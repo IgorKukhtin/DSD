@@ -111,7 +111,15 @@ AS
 $BODY$
    DECLARE vbIsAssetTo Boolean;
    DECLARE vbIsCLO_Member Boolean;
+   DECLARE vbIsAssetNoBalance Boolean;
 BEGIN
+
+    IF inAccountGroupId = -1 * zc_Enum_AccountGroup_20000()
+    THEN
+        vbIsAssetNoBalance:= TRUE;
+        inAccountGroupId:= -1 * zc_Enum_AccountGroup_20000();
+    END IF;
+
     -- !!!ДЛЯ ТЕСТА!!!
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpLocation'))
     AND inUserId = 5
@@ -235,7 +243,7 @@ BEGIN
      THEN
          DELETE FROM _tmpContainer;
      ELSE
-        CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerDescId_count Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
     END IF;
        
 
@@ -523,12 +531,15 @@ end if;
     WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
       AND COALESCE (_tmpListContainer.AccountId, 0) = 0
       AND EXISTS (SELECT 1 FROM Container WHERE Container.ParentId = _tmpListContainer.ContainerId_count)
+      AND (vbIsAssetNoBalance = TRUE) --  OR inUserId = 5
+      AND (EXISTS (SELECT 1 FROM _tmpLocation WHERE _tmpLocation.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset()))) --  OR inUserId = 5
      ;
 
 
     -- все ContainerId
-    INSERT INTO _tmpContainer (ContainerDescId, ContainerId_count, ContainerId_begin, LocationId, CarId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
+    INSERT INTO _tmpContainer (ContainerDescId, ContainerDescId_count, ContainerId_count, ContainerId_begin, LocationId, CarId, GoodsId, GoodsKindId, PartionGoodsId, AssetToId, AccountId, AccountGroupId, Amount)
        SELECT _tmpListContainer.ContainerDescId
+            , Container.DescId AS ContainerDescId_count
             , _tmpListContainer.ContainerId_count
             , _tmpListContainer.ContainerId_begin
             , CASE WHEN _tmpListContainer.LocationId = 0 THEN COALESCE (CLO_Unit.ObjectId, 0) ELSE _tmpListContainer.LocationId END AS LocationId
@@ -541,6 +552,7 @@ end if;
             , _tmpListContainer.AccountGroupId
             , _tmpListContainer.Amount
        FROM _tmpListContainer
+            LEFT JOIN Container ON Container.Id = _tmpListContainer.ContainerId_count
             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpListContainer.ContainerId_begin
                                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpListContainer.ContainerId_begin
@@ -589,7 +601,8 @@ end if;
                                        )
 
              , tmpMIContainer AS (SELECT _tmpContainer.ContainerDescId
-                                       , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
+                                       , _tmpContainer.ContainerDescId_count
+                                       , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
@@ -1081,7 +1094,8 @@ end if;
                                                                    AND tmpPriceList_Basis.GoodsKindId = 0
 
                                   GROUP BY _tmpContainer.ContainerDescId
-                                         , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END
+                                         , _tmpContainer.ContainerDescId_count
+                                         , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END
                                          , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END
                                          , _tmpContainer.LocationId
                                          , _tmpContainer.CarId
@@ -1514,6 +1528,7 @@ end if;
                                   --остатки
                                  UNION ALL
                                   SELECT _tmpContainer.ContainerDescId
+                                       , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
@@ -1612,6 +1627,7 @@ end if;
                                                                                      AND MIContainer.OperDate > inEndDate
 
                                   GROUP BY _tmpContainer.ContainerDescId
+                                         , _tmpContainer.ContainerDescId_count
                                          , _tmpContainer.ContainerId_count
                                          , _tmpContainer.ContainerId_begin
                                          , _tmpContainer.LocationId
@@ -1624,9 +1640,11 @@ end if;
                                          , _tmpContainer.AccountGroupId
                                          , _tmpContainer.Amount
                                   HAVING _tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
-                               ---CountCount      
+
                                  UNION ALL
+                                  -- CountCount      
                                   SELECT _tmpContainer.ContainerDescId
+                                       , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE OR inUserId = 5 THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
                                        , _tmpContainer.LocationId
@@ -1728,6 +1746,7 @@ end if;
                                                                        AND MIContainer.DescId = zc_MIContainer_CountCount()
                                                                        AND MIContainer.OperDate >= inStartDate
                                   GROUP BY _tmpContainer.ContainerDescId
+                                         , _tmpContainer.ContainerDescId_count
                                          , _tmpContainer.ContainerId_count
                                          , _tmpContainer.ContainerId_begin
                                          , _tmpContainer.LocationId
@@ -1751,7 +1770,7 @@ end if;
 
          -- Результат
          SELECT (tmpMIContainer_all.AccountId)       AS AccountId
-              , tmpMIContainer_all.ContainerDescId   AS ContainerDescId_count
+              , tmpMIContainer_all.ContainerDescId_count :: Integer AS ContainerDescId_count
               , tmpMIContainer_all.ContainerId_count AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin AS ContainerId
               , tmpMIContainer_all.LocationId
@@ -1842,7 +1861,7 @@ end if;
 
          FROM tmpMIContainer AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.AccountId 
-                , tmpMIContainer_all.ContainerDescId
+                , tmpMIContainer_all.ContainerDescId_count
                 , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
                 , tmpMIContainer_all.LocationId
@@ -1878,4 +1897,4 @@ ALTER FUNCTION lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inAccountGroupId:= 9015, inUnitGroupId := 0 , inLocationId := 8425 , inGoodsGroupId := 0 , inGoodsId := 0,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_MotionGoods (inStartDate:= '01.08.2025', inEndDate:= '01.08.2025', inAccountGroupId:= 9015, inUnitGroupId := 0 , inLocationId := 8425 , inGoodsGroupId := 0 , inGoodsId := 0,  inIsInfoMoney:= FALSE, inUserId := zfCalc_UserAdmin() :: Integer);

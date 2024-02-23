@@ -58,6 +58,16 @@ RETURNS TABLE (OperDate        TDateTime
              , AmountSh_child       TFloat
              , AmountSh_diff        TFloat
            
+               -- Резервы - пересорт, вес
+             , AmountWeight_sub_child_one TFloat -- с Остатка
+             , AmountWeight_sub_child_sec TFloat -- с Прихода
+             , AmountWeight_sub_child     TFloat -- Итого
+
+               -- Резервы - пересорт, шт
+             , AmountSh_sub_child_one     TFloat -- с Остатка
+             , AmountSh_sub_child_sec     TFloat -- с Прихода
+             , AmountSh_sub_child         TFloat -- Итого
+
                --
              , OperDate_CarInfo_calc      TDateTime
              , DayOfWeekName_CarInfo_calc TVarChar
@@ -74,6 +84,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE inGoodsGroupId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+
      -- !!!временно
      inGoodsGroupId:= 1832; -- ГП
 
@@ -193,16 +207,33 @@ BEGIN
                                     )
        -- Резервы
      , tmpMIChild AS (SELECT MovementItem.*
+                           , MovementItem_parent.ObjectId                  AS GoodsId_parent
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_parent
                       FROM MovementItem
+                           -- Элемент заявки не удален
+                           INNER JOIN tmpMI AS MovementItem_parent
+                                            ON MovementItem_parent.MovementId = MovementItem.MovementId
+                                           AND MovementItem_parent.DescId     = zc_MI_Master()
+                                           AND MovementItem_parent.Id         = MovementItem.ParentId
+                                           AND MovementItem_parent.isErased   = FALSE
+                            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem_parent.Id
+                                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementAll.Id FROM tmpMovementAll)
                         AND MovementItem.DescId     = zc_MI_Child()
                         AND MovementItem.isErased   = FALSE
+                        AND MovementItem.Amount     > 0
                      )
      , tmpMIFloat_Child AS (SELECT MovementItemFloat.*
                             FROM MovementItemFloat
                             WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIChild.Id FROM tmpMIChild)
                               AND MovementItemFloat.DescId = zc_MIFloat_MovementId()
                            )
+     , tmpMILO_GoodsKind_Child AS (SELECT MovementItemLinkObject.*
+                                   FROM MovementItemLinkObject
+                                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIChild.Id FROM tmpMIChild)
+                                     AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                  )
 
      , tmpChild AS (SELECT MovementItem.ParentId
                        --, SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0 THEN MovementItem.Amount ELSE 0 END) AS Amount
@@ -217,16 +248,88 @@ BEGIN
                          , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0 THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END ELSE 0 END) AS AmountSecond_sh
                          , SUM (COALESCE (MovementItem.Amount,0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END) AS Amount_all_sh
 
+                           -- 1.1. пересорт, вес
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0
+                                      AND (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                     ELSE 0
+                                END) AS Amount_sub_Weight
+                           -- 1.2. пересорт, вес
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0
+                                      AND (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                     ELSE 0
+                                END) AS AmountSecond_sub_Weight
+                           -- 1.3. пересорт, вес
+                         , SUM (CASE WHEN (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                     ELSE 0
+                                END) AS Amount_sub_all_Weight
+
+                           -- 2.1. пересорт, шт
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) = 0
+                                      AND (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN -- если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                                          CASE WHEN ObjectLink_Goods_Measure_parent.ChildObjectId = zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                           AND ObjectFloat_Weight_parent.ValueData > 0
+                                          THEN MovementItem.Amount / ObjectFloat_Weight_parent.ValueData
+
+                                          -- здесь шт
+                                          ELSE MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                          END
+                                     ELSE 0
+                                END) AS Amount_sub_sh
+                           -- 2.2. пересорт, шт
+                         , SUM (CASE WHEN COALESCE (MIFloat_MovementId.ValueData, 0) > 0
+                                      AND (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN -- если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                                          CASE WHEN ObjectLink_Goods_Measure_parent.ChildObjectId = zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                           AND ObjectFloat_Weight_parent.ValueData > 0
+                                          THEN MovementItem.Amount / ObjectFloat_Weight_parent.ValueData
+
+                                          -- здесь шт
+                                          ELSE MovementItem.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                          END
+                                     ELSE 0
+                                END) AS AmountSecond_sub_sh
+                           -- 2.3. пересорт, шт
+                         , SUM (CASE WHEN (MovementItem.GoodsId_parent <> MovementItem.ObjectId OR MovementItem.GoodsKindId_parent <> COALESCE (MILinkObject_GoodsKind.ObjectId, 0))
+                                     THEN -- если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                                          CASE WHEN ObjectLink_Goods_Measure_parent.ChildObjectId = zc_Measure_Sh() AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh()
+                                           AND ObjectFloat_Weight_parent.ValueData > 0
+                                          THEN MovementItem.Amount / ObjectFloat_Weight_parent.ValueData
+
+                                          -- здесь шт
+                                          ELSE COALESCE (MovementItem.Amount,0) * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                          END
+                                     ELSE 0
+                                END) AS Amount_sub_all_sh
+
+                         , MAX (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN zc_Measure_Sh()              ELSE 0 END) AS MeasureId_isSh
+                         , MAX (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 0 END) AS Weight_isSh
+
                     FROM tmpMIChild AS MovementItem
                          LEFT JOIN tmpMIFloat_Child AS MIFloat_MovementId
                                                     ON MIFloat_MovementId.MovementItemId = MovementItem.Id
                                                    AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
+                         LEFT JOIN tmpMILO_GoodsKind_Child AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                                   
                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                               ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                                ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
                                               AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+                                              
+                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure_parent
+                                              ON ObjectLink_Goods_Measure_parent.ObjectId = MovementItem.GoodsId_parent
+                                             AND ObjectLink_Goods_Measure_parent.DescId = zc_ObjectLink_Goods_Measure()
+                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight_parent
+                                               ON ObjectFloat_Weight_parent.ObjectId = MovementItem.GoodsId_parent
+                                              AND ObjectFloat_Weight_parent.DescId   = zc_ObjectFloat_Goods_Weight()
+                                              
                     GROUP BY MovementItem.ParentId
                    )
 
@@ -247,6 +350,7 @@ BEGIN
                          FROM (SELECT DISTINCT tmpMovementAll.OperDate_CarInfo_date FROM tmpMovementAll
                               ) AS tmp
                         )
+       -- Заказ + Резерв - в одну строчку
      , tmpMovement AS (SELECT Movement.OperDate
                             , MovementDate_OperDatePartner.ValueData                   AS OperDatePartner
                             , Movement.ToId                                            AS ToId
@@ -288,25 +392,37 @@ BEGIN
 
                             , MIN (tmpWeighing.StartWeighing) AS StartWeighing, MAX (tmpWeighing.EndWeighing) AS EndWeighing
 
-                              -- Заказы
-                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END) AS AmountSh
+                              -- Заказ - шт
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)
+                                        -- если пересорт и резерв есть хоть один = шт а заявка = кг, тогда нужно информативно шт
+                                        WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND tmpMI_Child.MeasureId_isSh = zc_Measure_Sh()
+                                             AND tmpMI_Child.Weight_isSh > 0
+     
+                                             THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                                   -- !!!вес из Резерва!!!
+                                                / tmpMI_Child.Weight_isSh
+                                        ELSE 0
+                                   END) AS AmountSh
+                              -- Заказ - кг
                             , SUM ((COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) AS AmountWeight
+                                   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                  ) AS AmountWeight
 
-                              -- Резервы
+                              -- Резерв
                             , SUM (tmpMI_Child.Amount_Weight)       AS AmountWeight_child_one -- с Остатка
                             , SUM (tmpMI_Child.AmountSecond_Weight) AS AmountWeight_child_sec -- с Прихода
                             , SUM (tmpMI_Child.Amount_all_Weight)   AS AmountWeight_child     -- Итого
 
                             , SUM (tmpMI_Child.Amount_sh)           AS AmountSh_child_one -- с Остатка
                             , SUM (tmpMI_Child.AmountSecond_sh)     AS AmountSh_child_sec -- с Прихода
-                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.Amount_all_sh,0) = 0         ----если пересорт и в резерве кг а в заявке шт, тогда нужно посчитать и резерв в шт
+                              -- Итого - если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                            , SUM (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.MeasureId_isSh, 0) <> zc_Measure_Sh()
                                         THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
                                                   THEN tmpMI_Child.Amount_all_Weight/ObjectFloat_Weight.ValueData  
                                                   ELSE 0
                                                   END
                                         ELSE COALESCE (tmpMI_Child.Amount_all_sh,0)
-                                   END)       AS AmountSh_child     -- Итого
+                                   END) AS AmountSh_child
 
                               -- Итого не хватает для резерва, вес
                             , SUM (CASE WHEN Movement.isRemains = TRUE
@@ -316,18 +432,45 @@ BEGIN
                                         ELSE 0
                                    END) AS AmountWeight_diff
 
+                              -- Итого не хватает для резерва, шт
                             , SUM (CASE WHEN Movement.isRemains = TRUE
-                                        THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
-                                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
-                                            - COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.Amount_all_sh,0) = 0
+                                         -- если пересорт и резерв есть хоть один = шт а заявка = кг, тогда нужно получить шт
+                                     AND ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND tmpMI_Child.MeasureId_isSh = zc_Measure_Sh()
+                                     AND tmpMI_Child.Weight_isSh > 0
+                                         THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                              -- !!!вес из Резерва!!!
+                                            / tmpMI_Child.Weight_isSh
+                                              -- если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                                            - COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.MeasureId_isSh, 0) <> zc_Measure_Sh()
                                                              THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
-                                                                       THEN tmpMI_Child.Amount_all_Weight/ObjectFloat_Weight.ValueData 
+                                                                       THEN tmpMI_Child.Amount_all_Weight / ObjectFloat_Weight.ValueData 
                                                                        ELSE 0
                                                                        END
                                                              ELSE COALESCE (tmpMI_Child.Amount_all_sh,0)
                                                         END, 0)
+
+                                        WHEN Movement.isRemains = TRUE
+                                             THEN (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
+                                                 * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN 1 ELSE 0 END
+                                                   -- если пересорт и резерв = кг а заявка = шт, тогда нужно пересчитать резерв в шт
+                                                 - COALESCE (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND COALESCE (tmpMI_Child.MeasureId_isSh, 0) <> zc_Measure_Sh()
+                                                                  THEN CASE WHEN COALESCE (ObjectFloat_Weight.ValueData,0) <> 0
+                                                                            THEN tmpMI_Child.Amount_all_Weight/ObjectFloat_Weight.ValueData 
+                                                                            ELSE 0
+                                                                            END
+                                                                  ELSE COALESCE (tmpMI_Child.Amount_all_sh,0)
+                                                             END, 0)
                                         ELSE 0
                                    END) AS AmountSh_diff
+
+                              -- Резервы - пересорт
+                            , SUM (tmpMI_Child.Amount_sub_Weight)       AS AmountWeight_sub_child_one -- с Остатка
+                            , SUM (tmpMI_Child.AmountSecond_sub_Weight) AS AmountWeight_sub_child_sec -- с Прихода
+                            , SUM (tmpMI_Child.Amount_sub_all_Weight)   AS AmountWeight_sub_child     -- Итого
+
+                            , SUM (tmpMI_Child.Amount_sub_sh)           AS AmountSh_sub_child_one     -- с Остатка
+                            , SUM (tmpMI_Child.AmountSecond_sub_sh)     AS AmountSh_sub_child_sec     -- с Прихода
+                            , SUM (tmpMI_Child.Amount_sub_all_sh)       AS AmountSh_sub_child         -- Итого
 
                        FROM tmpMovementAll AS Movement
                             LEFT JOIN tmpWeighing ON tmpWeighing.Id = Movement.Id
@@ -520,6 +663,15 @@ BEGIN
            , tmpMovement.AmountSh_child           ::TFloat AS AmountSh_child
              -- Итого не хватает для резерва, шт
            , tmpMovement.AmountSh_diff            ::TFloat AS AmountSh_diff
+
+             -- Резервы - пересорт
+           , tmpMovement.AmountWeight_sub_child_one ::TFloat -- с Остатка
+           , tmpMovement.AmountWeight_sub_child_sec ::TFloat -- с Прихода
+           , tmpMovement.AmountWeight_sub_child     ::TFloat -- Итого
+
+           , tmpMovement.AmountSh_sub_child_one     ::TFloat -- с Остатка
+           , tmpMovement.AmountSh_sub_child_sec     ::TFloat -- с Прихода
+           , tmpMovement.AmountSh_sub_child         ::TFloat -- Итого
 
              -- !!!Дата/время отгрузки - Расчет!!!
            , (CASE WHEN tmpOrderCarInfo.Id IS NULL
