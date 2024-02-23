@@ -62,10 +62,6 @@ object MessagesForm: TMessagesForm
     Caption = 'rlError'
     Properties.Alignment.Horz = taCenter
     Properties.Alignment.Vert = taVCenter
-    ExplicitLeft = 120
-    ExplicitTop = 72
-    ExplicitWidth = 47
-    ExplicitHeight = 17
     AnchorX = 234
     AnchorY = 91
   end

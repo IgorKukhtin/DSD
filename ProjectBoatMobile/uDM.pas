@@ -31,6 +31,7 @@ type
     procedure SetTaskName(AName : string);
 
     function UpdateProgram: string;
+    function LoadGoods: string;
   protected
     procedure Execute; override;
   end;
@@ -41,12 +42,50 @@ type
     cdsInventoryJournalStatusId: TIntegerField;
     cdsInventoryJournalisList: TBooleanField;
     cdsInventoryJournalInvNumber: TWideStringField;
-    cdsInventoryJournalStatus: TWideStringField;
+    cdsInventoryJournalStatusName: TWideStringField;
     cdsInventoryJournalUnitName: TWideStringField;
     cdsInventoryJournalComment: TWideStringField;
     cdsInventoryJournalOperDate: TWideStringField;
     cdsInventoryJournalTotalCount: TWideStringField;
     cdsInventoryJournalEditButton: TIntegerField;
+    cdsInventory: TClientDataSet;
+    cdsInventoryId: TIntegerField;
+    cdsInventoryInvNumber: TWideStringField;
+    cdsInventoryStatusName: TWideStringField;
+    cdsInventoryStatusId: TIntegerField;
+    cdsInventoryUnitName: TWideStringField;
+    cdsInventoryComment: TWideStringField;
+    cdsInventoryisList: TBooleanField;
+    cdsInventoryOperDate: TDateTimeField;
+    cdsInventoryTotalCount: TFloatField;
+    cdsInventoryList: TClientDataSet;
+    cdsInventoryListId: TIntegerField;
+    cdsInventoryListGoodsId: TIntegerField;
+    cdsInventoryListGoodsCode: TIntegerField;
+    cdsInventoryListGoodsName: TWideStringField;
+    cdsInventoryListArticle: TWideStringField;
+    cdsInventoryListEAN: TWideStringField;
+    cdsInventoryListGoodsGroupId: TIntegerField;
+    cdsInventoryListGoodsGroupName: TWideStringField;
+    cdsInventoryListMeasureName: TWideStringField;
+    cdsInventoryListAmount: TFloatField;
+    cdsInventoryListAmountRemains: TFloatField;
+    cdsInventoryListAmountDiff: TFloatField;
+    cdsInventoryListAmountRemains_curr: TFloatField;
+    cdsInventoryListPrice: TFloatField;
+    cdsInventoryListSumma: TFloatField;
+    cdsInventoryGoods: TClientDataSet;
+    cdsInventoryGoodsId: TIntegerField;
+    cdsInventoryUnitId: TIntegerField;
+    cdsGoods: TClientDataSet;
+    cdsGoodsId: TIntegerField;
+    cdsGoodsCode: TIntegerField;
+    cdsGoodsName: TWideStringField;
+    cdsGoodsArticle: TWideStringField;
+    cdsGoodsEAN: TWideStringField;
+    cdsGoodsGoodsGroupName: TWideStringField;
+    cdsGoodsMeasureName: TWideStringField;
+    cdsGoodsisErased: TBooleanField;
   private
     { Private declarations }
   public
@@ -58,8 +97,11 @@ type
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure UpdateProgram(const AResult: TModalResult);
 
+    function LoadGoods : Boolean;
     function LoadInventoryJournal : Boolean;
     function LoadInventory : Boolean;
+    function LoadInventoryList : Boolean;
+    function LoadInventoryGoods : Boolean;
   end;
 
 var
@@ -243,6 +285,45 @@ begin
   {$ENDIF}
 end;
 
+// Получение справочника Комплектующих
+function TWaitThread.LoadGoods: string;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if DM.cdsGoods.Active and not DM.cdsGoods.IsEmpty then
+    nID := DM.cdsGoodsId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  DM.cdsGoods.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_Object_MobileGoods';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.DataSet := DM.cdsGoods;
+
+    try
+      StoredProc.Execute(false, false, false);
+      if DM.cdsGoods.Active and (nID <> 0) then DM.cdsGoods.Locate('Id', nId, [])
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    Synchronize(procedure
+                begin
+                  DM.cdsGoods.EnableControls;
+                end);
+  end;
+end;
+
 procedure TWaitThread.Execute;
 var
   Res : string;
@@ -266,6 +347,10 @@ begin
     begin
       SetTaskName('Получение файла обновления');
       Res := UpdateProgram;
+    end else if TaskName = 'LoadGoods' then
+    begin
+      SetTaskName('Получение справочника Комплектующих');
+      Res := LoadGoods;
     end;
 
   finally
@@ -449,12 +534,30 @@ begin
   end;
 end;
 
+{ начитка товаров }
+function TDM.LoadGoods : Boolean;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'LoadGoods';
+  WaitThread.Start;
+  Result := True;
+end;
+
+
 { начитка журнала инвентаризаций }
 function TDM.LoadInventoryJournal : Boolean;
 var
   StoredProc : TdsdStoredProc;
+  nId: Integer;
 begin
+
+  if cdsInventoryJournal.Active and not cdsInventoryJournal.IsEmpty then
+    nID := DM.cdsInventoryJournalId.AsInteger
+  else nID := 0;
+
   StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryJournal.DisableControls;
   try
     StoredProc.OutputType := otDataSet;
 
@@ -467,7 +570,44 @@ begin
 
     try
       StoredProc.Execute(false, false, false);
-      Result :=cdsInventoryJournal.Active;
+      Result := cdsInventoryJournal.Active;
+      if Result and (nID <> 0) then cdsInventoryJournal.Locate('Id', nId, [])
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryJournal.EnableControls;
+  end;
+end;
+
+{ начитка инвентаризации}
+function TDM.LoadInventory : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if cdsInventory.Active and not cdsInventory.IsEmpty then
+    nID := DM.cdsInventoryId.AsInteger
+  else nID := DM.cdsInventoryJournalId.AsInteger;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_Movement_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, nID);
+    StoredProc.DataSet := cdsInventory;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsInventory.Active;
     except
       on E : Exception do
       begin
@@ -480,36 +620,86 @@ begin
   end;
 end;
 
-{ начитка инвентаризации}
-function TDM.LoadInventory : Boolean;
+{ начитка строк инвентаризации}
+function TDM.LoadInventoryList : Boolean;
 var
   StoredProc : TdsdStoredProc;
+  nId: Integer;
 begin
+
+  if not cdsInventory.Active or cdsInventory.IsEmpty then Exit;
+
+  if cdsInventoryList.Active and not cdsInventoryList.IsEmpty then
+    nID := DM.cdsInventoryId.AsInteger
+  else nID := 0;
+
   StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryList.DisableControls;
   try
     StoredProc.OutputType := otDataSet;
 
-//    StoredProc.StoredProcName := 'gpSelect_Movement_MobileInventory';
-//    StoredProc.Params.Clear;
-//    StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, frmMain.deInventoryStartDate.Date);
-//    StoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, frmMain.deInventoryEntDate.Date);
-//    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
-//    StoredProc.DataSet := cdsInventoryJournal;
-//
-//    try
-//      StoredProc.Execute(false, false, false);
-//      Result :=cdsInventoryJournal.Active;
-//    except
-//      on E : Exception do
-//      begin
-//        raise Exception.Create(E.Message);
-//        exit;
-//      end;
-//    end;
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DM.cdsInventoryId.AsInteger);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.DataSet := cdsInventoryList;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsInventoryList.Active;
+      if Result and (nID <> 0) then cdsInventoryList.Locate('Id', nId, [])
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
   finally
     FreeAndNil(StoredProc);
+    cdsInventoryList.EnableControls;
   end;
 end;
 
+{ начитка товаров для инвентаризации}
+function TDM.LoadInventoryGoods : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if not cdsInventory.Active or cdsInventory.IsEmpty then Exit;
+
+  if cdsInventoryGoods.Active and not cdsInventoryGoods.IsEmpty then
+    nID := DM.cdsInventoryGoodsId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryGoods.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, DM.cdsInventoryUnitId.AsInteger);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.DataSet := cdsInventoryGoods;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsInventoryGoods.Active;
+      if Result and (nID <> 0) then cdsInventoryGoods.Locate('Id', nId, [])
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryGoods.EnableControls;
+  end;
+end;
 
 end.
