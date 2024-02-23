@@ -4,12 +4,15 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  System.DateUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.Objects, FMX.Edit,
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
   System.IniFiles, FMX.VirtualKeyboard, FMX.DialogService, FMX.DataWedgeBarCode,
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
-  FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr, System.ImageList, FMX.ImgList
+  FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr, System.ImageList, FMX.ImgList,
+  FMX.DateTimeCtrls, System.Rtti, System.Bindings.Outputs, Fmx.Bind.Editors,
+  Data.Bind.EngExt, Fmx.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -57,7 +60,7 @@ type
     sbMain: TStyleBook;
     VertScrollBox8: TVertScrollBox;
     GridPanelLayout3: TGridPanelLayout;
-    bHandBook: TButton;
+    bInventoryJournal: TButton;
     Image1: TImage;
     Label1: TLabel;
     bVisit: TButton;
@@ -118,6 +121,19 @@ type
     Image9: TImage;
     ilPartners: TImageList;
     ilButton: TImageList;
+    tiInventoryJournal: TTabItem;
+    pPromoPartnerDate: TPanel;
+    Label41: TLabel;
+    deInventoryStartDate: TDateEdit;
+    Label10: TLabel;
+    deInventoryEntDate: TDateEdit;
+    lwInventoryJournal: TListView;
+    BindSourceDB1: TBindSourceDB;
+    BindingsList1: TBindingsList;
+    LinkFillControlToField1: TLinkFillControlToField;
+    sbtiInventoryJournalRefresh: TSpeedButton;
+    Image10: TImage;
+    tiInventory: TTabItem;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -130,18 +146,24 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure ShowInformation;
+    procedure ShowInventoryJournal;
+    procedure ShowInventory;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
-    procedure ChangePartnerInfoRightUpdate(Sender: TObject);
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
       const ATime: TMediaTime);
     procedure OnObrBarcodeDetected(Sender: TObject);
     procedure tiStopCameraTimer(Sender: TObject);
     procedure sbIlluminationModeClick(Sender: TObject);
+    procedure bInventoryJournalClick(Sender: TObject);
+    procedure sbtiInventoryJournalRefreshClick(Sender: TObject);
+    procedure lwInventoryJournalItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -276,10 +298,6 @@ begin
 
   if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(aFMXApplicationEventService)) then
      aFMXApplicationEventService.SetApplicationEventHandler(HandleAppEvent)
-  {$ELSE}
-
-  FisZebraScaner := False;
-
   {$ENDIF}
 end;
 
@@ -425,13 +443,16 @@ begin
         FisCameraScanBarCode := True;
         FCameraScanBarCode.Active := True;
       end;
+    end else
+    if tcMain.ActiveTab = tiInventoryJournal then
+    begin
+      lCaption.Text := 'Журнал инвентаризаций';
+    end else
+    if tcMain.ActiveTab = tiInventory then
+    begin
+      lCaption.Text := 'Инвентаризация';
     end
   end;
-end;
-
-procedure TfrmMain.ChangePartnerInfoRightUpdate(Sender: TObject);
-begin
-
 end;
 
 // начитка информации про программу
@@ -465,6 +486,24 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+// начитка информации журнала инвентаризаций
+procedure TfrmMain.ShowInventoryJournal;
+begin
+  if not DM.LoadInventoryJournal then Exit;
+  SwitchToForm(tiInventoryJournal, nil);
+end;
+
+// начитка информации журнала инвентаризаций
+procedure TfrmMain.ShowInventory;
+begin
+  if not DM.cdsInventoryJournal.Active then Exit;
+  if DM.cdsInventoryJournal.IsEmpty then Exit;
+  if DM.cdsInventoryJournalId.AsInteger = 0 then Exit;
+
+  // if not DM.LoadInventory then Exit;
+  SwitchToForm(tiInventory, nil);
+end;
+
 procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
 begin
   tiStopCamera.Enabled := False;
@@ -473,6 +512,12 @@ begin
     FCameraScanBarCode.Active := false;
     FObr.Active := False;
   end;
+end;
+
+// переход на форму журнала инвентаризаций
+procedure TfrmMain.bInventoryJournalClick(Sender: TObject);
+begin
+  ShowInventoryJournal;
 end;
 
 // переход на форму отображения информации
@@ -583,6 +628,12 @@ begin
   else SwitchToForm(tiScanBarCode, nil);
 end;
 
+// Перерисовка журнала инвентаризаций
+procedure TfrmMain.sbtiInventoryJournalRefreshClick(Sender: TObject);
+begin
+  DM.LoadInventoryJournal;
+end;
+
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
   Shift: TShiftState);
 var
@@ -635,6 +686,9 @@ begin
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
+  deInventoryStartDate.DateTime := IncDay(Date, -7);
+  deInventoryEntDate.DateTime := Date();
+
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(nil);
 end;
@@ -699,6 +753,14 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
+end;
+
+// Покажим инвентаризацию
+procedure TfrmMain.lwInventoryJournalItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if Assigned(ItemObject) and (ItemObject.Name = 'EditButton') then ShowInventory;
 end;
 
 procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);

@@ -76,13 +76,14 @@ type
     FActiveConnection: Integer;
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
-    FReceiveStream: TStringStream;
+    FReceiveStream: TBytesStream;
     InBytes: TBytes;
     XMLDocument: IXMLDocument;
     isArchive: boolean;
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
     function PrepareStr: String;
+    function PrepareDataSet: TBytes;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
     procedure ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -147,7 +148,7 @@ begin
     Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
     Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
     Instance.FSendList := TStringList.Create;
-    Instance.FReceiveStream := TStringStream.Create('');
+    Instance.FReceiveStream := TBytesStream.Create;
     Instance.XMLDocument := TXMLDocument.Create(nil);
     Instance.FCriticalSection := TCriticalSection.Create;
   end;
@@ -183,10 +184,23 @@ begin
   begin
     ZDecompress(InBytes, ResBytes);
 
-    Result := StringReplace(TEncoding.UTF8.GetString(ResBytes), #0, '', [rfReplaceAll]);
+    Result := StringReplace(TEncoding.UTF8.GetString(ResBytes), #0, '', [rfReplaceAll]);;
+
   end
   else
     Result := StringReplace(TEncoding.UTF8.GetString(InBytes), #0, '', [rfReplaceAll]);
+end;
+
+function TStorage.PrepareDataSet: TBytes;
+var
+  ResBytes: TBytes;
+begin
+  if isArchive then
+  begin
+    ZDecompress(InBytes, Result);
+  end
+  else
+    Result := InBytes;
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String; ProcedureParam: String);
@@ -280,7 +294,7 @@ begin
   try
     FSendList.Clear;
     if dsdProject = prBoat then
-      FSendList.Add('XML=' + '<?xml version="1.0" encoding="UTF-8"?>' + pData)
+      FSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' + pData)
     else FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
     if dsdProject = prBoat then
       FSendList.Add('ENC=UTF8');
@@ -392,7 +406,7 @@ begin
       if ResultType = gcResult then
          Result := PrepareStr;
       if ResultType = gcDataSet then
-         Result := PrepareStr;
+         Result := PrepareDataSet;
 
       Logger.AddToLog(Result);
     End;

@@ -50,7 +50,7 @@ BEGIN
           , True AS isBold
      FROM gpReport_FulfillmentPlanMobileApp(inOperDate, 0, 0, inSession) AS T1
      WHERE COALESCE(T1.AntiTOPMP_Place, 0) > 0
-     ORDER BY CASE WHEN T1.Color_Calc = zfCalc_Color (173, 255, 47) THEN 1 ELSE 0 END, T1.AntiTOPMP_Place;     
+     ORDER BY COALESCE(T1.SumPlace, 1000), T1.SumPlaceAward DESC;     
       
 END;
 $BODY$
@@ -65,4 +65,5 @@ ALTER FUNCTION gpReport_Check_TabletkiRecreate (TDateTime, TDateTime, Integer, T
 
 -- 
 
-select * from gpReport_FulfillmentPlanMobileAppAntiTOP(inOperDate := ('06.07.2023')::TDateTime ,  inSession := '3');
+
+select * from gpReport_FulfillmentPlanMobileAppAntiTOP(inOperDate := ('20.02.2024')::TDateTime ,  inSession := '3');
