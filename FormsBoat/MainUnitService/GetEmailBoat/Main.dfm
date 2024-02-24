@@ -138,6 +138,20 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 7
   end
+  object IdMessage: TIdMessage
+    AttachmentEncoding = 'UUE'
+    BccList = <>
+    CCList = <>
+    Encoding = meDefault
+    FromList = <
+      item
+      end>
+    Recipients = <>
+    ReplyTo = <>
+    ConvertPreamble = True
+    Left = 440
+    Top = 24
+  end
   object spSelect: TdsdStoredProc
     DataSet = ClientDataSet
     DataSets = <
@@ -160,6 +174,17 @@ object MainForm: TMainForm
     Interval = 100
     OnTimer = TimerTimer
     Left = 544
+    Top = 24
+  end
+  object IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL
+    Destination = ':143'
+    MaxLineAction = maException
+    Port = 143
+    DefaultPort = 0
+    SSLOptions.Mode = sslmUnassigned
+    SSLOptions.VerifyMode = []
+    SSLOptions.VerifyDepth = 0
+    Left = 328
     Top = 24
   end
   object spInsertUpdate_Invoice: TdsdStoredProc

@@ -297,7 +297,8 @@ begin
   else nID := 0;
 
   StoredProc := TdsdStoredProc.Create(nil);
-  DM.cdsGoods.DisableControls;
+  frmMain.lwGoods.BeginUpdate;
+//  DM.cdsGoods.DisableControls;
   try
     StoredProc.OutputType := otDataSet;
 
@@ -317,10 +318,11 @@ begin
     end;
   finally
     FreeAndNil(StoredProc);
-    Synchronize(procedure
-                begin
-                  DM.cdsGoods.EnableControls;
-                end);
+//    Synchronize(procedure
+//                begin
+//                  DM.cdsGoods.EnableControls;
+//                  frmMain.lwGoods.EndUpdate;
+//                end);
   end;
 end;
 

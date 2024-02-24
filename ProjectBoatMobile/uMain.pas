@@ -163,9 +163,9 @@ type
     lwGoods: TListView;
     BindSourceDB4: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
-    bGoodsRefresh: TSpeedButton;
+    bGoodsChoice: TSpeedButton;
     Image13: TImage;
-    SpeedButton1: TSpeedButton;
+    bGoodsRefresh: TSpeedButton;
     Image14: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
@@ -203,7 +203,7 @@ type
     procedure sbInventoryScanClick(Sender: TObject);
     procedure bGoodsClick(Sender: TObject);
     procedure bGoodsRefreshClick(Sender: TObject);
-    procedure bGoodsChoice(Sender: TObject);
+    procedure bGoodsChoiceClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -442,7 +442,7 @@ begin
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
 
-  bGoodsRefresh.Visible := False;
+  bGoodsChoice.Visible := False;
 
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart)  then
@@ -596,7 +596,7 @@ begin
 end;
 
 // Выбор товара
-procedure TfrmMain.bGoodsChoice(Sender: TObject);
+procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
 begin
 //
 end;
