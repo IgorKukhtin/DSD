@@ -46,13 +46,14 @@ BEGIN
       THEN
           DELETE FROM _tmpMIMaster;
       ELSE
-          CREATE TEMP TABLE _tmpMIMaster (Id Integer, GoodsId Integer, GoodsKindId Integer, GoodsId_sub Integer, GoodsKindId_sub Integer, Amount TFloat, Remains TFloat, Amount_diff TFloat) ON COMMIT DROP;
+          CREATE TEMP TABLE _tmpMIMaster (Id Integer, GoodsId Integer, GoodsKindId Integer, GoodsId_sub Integer, GoodsKindId_sub Integer, Amount_res_orig TFloat, Amount_orig TFloat, Remains_orig TFloat, Amount_diff_orig TFloat, Amount_sub TFloat, Remains TFloat, Amount_diff TFloat) ON COMMIT DROP;
       END IF;
 
       --
       WITH 
            tmpGoodsByGoodsKind AS (SELECT Object_GoodsByGoodsKind_View.GoodsId
                                         , Object_GoodsByGoodsKind_View.GoodsKindId
+                                          -- из чего будем подставлять
                                         , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId      AS GoodsId_sub
                                         , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId  AS GoodsKindId_sub
                                    FROM Object_GoodsByGoodsKind_View
@@ -65,7 +66,7 @@ BEGIN
                                    WHERE ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     > 0
                                      AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId > 0
                                   )
-            -- Заявка
+            -- Заявка - текущая
           , tmpMI AS (SELECT MovementItem.Id
                              --
                            , MovementItem.ObjectId                         AS GoodsId
@@ -73,32 +74,19 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                              --
                            , ObjectLink_Goods_Measure.ChildObjectId        AS MeasureId
-                           , ObjectFloat_Weight.ValueData                  AS Weight
+                           , COALESCE (ObjectFloat_Weight.ValueData, 0)    AS Weight
                              --
                            , ObjectLink_Goods_Measure_sub.ChildObjectId    AS MeasureId_sub
-                           , ObjectFloat_Weight_sub.ValueData              AS Weight_sub
-                             --
+                           , COALESCE (ObjectFloat_Weight_sub.ValueData, 0)AS Weight_sub
+                             -- шт
                            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) ELSE 0 END AS Amount_sh
+                             -- вес
                            , (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))
                            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
                              AS Amount_Weight
 
-                             -- Заявка - переводим в ед.изм. - MeasureId_sub
-                           , CASE -- ничего не делать
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId = ObjectLink_Goods_Measure_sub.ChildObjectId
-                                       THEN MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                  -- Переводим в Вес
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId  = zc_Measure_Sh() AND ObjectLink_Goods_Measure_sub.ChildObjectId <> zc_Measure_Sh()
-                                       THEN (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                                  -- Переводим в ШТ
-                                  WHEN ObjectLink_Goods_Measure.ChildObjectId <> zc_Measure_Sh() AND ObjectLink_Goods_Measure_sub.ChildObjectId   = zc_Measure_Sh()
-                                       THEN CASE WHEN ObjectFloat_Weight.ValueData > 0
-                                                      THEN (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) / ObjectFloat_Weight.ValueData
-                                                 ELSE 0
-                                            END
-                                  -- ???ничего не делать
-                                  ELSE MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                             END AS Amount
+                             -- Заявка - НЕ переводим в ед.изм. - MeasureId_sub
+                           , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS Amount
 
                              --
                            , COALESCE (tmpGoodsByGoodsKind.GoodsId_sub, MovementItem.ObjectId)                  AS GoodsId_sub
@@ -131,15 +119,6 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                         AND COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0) > 0
-                     )
-      -- Заявка - сгруппировали
-    , tmpMI_group AS (SELECT SUM (tmpMI.Amount) AS Amount
-                             --
-                           , tmpMI.GoodsId_sub
-                           , tmpMI.GoodsKindId_sub
-                      FROM tmpMI
-                      GROUP BY tmpMI.GoodsId_sub
-                             , tmpMI.GoodsKindId_sub
                      )
         -- ВСЕ заявки, в которых есть Резерв !!!для остатка!!! за эту "смену" или позже + !!!"прошлый" день!!!
       , tmpMIChild_All AS (SELECT MovementItem.Id                               AS MovementItemId
@@ -175,11 +154,15 @@ BEGIN
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                 -- Только для "товаров" из текущей заявки
                                 INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub, tmpMI.GoodsKindId_sub FROM tmpMI
+                                           UNION
+                                            -- плюс в случае пересорта, исходный товар
+                                            SELECT DISTINCT tmpMI.GoodsId AS GoodsId_sub, tmpMI.GoodsKindId AS GoodsKindId_sub FROM tmpMI
                                            ) AS tmpGoods
-                                             ON tmpGoods.GoodsId_sub      = MovementItem.ObjectId
+                                             ON tmpGoods.GoodsId_sub     = MovementItem.ObjectId
                                             AND tmpGoods.GoodsKindId_sub = MILinkObject_GoodsKind.ObjectId
                            WHERE Movement.DescId   = zc_Movement_OrderExternal()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             -- !!!Не текущий документ!!!
                              AND Movement.Id      <> inMovementId
 
                           UNION ALL
@@ -220,11 +203,15 @@ BEGIN
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                 -- Только для "товаров" из текущей заявки
                                 INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub, tmpMI.GoodsKindId_sub FROM tmpMI
+                                           UNION
+                                            -- плюс в случае пересорта, исходный товар
+                                            SELECT DISTINCT tmpMI.GoodsId AS GoodsId_sub, tmpMI.GoodsKindId AS GoodsKindId_sub FROM tmpMI
                                            ) AS tmpGoods
                                              ON tmpGoods.GoodsId_sub      = MovementItem.ObjectId
                                             AND tmpGoods.GoodsKindId_sub = MILinkObject_GoodsKind.ObjectId
                            WHERE Movement.DescId   = zc_Movement_OrderExternal()
                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                             -- !!!Не текущий документ!!!
                              AND Movement.Id      <> inMovementId
                           )
         , tmpMI_Float AS (SELECT MIF.MovementItemId, MIF.DescId, MIF.ValueData :: Integer AS MovementId
@@ -258,7 +245,11 @@ BEGIN
                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                                             AND CLO_Unit.ObjectId    = vbUnitId
                               -- Только для "товаров" из текущей заявки
-                              INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub FROM tmpMI) AS tmpGoods ON tmpGoods.GoodsId_sub = Container.ObjectId
+                              INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub FROM tmpMI
+                                         UNION
+                                          -- плюс в случае пересорта, исходный товар
+                                          SELECT DISTINCT tmpMI.GoodsId AS GoodsId_sub FROM tmpMI
+                                         ) AS tmpGoods ON tmpGoods.GoodsId_sub = Container.ObjectId
 
                               LEFT JOIN ContainerLinkObject AS CLO_Account
                                                             ON CLO_Account.ContainerId = CLO_Unit.ContainerId
@@ -266,7 +257,7 @@ BEGIN
 
                          WHERE Container.DescId = zc_Container_Count()
                            AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
-                         )
+                        )
       , tmpCLO_GoodsKind_rem AS (SELECT CLO_GoodsKind.*
                                  FROM ContainerLinkObject AS CLO_GoodsKind
                                  WHERE CLO_GoodsKind.ContainerId IN (SELECT DISTINCT tmpContainer_all.ContainerId FROM tmpContainer_all)
@@ -282,6 +273,9 @@ BEGIN
                                                              AND tmpCLO_GoodsKind_rem.DescId      = zc_ContainerLinkObject_GoodsKind()
                               -- Только для "товаров" из текущей заявки
                               INNER JOIN (SELECT DISTINCT tmpMI.GoodsId_sub, tmpMI.GoodsKindId_sub FROM tmpMI
+                                         UNION
+                                          -- плюс в случае пересорта, исходный товар
+                                          SELECT DISTINCT tmpMI.GoodsId AS GoodsId_sub, tmpMI.GoodsKindId AS GoodsKindId_sub FROM tmpMI
                                          ) AS tmpGoods
                                            ON tmpGoods.GoodsId_sub      = tmpContainer_all.GoodsId_sub
                                           AND tmpGoods.GoodsKindId_sub = tmpCLO_GoodsKind_rem.ObjectId
@@ -302,60 +296,196 @@ BEGIN
                               , tmpContainer.Amount
                        HAVING tmpContainer.Amount - SUM (COALESCE (MIContainer.Amount, 0)) > 0
                       )
+     -- Заявка - сгруппировали - без учета пересорта
+   , tmpMI_group_orig AS (SELECT SUM (tmpMI.Amount) AS Amount
+                                 --
+                               , tmpMI.GoodsId
+                               , tmpMI.GoodsKindId
+                          FROM tmpMI
+                          GROUP BY tmpMI.GoodsId
+                                 , tmpMI.GoodsKindId
+                         )
+    -- первый Результат - без учета пересорта
+  , tmpRes_one_all AS (SELECT tmpMI.Id
+                            , tmpMI.GoodsId
+                            , tmpMI.GoodsKindId
+                            , tmpMI.GoodsId_sub
+                            , tmpMI.GoodsKindId_sub
+           
+                            , tmpMI.MeasureId  AS MeasureId_orig
+                            , tmpMI.Weight     AS Weight_orig
+                             --
+                            , tmpMI.MeasureId_sub
+                            , tmpMI.Weight_sub
+
+                              -- Заявка - НЕ в ед.изм. MeasureId_sub
+                            , tmpMI.Amount AS Amount_orig
+           
+                              -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                            , COALESCE (tmpRemains.Amount, 0) /** CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END*/
+                              AS Remains_orig
+
+                              -- "свободный" Остаток для Резерв - распределяется пропорционально
+                            , (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
+                            * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+                              AS Amount_diff_orig
+           
+                              -- Заказ - Резерв с остатка
+                            , CASE -- если "свободного" остатка хватает, тогда резерв ВЕСЬ заказ
+                                   WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
+                                      * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+                                      >= COALESCE (tmpMI.Amount,0)
+
+                                        THEN COALESCE (tmpMI.Amount,0)
+
+                                   -- здесь только "свободный" остаток
+                                   WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
+                                      * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+                                      > 0 
+                                        THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
+                                           * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+
+                                   -- иначе 0
+                                   ELSE 0
+                              END AS Amount_res_orig
+                                                                            
+                       FROM tmpMI
+                            -- итого по текущим товарам, для пропорции
+                            LEFT JOIN tmpMI_group_orig AS tmpMI_group
+                                                       ON tmpMI_group.GoodsId     = tmpMI.GoodsId
+                                                      AND tmpMI_group.GoodsKindId = tmpMI.GoodsKindId
+                            -- здесь остатки GoodsId + из чего он может делаться - GoodsId_sub
+                            LEFT JOIN tmpRemains ON tmpRemains.GoodsId_sub     = tmpMI.GoodsId
+                                                AND tmpRemains.GoodsKindId_sub = tmpMI.GoodsKindId
+                            -- то что зарезервировано в других документах
+                            LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId_sub     = tmpMI.GoodsId
+                                                AND tmpMIChild.GoodsKindId_sub = tmpMI.GoodsKindId
+                       -- если есть "свободный" Остаток
+                       -- WHERE COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0) > 0
+                      )
+
+        -- первый Результат - без учета пересорта
+      , tmpRes_one AS (SELECT tmpRes_one_all.Id
+                            , tmpRes_one_all.GoodsId
+                            , tmpRes_one_all.GoodsKindId
+                            , tmpRes_one_all.GoodsId_sub
+                            , tmpRes_one_all.GoodsKindId_sub
+           
+                            , tmpRes_one_all.MeasureId_orig
+                            , tmpRes_one_all.Weight_orig
+                             --
+                            , tmpRes_one_all.MeasureId_sub
+                            , tmpRes_one_all.Weight_sub
+
+                              -- Заявка - НЕ в ед.изм. MeasureId_sub
+                            , tmpRes_one_all.Amount_orig
+           
+                              -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                            , tmpRes_one_all.Remains_orig
+
+                              -- "свободный" Остаток для Резерв - распределен пропорционально
+                            , tmpRes_one_all.Amount_diff_orig
+           
+                              -- результат 1 - Заказ - Резерв с остатка
+                            , tmpRes_one_all.Amount_res_orig
+                                                                            
+                             -- остаток от Заявки - переводим в ед.изм. - MeasureId_sub
+                           , CASE -- ничего не делать
+                                  WHEN tmpRes_one_all.MeasureId_orig = tmpRes_one_all.MeasureId_sub
+                                       THEN tmpRes_one_all.Amount_orig - COALESCE (tmpRes_one_all.Amount_res_orig, 0)
+                                  -- Переводим из ШТ в Вес
+                                  WHEN tmpRes_one_all.MeasureId_orig  = zc_Measure_Sh() AND tmpRes_one_all.MeasureId_sub <> zc_Measure_Sh()
+                                       THEN (tmpRes_one_all.Amount_orig - COALESCE (tmpRes_one_all.Amount_res_orig, 0)) * tmpRes_one_all.Weight_orig
+                                  -- Переводим из Вес в ШТ
+                                  WHEN tmpRes_one_all.MeasureId_orig <> zc_Measure_Sh() AND tmpRes_one_all.MeasureId_sub = zc_Measure_Sh()
+                                       THEN CASE WHEN tmpRes_one_all.Weight_sub > 0
+                                                      THEN (tmpRes_one_all.Amount_orig - COALESCE (tmpRes_one_all.Amount_res_orig, 0)) / tmpRes_one_all.Weight_sub
+                                                 ELSE 0
+                                            END
+                                  -- ???ничего не делать
+                                  ELSE tmpRes_one_all.Amount_orig - COALESCE (tmpRes_one_all.Amount_res_orig, 0)
+                             END AS Amount_sub
+
+                       FROM tmpRes_one_all
+                      )
+
+      -- Остаток Заявки - сгруппировали
+    , tmpMI_group AS (SELECT SUM (tmpRes_one.Amount_sub) AS Amount_sub
+                             --
+                           , tmpRes_one.GoodsId_sub
+                           , tmpRes_one.GoodsKindId_sub
+                      FROM tmpRes_one
+                      GROUP BY tmpRes_one.GoodsId_sub
+                             , tmpRes_one.GoodsKindId_sub
+                     )
          -- Результат
-          INSERT INTO _tmpMIMaster (Id, GoodsId, GoodsKindId, GoodsId_sub, GoodsKindId_sub, Amount, Remains, Amount_diff)
+          INSERT INTO _tmpMIMaster (Id, GoodsId, GoodsKindId, GoodsId_sub, GoodsKindId_sub, Amount_res_orig, Amount_orig, Remains_orig, Amount_diff_orig, Amount_sub, Remains, Amount_diff)
             SELECT tmpMI.Id
                  , tmpMI.GoodsId
                  , tmpMI.GoodsKindId
                  , tmpMI.GoodsId_sub
                  , tmpMI.GoodsKindId_sub
 
-                   -- Заявка - в ед.изм. MeasureId_sub
-                 , tmpMI.Amount
+           
+                   -- результат 1 - Заказ - Резерв с остатка
+                 , tmpMI.Amount_res_orig
+                   -- Заявка - НЕ в ед.изм. MeasureId_sub
+                 , tmpMI.Amount_orig
+                   -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                 , tmpMI.Remains_orig
+                   -- "свободный" Остаток для Резерв - распределен пропорционально
+                 , tmpMI.Amount_diff_orig
 
-                   -- Остаток начальный - пропорционально
-                 , COALESCE (tmpRemains.Amount, 0) * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+                   -- остаток Заявки - в ед.изм. MeasureId_sub
+                 , tmpMI.Amount_sub
+
+                   -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                 , COALESCE (tmpRemains.Amount, 0) /** CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END*/
                    AS Remains
-                   -- "свободный" Остаток для Резерв - пропорционально
-                 , (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0)) 
-                 * CASE WHEN tmpMI_group.Amount > tmpMI.Amount THEN tmpMI.Amount / tmpMI_group.Amount ELSE 1 END
+
+                   -- "свободный" Остаток за минусом предыдущего распределения - для Резерв - пропорционально
+                 , (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0) - COALESCE (tmpMI.Amount_res_orig, 0)) 
+                 * CASE WHEN tmpMI_group.Amount_sub > tmpMI.Amount_sub THEN tmpMI.Amount_sub / tmpMI_group.Amount_sub ELSE 1 END
                    AS Amount_diff
 
-            FROM tmpMI
+            FROM tmpRes_one AS tmpMI
+                 -- итого по текущим товарам, для пропорции
                  LEFT JOIN tmpMI_group ON tmpMI_group.GoodsId_sub     = tmpMI.GoodsId_sub
                                       AND tmpMI_group.GoodsKindId_sub = tmpMI.GoodsKindId_sub
+                 -- здесь остатки GoodsId + из чего он может делаться - GoodsId_sub
                  LEFT JOIN tmpRemains ON tmpRemains.GoodsId_sub     = tmpMI.GoodsId_sub
                                      AND tmpRemains.GoodsKindId_sub = tmpMI.GoodsKindId_sub
+                 -- то что зарезервировано в других документах
                  LEFT JOIN tmpMIChild ON tmpMIChild.GoodsId_sub     = tmpMI.GoodsId_sub
                                      AND tmpMIChild.GoodsKindId_sub = tmpMI.GoodsKindId_sub
             -- если есть "свободный" Остаток
-            WHERE COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0) > 0
+            WHERE COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMIChild.Amount, 0) - COALESCE (tmpMI.Amount_res_orig, 0) > 0
+               -- или предыдущее распределение
+               OR tmpMI.Amount_res_orig > 0
            ;
 
-
+/*
+    RAISE EXCEPTION 'Ошибка.<%>   %'
+, (select _tmpMIMaster.Amount from _tmpMIMaster where _tmpMIMaster.Id = 281700170)
+, (select _tmpMIMaster.Remains from _tmpMIMaster where _tmpMIMaster.Id = 281700170)
+ ;
+*/
      -- сохранили
      PERFORM lpInsertUpdate_MI_OrderExternal_Child (ioId                 := tmpMI.MovementItemId
                                                   , inParentId           := tmpMI.ParentId
                                                   , inMovementId         := inMovementId
                                                   , inGoodsId            := tmpMI.GoodsId_sub
-                                                  , inAmount             := CASE -- если "свободного" остатка хватает, тогда резерв весь остаток
-                                                                                 WHEN COALESCE (tmpMI.Amount_diff, 0) >= COALESCE (tmpMI.Amount,0)
-                                                                                      THEN COALESCE (tmpMI.Amount,0)
-                                                                                 -- здесь только "свободный" остаток
-                                                                                 WHEN tmpMI.Amount_diff > 0 THEN tmpMI.Amount_diff
-                                                                                 -- иначе 0
-                                                                                 ELSE 0
-                                                                            END
+                                                  , inAmount             := tmpMI.Amount_res
                                                   , inAmountRemains      := tmpMI.Remains
                                                   , inGoodsKindId        := tmpMI.GoodsKindId_sub
                                                   , inMovementId_Send    := NULL
                                                   , inUserId             := vbUserId
                                                    )
-     FROM (WITH -- нашли элементы - резерев
+     FROM (WITH -- нашли существуюшие элементы - резерев
                 tmpMI_all AS (SELECT MovementItem.Id
                                    , MovementItem.ParentId
-                                   , MovementItem.ObjectId                         AS GoodsId_sub
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId_sub
+                                   , MovementItem.ObjectId                         AS GoodsId
+                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                      -- № п/п
                                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ORDER BY MovementItem.Id ASC) AS Ord
                               FROM MovementItem
@@ -373,12 +503,13 @@ BEGIN
                             AND MIF.DescId         = zc_MIFloat_MovementId()
                             AND MIF.ValueData      > 0
                          )
+                -- существуюшие элементы - резерев + № п/п
               , tmpMI AS (SELECT MovementItem.Id
                                , MovementItem.ParentId
-                               , MovementItem.GoodsId_sub
-                               , MovementItem.GoodsKindId_sub
+                               , MovementItem.GoodsId
+                               , MovementItem.GoodsKindId
                                  -- № п/п
-                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.GoodsId_sub, MovementItem.GoodsKindId_sub ORDER BY MovementItem.Id ASC) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY MovementItem.ParentId, MovementItem.GoodsId, MovementItem.GoodsKindId ORDER BY MovementItem.Id ASC) AS Ord
                           FROM tmpMI_all AS MovementItem
                                LEFT JOIN tmpMI_Float AS MIFloat_Movement
                                                      ON MIFloat_Movement.MovementItemId = MovementItem.Id
@@ -386,18 +517,80 @@ BEGIN
                           -- если это резерев НЕ с внутреннего перемещения
                           WHERE MIFloat_Movement.ValueData IS NULL
                          )
+                -- результат
+              , tmpMIMaster AS (SELECT tmpMI.Id
+                                     , tmpMI.GoodsId
+                                     , tmpMI.GoodsKindId
+                                     , tmpMI.GoodsId           AS GoodsId_sub
+                                     , tmpMI.GoodsKindId       AS GoodsKindId_sub
+                               
+                                       -- результат 1 - Заказ - Резерв с остатка
+                                     , tmpMI.Amount_res_orig   AS Amount_res
+                                       -- Заявка - НЕ в ед.изм. MeasureId_sub
+                                     , tmpMI.Amount_orig       AS Amount
+                                       -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                                     , tmpMI.Remains_orig      AS Remains
+                                       -- "свободный" Остаток для Резерв - распределен пропорционально
+                                     , tmpMI.Amount_diff_orig  AS Amount_diff
+                    
+                                FROM _tmpMIMaster AS tmpMI
+                                -- если есть распределение - 1
+                                WHERE tmpMI.Amount_res_orig > 0
+
+                               UNION ALL
+                                SELECT tmpMI.Id
+                                     , tmpMI.GoodsId
+                                     , tmpMI.GoodsKindId
+                                     , tmpMI.GoodsId_sub
+                                     , tmpMI.GoodsKindId_sub
+                    
+                                       -- результат 2 - Заказ - Резерв с остатка
+                                     , CASE -- если "свободного" остатка хватает, тогда резерв ВЕСЬ заказ
+                                            WHEN COALESCE (tmpMI.Amount_diff, 0) >= COALESCE (tmpMI.Amount_sub,0)
+                                                 THEN COALESCE (tmpMI.Amount_sub,0)
+                                            -- здесь только "свободный" остаток
+                                            WHEN tmpMI.Amount_diff > 0 THEN tmpMI.Amount_diff
+                                            -- иначе 0
+                                            ELSE 0
+                                       END AS Amount_res
+
+                                       -- остаток Заявки - в ед.изм. MeasureId_sub
+                                     , tmpMI.Amount_sub AS Amount
+
+                                       -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
+                                     , tmpMI.Remains
+                                       -- "свободный" Остаток за минусом предыдущего распределения - для Резерв - пропорционально
+                                     , tmpMI.Amount_diff
+                    
+                                FROM _tmpMIMaster AS tmpMI
+                                -- если есть "свободный" Остаток
+                                WHERE tmpMI.Amount_diff > 0
+                                       -- есть остаток Заявки
+                                  AND tmpMI.Amount_sub > 0
+                               )
            -- Результат
-           SELECT COALESCE (_tmpMIMaster.Id, tmpMI.ParentId)                     AS ParentId
-                , tmpMI.Id                                                       AS MovementItemId
-                , COALESCE (_tmpMIMaster.GoodsId_sub,     tmpMI.GoodsId_sub)     AS GoodsId_sub
-                , COALESCE (_tmpMIMaster.GoodsKindId_sub, tmpMI.GoodsKindId_sub) AS GoodsKindId_sub
-                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN _tmpMIMaster.Amount_diff ELSE 0 END AS Amount_diff
+           SELECT COALESCE (_tmpMIMaster.Id, tmpMI.ParentId)                 AS ParentId
+                , tmpMI.Id                                                   AS MovementItemId
+                , COALESCE (_tmpMIMaster.GoodsId_sub,     tmpMI.GoodsId)     AS GoodsId_sub
+                , COALESCE (_tmpMIMaster.GoodsKindId_sub, tmpMI.GoodsKindId) AS GoodsKindId_sub
+
+                , COALESCE (_tmpMIMaster.GoodsId,     tmpMI.GoodsId)         AS GoodsId
+                , COALESCE (_tmpMIMaster.GoodsKindId, tmpMI.GoodsKindId)     AS GoodsKindId
+
+                  -- результат Заказ - Резерв с остатка
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN COALESCE (_tmpMIMaster.Amount_res, 0) ELSE 0 END AS Amount_res
+
+                  -- "свободный" Остаток - его и резервировали
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN COALESCE (_tmpMIMaster.Amount_diff, 0) ELSE 0 END AS Amount_diff
+                  -- Весь Остаток начальный - НЕ пропорционально - ИНФОРМАТИВНО ВСЕ
                 , COALESCE (_tmpMIMaster.Remains, 0) AS Remains
-                , COALESCE (_tmpMIMaster.Amount, 0)  AS Amount
-           FROM _tmpMIMaster
-                FULL JOIN tmpMI ON tmpMI.ParentId        = _tmpMIMaster.Id
-                               AND tmpMI.GoodsId_sub     = _tmpMIMaster.GoodsId_sub
-                               AND tmpMI.GoodsKindId_sub = _tmpMIMaster.GoodsKindId_sub
+                  -- Заявка или остаток от заявки - в ед.изм. MeasureId или в MeasureId_sub
+                , CASE WHEN COALESCE (tmpMI.Ord, 1) = 1 THEN COALESCE (_tmpMIMaster.Amount, 0) ELSE 0 END AS Amount
+
+           FROM tmpMIMaster AS _tmpMIMaster
+                FULL JOIN tmpMI ON tmpMI.ParentId    = _tmpMIMaster.Id
+                               AND tmpMI.GoodsId     = _tmpMIMaster.GoodsId_sub
+                               AND tmpMI.GoodsKindId = _tmpMIMaster.GoodsKindId_sub
           ) AS tmpMI
     ;
 
@@ -412,3 +605,12 @@ $BODY$
 */
 
 -- тест
+-- select * from Movement where Id =  27442087
+-- select * from MovementDesc where Id =  
+
+-- select * from MovementItem where Id =  281700170 
+-- select * from MovementItem where ParentId =  281700170 
+-- select * from object where Id in ( 426184, 2357)
+-- select * from movementItemFloat where MovementItemId = 281762725 AND DescId = zc_MIFloat_Remains()
+
+-- SELECT * FROM gpUpdateMIChild_OrderExternal_Amount (27442087, '5')
