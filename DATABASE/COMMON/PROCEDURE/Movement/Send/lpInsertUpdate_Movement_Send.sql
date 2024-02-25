@@ -30,6 +30,13 @@ BEGIN
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Send());
 
+     -- проверка RK + Склад Неликвид
+     IF inFromId IN (zc_Unit_RK(), 9558031) AND COALESCE (inSubjectDocId, 0) = 0
+     AND inToId IN (8458, 8451 )
+     THEN
+         RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%Не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
+     END IF;
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
