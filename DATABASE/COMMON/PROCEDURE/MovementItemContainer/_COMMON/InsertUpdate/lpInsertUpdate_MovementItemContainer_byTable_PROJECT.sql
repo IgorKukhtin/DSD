@@ -1,8 +1,9 @@
 -- Function: lpInsertUpdate_MovementItemContainer_byTable ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer_byTable ();
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItemContainer_byTable (Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer_byTable ()
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer_byTable (IN inUserId Integer DEFAULT 0)
 RETURNS VOID
 AS
 $BODY$
@@ -10,6 +11,7 @@ $BODY$
    DECLARE vbTmp Integer;
    DECLARE vbSec Integer;
 BEGIN
+
     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
     IF zc_IsLockTable() = TRUE
     THEN
@@ -84,10 +86,36 @@ BEGIN
              , IsActive
         FROM _tmpMIContainer_insert;
      
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM _tmpMIContainer_insert WHERE _tmpMIContainer_insert.MovementDescId = zc_Movement_ProductionUnion())
+        AND inUserId = 5
+     THEN
+         vbTmp:= (SELECT _tmpMIContainer_insert.MovementId FROM _tmpMIContainer_insert LIMIT 1);
+         -- Проверка
+         IF EXISTS (SELECT SUM (MIContainer.Amount)
+                    FROM MovementItemContainer AS MIContainer
+                    WHERE MIContainer.MovementId = vbTmp
+                      AND MIContainer.DescId = zc_MIContainer_Summ()
+                    HAVING SUM (MIContainer.Amount) <> 0
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.В проводке отличаются сумма <Дебет> и сумма <Кредит> :% (%)  + (%) = (%) %OR: (%)  + (%)'
+                           , CHR (13)
+                           , (SELECT SUM (MIContainer.Amount) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = vbTmp AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE)
+                           , (SELECT SUM (MIContainer.Amount) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = vbTmp AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = FALSE)
+                           , (SELECT SUM (MIContainer.Amount) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = vbTmp AND MIContainer.DescId = zc_MIContainer_Summ())
+                           , CHR (13)
+                           , (SELECT SUM (MIContainer.Amount) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = vbTmp AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.Amount > 0)
+                           , (SELECT SUM (MIContainer.Amount) FROM MovementItemContainer AS MIContainer WHERE MIContainer.MovementId = vbTmp AND MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.Amount < 0)
+                            ;
+         END IF;
+     END IF;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer_byTable () OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

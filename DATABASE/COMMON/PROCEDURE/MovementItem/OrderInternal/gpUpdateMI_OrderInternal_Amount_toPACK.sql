@@ -323,7 +323,6 @@ else*/
                                   WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId     = zc_MI_Detail()
                                     AND MovementItem.isErased   = FALSE
-                                  --AND vbUserId = 5
                                  )
              --
            , tmpMI_Detail AS (SELECT tmpMI_Detail_all.ParentId
@@ -726,7 +725,6 @@ THEN
                                   WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId     = zc_MI_Detail()
                                     AND MovementItem.isErased   = FALSE
-                                    AND vbUserId = 5
                                  )
              --
            , tmpMI_Detail AS (SELECT tmpMI_Detail_all.ParentId
@@ -778,6 +776,28 @@ end if;
                                                            WHERE ObjectBoolean_PackOrder.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackOrder()
                                                              AND ObjectBoolean_PackOrder.ValueData = TRUE
                                                           )
+                            -- разрешено расписывать план на такое ко-во дней
+                          , tmpGoods_PackLimit AS (SELECT DISTINCT
+                                                          ObjectLink_Goods.ChildObjectId     AS GoodsId
+                                                        , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                   FROM ObjectBoolean AS ObjectBoolean_PackLimit
+                                                        INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
+                                                                         AND Object.isErased = FALSE
+                                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                              ON ObjectLink_Goods.ObjectId = Object.Id
+                                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                        INNER JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                                              ON ObjectLink_GoodsKind.ObjectId = Object.Id
+                                                                             AND ObjectLink_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                        LEFT JOIN ObjectFloat AS ObjectFloat_PackLimit
+                                                                              ON ObjectFloat_PackLimit.ObjectId  = Object.Id
+                                                                             AND ObjectFloat_PackLimit.DescId    = zc_ObjectFloat_GoodsByGoodsKind_PackLimit()
+
+                                                   WHERE ObjectBoolean_PackLimit.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackLimit()
+                                                     AND ObjectBoolean_PackLimit.ValueData = TRUE
+                                                     --AND vbUserId = 5
+                                                  )
                             -- сумма - сколько уже распределили
                           , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete     AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete AS GoodsKindId_master
@@ -821,6 +841,8 @@ end if;
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
                                                LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
@@ -858,11 +880,13 @@ end if;
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- нар.
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
@@ -872,7 +896,13 @@ end if;
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
-                                                ))
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
+                                                 )
+
+                                             AND (tmpGoods_PackLimit.DayLimit >= vbNumber
+                                               OR tmpGoods_PackLimit.GoodsId IS NULL
+                                                 )
+                                                )
                                          )
 
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -962,8 +992,30 @@ end if;
                  FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
                             tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
                                                           )
-                          , -- сумма - сколько уже распределили
-                            tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
+                            -- разрешено расписывать план на такое ко-во дней
+                          , tmpGoods_PackLimit AS (SELECT DISTINCT
+                                                          ObjectLink_Goods.ChildObjectId     AS GoodsId
+                                                        , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                   FROM ObjectBoolean AS ObjectBoolean_PackLimit
+                                                        INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
+                                                                         AND Object.isErased = FALSE
+                                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                              ON ObjectLink_Goods.ObjectId = Object.Id
+                                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                        INNER JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                                              ON ObjectLink_GoodsKind.ObjectId = Object.Id
+                                                                             AND ObjectLink_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                        LEFT JOIN ObjectFloat AS ObjectFloat_PackLimit
+                                                                              ON ObjectFloat_PackLimit.ObjectId  = Object.Id
+                                                                             AND ObjectFloat_PackLimit.DescId    = zc_ObjectFloat_GoodsByGoodsKind_PackLimit()
+
+                                                   WHERE ObjectBoolean_PackLimit.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackLimit()
+                                                     AND ObjectBoolean_PackLimit.ValueData = TRUE
+                                                     --AND vbUserId = 5
+                                                  )
+                            -- сумма - сколько уже распределили
+                          , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete     AS GoodsKindId_master
                                                 , SUM (_tmpMI_Child.AmountSecondResult) AS AmountResult
                                            FROM _tmpMI_Child
@@ -1005,6 +1057,8 @@ end if;
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
                                                LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1038,21 +1092,29 @@ end if;
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- нар.
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
                                                                                                  9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
-                                                ))
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
+                                                 )
+
+                                             AND (tmpGoods_PackLimit.DayLimit >= vbNumber
+                                               OR tmpGoods_PackLimit.GoodsId IS NULL
+                                                 )
+                                                )
 
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
@@ -1141,6 +1203,28 @@ end if;
                  FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
                             tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
                                                           )
+                            -- разрешено расписывать план на такое ко-во дней
+                          , tmpGoods_PackLimit AS (SELECT DISTINCT
+                                                          ObjectLink_Goods.ChildObjectId     AS GoodsId
+                                                        , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                   FROM ObjectBoolean AS ObjectBoolean_PackLimit
+                                                        INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
+                                                                         AND Object.isErased = FALSE
+                                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                              ON ObjectLink_Goods.ObjectId = Object.Id
+                                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                        INNER JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                                              ON ObjectLink_GoodsKind.ObjectId = Object.Id
+                                                                             AND ObjectLink_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                        LEFT JOIN ObjectFloat AS ObjectFloat_PackLimit
+                                                                              ON ObjectFloat_PackLimit.ObjectId  = Object.Id
+                                                                             AND ObjectFloat_PackLimit.DescId    = zc_ObjectFloat_GoodsByGoodsKind_PackLimit()
+
+                                                   WHERE ObjectBoolean_PackLimit.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackLimit()
+                                                     AND ObjectBoolean_PackLimit.ValueData = TRUE
+                                                     --AND vbUserId = 5
+                                                  )
                             -- сумма - сколько уже распределили
                           , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete         AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete     AS GoodsKindId_master
@@ -1184,6 +1268,8 @@ end if;
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
                                                LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1216,11 +1302,13 @@ end if;
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- нар.
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
@@ -1230,7 +1318,13 @@ end if;
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
-                                                ))
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
+                                                 )
+
+                                             AND (tmpGoods_PackLimit.DayLimit >= vbNumber
+                                               OR tmpGoods_PackLimit.GoodsId IS NULL
+                                                 )
+                                                )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
@@ -1341,6 +1435,28 @@ end if;
                  FROM (WITH -- разрешено расписывать план на производство в цехе упак больше чем 5 дней
                             tmpGoods_PackOrder_noLimit AS (SELECT 3458129 AS GoodsId -- 991 - ШИЙКА LA PARMA с/в в/ґ ТМ Алан
                                                           )
+                            -- разрешено расписывать план на такое ко-во дней
+                          , tmpGoods_PackLimit AS (SELECT DISTINCT
+                                                          ObjectLink_Goods.ChildObjectId     AS GoodsId
+                                                        , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                   FROM ObjectBoolean AS ObjectBoolean_PackLimit
+                                                        INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
+                                                                         AND Object.isErased = FALSE
+                                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                              ON ObjectLink_Goods.ObjectId = Object.Id
+                                                                             AND ObjectLink_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                                        INNER JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                                              ON ObjectLink_GoodsKind.ObjectId = Object.Id
+                                                                             AND ObjectLink_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                        LEFT JOIN ObjectFloat AS ObjectFloat_PackLimit
+                                                                              ON ObjectFloat_PackLimit.ObjectId  = Object.Id
+                                                                             AND ObjectFloat_PackLimit.DescId    = zc_ObjectFloat_GoodsByGoodsKind_PackLimit()
+
+                                                   WHERE ObjectBoolean_PackLimit.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_PackLimit()
+                                                     AND ObjectBoolean_PackLimit.ValueData = TRUE
+                                                     --AND vbUserId = 5
+                                                  )
                             -- сумма - сколько уже распределили
                           , tmpMI_summ AS (SELECT _tmpMI_Child.GoodsId_complete             AS GoodsId_master
                                                 , _tmpMI_Child.GoodsKindId_complete         AS GoodsKindId_master
@@ -1384,6 +1500,8 @@ end if;
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
                                                LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1416,21 +1534,29 @@ end if;
                                             AND ((vbNumber <= vbdaycount_GoodsKind_8333_3
                                                OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (6899005) -- нар. 200
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- НАР
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (8333)    -- нар.
                                                OR _tmpGoods_delik.GoodsId IS NULL
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
                                                  )
                                              AND (vbNumber <= vbdaycount_GoodsKind_8333
-                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (-- 6899005 -- нар. 200
+                                               OR COALESCE (_tmpMI_Child.GoodsKindId, 0) NOT IN (--6899005 -- нар. 200
                                                                                                  9027592 -- т/ф газ нар 0,1
                                                                                                , 8988926 -- т/ф газ нар 0,2
                                                                                                , 8988924 -- изопак скин нар 0,08
                                                                                                , 8988925 -- изопак скин нар 0,1
                                                                                                 )
                                                OR tmpGoods_PackOrder_noLimit.GoodsId > 0
-                                                ))
+                                               OR (tmpGoods_PackLimit.DayLimit >= vbNumber AND tmpGoods_PackLimit.DayLimit > 0)
+                                                 )
+
+                                             AND (tmpGoods_PackLimit.DayLimit >= vbNumber
+                                               OR tmpGoods_PackLimit.GoodsId IS NULL
+                                                 )
+                                                )
                                          )
                             -- ИТОГО по Child для ПРОПОРЦИИ
                           , tmpMI_all_summ AS (SELECT tmpMI_all.GoodsId_master
