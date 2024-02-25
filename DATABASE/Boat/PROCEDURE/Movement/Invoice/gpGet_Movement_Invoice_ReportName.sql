@@ -96,6 +96,4 @@ $BODY$
 */
 
 -- тест
--- SELECT gpGet_Movement_Invoice_ReportName FROM gpGet_Movement_Invoice_ReportName(inMovementId := 891, inMovementId_Parent:= 0, inSession := zfCalc_UserAdmin()); -- все
-
-select * from gpGet_Movement_Invoice_ReportName(inMovementId := 1808 , inMovementId_parent := 890 ,  inSession := '5');
+-- SELECT * FROM gpGet_Movement_Invoice_ReportName (inMovementId := 1808 , inMovementId_parent := 890 ,  inSession := zfCalc_UserAdmin());

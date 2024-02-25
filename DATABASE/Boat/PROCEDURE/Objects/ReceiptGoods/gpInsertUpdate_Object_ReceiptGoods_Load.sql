@@ -930,6 +930,7 @@ end if;
                                                                   , inColorPatternId   := vbColorPatternId
                                                                   , inGoodsId          := vbGoodsId
                                                                   , inUnitId           := 0
+                                                                  , inUnitChildId      := 0
                                                                   , inIsMain           := TRUE     :: Boolean
                                                                   , inUserCode         := ''       :: TVarChar
                                                                   , inComment          := COALESCE ((SELECT OC.ValueData FROM Object AS OC
