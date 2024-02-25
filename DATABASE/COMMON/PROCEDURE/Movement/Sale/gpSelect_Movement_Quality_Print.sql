@@ -338,7 +338,8 @@ BEGIN
                                         AND MB_Comment.DescId = zc_MovementBlob_Comment()
             )
        -- список Названия покупателя для товаров + GoodsKindId
-     , tmpObject_GoodsPropertyValue AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+     , tmpObject_GoodsPropertyValue AS (SELECT tmpGoodsProperty.GoodsPropertyId
+                                             , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
@@ -378,7 +379,8 @@ BEGIN
                                                                    AND ObjectString_Quality10.DescId = zc_ObjectString_GoodsPropertyValue_Quality10()
                                        )
        -- список Названия для товаров (нужны если не найдем по GoodsKindId)
-     , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
+     , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.ObjectId
+                                                  , tmpObject_GoodsPropertyValue.GoodsId
                                                   , tmpObject_GoodsPropertyValue.Name
                                                   , tmpObject_GoodsPropertyValue.Article
                                                   , tmpObject_GoodsPropertyValue.Quality
@@ -536,7 +538,11 @@ BEGIN
            , tmpGoodsQuality.QualityComment
 
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+           , CASE WHEN tmpObject_GoodsPropertyValue.GoodsPropertyId = 9309155  AND tmpObject_GoodsPropertyValue.Quality <> ''
+                      THEN tmpObject_GoodsPropertyValue.Quality
+                      -- замена - всегда Value17 - 16.08.2023
+                      ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  
+             END :: TVarChar AS Value17
              -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
@@ -1053,7 +1059,12 @@ BEGIN
            , tmpGoodsQuality.QualityComment
 
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  :: TVarChar AS Value17   --, tmpGoodsQuality.Value17
+           , CASE -- Військова частина Т0920
+                  WHEN tmpObject_GoodsPropertyValue.ObjectId = 9309155  AND tmpObject_GoodsPropertyValue.Quality <> ''
+                      THEN tmpObject_GoodsPropertyValue.Quality
+                      -- замена - всегда Value17 - 16.08.2023
+                      ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)
+             END :: TVarChar AS Value17
              -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
