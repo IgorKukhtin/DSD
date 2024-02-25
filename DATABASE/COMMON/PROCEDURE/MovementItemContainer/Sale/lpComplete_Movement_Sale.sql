@@ -666,12 +666,12 @@ END IF;*/
 
      END IF;
 
+     -- !!!нашли!!!
+     vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());
+
      -- !!!Пересчет цен - если надо!!!!
      IF vbIsPriceList_begin_recalc = TRUE AND inIsRecalcPrice = TRUE
      THEN
-         -- !!!нашли!!!
-         vbMovementId_Order:= (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order());
-
          -- !!!нашли!!!
          SELECT tmp.PriceListId, tmp.OperDate
                INTO vbPriceListId_begin, vbOperDate_pl
@@ -1549,6 +1549,23 @@ end if;
      -- !!!надо определить - есть ли скидка в цене!!!
      vbIsChangePrice:= (SELECT _tmpItem.isChangePrice FROM _tmpItem LIMIT 1);
 
+
+     -- Проверка - RK + Склад Неликвид
+     IF vbUnitId_From IN (zc_Unit_RK(), 9558031) AND COALESCE (vbMovementId_Order, 0) = 0
+    AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+    AND EXISTS (SELECT 1
+                FROM _tmpItem
+                WHERE -- isTareReturning
+                      _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                      -- Списание Прочее сырье ли это (если да, то в проводках будет zc_Enum_AnalyzerId_Loss...)
+                  AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_20600() -- 10200; "Прочее сырье"
+                --
+                --AND _tmpItem.tmpOperSumm_PriceList > 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Продажа покупателю>.%Не указано основание - <Заявка от покупателя>.', CHR (13), CHR (13);
+     END IF;
+     
 
      -- Проверка - для ОС
      IF vbMovementDescId = zc_Movement_SaleAsset()

@@ -465,7 +465,8 @@ BEGIN
                          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                          AND (COALESCE (_tmpGoods_Complete_Inventory_find.GoodsId, _tmpGoods_Complete_Inventory_gk.GoodsId) > 0 OR vbIsGoodsGroup = FALSE)
                       )
-           , tmpContainer_all AS (SELECT tmpMI.MovementItemId
+           -- партияи с остатком > 0
+         , tmpContainer_all_1 AS (SELECT tmpMI.MovementItemId
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY Container.Amount DESC) AS Ord -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                                          -- !!!пустая партия!!!
                                        , CASE WHEN CLO_PartionGoods.ObjectId = 0 THEN -1 ELSE CLO_PartionGoods.ObjectId END AS PartionGoodsId
@@ -482,16 +483,69 @@ BEGIN
                                        INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                       ON CLO_PartionGoods.ContainerId = Container.Id
                                                                      AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                                                     -- AND CLO_PartionGoods.ObjectId    = 0
+                                       LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_GoodsKindComplete
+                                                            ON ObjectLink_PartionGoods_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                                   WHERE tmpMI.PartionGoodsDate = zc_DateEnd()
                                     AND tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                        , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                                         )
+                                    -- исправлена ошибка
+                                    AND ObjectLink_PartionGoods_GoodsKindComplete.ObjectId IS NULL
+                                    --
                                     AND tmpMI.PartionGoodsId = 0
                                     AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
                                       OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
                                         )
+                                 )
+           , tmpContainer_all AS (-- если подобрали в партиях с остатком > 0
+                                  SELECT tmpContainer_all_1.MovementItemId
+                                       , tmpContainer_all_1.Ord
+                                         -- !!!пустая партия!!!
+                                       , tmpContainer_all_1.PartionGoodsId
+                                  FROM tmpContainer_all_1
+
+                                 UNION ALL
+                                  -- Поиск по отрицательным остаткам
+                                  SELECT tmpMI.MovementItemId
+                                       , ROW_NUMBER() OVER (PARTITION BY tmpMI.MovementItemId ORDER BY ABS (Container.Amount) DESC) AS Ord -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                                         -- !!!пустая партия!!!
+                                       , CASE WHEN CLO_PartionGoods.ObjectId = 0 THEN -1 ELSE CLO_PartionGoods.ObjectId END AS PartionGoodsId
+                                  FROM tmpMI
+                                       -- партии с Остатком
+                                       LEFT JOIN tmpContainer_all_1 ON tmpContainer_all_1.MovementItemId = tmpMI.MovementItemId
+                                       --
+                                       INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                           AND Container.DescId   = zc_Container_Count()
+                                                           -- отрицательные остатки
+                                                           AND Container.Amount   < 0
+                                       LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                                     ON CLO_Member.ContainerId = Container.Id
+                                                                    AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
+                                       LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                       INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                      ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                     AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                       LEFT JOIN ObjectLink AS ObjectLink_PartionGoods_GoodsKindComplete
+                                                            ON ObjectLink_PartionGoods_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                           AND ObjectLink_PartionGoods_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                  WHERE tmpMI.PartionGoodsDate = zc_DateEnd()
+                                    AND tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                       , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                       , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                        )
+                                    -- исправлена ошибка
+                                    AND ObjectLink_PartionGoods_GoodsKindComplete.ObjectId IS NULL
+                                    --
+                                    AND tmpMI.PartionGoodsId = 0
+                                    AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
+                                      OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
+                                        )
+                                    -- если не нашли партии с Остатком
+                                    AND tmpContainer_all_1.MovementItemId IS NULL
                                  )
         SELECT (_tmp.MovementItemId) AS MovementItemId
 
@@ -611,6 +665,18 @@ BEGIN
                                                WHEN vbIsPartionDate_Unit      = TRUE
                                                 AND vbIsPartionGoodsKind_Unit = TRUE
                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()  -- Основное сырье + Мясное сырье
+                                                --
+                                                AND vbUnitId NOT IN (8447    -- ЦЕХ ковбасних виробів
+                                                                   , 8449    -- Цех сирокопчених ковбас
+                                                                   , 8448    -- Дільниця делікатесів
+                                                                   , 2790412 -- ЦЕХ Тушенка
+                                                                     --
+                                                                   , 8020711 -- ЦЕХ колбасный (Ирна)
+                                                                   , 8020708 -- Склад МИНУСОВКА (Ирна)
+                                                                   , 8020709 -- Склад ОХЛАЖДЕНКА (Ирна)
+                                                                   , 8020710 -- Участок мясного сырья (Ирна)
+                                                                    )
+                                                --
                                                 AND NOT EXISTS (SELECT 1 FROM _tmpList_Goods_1942 WHERE _tmpList_Goods_1942.GoodsId = _tmpItem.GoodsId)
                                                     THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate
                                                                                          , inGoodsKindId_complete := CASE WHEN _tmpItem.GoodsKindId_complete = zc_GoodsKind_Basis() THEN 0 ELSE _tmpItem.GoodsKindId_complete END
@@ -628,8 +694,13 @@ BEGIN
                                                 AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                       , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                        )
-                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := CASE WHEN _tmpItem.PartionGoodsDate = zc_DateEnd() THEN vbOperDate ELSE _tmpItem.PartionGoodsDate END
-                                                                                         , inGoodsKindId_complete := NULL      -- виртуальный параметр, т.к. иначе параметры пересекаются с другой проц
+                                                    THEN lpInsertFind_Object_PartionGoods (inOperDate             := CASE WHEN _tmpItem.PartionGoodsDate = zc_DateEnd()
+                                                                                                                               THEN vbOperDate
+                                                                                                                          ELSE _tmpItem.PartionGoodsDate
+                                                                                                                     END
+                                                                                           -- виртуальный параметр, т.к. иначе параметры пересекаются с другой проц
+                                                                                         , inGoodsKindId_complete := NULL
+                                                                                           -- Ячейка
                                                                                          , inPartionCellId        := _tmpItem.PartionCellId
                                                                                           )
 
@@ -730,6 +801,68 @@ BEGIN
                                                                    , inObjectCostId      := NULL
                                                                     )
      WHERE _tmpItem.OperCountCount <> 0;
+     
+
+     -- если надо все ContainerSumm добавить
+     IF lfGet_Object_Unit_isPartionCell(vbOperDate, vbUnitId) = TRUE
+     THEN
+         PERFORM lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                   , inUnitId                 := vbUnitId
+                                                   , inCarId                  := vbCarId
+                                                   , inMemberId               := vbMemberId
+                                                   , inBranchId               := vbBranchId
+                                                   , inJuridicalId_basis      := vbJuridicalId_Basis
+                                                   , inBusinessId             := _tmpItem.BusinessId
+                                                   , inAccountId              := tmpContainer_find.AccountId
+                                                   , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                   , inInfoMoneyId            := _tmpItem.InfoMoneyId
+                                                   , inInfoMoneyId_Detail     := tmpContainer_find.InfoMoneyId_Detail
+                                                   , inContainerId_Goods      := _tmpItem.ContainerId_Goods
+                                                   , inGoodsId                := _tmpItem.GoodsId
+                                                   , inGoodsKindId            := CLO_GoodsKind.ObjectId
+                                                   , inIsPartionSumm          := _tmpItem.isPartionSumm
+                                                   , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                   , inAssetId                := _tmpItem.AssetId
+                                                    )
+         FROM _tmpItem
+              -- найдем, т.к. в _tmpItem он может быть нулевым
+              LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                            ON CLO_GoodsKind.ContainerId = _tmpItem.ContainerId_Goods
+                                           AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+              INNER JOIN (SELECT DISTINCT
+                                 _tmpItem.GoodsId                        AS GoodsId
+                                 -- другой, т.к. в _tmpItem он может быть нулевым
+                               , COALESCE (CLO_GoodsKind.ObjectId, 0)    AS GoodsKindId
+                             --, CLO_InfoMoney.ObjectId                   AS InfoMoneyId
+                               , CLO_InfoMoneyDetail.ObjectId             AS InfoMoneyId_Detail
+                               , Container.ObjectId                       AS AccountId
+                          FROM _tmpItem
+                               INNER JOIN Container ON Container.ParentId = _tmpItem.ContainerId_Goods
+                                                   AND Container.DescId   = zc_Container_Summ()
+                               -- на всякий случай
+                               INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                              ON CLO_Unit.ContainerId = Container.Id
+                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                             -- !!! Розподільчий комплекс
+                                                             AND CLO_Unit.ObjectId    = vbUnitId
+                               LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                             ON CLO_GoodsKind.ContainerId = _tmpItem.ContainerId_Goods
+                                                            AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                             /*LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                                             ON CLO_InfoMoney.ContainerId = Container.Id
+                                                            AND CLO_InfoMoney.DescId      = zc_ContainerLinkObject_InfoMoney()*/
+                               LEFT JOIN ContainerLinkObject AS CLO_InfoMoneyDetail
+                                                             ON CLO_InfoMoneyDetail.ContainerId = Container.Id
+                                                            AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                         ) AS tmpContainer_find
+                           ON tmpContainer_find.GoodsId     = _tmpItem.GoodsId
+                          AND tmpContainer_find.GoodsKindId = COALESCE (CLO_GoodsKind.ObjectId, 0)
+                        --AND tmpContainer_find.InfoMoneyId = _tmpItem.InfoMoneyId
+                         ;
+                          
+
+     END IF;
+
 
 
     -- !!!Оптимизация!!!

@@ -1172,6 +1172,30 @@ END IF;
                                            ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpRemains.ContainerId
                                           AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
        ;
+
+     ELSEIF inMovementId IN (27533463) -- !!!захардкодил исправление ошибки - 01.06.2023!!! -- select * from Container where Container.ParentId =  808612
+     THEN
+         INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+            SELECT
+                  _tmpItemChild.MovementItemId_Parent
+                , _tmpItemChild.MovementItemId
+                , Container.Id       AS ContainerId_From
+                , Container.ObjectId AS AccountId_From
+                , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
+                , -1 * Container_err.Amount
+            FROM _tmpItemChild
+                 INNER JOIN Container ON Container.ParentId = _tmpItemChild.ContainerId_GoodsFrom
+                                     AND Container.Amount   > 0
+                                     AND Container.DescId   = zc_Container_Summ()
+                 INNER JOIN Container AS Container_err
+                                      ON Container_err.ParentId = _tmpItemChild.ContainerId_GoodsFrom
+                                     AND Container_err.Amount   < 0
+                                     AND Container_err.DescId   = zc_Container_Summ()
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container.Id
+                                              AND ContainerLinkObject_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+           ;
+
      ELSE
      INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
@@ -1253,6 +1277,42 @@ END IF;
                , _tmpItemSummChild.AccountId_From
                , _tmpItemSummChild.ContainerId_From
                 ;
+
+     ELSEIF inMovementId IN (27533463) -- !!!захардкодил исправление ошибки - 01.06.2023!!! -- select * from Container where Container.ParentId =  808612
+     THEN
+         INSERT INTO _tmpItemSumm_pr (MovementItemId, AccountGroupId_From, AccountDirectionId_From, AccountId_From, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyDestinationId_asset, InfoMoneyId_asset, InfoMoneyId_Detail_To, OperSumm)
+            SELECT _tmpItemSummChild.MovementItemId_Parent
+                 , ObjectLink_Account_AccountGroup.ChildObjectId     AS AccountGroupId_From
+                 , ObjectLink_Account_AccountDirection.ChildObjectId AS AccountDirectionId_From
+                 , _tmpItemSummChild.AccountId_From
+                 , _tmpItemSummChild.ContainerId_From
+
+                 , 0                      AS MIContainerId_To
+                 , Container_err.Id       AS ContainerId_To
+                 , Container_err.ObjectId AS AccountId_To -- !!!почему было _tmpItemSummChild.AccountId_From!!!, теперь понятно почему
+                 , 0 AS InfoMoneyDestinationId_asset
+                 , 0 AS InfoMoneyId_asset
+                 , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
+                 , _tmpItemSummChild.OperSumm
+            FROM _tmpItemSummChild
+                 INNER JOIN Container ON Container.Id = _tmpItemSummChild.ContainerId_From
+                 INNER JOIN Container AS Container_err
+                                      ON Container_err.ParentId = Container.ParentId
+                                     AND Container_err.Amount   < 0
+                                     AND Container_err.DescId   = zc_Container_Summ()
+
+                 LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                                      ON ObjectLink_Account_AccountGroup.ObjectId = _tmpItemSummChild.AccountId_From
+                                     AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+                 LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                                      ON ObjectLink_Account_AccountDirection.ObjectId = _tmpItemSummChild.AccountId_From
+                                     AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = _tmpItemSummChild.ContainerId_From
+                                              AND ContainerLinkObject_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
+                    ;
+
      ELSE
      INSERT INTO _tmpItemSumm_pr (MovementItemId, AccountGroupId_From, AccountDirectionId_From, AccountId_From, ContainerId_From, MIContainerId_To, ContainerId_To, AccountId_To, InfoMoneyDestinationId_asset, InfoMoneyId_asset, InfoMoneyId_Detail_To, OperSumm)
         SELECT _tmpItemSummChild.MovementItemId_Parent, ObjectLink_Account_AccountGroup.ChildObjectId, ObjectLink_Account_AccountDirection.ChildObjectId, _tmpItemSummChild.AccountId_From, _tmpItemSummChild.ContainerId_From
@@ -1444,7 +1504,9 @@ END IF;
 
      -- определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSumm_pr SET ContainerId_To = _tmpItem_group.ContainerId_To
-     FROM (SELECT CASE WHEN _tmpItem_pr.ObjectDescId = zc_Object_Asset()
+     FROM (SELECT CASE WHEN _tmpItemSumm_group.ContainerId_To > 0
+                            THEN _tmpItemSumm_group.ContainerId_To
+                       WHEN _tmpItem_pr.ObjectDescId = zc_Object_Asset()
                        THEN lpInsertUpdate_ContainerSumm_Asset (inOperDate               := vbOperDate
                                                               , inUnitId                 := vbUnitId_To
                                                               , inCarId                  := NULL
@@ -1498,6 +1560,7 @@ END IF;
                 JOIN (SELECT DISTINCT _tmpItemSumm_pr.MovementItemId, _tmpItemSumm_pr.AccountId_To, _tmpItemSumm_pr.InfoMoneyId_Detail_To
                                     , _tmpItemSumm_pr.InfoMoneyDestinationId_asset
                                     , _tmpItemSumm_pr.InfoMoneyId_asset
+                                    , _tmpItemSumm_pr.ContainerId_To
                       FROM _tmpItemSumm_pr
                      ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_pr.MovementItemId
           ) AS _tmpItem_group
@@ -1696,7 +1759,7 @@ END IF;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
-     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable (inUserId);
      -- 5.2. ФИНИШ - Обязательно сохраняем Проводки для Отчета
      PERFORM lpInsertUpdate_MIReport_byTable ();
 
@@ -1705,6 +1768,17 @@ END IF;
                                 , inDescId     := zc_Movement_ProductionUnion()
                                 , inUserId     := inUserId
                                  );
+
+
+IF inMovementId = 27533463  AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.<%>  %   %   %'
+                                   , (select _tmpItem_pr.ContainerId_GoodsTo from _tmpItem_pr)
+                                   , (select _tmpItemSumm_pr.ContainerId_To from _tmpItemSumm_pr)
+                                   , (select _tmpItemChild.ContainerId_GoodsFrom from _tmpItemChild)
+                                   , (select _tmpItemSummChild.ContainerId_From from _tmpItemSummChild )
+                                    ;
+end if;
 
      -- кроме Админа
      IF inUserId <> zfCalc_UserAdmin() :: Integer
