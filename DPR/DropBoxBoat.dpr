@@ -1,10 +1,10 @@
-program GetEmailBoat;
+program DropBoxBoat;
 
 uses
   MidasLib,
   Vcl.Forms,
   SysUtils,
-  Main in '..\FormsBoat\MainUnitService\GetEmailBoat\Main.pas' {MainForm},
+  Main in '..\FormsBoat\MainUnitService\DropBoxBoat\Main.pas' {MainForm},
   Authentication in '..\SOURCE\Authentication.pas',
   CommonData in '..\SOURCE\CommonData.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
@@ -33,8 +33,7 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   dsdTranslator in '..\SOURCE\COMPONENT\dsdTranslator.pas',
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
-  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm},
-  sevenzip in '..\FormsBoat\MainUnitService\GetEmailBoat\sevenzip.pas';
+  DialogPswSms in '..\SOURCE\DialogPswSms.pas' {DialogPswSmsForm};
 
 {$R *.res}
 

@@ -63,7 +63,7 @@ type
     bInventoryJournal: TButton;
     Image1: TImage;
     Label1: TLabel;
-    bVisit: TButton;
+    bSend: TButton;
     Image2: TImage;
     Label5: TLabel;
     bTasks: TButton;
@@ -78,7 +78,7 @@ type
     bInfo: TButton;
     Image5: TImage;
     Label6: TLabel;
-    bDocuments: TButton;
+    bGoods: TButton;
     Image18: TImage;
     Label74: TLabel;
     bRelogin: TButton;
@@ -122,7 +122,7 @@ type
     ilPartners: TImageList;
     ilButton: TImageList;
     tiInventoryJournal: TTabItem;
-    pPromoPartnerDate: TPanel;
+    pInventoryJournal: TPanel;
     Label41: TLabel;
     deInventoryStartDate: TDateEdit;
     Label10: TLabel;
@@ -130,10 +130,43 @@ type
     lwInventoryJournal: TListView;
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
-    LinkFillControlToField1: TLinkFillControlToField;
-    sbtiInventoryJournalRefresh: TSpeedButton;
+    bInventoryJournalRefresh: TSpeedButton;
     Image10: TImage;
     tiInventory: TTabItem;
+    Panel2: TPanel;
+    Label11: TLabel;
+    sbInventoryRefresh: TSpeedButton;
+    Image11: TImage;
+    edInventoryInvNumber: TEdit;
+    edInventoryStatus: TEdit;
+    Label12: TLabel;
+    Label13: TLabel;
+    edInventoryUnit: TEdit;
+    edInventoryComment: TEdit;
+    edInventoryOperDate: TEdit;
+    sbInventoryScan: TSpeedButton;
+    Image12: TImage;
+    imInventoryStatus: TImage;
+    BindSourceDB2: TBindSourceDB;
+    LinkControlToField1: TLinkControlToField;
+    LinkControlToField2: TLinkControlToField;
+    LinkControlToField3: TLinkControlToField;
+    LinkControlToField4: TLinkControlToField;
+    LinkControlToField5: TLinkControlToField;
+    lwInventoryList: TListView;
+    BindSourceDB3: TBindSourceDB;
+    LinkListControlToField1: TLinkListControlToField;
+    LinkListControlToField2: TLinkListControlToField;
+    tiInventoryScan: TTabItem;
+    tiGoods: TTabItem;
+    pGoods: TPanel;
+    lwGoods: TListView;
+    BindSourceDB4: TBindSourceDB;
+    LinkListControlToField3: TLinkListControlToField;
+    bGoodsChoice: TSpeedButton;
+    Image13: TImage;
+    bGoodsRefresh: TSpeedButton;
+    Image14: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -146,8 +179,10 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure ShowInformation;
+    procedure ShowGoods;
     procedure ShowInventoryJournal;
     procedure ShowInventory;
+    procedure ShowInventoryScan;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -164,6 +199,11 @@ type
     procedure lwInventoryJournalItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
+    procedure sbInventoryRefreshClick(Sender: TObject);
+    procedure sbInventoryScanClick(Sender: TObject);
+    procedure bGoodsClick(Sender: TObject);
+    procedure bGoodsRefreshClick(Sender: TObject);
+    procedure bGoodsChoiceClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -402,6 +442,8 @@ begin
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
 
+  bGoodsChoice.Visible := False;
+
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart)  then
     pBack.Visible := false
@@ -432,7 +474,14 @@ begin
       lCaption.Text := 'Информация';
       FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
     end
-    else if tcMain.ActiveTab = tiScanBarCode then
+    else
+    if tcMain.ActiveTab = tiGoods then
+    begin
+      lCaption.Text := 'Комплектующие';
+     // FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
+    end
+    else
+    if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
       tiStopCamera.Enabled := False;
@@ -486,6 +535,14 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+// начитка информации справочника товаров
+procedure TfrmMain.ShowGoods;
+begin
+  if not DM.cdsGoods.Active then
+    if not DM.LoadGoods then Exit;
+  SwitchToForm(tiGoods, nil);
+end;
+
 // начитка информации журнала инвентаризаций
 procedure TfrmMain.ShowInventoryJournal;
 begin
@@ -500,8 +557,26 @@ begin
   if DM.cdsInventoryJournal.IsEmpty then Exit;
   if DM.cdsInventoryJournalId.AsInteger = 0 then Exit;
 
-  // if not DM.LoadInventory then Exit;
-  SwitchToForm(tiInventory, nil);
+  if not DM.LoadInventory then Exit;
+  imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
+
+  if not DM.LoadInventoryList then Exit;
+
+  if tcMain.ActiveTab <> tiInventory then SwitchToForm(tiInventory, nil);
+end;
+
+
+// начитка информации для сканирования
+procedure TfrmMain.ShowInventoryScan;
+begin
+  if not DM.cdsInventory.Active then Exit;
+  if DM.cdsInventory.IsEmpty then Exit;
+  if DM.cdsInventoryId.AsInteger = 0 then Exit;
+
+  if not DM.LoadInventoryGoods then Exit;
+  imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
+
+  SwitchToForm(tiInventoryScan, nil);
 end;
 
 procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
@@ -518,6 +593,24 @@ end;
 procedure TfrmMain.bInventoryJournalClick(Sender: TObject);
 begin
   ShowInventoryJournal;
+end;
+
+// Выбор товара
+procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
+begin
+//
+end;
+
+// переход на форму справочника товаров
+procedure TfrmMain.bGoodsClick(Sender: TObject);
+begin
+  ShowGoods;
+end;
+
+// перечитать товар
+procedure TfrmMain.bGoodsRefreshClick(Sender: TObject);
+begin
+  DM.LoadGoods;
 end;
 
 // переход на форму отображения информации
@@ -554,17 +647,22 @@ procedure TfrmMain.sbBackClick(Sender: TObject);
 //var
 //  Mes : string;
 begin
-//  if (tcMain.ActiveTab = tiOrderExternal) and FCanEditDocument then
-//  begin
-//    if DM.cdsOrderExternalId.AsInteger = -1 then
-//      Mes := 'Выйти без сохранения заявки?'
-//    else
-//      Mes := 'Выйти из редактирования без сохранения?';
-//
-//    TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
-//      [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackResult);
-//  end
-//  else
+  if (tcMain.ActiveTab = tiInventoryJournal)  then
+  begin
+    DM.cdsInventoryJournal.Close;
+  end
+  else if (tcMain.ActiveTab = tiInventory)  then
+  begin
+    DM.cdsInventory.Close;
+    DM.cdsInventoryList.Close;
+  end
+  else if (tcMain.ActiveTab = tiInventoryScan)  then
+  begin
+    DM.cdsInventoryGoods.Close;
+  end
+  else
+
+  ;
 //  if (tcMain.ActiveTab = tiStoreReal) and FCanEditDocument then
 //  begin
 //    if DM.cdsStoreRealsId.AsInteger = -1 then
@@ -610,6 +708,17 @@ begin
   finally
     FreeAndNil(SettingsFile);
   end;
+end;
+
+procedure TfrmMain.sbInventoryRefreshClick(Sender: TObject);
+begin
+  ShowInventory;
+end;
+
+//
+procedure TfrmMain.sbInventoryScanClick(Sender: TObject);
+begin
+  ShowInventoryScan;
 end;
 
 procedure TfrmMain.sbScanClick(Sender: TObject);

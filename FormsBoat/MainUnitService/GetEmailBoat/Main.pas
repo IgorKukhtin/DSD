@@ -3,7 +3,8 @@ unit Main;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.DateUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.DateUtils,
+  System.Variants, System.Classes, System.IOUtils, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, IdMessage,
   IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, ShellAPI,
   IdExplicitTLSClientServerBase, IdMessageClient, IdPOP3, IdAttachment, dsdDB,
@@ -11,7 +12,7 @@ uses
   dsdAction, ExternalLoad, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack,
   IdSSL, IdSSLOpenSSL, IdIMAP4, dsdInternetAction, ZAbstractRODataset,
   ZAbstractDataset, ZDataset, ZAbstractConnection, ZConnection, System.Actions,
-  sevenzip, FormStorage, UnilWin;
+  sevenzip, FormStorage, UnilWin, IniFiles;
 
 const SAVE_LOG = true;
 
@@ -132,13 +133,31 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  Ini: TIniFile;
+  cUserName, cUserPassword: String;
 begin
+
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + TPath.GetFileNameWithoutExtension(Application.ExeName) + '.ini');
+
+  try
+
+    cUserName := Ini.ReadString('Connect', 'UserName', 'Админ');
+    Ini.WriteString('Connect', 'User', cUserName);
+
+    cUserPassword := Ini.ReadString('Connect', 'UserPassword', 'Админ');
+    Ini.WriteString('Connect', 'Password', cUserPassword);
+
+  finally
+    Ini.free;
+  end;
+
   // ЗАХАРДКОДИЛ - Важный параметр - Определяет "Загрузка Счетов"
   vbEmailKindDesc:= 'zc_Enum_EmailKind_Mail_InvoiceKredit';
   Self.Caption:= Self.Caption + ' - Только Счета';
 
   //создает сессию и коннект
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', gc_AdminPassword, gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, cUserName, cUserPassword, gc_User);
   // запущена обработка
   vbIsBegin:= false;
   //
