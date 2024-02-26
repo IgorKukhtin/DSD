@@ -3114,7 +3114,7 @@
     Top = 248
   end
   object spInsertDocument: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf'
+    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf_bySave'
     DataSets = <>
     OutputType = otResult
     Params = <

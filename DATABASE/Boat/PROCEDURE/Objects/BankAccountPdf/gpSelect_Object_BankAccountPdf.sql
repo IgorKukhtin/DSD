@@ -26,6 +26,7 @@ BEGIN
      WITH tmpProduct AS (SELECT MovementItem_OrderClient.ObjectId AS ProductId
                               , MovementItem.Id                   AS MovementItemId
                               , zfConvert_StringToNumber (Movement_Invoice.InvNumber) ::Integer AS InvNumber
+                              , MIFloat_MovementId.ValueData  :: Integer    AS MovementId_Invoice
                          FROM MovementItem
                               JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -63,7 +64,7 @@ BEGIN
      FROM Object AS Object_BankAccountPdf
           JOIN ObjectFloat AS ObjectFloat_BankAccountPdf_MovementItemId
                            ON ObjectFloat_BankAccountPdf_MovementItemId.ObjectId = Object_BankAccountPdf.Id
-                          AND ObjectFloat_BankAccountPdf_MovementItemId.DescId = zc_ObjectFloat_BankAccountPdf_MovementItemId()
+                          AND ObjectFloat_BankAccountPdf_MovementItemId.DescId = zc_ObjectFloat_BankAccountPdf_MovmentItemId()
                           --AND ObjectFloat_BankAccountPdf_MovementItemId.ValueData IN (SELECT DISTINCT tmpProduct.MovementItemId FROM tmpProduct)
           JOIN tmpProduct ON tmpProduct.MovementItemId = ObjectFloat_BankAccountPdf_MovementItemId.ValueData
 
@@ -110,6 +111,36 @@ BEGIN
                                ON ObjectBlob_Data.ObjectId = Object_ProductDocument.Id
                               AND ObjectBlob_Data.DescId = zc_ObjectBlob_ProductDocument_Data()
      WHERE Object_ProductDocument.DescId = zc_Object_ProductDocument()
+    UNION
+     SELECT
+            Object_InvoicePdf.Id        AS Id
+          , Object_InvoicePdf.ValueData AS FileName
+          , Object_DocTag.Id                AS DocTagId
+          , Object_DocTag.ValueData         AS DocTagName
+          , ObjectString_Comment.ValueData  AS Comment
+          , ObjectBlob_Data.ValueData       AS DocumentData 
+          , tmpProduct.InvNumber ::TVarChar AS InvNumber_invoice
+     FROM Object AS Object_InvoicePdf
+          JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovementId
+                           ON ObjectFloat_InvoicePdf_MovementId.ObjectId = Object_InvoicePdf.Id
+                          AND ObjectFloat_InvoicePdf_MovementId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
+                          --AND ObjectFloat_InvoicePdf_MovementItemId.ValueData IN (SELECT DISTINCT tmpProduct.MovementItemId FROM tmpProduct)
+          JOIN tmpProduct ON tmpProduct.MovementId_Invoice = ObjectFloat_InvoicePdf_MovementId.ValueData
+
+          LEFT JOIN ObjectLink AS ObjectLink_InvoicePdf_DocTag
+                               ON ObjectLink_InvoicePdf_DocTag.ObjectId = Object_InvoicePdf.Id
+                              AND ObjectLink_InvoicePdf_DocTag.DescId = zc_ObjectLink_InvoicePdf_DocTag()
+          LEFT JOIN Object AS Object_DocTag ON Object_DocTag.Id = ObjectLink_InvoicePdf_DocTag.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_InvoicePdf.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_InvoicePdf_Comment()
+
+          LEFT JOIN ObjectBlob AS ObjectBlob_Data
+                               ON ObjectBlob_Data.ObjectId = Object_InvoicePdf.Id
+                              AND ObjectBlob_Data.DescId = zc_ObjectBlob_InvoicePdf_Data()
+
+     WHERE Object_InvoicePdf.DescId = zc_Object_InvoicePdf()
     ;
 
 END;

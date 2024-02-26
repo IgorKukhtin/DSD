@@ -2598,7 +2598,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited PopupMenu: TPopupMenu
-    Left = 120
+    Left = 136
     Top = 56
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -3131,7 +3131,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 232
   end
   object spInsertDocument: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_BankAccountInvoicePdf'
+    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf_bySave'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3139,7 +3139,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'ioid'
         Value = Null
         Component = FormParams
-        ComponentItem = 'BankAccountPdfId'
+        ComponentItem = 'InvoicePdfId'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -3153,15 +3153,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovmentItemId'
+        Name = 'inMovementId'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_Invoice'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountPdfData'
+        Name = 'inInvoicePdfData'
         Value = '789C535018D10000F1E01FE1'
         Component = DocumentInvoice
         ComponentItem = 'Data'
@@ -3174,15 +3174,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 288
   end
   object spGetDocument: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_BankAccountPdf'
+    StoredProcName = 'gpGet_Object_InvoicePdf'
     DataSets = <>
     OutputType = otBlob
     Params = <
       item
-        Name = 'inBankAccountPdfId'
+        Name = 'inInvoicePdfId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'BankAccountPdfId'
+        ComponentItem = 'InvoicePdfId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
