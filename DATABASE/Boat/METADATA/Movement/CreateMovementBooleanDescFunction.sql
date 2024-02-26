@@ -10,11 +10,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Auto() RETURNS integer AS $BODY$BE
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Auto', 'Автоматически'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Auto');
   
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_FilesNotUploaded() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_FilesNotUploaded'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_FilesNotUploaded', 'Временно не выгружать файлы в DropBox'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_FilesNotUploaded');
 
-   
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.02.24                                                       * zc_MovementBoolean_FilesNotUploaded
  06.12.23         * zc_MovementBoolean_Auto
  10.05.22         * zc_MovementBoolean_List
  08.02.21         * zc_MovementBoolean_PriceWithVAT

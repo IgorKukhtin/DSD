@@ -20,7 +20,8 @@ type
     function GetName: string;
     function GetExtractFileName: string;
     procedure OpenDocument;
-    procedure SaveDocument;
+    procedure SaveDocument; overload;
+    procedure SaveDocument(AFullFileName: String); overload;
     property FileName: string read FFileName write FFileName;
   published
     property GetBlobProcedure: TdsdStoredProc read FBlobProcedure write FBlobProcedure;
@@ -209,6 +210,20 @@ begin
        Free;
      end;
 
+  end;
+end;
+
+procedure TDocument.SaveDocument(AFullFileName: String);
+var Data: AnsiString;
+begin
+  if (csWriting in Owner.ComponentState) or (csDesigning in Owner.ComponentState) then
+     exit;
+
+  if Assigned(FBlobProcedure) then
+  begin
+    Data := ReConvertConvert(FBlobProcedure.Execute);
+
+    FileWriteString(AFullFileName, Copy(Data, 256, maxint));
   end;
 end;
 

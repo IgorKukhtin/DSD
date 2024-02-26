@@ -6,8 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.DateUtils, System.Variants,
   System.Classes, System.IOUtils, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Vcl.StdCtrls, Vcl.Buttons, Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls,
-  Vcl.ActnList,
-  dsdDB, dsdAction, dsdInternetAction, System.Actions, FormStorage, UnilWin, IniFiles;
+  Vcl.ActnList, System.Types, System.Generics.Collections, System.RegularExpressions,
+  dsdDB, dsdAction, dsdInternetAction, System.Actions, FormStorage, UnilWin, IniFiles,
+  Document;
 
 const SAVE_LOG = true;
 
@@ -28,26 +29,38 @@ type
     Timer: TTimer;
     cbTimer: TCheckBox;
     PanelError: TPanel;
-    spInsertUpdate_Invoice: TdsdStoredProc;
     PanelInfo: TPanel;
-    spInsertUpdate_InvoicePdf: TdsdStoredProc;
+    BitSendUnscheduled: TBitBtn;
+    Document: TDocument;
+    spGetDocument: TdsdStoredProc;
+    spInvoicePdf_DateUnloading: TdsdStoredProc;
+    spDelete_FilesNotUploaded: TdsdStoredProc;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure cbTimerClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure SetDateSend(Value : TDateTime);
+    procedure BitSendUnscheduledClick(Sender: TObject);
   private
 
     FUserName: String;
     FUserPassword: String;
 
     FDropBoxDir: String;
+    FDateSend: TDateTime;
 
     FIsBegin: Boolean;// запущена обработка
     FOnTimer: TDateTime;// время когда сработал таймер
+    FSendUnscheduled: Boolean;// отправить внепланово
+
+    FDateSendList: TList<TDateTime>;// Следующий полная отправка
 
     function fBeginAll  : Boolean; // обработка все
-    function fBeginMail : Boolean; // обработка всей почты
+    function fCopyFile : Boolean; // Копирование всех файлов
   public
+
+    property DateSend: TDateTime read FDateSend write SetDateSend;
   end;
 
 var
@@ -92,8 +105,14 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
+  cTimeList: String;
+  Res: TArray<string>;
+  I: Integer;
 begin
 
+  Self.Caption:= Self.Caption + ' - Только Счета';
+
+  FDateSendList := TList<TDateTime>.Create;
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + TPath.GetFileNameWithoutExtension(Application.ExeName) + '.ini');
 
   try
@@ -105,19 +124,37 @@ begin
     Ini.WriteString('Connect', 'Password', FUserPassword);
 
     FDropBoxDir := Ini.ReadString('DropBox', 'DropBoxDir', '');
+    if FDropBoxDir[Length(FDropBoxDir)] <> '\' then FDropBoxDir := FDropBoxDir + '\';
     Ini.WriteString('DropBox', 'DropBoxDir', FDropBoxDir);
+
+    FDateSend := Ini.ReadDateTime('DropBox', 'DateSend', EncodeDate(2024, 1, 1));
+    Ini.WriteDateTime('DropBox', 'DateSend', FDateSend);
+
+    cTimeList := Ini.ReadString('Scheduler', 'TimeList', '18:00:00');
+    Ini.WriteString('Scheduler', 'TimeList', cTimeList);
 
   finally
     Ini.free;
   end;
 
-  // ЗАХАРДКОДИЛ - Важный параметр - Определяет "Загрузка Счетов"
-  Self.Caption:= Self.Caption + ' - Только Счета';
+  // Заполним шедулер
+  Res := TRegEx.Split(cTimeList, ';');
+
+  for I := 0 to High(Res) do
+  try
+    if FDateSendList.IndexOfItem(Date + StrToTime(Res[I]), TDirection.FromBeginning) < 0 then
+      FDateSendList.Add(Date + StrToTime(Res[I]));
+  except
+  end;
+  FDateSendList.Sort;
+
 
   //создает сессию и коннект
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, FUserName, FUserPassword, gc_User);
   // запущена обработка
   FIsBegin:= false;
+  // отправить внепланово
+  FSendUnscheduled:= false;
   //
   GaugeCopyFile.Progress:=0;
   //
@@ -130,15 +167,120 @@ begin
   //Timer.Enabled:=true;
   Sleep(50);
 end;
+
+procedure TMainForm.FormDestroy(Sender: TObject);
+begin
+  FDateSendList.Free;
+end;
+
+procedure TMainForm.SetDateSend(Value : TDateTime);
+var
+  Ini: TIniFile;
+begin
+
+  FDateSend := Value;
+
+  Self.Caption:= Self.Caption + ' - Только Счета';
+
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + TPath.GetFileNameWithoutExtension(Application.ExeName) + '.ini');
+  try
+
+    Ini.WriteDateTime('DropBox', 'DateSend', FDateSend);
+
+  finally
+    Ini.free;
+  end;
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbTimerClick(Sender: TObject);
 begin
      Timer.Enabled:=cbTimer.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-// обработка всей почты
-function TMainForm.fBeginMail : Boolean;
+// Копирование всех файлов
+function TMainForm.fCopyFile : Boolean;
+  var DateStart : TDateTime;
+      FileName: String;
+      MovementId: Integer;
+      isFilesUploaded: Boolean;
 begin
+
+  // Проверим если не надо отправлять или если не внеплановая отправка выходим
+  if (FDateSendList.Items[0] > NOW) and not FSendUnscheduled then Exit;
+
+  try
+    // установим дату начала
+    DateStart := Now;
+    try
+
+      spSelect.ParamByName('inStartDate').Value := FDateSend;
+      spSelect.Execute;
+      if not ClientDataSet.Active then Exit;
+
+      MovementId := 0;
+      isFilesUploaded := False;
+      ClientDataSet.First;
+      while not ClientDataSet.Eof do
+      begin
+
+        // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
+        if (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and isFilesUploaded then
+        begin
+          spDelete_FilesNotUploaded.ParamByName('inId').Value := MovementId;
+          spDelete_FilesNotUploaded.Execute;
+        end;
+
+        // Проверим создание папки выгрузки
+        if not ForceDirectories(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString) then
+        begin
+          PanelError.Caption:= '!!! ERROR - fCopyFile: Не создана папка для сохранения файлов ' + FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString;
+          PanelError.Invalidate;
+          Exit;
+        end;
+
+        // Сохраним файл в папку DropBox
+        spGetDocument.ParamByName('inInvoicePdfId').Value :=  ClientDataSet.FieldByName('Id').AsInteger;
+        FileName := FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' +
+                    TPath.GetFileNameWithoutExtension(ClientDataSet.FieldByName('FileName').AsString) +
+                    '_' + ClientDataSet.FieldByName('Id').AsString + TPath.GetExtension(ClientDataSet.FieldByName('FileName').AsString);
+        Document.SaveDocument(FileName);
+
+        // Отметим дату сохранения
+        spInvoicePdf_DateUnloading.ParamByName('inId').Value :=  ClientDataSet.FieldByName('Id').AsInteger;
+        spInvoicePdf_DateUnloading.Execute;
+
+        MovementId := ClientDataSet.FieldByName('MovementId').AsInteger;
+        isFilesUploaded := ClientDataSet.FieldByName('isFilesUploaded').AsBoolean;
+
+        ClientDataSet.Next;
+      end;
+
+      // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
+      if (MovementId <> 0) and isFilesUploaded then
+      begin
+        spDelete_FilesNotUploaded.ParamByName('inId').Value := MovementId;
+        spDelete_FilesNotUploaded.Execute;
+      end;
+
+      DateSend := DateStart;
+      if FDateSendList.Items[0] < FDateSend then
+      begin
+        FDateSendList.Items[0] := IncDay(FDateSendList.Items[0]);
+        FDateSendList.Sort;
+      end;
+
+    finally
+      ClientDataSet.Close;
+    end;
+  except on E: Exception do
+    begin
+      PanelError.Caption:= '!!! ERROR - fCopyFile: ' + E.Message;
+      PanelError.Invalidate;
+    end;
+  end;
+
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
@@ -153,6 +295,7 @@ begin
     isErr:= False;
     Timer.Enabled:= false;
     BtnStart.Enabled:= false;
+    BitSendUnscheduled.Enabled:= false;
 
     try
 
@@ -160,31 +303,37 @@ begin
        if FDropBoxDir = '' then
        begin
          isErr:= True;
-         PanelCopyFile.Caption:= '!!! ERROR - fBeginAll: Не установлена целевая папка.';
-         PanelCopyFile.Invalidate;
+         PanelError.Caption:= '!!! ERROR - fBeginAll: Не установлена целевая папка.';
+         PanelError.Invalidate;
          Exit;
        end;
 
        if not DirectoryExists(FDropBoxDir) then
        begin
          isErr:= True;
-         PanelCopyFile.Caption:= '!!! ERROR - fBeginAll: Не найдена целевая папка.';
+         PanelError.Caption:= '!!! ERROR - fBeginAll: Не найдена целевая папка.';
+         PanelError.Invalidate;
+         Exit;
+       end;
+
+       if FDateSendList.Count = 0 then
+       begin
+         isErr:= True;
+         PanelError.Caption:= '!!! ERROR - fBeginAll: Не заполнен планировщик.';
          PanelCopyFile.Invalidate;
          Exit;
        end;
 
-
-
-       // обработка всей почты
-       PanelInfo.Caption:= 'Обработка всей почты.';
+       // Копирование всех файлов
+       PanelInfo.Caption:= 'Копирование всех файлов.';
        PanelInfo.Invalidate;
        try
-         fBeginMail;
+         fCopyFile;
        except on E: Exception do
          begin
            isErr:= True;
-           PanelCopyFile.Caption:= '!!! ERROR - fBeginMail: ' + E.Message;
-           PanelCopyFile.Invalidate;
+           PanelError.Caption:= '!!! ERROR - fCopyFile: ' + E.Message;
+           PanelError.Invalidate;
          end;
        end;
 
@@ -192,17 +341,36 @@ begin
        PanelInfo.Caption:= 'Цикл завершен.';
        PanelInfo.Invalidate;
        //
-       if isErr = false
-       then
-       begin
-           PanelCopyFile.Caption:= 'End !!!ERROR!!! - fBeginMail ... and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',now + Timer.Interval / 1000 / 60 /  24 / 60 );
-           PanelCopyFile.Invalidate;
-       end;
+//       if isErr = True then
+//       begin
+//           PanelCopyFile.Caption:= 'End !!!ERROR!!! - fBeginAll ... and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',now + Timer.Interval / 1000 / 60 /  24 / 60 );
+//           PanelCopyFile.Invalidate;
+//       end;
        //
        FIsBegin:= false;
+       FSendUnscheduled:= false;
        Timer.Enabled:= true;
+       BitSendUnscheduled.Enabled:= true;
        BtnStart.Enabled:= FIsBegin = false;
     end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.BitSendUnscheduledClick(Sender: TObject);
+begin
+  Timer.Enabled := False;
+  try
+    if MessageDlg('Производить внеплановую отправку?', mtConfirmation,
+      [mbYes, mbCancel], 0) = mrYes then
+    begin
+      Timer.Interval := 60;
+      FSendUnscheduled := True;
+    end else Timer.Interval := 1000 * 60;
+
+  finally
+    cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' seccc ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',FOnTimer)+')';
+    Timer.Enabled := True;
+  end;
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.BtnStartClick(Sender: TObject);

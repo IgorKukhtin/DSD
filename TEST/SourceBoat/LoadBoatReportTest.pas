@@ -59,6 +59,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+    LoadReportFromFile('PrintUser_Badge', ReportPath + '\PrintUser_Badge.fr3');
+
     LoadReportFromFile('PrintMovement_OrderInternalSticker', ReportPath + '\PrintMovement_OrderInternalSticker.fr3');
 
     LoadReportFromFile('PrintMovement_Invoice_Pay', ReportPath + '\PrintMovement_Invoice_Pay.fr3');
@@ -116,6 +118,7 @@ begin
     LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
     LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');
+    LoadReportFromFile('PrintUser_Badge', ReportPath + '\PrintUser_Badge.fr3');
 //  LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');
 //  LoadReportFromFile('Анализ продаж (группа)', ReportPath + '\Анализ продаж (группа).fr3');
 //  LoadReportFromFile('Анализ продаж (линия_группа)', ReportPath + '\Анализ продаж (линия_группа).fr3');
