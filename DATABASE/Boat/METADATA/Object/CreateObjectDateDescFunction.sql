@@ -31,8 +31,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ServiceDate_Value() RETURNS Integer AS 
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ServiceDate(), 'zc_ObjectDate_ServiceDate_Value', 'Значение' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ServiceDate_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_InvoicePdf_DateUnloading() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_InvoicePdf_DateUnloading'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_InvoicePdf(), 'zc_ObjectDate_InvoicePdf_DateUnloading', 'Дата и время выгрузки в DropBox' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_InvoicePdf_DateUnloading');
+
 /*-------------------------------------------------------------------------------
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.02.24                                                       * zc_ObjectDate_InvoicePdf_DateUnloading
  17.02.22         * zc_ObjectDate_Partner_PriceList
  11.11.20         * zc_ObjectDate_Goods_PartnerDate
  09.10.20         * zc_ObjectDate_Product_

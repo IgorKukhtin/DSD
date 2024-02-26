@@ -1,20 +1,17 @@
--- Function: gpSelect_Movement_MobileInventory()
+-- Function: gpGet_Movement_MobileInventory()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_MobileInventory (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_MobileInventory (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_MobileInventory(
-    IN inStartDate         TDateTime , -- Дата нач. периода
-    IN inEndDate           TDateTime , -- Дата оконч. периода
-    IN inIsErased          Boolean   , -- показывать удаленные Да/Нет
+CREATE OR REPLACE FUNCTION gpGet_Movement_MobileInventory(
+    IN inMovementId        Integer ,   -- Id
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusId Integer, StatusName TVarChar
-             , TotalCount TVarChar
-             , UnitName TVarChar
+             , TotalCount TFloat
+             , UnitId Integer, UnitName TVarChar
              , Comment TVarChar 
              , isList Boolean
-             , EditButton Integer
              )
 AS
 $BODY$
@@ -27,26 +24,18 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
-
        SELECT
              Movement.Id
            , Movement.InvNumber
-           , ('Дата: '||zfConvert_DateShortToString(Movement.OperDate))::TVarChar AS OperDate
+           , Movement.OperDate
            , Object_Status.ObjectCode                          AS StatusId
            , Object_Status.ValueData                           AS Status
-           , ('Ост. факт: '||COALESCE(zfConvert_FloatToString(MovementFloat_TotalCount.ValueData), ''))::TVarChar  AS TotalCount
+           , MovementFloat_TotalCount.ValueData                AS TotalCount
+           , Object_Unit.Id                                    AS UnitId
            , Object_Unit.ValueData                             AS UnitName
            , MovementString_Comment.ValueData                  AS Comment
            , COALESCE (MovementBoolean_List.ValueData, FALSE) ::Boolean AS isList
-           , 4                                                 AS EditButton
-       FROM tmpStatus
-            JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate 
-                         AND Movement.DescId = zc_Movement_Inventory()
-                         AND Movement.StatusId = tmpStatus.StatusId
+       FROM Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -66,6 +55,8 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+       WHERE Movement.Id = inMovementId
      ;
   
 END;
@@ -80,4 +71,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_Movement_MobileInventory (inStartDate:= '01.01.2021', inEndDate:= '21.02.2024', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+SELECT * FROM gpGet_Movement_MobileInventory (inMovementId := 2741, inSession:= zfCalc_UserAdmin())
