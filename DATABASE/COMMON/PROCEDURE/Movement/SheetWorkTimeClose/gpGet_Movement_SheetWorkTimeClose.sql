@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , TimeClose TDateTime                             -- Время авто закрытия  на следующий день после окончания периода
              , StatusCode Integer, StatusName TVarChar
              , isClosed Boolean, isClosedAuto Boolean
+             , UnitId Integer, UnitName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              )
@@ -37,7 +38,10 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , FALSE   ::Boolean                                AS isClosed
-             , FALSE   ::Boolean 		                AS isClosedAuto
+             , FALSE   ::Boolean                                AS isClosedAuto
+
+             , 0                                                AS UnitId
+             , CAST ('' AS TVarChar)                            AS UnitName
 
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
@@ -64,6 +68,9 @@ BEGIN
            , COALESCE (MovementBoolean_Closed.ValueData, FALSE) ::Boolean     AS isClosed
            , COALESCE (MovementBoolean_ClosedAuto.ValueData, FALSE) ::Boolean AS isClosedAuto
 
+           , Object_Unit.Id                      AS UnitId
+           , Object_Unit.ValueData               AS UnitName
+
            , Object_Insert.ValueData             AS InsertName
            , MovementDate_Insert.ValueData       AS InsertDate
            , Object_Update.ValueData             AS UpdateName
@@ -85,6 +92,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_TimeClose
                                    ON MovementDate_TimeClose.MovementId = Movement.Id
                                   AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
@@ -114,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.24         *
  10.08.21         * 
 */
 

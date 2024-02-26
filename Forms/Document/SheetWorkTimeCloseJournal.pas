@@ -119,6 +119,7 @@ type
     spUpdateCloseAll: TdsdStoredProc;
     actUpdateCloseAll: TdsdExecStoredProc;
     bbUpdateCloseAll: TdxBarButton;
+    UnitName: TcxGridDBColumn;
   private
   public
   end;

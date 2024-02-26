@@ -232,6 +232,14 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         Options.Editing = False
         Width = 129
       end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077')'
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 112
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089#1086#1079#1076#1072#1085#1080#1103
         DataBinding.FieldName = 'InsertDate'

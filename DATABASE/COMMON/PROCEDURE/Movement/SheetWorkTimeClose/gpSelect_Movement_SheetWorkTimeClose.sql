@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , TimeClose Time                             -- ¬рем€ авто закрыти€  на следующий день после окончани€ периода
              , StatusCode Integer, StatusName TVarChar
              , isClosed Boolean, isClosedAuto Boolean, isClosedAll Boolean
+             , UnitId Integer, UnitName TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , MemberId Integer, MemberCode Integer, MemberName TVarChar
@@ -79,6 +80,9 @@ BEGIN
            , CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP THEN TRUE ELSE FALSE END ::Boolean AS isClosedAuto   
            -- ¬се табел€ закрыты
            , COALESCE (MovementBoolean_ClosedAll.ValueData, FALSE) ::Boolean AS isClosedAll
+           
+           , Object_Unit.Id                      AS UnitId
+           , Object_Unit.ValueData               AS UnitName
 
            , Object_Insert.ValueData             AS InsertName
            , MovementDate_Insert.ValueData       AS InsertDate
@@ -124,6 +128,11 @@ BEGIN
                                    ON MovementDate_TimeClose.MovementId = Movement.Id
                                   AND MovementDate_TimeClose.DescId = zc_MovementDate_TimeClose()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
