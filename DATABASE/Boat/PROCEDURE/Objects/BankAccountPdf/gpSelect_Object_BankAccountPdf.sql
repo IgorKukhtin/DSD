@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountPdf (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_BankAccountPdf (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccountPdf(
-    IN inMovmentId          Integer,
-    IN inMovmentItemId      Integer,
+    IN inMovementId          Integer,
+    IN inMovementItemId      Integer,
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_MovmentItemCondition());
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_MovementItemCondition());
 
    RETURN QUERY
      WITH tmpProduct AS (SELECT MovementItem_OrderClient.ObjectId AS ProductId
@@ -46,8 +46,8 @@ BEGIN
                                                      AND MovementItem_OrderClient.DescId      = zc_MI_Master()
                                                      AND MovementItem_OrderClient.isErased    = FALSE
 
-                         WHERE MovementItem.MovementId = inMovmentId 
-                           AND (MovementItem.Id = inMovmentItemId OR inMovmentItemId = 0)
+                         WHERE MovementItem.MovementId = inMovementId 
+                           AND (MovementItem.Id = inMovementItemId OR inMovementItemId = 0)
                            AND MovementItem.DescId   = zc_MI_Child()
                            AND MovementItem.isErased = FALSE
                          --LIMIT 1
@@ -61,11 +61,11 @@ BEGIN
           , ObjectBlob_Data.ValueData       AS DocumentData 
           , tmpProduct.InvNumber ::TVarChar AS InvNumber_invoice
      FROM Object AS Object_BankAccountPdf
-          JOIN ObjectFloat AS ObjectFloat_BankAccountPdf_MovmentItemId
-                           ON ObjectFloat_BankAccountPdf_MovmentItemId.ObjectId = Object_BankAccountPdf.Id
-                          AND ObjectFloat_BankAccountPdf_MovmentItemId.DescId = zc_ObjectFloat_BankAccountPdf_MovmentItemId()
-                          --AND ObjectFloat_BankAccountPdf_MovmentItemId.ValueData IN (SELECT DISTINCT tmpProduct.MovementItemId FROM tmpProduct)
-          JOIN tmpProduct ON tmpProduct.MovementItemId = ObjectFloat_BankAccountPdf_MovmentItemId.ValueData
+          JOIN ObjectFloat AS ObjectFloat_BankAccountPdf_MovementItemId
+                           ON ObjectFloat_BankAccountPdf_MovementItemId.ObjectId = Object_BankAccountPdf.Id
+                          AND ObjectFloat_BankAccountPdf_MovementItemId.DescId = zc_ObjectFloat_BankAccountPdf_MovementItemId()
+                          --AND ObjectFloat_BankAccountPdf_MovementItemId.ValueData IN (SELECT DISTINCT tmpProduct.MovementItemId FROM tmpProduct)
+          JOIN tmpProduct ON tmpProduct.MovementItemId = ObjectFloat_BankAccountPdf_MovementItemId.ValueData
 
           LEFT JOIN ObjectLink AS ObjectLink_BankAccountPdf_DocTag
                                ON ObjectLink_BankAccountPdf_DocTag.ObjectId = Object_BankAccountPdf.Id

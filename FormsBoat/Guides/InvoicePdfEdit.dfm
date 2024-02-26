@@ -177,8 +177,6 @@
       Caption = 'PanelDocView'
       ShowCaption = False
       TabOrder = 3
-      ExplicitLeft = 250
-      ExplicitTop = 24
     end
   end
   object Код: TcxLabel
@@ -332,7 +330,7 @@
     Left = 12
     Top = 366
     Properties.ReadOnly = True
-    TabOrder = 26
+    TabOrder = 24
     Width = 182
   end
   object cxLabel19: TcxLabel
@@ -357,7 +355,7 @@
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 28
+    TabOrder = 27
     Width = 84
   end
   object cxLabel11: TcxLabel
@@ -936,7 +934,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovmentId'
+        Name = 'inMovementId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -945,6 +943,7 @@
       end
       item
         Name = 'inInvoicePdfData'
+        Value = Null
         Component = Document
         ComponentItem = 'Data'
         DataType = ftBlob
