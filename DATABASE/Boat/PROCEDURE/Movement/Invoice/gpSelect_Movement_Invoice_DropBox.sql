@@ -44,6 +44,10 @@ BEGIN
                                      , Max(ObjectProtocol.OperDate)   AS OperDate
                                 FROM tmpInvoicePdf 
                                      INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = tmpInvoicePdf.Id
+                                     LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
+                                                          ON ObjectDate_DateUnloading.ObjectId = tmpInvoicePdf.Id
+                                                         AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()
+                                WHERE ObjectProtocol.OperDate <> COALESCE(ObjectDate_DateUnloading.ValueData, ObjectProtocol.OperDate - INTERVAL '1 DAY')
                                 GROUP BY ObjectProtocol.ObjectId
                                 )
 
@@ -86,4 +90,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpSelect_Movement_Invoice_DropBox(inStartDate := ('26.02.2024 12:49:03')::TDateTime , inSession := '5');
+select * from gpSelect_Movement_Invoice_DropBox(inStartDate := ('27.02.2024 01:00:20')::TDateTime , inSession := '5');

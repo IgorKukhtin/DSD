@@ -74,6 +74,7 @@ RETURNS TABLE (Id               Integer
              , MovementId_parent Integer
              , InvNumberFull_parent TVarChar, InvNumber_parent TVarChar
              , MovementDescName_parent TVarChar
+             , isFilesNotUploaded Boolean
 
              , Color_Pay Integer
               )
@@ -130,7 +131,7 @@ BEGIN
      , tmpMovementBoolean AS (SELECT MovementBoolean.*
                               FROM MovementBoolean
                               WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Auto()
+                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Auto(), zc_MovementBoolean_FilesNotUploaded()
                                                               )
                              )
 
@@ -255,6 +256,8 @@ BEGIN
                        , Movement_Parent.InvNumber                  AS InvNumber_parent
                        , MovementDesc_Parent.ItemName               AS DescName_parent
 
+                       , COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) ::Boolean AS isFilesNotUploaded
+
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
                        /*, CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
                                 OR (COALESCE (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountIn,0))  AND COALESCE (tmpMLM_BankAccount.AmountIn,0)<>0
@@ -294,6 +297,10 @@ BEGIN
                          LEFT JOIN tmpMovementBoolean AS MovementBoolean_Auto
                                                       ON MovementBoolean_Auto.MovementId = Movement.Id
                                                      AND MovementBoolean_Auto.DescId = zc_MovementBoolean_Auto()
+
+                         LEFT JOIN tmpMovementBoolean AS MovementBoolean_FilesNotUploaded
+                                                      ON MovementBoolean_FilesNotUploaded.MovementId = Movement.Id
+                                                     AND MovementBoolean_FilesNotUploaded.DescId = zc_MovementBoolean_FilesNotUploaded()
 
                          LEFT JOIN tmpMLO AS MovementLinkObject_Object
                                           ON MovementLinkObject_Object.MovementId = Movement.Id
@@ -454,6 +461,7 @@ BEGIN
       , tmpData.InvNumberFull_parent
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
+      , tmpData.isFilesNotUploaded
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
       , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
@@ -499,4 +507,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.01.2021', inEndDate:= '18.02.2021', inClientId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Invoice (inStartDate:= '01.01.2021', inEndDate:= '18.02.2025', inClientId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin());

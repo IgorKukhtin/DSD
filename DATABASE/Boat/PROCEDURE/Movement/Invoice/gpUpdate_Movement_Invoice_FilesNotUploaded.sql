@@ -1,12 +1,13 @@
--- Function: gpDelete_Movement_Invoice_FilesNotUploaded(Integer, TVarChar)
+-- Function: gpUpdate_Movement_Invoice_FilesNotUploaded(Integer, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpDelete_Movement_Invoice_FilesNotUploaded(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice_FilesNotUploaded(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpDelete_Movement_Invoice_FilesNotUploaded(
-    IN inId                        Integer   , -- ключ объекта <Документ>
+CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice_FilesNotUploaded(
+    IN inMovementId                Integer   , -- ключ объекта <Документ>
+ INOUT ioisFilesNotUploaded        Boolean   , -- Временно не выгружать файлы в DropBox    
     IN inSession                   TVarChar    -- сессия пользователя
 )
-RETURNS Void AS
+RETURNS Boolean AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -15,22 +16,22 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
    
     -- проверка
-   IF COALESCE (inId, 0) = 0
+   IF COALESCE (inMovementId, 0) = 0
    THEN
        --RAISE EXCEPTION 'Ошибка! Договор не установлен!';
         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Элемент документа не сохранен!'
-                                              , inProcedureName := 'gpDelete_Movement_Invoice_FilesNotUploaded'
+                                              , inProcedureName := 'gpUpdate_Movement_Invoice_FilesNotUploaded'
                                               , inUserId        := vbUserId
                                               );
    END IF;
    
-   -- Удаление 
-   DELETE FROM MovementBoolean 
-   WHERE MovementBoolean.MovementId = inId
-     AND MovementBoolean.DescId = zc_MovementBoolean_FilesNotUploaded();
+   ioisFilesNotUploaded := NOT ioisFilesNotUploaded;
+   
+   -- сохранили свойство <Временно не выгружать файлы в DropBox  >
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_FilesNotUploaded(), inMovementId, ioisFilesNotUploaded);
    
    -- сохранили протокол
-   PERFORM lpInsert_MovementProtocol (inId, vbUserId, False);
+   PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
 
 END;
 $BODY$

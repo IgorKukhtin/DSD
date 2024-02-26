@@ -204,6 +204,7 @@ function TMainForm.fCopyFile : Boolean;
       FileName: String;
       MovementId: Integer;
       isFilesUploaded: Boolean;
+      searchResult : TSearchRec;
 begin
 
   // Проверим если не надо отправлять или если не внеплановая отправка выходим
@@ -239,11 +240,29 @@ begin
           Exit;
         end;
 
-        // Сохраним файл в папку DropBox
-        spGetDocument.ParamByName('inInvoicePdfId').Value :=  ClientDataSet.FieldByName('Id').AsInteger;
+        // Сгенерируем имя файла
         FileName := FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' +
                     TPath.GetFileNameWithoutExtension(ClientDataSet.FieldByName('FileName').AsString) +
                     '_' + ClientDataSet.FieldByName('Id').AsString + TPath.GetExtension(ClientDataSet.FieldByName('FileName').AsString);
+
+        // Удалим если файл изменился
+        if (System.SysUtils.FindFirst(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\*_' +
+            ClientDataSet.FieldByName('Id').AsString + '.*', faArchive, searchResult) = 0) then
+        begin
+          repeat
+            //
+            if ((searchResult.Attr and faArchive) = searchResult.Attr) and
+               (searchResult.Name <> TPath.GetFileName(FileName)) then
+            begin
+              DeleteFile(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' + searchResult.Name);
+            end;
+          until System.SysUtils.FindNext(searchResult) <> 0;
+          System.SysUtils.FindClose(searchResult);
+        end;
+
+
+        // Сохраним файл в папку DropBox
+        spGetDocument.ParamByName('inInvoicePdfId').Value :=  ClientDataSet.FieldByName('Id').AsInteger;
         Document.SaveDocument(FileName);
 
         // Отметим дату сохранения
