@@ -62,6 +62,7 @@ type
     EnumName: TcxGridDBColumn;
     spUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    CheckImport: TcxGridDBColumn;
   private
     { Private declarations }
   public
