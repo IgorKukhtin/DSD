@@ -115,6 +115,10 @@ type
     actOpenForm: TdsdOpenForm;
     bbOpenForm: TdxBarButton;
     OperDateClose: TcxGridDBColumn;
+    isClosedAll: TcxGridDBColumn;
+    spUpdateCloseAll: TdsdStoredProc;
+    actUpdateCloseAll: TdsdExecStoredProc;
+    bbUpdateCloseAll: TdxBarButton;
   private
   public
   end;

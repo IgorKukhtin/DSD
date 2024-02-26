@@ -191,6 +191,13 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         Options.Editing = False
         Width = 70
       end
+      object isClosedAll: TcxGridDBColumn
+        Caption = #1042#1089#1077' '#1090#1072#1073#1077#1083#1103' '#1079#1072#1082#1088#1099#1090#1099
+        DataBinding.FieldName = 'isClosedAll'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+      end
       object isAmount: TcxGridDBColumn
         Caption = #1047#1072#1082#1088#1099#1090' ('#1076#1072') / '#1054#1090#1082#1088#1099#1090' ('#1085#1077#1090')'
         DataBinding.FieldName = 'isAmount'
@@ -431,6 +438,10 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateCloseAll'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -519,6 +530,10 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     end
     object bbOpenForm: TdxBarButton
       Action = actOpenForm
+      Category = 0
+    end
+    object bbUpdateCloseAll: TdxBarButton
+      Action = actUpdateCloseAll
       Category = 0
     end
   end
@@ -1080,6 +1095,23 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
     end
+    object actUpdateCloseAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateCloseAll
+      StoredProcList = <
+        item
+          StoredProc = spUpdateCloseAll
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1089#1077' '#1090#1072#1073#1077#1083#1103' '#1079#1072#1082#1088#1099#1090#1099' ('#1044#1072'/'#1053#1077#1090')>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1089#1077' '#1090#1072#1073#1077#1083#1103' '#1079#1072#1082#1088#1099#1090#1099' ('#1044#1072'/'#1053#1077#1090')>'
+      ImageIndex = 80
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' <'#1042#1089#1077' '#1090#1072#1073#1077#1083#1103' '#1079#1072#1082#1088#1099#1090#1099' ('#1044#1072'/'#1053#1077#1090')>?'
+    end
     object actUpdateClose_No: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1329,6 +1361,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
@@ -1498,7 +1531,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 418
+    Left = 378
     Top = 256
   end
   object spUpdateClose_No: TdsdStoredProc
@@ -1524,5 +1557,31 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     PackSize = 1
     Left = 370
     Top = 296
+  end
+  object spUpdateCloseAll: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_SheetWorkTimeClose_CloseAll'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisClosedAll'
+        Value = True
+        Component = ClientDataSet
+        ComponentItem = 'isClosedAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 466
+    Top = 288
   end
 end

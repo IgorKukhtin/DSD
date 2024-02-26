@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , OperDateClose TDateTime
              , TimeClose Time                             -- Время авто закрытия  на следующий день после окончания периода
              , StatusCode Integer, StatusName TVarChar
-             , isClosed Boolean, isClosedAuto Boolean
+             , isClosed Boolean, isClosedAuto Boolean, isClosedAll Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , MemberId Integer, MemberCode Integer, MemberName TVarChar
@@ -76,7 +76,9 @@ BEGIN
              -- Период закрыт (ручной режим)
            , COALESCE (MovementBoolean_Closed.ValueData, FALSE) ::Boolean     AS isClosed
              -- Период закрыт (автоматический режим)
-           , CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP THEN TRUE ELSE FALSE END ::Boolean AS isClosedAuto
+           , CASE WHEN MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP THEN TRUE ELSE FALSE END ::Boolean AS isClosedAuto   
+           -- Все табеля закрыты
+           , COALESCE (MovementBoolean_ClosedAll.ValueData, FALSE) ::Boolean AS isClosedAll
 
            , Object_Insert.ValueData             AS InsertName
            , MovementDate_Insert.ValueData       AS InsertDate
@@ -110,6 +112,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
                                       ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
                                      AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAll
+                                      ON MovementBoolean_ClosedAll.MovementId = Movement.Id
+                                     AND MovementBoolean_ClosedAll.DescId = zc_MovementBoolean_ClosedAll()
 
             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
@@ -147,6 +152,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+  26.02.24         *
   10.08.21         *
 */
 
