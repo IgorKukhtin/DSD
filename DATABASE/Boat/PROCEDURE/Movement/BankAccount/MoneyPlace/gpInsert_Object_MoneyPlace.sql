@@ -163,5 +163,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Client()
-
-select * from gpInsert_Object_MoneyPlace(ioid := 0 , ioCode := 0 , ioName := 'PAYONE GmbH' , ioIBAN := 'DE82300500000001685817' , ioStreet := '' , ioStreet_add := '' , ioTaxNumber := '' , ioPLZ := '26723' , ioCityName := 'Emden' , ioCountryName := 'Germany' , ioTaxKindId := 39396 , inAmountIn := 0 , inAmountOut := 23.8 ,  inSession := '5');
+-- select * from gpInsert_Object_MoneyPlace(ioid := 0 , ioCode := 0 , ioName := 'PAYONE GmbH' , ioIBAN := 'DE82300500000001685817' , ioStreet := '' , ioStreet_add := '' , ioTaxNumber := '' , ioPLZ := '26723' , ioCityName := 'Emden' , ioCountryName := 'Germany' , ioTaxKindId := 39396 , inAmountIn := 0 , inAmountOut := 23.8 ,  inSession := '5');
