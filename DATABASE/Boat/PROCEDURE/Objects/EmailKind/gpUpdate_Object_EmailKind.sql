@@ -1,10 +1,12 @@
 -- Function: gpUpdate_Object_EmailKind(Integer,Integer,TVarChar,TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_EmailKind(Integer,TVarChar,TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_EmailKind(Integer,TVarChar,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_EmailKind(
     IN inId	                 Integer,       -- ключ объекта 
     IN inDropBox             TVarChar,      -- Директория сохранения в DropBox
+    IN inCheckImport         TVarChar,      -- Проверка Импорта
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS Void AS
@@ -18,6 +20,8 @@ BEGIN
  
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_EmailKind_DropBox(), inId, inDropBox);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_EmailKind_CheckImport(), inId, inCheckImport);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -29,6 +33,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.24         * CheckImport
  12.02.24         * 
 
 */

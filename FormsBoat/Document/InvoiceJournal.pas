@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, cxSplitter;
+  Vcl.StdCtrls, cxButtons, cxSplitter, Document;
 
 type
   TInvoiceJournalForm = class(TAncestorJournal_boatForm)
@@ -152,6 +152,14 @@ type
     Ord_ch4: TcxGridDBColumn;
     btnOpenFormPdfEdit: TcxButton;
     actOpenFormPdfEdit: TdsdOpenForm;
+    spGetDocument: TdsdStoredProc;
+    DocumentInvoice: TDocument;
+    spInsertDocument: TdsdStoredProc;
+    actInsertDocument: TdsdExecStoredProc;
+    actDocumentOpenInvoice: TDocumentOpenAction;
+    mactSave_Invoice: TMultiAction;
+    btntPrint_Invoice: TcxButton;
+    actPrintInvoice_save: TdsdPrintAction;
   private
     { Private declarations }
   public

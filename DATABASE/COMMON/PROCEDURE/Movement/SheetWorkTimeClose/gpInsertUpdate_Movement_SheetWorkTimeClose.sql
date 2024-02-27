@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Movement_SheetWorkTimeClose()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SheetWorkTimeClose (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SheetWorkTimeClose (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SheetWorkTimeClose (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SheetWorkTimeClose (Integer, TVarChar, TDateTime, TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SheetWorkTimeClose(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата начала периода
     IN inOperDateEnd         TDateTime , -- Дата окончания периода
-    IN inTimeClose           TDateTime , -- Дата, Время авто закрытия
+    IN inTimeClose           TDateTime , -- Дата, Время авто закрытия 
+    IN inUnitId              Integer   , -- Подразделение(Исключение)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -42,6 +44,7 @@ BEGIN
                                                     , inOperDate     := inOperDate
                                                     , inOperDateEnd  := inOperDateEnd
                                                     , inTimeClose    := inTimeClose -- (DATE_TRUNC ('DAY', inOperDateEnd) + INTERVAL '1 DAY' + (inTimeClose - DATE_TRUNC ('DAY', inTimeClose))  :: INTERVAL) :: TDateTime
+                                                    , inUnitId       := inUnitId
                                                     , inUserId       := vbUserId
                                                      ) AS tmp;
 
@@ -58,6 +61,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.24         *
  10.08.21         *
 */
 

@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InvoicePdf(Integer, TVarChar, Inte
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InvoicePdf(
  INOUT ioId                        Integer   , -- ключ объекта
     IN inPhotoName                 TVarChar  , --
-    IN inMovmentId                 Integer   , --  
+    IN inMovementId                 Integer   , --  
     IN inInvoicePdfData            TBlob     , -- Файл
     IN inSession                   TVarChar    -- сессия пользователя
 )
@@ -19,7 +19,7 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
     -- проверка
-   IF COALESCE (inMovmentId, 0) = 0
+   IF COALESCE (inMovementId, 0) = 0
    THEN
        --RAISE EXCEPTION 'Ошибка! Документ не выбран!';
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Документ не выбран.'           :: TVarChar
@@ -34,7 +34,7 @@ BEGIN
    THEN 
        RETURN;
        -- попробуем найти
-       --ioId:= (SELECT OL.ObjectId FROM ObjectFloat AS OL WHERE OL.ValueData ::Integer = inMovmentItemId AND OL.DescId = zc_ObjectFloat_InvoicePdf_MovmentItemId());
+       --ioId:= (SELECT OL.ObjectId FROM ObjectFloat AS OL WHERE OL.ValueData ::Integer = inMovementItemId AND OL.DescId = zc_ObjectFloat_InvoicePdf_MovementItemId());
    END IF;
 
    -- сохранили <Объект>
@@ -46,7 +46,7 @@ BEGIN
    -- сохранили связь с <>
    --PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_InvoicePdf_PhotoTag(), ioId, inPhotoTagId);  
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_InvoicePdf_MovementId(), ioId, inMovmentId);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_InvoicePdf_MovementId(), ioId, inMovementId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

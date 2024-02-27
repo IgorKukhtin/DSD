@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_EmailKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , EnumName TVarChar, DropBox TVarChar
+             , EnumName TVarChar, DropBox TVarChar, CheckImport TVarChar
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -20,6 +20,7 @@ $BODY$BEGIN
       , Object_EmailKind.ValueData    AS Name
       , ObjectString_Enum.ValueData    ::TVarChar AS EnumName
       , ObjectString_DropBox.ValueData ::TVarChar AS DropBox
+      , ObjectString_CheckImport.ValueData ::TVarChar AS CheckImport
       
       , Object_EmailKind.isErased     AS isErased
       
@@ -29,7 +30,10 @@ $BODY$BEGIN
                              AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
        LEFT JOIN ObjectString AS ObjectString_DropBox
                               ON ObjectString_DropBox.ObjectId = Object_EmailKind.Id
-                             AND ObjectString_DropBox.DescId = zc_ObjectString_EmailKind_DropBox()                     
+                             AND ObjectString_DropBox.DescId = zc_ObjectString_EmailKind_DropBox()
+       LEFT JOIN ObjectString AS ObjectString_CheckImport
+                              ON ObjectString_CheckImport.ObjectId = Object_EmailKind.Id
+                             AND ObjectString_CheckImport.DescId = zc_ObjectString_EmailKind_CheckImport()                     
    WHERE Object_EmailKind.DescId = zc_Object_EmailKind();
   
 END;$BODY$
@@ -40,6 +44,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.02.24         * CheckImport
  12.02.24         *
 */
 

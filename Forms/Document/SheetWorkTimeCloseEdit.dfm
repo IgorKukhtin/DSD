@@ -2,27 +2,27 @@
   Caption = 
     #1044#1086#1082#1091#1084#1077#1085#1090' <'#1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072', '#1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084 +
     #1077#1085#1080'>>'
-  ClientHeight = 257
-  ClientWidth = 284
+  ClientHeight = 287
+  ClientWidth = 263
   AddOnFormData.isSingle = False
-  ExplicitWidth = 290
-  ExplicitHeight = 285
+  ExplicitWidth = 269
+  ExplicitHeight = 316
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 33
-    Top = 203
+    Left = 31
+    Top = 248
     Height = 26
-    ExplicitLeft = 33
-    ExplicitTop = 203
+    ExplicitLeft = 31
+    ExplicitTop = 248
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
-    Left = 174
-    Top = 203
+    Left = 172
+    Top = 248
     Height = 26
-    ExplicitLeft = 174
-    ExplicitTop = 203
+    ExplicitLeft = 172
+    ExplicitTop = 248
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -81,6 +81,23 @@
     TabOrder = 9
     Width = 118
   end
+  object ceUnit: TcxButtonEdit [10]
+    Left = 8
+    Top = 205
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 241
+  end
+  object cxLabel4: TcxLabel [11]
+    Left = 8
+    Top = 182
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077')'
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
     Top = 154
@@ -115,8 +132,8 @@
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 202
+    Left = 118
+    Top = 247
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_SheetWorkTimeClose'
@@ -158,6 +175,14 @@
         Value = Null
         Component = edTimeClose
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -217,6 +242,21 @@
         Component = edTimeClose
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 16
@@ -239,5 +279,32 @@
     ActionItemList = <>
     Left = 48
     Top = 136
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 96
+    Top = 194
   end
 end

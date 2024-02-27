@@ -26,7 +26,6 @@ object EmailKindForm: TEmailKindForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,21 +50,29 @@ object EmailKindForm: TEmailKindForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 73
+        Width = 64
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 181
+        Width = 126
       end
       object DropBox: TcxGridDBColumn
         DataBinding.FieldName = 'DropBox'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' '#1089#1086#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' DropBox'
-        Width = 248
+        Width = 192
+      end
+      object CheckImport: TcxGridDBColumn
+        Caption = 'Check Import'
+        DataBinding.FieldName = 'CheckImport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1074#1077#1088#1082#1072' '#1048#1084#1087#1086#1088#1090#1072
+        Width = 120
       end
       object EnumName: TcxGridDBColumn
         Caption = #1060#1091#1085#1082#1094#1080#1103
@@ -282,6 +289,7 @@ object EmailKindForm: TEmailKindForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TEmailKindEditForm'
+      FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -493,6 +501,15 @@ object EmailKindForm: TEmailKindForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'DropBox'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCheckImport'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'CheckImport'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

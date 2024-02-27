@@ -4,28 +4,28 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1235
-  ExplicitHeight = 649
+  ExplicitWidth = 1229
+  ExplicitHeight = 632
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 65
+    Top = 56
     Width = 1213
-    Height = 455
+    Height = 464
     TabOrder = 3
-    ExplicitTop = 65
+    ExplicitTop = 56
     ExplicitWidth = 1213
-    ExplicitHeight = 455
-    ClientRectBottom = 455
+    ExplicitHeight = 464
+    ClientRectBottom = 464
     ClientRectRight = 1213
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1213
-      ExplicitHeight = 455
+      ExplicitHeight = 464
       inherited cxGrid: TcxGrid
         Width = 1213
-        Height = 330
+        Height = 339
         ExplicitWidth = 1213
-        ExplicitHeight = 330
+        ExplicitHeight = 339
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -817,7 +817,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end
       object cxSplitter_Bottom_Child: TcxSplitter
         Left = 0
-        Top = 330
+        Top = 339
         Width = 1213
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -826,7 +826,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       end
       object cxGrid_Child: TcxGrid
         Left = 0
-        Top = 338
+        Top = 347
         Width = 1213
         Height = 117
         Align = alBottom
@@ -1349,7 +1349,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 8
     end
     object btntPrint_Invoice: TcxButton
-      Left = 126
+      Left = 127
       Top = 10
       Width = 115
       Height = 25
@@ -1365,7 +1365,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 10
     end
     object btnOpenInvoiceForm: TcxButton
-      Left = 247
+      Left = 248
       Top = 10
       Width = 118
       Height = 25
@@ -2342,7 +2342,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -2598,7 +2598,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited PopupMenu: TPopupMenu
-    Left = 120
+    Left = 136
     Top = 56
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -3127,11 +3127,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   object DocumentInvoice: TDocument
     GetBlobProcedure = spGetDocument
-    Left = 440
-    Top = 240
+    Left = 480
+    Top = 232
   end
   object spInsertDocument: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_BankAccountInvoicePdf'
+    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf_bySave'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -3139,7 +3139,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Name = 'ioid'
         Value = Null
         Component = FormParams
-        ComponentItem = 'BankAccountPdfId'
+        ComponentItem = 'InvoicePdfId'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
@@ -3153,15 +3153,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovmentItemId'
+        Name = 'inMovementId'
         Value = Null
         Component = ChildCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'MovementId_Invoice'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBankAccountPdfData'
+        Name = 'inInvoicePdfData'
         Value = '789C535018D10000F1E01FE1'
         Component = DocumentInvoice
         ComponentItem = 'Data'
@@ -3174,15 +3174,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Top = 288
   end
   object spGetDocument: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_BankAccountPdf'
+    StoredProcName = 'gpGet_Object_InvoicePdf'
     DataSets = <>
     OutputType = otBlob
     Params = <
       item
-        Name = 'inBankAccountPdfId'
+        Name = 'inInvoicePdfId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'BankAccountPdfId'
+        ComponentItem = 'InvoicePdfId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

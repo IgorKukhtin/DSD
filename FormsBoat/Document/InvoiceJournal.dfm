@@ -1,26 +1,28 @@
 ﻿inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 569
-  ClientWidth = 1121
+  ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1137
+  ExplicitWidth = 1155
   ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1121
+    Width = 1139
     Height = 316
     TabOrder = 3
     ExplicitWidth = 1121
     ExplicitHeight = 316
     ClientRectBottom = 316
-    ClientRectRight = 1121
+    ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1121
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
-        Width = 1121
+        Width = 1139
         Height = 316
+        ExplicitLeft = -208
+        ExplicitTop = -57
         ExplicitWidth = 1121
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -628,7 +630,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1121
+    Width = 1139
     ExplicitWidth = 1121
     inherited deEnd: TcxDateEdit
       Left = 315
@@ -707,10 +709,11 @@
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 496
-    Width = 1121
+    Width = 1139
     Height = 73
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1121
     object btnUpdate: TcxButton
       Left = 223
       Top = 8
@@ -720,7 +723,7 @@
       TabOrder = 0
     end
     object btnComplete: TcxButton
-      Left = 349
+      Left = 477
       Top = 8
       Width = 150
       Height = 25
@@ -728,7 +731,7 @@
       TabOrder = 1
     end
     object btnUnComplete: TcxButton
-      Left = 505
+      Left = 633
       Top = 8
       Width = 150
       Height = 25
@@ -736,7 +739,7 @@
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 661
+      Left = 789
       Top = 8
       Width = 162
       Height = 25
@@ -744,9 +747,9 @@
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 857
+      Left = 989
       Top = 8
-      Width = 159
+      Width = 130
       Height = 25
       Action = actFormClose
       ParentShowHint = False
@@ -754,7 +757,7 @@
       TabOrder = 4
     end
     object cxButton1: TcxButton
-      Left = 349
+      Left = 477
       Top = 42
       Width = 218
       Height = 25
@@ -762,7 +765,7 @@
       TabOrder = 5
     end
     object cxButton2: TcxButton
-      Left = 582
+      Left = 710
       Top = 42
       Width = 241
       Height = 25
@@ -770,9 +773,9 @@
       TabOrder = 6
     end
     object cxButton5: TcxButton
-      Left = 857
-      Top = 42
-      Width = 159
+      Left = 989
+      Top = 39
+      Width = 130
       Height = 25
       Action = actSetVisible_Grid_Item
       ParentShowHint = False
@@ -819,14 +822,24 @@
       Action = actOpenFormPdfEdit
       TabOrder = 12
     end
+    object btntPrint_Invoice: TcxButton
+      Left = 347
+      Top = 8
+      Width = 120
+      Height = 25
+      Action = mactSave_Invoice
+      TabOrder = 13
+    end
   end
   object cxGrid_Item: TcxGrid [3]
     Left = 0
-    Top = 381
-    Width = 1121
+    Top = 373
+    Width = 1139
     Height = 115
     Align = alBottom
     TabOrder = 7
+    ExplicitLeft = -64
+    ExplicitTop = 221
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1101,11 +1114,13 @@
   end
   object cxSplitter_Bottom_Item: TcxSplitter [4]
     Left = 0
-    Top = 373
-    Width = 1121
+    Top = 488
+    Width = 1139
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
+    ExplicitTop = 373
+    ExplicitWidth = 1121
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2184,6 +2199,176 @@
         end>
       isShowModal = False
     end
+    object actInsertDocument: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'BankAccountPdfId'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertDocument
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 0
+    end
+    object actDocumentOpenInvoice: TDocumentOpenAction
+      Category = 'Print'
+      MoveParams = <>
+      Document = DocumentInvoice
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1082#1072#1085
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object mactSave_Invoice: TMultiAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice_save
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actDocumentOpenInvoice
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1057#1095#1077#1090
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1057#1095#1077#1090
+      ImageIndex = 14
+    end
+    object actPrintInvoice_save: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintReturnCDS
+          UserName = 'frxDBDReturn'
+        end
+        item
+          DataSet = PrintOptionCDS
+          UserName = 'frxDBDOption'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44927d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44927d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_EmbeddedFonts'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_Background'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = 'GetTempPath'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvoiceFileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GetFileNameExport'
+          Value = '789C535018D10000F1E01FE1'
+          Component = DocumentInvoice
+          ComponentItem = 'FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Invoice1'
+      ReportNameParam.Value = 'PrintMovement_Invoice1'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameInvoice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -2564,6 +2749,17 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceFileName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoicePdfId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -2604,8 +2800,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 631
-    Top = 232
+    Left = 615
+    Top = 216
   end
   object FieldFilter_InvNumber_parent: TdsdFieldFilter
     TextEdit = edSearch_InvNumber_OrderClient
@@ -2801,6 +2997,13 @@
         ComponentItem = 'ReportNameInvoice'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvoiceFileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvoiceFileName'
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 800
@@ -2887,5 +3090,70 @@
     PackSize = 1
     Left = 644
     Top = 425
+  end
+  object spGetDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_InvoicePdf'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inInvoicePdfId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'InvoicePdfId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 288
+  end
+  object DocumentInvoice: TDocument
+    GetBlobProcedure = spGetDocument
+    Left = 488
+    Top = 248
+  end
+  object spInsertDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_InvoicePdf_bySave'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'InvoicePdfId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhotoname'
+        Value = '789C535018D10000F1E01FE1'
+        Component = FormParams
+        ComponentItem = 'InvoiceFileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoicePdfData'
+        Value = '789C535018D10000F1E01FE1'
+        Component = DocumentInvoice
+        ComponentItem = 'Data'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 288
   end
 end

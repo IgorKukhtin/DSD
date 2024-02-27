@@ -369,12 +369,18 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 
  CREATE OR REPLACE FUNCTION zc_ObjectString_EmailKind_DropBox() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_EmailKind_DropBox'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_EmailKind_DropBox', zc_object_InvoicePdf(), 'Директория сохранения в DropBox' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_EmailKind_DropBox');
+  SELECT 'zc_ObjectString_EmailKind_DropBox', zc_object_EmailKind(), 'Директория сохранения в DropBox' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_EmailKind_DropBox');
+
+ CREATE OR REPLACE FUNCTION zc_ObjectString_EmailKind_CheckImport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_EmailKind_CheckImport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_EmailKind_CheckImport', zc_object_EmailKind(), 'Проверка Импорта' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_EmailKind_CheckImport');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.12.24         * zc_ObjectString_EmailKind_CheckImport
  12.01.24         * zc_ObjectString_InvoicePdf_Comment
                     zc_ObjectString_EmailKind_DropBox
  13.01.24         * zc_ObjectString_BankAccountPdf_Comment
