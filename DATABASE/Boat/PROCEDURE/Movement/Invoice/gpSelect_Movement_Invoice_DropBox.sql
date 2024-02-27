@@ -19,9 +19,19 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbProductId Integer;
+   DECLARE vbKredit TVarChar;
+   DECLARE vbDebet TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+    vbDebet := COALESCE((SELECT tmp.Value
+                         FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= '5') AS tmp
+                         WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_DropBox_InvoiceDebet())), 'InvoiceFile\Debet');
+
+    vbKredit := COALESCE((SELECT tmp.Value
+                          FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= '5') AS tmp
+                          WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_DropBox_InvoiceKredit())), 'InvoiceFile\Kredit');
 
      -- Результат
      RETURN QUERY
@@ -59,8 +69,8 @@ BEGIN
           , Object_InvoicePdf.MovementId       AS MovementId
           , Object_InvoicePdf.isFilesUploaded  AS isFilesUploaded
           , CASE WHEN COALESCE(MovementFloat_Amount.ValueData, 0) < 0 
-                 THEN 'InvoiceFile\Kredit'
-                 ELSE 'InvoiceFile\Debet' END::TVarChar   AS FilePath
+                 THEN vbKredit
+                 ELSE vbDebet END::TVarChar   AS FilePath
           , COALESCE(MovementString_ReceiptNumber.ValueData, Object_InvoicePdf.InvNumber)::TVarChar  AS ReceiptNumber 
      FROM tmpInvoicePdf AS Object_InvoicePdf
      
