@@ -1642,8 +1642,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 197
-    Top = 190
+    Left = 213
+    Top = 158
   end
   object GuidesCity_real: TdsdGuides
     KeyField = 'Id'

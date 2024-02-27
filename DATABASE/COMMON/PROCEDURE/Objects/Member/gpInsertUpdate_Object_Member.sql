@@ -46,10 +46,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inBankSecondTwoId     Integer   ,    --
     IN inBankSecondDiffId    Integer   ,    --
     IN inInfoMoneyId         Integer   ,    --
-    IN inUnitMobileId        Integer   ,    --Подразделение(заявки мобильный)
+    IN inUnitMobileId        Integer   ,    --Подразделение(заявки мобильный) 
+   OUT outBankName           TVarChar  ,    --   
+   OUT outBankSecondName     TVarChar  ,    --
+   OUT outBankSecondTwoName  TVarChar  ,    --
+   OUT outBankSecondDiffName TVarChar  ,    --
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
@@ -164,6 +168,13 @@ BEGIN
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
 
+   --
+   outBankName           := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankId);
+   outBankSecondName     := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondId);
+   outBankSecondTwoName  := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondTwoId);
+   outBankSecondDiffName := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondDiffId);
+    
+    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    

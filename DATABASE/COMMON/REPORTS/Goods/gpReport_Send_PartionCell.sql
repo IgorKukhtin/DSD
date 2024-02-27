@@ -188,7 +188,7 @@ BEGIN
                        , tmpData_All.GoodsId
                        , tmpData_All.GoodsKindId
                        , tmpData_All.PartionGoodsDate    
-                       , SUM (tmpData_All.Amount) AS Amount
+                       ,  (tmpData_All.Amount) AS Amount
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellName ELSE '' END) AS PartionCellName_2
@@ -215,7 +215,8 @@ BEGIN
                          , tmpData_All.MovementItemId
                          , tmpData_All.GoodsId
                          , tmpData_All.GoodsKindId
-                         , tmpData_All.PartionGoodsDate
+                         , tmpData_All.PartionGoodsDate 
+                         , tmpData_All.Amount
                   )
 
     

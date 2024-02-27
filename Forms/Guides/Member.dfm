@@ -76,20 +76,6 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 50
       end
-      object Card: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
-        DataBinding.FieldName = 'Card'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
-      object CardBank: TcxGridDBColumn
-        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
-        DataBinding.FieldName = 'CardBank'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' ('#1060'1)'
         DataBinding.FieldName = 'BankName'
@@ -105,15 +91,29 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object CardSecond: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
-        DataBinding.FieldName = 'CardSecond'
+      object Card: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'Card'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 115
+      end
+      object CardBank: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'CardBank'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object CardIBAN: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+        DataBinding.FieldName = 'CardIBAN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
       end
       object BankSecondName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082' ('#1060'2)'
+        Caption = #1041#1072#1085#1082' - '#1060'2 ('#1042#1086#1089#1090#1086#1082')'
         DataBinding.FieldName = 'BankSecondName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -126,6 +126,27 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object CardBankSecond: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+        DataBinding.FieldName = 'CardBankSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
+      object CardIBANSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+        DataBinding.FieldName = 'CardIBANSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
+      end
+      object CardSecond: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
+        DataBinding.FieldName = 'CardSecond'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 140
       end
       object BankSecondTwoName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' - '#1060'2 ('#1054#1058#1055')'
@@ -141,35 +162,6 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
-      end
-      object BankSecondDiffName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082' - '#1060'2 ('#1083#1080#1095#1085#1099#1081')'
-        DataBinding.FieldName = 'BankSecondDiffName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceBankSecondDiffForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object CardChild: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
-        DataBinding.FieldName = 'CardChild'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
-      object CardBankSecond: TcxGridDBColumn
-        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)'
-        DataBinding.FieldName = 'CardBankSecond'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
       end
       object CardBankSecondTwo: TcxGridDBColumn
         Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1054#1058#1055')'
@@ -192,6 +184,21 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object BankSecondDiffName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082' - '#1060'2 ('#1083#1080#1095#1085#1099#1081')'
+        DataBinding.FieldName = 'BankSecondDiffName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceBankSecondDiffForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object CardBankSecondDiff: TcxGridDBColumn
         Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)('#1083#1080#1095#1085#1099#1081')'
         DataBinding.FieldName = 'CardBankSecondDiff'
@@ -213,6 +220,13 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object CardChild: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'CardChild'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 115
+      end
       object BankChildName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099' ('#1091#1076#1077#1088#1078'.)'
         DataBinding.FieldName = 'BankChildName'
@@ -227,20 +241,6 @@ object MemberForm: TMemberForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
-      end
-      object CardIBAN: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
-        DataBinding.FieldName = 'CardIBAN'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 115
-      end
-      object CardIBANSecond: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
-        DataBinding.FieldName = 'CardIBANSecond'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
       end
       object INN: TcxGridDBColumn
         Caption = #1048#1053#1053
@@ -646,7 +646,7 @@ object MemberForm: TMemberForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Text = #1042#1099#1073#1077#1088#1080#1090#1077' '#1073#1072#1085#1082
     Width = 117
   end
@@ -658,12 +658,12 @@ object MemberForm: TMemberForm
     Align = alTop
     TabOrder = 7
     object cxLabel13: TcxLabel
-      Left = 207
+      Left = 193
       Top = 9
-      Caption = #1041#1072#1085#1082' ('#1060'2)'
+      Caption = #1041#1072#1085#1082' -'#1060'2 ('#1042#1086#1089#1090#1086#1082')'
     end
     object edBankSecond: TcxButtonEdit
-      Left = 260
+      Left = 292
       Top = 8
       Properties.Buttons = <
         item
@@ -675,12 +675,12 @@ object MemberForm: TMemberForm
       Width = 131
     end
     object cxLabel1: TcxLabel
-      Left = 10
+      Left = 3
       Top = 9
       Caption = #1041#1072#1085#1082' ('#1060'1)'
     end
     object edBank: TcxButtonEdit
-      Left = 64
+      Left = 56
       Top = 8
       Properties.Buttons = <
         item
@@ -692,12 +692,12 @@ object MemberForm: TMemberForm
       Width = 131
     end
     object cxLabel2: TcxLabel
-      Left = 402
+      Left = 429
       Top = 9
       Caption = #1041#1072#1085#1082' - '#1060'2('#1054#1058#1055')'
     end
     object edBankSecondTwo: TcxButtonEdit
-      Left = 482
+      Left = 509
       Top = 8
       Properties.Buttons = <
         item
@@ -709,12 +709,12 @@ object MemberForm: TMemberForm
       Width = 131
     end
     object cxLabel3: TcxLabel
-      Left = 618
+      Left = 646
       Top = 9
       Caption = #1041#1072#1085#1082' - '#1060'2('#1083#1080#1095#1085#1099#1081')'
     end
     object edBankSecondDiff: TcxButtonEdit
-      Left = 715
+      Left = 746
       Top = 8
       Properties.Buttons = <
         item
@@ -2174,6 +2174,38 @@ object MemberForm: TMemberForm
         Component = ClientDataSet
         ComponentItem = 'UnitMobileId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankSecondName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankSecondName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankSecondTwoName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankSecondTwoName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBankSecondDiffName'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'BankSecondDiffName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
