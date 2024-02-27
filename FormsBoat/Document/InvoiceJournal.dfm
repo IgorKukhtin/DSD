@@ -3,28 +3,28 @@
   ClientHeight = 569
   ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1155
-  ExplicitHeight = 608
+  ExplicitWidth = 1161
+  ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 66
     Width = 1139
-    Height = 316
+    Height = 307
     TabOrder = 3
-    ExplicitWidth = 1121
-    ExplicitHeight = 316
-    ClientRectBottom = 316
+    ExplicitTop = 66
+    ExplicitWidth = 1139
+    ExplicitHeight = 307
+    ClientRectBottom = 307
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1121
-      ExplicitHeight = 316
+      ExplicitWidth = 1139
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 316
-        ExplicitLeft = -208
-        ExplicitTop = -57
-        ExplicitWidth = 1121
-        ExplicitHeight = 316
+        Height = 307
+        ExplicitWidth = 1139
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -179,7 +179,15 @@
             Options.Editing = False
             Width = 50
           end
-          object InvoiceKindName: TcxGridDBColumn [2]
+          object isFilesNotUploaded: TcxGridDBColumn [2]
+            Caption = #1053#1077' '#1074#1099#1075#1088'. '#1074' DropBox'
+            DataBinding.FieldName = 'isFilesNotUploaded'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object InvoiceKindName: TcxGridDBColumn [3]
             Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'InvoiceKindName'
             HeaderAlignmentHorz = taCenter
@@ -187,7 +195,7 @@
             Options.Editing = False
             Width = 79
           end
-          object ReceiptNumber: TcxGridDBColumn [3]
+          object ReceiptNumber: TcxGridDBColumn [4]
             Caption = 'Inv No'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
@@ -202,7 +210,7 @@
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [5]
+          object InvNumberPartner: TcxGridDBColumn [6]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -618,6 +626,14 @@
             Options.Editing = False
             Width = 85
           end
+          object DateUnloading: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
+            DataBinding.FieldName = 'DateUnloading'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 118
+          end
           object Color_Pay: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Pay'
             Visible = False
@@ -631,7 +647,7 @@
   end
   inherited Panel: TPanel
     Width = 1139
-    ExplicitWidth = 1121
+    ExplicitWidth = 1139
     inherited deEnd: TcxDateEdit
       Left = 315
       ExplicitLeft = 315
@@ -713,9 +729,8 @@
     Height = 73
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1121
     object btnUpdate: TcxButton
-      Left = 223
+      Left = 218
       Top = 8
       Width = 111
       Height = 25
@@ -815,7 +830,7 @@
       TabOrder = 11
     end
     object btnOpenFormPdfEdit: TcxButton
-      Left = 223
+      Left = 218
       Top = 42
       Width = 111
       Height = 25
@@ -823,23 +838,29 @@
       TabOrder = 12
     end
     object btntPrint_Invoice: TcxButton
-      Left = 347
+      Left = 340
       Top = 8
-      Width = 120
+      Width = 127
       Height = 25
       Action = mactSave_Invoice
       TabOrder = 13
     end
+    object cxButton6: TcxButton
+      Left = 340
+      Top = 42
+      Width = 127
+      Height = 25
+      Action = actFilesNotUploaded
+      TabOrder = 14
+    end
   end
   object cxGrid_Item: TcxGrid [3]
     Left = 0
-    Top = 373
+    Top = 381
     Width = 1139
     Height = 115
     Align = alBottom
     TabOrder = 7
-    ExplicitLeft = -64
-    ExplicitTop = 221
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1114,13 +1135,11 @@
   end
   object cxSplitter_Bottom_Item: TcxSplitter [4]
     Left = 0
-    Top = 488
+    Top = 373
     Width = 1139
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
-    ExplicitTop = 373
-    ExplicitWidth = 1121
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2369,6 +2388,19 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actFilesNotUploaded: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_FilesNotUploaded
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_FilesNotUploaded
+        end>
+      Caption = #1053#1077' '#1074#1099#1075#1088'. '#1074' DropBox'
+      Hint = #1042#1088#1077#1084#1077#1085#1085#1086' '#1085#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1092#1072#1081#1083#1099' '#1074' DropBox'
+      ImageIndex = 88
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -2414,7 +2446,7 @@
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3155,5 +3187,31 @@
     PackSize = 1
     Left = 440
     Top = 288
+  end
+  object spUpdate_FilesNotUploaded: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Invoice_FilesNotUploaded'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisFilesNotUploaded'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isFilesNotUploaded'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 951
+    Top = 176
   end
 end

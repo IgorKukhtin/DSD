@@ -32,8 +32,6 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Copy file : '
     TabOrder = 1
-    ExplicitTop = 53
-    ExplicitWidth = 984
     object GaugeCopyFile: TGauge
       Left = 1
       Top = 50
@@ -42,7 +40,7 @@ object MainForm: TMainForm
       Align = alBottom
       Progress = 50
       ExplicitLeft = 2
-      ExplicitWidth = 982
+      ExplicitTop = 56
     end
   end
   object cbTimer: TCheckBox
@@ -67,7 +65,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitWidth = 984
   end
   object PanelInfo: TPanel
     Left = 0
@@ -82,7 +79,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 4
-    ExplicitWidth = 984
   end
   object BitSendUnscheduled: TBitBtn
     Left = 232

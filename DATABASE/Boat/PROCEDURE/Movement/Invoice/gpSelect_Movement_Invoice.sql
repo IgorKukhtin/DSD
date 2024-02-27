@@ -75,6 +75,7 @@ RETURNS TABLE (Id               Integer
              , InvNumberFull_parent TVarChar, InvNumber_parent TVarChar
              , MovementDescName_parent TVarChar
              , isFilesNotUploaded Boolean
+             , DateUnloading TDateTime
 
              , Color_Pay Integer
               )
@@ -373,7 +374,23 @@ BEGIN
 
                      WHERE Object_Object.Id = inClientId
                         OR inClientId = 0
-                                   )
+                                   ),
+    tmpDateUnloading AS (SELECT tmpData.Id
+                              , MAX(ObjectDate_DateUnloading.ValueData)::TDateTime  AS DateUnloading
+                         FROM tmpData
+                         
+                              INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
+                                                     ON ObjectFloat_InvoicePdf_MovmentId.ValueData = tmpData.Id
+                                                    AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
+
+                              INNER JOIN ObjectDate AS ObjectDate_DateUnloading
+                                                    ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
+                                                   AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
+                                                   
+                         GROUP BY tmpData.Id                          
+                         )
+    
+    
     -- Результат
     SELECT
         tmpData.Id
@@ -462,6 +479,7 @@ BEGIN
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
       , tmpData.isFilesNotUploaded
+      , tmpDateUnloading.DateUnloading
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
       , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
@@ -492,6 +510,8 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
                               AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
+        
+        LEFT JOIN tmpDateUnloading ON tmpDateUnloading.Id = tmpData.Id
 
 ;
 
