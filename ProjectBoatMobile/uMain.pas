@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.DateUtils,
+  System.DateUtils, Data.DB,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.Objects, FMX.Edit,
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
@@ -167,6 +167,17 @@ type
     Image13: TImage;
     bGoodsRefresh: TSpeedButton;
     Image14: TImage;
+    Panel3: TPanel;
+    Label14: TLabel;
+    Label16: TLabel;
+    edInventScanBarCode: TEdit;
+    Edit1: TEdit;
+    Label15: TLabel;
+    Edit2: TEdit;
+    bInventScanOk: TSpeedButton;
+    Image15: TImage;
+    bInventScanSearch: TSpeedButton;
+    Image16: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -187,6 +198,8 @@ type
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
+    procedure OnScanResultGoods(Sender: TObject; AData_String: String);
+    procedure OnScanResultInventoryScan(Sender: TObject; AData_String: String);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
@@ -204,6 +217,8 @@ type
     procedure bGoodsClick(Sender: TObject);
     procedure bGoodsRefreshClick(Sender: TObject);
     procedure bGoodsChoiceClick(Sender: TObject);
+    procedure bInventoryJournalRefreshClick(Sender: TObject);
+    procedure bInventScanSearchClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -232,12 +247,25 @@ var
 
 implementation
 
-uses System.IOUtils, Authentication, Storage, CommonData, CursorUtils;
+uses System.IOUtils, FMX.SearchBox, Authentication, Storage, CommonData, CursorUtils;
 
 {$R *.fmx}
 
 const
   WebServer = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+
+function SearshBox(AListView: TListView): TSearchBox;
+var
+  AIdx: Integer;
+begin
+  Result := Nil;
+  for AIdx := 0 to AListView.ComponentCount - 1 do
+    if AListView.Components[AIdx] is TSearchBox then
+    begin
+      Result := TSearchBox(AListView.Components[AIdx]);
+      Break;
+    end;
+end;
 
 // перевод формы в/из режим ожидания
 procedure TfrmMain.Wait(AWait: Boolean);
@@ -461,7 +489,7 @@ begin
       sbBack.Visible := true;
     end;
 
-    if (tcMain.ActiveTab = tiInformation)  then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods)  then
       sbScan.Visible := true
     else sbScan.Visible := false;
     sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner;
@@ -478,7 +506,8 @@ begin
     if tcMain.ActiveTab = tiGoods then
     begin
       lCaption.Text := 'Комплектующие';
-     // FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
+      bGoodsChoice.Visible := False;
+      FDataWedgeBarCode.OnScanResult := OnScanResultGoods;
     end
     else
     if tcMain.ActiveTab = tiScanBarCode then
@@ -500,6 +529,11 @@ begin
     if tcMain.ActiveTab = tiInventory then
     begin
       lCaption.Text := 'Инвентаризация';
+    end else
+    if tcMain.ActiveTab = tiInventoryScan then
+    begin
+      lCaption.Text := 'Вставка товара в инвентаризацию';
+      FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
     end
   end;
 end;
@@ -573,8 +607,17 @@ begin
   if DM.cdsInventory.IsEmpty then Exit;
   if DM.cdsInventoryId.AsInteger = 0 then Exit;
 
+  if DM.cdsInventoryJournalStatusId.AsInteger <> 1 then
+  begin
+    ShowMessage('Добавлять товар в проведенную инвентаризацию запрещено.');
+    Exit;
+  end;
+
   if not DM.LoadInventoryGoods then Exit;
   imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
+
+  if not DM.cdsGoods.Active then DM.LoadGoods;
+
 
   SwitchToForm(tiInventoryScan, nil);
 end;
@@ -595,10 +638,26 @@ begin
   ShowInventoryJournal;
 end;
 
+procedure TfrmMain.bInventoryJournalRefreshClick(Sender: TObject);
+begin
+  DM.LoadInventoryJournal;
+end;
+
+// Поиск товара для вставки в инвентаризацию
+procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
+begin
+  ShowGoods;
+  bGoodsChoice.Visible := True;
+end;
+
 // Выбор товара
 procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
 begin
-//
+  ReturnPriorForm;
+  if tcMain.ActiveTab = tiInventoryScan then
+  begin
+
+  end;
 end;
 
 // переход на форму справочника товаров
@@ -623,7 +682,7 @@ end;
 procedure TfrmMain.bLogInClick(Sender: TObject);
 begin
   FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
-   sbScanClick(Sender);
+  sbScanClick(Sender);
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -933,6 +992,22 @@ begin
       ReturnPriorForm
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
   end;
+end;
+
+procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);
+begin
+  SearshBox(lwGoods).Text := Copy(AData_String, 1, Length(AData_String) - 1);
+end;
+
+// Обрабатываем отсканированный товар для инвентаризации
+procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
+begin
+  edInventScanBarCode.Text := Copy(AData_String, 1, Length(AData_String) - 1);
+
+  if DM.cdsGoods.Locate('EAN', edInventScanBarCode.Text, [loCaseInsensitive]) then
+  begin
+
+  end else ShowMessage('Товар с штрихкодом ' + edInventScanBarCode.Text + ' не найден.');
 end;
 
 end.
