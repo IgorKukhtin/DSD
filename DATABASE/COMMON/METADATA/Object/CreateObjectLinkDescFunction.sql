@@ -2316,6 +2316,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_UnitMobile() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Member_UnitMobile', 'Связь физ.лиц с Подразделение(заявки мобильный)', zc_Object_Member(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_UnitMobile');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_BankSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_BankSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_BankSecondTwo', 'Bank - Ф2(ОТП)', zc_Object_Member(), zc_Object_Bank() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_BankSecondTwo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Member_BankSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_BankSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Member_BankSecondDiff', 'Bank - Ф2(личный)', zc_Object_Member(), zc_Object_Bank() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Member_BankSecondDiff');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UserFarmacyCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Unit_UserFarmacyCash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -3011,6 +3020,8 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 26.02.24         * zc_ObjectLink_Member_BankSecondTwo
+                    zc_ObjectLink_Member_BankSecondDiff
  19.12.23         * zc_ObjectLink_GoodsGroupProperty_Parent
                     zc_ObjectLink_Goods_GoodsGroupProperty
  20.11.23                                                                                      * zc_ObjectLink_SubjectDoc_Reason
