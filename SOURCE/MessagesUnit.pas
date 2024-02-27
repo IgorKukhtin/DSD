@@ -86,20 +86,20 @@ begin
   fFullMessage:=inFullMessage;
   try
     meFullMessage.Lines.Text := Copy(inFullMessage, 1, 4096);
+  except
+  end;
+  if trim(inMessage)<>''then
+  begin
+    rlError.Caption := Copy(inMessage, 1, 4096);
     List := TStringList.Create;
     try
-      List.Text := meFullMessage.Lines.Text;
+      List.Text := rlError.Caption;
       if List.Count > 10 then
         rlError.Properties.Alignment.Vert := taTopJustify
       else rlError.Properties.Alignment.Vert := taVCenter;
     finally
       List.Free;
     end;
-  except
-  end;
-  if trim(inMessage)<>''then
-  begin
-     rlError.Caption := Copy(inMessage, 1, 4096)
   end else begin
      with rlError.Style.Font do begin
        Color:= clRed;

@@ -192,9 +192,9 @@ BEGIN
                                   --
                                 , tmpMI_orig.GoodsId
                                 , tmpMI_orig.GoodsKindId
-                           FROM tmpMI
-                           GROUP BY tmpMI.GoodsId
-                                  , tmpMI.GoodsKindId
+                           FROM tmpMI_orig
+                           GROUP BY tmpMI_orig.GoodsId
+                                  , tmpMI_orig.GoodsKindId
                           )
 
         -- ВСЕ заявки, в которых есть Резерв !!!для перемещения!!! за эту "смену" или позже
