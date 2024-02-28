@@ -311,7 +311,7 @@ type
     actInsertUpdate_Quality_byTransport: TdsdExecStoredProc;
     actPrint_TTN_list: TdsdPrintAction;
     macPrint_QualityDoc_list: TMultiAction;
-    macPrint_TTN_list: TMultiAction;
+    macPrint_TTN_2copy_list: TMultiAction;
     macPrint_Group_list: TMultiAction;
     macPrint_Group: TMultiAction;
     bbPrint_Group: TdxBarButton;

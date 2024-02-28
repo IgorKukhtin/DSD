@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalGroupSummAdd(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
+             , StatusCode Integer, StatusName TVarChar 
+             , NormHour TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -42,7 +43,7 @@ BEGIN
             , inOperDate            AS OperDate                            --CURRENT_DATE
             , lfObject_Status.Code  AS StatusCode
             , lfObject_Status.Name  AS StatusName
-
+            , 0        ::TFloat     AS NormHour
             , ''       :: TVarChar  AS Comment
 
             , 0                     AS PersonalServiceListId
@@ -63,11 +64,15 @@ BEGIN
             , Movement.OperDate
             , Object_Status.ObjectCode   AS StatusCode
             , Object_Status.ValueData    AS StatusName
-
+            , MovementFloat_NormHour.ValueData   AS NormHour
             , MovementString_Comment.ValueData   AS Comment
 
             , Object_PersonalServiceList.Id        AS PersonalServiceListId
             , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+            , Object_Unit.Id                       AS UnitId
+            , Object_Unit.ValueData                AS UnitName
+            , Object_PersonalGroup.Id              AS PersonalGroupId
+            , Object_PersonalGroup.ValueData       AS PersonalGroupName            
             , CAST (FALSE AS Boolean)            AS isMask
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -75,6 +80,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementFloat AS MovementFloat_NormHour
+                                    ON MovementFloat_NormHour.MovementId =  Movement.Id
+                                   AND MovementFloat_NormHour.DescId = zc_MovementFloat_NormHour()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id

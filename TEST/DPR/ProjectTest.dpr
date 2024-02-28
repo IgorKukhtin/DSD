@@ -1491,7 +1491,9 @@ uses
   PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
   Goods_ScaleDialog in '..\..\Forms\Guides\Goods_ScaleDialog.pas' {Goods_ScaleDialogForm: TParentForm},
-  ContractPartner_Object in '..\..\Forms\Guides\ContractPartner_Object.pas' {ContractPartner_ObjectForm: TParentForm};
+  ContractPartner_Object in '..\..\Forms\Guides\ContractPartner_Object.pas' {ContractPartner_ObjectForm: TParentForm},
+  PersonalGroupSummAddJournal in '..\..\Forms\Document\PersonalGroupSummAddJournal.pas' {PersonalGroupSummAddJournalForm: TParentForm},
+  PersonalGroupSummAdd in '..\..\Forms\Document\PersonalGroupSummAdd.pas' {PersonalGroupSummAddForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

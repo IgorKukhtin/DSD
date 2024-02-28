@@ -27,7 +27,7 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 43770d
+      EditValue = 45292d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -36,7 +36,7 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 43830d
+      EditValue = 45292d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -98,7 +98,7 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = TotalSumm
+          Column = NormHour
         end
         item
           Format = ',0.00'
@@ -120,11 +120,6 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
           Format = ',0.00'
           Kind = skSum
         end
-        item
-          Format = ',0.###;-,0.###; ;'
-          Kind = skSum
-        end>
-      DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
@@ -133,26 +128,17 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSumm
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm
         end
         item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = InvNumber
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -162,6 +148,7 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -198,21 +185,34 @@ object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
         Width = 92
       end
       object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
+        Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1083#1077#1085#1080#1081
         DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxDateEditProperties'
+        Properties.DisplayFormat = 'mmmm yyyy'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object TotalSumm: TcxGridDBColumn
+      object NormHour: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1074#1088#1077#1084#1077#1085#1080
-        DataBinding.FieldName = 'TotalSumm'
+        DataBinding.FieldName = 'NormHour'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 107
+      end
+      object TotalSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072
+        DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 107
       end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103

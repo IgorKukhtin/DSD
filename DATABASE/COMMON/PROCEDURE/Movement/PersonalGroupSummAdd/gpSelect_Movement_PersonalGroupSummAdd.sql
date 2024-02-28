@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalGroupSummAdd(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , NormHour TFloat
+             , NormHour TFloat , TotalSumm TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -38,7 +38,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
-         , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+         , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ 
          , tmpMemberPersonalServiceList
                       AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                           FROM ObjectLink AS ObjectLink_User_Member
@@ -88,6 +88,8 @@ BEGIN
             , Object_Status.ObjectCode           AS StatusCode
             , Object_Status.ValueData            AS StatusName
             , MovementFloat_NormHour.ValueData   AS NormHour
+            , MovementFloat_TotalSumm.ValueData  AS TotalSumm 
+            
             , MovementString_Comment.ValueData   AS Comment
 
             , Object_PersonalServiceList.Id        AS PersonalServiceListId
@@ -108,6 +110,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_NormHour
                                     ON MovementFloat_NormHour.MovementId =  Movement.Id
                                    AND MovementFloat_NormHour.DescId = zc_MovementFloat_NormHour()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -117,7 +122,7 @@ BEGIN
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
-            INNER JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+            --INNER JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id

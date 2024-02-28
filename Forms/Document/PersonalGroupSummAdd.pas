@@ -86,8 +86,8 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    InfoMoneyChoiceForm: TOpenChoiceForm;
-    ContractChoiceForm: TOpenChoiceForm;
+    PositionChoiceForm: TOpenChoiceForm;
+    PositionLevelChoiceForm: TOpenChoiceForm;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     cxLabel18: TcxLabel;
@@ -105,6 +105,11 @@ type
     cxLabel6: TcxLabel;
     edPersonalGroup: TcxButtonEdit;
     GuidesPersonalGroup: TdsdGuides;
+    edNormHour: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    spInsertMI_Last: TdsdStoredProc;
+    actInsertMI_Last: TdsdExecStoredProc;
+    bbInsertMI_Last: TdxBarButton;
   private
   public
   end;

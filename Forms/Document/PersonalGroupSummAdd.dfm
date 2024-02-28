@@ -2,8 +2,8 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1077#1084#1080#1103' '#1079#1072' '#1083#1091#1095#1096#1091#1102' '#1073#1088#1080#1075#1072#1076#1091'>'
-  ClientHeight = 396
-  ClientWidth = 743
+  ClientHeight = 405
+  ClientWidth = 814
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,11 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 743
+    Width = 814
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitWidth = 773
     object edInvNumber: TcxTextEdit
       Left = 16
       Top = 20
@@ -46,6 +44,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       Left = 134
       Top = 20
       EditValue = 0d
+      Properties.DisplayFormat = 'mmmm yyyy'
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -54,7 +53,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
     object cxLabel2: TcxLabel
       Left = 134
       Top = 2
-      Caption = #1044#1072#1090#1072
+      Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1083#1077#1085#1080#1081
     end
     object cxLabel4: TcxLabel
       Left = 16
@@ -92,7 +91,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       Left = 502
       Top = 60
       TabOrder = 7
-      Width = 227
+      Width = 299
     end
     object cxLabel3: TcxLabel
       Left = 240
@@ -128,32 +127,43 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       TabOrder = 11
       Width = 249
     end
+    object edNormHour: TcxCurrencyEdit
+      Left = 706
+      Top = 20
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
+      Properties.ReadOnly = False
+      TabOrder = 12
+      Width = 95
+    end
+    object cxLabel7: TcxLabel
+      Left = 706
+      Top = 2
+      Caption = #1053#1086#1088#1084#1072' '#1074#1088#1077#1084#1077#1085#1080
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 743
-    Height = 281
+    Width = 814
+    Height = 290
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 773
-    ClientRectBottom = 281
-    ClientRectRight = 743
+    ClientRectBottom = 290
+    ClientRectRight = 814
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 773
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 743
-        Height = 257
+        Width = 814
+        Height = 266
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 773
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -219,7 +229,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object PersonalCode: TcxGridDBColumn
+          object PositionCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PositionCode'
             Visible = False
@@ -231,17 +241,31 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
           object PositionName: TcxGridDBColumn
             Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'PositionName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PositionChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 239
           end
           object PositionLevelName: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
             DataBinding.FieldName = 'PositionLevelName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PositionLevelChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 195
           end
           object Amount: TcxGridDBColumn
@@ -294,7 +318,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 227
+    Width = 191
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -352,8 +376,8 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 140
-    Top = 224
+    Left = 108
+    Top = 280
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -425,6 +449,22 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMI_Last'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -507,6 +547,10 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
     end
     object bbItemProtocol: TdxBarButton
       Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
+    object bbInsertMI_Last: TdxBarButton
+      Action = actInsertMI_Last
       Category = 0
     end
   end
@@ -654,7 +698,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = ContractChoiceForm
+      Action = PositionLevelChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
@@ -694,12 +738,12 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       isSetErased = False
       DataSource = MasterDS
     end
-    object InfoMoneyChoiceForm: TOpenChoiceForm
+    object PositionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TInfoMoneyForm'
-      FormNameParam.Value = ''
+      FormName = 'TPositionForm'
+      FormNameParam.Value = 'TPositionForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -707,25 +751,25 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
+          ComponentItem = 'PositionId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
+          ComponentItem = 'PositionName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
-    object ContractChoiceForm: TOpenChoiceForm
+    object PositionLevelChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      FormName = 'TContractChoiceForm'
-      FormNameParam.Value = ''
+      FormName = 'TPositionLevelForm'
+      FormNameParam.Value = 'TPositionLevelForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -733,52 +777,15 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
           Name = 'Key'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ContractId'
+          ComponentItem = 'PositionLevelId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'ContractName'
+          ComponentItem = 'PositionLevelName'
           DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'JuridicalName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'InfoMoneyName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPaidKindId'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'inPaidKindId'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -954,12 +961,26 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
           Name = 'GoodsName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PersonalName'
+          ComponentItem = 'PositionName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actInsertMI_Last: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMI_Last
+      StoredProcList = <
+        item
+          StoredProc = spInsertMI_Last
+        end>
+      Caption = 'C'#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1080#1079' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1084#1077#1089#1103#1094#1072
+      ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1084#1077#1089#1103#1094#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1084#1077#1089#1103#1094#1072' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
     end
   end
   object MasterDS: TDataSource
@@ -1003,10 +1024,18 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inPositionlId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PersonalId'
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPositionLevelId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PositionLevelId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1027,24 +1056,10 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PositionId'
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 94
-    Top = 264
+    Left = 54
+    Top = 296
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1100,6 +1115,14 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNormHour'
+        Value = Null
+        Component = edNormHour
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = ceComment
@@ -1132,8 +1155,8 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 387
-    Top = 177
+    Left = 715
+    Top = 81
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1153,6 +1176,12 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       end
       item
         Control = edPersonalServiceList
+      end
+      item
+        Control = edUnit
+      end
+      item
+        Control = edPersonalGroup
       end>
     GetStoredProc = spGet
     Left = 314
@@ -1290,6 +1319,13 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NormHour'
+        Value = Null
+        Component = edNormHour
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 632
@@ -1316,7 +1352,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 258
+    Left = 250
     Top = 178
   end
   object spErasedMIMaster: TdsdStoredProc
@@ -1533,5 +1569,22 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       end>
     Left = 564
     Top = 8
+  end
+  object spInsertMI_Last: TdsdStoredProc
+    StoredProcName = 'gpInsert_MI_PersonalGroupSummAdd_Last'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 171
   end
 end

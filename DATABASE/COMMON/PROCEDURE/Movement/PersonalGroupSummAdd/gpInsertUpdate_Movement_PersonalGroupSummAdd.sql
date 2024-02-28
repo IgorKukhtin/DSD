@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Movement_PersonalGroupSummAdd()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalGroupSummAdd (Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalGroupSummAdd (Integer, TVarChar, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalGroupSummAdd(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalGroupSummAdd(                               
  INOUT ioId                     Integer   , -- Ключ объекта <Документ>
     IN inInvNumber              TVarChar  , -- Номер документа
-    IN inOperDate               TDateTime , -- Дата документа
+    IN inOperDate               TDateTime , -- Дата документа 
+    IN inNormHour               TFloat    , --NormHour
     IN inComment                TVarChar  , -- Примечание
     IN inPersonalServiceListId  Integer   , -- 
     IN inUnitId                 Integer   , -- 
@@ -28,6 +29,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
 
+     -- переопределяем дату документа - Месяц начислений = первое число месяца
+     inOperDate:= DATE_TRUNC ('MONTH', inOperDate);
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -40,7 +44,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalGroup(), ioId, inPersonalGroupId);
-
+     
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_NormHour(), ioId, inNormHour);
+     
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
      

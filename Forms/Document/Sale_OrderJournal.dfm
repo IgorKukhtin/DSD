@@ -4139,7 +4139,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
       ImageIndex = 16
     end
-    object macPrint_TTN_list: TMultiAction
+    object macPrint_TTN_2copy_list: TMultiAction
       Category = 'Group_TTN_Quality'
       MoveParams = <
         item
@@ -4191,7 +4191,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
           Action = macPrintPack_2copy
         end
         item
-          Action = macPrint_TTN_list
+          Action = macPrint_TTN_2copy_list
         end
         item
           Action = macPrint_QualityDoc_list
@@ -4655,8 +4655,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       ActionList = <
         item
+          Action = actInsertUpdate_TTN_byTransport
         end
         item
+          Action = actInsertUpdate_Quality_byTransport
         end
         item
           Action = macPrintPack_2copy
@@ -4792,14 +4794,16 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       ActionList = <
         item
+          Action = actInsertUpdate_TTN_byTransport
         end
         item
+          Action = actInsertUpdate_Quality_byTransport
         end
         item
           Action = macPrintPack_3copy
         end
         item
-          Action = macPrint_TTN_Copy1_list
+          Action = macPrint_TTN_2copy_list
         end
         item
           Action = macPrint_QualityDoc_list
@@ -4833,10 +4837,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       QuestionBeforeExecute = 
         #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1099#1087#1086#1083#1085#1080#1090#1100' '#1087#1072#1082#1077#1090#1085#1091#1102' '#1087#1077#1095#1072#1090#1100' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1058#1058#1053' '#1080'  '#1050#1072#1095#1077#1089#1090#1074 +
-        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 3 '#1053#1072#1082#1083#1072#1076#1085#1099#1093', '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
+        #1077#1085#1085#1086#1075#1086', '#1087#1077#1095#1072#1090#1100' 3 '#1053#1072#1082#1083#1072#1076#1085#1099#1093', 2 '#1058#1058#1053', '#1050#1072#1095#1077#1089#1090#1074#1077#1085#1085#1086#1075#1086')? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1089#1086#1079#1076#1072#1085#1099', '#1087#1077#1095#1072#1090#1100' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+'#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+2 '#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1074' '#1087#1072#1082#1077#1090#1077' ('#1041#1053') (3 '#1088#1072#1089#1093#1086#1076'+2 '#1090#1090#1085'+'#1082#1072#1095#1077#1089#1090#1074')'
       ImageIndex = 44
     end
   end
@@ -5377,10 +5381,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         item
           Visible = True
           ItemName = 'bbBarSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint_Sale2_TTN_Quality'
         end
         item
           Visible = True
