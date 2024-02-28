@@ -118,14 +118,17 @@ begin
   try
 
     FUserName := Ini.ReadString('Connect', 'UserName', 'Админ');
-    Ini.WriteString('Connect', 'User', FUserName);
+    Ini.WriteString('Connect', 'UserName', FUserName);
 
     FUserPassword := Ini.ReadString('Connect', 'UserPassword', 'Админ');
-    Ini.WriteString('Connect', 'Password', FUserPassword);
+    Ini.WriteString('Connect', 'UserPassword', FUserPassword);
 
     FDropBoxDir := Ini.ReadString('DropBox', 'DropBoxDir', '');
-    if FDropBoxDir[Length(FDropBoxDir)] <> '\' then FDropBoxDir := FDropBoxDir + '\';
-    Ini.WriteString('DropBox', 'DropBoxDir', FDropBoxDir);
+    if FDropBoxDir <> '' then
+    begin
+      if FDropBoxDir[Length(FDropBoxDir)] <> '\' then FDropBoxDir := FDropBoxDir + '\';
+      Ini.WriteString('DropBox', 'DropBoxDir', FDropBoxDir);
+    end;
 
     FDateSend := Ini.ReadDateTime('DropBox', 'DateSend', EncodeDate(2024, 1, 1));
     Ini.WriteDateTime('DropBox', 'DateSend', FDateSend);

@@ -23,7 +23,6 @@ object MainForm: TMainForm
     Height = 331
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 241
     object grtvMaker: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       ScrollbarAnnotations.CustomAnnotations = <>

@@ -1151,12 +1151,15 @@ begin
       end;
     end;
 
-    if qryMaker.FieldByName('isQuarter').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) and
+    if qryMaker.FieldByName('isQuarter').AsBoolean and ((MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 4, 7, 10]) or
+       (qryMaker.FieldByName('SendPlan').AsDateTime = EncodeDate(2024, 3, 1))) and
       (DateEnd = IncDay(StartOfTheMonth(qryMaker.FieldByName('SendPlan').AsDateTime), -1))  then
     begin
       FormQuarterFile := True;
       DateEndQuarter := DateEnd;
-      DateStartQuarter := System.SysUtils.IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
+      if qryMaker.FieldByName('SendPlan').AsDateTime = EncodeDate(2024, 3, 1) then
+        DateStartQuarter := System.SysUtils.IncMonth(StartOfTheMonth(DateEndQuarter), - 1)
+      else DateStartQuarter := System.SysUtils.IncMonth(StartOfTheMonth(DateEndQuarter), - 2);
     end;
 
     if qryMaker.FieldByName('is4Month').AsBoolean and (MonthOf(qryMaker.FieldByName('SendPlan').AsDateTime) in [1, 5, 9]) and
