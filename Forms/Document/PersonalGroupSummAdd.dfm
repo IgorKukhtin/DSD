@@ -976,6 +976,9 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       StoredProcList = <
         item
           StoredProc = spInsertMI_Last
+        end
+        item
+          StoredProc = spSelectMI
         end>
       Caption = 'C'#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1080#1079' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1084#1077#1089#1103#1094#1072
       ImageIndex = 27
