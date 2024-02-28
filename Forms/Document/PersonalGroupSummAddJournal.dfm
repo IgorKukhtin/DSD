@@ -1,7 +1,7 @@
-object PersonalRateJournalForm: TPersonalRateJournalForm
+object PersonalGroupSummAddJournalForm: TPersonalGroupSummAddJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1090#1072#1074#1082#1080' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1077#1084#1080#1103' '#1079#1072' '#1083#1091#1095#1096#1091#1102' '#1073#1088#1080#1075#1072#1076#1091'>'
   ClientHeight = 427
   ClientWidth = 971
   Color = clBtnFace
@@ -162,7 +162,6 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -190,30 +189,30 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
-        Width = 158
+        Width = 94
       end
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 117
+        Width = 92
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 138
+        Width = 85
       end
       object TotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
+        Caption = #1053#1086#1088#1084#1072' '#1074#1088#1077#1084#1077#1085#1080
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 156
+        Width = 80
       end
       object PersonalServiceListName: TcxGridDBColumn
         Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -221,13 +220,28 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 179
+        Width = 207
+      end
+      object UnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 183
+      end
+      object PersonalGroupName: TcxGridDBColumn
+        Caption = #1041#1088#1080#1075#1072#1076#1072
+        DataBinding.FieldName = 'PersonalGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 103
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 209
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -470,8 +484,8 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TPersonalRateForm'
-      FormNameParam.Value = 'TPersonalRateForm'
+      FormName = 'TPersonalGroupSummAddForm'
+      FormNameParam.Value = 'TPersonalGroupSummAddForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -503,8 +517,8 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TPersonalRateForm'
-      FormNameParam.Value = 'TPersonalRateForm'
+      FormName = 'TPersonalGroupSummAddForm'
+      FormNameParam.Value = 'TPersonalGroupSummAddForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -890,8 +904,8 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
       ImageIndex = 54
-      FormName = 'TPersonalRateForm'
-      FormNameParam.Value = 'TPersonalRateForm'
+      FormName = 'TPersonalGroupSummAddForm'
+      FormNameParam.Value = 'TPersonalGroupSummAddForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -927,7 +941,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PersonalRate'
+    StoredProcName = 'gpSelect_Movement_PersonalGroupSummAdd'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -971,7 +985,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     Top = 104
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_PersonalRate'
+    StoredProcName = 'gpComplete_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1027,7 +1041,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_PersonalRate'
+    StoredProcName = 'gpUnComplete_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1044,7 +1058,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_PersonalRate'
+    StoredProcName = 'gpSetErased_Movement_PersonalGroupSummAdd'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -1084,6 +1098,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
@@ -1113,7 +1128,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     Top = 168
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_PersonalRate'
+    StoredProcName = 'gpCompletePeriod_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <>
@@ -1122,7 +1137,7 @@ object PersonalRateJournalForm: TPersonalRateJournalForm
     Top = 288
   end
   object spMovementReComplete: TdsdStoredProc
-    StoredProcName = 'gpReComplete_Movement_PersonalRate'
+    StoredProcName = 'gpReComplete_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <

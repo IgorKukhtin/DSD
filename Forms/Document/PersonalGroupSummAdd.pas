@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TPersonalRateForm = class(TParentForm)
+  TPersonalGroupSummAddForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -97,9 +97,14 @@ type
     GuidesPersonalServiceList: TdsdGuides;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
-    Date_Last: TcxGridDBColumn;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     bbItemProtocol: TdxBarButton;
+    cxLabel5: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edPersonalGroup: TcxButtonEdit;
+    GuidesPersonalGroup: TdsdGuides;
   private
   public
   end;
@@ -109,6 +114,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalRateForm);
+  RegisterClass(TPersonalGroupSummAddForm);
 
 end.

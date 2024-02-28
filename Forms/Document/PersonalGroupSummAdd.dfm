@@ -1,9 +1,9 @@
-object PersonalRateForm: TPersonalRateForm
+object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1090#1072#1074#1082#1080' '#1079#1072#1088#1072#1073#1086#1090#1085#1086#1081' '#1087#1083#1072#1090#1099'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1077#1084#1080#1103' '#1079#1072' '#1083#1091#1095#1096#1091#1102' '#1073#1088#1080#1075#1072#1076#1091'>'
   ClientHeight = 396
-  ClientWidth = 773
+  ClientWidth = 743
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,13 @@ object PersonalRateForm: TPersonalRateForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 773
+    Width = 743
     Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitWidth = 773
     object edInvNumber: TcxTextEdit
       Left = 16
       Top = 20
@@ -82,15 +84,15 @@ object PersonalRateForm: TPersonalRateForm
       Width = 209
     end
     object cxLabel18: TcxLabel
-      Left = 240
+      Left = 502
       Top = 42
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 240
+      Left = 502
       Top = 60
       TabOrder = 7
-      Width = 329
+      Width = 227
     end
     object cxLabel3: TcxLabel
       Left = 240
@@ -107,31 +109,51 @@ object PersonalRateForm: TPersonalRateForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 329
+      Width = 249
+    end
+    object cxLabel5: TcxLabel
+      Left = 240
+      Top = 42
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object edUnit: TcxButtonEdit
+      Left = 240
+      Top = 60
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 249
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 115
-    Width = 773
+    Width = 743
     Height = 281
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 773
     ClientRectBottom = 281
-    ClientRectRight = 773
+    ClientRectRight = 743
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 773
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 773
+        Width = 743
         Height = 257
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 773
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -182,7 +204,7 @@ object PersonalRateForm: TPersonalRateForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = PersonalName
+              Column = PositionLevelName
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -197,62 +219,9 @@ object PersonalRateForm: TPersonalRateForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object UnitCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1087#1086#1076#1088'.'
-            DataBinding.FieldName = 'UnitCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
-          end
-          object UnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object Card: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'1)'
-            DataBinding.FieldName = 'Card'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 115
-          end
-          object CardSecond: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090'. '#1047#1055' ('#1060'2)'
-            DataBinding.FieldName = 'CardSecond'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 115
-          end
-          object CardIBAN: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'1)'
-            DataBinding.FieldName = 'CardIBAN'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 115
-          end
-          object CardIBANSecond: TcxGridDBColumn
-            Caption = #8470' '#1082#1072#1088#1090'. IBAN '#1047#1055' ('#1060'2)'
-            DataBinding.FieldName = 'CardIBANSecond'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 115
-          end
           object PersonalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PersonalCode'
+            DataBinding.FieldName = 'PositionCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -265,32 +234,15 @@ object PersonalRateForm: TPersonalRateForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 239
           end
-          object PersonalName: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
-            DataBinding.FieldName = 'PersonalName'
+          object PositionLevelName: TcxGridDBColumn
+            Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'PositionLevelName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 130
-          end
-          object MemberName: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1092#1080#1079'.'#1083#1080#1094#1086')'
-            DataBinding.FieldName = 'MemberName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 135
-          end
-          object INN: TcxGridDBColumn
-            Caption = #1048#1053#1053
-            DataBinding.FieldName = 'INN'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 110
+            Width = 195
           end
           object Amount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -309,7 +261,7 @@ object PersonalRateForm: TPersonalRateForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 125
+            Width = 185
           end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -320,20 +272,29 @@ object PersonalRateForm: TPersonalRateForm
             Options.Editing = False
             Width = 40
           end
-          object Date_Last: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090'. '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1089#1090#1072#1074#1082#1072
-            DataBinding.FieldName = 'Date_Last'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072', '#1076#1086' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' '#1089#1090#1072#1074#1082#1072
-            Width = 94
-          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
         end
       end
     end
+  end
+  object cxLabel6: TcxLabel
+    Left = 502
+    Top = 2
+    Caption = #1041#1088#1080#1075#1072#1076#1072' '#8470
+  end
+  object edPersonalGroup: TcxButtonEdit
+    Left = 502
+    Top = 20
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 227
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -359,7 +320,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 304
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PersonalRate'
+    StoredProcName = 'gpSelect_MovementItem_PersonalGroupSummAdd'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -391,7 +352,7 @@ object PersonalRateForm: TPersonalRateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 116
+    Left = 140
     Top = 224
   end
   object dxBarManager: TdxBarManager
@@ -472,14 +433,6 @@ object PersonalRateForm: TPersonalRateForm
         item
           Visible = True
           ItemName = 'bbMIContainer'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1029,7 +982,7 @@ object PersonalRateForm: TPersonalRateForm
     end
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalRate'
+    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1090,8 +1043,8 @@ object PersonalRateForm: TPersonalRateForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 86
-    Top = 224
+    Left = 94
+    Top = 264
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1108,6 +1061,7 @@ object PersonalRateForm: TPersonalRateForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 360
     Top = 304
@@ -1117,7 +1071,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 168
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_PersonalRate'
+    StoredProcName = 'gpInsertUpdate_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1160,6 +1114,22 @@ object PersonalRateForm: TPersonalRateForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 387
@@ -1189,7 +1159,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 225
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalRate'
+    StoredProcName = 'gpGet_Movement_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1290,10 +1260,40 @@ object PersonalRateForm: TPersonalRateForm
         Component = FormParams
         ComponentItem = 'Id'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = Null
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 608
-    Top = 32
+    Left = 632
+    Top = 80
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'PersonalRateJournalForm'
@@ -1320,7 +1320,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 178
   end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalRate_SetErased'
+    StoredProcName = 'gpMovementItem_PersonalGroupSummAdd_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1345,7 +1345,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 200
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalRate_SetUnErased'
+    StoredProcName = 'gpMovementItem_PersonalGroupSummAdd_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1381,7 +1381,7 @@ object PersonalRateForm: TPersonalRateForm
     Top = 56
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalRate'
+    StoredProcName = 'gpUpdate_Status_PersonalGroupSummAdd'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1456,7 +1456,82 @@ object PersonalRateForm: TPersonalRateForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 416
-    Top = 13
+    Left = 368
+    Top = 5
+  end
+  object GuidesUnit: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 387
+    Top = 36
+  end
+  object GuidesPersonalGroup: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalGroup
+    isShowModal = True
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 564
+    Top = 8
   end
 end

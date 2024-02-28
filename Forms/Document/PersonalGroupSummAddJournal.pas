@@ -28,7 +28,7 @@ uses
   cxButtonEdit, dsdGuides;
 
 type
-  TPersonalRateJournalForm = class(TParentForm)
+  TPersonalGroupSummAddJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -115,6 +115,8 @@ type
     actInsertMask: TdsdInsertUpdateAction;
     macInsertMask: TMultiAction;
     bbInsertMask: TdxBarButton;
+    UnitName: TcxGridDBColumn;
+    PersonalGroupName: TcxGridDBColumn;
   private
   public
   end;
@@ -124,6 +126,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPersonalRateJournalForm);
+  RegisterClass(TPersonalGroupSummAddJournalForm);
 
 end.
