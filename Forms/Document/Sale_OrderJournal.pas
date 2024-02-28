@@ -344,6 +344,16 @@ type
     actPrintReturnInDay_2copy: TdsdPrintAction;
     macPrint_Group_list_cash_Ret: TMultiAction;
     bbPrint_Group_cash_Ret: TdxBarButton;
+    actPrint_TTN_copy1_list: TdsdPrintAction;
+    macPrint_TTN_Copy1_list: TMultiAction;
+    macPrint_Sale2_TTN_Quality_list: TMultiAction;
+    macPrint_Sale2_TTN_Quality: TMultiAction;
+    actPrintPack_3copy: TdsdPrintAction;
+    macPrintPack_3copy: TMultiAction;
+    macPrint_Sale3_TTN_Quality_list: TMultiAction;
+    macPrint_Sale3_TTN_Quality: TMultiAction;
+    bbPrint_Sale2_TTN_Quality: TdxBarButton;
+    bbPrint_Sale3_TTN_Quality: TdxBarButton;
   private
     { Private declarations }
   public

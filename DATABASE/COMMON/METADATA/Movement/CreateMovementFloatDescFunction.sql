@@ -708,13 +708,16 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_RoundPrice() RETURNS Integer AS $BOD
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_RoundPrice', 'Кол-во знаков для округления' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RoundPrice');  
  
-    
+CREATE OR REPLACE FUNCTION zc_MovementFloat_NormHour() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NormHour'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_NormHour', 'Норма времени' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NormHour');  
  
  
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 28.02.24         * zc_MovementFloat_NormHour
  08.11.23         * zc_MovementFloat_RoundPrice
                     zc_MovementFloat_DiffPrice       
  04.07.23         * zc_MovementFloat_PriceNalog
