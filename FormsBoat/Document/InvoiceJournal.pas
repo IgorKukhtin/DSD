@@ -160,6 +160,11 @@ type
     mactSave_Invoice: TMultiAction;
     btntPrint_Invoice: TcxButton;
     actPrintInvoice_save: TdsdPrintAction;
+    cxButton6: TcxButton;
+    isFilesNotUploaded: TcxGridDBColumn;
+    spUpdate_FilesNotUploaded: TdsdStoredProc;
+    actFilesNotUploaded: TdsdExecStoredProc;
+    DateUnloading: TcxGridDBColumn;
   private
     { Private declarations }
   public

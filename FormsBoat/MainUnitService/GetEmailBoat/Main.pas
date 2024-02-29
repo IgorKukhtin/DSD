@@ -143,10 +143,10 @@ begin
   try
 
     cUserName := Ini.ReadString('Connect', 'UserName', 'Админ');
-    Ini.WriteString('Connect', 'User', cUserName);
+    Ini.WriteString('Connect', 'UserName', cUserName);
 
     cUserPassword := Ini.ReadString('Connect', 'UserPassword', 'Админ');
-    Ini.WriteString('Connect', 'Password', cUserPassword);
+    Ini.WriteString('Connect', 'UserPassword', cUserPassword);
 
   finally
     Ini.free;

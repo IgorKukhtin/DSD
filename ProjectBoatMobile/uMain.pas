@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.DateUtils,
+  System.DateUtils, Data.DB,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.Objects, FMX.Edit,
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
@@ -69,7 +69,7 @@ type
     bTasks: TButton;
     Image4: TImage;
     lTasks: TLabel;
-    bReport: TButton;
+    bUpload: TButton;
     Image6: TImage;
     Label7: TLabel;
     bLogIn: TButton;
@@ -167,6 +167,39 @@ type
     Image13: TImage;
     bGoodsRefresh: TSpeedButton;
     Image14: TImage;
+    Panel3: TPanel;
+    Label14: TLabel;
+    Label16: TLabel;
+    edInventScanBarCode: TEdit;
+    edInventScanPartNumber: TEdit;
+    Label15: TLabel;
+    edInventScanАmount: TEdit;
+    Image15: TImage;
+    bInventScanSearch: TSpeedButton;
+    Image16: TImage;
+    lwInventoryScan: TListView;
+    bInventScanOk: TEditButton;
+    BindSourceDB5: TBindSourceDB;
+    LinkListControlToField4: TLinkListControlToField;
+    ppEnterAmount: TPopup;
+    pEnterAmount: TPanel;
+    lAmount: TLabel;
+    b7: TButton;
+    b8: TButton;
+    b9: TButton;
+    b4: TButton;
+    b5: TButton;
+    b6: TButton;
+    b1: TButton;
+    b2: TButton;
+    b3: TButton;
+    b0: TButton;
+    bDot: TButton;
+    bEnterAmount: TButton;
+    bAddAmount: TButton;
+    bClearAmount: TButton;
+    lMeasure: TLabel;
+    bMinusAmount: TButton;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -187,6 +220,8 @@ type
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
+    procedure OnScanResultGoods(Sender: TObject; AData_String: String);
+    procedure OnScanResultInventoryScan(Sender: TObject; AData_String: String);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
@@ -204,6 +239,21 @@ type
     procedure bGoodsClick(Sender: TObject);
     procedure bGoodsRefreshClick(Sender: TObject);
     procedure bGoodsChoiceClick(Sender: TObject);
+    procedure bInventoryJournalRefreshClick(Sender: TObject);
+    procedure bInventScanSearchClick(Sender: TObject);
+    procedure edInventScanАmountChangeTracking(Sender: TObject);
+    procedure bInventScanOkClick(Sender: TObject);
+    procedure lwInventoryScanItemClickEx(const Sender: TObject;
+      ItemIndex: Integer; const LocalClickPos: TPointF;
+      const ItemObject: TListItemDrawable);
+    procedure SetDateDownloadGoods(Values : TDateTime);
+    procedure b0Click(Sender: TObject);
+    procedure bDotClick(Sender: TObject);
+    procedure bClearAmountClick(Sender: TObject);
+    procedure bEnterAmountClick(Sender: TObject);
+    procedure bAddAmountClick(Sender: TObject);
+    procedure bMinusAmountClick(Sender: TObject);
+    procedure bUploadClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -211,13 +261,19 @@ type
     FCameraScanBarCode: TCameraComponent;
     FObr: TFObr;
     FWebServer: string;
+    FINIFile: string;
     FPermissionState: boolean;
     FisZebraScaner: boolean;
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
+    FDateDownloadGoods: TDateTime;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
+    procedure DeleteInventoryGoods(const AResult: TModalResult);
+    procedure BackInventoryScan(const AResult: TModalResult);
+    procedure DownloadGoods(const AResult: TModalResult);
+    procedure UploadAllData(const AResult: TModalResult);
     {$IFDEF ANDROID}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
     {$ENDIF}
@@ -225,6 +281,7 @@ type
     procedure Wait(AWait: Boolean);
   public
     { Public declarations }
+    property DateDownloadGoods: TDateTime read FDateDownloadGoods write SetDateDownloadGoods;
   end;
 
 var
@@ -232,12 +289,25 @@ var
 
 implementation
 
-uses System.IOUtils, Authentication, Storage, CommonData, CursorUtils;
+uses System.IOUtils, FMX.SearchBox, Authentication, Storage, CommonData, CursorUtils;
 
 {$R *.fmx}
 
 const
   WebServer = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+
+function SearshBox(AListView: TListView): TSearchBox;
+var
+  AIdx: Integer;
+begin
+  Result := Nil;
+  for AIdx := 0 to AListView.ComponentCount - 1 do
+    if AListView.Components[AIdx] is TSearchBox then
+    begin
+      Result := TSearchBox(AListView.Components[AIdx]);
+      Break;
+    end;
+end;
 
 // перевод формы в/из режим ожидания
 procedure TfrmMain.Wait(AWait: Boolean);
@@ -276,15 +346,18 @@ begin
   // получение настроек из ini файла
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
-  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
+  FINIFile := TPath.Combine(TPath.GetDocumentsPath, 'settings.ini');
   {$ELSE}
   FisZebraScaner := False;
-  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
+  FINIFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini');
   {$ENDIF}
+
+  SettingsFile := TIniFile.Create(FINIFile);
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
     FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
+    FDateDownloadGoods := SettingsFile.ReadDateTime('Params', 'DateDownloadGoods', IncDay(Now, - 2));
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -347,6 +420,84 @@ begin
   FObr.Free;
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
+end;
+
+procedure TfrmMain.SetDateDownloadGoods(Values : TDateTime);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FDateDownloadGoods := Values;
+    SettingsFile.WriteDateTime('Params', 'DateDownloadGoods', FDateDownloadGoods);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.bDotClick(Sender: TObject);
+begin
+  if lAmount.Text = '' then
+    lAmount.Text := '0.'
+  else
+  if pos('.', lAmount.Text) = 0 then
+    lAmount.Text := lAmount.Text + TButton(Sender).Text;
+end;
+
+// ввод числа (для редактирования количества товара)
+procedure TfrmMain.b0Click(Sender: TObject);
+begin
+  if lAmount.Text = '0' then
+    lAmount.Text := '';
+
+  lAmount.Text := lAmount.Text + TButton(Sender).Text;
+end;
+
+// очистка количества товаров
+procedure TfrmMain.bClearAmountClick(Sender: TObject);
+begin
+  lAmount.Text := '0';
+end;
+
+procedure TfrmMain.bAddAmountClick(Sender: TObject);
+begin
+  if tcMain.ActiveTab = tiInventoryScan then
+  begin
+    DM.cdsInventoryGoods.Edit;
+    DM.cdsInventoryGoodsAmount.AsFloat := DM.cdsInventoryGoodsAmount.AsFloat + StrToFloatDef(lAmount.Text, 0);
+    DM.cdsInventoryGoods.Post;
+    DM.SaveInventoryGoods;
+  end;
+
+  ppEnterAmount.IsOpen := false;
+end;
+
+// отнимание количества товаров от введенных ранее
+procedure TfrmMain.bMinusAmountClick(Sender: TObject);
+begin
+  if tcMain.ActiveTab = tiInventoryScan then
+  begin
+    DM.cdsInventoryGoods.Edit;
+    DM.cdsInventoryGoodsAmount.AsFloat := DM.cdsInventoryGoodsAmount.AsFloat - StrToFloatDef(lAmount.Text, 0);
+    DM.cdsInventoryGoods.Post;
+    DM.SaveInventoryGoods;
+  end;
+
+  ppEnterAmount.IsOpen := false;
+end;
+
+// присвоение количества товаров
+procedure TfrmMain.bEnterAmountClick(Sender: TObject);
+begin
+  if tcMain.ActiveTab = tiInventoryScan then
+  begin
+    DM.cdsInventoryGoods.Edit;
+    DM.cdsInventoryGoodsAmount.AsFloat := StrToFloatDef(lAmount.Text, 0);
+    DM.cdsInventoryGoods.Post;
+    DM.SaveInventoryGoods;
+  end;
+
+  ppEnterAmount.IsOpen := false;
 end;
 
 {$IFDEF ANDROID}
@@ -454,6 +605,7 @@ begin
     begin
       imLogo.Visible := true;
       sbBack.Visible := false;
+      DM.cdsGoods.Close;
     end
     else
     begin
@@ -461,7 +613,7 @@ begin
       sbBack.Visible := true;
     end;
 
-    if (tcMain.ActiveTab = tiInformation)  then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods)  then
       sbScan.Visible := true
     else sbScan.Visible := false;
     sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner;
@@ -478,7 +630,8 @@ begin
     if tcMain.ActiveTab = tiGoods then
     begin
       lCaption.Text := 'Комплектующие';
-     // FDataWedgeBarCode.OnScanResultDetails := OnScanResultDetails;
+      bGoodsChoice.Visible := False;
+      FDataWedgeBarCode.OnScanResult := OnScanResultGoods;
     end
     else
     if tcMain.ActiveTab = tiScanBarCode then
@@ -500,8 +653,42 @@ begin
     if tcMain.ActiveTab = tiInventory then
     begin
       lCaption.Text := 'Инвентаризация';
+    end else
+    if tcMain.ActiveTab = tiInventoryScan then
+    begin
+      lCaption.Text := 'Вставка товара в инвентаризацию';
+      DM.InitInventoryGoods;
+      FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
     end
   end;
+end;
+
+// Ввод только числа
+procedure TfrmMain.edInventScanАmountChangeTracking(Sender: TObject);
+Var FEdit : TEdit;
+    FFloat : Single;
+begin
+  If Not (Sender is TEdit) Then // Защитимся от не выспавшегося самого себя
+    Exit;
+  FEdit:=(Sender as TEdit); // Для удобства...
+  FEdit.Text:=FEdit.Text.Replace(' ',''); // Убираем случайные пробелы
+  if (FEdit.Text.IsEmpty) or (FEdit.Text.Equals('-')) then // Если пусто (ничего не введено или все удалено) или только минус, ничего не делаем
+    Exit;
+  if FormatSettings.DecimalSeparator = '.' then
+    FEdit.Text:=FEdit.Text.Replace(',', FormatSettings.DecimalSeparator) // Заменяйм запятую на системный разделитель
+  else FEdit.Text:=FEdit.Text.Replace('.', FormatSettings.DecimalSeparator); // Заменяйм точку на системный разделитель
+  if FEdit.Text.Equals(FormatSettings.DecimalSeparator) then // Если введен разделитель, добавляем перед ним ноль для красоты (не обязательно)
+  begin
+    FEdit.Text:='0,';
+    FEdit.CaretPosition:=FEdit.CaretPosition+1; // без этого курсор останется между нулём и запятой
+  end;
+  if (Pos(FormatSettings.DecimalSeparator, FEdit.Text) > 0) and
+     (Length(Copy(FEdit.Text,  Pos(FormatSettings.DecimalSeparator, FEdit.Text) + 1, Length(FEdit.Text))) > 4) then
+    FEdit.Text:=FEdit.TagString // Если много знаков после запятой, восстанавливаем из временного хранилища
+  else if TryStrToFloat(FEdit.Text,FFloat) Then // Пробуем преобразовать в число
+    FEdit.TagString:=FEdit.Text // Если удалось, сохраняем в временном хранилище
+  Else
+    FEdit.Text:=FEdit.TagString; // Если не удалось, восстанавливаем из временного хранилища
 end;
 
 // начитка информации про программу
@@ -538,15 +725,16 @@ end;
 // начитка информации справочника товаров
 procedure TfrmMain.ShowGoods;
 begin
-  if not DM.cdsGoods.Active then
-    if not DM.LoadGoods then Exit;
-  SwitchToForm(tiGoods, nil);
+  if FDateDownloadGoods < IncDay(Now, - 1)  then
+    DM.DownloadGoods
+  else if not DM.cdsGoodsList.Active then DM.LoadGoodsList;
+  if tcMain.ActiveTab <> tiGoods then SwitchToForm(tiGoods, nil);
 end;
 
 // начитка информации журнала инвентаризаций
 procedure TfrmMain.ShowInventoryJournal;
 begin
-  if not DM.LoadInventoryJournal then Exit;
+  if not DM.DownloadInventoryJournal then Exit;
   SwitchToForm(tiInventoryJournal, nil);
 end;
 
@@ -557,10 +745,10 @@ begin
   if DM.cdsInventoryJournal.IsEmpty then Exit;
   if DM.cdsInventoryJournalId.AsInteger = 0 then Exit;
 
-  if not DM.LoadInventory then Exit;
+  if not DM.DownloadInventory then Exit;
   imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
 
-  if not DM.LoadInventoryList then Exit;
+  if not DM.DownloadInventoryList then Exit;
 
   if tcMain.ActiveTab <> tiInventory then SwitchToForm(tiInventory, nil);
 end;
@@ -573,8 +761,15 @@ begin
   if DM.cdsInventory.IsEmpty then Exit;
   if DM.cdsInventoryId.AsInteger = 0 then Exit;
 
-  if not DM.LoadInventoryGoods then Exit;
+  if DM.cdsInventoryJournalStatusId.AsInteger <> 1 then
+  begin
+    ShowMessage('Добавлять товар в проведенную инвентаризацию запрещено.');
+    Exit;
+  end;
+
   imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
+
+  if not DM.cdsGoods.Active then DM.LoadGoods;
 
   SwitchToForm(tiInventoryScan, nil);
 end;
@@ -595,10 +790,65 @@ begin
   ShowInventoryJournal;
 end;
 
+procedure TfrmMain.bInventoryJournalRefreshClick(Sender: TObject);
+begin
+  DM.DownloadInventoryJournal;
+end;
+
+// Поиск товара для вставки в инвентаризацию по введеному коду
+procedure TfrmMain.bInventScanOkClick(Sender: TObject);
+begin
+
+  if Length(edInventScanBarCode.Text) > 12 then
+    edInventScanBarCode.Text := Copy(edInventScanBarCode.Text, 1, Length(edInventScanBarCode.Text) - 1);
+
+  if edInventScanBarCode.Text = '' then Exit;
+  if not DM.cdsGoods.Active then DM.LoadGoods;
+
+  try
+    try
+      DM.cdsGoods.Filter := 'EAN LIKE ''' + edInventScanBarCode.Text + '%''';
+      DM.cdsGoods.Filtered := True;
+      if DM.cdsGoods.RecordCount = 1 then
+      begin
+        DM.AddInventoryGoods;
+      end else if DM.cdsGoods.RecordCount > 1 then
+      begin
+        SearshBox(lwGoods).Text := edInventScanBarCode.Text;
+        bInventScanSearchClick(Sender);
+        Exit;
+      end else ShowMessage('Товар с штрихкодом ' + edInventScanBarCode.Text + ' не найден.');
+    finally
+      DM.cdsGoods.Filtered := False;
+      DM.cdsGoods.Filter := '';
+    end;
+  finally
+    edInventScanBarCode.Text := '';
+    edInventScanPartNumber.Text := '';
+    edInventScanАmount.Text := '1';
+  end;
+end;
+
+// Поиск товара для вставки в инвентаризацию
+procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
+begin
+  ShowGoods;
+  bGoodsChoice.Visible := True;
+end;
+
 // Выбор товара
 procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
 begin
-//
+  if lwGoods.ItemCount = 0 then Exit;
+
+  ReturnPriorForm;
+  if (tcMain.ActiveTab = tiInventoryScan)  then
+  begin
+    DM.AddInventoryGoods(True);
+    edInventScanBarCode.Text := '';
+    edInventScanPartNumber.Text := '';
+    edInventScanАmount.Text := '1';
+  end;
 end;
 
 // переход на форму справочника товаров
@@ -610,7 +860,8 @@ end;
 // перечитать товар
 procedure TfrmMain.bGoodsRefreshClick(Sender: TObject);
 begin
-  DM.LoadGoods;
+  TDialogService.MessageDialog('Загрузить справочник Комплектующих?',
+       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadGoods)
 end;
 
 // переход на форму отображения информации
@@ -623,7 +874,7 @@ end;
 procedure TfrmMain.bLogInClick(Sender: TObject);
 begin
   FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
-   sbScanClick(Sender);
+  sbScanClick(Sender);
 end;
 
 procedure TfrmMain.bReloginClick(Sender: TObject);
@@ -636,6 +887,14 @@ begin
   DM.UpdateProgram(mrYes);
 end;
 
+procedure TfrmMain.bUploadClick(Sender: TObject);
+begin
+  if not DM.isInventoryGoodsSend then
+    TDialogService.MessageDialog('Отправить все несохраненные данные?',
+       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UploadAllData)
+  else ShowMessage('Нет данных для отправки.');
+end;
+
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
@@ -644,8 +903,6 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
-//var
-//  Mes : string;
 begin
   if (tcMain.ActiveTab = tiInventoryJournal)  then
   begin
@@ -658,34 +915,17 @@ begin
   end
   else if (tcMain.ActiveTab = tiInventoryScan)  then
   begin
-    DM.cdsInventoryGoods.Close;
-  end
-  else
+    if DM.cdsInventoryGoods.RecordCount > 0 then
+    begin
+      TDialogService.MessageDialog('Отправить введенные в инвентаризацию дааные на сервер?', TMsgDlgType.mtWarning,
+        [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackInventoryScan);
+    end;
 
-  ;
-//  if (tcMain.ActiveTab = tiStoreReal) and FCanEditDocument then
-//  begin
-//    if DM.cdsStoreRealsId.AsInteger = -1 then
-//      Mes := 'Выйти без сохранения остатков?'
-//    else
-//      Mes := 'Выйти из редактирования без сохранения?';
-//
-//    TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
-//      [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackResult);
-//  end
-//  else
-//  if (tcMain.ActiveTab = tiReturnIn) and FCanEditDocument then
-//  begin
-//    if DM.cdsReturnInId.AsInteger = -1 then
-//      Mes := 'Выйти без сохранения возврата?'
-//    else
-//      Mes := 'Выйти из редактирования без сохранения?';
-//
-//    TDialogService.MessageDialog(Mes, TMsgDlgType.mtWarning,
-//      [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackResult);
-//  end
-//  else
-    ReturnPriorForm;
+    DM.cdsInventoryGoods.Close;
+    DM.cdsGoods.Close;
+  end;
+
+  ReturnPriorForm;
 end;
 
 procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
@@ -698,11 +938,7 @@ begin
   else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
 
   // сохранение подсветки в ini файле
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
-  {$ELSE}
-  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
-  {$ENDIF}
+  SettingsFile := TIniFile.Create(FINIFile);
   try
     SettingsFile.WriteBool('DataWedge', 'isIllumination', FDataWedgeBarCode.isIllumination);
   finally
@@ -740,7 +976,7 @@ end;
 // Перерисовка журнала инвентаризаций
 procedure TfrmMain.sbtiInventoryJournalRefreshClick(Sender: TObject);
 begin
-  DM.LoadInventoryJournal;
+  DM.DownloadInventoryJournal;
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -762,27 +998,9 @@ begin
       if pProgress.Visible then
         exit
       else
-//      if ppEnterAmount.IsOpen then
-//        ppEnterAmount.IsOpen := false
-//      else
-//      if ppPartner.IsOpen then
-//        ppPartner.IsOpen := false
-//      else
-//      if pAdminPassword.Visible then
-//        bCancelPasswordClick(bCancelPassword)
-//      else
-//      if pEnterMovmentCash.Visible then
-//        bCancelCashClick(bCancelCash)
-//      else
-//      if pNewPhotoGroup.Visible then
-//        bCanclePGClick(bCanclePG)
-//      else
-//      if pPhotoComment.Visible then
-//        bCancelPhotoClick(bCancelPhoto)
-//      else
-//      if pTaskComment.Visible then
-//        bCancelTaskClick(bCancelTask)
-//      else
+      if ppEnterAmount.IsOpen then
+        ppEnterAmount.IsOpen := false
+      else
       if tcMain.ActiveTab = tiStart then
         TDialogService.MessageDialog('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], TMsgDlgBtn.mbCancel, -1, OnCloseDialog)
       else
@@ -791,7 +1009,8 @@ begin
       else
         sbBackClick(sbBack);
     end;
-  end;end;
+  end;
+end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
@@ -850,11 +1069,7 @@ begin
   {$ENDIF}
 
   // сохранение логина и веб сервера в ini файле
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  SettingsFile := TIniFile.Create(TPath.Combine(TPath.GetDocumentsPath, 'settings.ini'));
-  {$ELSE}
-  SettingsFile := TIniFile.Create(TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini'));
-  {$ENDIF}
+  SettingsFile := TIniFile.Create(FINIFile);
   try
     SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
   finally
@@ -870,6 +1085,47 @@ procedure TfrmMain.lwInventoryJournalItemClickEx(const Sender: TObject;
   const ItemObject: TListItemDrawable);
 begin
   if Assigned(ItemObject) and (ItemObject.Name = 'EditButton') then ShowInventory;
+end;
+
+procedure TfrmMain.BackInventoryScan(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.UploadInventoryGoods;
+end;
+
+procedure TfrmMain.DeleteInventoryGoods(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.DeleteInventoryGoods;
+end;
+
+procedure TfrmMain.DownloadGoods(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.DownloadGoods;
+end;
+
+procedure TfrmMain.UploadAllData(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.UploadAllData;
+end;
+
+procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
+  ItemIndex: Integer; const LocalClickPos: TPointF;
+  const ItemObject: TListItemDrawable);
+begin
+  if Assigned(ItemObject) and (ItemObject.Name = 'DeleteButton') then
+    TDialogService.MessageDialog('Удалить товар "' + DM.cdsInventoryGoodsGoodsName.AsString +
+         '" подготовленный к вставке в инвентаризацию ?',
+         TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
+  else
+  // вызов формы для редактирования количества выбранного товара
+  if Assigned(ItemObject) and ((ItemObject.Name = 'Amount') or (ItemObject.Name = 'MeasureName')) and
+     not DM.cdsInventoryGoods.IsEmpty and (DM.cdsInventoryGoodsisSend.AsBoolean = False) then
+  begin
+    lAmount.Text := '0';
+    lMeasure.Text := DM.cdsInventoryGoodsMeasureName.AsString;
+
+    ppEnterAmount.IsOpen := true;
+  end;
+
 end;
 
 procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -933,6 +1189,20 @@ begin
       ReturnPriorForm
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
   end;
+end;
+
+procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);
+begin
+  SearshBox(lwGoods).Text := Copy(AData_String, 1, Length(AData_String) - 1);
+end;
+
+// Обрабатываем отсканированный товар для инвентаризации
+procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
+begin
+
+  edInventScanBarCode.Text := Copy(AData_String, 1, Length(AData_String) - 1);
+
+  bInventScanOkClick(Sender);
 end;
 
 end.

@@ -382,6 +382,32 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_GLN() RETURNS Integer AS $BODY
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_GLN', zc_object_Member(), 'GLN' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_GLN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBankSecondTwo', zc_object_Member(), 'Номер банковской карточки ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBANSecondTwo', zc_object_Member(), '№ карточного IBANсчета ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondTwo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardSecondTwo', zc_object_Member(), '№ карточного счета ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBankSecondDiff', zc_object_Member(), 'Номер банковской карточки ЗП - Ф2(личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBANSecondDiff', zc_object_Member(), '№ карточного IBANсчета ЗП - Ф2(личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondDiff');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardSecondDiff', zc_object_Member(), '№ карточного счета ЗП - Ф2(личный) ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff');
+
+
+
 ---
 CREATE OR REPLACE FUNCTION zc_ObjectString_ModelService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ModelService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1621,6 +1647,12 @@ INSERT INTO ObjectStringDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 26.02.24         * zc_ObjectString_Member_CardBankSecondTwo
+                    zc_ObjectString_Member_CardIBANSecondTwo()
+                    zc_ObjectString_Member_CardSecondTwo()
+                    zc_ObjectString_Member_CardBankSecondDiff()
+                    zc_ObjectString_Member_CardIBANSecondDiff() 
+                    zc_ObjectString_Member_CardSecondDiff()
  27.12.23         * zc_ObjectString_PartionCell_Comment
  23.11.23         * zc_ObjectString_SubjectDoc_MovementDesc
  21.11.23         * zc_ObjectLink_SubjectDoc_Reason

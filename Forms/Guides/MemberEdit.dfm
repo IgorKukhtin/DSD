@@ -220,7 +220,7 @@
       end
       object cxLabel13: TcxLabel
         Left = 171
-        Top = 248
+        Top = 249
         Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
       end
       object ceBankChild: TcxButtonEdit
@@ -1522,8 +1522,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 215
+    Left = 224
+    Top = 263
   end
   object BankChildGuides: TdsdGuides
     KeyField = 'Id'
@@ -1642,8 +1642,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 197
-    Top = 190
+    Left = 213
+    Top = 158
   end
   object GuidesCity_real: TdsdGuides
     KeyField = 'Id'
@@ -1672,8 +1672,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 221
-    Top = 214
+    Left = 141
+    Top = 254
   end
   object GuidesMemberSkill: TdsdGuides
     KeyField = 'Id'

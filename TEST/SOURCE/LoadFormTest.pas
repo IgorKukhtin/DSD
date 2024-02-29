@@ -139,6 +139,7 @@ type
     procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupMovementFormTest;
     procedure LoadPersonalSendCashFormTest;
+    procedure LoadPersonalGroupSummAddFormTest;
     procedure LoadPersonalRateFormTest;
     procedure LoadPersonalServiceFormTest;
     procedure LoadPersonalServiceListFormTest;
@@ -894,6 +895,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashJournalForm');
 end;
 
+
+procedure TLoadFormTest.LoadPersonalGroupSummAddFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupSummAddForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupSummAddForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupSummAddJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupSummAddJournalForm');
+end;
+
 procedure TLoadFormTest.LoadPersonalRateFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalRateForm'));
@@ -1541,26 +1552,26 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  {exit;
-
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-  //exit;
-  }
+  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
   //  exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
    exit;

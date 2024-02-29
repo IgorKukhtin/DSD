@@ -4,7 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                    , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
@@ -22,15 +25,35 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
     IN inCardIBANSecond      TVarChar  ,    -- є карточного счета IBAN «ѕ - втора€ форма
     IN inCardBank            TVarChar  ,    -- є карточного счета «ѕ
     IN inCardBankSecond      TVarChar  ,    -- є карточного счета «ѕ - втора€ форма
+    
+    IN inCardBankSecondTwo   TVarChar  ,    --
+    IN inCardIBANSecondTwo   TVarChar  ,    --
+    IN inCardSecondTwo       TVarChar  ,    --
+    IN inCardBankSecondDiff  TVarChar  ,    --  
+    IN inCardIBANSecondDiff  TVarChar  ,    --
+    IN inCardSecondDiff      TVarChar  ,    --
+    
     IN inComment             TVarChar  ,    -- ѕримечание 
+
+    IN inBankId_Top            Integer   ,    --
+    IN inBankSecondId_Top      Integer   ,    --
+    IN inBankSecondTwoId_Top   Integer   ,    --
+    IN inBankSecondDiffId_Top  Integer   ,    --
+    
     IN inBankId              Integer   ,    --
     IN inBankSecondId        Integer   ,    --
     IN inBankChildId         Integer   ,    --
+    IN inBankSecondTwoId     Integer   ,    --
+    IN inBankSecondDiffId    Integer   ,    --
     IN inInfoMoneyId         Integer   ,    --
-    IN inUnitMobileId        Integer   ,    --ѕодразделение(за€вки мобильный)
+    IN inUnitMobileId        Integer   ,    --ѕодразделение(за€вки мобильный) 
+   OUT outBankName           TVarChar  ,    --   
+   OUT outBankSecondName     TVarChar  ,    --
+   OUT outBankSecondTwoName  TVarChar  ,    --
+   OUT outBankSecondDiffName TVarChar  ,    --
     IN inSession             TVarChar       -- сесси€ пользовател€
 )
-  RETURNS integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
@@ -47,7 +70,13 @@ BEGIN
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- ≈сли код не установлен, определ€ем его как последний + 1
-   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Member());
+   vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Member());   
+   
+   --переопредел€ем параметры - 
+   IF COALESCE (inBankId_Top,0) <> 0           THEN inBankId           = inBankId_Top;           END IF;
+   IF COALESCE (inBankSecondId_Top,0) <> 0     THEN inBankSecondId     = inBankSecondId_Top;     END IF;
+   IF COALESCE (inBankSecondTwoId_Top,0) <> 0  THEN inBankSecondTwoId  = inBankSecondTwoId_Top;  END IF;
+   IF COALESCE (inBankSecondDiffId_Top,0) <> 0 THEN inBankSecondDiffId = inBankSecondDiffId_Top; END IF;
    
    -- проверка уникальности <Ќаименование>
    IF TRIM (inINN) = ''
@@ -56,7 +85,7 @@ BEGIN
    END IF;
    -- проверка уникальности < од>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
-   -- проверка уникальность <INN>
+   -- проверка уникальность <INN>      если выбран в контроле тогда берем из него
    IF TRIM (inINN) <> ''
    THEN
        IF EXISTS (SELECT ObjectString.ObjectId
@@ -91,7 +120,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardSecond(), ioId, inCardSecond);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardChild(), ioId, inCardChild);
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardChild(), ioId, inCardChild); 
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBAN(), ioId, inCardIBAN);
@@ -102,6 +131,19 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBank(), ioId, inCardBank);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBankSecond(), ioId, inCardBankSecond);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBankSecondTwo(), ioId, inCardBankSecondTwo);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBANSecondTwo(), ioId, inCardIBANSecondTwo);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardSecondTwo(), ioId, inCardSecondTwo);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardBankSecondDiff(), ioId, inCardBankSecondDiff);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardSecondDiff(), ioId, inCardSecondDiff);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_CardIBANSecondDiff(), ioId, inCardIBANSecondDiff);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
@@ -115,6 +157,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankSecond(), ioId, inBankSecondId);
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankChild(), ioId, inBankChildId);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankSecondTwo(), ioId, inBankSecondTwoId);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_BankSecondDiff(), ioId, inBankSecondDiffId);
     -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_UnitMobile(), ioId, inUnitMobileId);
 
@@ -122,6 +168,13 @@ BEGIN
    UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
 
+   --
+   outBankName           := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankId);
+   outBankSecondName     := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondId);
+   outBankSecondTwoName  := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondTwoId);
+   outBankSecondDiffName := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondDiffId);
+    
+    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    

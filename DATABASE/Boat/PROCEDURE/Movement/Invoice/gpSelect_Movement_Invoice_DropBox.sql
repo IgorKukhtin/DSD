@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , MovementId Integer
              , isFilesUploaded Boolean
              , FilePath TVarChar
+             , ReceiptNumber TVarChar
               )
 
 AS
@@ -18,14 +19,25 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
    DECLARE vbProductId Integer;
+   DECLARE vbKredit TVarChar;
+   DECLARE vbDebet TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+    vbDebet := COALESCE((SELECT tmp.Value
+                         FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= '5') AS tmp
+                         WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_DropBox_InvoiceDebet())), 'InvoiceFile\Debet');
+
+    vbKredit := COALESCE((SELECT tmp.Value
+                          FROM gpSelect_Object_EmailSettings (inEmailKindId:= 0, inSession:= '5') AS tmp
+                          WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_DropBox_InvoiceKredit())), 'InvoiceFile\Kredit');
 
      -- Результат
      RETURN QUERY
        WITH
           tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                    AS  MovementId
+                                 , Movement_Invoice.InvNumber                             AS  InvNumber
                                  , MovementBoolean_FilesNotUploaded.ValueData IS NOT NULL AS isFilesUploaded
                                  , Object_InvoicePdf.*
                             FROM Object AS Object_InvoicePdf
@@ -57,8 +69,9 @@ BEGIN
           , Object_InvoicePdf.MovementId       AS MovementId
           , Object_InvoicePdf.isFilesUploaded  AS isFilesUploaded
           , CASE WHEN COALESCE(MovementFloat_Amount.ValueData, 0) < 0 
-                 THEN 'InvoiceFile\Kredit'
-                 ELSE 'InvoiceFile\Debet' END::TVarChar   AS FilePath
+                 THEN vbKredit
+                 ELSE vbDebet END::TVarChar   AS FilePath
+          , COALESCE(MovementString_ReceiptNumber.ValueData, Object_InvoicePdf.InvNumber)::TVarChar  AS ReceiptNumber 
      FROM tmpInvoicePdf AS Object_InvoicePdf
      
           LEFT JOIN tmpObjectProtocol ON tmpObjectProtocol.ObjectId = Object_InvoicePdf.Id 
@@ -71,6 +84,10 @@ BEGIN
                                ON ObjectDate_DateUnloading.ObjectId = Object_InvoicePdf.Id
                               AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()
 
+          LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                   ON MovementString_ReceiptNumber.MovementId = Object_InvoicePdf.MovementId 
+                                  AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                                     
      WHERE COALESCE(MovementFloat_Amount.ValueData, 0) <> 0 
        AND (tmpObjectProtocol.OperDate >= inStartDate
         OR Object_InvoicePdf.isFilesUploaded = TRUE
@@ -89,5 +106,4 @@ $BODY$
 
 -- тест
 -- 
-
-select * from gpSelect_Movement_Invoice_DropBox(inStartDate := ('27.02.2024 01:00:20')::TDateTime , inSession := '5');
+select * from gpSelect_Movement_Invoice_DropBox(inStartDate := ('01.01.2024 01:00:20')::TDateTime , inSession := '5');

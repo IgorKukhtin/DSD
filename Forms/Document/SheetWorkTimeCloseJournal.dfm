@@ -4,8 +4,8 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
   Caption = 
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072', '#1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077 +
     #1085#1080'>'
-  ClientHeight = 381
-  ClientWidth = 809
+  ClientHeight = 387
+  ClientWidth = 771
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,10 +23,11 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 809
+    Width = 771
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -61,12 +62,14 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 809
-    Height = 324
+    Width = 771
+    Height = 330
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 809
+    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -88,7 +91,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
+      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -134,6 +137,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         PropertiesClassName = 'TcxDateEditProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object OperDateEnd: TcxGridDBColumn
@@ -161,6 +165,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1072#1090#1072' '#1072#1074#1090#1086' '#1079#1072#1082#1088#1099#1090#1080#1103'  - '#1085#1072' '#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1076#1077#1085#1100' '#1087#1086#1089#1083#1077' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1087#1077#1088#1080#1086#1076#1072
+        Options.Editing = False
         Width = 70
       end
       object TimeClose: TcxGridDBColumn
@@ -235,9 +240,16 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       object UnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1048#1089#1082#1083#1102#1095#1077#1085#1080#1077')'
         DataBinding.FieldName = 'UnitName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actUnitChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 112
       end
       object InsertDate: TcxGridDBColumn
@@ -1052,6 +1064,35 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actUnitChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'UnitChoiceForm'
+      FormName = 'TUnit_ObjectForm'
+      FormNameParam.Value = 'TUnit_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actPartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1085,10 +1126,10 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateClose_Yes
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spUpdateClose_Yes
+          StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -1415,7 +1456,7 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 728
+    Left = 672
     Top = 200
   end
   object PrintHeaderCDS: TClientDataSet
@@ -1591,5 +1632,66 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     PackSize = 1
     Left = 466
     Top = 288
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_SheetWorkTimeClose'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ininvnumber'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'invnumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inoperdate'
+        Value = 44419d
+        Component = ClientDataSet
+        ComponentItem = 'operdate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDateEnd'
+        Value = 42132d
+        Component = ClientDataSet
+        ComponentItem = 'OperDateEnd'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTimeClose'
+        Value = 42132d
+        Component = ClientDataSet
+        ComponentItem = 'TimeClose'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 544
+    Top = 160
   end
 end

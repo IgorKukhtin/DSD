@@ -34,7 +34,16 @@ BEGIN
         RETURN; -- !!!ВЫХОД!!!
      END IF;
       */
-      
+        
+/*
+R первый
+L второй 
+N третий
+M четвертый 
+O пятый 
+K шестой
+*/
+
      -- уровень 1  
      IF COALESCE (inName_l1, '') <> '' THEN
          -- !!!поиск ИД ячейки!!!
@@ -43,7 +52,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 1
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l1) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l1) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l1) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l1) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l1) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l1) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l1))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -53,7 +68,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l1) :: TVarChar
-                                                     , inLevel       := 1         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l1) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l1) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l1) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l1) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l1) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l1) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat
@@ -80,7 +102,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 2
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l2) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l2) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l2) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l2) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l2) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l2) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l2))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -90,7 +118,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l2)   :: TVarChar
-                                                     , inLevel       := 2         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l2) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l2) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l2) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l2) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l2) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l2) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat
@@ -117,7 +152,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 3
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l3) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l3) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l3) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l3) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l3) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l3) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l3))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -127,7 +168,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l3)                      :: TVarChar
-                                                     , inLevel       := 3         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l3) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l3) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l3) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l3) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l3) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l3) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat
@@ -154,7 +202,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 4
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l4) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l4) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l4) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l4) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l4) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l4) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l4))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -164,7 +218,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l4)                      :: TVarChar
-                                                     , inLevel       := 4         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l4) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l4) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l4) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l4) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l4) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l4) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat
@@ -192,7 +253,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 5
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l5) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l5) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l5) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l5) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l5) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l5) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l5))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -202,7 +269,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l5)                      :: TVarChar
-                                                     , inLevel       := 5         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l5) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l5) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l5) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l5) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l5) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l5) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat
@@ -229,7 +303,13 @@ BEGIN
                                  INNER JOIN ObjectFloat AS ObjectFloat_Level
                                                         ON ObjectFloat_Level.ObjectId = Object.Id
                                                        AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
-                                                       AND ObjectFloat_Level.ValueData = 6
+                                                       AND ObjectFloat_Level.ValueData = CASE WHEN POSITION ( 'R-' in inName_l6) > 0 THEN 1
+                                                                                              WHEN POSITION ( 'L-' in inName_l6) > 0 THEN 2
+                                                                                              WHEN POSITION ( 'N-' in inName_l6) > 0 THEN 3
+                                                                                              WHEN POSITION ( 'M-' in inName_l6) > 0 THEN 4
+                                                                                              WHEN POSITION ( 'O-' in inName_l6) > 0 THEN 5
+                                                                                              WHEN POSITION ( 'K-' in inName_l6) > 0 THEN 6
+                                                                                         END
                             WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inName_l6))
                               AND Object.DescId     = zc_Object_PartionCell()
                            );
@@ -239,7 +319,14 @@ BEGIN
             PERFORM gpInsertUpdate_Object_PartionCell( ioId          := 0 :: Integer
                                                      , inCode        := lfGet_ObjectCode(0, zc_Object_PartionCell()) :: Integer
                                                      , inName        := TRIM (inName_l6)                      :: TVarChar
-                                                     , inLevel       := 6         :: TFloat
+                                                     , inLevel       := CASE WHEN POSITION ( 'R-' in inName_l6) > 0 THEN 1
+                                                                             WHEN POSITION ( 'L-' in inName_l6) > 0 THEN 2
+                                                                             WHEN POSITION ( 'N-' in inName_l6) > 0 THEN 3
+                                                                             WHEN POSITION ( 'M-' in inName_l6) > 0 THEN 4
+                                                                             WHEN POSITION ( 'O-' in inName_l6) > 0 THEN 5
+                                                                             WHEN POSITION ( 'K-' in inName_l6) > 0 THEN 6
+                                                                             ELSE 0
+                                                                        END         :: TFloat
                                                      , inLength      := 0         :: TFloat
                                                      , inWidth       := 0         :: TFloat
                                                      , inHeight      := 0         :: TFloat

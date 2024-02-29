@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Bank(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Bank(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, MFO TVarChar, SWIFT TVarChar, IBAN TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, MFO TVarChar, SWIFT TVarChar, IBAN TVarChar, isErased Boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -31,7 +31,17 @@ $BODY$BEGIN
                  ON ObjectString_IBAN.ObjectId = Object.Id
                 AND ObjectString_IBAN.DescId = zc_ObjectString_Bank_IBAN()
 
-     WHERE Object.DescId = zc_Object_Bank();
+     WHERE Object.DescId = zc_Object_Bank()
+   UNION
+     SELECT
+       0                    AS Id
+     , 0                    AS Code
+     , 'Удалить'::TVarChar  AS Name
+     , ''::TVarChar         AS MFO
+     , ''::TVarChar         AS SWIFT
+     , ''::TVarChar         AS IBAN
+     , FALSE ::Boolean      AS isErased
+     ;
 
 
 END;$BODY$

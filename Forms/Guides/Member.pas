@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
-  dsdGuides, ExternalLoad, cxCalendar;
+  dsdGuides, ExternalLoad, cxCalendar, Vcl.ExtCtrls;
 
 type
   TMemberForm = class(TParentForm)
@@ -84,8 +84,8 @@ type
     BankSecondName: TcxGridDBColumn;
     spUpdateBank: TdsdStoredProc;
     cxLabel6: TcxLabel;
-    edBank: TcxButtonEdit;
-    BankGuides: TdsdGuides;
+    edBankUpDate: TcxButtonEdit;
+    GuidesBankUpdate: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     actUpdateBank: TdsdExecStoredProc;
@@ -166,6 +166,19 @@ type
     bbStartLoadCardF1: TdxBarButton;
     bbStartLoadCardF2: TdxBarButton;
     dxBarSeparator1: TdxBarSeparator;
+    Panel: TPanel;
+    cxLabel13: TcxLabel;
+    edBankSecond: TcxButtonEdit;
+    GuidesBankSecond: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edBank: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    edBankSecondTwo: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    edBankSecondDiff: TcxButtonEdit;
+    GuidesBank: TdsdGuides;
+    GuidesBankSecondTwo: TdsdGuides;
+    GuidesBankSecondDiff: TdsdGuides;
   private
     { Private declarations }
   public

@@ -340,10 +340,10 @@ type
     spGetReporNameTTN_list: TdsdStoredProc;
     spGetReportNameQuality_list: TdsdStoredProc;
     actSPPrintTTNProcName_list: TdsdExecStoredProc;
-    actPrint_TTN_list: TdsdPrintAction;
+    actPrint_TTN_copy2_list: TdsdPrintAction;
     spSelectPrint_TTN_list: TdsdStoredProc;
     spSelectPrint_Quality_list: TdsdStoredProc;
-    macPrint_TTN_list: TMultiAction;
+    macPrint_TTN_Copy2_list: TMultiAction;
     macPrint_QualityDoc_list: TMultiAction;
     actPrint_Quality_ReportName_list: TdsdExecStoredProc;
     actPrint_QualityDoc_list: TdsdPrintAction;
@@ -375,6 +375,16 @@ type
     actUpdatePrintAuto_True: TdsdExecStoredProc;
     bbPrint_Group_cash_Ret: TdxBarButton;
     macPrint_Group_list_cash_Ret: TMultiAction;
+    macPrint_Sale2_TTN_Quality_list: TMultiAction;
+    macPrint_TTN_Copy1_list: TMultiAction;
+    macPrint_Sale2_TTN_Quality: TMultiAction;
+    macPrint_Sale3_TTN_Quality: TMultiAction;
+    actPrintPack_3copy: TdsdPrintAction;
+    macPrintPack_3copy: TMultiAction;
+    macPrint_Sale3_TTN_Quality_list: TMultiAction;
+    bbPrint_Sale2_TTN_Quality: TdxBarButton;
+    bbPrint_Sale3_TTN_Quality: TdxBarButton;
+    actPrint_TTN_copy1_list: TdsdPrintAction;
   private
     { Private declarations }
   public

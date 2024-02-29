@@ -1,6 +1,7 @@
 object DM: TDM
-  Height = 1080
-  Width = 1440
+  OnCreate = DataModuleCreate
+  Height = 643
+  Width = 1018
   PixelsPerInch = 144
   object cdsInventoryJournal: TClientDataSet
     Aggregates = <>
@@ -45,7 +46,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 304
-    Top = 48
+    Top = 56
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
     end
@@ -114,6 +115,10 @@ object DM: TDM
     object cdsInventoryListMeasureName: TWideStringField
       FieldName = 'MeasureName'
     end
+    object cdsInventoryListPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
     object cdsInventoryListAmount: TFloatField
       FieldName = 'Amount'
     end
@@ -135,11 +140,52 @@ object DM: TDM
   end
   object cdsInventoryGoods: TClientDataSet
     Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <>
     Params = <>
+    StoreDefs = True
     Left = 648
     Top = 48
-    object cdsInventoryGoodsId: TIntegerField
-      FieldName = 'Id'
+    object cdsInventoryGoodsMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object cdsInventoryGoodsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsInventoryGoodsGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsInventoryGoodsGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsInventoryGoodsArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsInventoryGoodsEAN: TWideStringField
+      FieldName = 'EAN'
+      Size = 40
+    end
+    object cdsInventoryGoodsGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsInventoryGoodsMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsInventoryGoodsPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object cdsInventoryGoodsAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsInventoryGoodsisSend: TBooleanField
+      FieldName = 'isSend'
+    end
+    object cdsInventoryGoodsDeleteId: TIntegerField
+      FieldName = 'DeleteId'
     end
   end
   object cdsGoods: TClientDataSet
@@ -171,6 +217,38 @@ object DM: TDM
       FieldName = 'MeasureName'
     end
     object cdsGoodsisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+  end
+  object cdsGoodsList: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 296
+    Top = 176
+    object cdsGoodsListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsGoodsListCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object cdsGoodsListName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object cdsGoodsListArticle: TWideStringField
+      FieldName = 'Article'
+    end
+    object cdsGoodsListEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object cdsGoodsListGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsGoodsListMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsGoodsListisErased: TBooleanField
       FieldName = 'isErased'
     end
   end

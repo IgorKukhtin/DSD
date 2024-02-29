@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.DateUtils, System.Variants,
-  System.Classes, System.IOUtils, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  Vcl.StdCtrls, Vcl.Buttons, Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges, Vcl.ExtCtrls,
-  Vcl.ActnList, System.Types, System.Generics.Collections, System.RegularExpressions,
+  System.Classes, System.IOUtils, System.UITypes, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Datasnap.DBClient, Vcl.Samples.Gauges,
+  Vcl.ExtCtrls, Vcl.ActnList, System.Types, System.Generics.Collections, System.RegularExpressions,
   dsdDB, dsdAction, dsdInternetAction, System.Actions, FormStorage, UnilWin, IniFiles,
   Document;
 
@@ -57,7 +57,7 @@ type
     FDateSendList: TList<TDateTime>;// Следующий полная отправка
 
     function fBeginAll  : Boolean; // обработка все
-    function fCopyFile : Boolean; // Копирование всех файлов
+    procedure fCopyFile;           // Копирование всех файлов
   public
 
     property DateSend: TDateTime read FDateSend write SetDateSend;
@@ -118,14 +118,17 @@ begin
   try
 
     FUserName := Ini.ReadString('Connect', 'UserName', 'Админ');
-    Ini.WriteString('Connect', 'User', FUserName);
+    Ini.WriteString('Connect', 'UserName', FUserName);
 
     FUserPassword := Ini.ReadString('Connect', 'UserPassword', 'Админ');
-    Ini.WriteString('Connect', 'Password', FUserPassword);
+    Ini.WriteString('Connect', 'UserPassword', FUserPassword);
 
     FDropBoxDir := Ini.ReadString('DropBox', 'DropBoxDir', '');
-    if FDropBoxDir[Length(FDropBoxDir)] <> '\' then FDropBoxDir := FDropBoxDir + '\';
-    Ini.WriteString('DropBox', 'DropBoxDir', FDropBoxDir);
+    if FDropBoxDir <> '' then
+    begin
+      if FDropBoxDir[Length(FDropBoxDir)] <> '\' then FDropBoxDir := FDropBoxDir + '\';
+      Ini.WriteString('DropBox', 'DropBoxDir', FDropBoxDir);
+    end;
 
     FDateSend := Ini.ReadDateTime('DropBox', 'DateSend', EncodeDate(2024, 1, 1));
     Ini.WriteDateTime('DropBox', 'DateSend', FDateSend);
@@ -199,12 +202,12 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Копирование всех файлов
-function TMainForm.fCopyFile : Boolean;
+procedure TMainForm.fCopyFile;
   var DateStart : TDateTime;
       FileName: String;
       MovementId: Integer;
       isFilesUploaded: Boolean;
-      searchResult : TSearchRec;
+      //searchResult : TSearchRec;
 begin
 
   // Проверим если не надо отправлять или если не внеплановая отправка выходим
@@ -222,6 +225,8 @@ begin
       MovementId := 0;
       isFilesUploaded := False;
       ClientDataSet.First;
+      GaugeCopyFile.MaxValue := ClientDataSet.RecordCount;
+      GaugeCopyFile.Progress := 0;
       while not ClientDataSet.Eof do
       begin
 
@@ -243,22 +248,22 @@ begin
         // Сгенерируем имя файла
         FileName := FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' +
                     TPath.GetFileNameWithoutExtension(ClientDataSet.FieldByName('FileName').AsString) +
-                    '_' + ClientDataSet.FieldByName('Id').AsString + TPath.GetExtension(ClientDataSet.FieldByName('FileName').AsString);
+                    '_' + ClientDataSet.FieldByName('ReceiptNumber').AsString + TPath.GetExtension(ClientDataSet.FieldByName('FileName').AsString);
 
         // Удалим если файл изменился
-        if (System.SysUtils.FindFirst(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\*_' +
-            ClientDataSet.FieldByName('Id').AsString + '.*', faArchive, searchResult) = 0) then
-        begin
-          repeat
-            //
-            if ((searchResult.Attr and faArchive) = searchResult.Attr) and
-               (searchResult.Name <> TPath.GetFileName(FileName)) then
-            begin
-              DeleteFile(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' + searchResult.Name);
-            end;
-          until System.SysUtils.FindNext(searchResult) <> 0;
-          System.SysUtils.FindClose(searchResult);
-        end;
+//        if (System.SysUtils.FindFirst(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\*_' +
+//            ClientDataSet.FieldByName('Id').AsString + '.*', faArchive, searchResult) = 0) then
+//        begin
+//          repeat
+//            //
+//            if ((searchResult.Attr and faArchive) = searchResult.Attr) and
+//               (searchResult.Name <> TPath.GetFileName(FileName)) then
+//            begin
+//              DeleteFile(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString + '\' + searchResult.Name);
+//            end;
+//          until System.SysUtils.FindNext(searchResult) <> 0;
+//          System.SysUtils.FindClose(searchResult);
+//        end;
 
 
         // Сохраним файл в папку DropBox
@@ -273,7 +278,9 @@ begin
         isFilesUploaded := ClientDataSet.FieldByName('isFilesUploaded').AsBoolean;
 
         ClientDataSet.Next;
+        GaugeCopyFile.Progress := ClientDataSet.RecNo;
       end;
+      GaugeCopyFile.Progress := 0;
 
       // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
       if (MovementId <> 0) and isFilesUploaded then
@@ -304,14 +311,12 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // обработка все
 function TMainForm.fBeginAll : Boolean;
-var isErr : Boolean;
 begin
     Result := True;
     PanelError.Caption:= '';
     PanelError.Invalidate;
     PanelInfo.Caption:= 'Начало цикла обработки.';
     PanelInfo.Invalidate;
-    isErr:= False;
     Timer.Enabled:= false;
     BtnStart.Enabled:= false;
     BitSendUnscheduled.Enabled:= false;
@@ -321,7 +326,6 @@ begin
        // Проверка наличия целевой папки
        if FDropBoxDir = '' then
        begin
-         isErr:= True;
          PanelError.Caption:= '!!! ERROR - fBeginAll: Не установлена целевая папка.';
          PanelError.Invalidate;
          Exit;
@@ -329,7 +333,6 @@ begin
 
        if not DirectoryExists(FDropBoxDir) then
        begin
-         isErr:= True;
          PanelError.Caption:= '!!! ERROR - fBeginAll: Не найдена целевая папка.';
          PanelError.Invalidate;
          Exit;
@@ -337,7 +340,6 @@ begin
 
        if FDateSendList.Count = 0 then
        begin
-         isErr:= True;
          PanelError.Caption:= '!!! ERROR - fBeginAll: Не заполнен планировщик.';
          PanelCopyFile.Invalidate;
          Exit;
@@ -350,7 +352,6 @@ begin
          fCopyFile;
        except on E: Exception do
          begin
-           isErr:= True;
            PanelError.Caption:= '!!! ERROR - fCopyFile: ' + E.Message;
            PanelError.Invalidate;
          end;
@@ -359,13 +360,6 @@ begin
     finally
        PanelInfo.Caption:= 'Цикл завершен.';
        PanelInfo.Invalidate;
-       //
-//       if isErr = True then
-//       begin
-//           PanelCopyFile.Caption:= 'End !!!ERROR!!! - fBeginAll ... and Next - ' + FormatDateTime('dd.mm.yyyy hh:mm:ss',now + Timer.Interval / 1000 / 60 /  24 / 60 );
-//           PanelCopyFile.Invalidate;
-//       end;
-       //
        FIsBegin:= false;
        FSendUnscheduled:= false;
        Timer.Enabled:= true;

@@ -584,11 +584,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_ConvertRemains() RETURNS Integer AS $BODY
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ConvertRemains', 'Конвертация остатков' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ConvertRemains');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PersonalGroupSummAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PersonalGroupSummAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PersonalGroupSummAdd', 'Премия за лучшую бригаду' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalGroupSummAdd');
 
 /*-------------------------------------------------------------------------------
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 27.02.24         * zc_Movement_PersonalGroupSummAdd
  25.10.23                                                                                     * zc_Movement_ConvertRemains
  11.04.23                                                                                     * zc_Movement_GoodsSP408_1303
  01.04.23                                                                                     * zc_Movement_GoodsSPInform_1303

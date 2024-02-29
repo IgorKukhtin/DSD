@@ -2,7 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1172
-  ExplicitTop = -42
   ExplicitWidth = 1188
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -11,6 +10,7 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1172
     Height = 540
+    Properties.ActivePage = cxTabSheet_PartionCell
     ExplicitTop = 118
     ExplicitWidth = 1172
     ExplicitHeight = 540
@@ -503,6 +503,9 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -728,6 +731,9 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -1584,7 +1590,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIPC
       StoredProcList = <
         item
@@ -1600,6 +1605,9 @@ inherited SendForm: TSendForm
       ErasedFieldName = 'isErased'
       DataSource = PartionCellDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
     end
     object macLoadExcel2: TMultiAction [5]
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1624,7 +1632,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIPC
       StoredProcList = <
         item
@@ -1664,6 +1671,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     object actMISetUnErasedDetail: TdsdUpdateErased [9]
       Category = 'DSDLib'
@@ -1690,7 +1698,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelect_MI_PartionCell
       StoredProcList = <
         item
@@ -1709,6 +1716,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -1751,6 +1759,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actShowAllDetail: TBooleanStoredProcAction [15]
       Category = 'DSDLib'
@@ -1775,6 +1784,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actUpdatePartionCellDS: TdsdUpdateDataSet [17]
       Category = 'DSDLib'
@@ -2024,6 +2034,7 @@ inherited SendForm: TSendForm
     end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actGoodsKindChoicePC: TOpenChoiceForm [31]
       Category = 'DSDLib'
@@ -2189,6 +2200,7 @@ inherited SendForm: TSendForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actAddMaskDetail: TdsdExecStoredProc [40]
       Category = 'DSDLib'
@@ -2210,6 +2222,7 @@ inherited SendForm: TSendForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2263,6 +2276,7 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
@@ -2916,6 +2930,7 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertRecordAsset
@@ -3059,6 +3074,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = InsertRecord20202
@@ -3138,6 +3154,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
@@ -3253,7 +3270,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       ImageIndex = 1
@@ -3366,7 +3382,6 @@ inherited SendForm: TSendForm
       Category = 'OperDatePartner'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogUpdatePartionGoodsDate

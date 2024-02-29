@@ -1868,7 +1868,8 @@ BEGIN
      --END IF;
 
 
-     IF vbMovementDescId IN (zc_Movement_PersonalSendCash(), zc_Movement_PersonalAccount(), zc_Movement_MobileBills(), zc_Movement_LossDebt(), zc_Movement_LossPersonal(), zc_Movement_ProfitLossResult())
+     IF vbMovementDescId IN (zc_Movement_PersonalSendCash(), zc_Movement_PersonalAccount(), zc_Movement_MobileBills(), zc_Movement_LossDebt(), zc_Movement_LossPersonal(), zc_Movement_ProfitLossResult()
+                           , zc_Movement_PersonalGroupSummAdd())
      THEN
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);

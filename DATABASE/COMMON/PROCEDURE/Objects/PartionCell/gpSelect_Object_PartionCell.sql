@@ -168,6 +168,7 @@ BEGIN
            , MAX (CASE WHEN Object.Level = 6 THEN Object.Comment ELSE '' END)::TVarChar AS Comment_l6
 
        FROM tmpPartionCell AS Object
+       WHERE  Object.Level <> 0 
        GROUP BY RIGHT (Object.Name,5)
       ;
 
