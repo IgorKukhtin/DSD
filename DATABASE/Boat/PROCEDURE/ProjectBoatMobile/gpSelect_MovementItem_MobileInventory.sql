@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Article TVarChar, EAN TVarChar 
              , GoodsGroupId Integer, GoodsGroupName TVarChar
-             , MeasureName TVarChar
+             , MeasureName TVarChar, PartNumber TVarChar
              , Amount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
              , Price TFloat, Summa TFloat
               )
@@ -41,13 +41,13 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount
-                           , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
-                           , COALESCE (MIString_Comment.ValueData,'')     AS Comment
-                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                           , MILinkObject_Partner.ObjectId                AS PartnerId
-                           , MILO_PartionCell.ObjectId                    AS PartionCellId
+                           , COALESCE (MIFloat_Price.ValueData, 0)::TFloat           AS Price
+                           , COALESCE (MIString_Comment.ValueData,'')::TVarChar      AS Comment
+                           , COALESCE (MIString_PartNumber.ValueData, '')::TVarChar  AS PartNumber
+                           , MILinkObject_Partner.ObjectId                           AS PartnerId
+                           , MILO_PartionCell.ObjectId                               AS PartionCellId
                            , MovementItem.isErased
-                           , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
+                           , MIFloat_MovementId.ValueData :: Integer                 AS MovementId_OrderClient
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId     = zc_MI_Master()
@@ -122,6 +122,7 @@ BEGIN
            , Object_GoodsGroup.Id                AS GoodsGroupId
            , Object_GoodsGroup.ValueData         AS GoodsGroupName
            , Object_Measure.ValueData            AS MeasureName
+           , tmpMI.PartNumber                    AS PartNumber
 
            , tmpMI.Amount                                               AS Amount
            , tmpRemains.Remains                                ::TFloat AS AmountRemains
@@ -200,5 +201,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 703 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 703 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
