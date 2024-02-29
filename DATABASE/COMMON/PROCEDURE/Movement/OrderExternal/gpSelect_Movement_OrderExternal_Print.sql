@@ -366,7 +366,7 @@ BEGIN
     OPEN Cursor2 FOR
        WITH -- Остатки
             tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
+                                , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
@@ -379,6 +379,8 @@ BEGIN
                            WHERE CLO_Unit.ObjectId = vbUnitId
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
+                           GROUP BY Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
           , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
