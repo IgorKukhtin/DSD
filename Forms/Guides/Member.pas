@@ -179,6 +179,16 @@ type
     GuidesBank: TdsdGuides;
     GuidesBankSecondTwo: TdsdGuides;
     GuidesBankSecondDiff: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edCard_search: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edCardIBAN_search: TcxTextEdit;
+    FieldFilter_Card: TdsdFieldFilter;
+    Card_search: TcxGridDBColumn;
+    CardIBAN_search: TcxGridDBColumn;
+    CardBank_search: TcxGridDBColumn;
+    edCardBank_search: TcxTextEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public
