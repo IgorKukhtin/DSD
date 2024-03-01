@@ -666,7 +666,7 @@ BEGIN
                           , SUM (tmp.Sale_Amount_40200_Weight      ) AS       Sale_Amount_40200_Weight  
                           , SUM (tmp.Return_Amount_40200_Weight    ) AS       Return_Amount_40200_Weight
                           , SUM (tmp.ReturnPercent                 ) AS       ReturnPercent
-                    FROM gpReport_GoodsMI_SaleReturnIn22 (inStartDate
+                    FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
                                                       , inEndDate
                                                       , inBranchId
                                                       , inAreaId
@@ -991,7 +991,7 @@ $BODY$
 -- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '31.05.2023', inEndDate:= '31.05.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
 /*
 
-select 1 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185 , inPaidKindId := 3 
+select 1 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185  , inPaidKindId := 3 
 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')as  tmp
 
 
