@@ -616,13 +616,10 @@ BEGIN
                           , tmp.juridicalid
                           , tmp.JuridicalCode
                           , tmp.JuridicalName
-              
                           , tmp.RetailName
-                          , tmp.RetailReportName
-              
+                         -- , tmp.RetailReportName
                           , tmp.AreaName, tmp.PartnerTagName
                           , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
-              
                           , tmp.PartnerId
                           , tmp.PartnerCode
                           , tmp.PartnerName
@@ -699,7 +696,7 @@ BEGIN
                           , tmp.JuridicalName
                           , tmp.trademarkid              
                           , tmp.RetailName
-                          , tmp.RetailReportName
+                         -- , tmp.RetailReportName
                           , tmp.AreaName, tmp.PartnerTagName
                           , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
                           , tmp.infomoneyid
@@ -802,7 +799,8 @@ BEGIN
             , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName)   :: TVarChar AS JuridicalName
 
             , COALESCE (tmp.RetailName, Object_Retail.ValueData)             :: TVarChar AS RetailName
-            , COALESCE (tmp.RetailReportName, Object_RetailReport.ValueData) :: TVarChar AS RetailReportName
+           -- , COALESCE (tmp.RetailReportName, Object_RetailReport.ValueData) :: TVarChar AS RetailReportName
+           , Object_RetailReport.ValueData :: TVarChar AS RetailReportName
 
             , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
