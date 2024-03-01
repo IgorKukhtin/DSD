@@ -421,6 +421,16 @@ BEGIN
                              AND ObjectLink_Member_UnitMobile.DescId = zc_ObjectLink_Member_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Member_UnitMobile.ChildObjectId
 
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecondTwo
+                              ON ObjectLink_Member_BankSecondTwo.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankSecondTwo.DescId = zc_ObjectLink_Member_BankSecondTwo()
+         LEFT JOIN Object AS Object_BankSecondTwo ON Object_BankSecondTwo.Id = ObjectLink_Member_BankSecondTwo.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecondDiff
+                              ON ObjectLink_Member_BankSecondDiff.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankSecondDiff.DescId = zc_ObjectLink_Member_BankSecondDiff()
+         LEFT JOIN Object AS Object_BankSecondDiff ON Object_BankSecondDiff.Id = ObjectLink_Member_BankSecondDiff.ChildObjectId
+
          LEFT JOIN ObjectDate AS ObjectDate_Birthday
                               ON ObjectDate_Birthday.ObjectId = Object_Member.Id
                              AND ObjectDate_Birthday.DescId = zc_ObjectDate_Member_Birthday()
