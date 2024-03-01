@@ -192,8 +192,6 @@ begin
 end;
 
 function TStorage.PrepareDataSet: TBytes;
-var
-  ResBytes: TBytes;
 begin
   if isArchive then
   begin

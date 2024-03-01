@@ -1260,11 +1260,12 @@ object MainCehForm: TMainCehForm
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
-        Width = 91
+        Width = 128
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = 'Scale.Active = ???'
+        ExplicitWidth = 91
       end
       object PanelWeight_Scale: TPanel
         Left = 1
@@ -1307,7 +1308,7 @@ object MainCehForm: TMainCehForm
       object Label17: TLabel
         Left = 1
         Top = 1
-        Width = 59
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1057#1084#1077#1085#1072' '#1079#1072
@@ -1317,6 +1318,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 59
       end
       object OperDateEdit: TcxDateEdit
         Left = 10
@@ -1341,7 +1343,7 @@ object MainCehForm: TMainCehForm
       object LabelPartionDate: TLabel
         Left = 1
         Top = 1
-        Width = 62
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1055#1072#1088#1090#1080#1103' '#1079#1072
@@ -1351,6 +1353,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 62
       end
       object PartionDateEdit: TcxDateEdit
         Left = 10
@@ -1374,11 +1377,12 @@ object MainCehForm: TMainCehForm
       object HeadCountLabel: TLabel
         Left = 0
         Top = 0
-        Width = 112
+        Width = 130
         Height = 15
         Align = alTop
         Alignment = taCenter
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
+        ExplicitWidth = 112
       end
       object EditEnterCount: TcxCurrencyEdit
         Left = 10
@@ -1414,7 +1418,7 @@ object MainCehForm: TMainCehForm
       object LabelStorageLine: TLabel
         Left = 1
         Top = 1
-        Width = 78
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1051#1080#1085#1080#1103' '#1087#1088'-'#1074#1072
@@ -1424,6 +1428,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 78
       end
       object EditStorageLine: TcxButtonEdit
         Left = 4
@@ -1459,7 +1464,7 @@ object MainCehForm: TMainCehForm
       object LabelArticleLoss: TLabel
         Left = 1
         Top = 1
-        Width = 100
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
@@ -1469,6 +1474,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 100
       end
       object EditArticleLoss: TcxButtonEdit
         Left = 4
@@ -1796,7 +1802,7 @@ object MainCehForm: TMainCehForm
         object InfoBoxLabel: TLabel
           Left = 0
           Top = 0
-          Width = 111
+          Width = 130
           Height = 25
           Align = alTop
           Alignment = taCenter
@@ -1807,6 +1813,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 111
         end
       end
       object Space2Panel: TPanel
@@ -1849,7 +1856,7 @@ object MainCehForm: TMainCehForm
       object LabelPersonalGroup: TLabel
         Left = 1
         Top = 1
-        Width = 74
+        Width = 128
         Height = 14
         Align = alTop
         Caption = '   '#8470' '#1041#1088#1080#1075#1072#1076#1099
@@ -1859,6 +1866,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 74
       end
       object EditPersonalGroup: TcxButtonEdit
         Left = 4
@@ -1925,7 +1933,7 @@ object MainCehForm: TMainCehForm
         object LabelNumberKVK: TLabel
           Left = 1
           Top = 1
-          Width = 46
+          Width = 128
           Height = 14
           Align = alTop
           Caption = '   '#8470' '#1050#1042#1050
@@ -1935,6 +1943,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 46
         end
         object EditNumberKVK: TEdit
           Left = 4
@@ -1960,7 +1969,7 @@ object MainCehForm: TMainCehForm
         object LabelPersonalKVK: TLabel
           Left = 1
           Top = 1
-          Width = 87
+          Width = 128
           Height = 14
           Align = alTop
           Caption = '   '#1054#1087#1077#1088#1072#1090#1086#1088' '#1050#1042#1050
@@ -1970,6 +1979,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 87
         end
         object EditPersonalKVK: TcxButtonEdit
           Left = 4
@@ -2016,7 +2026,7 @@ object MainCehForm: TMainCehForm
       object LabelProduction_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 115
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -2027,6 +2037,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 115
       end
       object GBProduction_GoodsCode: TGroupBox
         Left = 0
@@ -2123,7 +2134,7 @@ object MainCehForm: TMainCehForm
       object LabelTare_Goods: TLabel
         Left = 0
         Top = 0
-        Width = 30
+        Width = 0
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -2134,6 +2145,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 30
       end
       object GBTare_GoodsCode: TGroupBox
         Left = 0
@@ -2422,7 +2434,7 @@ object MainCehForm: TMainCehForm
       object LabelGoods: TLabel
         Left = 0
         Top = 0
-        Width = 61
+        Width = 222
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2433,6 +2445,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 61
       end
       object infoPanelGoodsCode: TPanel
         Left = 0
@@ -2453,7 +2466,7 @@ object MainCehForm: TMainCehForm
           object LabelGoodsCode: TLabel
             Left = 0
             Top = 0
-            Width = 19
+            Width = 100
             Height = 14
             Align = alTop
             Alignment = taCenter
@@ -2464,6 +2477,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
+            ExplicitWidth = 19
           end
           object EditGoodsCode: TcxCurrencyEdit
             Left = 5
@@ -2489,7 +2503,7 @@ object MainCehForm: TMainCehForm
           object LabelGoodsWeight: TLabel
             Left = 0
             Top = 0
-            Width = 19
+            Width = 122
             Height = 14
             Align = alTop
             Alignment = taCenter
@@ -2500,6 +2514,7 @@ object MainCehForm: TMainCehForm
             Font.Name = 'Arial'
             Font.Style = []
             ParentFont = False
+            ExplicitWidth = 19
           end
           object PanelGoodsWeight: TPanel
             Left = 0
@@ -2546,7 +2561,7 @@ object MainCehForm: TMainCehForm
       object LabelGoodsKind: TLabel
         Left = 0
         Top = 0
-        Width = 106
+        Width = 222
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2557,6 +2572,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 106
       end
       object PanelGoodsKindCode: TPanel
         Left = 0
@@ -2608,7 +2624,7 @@ object MainCehForm: TMainCehForm
       object LabelPartionGoods: TLabel
         Left = 1
         Top = 1
-        Width = 119
+        Width = 220
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2619,6 +2635,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 119
       end
       object EditPartionGoods: TEdit
         Left = 5
@@ -2642,7 +2659,7 @@ object MainCehForm: TMainCehForm
       object LabelCount_all: TLabel
         Left = 1
         Top = 1
-        Width = 88
+        Width = 220
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2653,6 +2670,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 88
       end
       object PanelCount: TPanel
         Left = 1
@@ -2665,7 +2683,7 @@ object MainCehForm: TMainCehForm
         object LabelCount: TLabel
           Left = 0
           Top = 0
-          Width = 114
+          Width = 100
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2676,6 +2694,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 114
         end
         object EditCount: TcxCurrencyEdit
           Left = 4
@@ -2701,7 +2720,7 @@ object MainCehForm: TMainCehForm
         object LabelCountPack: TLabel
           Left = 0
           Top = 0
-          Width = 100
+          Width = 120
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2712,6 +2731,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 100
         end
         object EditCountPack: TcxCurrencyEdit
           Left = 5
@@ -2746,7 +2766,7 @@ object MainCehForm: TMainCehForm
         object LabelSkewer2: TLabel
           Left = 0
           Top = 0
-          Width = 81
+          Width = 100
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2757,6 +2777,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 81
         end
         object EditSkewer2: TcxCurrencyEdit
           Left = 4
@@ -2784,7 +2805,7 @@ object MainCehForm: TMainCehForm
         object LabelWeightSkewer2: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 120
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2795,6 +2816,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object PanelWeightSkewer2: TPanel
           Left = 0
@@ -2824,7 +2846,7 @@ object MainCehForm: TMainCehForm
       object LabelTare_enter_all: TLabel
         Left = 1
         Top = 1
-        Width = 26
+        Width = 220
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2835,6 +2857,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 26
       end
       object infoPanelWeightTare_enter: TPanel
         Left = 1
@@ -2847,7 +2870,7 @@ object MainCehForm: TMainCehForm
         object LabelWeightTare_enter: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 100
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2858,6 +2881,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object EditWeightTare_enter: TcxCurrencyEdit
           Left = 4
@@ -2884,7 +2908,7 @@ object MainCehForm: TMainCehForm
         object LabelWeightTare_enter_two: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 120
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2895,6 +2919,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object PanelWeightTare_enter_two: TPanel
           Left = 0
@@ -2924,7 +2949,7 @@ object MainCehForm: TMainCehForm
       object LabelSkewer: TLabel
         Left = 1
         Top = 1
-        Width = 81
+        Width = 220
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -2935,6 +2960,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 81
       end
       object PanelSkewer1: TPanel
         Left = 1
@@ -2947,7 +2973,7 @@ object MainCehForm: TMainCehForm
         object LabelSkewer1: TLabel
           Left = 0
           Top = 0
-          Width = 81
+          Width = 100
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2958,6 +2984,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 81
         end
         object EditSkewer1: TcxCurrencyEdit
           Left = 4
@@ -2985,7 +3012,7 @@ object MainCehForm: TMainCehForm
         object LabelWeightSkewer1: TLabel
           Left = 0
           Top = 0
-          Width = 19
+          Width = 120
           Height = 14
           Align = alTop
           Alignment = taCenter
@@ -2996,6 +3023,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
+          ExplicitWidth = 19
         end
         object PanelWeightSkewer1: TPanel
           Left = 0
@@ -3025,11 +3053,12 @@ object MainCehForm: TMainCehForm
       object LabelWeightOther: TLabel
         Left = 1
         Top = 1
-        Width = 125
+        Width = 220
         Height = 14
         Align = alTop
         Alignment = taCenter
         Caption = #1055#1088#1086#1095#1080#1077', '#1086#1073#1097#1080#1081' '#1074#1077#1089', '#1082#1075
+        ExplicitWidth = 125
       end
       object EditWeightOther: TcxCurrencyEdit
         Left = 55
@@ -3056,7 +3085,7 @@ object MainCehForm: TMainCehForm
       object Label_Weight: TLabel
         Left = 1
         Top = 1
-        Width = 66
+        Width = 220
         Height = 13
         Align = alTop
         Alignment = taCenter
@@ -3067,6 +3096,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsBold]
         ParentFont = False
+        ExplicitWidth = 66
       end
       object Panel_Weight: TPanel
         Left = 1
@@ -3145,7 +3175,7 @@ object MainCehForm: TMainCehForm
       object SubjectDocLabel: TLabel
         Left = 0
         Top = 0
-        Width = 103
+        Width = 222
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -3156,6 +3186,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
+        ExplicitWidth = 103
       end
       object EditSubjectDoc: TcxButtonEdit
         Left = 6
@@ -3191,7 +3222,7 @@ object MainCehForm: TMainCehForm
       object AssetLabel: TLabel
         Left = 0
         Top = 0
-        Width = 91
+        Width = 222
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -3202,6 +3233,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
+        ExplicitWidth = 91
       end
       object EditAsset: TcxButtonEdit
         Left = 4
@@ -3237,7 +3269,7 @@ object MainCehForm: TMainCehForm
       object Asset_twoLabel: TLabel
         Left = 0
         Top = 0
-        Width = 91
+        Width = 222
         Height = 14
         Align = alTop
         Alignment = taCenter
@@ -3248,6 +3280,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = []
         ParentFont = False
+        ExplicitWidth = 91
       end
       object EditAsset_two: TcxButtonEdit
         Left = 4
@@ -3416,6 +3449,7 @@ object MainCehForm: TMainCehForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     KeepSelectColor = True
     PropertiesCellList = <>
     Left = 408

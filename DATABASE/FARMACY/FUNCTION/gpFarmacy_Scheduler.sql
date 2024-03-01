@@ -182,7 +182,7 @@ BEGIN
     END;
 
     -- Перерасчет ЗП каждый час
-    IF date_part('HOUR',  CURRENT_TIME)::Integer >= 9 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
+    /*IF date_part('HOUR',  CURRENT_TIME)::Integer >= 9 AND date_part('HOUR',  CURRENT_TIME)::Integer <= 21 AND
        EXISTS(SELECT Movement.ID
               FROM Movement
                    LEFT JOIN MovementDate AS MovementDate_Calculation
@@ -238,7 +238,7 @@ BEGIN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_Wages_CalculationAll', True, text_var1::TVarChar, vbUserId);
       END;
-    END IF;
+    END IF;*/
 
     -- Сброс 5 категории через 30 дней
     /*BEGIN
@@ -345,7 +345,7 @@ BEGIN
     END;
     
     -- Пропись в ЗП
-    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 5 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30 AND FALSE
     THEN
 
       -- Заполнение суммы по выполнению плана продаж
@@ -511,7 +511,7 @@ BEGIN
     END;
 
     -- Создание графиков менеджеров по текущему месяцу
-    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    /*IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
     THEN
 
       BEGIN
@@ -528,10 +528,10 @@ BEGIN
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_EmployeeScheduleVIP', True, text_var1::TVarChar, vbUserId);
       END;
           
-    END IF;    
+    END IF;*/    
       
     -- Создание ЗП менеджеров по текущему месяцу
-    IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+    /*IF date_part('DAY',  CURRENT_DATE)::Integer = 1 AND date_part('HOUR',  CURRENT_TIME)::Integer = 1 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
     THEN
 
       BEGIN
@@ -548,7 +548,7 @@ BEGIN
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP', True, text_var1::TVarChar, vbUserId);
       END;    
 
-    END IF;    
+    END IF;*/
 
     -- Удаление вчарашних заказов по нашему сайту
     IF date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND date_part('MINUTE',  CURRENT_TIME)::Integer >= 30
@@ -604,7 +604,7 @@ BEGIN
       END;    
 
       -- Проставление смен 
-      BEGIN
+      /*BEGIN
          PERFORM gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP(inMovementId := Movement.Id,  inSession := inSession)
          FROM Movement
          WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
@@ -614,10 +614,10 @@ BEGIN
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpUpdate_MI_EmployeeScheduleVIP_SetPayrollTypeVIP', True, text_var1::TVarChar, vbUserId);
-      END;    
+      END;*/
       
       -- Расчет ЗП випам 
-      BEGIN
+      /*BEGIN
          PERFORM gpInsertUpdate_Movement_WagesVIP_CalculationAllDay(inMovementId := Movement.Id,  inSession := inSession)
          FROM Movement
          WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
@@ -627,11 +627,11 @@ BEGIN
          WHEN others THEN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP_CalculationAllDay', True, text_var1::TVarChar, vbUserId);
-      END;          
+      END;*/          
             
     END IF;    
 
-    IF date_part('DAY',  CURRENT_DATE)::Integer <= 3 AND date_part('HOUR',  CURRENT_TIME)::Integer = 18 AND 
+   /* IF date_part('DAY',  CURRENT_DATE)::Integer <= 3 AND date_part('HOUR',  CURRENT_TIME)::Integer = 18 AND 
        date_part('MINUTE',  CURRENT_TIME)::Integer >= 0 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
     THEN
 
@@ -656,9 +656,9 @@ BEGIN
            GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Movement_Wages_ApplicationAward', True, text_var1::TVarChar, vbUserId);
       END;    */
-    END IF;    
+    END IF;  */   
 
-    IF date_part('DAY',  CURRENT_DATE)::Integer = 4 AND date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND 
+    /*IF date_part('DAY',  CURRENT_DATE)::Integer = 4 AND date_part('HOUR',  CURRENT_TIME)::Integer = 21 AND 
        date_part('MINUTE',  CURRENT_TIME)::Integer >= 0 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 20
     THEN
 
@@ -675,7 +675,7 @@ BEGIN
          PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpInsertUpdate_Movement_WagesVIP_CalculationAllDay', True, text_var1::TVarChar, vbUserId);
       END;         
 
-    END IF;    
+    END IF;*/    
 
     IF date_part('isodow', CURRENT_DATE)::Integer in (6) AND date_part('HOUR',  CURRENT_TIME)::Integer = 8 AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
     THEN

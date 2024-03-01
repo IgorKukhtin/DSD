@@ -3162,9 +3162,11 @@ begin
   then begin
         //AssetLabel.Caption:= 'Выбор Стелаж №';
         AssetLabel.Caption:= 'Выбор Ячейка хранения №';
+        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Caption:= 'Ячейка хранения №';
   end
   else begin
         AssetLabel.Caption:= 'Оборудование - 1';
+        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AssetName').Index].Caption:= 'Оборудование - 1';
   end;
 
   //

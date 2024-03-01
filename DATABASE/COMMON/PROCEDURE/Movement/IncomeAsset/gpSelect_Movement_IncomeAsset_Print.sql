@@ -101,6 +101,12 @@ BEGIN
 
       --
     OPEN Cursor1 FOR
+         WITH tmpMovementDate       AS (SELECT * FROM MovementDate WHERE MovementDate.MovementId =  inMovementId)
+            , tmpMovementString     AS (SELECT * FROM MovementString WHERE MovementString.MovementId =  inMovementId)
+            , tmpMovementBoolean    AS (SELECT * FROM MovementBoolean WHERE MovementBoolean.MovementId =  inMovementId)
+            , tmpMovementFloat      AS (SELECT * FROM MovementFloat WHERE MovementFloat.MovementId =  inMovementId)
+            , tmpMovementLinkObject AS (SELECT * FROM MovementLinkObject WHERE MovementLinkObject.MovementId =  inMovementId)
+         --
          SELECT
              Movement.Id
            , Movement.InvNumber
@@ -169,62 +175,62 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+            LEFT JOIN tmpMovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountPartner
                                     ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSpending
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummSpending
                                     ON MovementFloat_TotalSummSpending.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummSpending.DescId = zc_MovementFloat_TotalSummSpending()
 
-            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+            LEFT JOIN tmpMovementFloat AS MovementFloat_CurrencyValue
                                     ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
                                    AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_View ON Object_Contract_View.ContractId = MovementLinkObject_Contract.ObjectId
@@ -244,12 +250,12 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_CardFuel_Juridical.ChildObjectId)
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CurrencyDocument
                                          ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
             LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+            LEFT JOIN tmpMovementLinkObject AS MovementLinkObject_CurrencyPartner
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId

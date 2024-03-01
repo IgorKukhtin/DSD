@@ -581,7 +581,7 @@ BEGIN
              --  новая схема
            , (OH_JuridicalDetails_To.OKPO = '32490244' -- ЕПІЦЕНТР К ТОВ
            OR OH_JuridicalDetails_To.OKPO = '44140683' -- Турбо. ЮА
-           OR OH_JuridicalDetails_To.OKPO = '43536406' -- Гловопром Україна
+         --OR (vbUserId = 5 AND OH_JuridicalDetails_To.OKPO = '43536406') -- Гловопром Україна
              ) :: Boolean AS isDOCUMENTINVOICE_DRN
 
            , tmpTransportGoods.CarName

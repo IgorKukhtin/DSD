@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, FMX.DialogService, System.UITypes,
-  Data.DB, dsdDB, Datasnap.DBClient
+  Data.DB, dsdDB, Datasnap.DBClient, System.Variants
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
@@ -32,6 +32,8 @@ type
 
     function UpdateProgram: string;
     function LoadGoods: string;
+    function LoadGoodsList: string;
+    function UploadInventoryGoods: string;
   protected
     procedure Execute; override;
   end;
@@ -75,7 +77,6 @@ type
     cdsInventoryListPrice: TFloatField;
     cdsInventoryListSumma: TFloatField;
     cdsInventoryGoods: TClientDataSet;
-    cdsInventoryGoodsId: TIntegerField;
     cdsInventoryUnitId: TIntegerField;
     cdsGoods: TClientDataSet;
     cdsGoodsId: TIntegerField;
@@ -86,8 +87,33 @@ type
     cdsGoodsGoodsGroupName: TWideStringField;
     cdsGoodsMeasureName: TWideStringField;
     cdsGoodsisErased: TBooleanField;
+    cdsInventoryGoodsGoodsId: TIntegerField;
+    cdsInventoryGoodsGoodsCode: TIntegerField;
+    cdsInventoryGoodsGoodsName: TWideStringField;
+    cdsInventoryGoodsArticle: TWideStringField;
+    cdsInventoryGoodsEAN: TWideStringField;
+    cdsInventoryGoodsGoodsGroupName: TWideStringField;
+    cdsInventoryGoodsMeasureName: TWideStringField;
+    cdsInventoryGoodsAmount: TFloatField;
+    cdsInventoryGoodsPartNumber: TWideStringField;
+    cdsInventoryListPartNumber: TWideStringField;
+    cdsInventoryGoodsMovementId: TIntegerField;
+    cdsInventoryGoodsisSend: TBooleanField;
+    cdsInventoryGoodsDeleteId: TIntegerField;
+    cdsGoodsList: TClientDataSet;
+    cdsGoodsListId: TIntegerField;
+    cdsGoodsListCode: TIntegerField;
+    cdsGoodsListName: TWideStringField;
+    cdsGoodsListArticle: TWideStringField;
+    cdsGoodsListEAN: TWideStringField;
+    cdsGoodsListGoodsGroupName: TWideStringField;
+    cdsGoodsListMeasureName: TWideStringField;
+    cdsGoodsListisErased: TBooleanField;
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
+    FGoodsFile: String;
+    FInventoryGoodsFile: String;
   public
     { Public declarations }
     function GetCurrentVersion: string;
@@ -97,11 +123,24 @@ type
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure UpdateProgram(const AResult: TModalResult);
 
-    function LoadGoods : Boolean;
-    function LoadInventoryJournal : Boolean;
-    function LoadInventory : Boolean;
-    function LoadInventoryList : Boolean;
-    function LoadInventoryGoods : Boolean;
+    function DownloadGoods : Boolean;
+    function DownloadInventoryJournal : Boolean;
+    function DownloadInventory : Boolean;
+    function DownloadInventoryList : Boolean;
+
+    function LoadGoodsList : Boolean;
+
+    procedure LoadGoods;
+    procedure SaveGoods;
+
+    procedure InitInventoryGoods;
+    procedure SaveInventoryGoods;
+    procedure AddInventoryGoods(AList : Boolean = False);
+    procedure DeleteInventoryGoods;
+    function isInventoryGoodsSend : Boolean;
+
+    procedure UploadAllData;
+    procedure UploadInventoryGoods;
   end;
 
 var
@@ -113,7 +152,7 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses System.IOUtils, System.ZLib, FMX.Dialogs, uMain;
+uses System.IOUtils, System.DateUtils, System.ZLib, FMX.Dialogs, uMain;
 
 {$R *.dfm}
 
@@ -297,9 +336,6 @@ begin
   else nID := 0;
 
   StoredProc := TdsdStoredProc.Create(nil);
-  frmMain.lwGoods.BeginUpdate;
-  frmMain.lwGoods.Visible := False;
-//  DM.cdsGoods.DisableControls;
   try
     StoredProc.OutputType := otDataSet;
 
@@ -319,13 +355,97 @@ begin
     end;
   finally
     FreeAndNil(StoredProc);
-    Synchronize(procedure
-                begin
-                 // DM.cdsGoods.EnableControls;
-                  frmMain.lwGoods.EndUpdate;
-                  frmMain.lwGoods.Visible := True;
-                end);
+    DM.SaveGoods;
+    frmMain.DateDownloadGoods := Now;
+    if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'LoadGoodsList';
   end;
+end;
+
+// Открытие справочника Комплектующих
+function TWaitThread.LoadGoodsList: string;
+  var nID: Integer;
+begin
+  frmMain.lwGoods.Visible := False;
+  //frmMain.lwGoods.BeginUpdate;
+  try
+    if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
+    else nID := 0;
+    DM.cdsGoodsList.Close;
+    if not DM.cdsGoods.Active then DM.LoadGoods;
+    //DM.cdsGoodsList.DisableControls;
+    if DM.cdsGoods.Active then DM.cdsGoodsList.AppendData(DM.cdsGoods.Data, False);
+  finally
+    if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
+    //DM.cdsGoodsList.EnableControls;
+    //frmMain.lwGoods.EndUpdate;
+    Synchronize(procedure
+              begin
+                frmMain.lwGoods.Visible := True;
+              end);
+  end;
+end;
+
+// Отправить инвентаризации
+function TWaitThread.UploadInventoryGoods: string;
+var
+  StoredProc : TdsdStoredProc;
+  CDS: TClientDataSet;
+begin
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    CDS := TClientDataSet.Create(Nil);
+    StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, 0);
+    StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, '');
+
+    try
+      CDS.LoadFromFile(DM.FInventoryGoodsFile);
+      if CDS.IsEmpty then Exit;
+      CDS.IndexFieldNames := 'MovementId;GoodsId;PartNumber';
+      CDS.Filter := 'isSend = False';
+      CDS.Filtered := True;
+      CDS.First;
+      while not CDS.Eof do
+      begin
+        StoredProc.ParamByName('ioId').Value := 0;
+        StoredProc.ParamByName('inMovementId').Value := CDS.FieldByName('MovementId').AsInteger;
+        StoredProc.ParamByName('inGoodsId').Value := CDS.FieldByName('GoodsId').AsInteger;
+        StoredProc.ParamByName('inAmount').Value := CDS.FieldByName('Amount').AsInteger;
+        StoredProc.ParamByName('inPartNumber').Value := CDS.FieldByName('PartNumber').AsString;
+        StoredProc.Execute(false, false, false);
+
+        CDS.Edit;
+        CDS.FieldByName('isSend').AsBoolean := True;
+        CDS.Post;
+        CDS.SaveToFile(DM.FInventoryGoodsFile);
+
+        CDS.First;
+      end;
+
+      CDS.Filtered := False;
+      CDS.Filter := 'isSend = True';
+      CDS.Filtered := True;
+      while not CDS.Eof do CDS.Delete;
+
+    except
+      on E : Exception do
+      begin
+        Result := E.Message;
+      end;
+    end;
+  finally
+    CDS.SaveToFile(DM.FInventoryGoodsFile);
+    FreeAndNil(StoredProc);
+    FreeAndNil(CDS);
+  end;
+
 end;
 
 procedure TWaitThread.Execute;
@@ -351,10 +471,24 @@ begin
     begin
       SetTaskName('Получение файла обновления');
       Res := UpdateProgram;
-    end else if TaskName = 'LoadGoods' then
+    end;
+
+    if (Res = '') and (TaskName = 'LoadGoods') then
     begin
       SetTaskName('Получение справочника Комплектующих');
       Res := LoadGoods;
+    end;
+
+    if (Res = '') and (TaskName = 'LoadGoodsList') then
+    begin
+      SetTaskName('Открытие справочника Комплектующих');
+      Res := LoadGoodsList;
+    end;
+
+    if (Res = '') and (TaskName = 'UploadInventoryGoods') or (TaskName = 'UploadAll') then
+    begin
+      SetTaskName('Отправка инвентаризаций');
+      Res := UploadInventoryGoods;
     end;
 
   finally
@@ -378,7 +512,19 @@ begin
   end;
 end;
 
+{ TDM }
 
+procedure TDM.DataModuleCreate(Sender: TObject);
+begin
+  // Определим имена файлов
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  FGoodsFile := TPath.Combine(TPath.GetDocumentsPath, 'Goods.dat');
+  FInventoryGoodsFile := TPath.Combine(TPath.GetDocumentsPath, 'InventoryGoods.dat');
+  {$ELSE}
+  FGoodsFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Goods.dat');
+  FInventoryGoodsFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'InventoryGoods.dat');
+  {$ENDIF}
+end;
 
 { получение текущей версии программы }
 function TDM.GetCurrentVersion: string;
@@ -539,7 +685,7 @@ begin
 end;
 
 { начитка товаров }
-function TDM.LoadGoods : Boolean;
+function TDM.DownloadGoods : Boolean;
 begin
   WaitThread := TWaitThread.Create(true);
   WaitThread.FreeOnTerminate := true;
@@ -550,7 +696,7 @@ end;
 
 
 { начитка журнала инвентаризаций }
-function TDM.LoadInventoryJournal : Boolean;
+function TDM.DownloadInventoryJournal : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
@@ -590,7 +736,7 @@ begin
 end;
 
 { начитка инвентаризации}
-function TDM.LoadInventory : Boolean;
+function TDM.DownloadInventory : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
@@ -625,12 +771,13 @@ begin
 end;
 
 { начитка строк инвентаризации}
-function TDM.LoadInventoryList : Boolean;
+function TDM.DownloadInventoryList : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
 begin
 
+  Result := False;
   if not cdsInventory.Active or cdsInventory.IsEmpty then Exit;
 
   if cdsInventoryList.Active and not cdsInventoryList.IsEmpty then
@@ -665,45 +812,183 @@ begin
   end;
 end;
 
-{ начитка товаров для инвентаризации}
-function TDM.LoadInventoryGoods : Boolean;
-var
-  StoredProc : TdsdStoredProc;
-  nId: Integer;
+function TDM.LoadGoodsList : Boolean;
+begin
+  if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
+  begin
+    WaitThread := TWaitThread.Create(true);
+    WaitThread.FreeOnTerminate := true;
+    WaitThread.TaskName := 'LoadGoodsList';
+    WaitThread.Start;
+    Result := True;
+  end else DM.DownloadGoods;
+end;
+
+procedure TDM.LoadGoods;
 begin
 
-  if not cdsInventory.Active or cdsInventory.IsEmpty then Exit;
+  if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
+  begin
 
-  if cdsInventoryGoods.Active and not cdsInventoryGoods.IsEmpty then
-    nID := DM.cdsInventoryGoodsId.AsInteger
-  else nID := 0;
+    if FileExists(FGoodsFile) then cdsGoods.LoadFromFile(FGoodsFile);
 
-  StoredProc := TdsdStoredProc.Create(nil);
-  cdsInventoryGoods.DisableControls;
-  try
-    StoredProc.OutputType := otDataSet;
+  end else DownloadGoods;
+end;
 
-    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileInventory';
-    StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inUnitId', ftInteger, ptInput, DM.cdsInventoryUnitId.AsInteger);
-    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
-    StoredProc.DataSet := cdsInventoryGoods;
+procedure TDM.SaveGoods;
+begin
+
+  if cdsGoods.Active then
+  begin
+    cdsGoods.SaveToFile(FGoodsFile);
+  end;
+end;
+
+// Иницилизация хранилища результатов сканирования
+procedure TDM.InitInventoryGoods;
+begin
+
+  if not cdsInventoryGoods.Active then
+  begin
+
+    if FileExists(FInventoryGoodsFile) then cdsInventoryGoods.LoadFromFile(FInventoryGoodsFile);
+
+    if not cdsInventoryGoods.Active then cdsInventoryGoods.CreateDataSet;
 
     try
-      StoredProc.Execute(false, false, false);
-      Result := cdsInventoryGoods.Active;
-      if Result and (nID <> 0) then cdsInventoryGoods.Locate('Id', nId, [])
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(E.Message);
-        exit;
-      end;
+      cdsInventoryGoods.Filtered := False;
+      cdsInventoryGoods.Filter := 'isSend = True';
+      cdsInventoryGoods.Filtered := True;
+      while not cdsInventoryGoods.Eof do cdsInventoryGoods.Delete;
+    finally
+      cdsInventoryGoods.Filtered := False;
+      cdsInventoryGoods.Filter := '';
     end;
-  finally
-    FreeAndNil(StoredProc);
-    cdsInventoryGoods.EnableControls;
   end;
+
+  cdsInventoryGoods.Filtered := False;
+  cdsInventoryGoods.Filter := 'MovementId = ' + cdsInventoryId.AsString;
+  cdsInventoryGoods.Filtered := True;
+end;
+
+// Сохраним введенные данные по инвентаризации
+procedure TDM.SaveInventoryGoods;
+begin
+
+  if cdsInventoryGoods.Active then
+  begin
+
+    cdsInventoryGoods.SaveToFile(FInventoryGoodsFile);
+  end;
+end;
+
+
+// Добавить товар для вставки в инвентаризацию
+procedure TDM.AddInventoryGoods(AList : Boolean = False);
+  var nAmount : Currency;
+begin
+
+  if TryStrToCurr(frmMain.edInventScanАmount.Text, nAmount) then nAmount := 1;
+
+  if AList then
+  begin
+    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsListId.AsInteger,frmMain.edInventScanPartNumber.Text]), []) then
+    begin
+      cdsInventoryGoods.Edit;
+      if cdsInventoryGoodsisSend.AsBoolean = False then
+        cdsInventoryGoodsAmount.AsFloat := cdsInventoryGoodsAmount.AsFloat + nAmount
+      else cdsInventoryGoodsAmount.AsFloat := nAmount;
+      cdsInventoryGoodsisSend.AsBoolean := False;
+      cdsInventoryGoods.Post;
+    end else
+    begin
+      cdsInventoryGoods.Last;
+      cdsInventoryGoods.Append;
+      cdsInventoryGoodsMovementId.AsInteger := cdsInventoryId.AsInteger;
+      cdsInventoryGoodsGoodsId.AsInteger := cdsGoodsListId.AsInteger;
+      cdsInventoryGoodsGoodsCode.AsInteger := cdsGoodsListCode.AsInteger;
+      cdsInventoryGoodsGoodsName.AsString := cdsGoodsListName.AsString;
+      cdsInventoryGoodsGoodsGroupName.AsString := cdsGoodsListGoodsGroupName.AsString;
+      cdsInventoryGoodsArticle.AsString := cdsGoodsListArticle.AsString;
+      cdsInventoryGoodsMeasureName.AsString := cdsGoodsListMeasureName.AsString;
+      cdsInventoryGoodsAmount.AsFloat := nAmount;
+      cdsInventoryGoodsPartNumber.AsString := frmMain.edInventScanPartNumber.Text;
+      cdsInventoryGoodsisSend.AsBoolean := False;
+      cdsInventoryGoodsDeleteId.AsInteger := 0;
+      cdsInventoryGoods.Post;
+    end;
+  end else
+  begin
+    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsId.AsInteger,frmMain.edInventScanPartNumber.Text]), []) then
+    begin
+      cdsInventoryGoods.Edit;
+      if cdsInventoryGoodsisSend.AsBoolean = False then
+        cdsInventoryGoodsAmount.AsFloat := cdsInventoryGoodsAmount.AsFloat + nAmount
+      else cdsInventoryGoodsAmount.AsFloat := nAmount;
+      cdsInventoryGoodsisSend.AsBoolean := False;
+      cdsInventoryGoods.Post;
+    end else
+    begin
+      cdsInventoryGoods.Last;
+      cdsInventoryGoods.Append;
+      cdsInventoryGoodsMovementId.AsInteger := cdsInventoryId.AsInteger;
+      cdsInventoryGoodsGoodsId.AsInteger := cdsGoodsId.AsInteger;
+      cdsInventoryGoodsGoodsCode.AsInteger := cdsGoodsCode.AsInteger;
+      cdsInventoryGoodsGoodsName.AsString := cdsGoodsName.AsString;
+      cdsInventoryGoodsGoodsGroupName.AsString := cdsGoodsGoodsGroupName.AsString;
+      cdsInventoryGoodsArticle.AsString := cdsGoodsArticle.AsString;
+      cdsInventoryGoodsMeasureName.AsString := cdsGoodsMeasureName.AsString;
+      cdsInventoryGoodsAmount.AsFloat := nAmount;
+      cdsInventoryGoodsPartNumber.AsString := frmMain.edInventScanPartNumber.Text;
+      cdsInventoryGoodsisSend.AsBoolean := False;
+      cdsInventoryGoodsDeleteId.AsInteger := 0;
+      cdsInventoryGoods.Post;
+    end;
+  end;
+
+  SaveInventoryGoods;
+end;
+
+procedure TDM.DeleteInventoryGoods;
+begin
+  if cdsInventoryGoods.Active and not cdsInventoryGoods.IsEmpty then
+  begin
+    cdsInventoryGoods.Delete;
+    SaveInventoryGoods;
+  end;
+end;
+
+// Проверим необходимость отправки инвентаризаций
+function TDM.isInventoryGoodsSend : Boolean;
+begin
+
+  try
+    if cdsInventoryGoods.Active then cdsInventoryGoods.Close;
+
+    if FileExists(FInventoryGoodsFile) then cdsInventoryGoods.LoadFromFile(FInventoryGoodsFile);
+
+    if not cdsInventoryGoods.Active then cdsInventoryGoods.CreateDataSet;
+
+    Result := not cdsInventoryGoods.Locate('isSend', False, []);
+  finally
+    cdsInventoryGoods.Close;
+  end;
+end;
+
+procedure TDM.UploadAllData;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'UploadAll';
+  WaitThread.Start;
+end;
+
+procedure TDM.UploadInventoryGoods;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'UploadInventoryGoods';
+  WaitThread.Start;
 end;
 
 end.
