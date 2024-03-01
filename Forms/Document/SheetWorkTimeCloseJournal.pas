@@ -120,7 +120,7 @@ type
     actUpdateCloseAll: TdsdExecStoredProc;
     bbUpdateCloseAll: TdxBarButton;
     UnitName: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
+    spInsertUpdate_Unit: TdsdStoredProc;
     actUnitChoiceForm: TOpenChoiceForm;
   private
   public
