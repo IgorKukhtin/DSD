@@ -316,7 +316,7 @@ BEGIN
                                                               AND (ContainerLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                              ON MovementLinkObject_Partner.MovementId = MIContainer.MovementId
-                                                            AND MovementLinkObject_Partner.DescId    = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
+                                                            AND MovementLinkObject_Partner.DescId = CASE WHEN MIContainer.MovementDescId = zc_Movement_PriceCorrective() THEN zc_MovementLinkObject_Partner() ELSE tmpAnalyzer.MLO_DescId END
 
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                                  ON MILinkObject_Branch.MovementItemId = MIContainer.MovementItemId
@@ -600,7 +600,120 @@ BEGIN
 
                    LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpOperationGroup.ContractId
                    LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = tmpOperationGroup.InfoMoneyId
-              )
+              )    
+              
+   --
+    , tmpReport AS (SELECT  tmp.goodsid
+                          , tmp.GoodsCode
+                          , tmp.GoodsName  
+                          , tmp.GoodsKindId
+                          , tmp.GoodsKindName
+                          , tmp.trademarkid
+                          , tmp.TradeMarkName
+                          , tmp.branchid
+                          , tmp.BranchCode
+                          , tmp.BranchName
+                          , tmp.juridicalid
+                          , tmp.JuridicalCode
+                          , tmp.JuridicalName
+              
+                          , tmp.RetailName
+                          , tmp.RetailReportName
+              
+                          , tmp.AreaName, tmp.PartnerTagName
+                          , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+              
+                          , tmp.PartnerId
+                          , tmp.PartnerCode
+                          , tmp.PartnerName
+                          , tmp.contractid
+                          , tmp.ContractCode 
+                          , tmp.ContractNumber
+                          , tmp.ContractTagName
+                          , tmp.ContractTagGroupName
+                          , tmp.infomoneyid
+                         -- , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+                         -- , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+                          
+                          , SUM (tmp.Promo_Summ                    ) AS       Promo_Summ                
+                          , SUM (tmp.Sale_Summ                     ) AS       Sale_Summ                 
+                          , SUM (tmp.Sale_SummReal                 ) AS       Sale_SummReal             
+                          , SUM (tmp.Sale_Summ_10200               ) AS       Sale_Summ_10200           
+                          , SUM (tmp.Sale_Summ_10250               ) AS       Sale_Summ_10250           
+                          , SUM (tmp.Sale_Summ_10300               ) AS       Sale_Summ_10300           
+                          , SUM (tmp.Promo_SummCost                ) AS       Promo_SummCost            
+                          , SUM (tmp.Sale_SummCost                 ) AS       Sale_SummCost             
+                          , SUM (tmp.Sale_SummCost_10500           ) AS       Sale_SummCost_10500       
+                          , SUM (tmp.Sale_SummCost_40200           ) AS       Sale_SummCost_40200       
+                          , SUM (tmp.Sale_Amount_Weight            ) AS       Sale_Amount_Weight        
+                          , SUM (tmp.Sale_Amount_Sh                ) AS       Sale_Amount_Sh            
+                          , SUM (tmp.Promo_AmountPartner_Weight    ) AS       Promo_AmountPartner_Weight
+                          , SUM (tmp.Promo_AmountPartner_Sh        ) AS       Promo_AmountPartner_Sh    
+                          , SUM (tmp.Sale_AmountPartner_Weight     ) AS       Sale_AmountPartner_Weight 
+                          , SUM (tmp.Sale_AmountPartner_Sh         ) AS       Sale_AmountPartner_Sh     
+                          , SUM (tmp.Sale_AmountPartnerR_Weight    ) AS       Sale_AmountPartnerR_Weight
+                          , SUM (tmp.Sale_AmountPartnerR_Sh        ) AS       Sale_AmountPartnerR_Sh    
+                          , SUM (tmp.Return_Summ                   ) AS       Return_Summ               
+                          , SUM (tmp.Return_Summ_10300             ) AS       Return_Summ_10300         
+                          , SUM (tmp.Return_Summ_10700             ) AS       Return_Summ_10700         
+                          , SUM (tmp.Return_SummCost               ) AS       Return_SummCost           
+                          , SUM (tmp.Return_SummCost_40200         ) AS       Return_SummCost_40200     
+                          , SUM (tmp.Return_Amount_Weight          ) AS       Return_Amount_Weight      
+                          , SUM (tmp.Return_Amount_Sh              ) AS       Return_Amount_Sh          
+                          , SUM (tmp.Return_AmountPartner_Weight   ) AS       Return_AmountPartner_Weight
+                          , SUM (tmp.Return_AmountPartner_Sh       ) AS       Return_AmountPartner_Sh   
+                          , SUM (tmp.Sale_Amount_10500_Weight      ) AS       Sale_Amount_10500_Weight  
+                          , SUM (tmp.Sale_Amount_40200_Weight      ) AS       Sale_Amount_40200_Weight  
+                          , SUM (tmp.Return_Amount_40200_Weight    ) AS       Return_Amount_40200_Weight
+                          , SUM (tmp.ReturnPercent                 ) AS       ReturnPercent
+                    FROM gpReport_GoodsMI_SaleReturnIn22 (inStartDate
+                                                      , inEndDate
+                                                      , inBranchId
+                                                      , inAreaId
+                                                      , inRetailId
+                                                      , inJuridicalId
+                                                      , inPaidKindId
+                                                      , inTradeMarkId
+                                                      , inGoodsGroupId
+                                                      , inInfoMoneyId
+                                                      , inIsPartner
+                                                      , inIsTradeMark
+                                                      , inIsGoods
+                                                      , true  --inIsGoodsKind                 --   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG  -- всегда по видам товара, а потом свернуть.
+                                                      , inIsContract
+                                                      , inIsOLAP
+                                                      , FALSE
+                                                      , FALSE
+                                                      , inSession
+                                                       ) AS tmp
+                    GROUP BY tmp.goodsid, tmp.GoodsCode
+                          , tmp.GoodsName  
+                          , tmp.GoodsKindId
+                          , tmp.GoodsKindName
+                          , tmp.TradeMarkName
+                          , tmp.branchid
+                          , tmp.BranchCode
+                          , tmp.BranchName
+                          , tmp.juridicalid
+                          , tmp.JuridicalCode
+                          , tmp.JuridicalName
+                          , tmp.trademarkid              
+                          , tmp.RetailName
+                          , tmp.RetailReportName
+                          , tmp.AreaName, tmp.PartnerTagName
+                          , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+                          , tmp.infomoneyid
+                          , tmp.PartnerId
+                          , tmp.PartnerCode
+                          , tmp.PartnerName
+                          , tmp.contractid
+                          , tmp.ContractCode 
+                          , tmp.ContractNumber
+                          , tmp.ContractTagName
+                          , tmp.ContractTagGroupName
+       ) 
+
+
        -- результат
        SELECT tmp.GoodsGroupName, tmp.GoodsGroupNameFull
             , tmp.GoodsCode
@@ -674,6 +787,7 @@ BEGIN
             , COALESCE (_tmpMI.GoodsName, tmp.GoodsName)         :: TVarChar AS GoodsName
             , COALESCE (_tmpMI.GoodsKindId, tmp.GoodsKindId)                 AS GoodsKindId
             , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
+           -- , tmp.GoodsKindName :: TVarChar AS GoodsKindName
             , Object_Measure.ValueData            AS MeasureName
             , COALESCE (_tmpMI.TradeMarkName, tmp.TradeMarkName) :: TVarChar AS TradeMarkName
             , Object_GoodsGroupAnalyst.ValueData  AS GoodsGroupAnalystName
@@ -700,8 +814,13 @@ BEGIN
             , COALESCE (_tmpMI.ContractCode, tmp.ContractCode)     :: Integer  AS ContractCode
             , COALESCE (_tmpMI.ContractNumber, tmp.ContractNumber) :: TVarChar AS ContractNumber
             , tmp.ContractTagName, tmp.ContractTagGroupName
-            , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
-            , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+            --, tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
+            --, tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
+            , View_Personal.PersonalName       AS PersonalName
+            , View_Personal.UnitName           AS UnitName_Personal
+            , Object_BranchPersonal.ValueData  AS BranchName_Personal
+            , View_PersonalTrade.PersonalName  AS PersonalTradeName
+            , View_PersonalTrade.UnitName      AS UnitName_PersonalTrade
 
             , View_InfoMoney.InfoMoneyGroupName, View_InfoMoney.InfoMoneyDestinationName
             , View_InfoMoney.InfoMoneyCode
@@ -752,25 +871,7 @@ BEGIN
               -- сумма НДС
             , _tmpMI.Return_SummVAT :: TFloat AS Return_SummVAT
 
-       FROM gpReport_GoodsMI_SaleReturnIn (inStartDate
-                                         , inEndDate
-                                         , inBranchId
-                                         , inAreaId
-                                         , inRetailId
-                                         , inJuridicalId
-                                         , inPaidKindId
-                                         , inTradeMarkId
-                                         , inGoodsGroupId
-                                         , inInfoMoneyId
-                                         , inIsPartner
-                                         , inIsTradeMark
-                                         , inIsGoods
-                                         , TRUE --inIsGoodsKind                 --   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG  -- всегда по видам товара, а потом свернуть.
-                                         , inIsContract
-                                         , inIsOLAP
-                                         , FALSE
-                                         , inSession
-                                          ) AS tmp
+       FROM tmpReport AS tmp
            FULL JOIN _tmpMI ON COALESCE (_tmpMI.JuridicalId,0)  = COALESCE (tmp.JuridicalId, 0)
                            AND COALESCE (_tmpMI.ContractId,0)   = COALESCE (tmp.ContractId,0)
                            AND COALESCE (_tmpMI.PartnerId ,0)   = COALESCE (tmp.PartnerId, 0)
@@ -831,6 +932,20 @@ BEGIN
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (_tmpMI.InfoMoneyId, tmp.InfoMoneyId)
 
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (tmp.PartnerId,   Object_Partner.Id)
+                              AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+          LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = View_Personal.UnitId
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (tmp.PartnerId,   Object_Partner.Id)
+                              AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+          LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
+          
          ) AS tmp
        GROUP BY tmp.GoodsGroupName, tmp.GoodsGroupNameFull
             , tmp.GoodsCode
@@ -874,3 +989,15 @@ $BODY$
 -- тест
 --
 -- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '31.05.2023', inEndDate:= '31.05.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+/*
+
+select 1 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185 , inPaidKindId := 3 
+, inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e')as  tmp
+
+
+
+union 
+select 2 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH_old(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185 , inPaidKindId := 3 
+, inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession :=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+
+*/

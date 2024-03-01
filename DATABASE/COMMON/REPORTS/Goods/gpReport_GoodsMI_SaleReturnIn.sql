@@ -1,9 +1,5 @@
  -- Function: gpReport_GoodsMI_SaleReturnIn() - Рабочая версия
 
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
--- DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
@@ -460,7 +456,7 @@ BEGIN
                                                                  , inIsTradeMark
                                                                  , inIsGoods
                                                                  --, inIsGoodsKind
-                                                                 , CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
+                                                                 , TRUE --, CASE WHEN inIsGoods = TRUE THEN TRUE ELSE inIsGoodsKind END   -- когда нет галки "по видам", но есть "по товарам" - вывести виды через STRING_AGG
                                                                  , inIsContract
                                                                  , FALSE -- inIsOLAP
                                                                  , inIsDate
@@ -944,7 +940,7 @@ BEGIN
                               LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpOperationGroup2.GoodsId
 
                               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpOperationGroup2.GoodsKindId
-                                                                  AND (inIsGoods = TRUE OR inIsGoodsKind = TRUE)
+                                                                  --AND (inIsGoods = TRUE OR inIsGoodsKind = TRUE)
 
                          WHERE (_tmpPartner.PartnerId > 0 OR vbIsPartner_where = FALSE)
                            AND (_tmpGoods.GoodsId > 0 OR vbIsGoods_where = FALSE)
@@ -1283,3 +1279,8 @@ $BODY$
 */
 -- тест
 -- 
+/*
+ select * FROM gpReport_GoodsMI_SaleReturnIn22(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185 , inPaidKindId := 3 
+, inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,
+inIsDate :=  'False' , inIsMonth  :=  'False',  inSession :=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+   */

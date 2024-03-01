@@ -27,7 +27,6 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 809
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -68,8 +67,6 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 809
-    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -1126,10 +1123,10 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
+      StoredProc = spInsertUpdate_Unit
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate
+          StoredProc = spInsertUpdate_Unit
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -1633,52 +1630,16 @@ object SheetWorkTimeCloseJournalForm: TSheetWorkTimeCloseJournalForm
     Left = 466
     Top = 288
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_SheetWorkTimeClose'
+  object spInsertUpdate_Unit: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_SheetWorkTimeClose_Unit'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioid'
+        Name = 'inid'
         Value = '0'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ininvnumber'
-        Value = '0'
-        Component = ClientDataSet
-        ComponentItem = 'invnumber'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inoperdate'
-        Value = 44419d
-        Component = ClientDataSet
-        ComponentItem = 'operdate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateEnd'
-        Value = 42132d
-        Component = ClientDataSet
-        ComponentItem = 'OperDateEnd'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inTimeClose'
-        Value = 42132d
-        Component = ClientDataSet
-        ComponentItem = 'TimeClose'
-        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
