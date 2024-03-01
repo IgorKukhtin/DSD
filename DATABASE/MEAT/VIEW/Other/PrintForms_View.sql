@@ -33,8 +33,8 @@ AS
            , CAST ('PrintMovement_Sale2DiscountPrice' AS TVarChar)
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
-                           ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice() 
+                           ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
                           AND ObjectBoolean_isDiscountPrice.ValueData = TRUE
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
@@ -49,12 +49,12 @@ AS
            , CAST ('PrintMovement_Sale2PriceWithVAT' AS TVarChar)
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
                           AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
         LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-        AND OH_JuridicalDetails.OKPO NOT IN ('2902403938') 
+        AND OH_JuridicalDetails.OKPO NOT IN ('2902403938')
       UNION
 -- признак isPriceWithVAT = True - печатать цену с НДС
       SELECT
@@ -68,7 +68,7 @@ AS
       FROM Object AS Object_Juridical
         LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-        AND OH_JuridicalDetails.OKPO IN ('02541349') 
+        AND OH_JuridicalDetails.OKPO IN ('02541349')
 
       UNION
 -- Счет
@@ -89,7 +89,7 @@ AS
            , CAST (0 AS INTEGER)                        AS JuridicalId
            , zc_Enum_PaidKind_SecondForm()              AS PaidKindId --н
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
-   
+
       UNION
       SELECT
              zc_Movement_Sale()
@@ -116,8 +116,8 @@ AS
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
                           AND ObjectBoolean_isPriceWithVAT.ValueData = FALSE
       UNION
       SELECT
@@ -130,8 +130,8 @@ AS
            , CAST ('PrintMovement_Bill' AS TVarChar)    AS PrintFormName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
                           AND ObjectBoolean_isPriceWithVAT.ValueData = FALSE
 
       UNION
@@ -146,8 +146,8 @@ AS
            , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
                           AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
         LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
@@ -164,8 +164,8 @@ AS
            , CAST ('PrintMovement_Bill_WithVAT' AS TVarChar)   AS PrintFormName
       FROM Object AS Object_Juridical
         JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
-                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id 
-                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT() 
+                           ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
+                          AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
                           AND ObjectBoolean_isPriceWithVAT.ValueData = TRUE
         LEFT JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
@@ -223,7 +223,7 @@ AS
            , CAST ('PrintMovement_Sale32490244' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887', '41609092') 
+       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097', '41135005', '30728887', '41609092')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
      UNION
@@ -288,7 +288,7 @@ AS
                                AND ObjectLink_Retail.DescId = zc_ObjectLink_Juridical_Retail()
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
         AND (OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874') -- '39143745' перенесли в др.группу ритейл
-             OR (ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков   
+             OR (ObjectLink_Retail.ChildObjectId IN (310862) -- Рост Харьков
                   AND OH_JuridicalDetails.OKPO <> '43094673')      --другая печать   ДЛК "ПІЛОТ"
             )
 
@@ -354,7 +354,7 @@ AS
                                       , '01074874','24755803','04791599','01073946','01074741','25927436'
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-      
+
      UNION
       -- Укрзалізниця АТ
       SELECT
@@ -440,9 +440,10 @@ AS
                                       , '41360805' -- ФРЕЯ 2017 ТОВ
                                       , '41201250' -- Левайс
                                       , '41200660' -- Релайз
+                                      , '45268675' -- ГЛОРІ МІЛ ТОВ
                                       , '42599711' -- Пангеон
                                       , '44588869' -- Бунар
-                                      --, '32490244' -- ЕПІЦЕНТР К ТОВ 
+                                      --, '32490244' -- ЕПІЦЕНТР К ТОВ
                                       --, '41744911' -- РИДО ГРУП
                                       , '42668161' -- Стало Трейдап
                                       , '44608319' -- ОЛІВІЯ ТРЕНД
@@ -495,7 +496,7 @@ AS
            , CAST ('PrintMovement_Sale43094673' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('43094673') 
+       AND OH_JuridicalDetails.OKPO IN ('43094673')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
 
@@ -568,7 +569,7 @@ AS
            , CAST ('15.03.2021' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax0321' AS TVarChar)           
+           , CAST ('PrintMovement_Tax0321' AS TVarChar)
       UNION
 --налоговая c 16.03.2021
       SELECT
@@ -578,7 +579,7 @@ AS
            , CAST ('16.02.2022' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax160321' AS TVarChar)           
+           , CAST ('PrintMovement_Tax160321' AS TVarChar)
 
       UNION
 --налоговая c 17.02.2022
@@ -589,7 +590,7 @@ AS
            , CAST ('31.03.2023' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax170222' AS TVarChar)           
+           , CAST ('PrintMovement_Tax170222' AS TVarChar)
       UNION
 --налоговая c 01.04.2023
       SELECT
@@ -599,7 +600,7 @@ AS
            , CAST ('31.07.2023' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax010423' AS TVarChar)   
+           , CAST ('PrintMovement_Tax010423' AS TVarChar)
       UNION
 --налоговая c 01.08.2023
       SELECT
@@ -609,7 +610,7 @@ AS
            , CAST ('01.01.2214' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_Tax010823' AS TVarChar)   
+           , CAST ('PrintMovement_Tax010823' AS TVarChar)
       UNION
 --коррект
       SELECT
@@ -866,9 +867,9 @@ AS
            , CAST ('PrintMovement_Transport32516492' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')        
+       AND OH_JuridicalDetails.OKPO IN ('32516492', '39135315')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
-    
+
       UNION
 -- Транспортная Метро
       SELECT
@@ -881,7 +882,7 @@ AS
            , CAST ('PrintMovement_Transport32049199' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32049199')        
+       AND OH_JuridicalDetails.OKPO IN ('32049199')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
@@ -896,7 +897,7 @@ AS
            , CAST ('PrintMovement_Transport36003603' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('36003603')        
+       AND OH_JuridicalDetails.OKPO IN ('36003603')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
@@ -911,7 +912,7 @@ AS
            , CAST ('PrintMovement_Transport36387249' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')        
+       AND OH_JuridicalDetails.OKPO IN ('36387249', '36387233', '38916558')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
@@ -937,7 +938,7 @@ AS
            , CAST ('PrintMovement_Quality32049199' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32049199')        
+       AND OH_JuridicalDetails.OKPO IN ('32049199')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
 
       UNION
@@ -1023,7 +1024,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
  15.03.17         * add Tax0317, TaxCorrective0317
  01.02.16         * add PrintMovement_Transport
  21.12.15         * add PrintMovement_Sale36003603 Новус
-                      , PrintMovement_Sale39118745 
+                      , PrintMovement_Sale39118745
  18.12.15         * add PrintMovement_Sale2DiscountPrice
  28.01.15                                                        * + PrintMovement_ReturnIn32049199
  25.11.14                                                        * + new nalog forms
