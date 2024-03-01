@@ -28,6 +28,8 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitTop = 53
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -646,7 +648,7 @@ object MemberForm: TMemberForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
     Text = #1042#1099#1073#1077#1088#1080#1090#1077' '#1073#1072#1085#1082
     Width = 117
   end
@@ -2366,8 +2368,8 @@ object MemberForm: TMemberForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 216
+    Left = 360
+    Top = 336
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'

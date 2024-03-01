@@ -4165,10 +4165,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPosition_ObjectForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   exit;

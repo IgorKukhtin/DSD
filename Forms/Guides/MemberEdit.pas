@@ -59,7 +59,7 @@ type
     cxLabel13: TcxLabel;
     ceBankChild: TcxButtonEdit;
     GuidesBank: TdsdGuides;
-    BankSecondGuides: TdsdGuides;
+    GuidesBankSecond: TdsdGuides;
     BankChildGuides: TdsdGuides;
     cxLabel14: TcxLabel;
     edCardIBAN: TcxTextEdit;
@@ -143,6 +143,24 @@ type
     cxLabel47: TcxLabel;
     edUnitMobile: TcxButtonEdit;
     GuidesUnitMobile: TdsdGuides;
+    cxLabel48: TcxLabel;
+    cxLabel49: TcxLabel;
+    cxLabel50: TcxLabel;
+    cxLabel51: TcxLabel;
+    ceCardBankSecondTwo: TcxTextEdit;
+    edCardIBANSecondTwo: TcxTextEdit;
+    ceCardSecondTwo: TcxTextEdit;
+    ceBankSecondTwo: TcxButtonEdit;
+    cxLabel52: TcxLabel;
+    cxLabel53: TcxLabel;
+    cxLabel54: TcxLabel;
+    cxLabel55: TcxLabel;
+    ceCardBankSecondDiff: TcxTextEdit;
+    edCardIBANSecondDiff: TcxTextEdit;
+    ceCardSecondDiff: TcxTextEdit;
+    cedBankSecondDiff: TcxButtonEdit;
+    GuidesBankSecondTwo: TdsdGuides;
+    GuidesBankSecondDiff: TdsdGuides;
   private
     { Private declarations }
   public
