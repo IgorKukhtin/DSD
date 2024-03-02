@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
              , CardBank TVarChar, CardBankSecond TVarChar  
              , CardBankSecondTwo TVarChar, CardIBANSecondTwo TVarChar, CardSecondTwo TVarChar
-             , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar
+             , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar 
+             , CardBank_search TVarChar, CardIBAN_search TVarChar, Card_search TVarChar
              , Comment TVarChar
              , isOfficial Boolean
              , isNotCompensation Boolean
@@ -149,6 +150,10 @@ end if;
          , ObjectString_CardBankSecondDiff.ValueData   AS CardBankSecondDiff
          , ObjectString_CardIBANSecondDiff.ValueData   AS CardIBANSecondDiff
          , ObjectString_CardSecondDiff.ValueData       AS CardSecondDiff
+         
+         , (COALESCE (ObjectString_CardBank.ValueData,'') ||'&'||COALESCE (ObjectString_CardBankSecond.ValueData,'') ||'&'|| COALESCE (ObjectString_CardBankSecondTwo.ValueData,'')||'&'|| COALESCE (ObjectString_CardBankSecondDiff.ValueData,''))::TVarChar AS CardBank_search
+         , (COALESCE (ObjectString_CardIBAN.ValueData,'') ||'&'||COALESCE (ObjectString_CardIBANSecond.ValueData,'') ||'&'|| COALESCE (ObjectString_CardIBANSecondTwo.ValueData,'')||'&'|| COALESCE (ObjectString_CardIBANSecondDiff.ValueData,''))::TVarChar AS CardIBAN_search
+         , (COALESCE (ObjectString_Card.ValueData,'')     ||'&'||COALESCE (ObjectString_CardSecond.ValueData,'')     ||'&'|| COALESCE (ObjectString_CardSecondTwo.ValueData,'')    ||'&'|| COALESCE (ObjectString_CardSecondDiff.ValueData,'')    )::TVarChar AS Card_search         
              
          , ObjectString_Comment.ValueData           AS Comment
 
@@ -553,6 +558,9 @@ end if;
            , CAST ('' AS TVarChar)  AS CardBankSecondDiff
            , CAST ('' AS TVarChar)  AS CardIBANSecondDiff
            , CAST ('' AS TVarChar)  AS CardSecondDiff
+           , CAST ('' AS TVarChar)  AS CardBank_search
+           , CAST ('' AS TVarChar)  AS CardIBAN_search
+           , CAST ('' AS TVarChar)  AS Card_search 
            , CAST ('' as TVarChar)  AS Comment
            
            , FALSE                  AS isOfficial

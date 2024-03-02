@@ -11,11 +11,15 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Card TVarChar, CardSecond TVarChar, CardChild TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
              , CardBank TVarChar, CardBankSecond TVarChar
+             , CardBankSecondTwo TVarChar, CardIBANSecondTwo TVarChar, CardSecondTwo TVarChar
+             , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar
              , Comment TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , BankId Integer, BankName TVarChar
              , BankSecondId Integer, BankSecondName TVarChar
-             , BankChildId Integer, BankChildName TVarChar
+             , BankChildId Integer, BankChildName TVarChar 
+             , BankSecondTwoId Integer, BankSecondTwoName TVarChar
+             , BankSecondDiffId Integer, BankSecondDiffName TVarChar
              , PersonalId Integer
              , UnitId     Integer, UnitName TVarChar
              , UnitMobileId Integer, UnitMobileName TVarChar
@@ -83,7 +87,15 @@ BEGIN
            , CAST ('' AS TVarChar)  AS CardIBAN
            , CAST ('' AS TVarChar)  AS CardIBANSecond
            , CAST ('' AS TVarChar)  AS CardBank
-           , CAST ('' AS TVarChar)  AS CardBankSecond
+           , CAST ('' AS TVarChar)  AS CardBankSecond 
+           
+           , CAST ('' AS TVarChar)  AS CardBankSecondTwo
+           , CAST ('' AS TVarChar)  AS CardIBANSecondTwo
+           , CAST ('' AS TVarChar)  AS CardSecondTwo
+           , CAST ('' AS TVarChar)  AS CardBankSecondDiff
+           , CAST ('' AS TVarChar)  AS CardIBANSecondDiff
+           , CAST ('' AS TVarChar)  AS CardSecondDiff
+                    
            , CAST ('' AS TVarChar)  AS Comment
            , CAST (0 AS Integer)    AS InfoMoneyId
            , CAST (0 AS Integer)    AS InfoMoneyCode
@@ -96,7 +108,10 @@ BEGIN
            , CAST ('' AS TVarChar)  AS BankSecondName 
            , CAST (0 AS Integer)    AS BankChildId
            , CAST ('' AS TVarChar)  AS BankChildName 
-     
+           , CAST (0 AS Integer)    AS BankSecondTwoId
+           , CAST ('' AS TVarChar)  AS BankSecondTwoName
+           , CAST (0 AS Integer)    AS BankSecondDiffId
+           , CAST ('' AS TVarChar)  AS BankSecondDiffName     
            , 0                      AS PersonalId
            , 0                      AS UnitId
            , CAST ('' AS TVarChar)  AS UnitName
@@ -201,6 +216,13 @@ BEGIN
             , ObjectString_CardIBANSecond.ValueData    AS CardIBANSecond
             , ObjectString_CardBank.ValueData          AS CardBank
             , ObjectString_CardBankSecond.ValueData    AS CardBankSecond
+            , ObjectString_CardBankSecondTwo.ValueData    AS CardBankSecondTwo
+            , ObjectString_CardIBANSecondTwo.ValueData    AS CardIBANSecondTwo
+            , ObjectString_CardSecondTwo.ValueData        AS CardSecondTwo
+            , ObjectString_CardBankSecondDiff.ValueData   AS CardBankSecondDiff
+            , ObjectString_CardIBANSecondDiff.ValueData   AS CardIBANSecondDiff
+            , ObjectString_CardSecondDiff.ValueData       AS CardSecondDiff
+
             , ObjectString_Comment.ValueData           AS Comment
             
             , Object_InfoMoney_View.InfoMoneyId
@@ -214,7 +236,11 @@ BEGIN
             , Object_BankSecond.ValueData  AS BankSecondName
             , Object_BankChild.Id          AS BankChildId
             , Object_BankChild.ValueData   AS BankChildName
-      
+            , Object_BankSecondTwo.Id          AS BankSecondTwoId
+            , Object_BankSecondTwo.ValueData   AS BankSecondTwoName
+            , Object_BankSecondDiff.Id         AS BankSecondDiffId
+            , Object_BankSecondDiff.ValueData  AS BankSecondDiffName
+   
             , tmpPersonal.PersonalId
             , Object_Unit.Id            AS UnitId
             , Object_Unit.ValueData     AS UnitName
@@ -311,6 +337,25 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_DriverCertificate 
                                     ON ObjectString_DriverCertificate.ObjectId = Object_Member.Id 
                                    AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+
+             LEFT JOIN ObjectString AS ObjectString_CardBankSecondTwo
+                                    ON ObjectString_CardBankSecondTwo.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardBankSecondTwo.DescId = zc_ObjectString_Member_CardBankSecondTwo()
+             LEFT JOIN ObjectString AS ObjectString_CardIBANSecondTwo
+                                    ON ObjectString_CardIBANSecondTwo.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardIBANSecondTwo.DescId = zc_ObjectString_Member_CardIBANSecondTwo()
+             LEFT JOIN ObjectString AS ObjectString_CardSecondTwo
+                                    ON ObjectString_CardSecondTwo.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardSecondTwo.DescId = zc_ObjectString_Member_CardSecondTwo()
+             LEFT JOIN ObjectString AS ObjectString_CardBankSecondDiff
+                                    ON ObjectString_CardBankSecondDiff.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardBankSecondDiff.DescId = zc_ObjectString_Member_CardBankSecondDiff()
+             LEFT JOIN ObjectString AS ObjectString_CardIBANSecondDiff
+                                    ON ObjectString_CardIBANSecondDiff.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardIBANSecondDiff.DescId = zc_ObjectString_Member_CardIBANSecondDiff()
+             LEFT JOIN ObjectString AS ObjectString_CardSecondDiff
+                                    ON ObjectString_CardSecondDiff.ObjectId = Object_Member.Id 
+                                   AND ObjectString_CardSecondDiff.DescId = zc_ObjectString_Member_CardSecondDiff()
       
              LEFT JOIN ObjectString AS ObjectString_Comment 
                                     ON ObjectString_Comment.ObjectId = Object_Member.Id 
@@ -375,6 +420,16 @@ BEGIN
                               ON ObjectLink_Member_UnitMobile.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_UnitMobile.DescId = zc_ObjectLink_Member_UnitMobile()
          LEFT JOIN Object AS Object_UnitMobile ON Object_UnitMobile.Id = ObjectLink_Member_UnitMobile.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecondTwo
+                              ON ObjectLink_Member_BankSecondTwo.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankSecondTwo.DescId = zc_ObjectLink_Member_BankSecondTwo()
+         LEFT JOIN Object AS Object_BankSecondTwo ON Object_BankSecondTwo.Id = ObjectLink_Member_BankSecondTwo.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_BankSecondDiff
+                              ON ObjectLink_Member_BankSecondDiff.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_BankSecondDiff.DescId = zc_ObjectLink_Member_BankSecondDiff()
+         LEFT JOIN Object AS Object_BankSecondDiff ON Object_BankSecondDiff.Id = ObjectLink_Member_BankSecondDiff.ChildObjectId
 
          LEFT JOIN ObjectDate AS ObjectDate_Birthday
                               ON ObjectDate_Birthday.ObjectId = Object_Member.Id

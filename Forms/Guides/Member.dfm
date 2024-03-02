@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 458
-  ClientWidth = 908
+  ClientWidth = 925
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,18 @@ object MemberForm: TMemberForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 61
-    Width = 908
-    Height = 397
+    Top = 96
+    Width = 925
+    Height = 362
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitTop = 53
+    ExplicitWidth = 908
+    ExplicitHeight = 397
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -627,6 +631,30 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 80
       end
+      object Card_search: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Card_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object CardIBAN_search: TcxGridDBColumn
+        Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'CardIBAN_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object CardBank_search: TcxGridDBColumn
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'CardBank_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -646,15 +674,15 @@ object MemberForm: TMemberForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 2
     Text = #1042#1099#1073#1077#1088#1080#1090#1077' '#1073#1072#1085#1082
     Width = 117
   end
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 908
-    Height = 35
+    Width = 925
+    Height = 70
     Align = alTop
     TabOrder = 7
     object cxLabel13: TcxLabel
@@ -724,6 +752,69 @@ object MemberForm: TMemberForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 131
+    end
+    object cxLabel4: TcxLabel
+      Left = 11
+      Top = 42
+      Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edCard_search: TcxTextEdit
+      Left = 140
+      Top = 43
+      TabOrder = 9
+      DesignSize = (
+        132
+        21)
+      Width = 132
+    end
+    object cxLabel5: TcxLabel
+      Left = 281
+      Top = 42
+      Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edCardIBAN_search: TcxTextEdit
+      Left = 446
+      Top = 43
+      TabOrder = 11
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object edCardBank_search: TcxTextEdit
+      Left = 740
+      Top = 43
+      TabOrder = 12
+      DesignSize = (
+        120
+        21)
+      Width = 120
+    end
+    object cxLabel7: TcxLabel
+      Left = 583
+      Top = 42
+      Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   object DataSource: TDataSource
@@ -2366,8 +2457,8 @@ object MemberForm: TMemberForm
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 488
-    Top = 216
+    Left = 360
+    Top = 336
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2644,8 +2735,8 @@ object MemberForm: TMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 7
+    Left = 80
+    Top = 65535
   end
   object GuidesBankSecondTwo: TdsdGuides
     KeyField = 'Id'
@@ -2706,5 +2797,26 @@ object MemberForm: TMemberForm
       end>
     Left = 776
     Top = 7
+  end
+  object FieldFilter_Card: TdsdFieldFilter
+    TextEdit = edCard_search
+    DataSet = ClientDataSet
+    Column = Card_search
+    ColumnList = <
+      item
+        Column = Card_search
+      end
+      item
+        Column = CardIBAN_search
+        TextEdit = edCardIBAN_search
+      end
+      item
+        Column = CardBank_search
+        TextEdit = edCardBank_search
+      end>
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 144
+    Top = 280
   end
 end

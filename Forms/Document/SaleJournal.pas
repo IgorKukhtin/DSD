@@ -385,6 +385,8 @@ type
     bbPrint_Sale2_TTN_Quality: TdxBarButton;
     bbPrint_Sale3_TTN_Quality: TdxBarButton;
     actPrint_TTN_copy1_list: TdsdPrintAction;
+    actPrint_TTN_copy3_list: TdsdPrintAction;
+    macPrint_TTN_Copy3_list: TMultiAction;
   private
     { Private declarations }
   public
