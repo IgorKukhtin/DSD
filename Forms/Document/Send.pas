@@ -239,6 +239,12 @@ type
     actShowErasedPC: TBooleanStoredProcAction;
     bbShowErasedPC: TdxBarButton;
     isErased_ch4: TcxGridDBColumn;
+    actGridDetailToExcel: TdsdGridToExcel;
+    actGridChildlToExcel: TdsdGridToExcel;
+    actGrid_PartionCelllToExcel: TdsdGridToExcel;
+    bbGridDetailToExcel: TdxBarButton;
+    bbGridChildlToExcel: TdxBarButton;
+    bbGrid_PartionCelllToExcel: TdxBarButton;
   private
     { Private declarations }
   public

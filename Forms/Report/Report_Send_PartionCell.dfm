@@ -90,6 +90,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -200,7 +201,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 58
           end
-          object PartionCellName_1_ch4: TcxGridDBColumn
+          object isClose_value_min: TcxGridDBColumn
+            Caption = #1045#1089#1090#1100' '#1079#1072#1082#1088#1099#1090#1080#1103
+            DataBinding.FieldName = 'isClose_value_min'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object PartionCellName_1: TcxGridDBColumn
             Caption = '1.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_1'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -215,7 +224,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_2_ch4: TcxGridDBColumn
+          object PartionCellName_2: TcxGridDBColumn
             Caption = '2.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_2'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -230,7 +239,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_3_ch4: TcxGridDBColumn
+          object PartionCellName_3: TcxGridDBColumn
             Caption = '3.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_3'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -245,7 +254,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_4_ch4: TcxGridDBColumn
+          object PartionCellName_4: TcxGridDBColumn
             Caption = '4.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_4'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -260,7 +269,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_5_ch4: TcxGridDBColumn
+          object PartionCellName_5: TcxGridDBColumn
             Caption = '5.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_5'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -275,7 +284,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_6_ch4: TcxGridDBColumn
+          object PartionCellName_6: TcxGridDBColumn
             Caption = '6.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_6'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -290,7 +299,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_7_ch4: TcxGridDBColumn
+          object PartionCellName_7: TcxGridDBColumn
             Caption = '7.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_7'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -306,7 +315,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_8_ch4: TcxGridDBColumn
+          object PartionCellName_8: TcxGridDBColumn
             Caption = '8.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_8'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -321,7 +330,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_9_ch4: TcxGridDBColumn
+          object PartionCellName_9: TcxGridDBColumn
             Caption = '9.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_9'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -336,7 +345,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_10_ch4: TcxGridDBColumn
+          object PartionCellName_10: TcxGridDBColumn
             Caption = '10.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_10'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -351,8 +360,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1071#1095#1077#1081#1082#1072'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
-          object PartionCellName_11_ch4: TcxGridDBColumn
-            Caption = #1055#1088'. '#1071#1095#1077#1081#1082#1080
+          object PartionCellName_11: TcxGridDBColumn
+            Caption = #1044#1088#1091#1075#1080#1077' '#1071#1095#1077#1081#1082#1080
             DataBinding.FieldName = 'PartionCellName_11'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -363,8 +372,191 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object Color_PartionGoodsDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PartionGoodsDate'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
-            Width = 70
+            Width = 55
+          end
+          object ColorFon_1: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_2: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_3: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_3'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_4: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_5: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_5'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_6: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_6'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_7: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_7'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_8: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_8'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_9: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_9'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object ColorFon_10: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_10'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_1: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_1'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_2: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_2'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_3: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_3'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_4: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_4'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_5: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_5'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_6: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_6'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_7: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_7'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_8: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_8'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_9: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_9'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
+          end
+          object Color_10: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_10'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 55
           end
         end
       end
@@ -1062,6 +1254,66 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ColorColumn = PartionGoodsDate
         BackGroundValueColumn = Color_PartionGoodsDate
         ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_1
+        ValueColumn = Color_1
+        BackGroundValueColumn = ColorFon_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_2
+        ValueColumn = Color_2
+        BackGroundValueColumn = ColorFon_2
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_3
+        ValueColumn = Color_3
+        BackGroundValueColumn = ColorFon_3
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_4
+        ValueColumn = Color_4
+        BackGroundValueColumn = ColorFon_4
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_5
+        ValueColumn = Color_5
+        BackGroundValueColumn = ColorFon_5
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_6
+        ValueColumn = Color_6
+        BackGroundValueColumn = ColorFon_6
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_7
+        ValueColumn = Color_7
+        BackGroundValueColumn = ColorFon_7
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_8
+        ValueColumn = Color_8
+        BackGroundValueColumn = ColorFon_8
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_9
+        ValueColumn = Color_9
+        BackGroundValueColumn = ColorFon_9
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_10
+        ValueColumn = Color_10
+        BackGroundValueColumn = ColorFon_10
+        ColorValueList = <>
       end>
     Left = 368
     Top = 240
@@ -1262,6 +1514,86 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Component = MasterCDS
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_5'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_6'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_7'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_8'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_8'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_9'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_9'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_10'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_10'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
