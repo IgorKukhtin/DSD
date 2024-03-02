@@ -458,24 +458,44 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_PartionCell_1', 'Ячейка-1 хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_1');
+  SELECT 'zc_MILinkObject_PartionCell_1', 'Ячейка-1' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_1');
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_PartionCell_2', 'Ячейка-2 хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_2');
+  SELECT 'zc_MILinkObject_PartionCell_2', 'Ячейка-2' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_2');
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_PartionCell_3', 'Ячейка-3 хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_3');
+  SELECT 'zc_MILinkObject_PartionCell_3', 'Ячейка-3' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_3');
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_PartionCell_4', 'Ячейка-4 хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_4');
+  SELECT 'zc_MILinkObject_PartionCell_4', 'Ячейка-4' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_4');
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_PartionCell_5', 'Ячейка-5 хранения (Партия учета)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_5');
+  SELECT 'zc_MILinkObject_PartionCell_5', 'Ячейка-5' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_5');
 
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell_real_1', 'Ячейка-1 (старт)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_1');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell_real_2', 'Ячейка-2 (старт)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_2');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell_real_3', 'Ячейка-3 (старт)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_3');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell_real_4', 'Ячейка-4 (старт)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_4');
+
+CREATE OR REPLACE FUNCTION zc_MILinkObject_PartionCell_real_5() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_5'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_PartionCell_real_5', 'Ячейка-5 (старт)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PartionCell_real_5');
     
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

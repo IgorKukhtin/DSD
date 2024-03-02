@@ -57,6 +57,17 @@ type
     macUpdatePartionGoodsDate: TMultiAction;
     bbUpdatePartionGoodsDate: TdxBarButton;
     Color_PartionGoodsDate: TcxGridDBColumn;
+    isClose_value_min: TcxGridDBColumn;
+    Color_1: TcxGridDBColumn;
+    Color_2: TcxGridDBColumn;
+    Color_3: TcxGridDBColumn;
+    Color_4: TcxGridDBColumn;
+    Color_5: TcxGridDBColumn;
+    Color_6: TcxGridDBColumn;
+    Color_7: TcxGridDBColumn;
+    Color_8: TcxGridDBColumn;
+    Color_9: TcxGridDBColumn;
+    Color_10: TcxGridDBColumn;
   private
     { Private declarations }
   public

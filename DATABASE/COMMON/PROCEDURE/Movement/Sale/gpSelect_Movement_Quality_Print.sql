@@ -538,10 +538,13 @@ BEGIN
            , tmpGoodsQuality.QualityComment
 
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , CASE WHEN tmpObject_GoodsPropertyValue.GoodsPropertyId = 9309155  AND tmpObject_GoodsPropertyValue.Quality <> ''
+           , CASE WHEN vbUserId =5 AND 1=0
                       THEN tmpObject_GoodsPropertyValue.Quality
-                      -- замена - всегда Value17 - 16.08.2023
-                      ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  
+                  -- Військова частина Т0920 + ...
+                  WHEN tmpObject_GoodsPropertyValue.Quality NOT ILIKE '*удален%' AND tmpObject_GoodsPropertyValue.Quality <> ''
+                      THEN tmpObject_GoodsPropertyValue.Quality
+                  -- замена - всегда Value17 - 16.08.2023
+                  ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)  
              END :: TVarChar AS Value17
              -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
@@ -1059,12 +1062,15 @@ BEGIN
            , tmpGoodsQuality.QualityComment
 
              -- Значение ГОСТ, ДСТУ,ТУ (КУ)
-           , CASE -- Військова частина Т0920
-                  WHEN tmpObject_GoodsPropertyValue.ObjectId = 9309155  AND tmpObject_GoodsPropertyValue.Quality <> ''
+           , CASE WHEN vbUserId = 5 AND 1=0
+                      THEN '2222'
+                  -- Військова частина Т0920 + ...
+                  WHEN tmpObject_GoodsPropertyValue.Quality NOT ILIKE '*удален%' AND tmpObject_GoodsPropertyValue.Quality <> ''
                       THEN tmpObject_GoodsPropertyValue.Quality
-                      -- замена - всегда Value17 - 16.08.2023
-                      ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)
+                  -- замена - всегда Value17 - 16.08.2023
+                  ELSE COALESCE (tmpGoodsQuality.Value17, tmpObject_GoodsPropertyValueGroup.Quality, tmpObject_GoodsPropertyValue.Quality, tmpGoodsQuality.Value17)
              END :: TVarChar AS Value17
+
              -- для вида товара - Вид оболонки, №4 
            , CASE WHEN tmpMIGoodsByGoodsKind.Value1_gk <> '' THEN tmpMIGoodsByGoodsKind.Value1_gk ELSE tmpGoodsQuality.Value1 END :: TVarChar AS Value1
 
