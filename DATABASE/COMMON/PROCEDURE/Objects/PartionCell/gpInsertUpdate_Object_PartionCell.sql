@@ -77,7 +77,26 @@ LANGUAGE plpgsql VOLATILE;
 
 UPDATE Object
  SET ObjectCode = tmp.Ord 
- FROM (SELECT * FROM gpSelect_Object_PartionCell_list (TRUE, zfCalc_UserAdmin())
+ FROM (SELECT
+             Object.Id         AS Id
+           , Object.ObjectCode AS Code
+           , Object.ValueData  AS Name 
+           , ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2))::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4))::Integer
+                                ) ::Integer AS Ord
+
+           , Object.isErased   AS isErased
+
+       FROM Object
+        LEFT JOIN ObjectFloat AS ObjectFloat_Level
+                              ON ObjectFloat_Level.ObjectId = Object.Id
+                             AND ObjectFloat_Level.DescId = zc_ObjectFloat_PartionCell_Level()
+
+       WHERE Object.DescId = zc_Object_PartionCell() 
+         AND Object.isErased = FALSE
+         AND Object.ObjectCode > 0
        ) as tmp
  WHERE Object.DescId = zc_Object_PartionCell()
    AND Object.Id = tmp.Id; 
