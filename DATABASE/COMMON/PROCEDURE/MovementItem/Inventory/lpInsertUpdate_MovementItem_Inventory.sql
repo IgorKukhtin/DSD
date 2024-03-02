@@ -33,12 +33,11 @@ BEGIN
       -- !!!Проверка inPartionGoodsDate!!!
      IF inPartionGoodsDate IS NOT NULL
      -- Склад Реализации + Склад База ГП
-     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8458)) --, zc_Unit_RK()
      -- Кладовщик Днепр
      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382))
      -- !!!tmp
-     AND inUserId <> 5
-
+     -- AND inUserId <> 5
       THEN
           RAISE EXCEPTION 'Ошибка.В документе <Инвентаризация> № <%> за <%> партия даты должна быть пустой <%>.% <%> <%>'
                          , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
@@ -54,7 +53,7 @@ BEGIN
      IF 1=0
      AND inAmount <> 0 -- AND inGoodsKindId <> 0
      -- Склад Реализации + Склад База ГП
-     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459, 8458))
+     AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK(), 8458))
      -- Кладовщик Днепр
      AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS View_UserRole WHERE View_UserRole.UserId = inUserId AND View_UserRole.RoleId IN (428382))
      -- Проверка
@@ -97,9 +96,9 @@ BEGIN
 
 
      -- Для Ячейки может быть сохранена только ОДНА партия
-     IF 1=1 AND inAssetId > 0 
+     IF 1=1 AND inAssetId < 0 
      -- Розподільчий комплекс
-     AND 8459 = (SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+     AND zc_Unit_RK() = (SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
      -- Проверка
      AND EXISTS (SELECT 1
                  FROM MovementItem
@@ -128,7 +127,7 @@ BEGIN
                          , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                          , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                         , CHR (13)
-                        , lfGet_Object_ValueData (inAssetId)
+                        , lfGet_Object_ValueData (-1 * inAssetId)
                         , CHR (13)
                         , CHR (13)
                         , (SELECT DISTINCT lfGet_Object_ValueData (MovementItem.ObjectId) || '> <' || lfGet_Object_ValueData_sh (MILO_GoodsKind.ObjectId)
@@ -136,7 +135,7 @@ BEGIN
                                 INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
                                                                   ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
                                                                  AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-                                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                                                                 AND MILO_PartionCell_1.ObjectId       = -1 * inAssetId
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -160,7 +159,7 @@ BEGIN
                                 INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
                                                                   ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
                                                                  AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-                                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                                                                 AND MILO_PartionCell_1.ObjectId       = -1 * inAssetId
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -204,8 +203,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, inGoodsKindCompleteId);
 
 
-     -- если это Ячейка хрванения - ТОЛЬКО для Розподільчий комплекс
-     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (8459))
+     -- если это Ячейка хранения - ТОЛЬКО для Розподільчий комплекс
+     IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))
         -- так передается из Scale
         AND inAssetId < 0
      THEN
