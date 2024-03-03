@@ -34,7 +34,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 497
       object Код: TcxLabel
         Left = 8
         Top = 5
@@ -387,7 +386,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
-      ExplicitWidth = 497
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191
@@ -2160,6 +2158,21 @@
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -2283,6 +2296,21 @@
         Name = 'CountryName'
         Value = ''
         Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
