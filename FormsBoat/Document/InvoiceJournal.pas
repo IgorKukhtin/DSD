@@ -158,13 +158,13 @@ type
     actInsertDocument: TdsdExecStoredProc;
     actDocumentOpenInvoice: TDocumentOpenAction;
     mactSave_Invoice: TMultiAction;
-    btntPrint_Invoice: TcxButton;
     actPrintInvoice_save: TdsdPrintAction;
     cxButton6: TcxButton;
     isFilesNotUploaded: TcxGridDBColumn;
     spUpdate_FilesNotUploaded: TdsdStoredProc;
     actFilesNotUploaded: TdsdExecStoredProc;
     DateUnloading: TcxGridDBColumn;
+    bbSave_Invoice: TdxBarButton;
   private
     { Private declarations }
   public

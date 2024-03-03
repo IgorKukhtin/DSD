@@ -178,7 +178,7 @@ BEGIN
                                            , inAmount           := vbAmount :: Tfloat
                                            , inInvNumberPartner := inInvNumberPartner
                                            , inReceiptNumber    := inReceiptNumber
-                                           , inComment          := inComment
+                                           , inComment          := CASE WHEN inComment = '*' THEN '' ELSE inComment END
                                            , inObjectId         := inObjectId
                                            , inUnitId           := inUnitId
                                            , inInfoMoneyId      := inInfoMoneyId
@@ -190,8 +190,9 @@ BEGIN
 
 
      -- Примечание
-     IF NOT EXISTS (SELECT 1 FROM MovementString WHERE MovementString.MovementId = ioId AND MovementString.DescId = zc_MovementString_Comment AND MovementString.ValueData <> '')
+     IF NOT EXISTS (SELECT 1 FROM MovementString WHERE MovementString.MovementId = ioId AND MovementString.DescId = zc_MovementString_Comment() AND MovementString.ValueData <> '')
         AND inParentId > 0
+        AND inComment <> '*'
      THEN
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment()
                                               , ioId

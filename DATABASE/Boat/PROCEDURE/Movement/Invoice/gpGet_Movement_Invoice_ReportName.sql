@@ -62,22 +62,28 @@ BEGIN
 
            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                  AND MovementItem.DescId = zc_MI_Master()
-                                 AND MovementItem.isErased = False  
+                                 AND MovementItem.isErased = False
            LEFT JOIN tmpMov_Parent ON tmpMov_Parent.Id = Movement.Id
 
        WHERE Movement.Id = inMovementId
        LIMIT 1
       );
-      
+
      -- Названия файла - для сохранения PDF
      vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE (MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
-                                                       zfConvert_DateShortToString (Movement.OperDate)  
-                                                FROM Movement 
+                                                       zfConvert_DateShortToString (Movement.OperDate)
+                                                FROM Movement
                                                      -- Официальный номер квитанции - Quittung Nr
                                                      LEFT JOIN MovementString AS MovementString_ReceiptNumber
                                                                               ON MovementString_ReceiptNumber.MovementId = Movement.Id
                                                                              AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
                                                 WHERE Movement.Id = inMovementId), 'XXXX_XXXX');
+
+     IF vbInvoiceFileName NOT ILIKE '%.pdf'
+     THEN
+          vbInvoiceFileName:= vbInvoiceFileName || '.pdf';
+     END IF;
+
 
      -- Результат
      RETURN QUERY
@@ -91,7 +97,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  12.02.24                                                       *
  08.12.23         *
 */

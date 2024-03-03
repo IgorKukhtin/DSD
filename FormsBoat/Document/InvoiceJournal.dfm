@@ -178,7 +178,7 @@
             Width = 50
           end
           object isFilesNotUploaded: TcxGridDBColumn [2]
-            Caption = #1044#1072'/'#1053#1077#1090' DropBox'
+            Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
             DataBinding.FieldName = 'isFilesNotUploaded'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -836,21 +836,15 @@
       Action = actOpenFormPdfEdit
       TabOrder = 12
     end
-    object btntPrint_Invoice: TcxButton
-      Left = 340
-      Top = 8
-      Width = 127
-      Height = 25
-      Action = mactSave_Invoice
-      TabOrder = 13
-    end
     object cxButton6: TcxButton
       Left = 340
       Top = 42
       Width = 127
       Height = 25
       Action = actFilesNotUploaded
-      TabOrder = 14
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 13
     end
   end
   object cxGrid_Item: TcxGrid [3]
@@ -1584,7 +1578,44 @@
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object actPrintInvoice: TdsdPrintAction [27]
+    object mactPrint_Invoice: TMultiAction [27]
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      ShortCut = 16464
+    end
+    object actInvoiceReportName: TdsdExecStoredProc [28]
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actInvoiceReportName'
+    end
+    object actPrintInvoice: TdsdPrintAction [29]
       Category = 'Print'
       MoveParams = <
         item
@@ -1605,7 +1636,6 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1649,7 +1679,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateDataSet_item: TdsdUpdateDataSet [30]
+    object actUpdateDataSet_item: TdsdUpdateDataSet [32]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2070,49 +2100,6 @@
       ErasedFieldName = 'isErased'
       DataSource = ItemDS
     end
-    object actInvoiceReportName: TdsdExecStoredProc
-      Category = 'Print'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actInvoiceReportName'
-    end
-    object mactPrint_Invoice: TMultiAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.Component = MasterCDS
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      ActionList = <
-        item
-          Action = actInvoiceReportName
-        end
-        item
-          Action = actPrintInvoice
-        end
-        item
-          Action = actInsertDocument
-        end
-        item
-          Action = actDocumentOpenInvoice
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ShortCut = 16464
-    end
     object actChoiceFormGoods_item: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2231,7 +2218,7 @@
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = '0'
           ToParam.Component = FormParams
-          ToParam.ComponentItem = 'BankAccountPdfId'
+          ToParam.ComponentItem = 'InvoicePdfId'
           ToParam.MultiSelectSeparator = ','
         end>
       PostDataSetBeforeExecute = False
@@ -2242,7 +2229,6 @@
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 0
     end
     object actDocumentOpenInvoice: TDocumentOpenAction
       Category = 'Print'
@@ -2279,9 +2265,8 @@
         item
           Action = actDocumentOpenInvoice
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1057#1095#1077#1090
-      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 14
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090' + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
     end
     object actPrintInvoice_save: TdsdPrintAction
       Category = 'Print'
@@ -2304,7 +2289,6 @@
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -2403,7 +2387,7 @@
           StoredProc = spUpdate_FilesNotUploaded
         end>
       Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
-      Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 88
     end
   end
@@ -2487,6 +2471,14 @@
         item
           Visible = True
           ItemName = 'bbsOpenForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSave_Invoice'
         end
         item
           Visible = True
@@ -2724,6 +2716,10 @@
     end
     object dxBarButton1: TdxBarButton
       Action = actInsert_Service
+      Category = 0
+    end
+    object bbSave_Invoice: TdxBarButton
+      Action = mactSave_Invoice
       Category = 0
     end
   end

@@ -94,7 +94,7 @@ BEGIN
     -- Сохранили свойство <Итого Сумма>
     IF COALESCE(vbAmount, 0) <> 0
     THEN
-      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, vbAmount);
+      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, -1 * vbAmount);
     END IF;
     -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inSubject);
