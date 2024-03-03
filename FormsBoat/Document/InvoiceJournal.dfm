@@ -3,28 +3,26 @@
   ClientHeight = 569
   ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1161
-  ExplicitHeight = 625
+  ExplicitWidth = 1155
+  ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 66
     Width = 1139
-    Height = 307
+    Height = 316
     TabOrder = 3
-    ExplicitTop = 66
     ExplicitWidth = 1139
-    ExplicitHeight = 307
-    ClientRectBottom = 307
+    ExplicitHeight = 316
+    ClientRectBottom = 316
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
-      ExplicitHeight = 307
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 307
+        Height = 316
         ExplicitWidth = 1139
-        ExplicitHeight = 307
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -180,10 +178,11 @@
             Width = 50
           end
           object isFilesNotUploaded: TcxGridDBColumn [2]
-            Caption = #1053#1077' '#1074#1099#1075#1088'. '#1074' DropBox'
+            Caption = #1044#1072'/'#1053#1077#1090' DropBox'
             DataBinding.FieldName = 'isFilesNotUploaded'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 77
           end
@@ -789,7 +788,7 @@
     end
     object cxButton5: TcxButton
       Left = 989
-      Top = 39
+      Top = 42
       Width = 130
       Height = 25
       Action = actSetVisible_Grid_Item
@@ -2103,6 +2102,12 @@
         end
         item
           Action = actPrintInvoice
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actDocumentOpenInvoice
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -2176,9 +2181,9 @@
     object actOpenFormPdfEdit: TdsdOpenForm
       Category = 'OpenForm'
       MoveParams = <>
-      Caption = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' PDF'
-      Hint = #1055#1088#1080#1082#1088#1077#1087#1080#1090#1100' PDF'
-      ImageIndex = 60
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' PDF'
+      ImageIndex = 26
       FormName = 'TInvoicePdfEditForm'
       FormNameParam.Value = 'TInvoicePdfEditForm'
       FormNameParam.DataType = ftString
@@ -2397,8 +2402,8 @@
         item
           StoredProc = spUpdate_FilesNotUploaded
         end>
-      Caption = #1053#1077' '#1074#1099#1075#1088'. '#1074' DropBox'
-      Hint = #1042#1088#1077#1084#1077#1085#1085#1086' '#1085#1077' '#1074#1099#1075#1088#1091#1078#1072#1090#1100' '#1092#1072#1081#1083#1099' '#1074' DropBox'
+      Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
+      Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 88
     end
   end
@@ -2446,7 +2451,7 @@
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

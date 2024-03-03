@@ -1349,7 +1349,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 8
     end
     object btntPrint_Invoice: TcxButton
-      Left = 127
+      Left = 126
       Top = 10
       Width = 115
       Height = 25
@@ -1382,7 +1382,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       TabOrder = 12
     end
     object cxButton2: TcxButton
-      Left = 247
+      Left = 248
       Top = 41
       Width = 118
       Height = 25
