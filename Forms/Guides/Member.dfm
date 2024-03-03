@@ -28,10 +28,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitTop = 53
-    ExplicitWidth = 908
-    ExplicitHeight = 397
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -756,7 +752,7 @@ object MemberForm: TMemberForm
     object cxLabel4: TcxLabel
       Left = 11
       Top = 42
-      Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' '#1047#1055':'
+      Caption = #1055#1086#1080#1089#1082' '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -766,7 +762,7 @@ object MemberForm: TMemberForm
       Style.IsFontAssigned = True
     end
     object edCard_search: TcxTextEdit
-      Left = 140
+      Left = 164
       Top = 43
       TabOrder = 9
       DesignSize = (
@@ -775,9 +771,9 @@ object MemberForm: TMemberForm
       Width = 132
     end
     object cxLabel5: TcxLabel
-      Left = 281
+      Left = 310
       Top = 42
-      Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055':'
+      Caption = #8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -787,7 +783,7 @@ object MemberForm: TMemberForm
       Style.IsFontAssigned = True
     end
     object edCardIBAN_search: TcxTextEdit
-      Left = 446
+      Left = 453
       Top = 43
       TabOrder = 11
       DesignSize = (
@@ -796,7 +792,7 @@ object MemberForm: TMemberForm
       Width = 120
     end
     object edCardBank_search: TcxTextEdit
-      Left = 740
+      Left = 717
       Top = 43
       TabOrder = 12
       DesignSize = (
@@ -805,9 +801,9 @@ object MemberForm: TMemberForm
       Width = 120
     end
     object cxLabel7: TcxLabel
-      Left = 583
+      Left = 584
       Top = 42
-      Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055':'
+      Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
