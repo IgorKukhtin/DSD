@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_ReportName (Integer, Integer, TVa
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice_ReportName (
     IN inMovementId         Integer  , -- ключ Документа
-    IN inMovementId_Parent  Integer  , -- 
+    IN inMovementId_Parent  Integer  , -- Заказ Клиента / Заказ Поставщику
     IN inSession            TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (gpGet_Movement_Invoice_ReportName               TVarChar
@@ -21,8 +21,9 @@ BEGIN
 
      vbPrintFormName:=
       (WITH
-        -- Все документы, в которых указан этот Счет, возьмем первый
+       -- Все Счета Предоплаты для Заказ Клиента, проверим нужный
        tmpMov_Parent AS (SELECT Movement.Id
+                                -- № предоплаты
                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS ord
                          FROM Movement
                               INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
@@ -32,8 +33,7 @@ BEGIN
                          WHERE Movement.DescId = zc_Movement_Invoice()
                            AND Movement.ParentId = inMovementId_Parent
                            AND Movement.StatusId = zc_Enum_Status_Complete() --zc_Enum_Status_Erased()
-                         )
-
+                        )
        -- Результат
        SELECT CASE WHEN COALESCE (MovementItem.Id,0) <> 0                                        ---если заполнен zc_MI_Master
                         THEN 'PrintMovement_Invoice_Master'
@@ -69,8 +69,9 @@ BEGIN
        LIMIT 1
       );
       
-     vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE(MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
-                                                       zfConvert_DateShortToString(Movement.OperDate)  
+     -- Названия файла - для сохранения PDF
+     vbInvoiceFileName := 'Invoice_'||COALESCE((SELECT COALESCE (MovementString_ReceiptNumber.ValueData, 'XXX')||'_'||
+                                                       zfConvert_DateShortToString (Movement.OperDate)  
                                                 FROM Movement 
                                                      -- Официальный номер квитанции - Quittung Nr
                                                      LEFT JOIN MovementString AS MovementString_ReceiptNumber
@@ -80,9 +81,9 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-
-     SELECT vbPrintFormName
-          , vbInvoiceFileName;
+        SELECT vbPrintFormName    -- Печатная форма
+             , vbInvoiceFileName  -- Названия файла - для сохранения PDF
+              ;
 
 END;
 $BODY$

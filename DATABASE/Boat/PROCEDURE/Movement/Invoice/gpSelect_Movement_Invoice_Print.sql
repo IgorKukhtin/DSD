@@ -220,9 +220,9 @@ BEGIN
                                ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
           LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId  
-          --итого сумма предоплат
+          -- итого сумма предоплат
           LEFT JOIN (SELECT SUM (tmpMov_PrePay.Total_PrePay) AS Total_PrePay FROM  tmpMov_PrePay) AS tmpMov_PrePay ON 1 = 1  
-          --номер предоплаты
+          -- номер предоплаты
           LEFT JOIN tmpMov_PrePay AS tmpPrePay ON tmpPrePay.Id = tmpInvoice.Id
 
           LEFT JOIN MovementString AS MovementString_Comment

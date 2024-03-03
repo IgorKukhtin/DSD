@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BankAccountInvoicePdf(Integer, TVa
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccountInvoicePdf(
  INOUT ioId                        Integer   , -- ключ объекта
-    IN inPhotoName                 TVarChar  , --
-    IN inMovmentItemId             Integer   , --  
+    IN inPhotoName                 TVarChar  , -- Название PDF
+    IN inMovmentItemId             Integer   , -- элемент BankAccount
     IN inBankAccountPdfData        TBlob     , -- Файл
     IN inSession                   TVarChar    -- сессия пользователя
 )
@@ -18,25 +18,34 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- если пусто
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM (inPhotoName), '') = '' 
+
+   -- Проверка
+   IF COALESCE (inMovmentItemId, 0) = 0
    THEN 
-       RAISE EXCEPTION 'Ошибка! Не передано имя файла!';
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <элемент BankAccount>.';
    END IF;
 
-   -- попробуем найти
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM (inPhotoName), '') <> '' 
+   -- Проверка
+   IF COALESCE (TRIM (inPhotoName), '') = '' 
    THEN 
-       ioId:= (SELECT OF_Id.ObjectId 
-               FROM ObjectFloat AS OF_Id
-                    INNER JOIN Object AS Object_BankAccountPdf 
-                                      ON Object_BankAccountPdf.Id        = OF_Id.ObjectId 
-                                     AND Object_BankAccountPdf.DescId    = zc_Object_BankAccountPdf()
-                                     AND Object_BankAccountPdf.ValueData = inPhotoName
-               WHERE OF_Id.ValueData ::Integer = inMovmentItemId 
-                 AND OF_Id.DescId = zc_ObjectFloat_BankAccountPdf_MovmentItemId());
+       RAISE EXCEPTION 'Ошибка.Не передано имя файла.';
    END IF;
 
+
+   -- ВСЕГДА попробуем найти
+   ioId:= (SELECT OF_Id.ObjectId 
+           FROM ObjectFloat AS OF_Id
+                INNER JOIN Object AS Object_BankAccountPdf 
+                                  ON Object_BankAccountPdf.Id        = OF_Id.ObjectId 
+                                 AND Object_BankAccountPdf.DescId    = zc_Object_BankAccountPdf()
+                                 --  с таким названием PDF
+                                 AND Object_BankAccountPdf.ValueData = inPhotoName
+           -- элемент BankAccount
+           WHERE OF_Id.ValueData = inMovmentItemId :: TFloat
+             AND OF_Id.DescId    = zc_ObjectFloat_BankAccountPdf_MovmentItemId()
+          );
+
+   -- сохранили
    ioId :=  gpInsertUpdate_Object_BankAccountPdf (ioId                 := ioId
                                                 , inPhotoName          := inPhotoName
                                                 , inMovmentItemId      := inMovmentItemId

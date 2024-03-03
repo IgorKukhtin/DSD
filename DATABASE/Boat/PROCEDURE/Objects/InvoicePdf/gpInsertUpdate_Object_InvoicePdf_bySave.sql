@@ -1,11 +1,11 @@
 -- Function: gpInsertUpdate_Object_InvoicePdf_bySave(Integer, TVarChar, Integer, TBlob, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InvoicePdf_bySave(Integer, TVarChar, Integer, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_InvoicePdf_bySave (Integer, TVarChar, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InvoicePdf_bySave(
  INOUT ioId                        Integer   , -- ключ объекта
-    IN inPhotoName                 TVarChar  , --
-    IN inMovementId                Integer   , --  
+    IN inPhotoName                 TVarChar  , -- Название PDF
+    IN inMovementId                Integer   , -- Документ Счет
     IN inInvoicePdfData            TBlob     , -- Файл
     IN inSession                   TVarChar    -- сессия пользователя
 )
@@ -18,36 +18,42 @@ BEGIN
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
 
-   -- если пусто
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM (inPhotoName), '') = '' 
+
+   -- Проверка
+   IF COALESCE (inMovementId, 0) = 0
    THEN 
-       RAISE EXCEPTION 'Ошибка! Не передано имя файла!';
+       RAISE EXCEPTION 'Ошибка.Не установлено значение <Документ Счет>.';
    END IF;
 
-   -- попробуем найти
-   IF COALESCE (ioId, 0) = 0 AND COALESCE (TRIM (inPhotoName), '') <> '' 
+   -- Проверка
+   IF COALESCE (TRIM (inPhotoName), '') = '' 
    THEN 
-       ioId:= (SELECT OF_Id.ObjectId 
-               FROM ObjectFloat AS OF_Id
-                    INNER JOIN Object AS Object_InvoicePdf 
-                                      ON Object_InvoicePdf.Id        = OF_Id.ObjectId 
-                                     AND Object_InvoicePdf.DescId    = zc_Object_InvoicePdf()
-                                     AND Object_InvoicePdf.ValueData = inPhotoName
-               WHERE OF_Id.ValueData ::Integer = inMovementId 
-                 AND OF_Id.DescId = zc_ObjectFloat_InvoicePdf_MovementId());
+       RAISE EXCEPTION 'Ошибка.Не передано имя файла.';
    END IF;
 
+
+   -- ВСЕГДА попробуем найти
+   ioId:= (SELECT OF_Id.ObjectId 
+           FROM ObjectFloat AS OF_Id
+                INNER JOIN Object AS Object_InvoicePdf 
+                                  ON Object_InvoicePdf.Id        = OF_Id.ObjectId 
+                                 AND Object_InvoicePdf.DescId    = zc_Object_InvoicePdf()
+                                 --  с таким названием PDF
+                                 AND Object_InvoicePdf.ValueData = inPhotoName
+           -- Документ Счет
+           WHERE OF_Id.ValueData = inMovementId :: TFloat
+             AND OF_Id.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
+          );
+
+
+   -- сохранили
    ioId :=  gpInsertUpdate_Object_InvoicePdf (ioId                 := ioId
                                             , inPhotoName          := inPhotoName
                                             , inMovementId         := inMovementId
-                                            , inInvoicePdfData := inInvoicePdfData
-                                            , inSession            := inSession);  
+                                            , inInvoicePdfData     := inInvoicePdfData
+                                            , inSession            := inSession
+                                             );  
                                             
-                                             INOUT ioId                        Integer   , -- ключ объекта
-    IN inPhotoName                 TVarChar  , --
-    IN inMovementId                 Integer   , --  
-    IN inInvoicePdfData            TBlob     , -- Файл
-    
 
 END;
 $BODY$
