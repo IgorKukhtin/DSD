@@ -13,7 +13,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , TFloat, TFloat, TFloat
                                                      , Integer, Integer, Integer, Integer, Integer, TVarChar);
-                                                     
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                      , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar , TVarChar, TVarChar, TVarChar
                                                      , TFloat, TFloat, TFloat
@@ -43,11 +43,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inTaxNumber       TVarChar,
     IN inPLZ             TVarChar,
     IN inCityName        TVarChar,
-    IN inCountryName     TVarChar,  
+    IN inCountryName     TVarChar,
     IN inDiscountTax     TFloat ,
     IN inDayCalendar     TFloat ,
     IN inDayBank         TFloat ,
-    IN inBankId          Integer , 
+    IN inBankId          Integer ,
     --IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
     IN inTaxKindId       Integer ,
@@ -59,17 +59,21 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbIsInsert Boolean; 
+   DECLARE vbIsInsert Boolean;
    DECLARE vbCountryId Integer;
    DECLARE vbPLZId Integer;
+   DECLARE vbIsCheck_not Boolean;
 BEGIN
+   vbIsCheck_not:=  zfConvert_StringToNumber (inSession) < 0;
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
+   IF zfConvert_StringToNumber (inSession) < 0 THEN inSession:= (-1 * zfConvert_StringToNumber (inSession)) :: TVarChar; END IF;
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
-   
+
     -- Если код не установлен, определяем его как последний+1
    vbCode_calc:= lfGet_ObjectCode (ioCode, zc_Object_Partner());
 
@@ -123,30 +127,34 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PaidKind(), ioId, CASE WHEN inPaidKindId > 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
 
-      -- проверка <inCountryName>
-   IF TRIM (COALESCE (inCountryName, '')) = ''
+
+   IF vbIsCheck_not = FALSE
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Country> должно быть установлено.';
+       -- проверка <inCountryName>
+       IF TRIM (COALESCE (inCountryName, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <Country> должно быть установлено.';
+       END IF;
+
+       -- проверка <inCityName>
+       IF TRIM (COALESCE (inCityName, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <City> должно быть установлено.';
+       END IF;
+
+       -- проверка <inPLZ>
+       IF TRIM (COALESCE (inPLZ, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <PLZ> должно быть установлено.';
+       END IF;
    END IF;
 
-   -- проверка <inCityName>
-   IF TRIM (COALESCE (inCityName, '')) = ''
-   THEN
-       RAISE EXCEPTION 'Ошибка.Значение <City> должно быть установлено.';
-   END IF;
 
-   -- проверка <inPLZ>
-   IF TRIM (COALESCE (inPLZ, '')) = ''
-   THEN
-       RAISE EXCEPTION 'Ошибка.Значение <PLZ> должно быть установлено.';
-   END IF;
-   
-
-   -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    , 
+   -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    ,
    -- страна
    vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
-   --если не находим создаем
-   IF COALESCE (vbCountryId,0) = 0       
+   -- если не находим создаем
+   IF COALESCE (vbCountryId,0) = 0 AND TRIM (inCountryName) <> ''
    THEN
         vbCountryId := (SELECT tmp.ioId
                         FROM gpInsertUpdate_Object_Country (ioId        := 0         :: Integer
@@ -156,6 +164,7 @@ BEGIN
                                                           , inSession   := inSession :: TVarChar
                                                            ) AS tmp);
    END IF;
+
    -- пробуем найти  PLZId
    vbPLZId := (SELECT Object_PLZ.Id
                FROM Object AS Object_PLZ
@@ -163,18 +172,18 @@ BEGIN
                                             ON ObjectString_City.ObjectId = Object_PLZ.Id
                                            AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
                                            AND UPPER (TRIM (ObjectString_City.ValueData)) = UPPER (TRIM (inCityName))
-        
+
                     INNER JOIN ObjectLink AS ObjectLink_Country
                                           ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                                          AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
                                          AND COALESCE (ObjectLink_Country.ChildObjectId,0) = vbCountryId
-        
+
                WHERE Object_PLZ.DescId = zc_Object_PLZ()
                  AND Object_PLZ.isErased = FALSE
                  AND TRIM (Object_PLZ.ValueData) ILIKE TRIM (inPLZ)
                 );
- 
-   IF COALESCE (vbPLZId,0) = 0       
+
+   IF COALESCE (vbPLZId,0) = 0 AND TRIM (inCityName) <> ''
    THEN
         vbPLZId := (SELECT tmp.ioId
                     FROM gpInsertUpdate_Object_PLZ (ioId        := 0
@@ -193,7 +202,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner_PLZ(), ioId, vbPLZId);
 
 
-   
+
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);

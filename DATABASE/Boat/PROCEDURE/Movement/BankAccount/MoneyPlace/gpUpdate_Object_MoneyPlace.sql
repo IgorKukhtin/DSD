@@ -25,10 +25,12 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
-   --проверка
+   -- проверка
    IF COALESCE (inId,0) = 0
    THEN 
-       RAISE EXCEPTION 'ќшибка.Ёлемент не сохранен.';
+       RAISE EXCEPTION 'ќшибка.Ёлемент справочника еще не сохранен.%ƒл€ сохранени€ изменений выберите кнопку <—охранить>'
+                      , CHR (13)
+                       ;
    END IF;
    
    --определ€ем в какой справочник обновл€ть информацию 

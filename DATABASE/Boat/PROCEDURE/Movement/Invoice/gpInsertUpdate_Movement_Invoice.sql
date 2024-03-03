@@ -230,16 +230,16 @@ BEGIN
                                                                              , (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
                                                                              , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS Ord
                                                                         FROM Movement
-                                                                           INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
-                                                                                                         ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
-                                                                                                        AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                                                                        AND MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()
-                                                                           LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                                                                                   ON MovementFloat_Amount.MovementId = Movement.Id
-                                                                                                  AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                                                             INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                                                           ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                                                                          AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                                                                          AND MovementLinkObject_InvoiceKind.ObjectId   = zc_Enum_InvoiceKind_PrePay()
+                                                                             LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                                                                     ON MovementFloat_Amount.MovementId = Movement.Id
+                                                                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
                                                                         WHERE Movement.DescId   = zc_Movement_Invoice()
                                                                           AND Movement.ParentId = inParentId
-                                                                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                          AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.Id = ioId)
                                                                        )
                                                  -- Результат
                                                  SELECT CASE WHEN tmpPrePay.Ord = 1 THEN 'Reservation Fee '

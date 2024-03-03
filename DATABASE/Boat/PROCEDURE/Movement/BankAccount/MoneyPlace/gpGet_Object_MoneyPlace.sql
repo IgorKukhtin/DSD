@@ -1,10 +1,10 @@
-﻿-- 
+﻿--
 
-DROP FUNCTION IF EXISTS gpGet_Object_MoneyPlace (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_MoneyPlace (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_MoneyPlace(
-    IN inMovementId       Integer, 
-    IN inId          Integer,       -- 
+    IN inMovementId  Integer,
+    IN inId          Integer,       --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PLZId Integer, PLZName TVarChar
              , CityName TVarChar, CountryId Integer, CountryName TVarChar   --город страна
              , TaxKindId Integer, TaxKindName TVarChar
-             )
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+              )
 AS
 $BODY$
  DECLARE vbDescId Integer;
@@ -21,7 +22,7 @@ BEGIN
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
 
-   --определяем в какой справочник обновлять информацию 
+   --определяем в какой справочник обновлять информацию
    vbDescId := (SELECT Object.DescId FROM Object WHERE Object.Id = inId);
 
   IF COALESCE (inId, 0) = 0
@@ -42,6 +43,9 @@ BEGIN
            , '' :: TVarChar           AS CountryName
            , Object_TaxKind.Id         AS TaxKindId
            , Object_TaxKind.ValueData  AS TaxKindName
+
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyName_all
 
         FROM Object_InfoMoney_View
              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
@@ -72,13 +76,16 @@ BEGIN
            , Object_Country.ValueData        AS CountryName
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyName_all
+
        FROM Object AS Object_Client
           LEFT JOIN ObjectString AS ObjectString_IBAN
                                  ON ObjectString_IBAN.ObjectId = Object_Client.Id
                                 AND ObjectString_IBAN.DescId = zc_ObjectString_Client_IBAN()
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
-                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street() 
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
           LEFT JOIN ObjectString AS ObjectString_Street_add
                                  ON ObjectString_Street_add.ObjectId = Object_Client.Id
                                 AND ObjectString_Street_add.DescId = zc_ObjectString_Client_Street_add()
@@ -100,9 +107,15 @@ BEGIN
                                ON ObjectLink_TaxKind.ObjectId = Object_Client.Id
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                               ON ObjectLink_InfoMoney.ObjectId = Object_Client.Id
+                              AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Client_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
+
        WHERE Object_Client.Id = inId
          AND vbDescId = zc_Object_Client()
-      
+
       UNION
               SELECT
              Object_Partner.Id               AS Id
@@ -119,6 +132,10 @@ BEGIN
            , Object_Country.ValueData        AS CountryName
            , Object_TaxKind.Id               AS TaxKindId
            , Object_TaxKind.ValueData        AS TaxKindName
+
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyName_all
+
        FROM Object AS Object_Partner
           LEFT JOIN ObjectString AS ObjectString_IBAN
                                  ON ObjectString_IBAN.ObjectId = Object_Partner.Id
@@ -147,14 +164,21 @@ BEGIN
                                ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Partner_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney
+                               ON ObjectLink_InfoMoney.ObjectId = Object_Partner.Id
+                              AND ObjectLink_InfoMoney.DescId   = zc_ObjectLink_Partner_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_InfoMoney.ChildObjectId
+
        WHERE Object_Partner.Id = inId
-         AND vbDescId = zc_Object_Partner()   
+         AND vbDescId = zc_Object_Partner()
          ;
     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
- 
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

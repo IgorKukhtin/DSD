@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount_csv_Load(
     IN inString_4             TVarChar  , --
     IN inTDateTime_5          TDateTime , --
     IN inOperDate             TDateTime , --  6
-    IN inString_7             TVarChar  , --
+    IN inString_7             TVarChar  , -- 
     IN inString_8             TVarChar  , --
     IN inString_9             TVarChar  , --
     IN inString_10            TVarChar  , --
@@ -36,6 +36,8 @@ $BODY$
    DECLARE vbAmount TFloat;
    DECLARE vbMovementId Integer;  
    DECLARE vbInvNumber TVarChar;
+   DECLARE vbMoneyPlaceId_find Integer;  
+   DECLARE vbMoneyPlace_str TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
@@ -59,10 +61,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не выбран документ Счет.';
      END IF;
 */
+
      --пробуем найти док. (на случай если несколько раз пробуют загрузить )
      --ключ  String_2 +  inTDateTime_5  + inOperDate +  String_7 +String_10 + Amount   
-     SELECT Movement.Id, Movement.InvNumber 
-    INTO vbMovementId, vbInvNumber
+     /*SELECT Movement.Id, Movement.InvNumber 
+            INTO vbMovementId, vbInvNumber
      FROM Movement   
          --
          INNER JOIN MovementString AS MovementString_2
@@ -93,7 +96,8 @@ BEGIN
        AND Movement.StatusId <> zc_Enum_Status_Erased()
        AND Movement.OperDate = inOperDate 
      LIMIT 1  --на всякий случай
-     ;
+     ;*/
+
 
      -- 1. Распроводим Документ
      IF COALESCE (vbMovementId,0) > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
@@ -101,6 +105,40 @@ BEGIN
          PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
                                       , inUserId     := vbUserId);
      END IF;
+     
+
+     -- Ищем MoneyPlace
+     vbMoneyPlace_str := TRIM (COALESCE (inString_7, ''));
+
+     WHILE LENGTH (vbMoneyPlace_str) >= 3
+     LOOP
+         IF EXISTS (SELECT Object.Id
+                    FROM Object
+                    WHERE Object.DescId    = CASE WHEN inAmount < 0 THEN zc_Object_Partner() ELSE zc_Object_Client() END
+                      AND Object.isErased  = FALSE
+                      AND Object.ValueData ILIKE vbMoneyPlace_str||'%'
+                   )
+         THEN
+             vbMoneyPlaceId_find:= (SELECT Object.Id
+                                    FROM Object
+                                    WHERE Object.DescId    = CASE WHEN inAmount < 0 THEN zc_Object_Partner() ELSE zc_Object_Client() END
+                                      AND Object.isErased  = FALSE
+                                      AND Object.ValueData ILIKE vbMoneyPlace_str ||'%'
+                                    ORDER BY Object.Id DESC
+                                    LIMIT 1
+                                   );
+         
+             EXIT;
+         END IF;
+       
+         -- теперь следуюющий
+         vbMoneyPlace_str:= LEFT (vbMoneyPlace_str, LENGTH (vbMoneyPlace_str) - 1);
+
+     END LOOP;    
+
+     
+     
+     --
 
      -- сохранили <Документ>
      vbMovementId:= lpInsertUpdate_Movement_BankAccount (ioId                   := COALESCE (vbMovementId,0)::Integer
@@ -110,7 +148,7 @@ BEGIN
                                                        , inAmount               := inAmount    ::TFloat
                                                        , inAmount_Invoice       := inAmount    ::TFloat
                                                        , inBankAccountId        := 33325       ::Integer       --     "34567890"     "Erste Bank"        "EUR"
-                                                       , inMoneyPlaceId         := 0           ::Integer
+                                                       , inMoneyPlaceId         := vbMoneyPlaceId_find
                                                        , inMovementId_Invoice   := 0           ::Integer
                                                        , inComment              := inComment   ::TVarChar
                                                        , inUserId               := vbUserId    ::Integer

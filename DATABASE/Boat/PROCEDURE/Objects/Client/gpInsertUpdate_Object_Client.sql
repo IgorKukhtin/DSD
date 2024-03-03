@@ -43,14 +43,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inWWW             TVarChar,
     IN inEmail           TVarChar,
     IN inCodeDB          TVarChar,
-    IN inTaxNumber       TVarChar, 
+    IN inTaxNumber       TVarChar,
     IN inPLZ             TVarChar,
     IN inCityName        TVarChar,
     IN inCountryName     TVarChar,
     IN inDiscountTax     TFloat  ,      -- % скидки
     IN inDayCalendar     TFloat  ,
     IN inDayBank         TFloat  ,
-    IN inBankId          Integer , 
+    IN inBankId          Integer ,
     --IN inPLZId           Integer ,
     IN inInfoMoneyId     Integer ,
     IN inTaxKindId       Integer ,
@@ -64,14 +64,18 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbCountryId Integer;
    DECLARE vbPLZId Integer;
+   DECLARE vbIsCheck_not Boolean;
 BEGIN
+   vbIsCheck_not:=  zfConvert_StringToNumber (inSession) < 0;
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
+   IF zfConvert_StringToNumber (inSession) < 0 THEN inSession:= (-1 * zfConvert_StringToNumber (inSession)) :: TVarChar; END IF;
    vbUserId:= lpGetUserBySession (inSession);
 
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
-   
+
     -- Если код не установлен, определяем его как последний+1
    ioCode:= lfGet_ObjectCode (ioCode, zc_Object_Client());
 
@@ -92,7 +96,7 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_IBAN(), ioId, inIBAN);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street(), ioId, inStreet); 
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street(), ioId, inStreet);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_Street_add(), ioId, inStreet_add);
    -- сохранили свойство <>
@@ -105,7 +109,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_CodeDB(), ioId, inCodeDB);
    -- сохранили свойство <Налоговый номер>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Client_TaxNumber(), ioId, inTaxNumber);
-   
+
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Client_DiscountTax(), ioId, inDiscountTax);
@@ -123,31 +127,34 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_PaidKind(), ioId, inPaidKindId);
 
-  
-   -- проверка <inCountryName>
-   IF TRIM (COALESCE (inCountryName, '')) = ''
+
+   IF vbIsCheck_not = FALSE
    THEN
-       RAISE EXCEPTION 'Ошибка.Значение <Country> должно быть установлено.';
+       -- проверка <inCountryName>
+       IF TRIM (COALESCE (inCountryName, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <Country> должно быть установлено.';
+       END IF;
+
+       -- проверка <inCityName>
+       IF TRIM (COALESCE (inCityName, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <City> должно быть установлено.';
+       END IF;
+
+       -- проверка <inPLZ>
+       IF TRIM (COALESCE (inPLZ, '')) = ''
+       THEN
+           RAISE EXCEPTION 'Ошибка.Значение <PLZ> должно быть установлено.';
+       END IF;
    END IF;
 
-   -- проверка <inCityName>
-   IF TRIM (COALESCE (inCityName, '')) = ''
-   THEN
-       RAISE EXCEPTION 'Ошибка.Значение <City> должно быть установлено.';
-   END IF;
 
-   -- проверка <inPLZ>
-   IF TRIM (COALESCE (inPLZ, '')) = ''
-   THEN
-       RAISE EXCEPTION 'Ошибка.Значение <PLZ> должно быть установлено.';
-   END IF;
-   
-
-   -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    , 
+   -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    ,
    -- страна
    vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
    --если не находим создаем
-   IF COALESCE (vbCountryId,0) = 0       
+   IF COALESCE (vbCountryId,0) = 0 AND TRIM (inCountryName) <> ''
    THEN
         vbCountryId := (SELECT tmp.ioId
                         FROM gpInsertUpdate_Object_Country (ioId        := 0         :: Integer
@@ -164,18 +171,18 @@ BEGIN
                                             ON ObjectString_City.ObjectId = Object_PLZ.Id
                                            AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
                                            AND UPPER (TRIM (ObjectString_City.ValueData)) = UPPER (TRIM (inCityName))
-        
+
                     INNER JOIN ObjectLink AS ObjectLink_Country
                                           ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                                          AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
                                          AND COALESCE (ObjectLink_Country.ChildObjectId,0) = vbCountryId
-        
+
                WHERE Object_PLZ.DescId = zc_Object_PLZ()
                  AND Object_PLZ.isErased = FALSE
                  AND TRIM (Object_PLZ.ValueData) ILIKE TRIM (inPLZ)
                 );
- 
-   IF COALESCE (vbPLZId,0) = 0       
+
+   IF COALESCE (vbPLZId,0) = 0 AND TRIM (inCityName) <> ''
    THEN
         vbPLZId := (SELECT tmp.ioId
                     FROM gpInsertUpdate_Object_PLZ (ioId        := 0

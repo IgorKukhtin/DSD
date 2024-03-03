@@ -31,28 +31,31 @@ BEGIN
     -- »щем партнера
     vbPartner := SPLIT_PART (inSubject, ',', 1)||' '||SPLIT_PART (inSubject, ',', 2);
 
-    WHILE length(vbPartner) >= 3 LOOP
-      IF EXISTS(SELECT Object_Partner.Id
-                FROM Object AS Object_Partner
-                WHERE Object_Partner.DescId = zc_Object_Partner()
-                  AND Object_Partner.isErased = False
-                  AND Object_Partner.ValueData ILIKE vbPartner||'%')
+    WHILE LENGTH (vbPartner) >= 3 LOOP
+      IF EXISTS (SELECT Object_Partner.Id
+                 FROM Object AS Object_Partner
+                 WHERE Object_Partner.DescId = zc_Object_Partner()
+                   AND Object_Partner.isErased = FALSE
+                   AND Object_Partner.ValueData ILIKE vbPartner||'%'
+                )
       THEN
-        SELECT Object_Partner.Id
-        INTO vbObjectId
-        FROM Object AS Object_Partner
-        WHERE Object_Partner.DescId = zc_Object_Partner()
-          AND Object_Partner.isErased = False
-          AND Object_Partner.ValueData ILIKE vbPartner||'%'
-        ORDER BY ID DESC
-        LIMIT 1;
+        vbObjectId:= (SELECT Object_Partner.Id
+                      FROM Object AS Object_Partner
+                      WHERE Object_Partner.DescId = zc_Object_Partner()
+                        AND Object_Partner.isErased = FALSE
+                        AND Object_Partner.ValueData ILIKE vbPartner||'%'
+                      ORDER BY ID DESC
+                      LIMIT 1
+                     );
       
         EXIT;
+
       END IF;
       
       -- теперь следуюющий
       vbPartner := SUBSTRING(vbPartner, 1, length(vbPartner) - 1);
     END LOOP;    
+
 
     -- »щем сумму
     vbPartner := TRIM(inSubject);

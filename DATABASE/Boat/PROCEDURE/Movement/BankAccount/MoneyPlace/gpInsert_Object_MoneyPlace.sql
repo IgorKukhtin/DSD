@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_MoneyPlace(
     INOUT ioIBAN            TVarChar,
     INOUT ioStreet          TVarChar,
     INOUT ioStreet_add      TVarChar,
-    INOUT ioTaxNumber       TVarChar, 
+    INOUT ioTaxNumber       TVarChar,
     INOUT ioPLZ             TVarChar,
     INOUT ioCityName        TVarChar,
     INOUT ioCountryName     TVarChar,
@@ -28,18 +28,22 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Client());
    vbUserId:= lpGetUserBySession (inSession);
 
-   --проверка
-   IF COALESCE (ioId,0) <> 0
-   THEN 
-       RAISE EXCEPTION 'Ошибка.Элемент уже сохранен. Для записи данных нажмите <Изменить>';
-   END IF;
-    
-   --определяем в какой справочник обновлять информацию 
-   vbDescId := (CASE WHEN COALESCE (inAmountIn,0) <> 0  THEN zc_Object_Client() 
+
+   -- определяем в какой справочник обновлять информацию
+   vbDescId := (CASE WHEN COALESCE (inAmountIn,0) <> 0  THEN zc_Object_Client()
                      WHEN COALESCE (inAmountOut,0) <> 0 THEN zc_Object_Partner()
                 END);
-    
-   --поиск по названию 
+
+   --проверка
+   IF COALESCE (ioId, 0) <> 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.% уже сохранен.%Для сохранения изменений в справочнике выберите кнопку <Изменить>'
+                      , CASE WHEN vbDescId = zc_Object_Client() THEN 'Клиент' ELSE 'Поставщик' END
+                      , CHR (13)
+                       ;
+   END IF;
+
+   --поиск по названию
    vbObjectId := (SELECT Object.Id
                   FROM Object
                   WHERE Object.DescId IN (zc_Object_Client(), zc_Object_Partner())
@@ -47,7 +51,7 @@ BEGIN
                   );
    --поиск поTaxNumber
    IF COALESCE (vbObjectId,0) = 0
-   THEN    
+   THEN
        --
        vbObjectId := (SELECT Object.Id
                       FROM Object
@@ -77,12 +81,12 @@ BEGIN
       INTO ioId, ioCode, ioName, ioIBAN, ioStreet, ioStreet_add, ioTaxNumber, ioPLZ, ioCityName, ioCountryName, ioTaxKindId
         FROM gpGet_Object_MoneyPlace (0, vbObjectId, inSession) AS tmp
        ;
-      RETURN; 
+      RETURN;
    END IF;
 
 
    IF vbDescId = zc_Object_Partner()
-   THEN 
+   THEN
         --
        SELECT tmp.ioId
      INTO ioId
@@ -107,49 +111,49 @@ BEGIN
                                         , inDiscountTax  := 0                    :: TFloat
                                         , inDayCalendar  := 0                    :: TFloat
                                         , inDayBank      := 0                    :: TFloat
-                                        , inBankId       := 0                    :: Integer  
+                                        , inBankId       := 0                    :: Integer
                                         , inInfoMoneyId  := zc_Enum_InfoMoney_10101()  ::Integer
                                         , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
-                                        , inSession      := inSession       :: TVarChar
+                                        , inSession      := (-1 * vbUserId)      :: TVarChar
                                          ) AS tmp;
-   END IF; 
-   
+   END IF;
+
    --
    IF vbDescId = zc_Object_Client()
-   THEN 
+   THEN
         --
         SELECT tmp.ioId
       INTO ioId
         FROM gpInsertUpdate_Object_Client(ioId           := 0                    :: Integer
-                                        , ioCode         := inCode               :: Integer
+                                        , ioCode         := ioCode               :: Integer
                                         , inName         := TRIM (ioName)        :: TVarChar
                                         , inComment      := ''                   :: TVarChar
                                         , inFax          := ''                   :: TVarChar
                                         , inPhone        := ''                   :: TVarChar
                                         , inMobile       := ''                   :: TVarChar
-                                        , inIBAN         := TRIM (inIBAN)        :: TVarChar
-                                        , inStreet       := TRIM (inStreet)      :: TVarChar
-                                        , inStreet_add   := TRIM (inStreet_add)  :: TVarChar
+                                        , inIBAN         := TRIM (ioIBAN)        :: TVarChar
+                                        , inStreet       := TRIM (ioStreet)      :: TVarChar
+                                        , inStreet_add   := TRIM (ioStreet_add)  :: TVarChar
                                         , inMember       := ''                   :: TVarChar
                                         , inWWW          := ''                   :: TVarChar
                                         , inEmail        := ''                   :: TVarChar
                                         , inCodeDB       := ''                   :: TVarChar
-                                        , inTaxNumber    := TRIM (inTaxNumber)   :: TVarChar
-                                        , inPLZ          := TRIM (inPLZ)         :: TVarChar
-                                        , inCityName     := TRIM (inCityName)    :: TVarChar
-                                        , inCountryName  := TRIM (inCountryName) :: TVarChar
+                                        , inTaxNumber    := TRIM (ioTaxNumber)   :: TVarChar
+                                        , inPLZ          := TRIM (ioPLZ)         :: TVarChar
+                                        , inCityName     := TRIM (ioCityName)    :: TVarChar
+                                        , inCountryName  := TRIM (ioCountryName) :: TVarChar
                                         , inDiscountTax  := 0                    :: TFloat
                                         , inDayCalendar  := 0                    :: TFloat
                                         , inDayBank      := 0                    :: TFloat
-                                        , inBankId       := 0                    :: Integer  
-                                        , inInfoMoneyId  := zc_Enum_InfoMoney_10101()  ::Integer
-                                        , inTaxKindId    := COALESCE (inTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
+                                        , inBankId       := 0                    :: Integer
+                                        , inInfoMoneyId  := zc_Enum_InfoMoney_30101()  ::Integer
+                                        , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
-                                        , inSession      := inSession       :: TVarChar
+                                        , inSession      := (-1 * vbUserId)      :: TVarChar
                                         ) AS tmp;
-   END IF; 
-    
+   END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -162,5 +166,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Client()
--- select * from gpInsert_Object_MoneyPlace(ioid := 0 , ioCode := 0 , ioName := 'PAYONE GmbH' , ioIBAN := 'DE82300500000001685817' , ioStreet := '' , ioStreet_add := '' , ioTaxNumber := '' , ioPLZ := '26723' , ioCityName := 'Emden' , ioCountryName := 'Germany' , ioTaxKindId := 39396 , inAmountIn := 0 , inAmountOut := 23.8 ,  inSession := '5');
+-- SELECT * FROM gpInsert_Object_MoneyPlace(ioid := 0 , ioCode := 0 , ioName := 'PAYONE GmbH' , ioIBAN := 'DE82300500000001685817' , ioStreet := '' , ioStreet_add := '' , ioTaxNumber := '' , ioPLZ := '26723' , ioCityName := 'Emden' , ioCountryName := 'Germany' , ioTaxKindId := 39396 , inAmountIn := 0 , inAmountOut := 23.8 ,  inSession := '5');
