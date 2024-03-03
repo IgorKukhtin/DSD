@@ -3146,8 +3146,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'inPhotoname'
         Value = ''
-        Component = DocumentInvoice
-        ComponentItem = 'ExtractFileName'
+        Component = FormParams
+        ComponentItem = 'InvoiceFileName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
