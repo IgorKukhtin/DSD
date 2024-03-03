@@ -74,7 +74,7 @@ RETURNS TABLE (Id               Integer
              , MovementId_parent Integer
              , InvNumberFull_parent TVarChar, InvNumber_parent TVarChar
              , MovementDescName_parent TVarChar
-             , isFilesNotUploaded Boolean
+             , isFilesNotUploaded Boolean, isPostedToDropBox Boolean
              , DateUnloading TDateTime
 
              , Color_Pay Integer
@@ -132,8 +132,7 @@ BEGIN
      , tmpMovementBoolean AS (SELECT MovementBoolean.*
                               FROM MovementBoolean
                               WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Auto(), zc_MovementBoolean_FilesNotUploaded()
-                                                              )
+                                AND MovementBoolean.DescId IN (zc_MovementBoolean_Auto(), zc_MovementBoolean_FilesNotUploaded(), zc_MovementBoolean_PostedToDropBox())
                              )
 
      , tmpMLO AS (SELECT MovementLinkObject.*
@@ -258,6 +257,7 @@ BEGIN
                        , MovementDesc_Parent.ItemName               AS DescName_parent
 
                        , COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) ::Boolean AS isFilesNotUploaded
+                       , COALESCE (MovementBoolean_PostedToDropBox.ValueData, FALSE) ::Boolean  AS isPostedToDropBox
 
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
                        /*, CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
@@ -302,6 +302,9 @@ BEGIN
                          LEFT JOIN tmpMovementBoolean AS MovementBoolean_FilesNotUploaded
                                                       ON MovementBoolean_FilesNotUploaded.MovementId = Movement.Id
                                                      AND MovementBoolean_FilesNotUploaded.DescId = zc_MovementBoolean_FilesNotUploaded()
+                         LEFT JOIN tmpMovementBoolean AS MovementBoolean_PostedToDropBox
+                                                      ON MovementBoolean_PostedToDropBox.MovementId = Movement.Id
+                                                     AND MovementBoolean_PostedToDropBox.DescId = zc_MovementBoolean_PostedToDropBox()
 
                          LEFT JOIN tmpMLO AS MovementLinkObject_Object
                                           ON MovementLinkObject_Object.MovementId = Movement.Id
@@ -479,6 +482,7 @@ BEGIN
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
       , tmpData.isFilesNotUploaded
+      , tmpData.isPostedToDropBox
       , tmpDateUnloading.DateUnloading
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета

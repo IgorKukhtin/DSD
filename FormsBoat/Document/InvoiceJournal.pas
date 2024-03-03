@@ -165,6 +165,7 @@ type
     actFilesNotUploaded: TdsdExecStoredProc;
     DateUnloading: TcxGridDBColumn;
     bbSave_Invoice: TdxBarButton;
+    isPostedToDropBox: TcxGridDBColumn;
   private
     { Private declarations }
   public

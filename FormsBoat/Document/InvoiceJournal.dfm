@@ -3,26 +3,28 @@
   ClientHeight = 569
   ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1155
-  ExplicitHeight = 608
+  ExplicitWidth = 1161
+  ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 66
     Width = 1139
-    Height = 316
+    Height = 307
     TabOrder = 3
+    ExplicitTop = 66
     ExplicitWidth = 1139
-    ExplicitHeight = 316
-    ClientRectBottom = 316
+    ExplicitHeight = 307
+    ClientRectBottom = 307
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
-      ExplicitHeight = 316
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 316
+        Height = 307
         ExplicitWidth = 1139
-        ExplicitHeight = 316
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -186,7 +188,16 @@
             Options.Editing = False
             Width = 77
           end
-          object InvoiceKindName: TcxGridDBColumn [3]
+          object isPostedToDropBox: TcxGridDBColumn [3]
+            Caption = #1054#1090#1087#1088#1072#1074'. '#1074' DropBox'
+            DataBinding.FieldName = 'isPostedToDropBox'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' DropBox'
+            Options.Editing = False
+            Width = 68
+          end
+          object InvoiceKindName: TcxGridDBColumn [4]
             Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'InvoiceKindName'
             HeaderAlignmentHorz = taCenter
@@ -194,7 +205,7 @@
             Options.Editing = False
             Width = 79
           end
-          object ReceiptNumber: TcxGridDBColumn [4]
+          object ReceiptNumber: TcxGridDBColumn [5]
             Caption = 'Inv No'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
@@ -209,7 +220,7 @@
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [6]
+          object InvNumberPartner: TcxGridDBColumn [7]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -631,7 +642,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 118
+            Width = 116
           end
           object Color_Pay: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Pay'
@@ -2435,7 +2446,7 @@
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3209,6 +3220,14 @@
         ComponentItem = 'isFilesNotUploaded'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPostedToDropBox'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPostedToDropBox'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

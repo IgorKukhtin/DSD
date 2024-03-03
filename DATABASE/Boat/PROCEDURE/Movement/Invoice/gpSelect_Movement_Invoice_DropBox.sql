@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Invoice_DropBox(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , FileName TVarChar
-             , MovementId Integer
-             , isFilesUploaded Boolean
-             , FilePath TVarChar
-             , ReceiptNumber TVarChar
+             , FileName           TVarChar
+             , MovementId         Integer
+             , isPostedToDropBox  Boolean
+             , FilePath           TVarChar
+             , ReceiptNumber      TVarChar
               )
 
 AS
@@ -39,6 +39,7 @@ BEGIN
           tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                    AS  MovementId
                                  , Movement_Invoice.InvNumber                             AS  InvNumber
                                  , MovementBoolean_FilesNotUploaded.ValueData IS NOT NULL AS isFilesUploaded
+                                 , MovementBoolean_PostedToDropBox.ValueData IS NOT NULL  AS isPostedToDropBox
                                  , Object_InvoicePdf.*
                             FROM Object AS Object_InvoicePdf
                                  INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
@@ -47,35 +48,27 @@ BEGIN
                                  INNER JOIN Movement AS Movement_Invoice
                                                      ON Movement_Invoice.Id = ObjectFloat_InvoicePdf_MovmentId.ValueData
                                                     AND Movement_Invoice.DescId   = zc_Movement_Invoice()
+                                                    AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
                                  LEFT JOIN MovementBoolean AS MovementBoolean_FilesNotUploaded
                                                            ON MovementBoolean_FilesNotUploaded.MovementId = Movement_Invoice.Id
                                                           AND MovementBoolean_FilesNotUploaded.DescId = zc_MovementBoolean_FilesNotUploaded()
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_PostedToDropBox
+                                                           ON MovementBoolean_PostedToDropBox.MovementId = Movement_Invoice.Id
+                                                          AND MovementBoolean_PostedToDropBox.DescId = zc_MovementBoolean_PostedToDropBox()
                             WHERE Object_InvoicePdf.DescId = zc_Object_InvoicePdf()
-                              AND COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) = FALSE),
-          tmpObjectProtocol AS (SELECT ObjectProtocol.ObjectId
-                                     , Max(ObjectProtocol.OperDate)   AS OperDate
-                                FROM tmpInvoicePdf 
-                                     INNER JOIN ObjectProtocol ON ObjectProtocol.ObjectId = tmpInvoicePdf.Id
-                                     LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
-                                                          ON ObjectDate_DateUnloading.ObjectId = tmpInvoicePdf.Id
-                                                         AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()
-                                WHERE ObjectProtocol.OperDate <> COALESCE(ObjectDate_DateUnloading.ValueData, ObjectProtocol.OperDate - INTERVAL '1 DAY')
-                                GROUP BY ObjectProtocol.ObjectId
-                                )
+                              AND COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) = FALSE)
 
     SELECT
-            Object_InvoicePdf.Id               AS Id
-          , Object_InvoicePdf.ValueData        AS FileName
-          , Object_InvoicePdf.MovementId       AS MovementId
-          , Object_InvoicePdf.isFilesUploaded  AS isFilesUploaded
+            Object_InvoicePdf.Id                 AS Id
+          , Object_InvoicePdf.ValueData          AS FileName
+          , Object_InvoicePdf.MovementId         AS MovementId
+          , Object_InvoicePdf.isPostedToDropBox  AS isPostedToDropBox
           , CASE WHEN COALESCE(MovementFloat_Amount.ValueData, 0) < 0 
                  THEN vbKredit
                  ELSE vbDebet END::TVarChar   AS FilePath
           , COALESCE(MovementString_ReceiptNumber.ValueData, Object_InvoicePdf.InvNumber)::TVarChar  AS ReceiptNumber 
      FROM tmpInvoicePdf AS Object_InvoicePdf
      
-          LEFT JOIN tmpObjectProtocol ON tmpObjectProtocol.ObjectId = Object_InvoicePdf.Id 
-
           LEFT JOIN MovementFloat AS MovementFloat_Amount
                                   ON MovementFloat_Amount.MovementId = Object_InvoicePdf.MovementId 
                                  AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -89,9 +82,8 @@ BEGIN
                                   AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
                                      
      WHERE COALESCE(MovementFloat_Amount.ValueData, 0) <> 0 
-       AND (tmpObjectProtocol.OperDate >= inStartDate
-        OR Object_InvoicePdf.isFilesUploaded = TRUE
-        OR ObjectDate_DateUnloading.ValueData IS NULL)
+       AND (Object_InvoicePdf.isPostedToDropBox = TRUE
+         OR ObjectDate_DateUnloading.ValueData IS NULL)
      ORDER BY Object_InvoicePdf.MovementId, Object_InvoicePdf.Id
     ;
 

@@ -158,8 +158,8 @@ object MainForm: TMainForm
     Left = 552
     Top = 144
   end
-  object spDelete_FilesNotUploaded: TdsdStoredProc
-    StoredProcName = 'gpDelete_Movement_Invoice_FilesNotUploaded'
+  object spUpdate_PostedToDropBox: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Invoice_PostedToDropBox'
     DataSets = <>
     OutputType = otBlob
     Params = <
@@ -168,6 +168,13 @@ object MainForm: TMainForm
         Value = Null
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisPostedToDropBox'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

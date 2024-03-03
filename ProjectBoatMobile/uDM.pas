@@ -4,12 +4,21 @@ interface
 
 uses
   System.SysUtils, System.Classes, FMX.DialogService, System.UITypes,
-  Data.DB, dsdDB, Datasnap.DBClient, System.Variants
+  Data.DB, dsdDB, Datasnap.DBClient, System.Variants, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
+  FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
+  FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.FMXUI.Wait, FireDAC.Comp.Client,
+  FireDAC.Comp.UI, FireDAC.Stan.Param, FireDAC.DApt, Datasnap.Provider,
+  FMX.Forms, FireDAC.Phys.SQLiteWrapper
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
   Androidapi.JNI.Support
   {$ENDIF};
+
+CONST
+  DataBaseFileName = 'BoatMobile.sdb';
 
 type
   { отдельный поток для показа бегущего круга }
@@ -86,7 +95,6 @@ type
     cdsGoodsEAN: TWideStringField;
     cdsGoodsGoodsGroupName: TWideStringField;
     cdsGoodsMeasureName: TWideStringField;
-    cdsGoodsisErased: TBooleanField;
     cdsInventoryGoodsGoodsId: TIntegerField;
     cdsInventoryGoodsGoodsCode: TIntegerField;
     cdsInventoryGoodsGoodsName: TWideStringField;
@@ -108,14 +116,27 @@ type
     cdsGoodsListEAN: TWideStringField;
     cdsGoodsListGoodsGroupName: TWideStringField;
     cdsGoodsListMeasureName: TWideStringField;
-    cdsGoodsListisErased: TBooleanField;
+    conMain: TFDConnection;
+    fdGUIxWaitCursor: TFDGUIxWaitCursor;
+    fdDriverLink: TFDPhysSQLiteDriverLink;
+    fdfAnsiUpperCase: TFDSQLiteFunction;
+    cdsGoodsisErased: TBooleanField;
     procedure DataModuleCreate(Sender: TObject);
+    procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
+      AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
   private
     { Private declarations }
-    FGoodsFile: String;
     FInventoryGoodsFile: String;
+    FFilterGoods: String;
+    FFilterGoodsEAN: Boolean;
+    FLimitList : Integer;
   public
     { Public declarations }
+    function Connect: Boolean;
+    procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
+    procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
+    procedure LoadSQLite(ADst: TClientDataSet; ASQL: String);
+
     function GetCurrentVersion: string;
     function GetMobileVersion : String;
     function GetAPKFileName : String;
@@ -125,13 +146,15 @@ type
 
     function DownloadGoods : Boolean;
     function DownloadInventoryJournal : Boolean;
-    function DownloadInventory : Boolean;
+    function DownloadInventory(AId : Integer = 0) : Boolean;
     function DownloadInventoryList : Boolean;
+
+    function GetInventoryActive(AisCreate : Boolean) : Boolean;
+
 
     function LoadGoodsList : Boolean;
 
     procedure LoadGoods;
-    procedure SaveGoods;
 
     procedure InitInventoryGoods;
     procedure SaveInventoryGoods;
@@ -141,6 +164,11 @@ type
 
     procedure UploadAllData;
     procedure UploadInventoryGoods;
+
+    property FilterGoods : String read FFilterGoods write FFilterGoods;
+    property FilterGoodsEAN : Boolean read FFilterGoodsEAN write FFilterGoodsEAN default False;
+    property LimitList : Integer read FLimitList write FLimitList default 300;
+
   end;
 
 var
@@ -152,7 +180,8 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses System.IOUtils, System.DateUtils, System.ZLib, FMX.Dialogs, uMain;
+uses System.IOUtils, System.DateUtils, System.ZLib, System.RegularExpressions,
+     FMX.Dialogs, uMain;
 
 {$R *.dfm}
 
@@ -328,12 +357,7 @@ end;
 function TWaitThread.LoadGoods: string;
 var
   StoredProc : TdsdStoredProc;
-  nId: Integer;
 begin
-
-  if DM.cdsGoods.Active and not DM.cdsGoods.IsEmpty then
-    nID := DM.cdsGoodsId.AsInteger
-  else nID := 0;
 
   StoredProc := TdsdStoredProc.Create(nil);
   try
@@ -346,16 +370,16 @@ begin
 
     try
       StoredProc.Execute(false, false, false);
-      if DM.cdsGoods.Active and (nID <> 0) then DM.cdsGoods.Locate('Id', nId, [])
+      frmMain.DateDownloadGoods := Now;
+      DM.SaveSQLiteData(DM.cdsGoods, 'Goods', 'Name,Article')
     except
       on E : Exception do
       begin
-        Result := E.Message;
+        raise Exception.Create(E.Message);
       end;
     end;
   finally
     FreeAndNil(StoredProc);
-    DM.SaveGoods;
     frmMain.DateDownloadGoods := Now;
     if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'LoadGoodsList';
   end;
@@ -366,21 +390,17 @@ function TWaitThread.LoadGoodsList: string;
   var nID: Integer;
 begin
   frmMain.lwGoods.Visible := False;
-  //frmMain.lwGoods.BeginUpdate;
+  frmMain.lGoodsSelect.Visible := False;
   try
     if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
     else nID := 0;
-    DM.cdsGoodsList.Close;
-    if not DM.cdsGoods.Active then DM.LoadGoods;
-    //DM.cdsGoodsList.DisableControls;
-    if DM.cdsGoods.Active then DM.cdsGoodsList.AppendData(DM.cdsGoods.Data, False);
+    DM.LoadGoodsList;
   finally
     if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
-    //DM.cdsGoodsList.EnableControls;
-    //frmMain.lwGoods.EndUpdate;
     Synchronize(procedure
               begin
                 frmMain.lwGoods.Visible := True;
+                frmMain.lGoodsSelect.Visible := True;
               end);
   end;
 end;
@@ -516,14 +536,234 @@ end;
 
 procedure TDM.DataModuleCreate(Sender: TObject);
 begin
+  FLimitList := 300;
+  FFilterGoods := '';
+  FFilterGoodsEAN := False;
   // Определим имена файлов
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  FGoodsFile := TPath.Combine(TPath.GetDocumentsPath, 'Goods.dat');
   FInventoryGoodsFile := TPath.Combine(TPath.GetDocumentsPath, 'InventoryGoods.dat');
   {$ELSE}
-  FGoodsFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Goods.dat');
   FInventoryGoodsFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'InventoryGoods.dat');
   {$ENDIF}
+end;
+
+function TDM.Connect: Boolean;
+begin
+  if conMain.Connected then
+    Exit(True);
+
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  conMain.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, DataBaseFileName);
+  {$ELSE}
+  conMain.Params.Values['Database'] := DataBaseFileName;
+  {$ENDIF}
+
+  try
+    conMain.Connected := True;
+    conMain.ExecSQL('VACUUM;');
+    fdfAnsiUpperCase.Active := True;
+  except
+    ON E: Exception DO
+    begin
+//      if not ConnectWithOutDB or not CreateDataBase then
+//        Exit(False);
+    end;
+  end;
+  if not conMain.Connected then
+    Exit(False);
+
+
+  result := conMain.Connected;
+end;
+
+procedure TDM.SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
+  var I, J : Integer; S : string;
+      AParams: TFDParams;
+      Res: TArray<string>;
+begin
+  if not Connect and not ASrc.Active then Exit;
+
+  Res := TRegEx.Split(AUpperField, ',');
+
+  try
+    ASrc.DisableControls;
+    try
+
+        // Удаляем новую если вдркг остался мусор
+      conMain.ExecSQL('drop table if exists ' + ATableName+ 'New');
+
+        // Создаем новую таблицу
+      S :=  'CREATE TABLE ' + ATableName + 'New (';
+      for I := 0 to ASrc.FieldCount - 1 do
+      begin
+        if I > 0 then S := S + ', ';
+        S := S + ASrc.Fields.Fields[I].FieldName + ' ';
+        case ASrc.Fields.Fields[I].DataType of
+          ftInteger, ftLargeint : S := S + 'Integer';
+          ftDateTime : S := S + 'DateTime';
+          ftString, ftWideString :
+            if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
+              S := S + 'VarWideChar(255)'
+            else S := S + 'TEXT';
+          ftMemo, ftWideMemo : S := S + 'TEXT';
+          ftFloat, ftCurrency : S := S + 'Float';
+          ftBoolean : S := S + 'Boolean';
+        else
+          ;
+        end;
+      end;
+
+      for J := 0 to High(Res) do
+        S := S + ', ' + Res[J] + 'Upper VarWideChar(255)';
+
+      S := S + ')';
+
+      conMain.ExecSQL(S);
+
+        // Заливаем данные построчно т.к. через JSON UTF-8 не проходит
+      AParams := TFDParams.Create;
+      try
+        S :=  '';
+        for I := 0 to ASrc.Fields.Count - 1 do
+        begin
+          if I > 0 then S := S + ', ';
+          S := S + ':' + ASrc.Fields.Fields[I].FieldName;
+          AParams.Add(ASrc.Fields.Fields[I].FieldName, Null, ptInput);
+        end;
+
+        for J := 0 to High(Res) do
+        begin
+          S := S + ', :' + Res[J] + 'Upper';
+          AParams.Add(Res[J] + 'Upper', Null, ptInput);
+        end;
+
+        ASrc.First;
+        while not ASrc.Eof do
+        begin
+          for I := 0 to ASrc.Fields.Count - 1 do
+            if not ASrc.Fields.Fields[I].IsNull and (ASrc.Fields.Fields[I].DataType in [ftString, ftWideString, ftMemo, ftWideMemo]) then
+              AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).AsWideString :=  ASrc.Fields.Fields[I].AsWideString
+            else AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).Value :=  ASrc.Fields.Fields[I].Value;
+
+          for J := 0 to High(Res) do
+            AParams.ParamByName(Res[J] + 'Upper').AsWideString := AnsiUpperCase(ASrc.FieldByName(Res[J]).AsWideString);
+
+          conMain.ExecSQL('INSERT INTO ' + ATableName + 'New SELECT ' + S, AParams);
+
+          ASrc.Next;
+        end;
+
+      finally
+        AParams.Free;
+      end;
+
+        // Удаляем предыдущий вариант
+      conMain.ExecSQL('drop table if exists ' + ATableName);
+
+        // Переименовываем
+      conMain.ExecSQL('ALTER TABLE ' + ATableName + 'New RENAME TO ' + ATableName);
+
+    finally
+      ASrc.EnableControls;
+    end;
+  Except on E: Exception do
+    //Add_SQLiteLog('Ошибка сохранения таблицы: ' + ATableName + ' - ' + E.Message);
+  end;
+end;
+
+procedure TDM.LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
+  var  DataSetProvider: TDataSetProvider;
+       ClientDataSet: TClientDataSet;
+       FDQuery: TDataSet;
+       I: Integer;
+begin
+
+  if not Connect then Exit;
+
+  try
+    try
+
+      // Проверяем наличие таблицы
+      conMain.ExecSQL('SELECT COUNT(*) AS CounrTable FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''', Nil, FDQuery);
+
+      if FDQuery.RecordCount < 1 then Exit;
+
+      FDQuery.Close;
+      TFDQuery(FDQuery).SQL.Text := 'select * FROM ' + ATableName;
+
+      DataSetProvider := TDataSetProvider.Create(Application);
+      DataSetProvider.Name := 'DataSetProvider';
+      DataSetProvider.DataSet := FDQuery;
+      ClientDataSet := TClientDataSet.Create(Application);
+      ClientDataSet.ProviderName := DataSetProvider.Name;
+      try
+
+        ClientDataSet.Active := True;
+
+        ADst.DisableControls;
+        if ADst.Active then ADst.Close;
+        try
+          ADst.AppendData(ClientDataSet.Data, False);
+        finally
+          ADst.EnableControls;
+        end;
+
+      finally
+        if Assigned(FDQuery) then FDQuery.Free;
+        ClientDataSet.Free;
+        DataSetProvider.Free;
+      end;
+    finally
+
+    end;
+  Except on E: Exception do
+    // Add_SQLiteLog('Ошибка загрузки таблицы '+ ATableName + ' - ' + E.Message);
+  end;
+end;
+
+procedure TDM.LoadSQLite(ADst: TClientDataSet; ASQL: String);
+  var  DataSetProvider: TDataSetProvider;
+       ClientDataSet: TClientDataSet;
+       FDQuery: TFDQuery;
+       I: Integer;
+begin
+
+  if not Connect then Exit;
+
+  FDQuery := TFDQuery.Create(nil);
+  FDQuery.Connection := DM.conMain;
+  FDQuery.SQL.Text := ASQL;
+  try
+
+    FDQuery := TFDQuery.Create(nil);
+    FDQuery.Connection := DM.conMain;
+    FDQuery.SQL.Text := ASQL;
+
+    DataSetProvider := TDataSetProvider.Create(Application);
+    DataSetProvider.Name := 'DataSetProvider';
+    DataSetProvider.DataSet := FDQuery;
+    ClientDataSet := TClientDataSet.Create(Application);
+    ClientDataSet.ProviderName := DataSetProvider.Name;
+    try
+
+      ClientDataSet.Active := True;
+
+      ADst.DisableControls;
+      if ADst.Active then ADst.Close;
+      try
+        ADst.AppendData(ClientDataSet.Data, False);
+      finally
+        ADst.EnableControls;
+      end;
+
+    finally
+      FDQuery.Free;
+      ClientDataSet.Free;
+      DataSetProvider.Free;
+    end;
+  Except on E: Exception do
+    // Add_SQLiteLog('Ошибка загрузки таблицы '+ ATableName + ' - ' + E.Message);
+  end;
 end;
 
 { получение текущей версии программы }
@@ -695,6 +935,37 @@ begin
 end;
 
 
+function TDM.GetInventoryActive(AisCreate : Boolean) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpInsertUpdate_Movement_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inisCreateNew', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('outMovementId', ftInteger, ptOutput, 0);
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := StoredProc.ParamByName('outMovementId').Value <> 0;
+      if Result then
+        Result := DownloadInventory(StoredProc.ParamByName('outMovementId').Value);
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
 { начитка журнала инвентаризаций }
 function TDM.DownloadInventoryJournal : Boolean;
 var
@@ -736,13 +1007,15 @@ begin
 end;
 
 { начитка инвентаризации}
-function TDM.DownloadInventory : Boolean;
+function TDM.DownloadInventory(AId : Integer = 0) : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
 begin
 
-  if cdsInventory.Active and not cdsInventory.IsEmpty then
+  if AId <> 0 then
+    nId := AId
+  else  if cdsInventory.Active and not cdsInventory.IsEmpty then
     nID := DM.cdsInventoryId.AsInteger
   else nID := DM.cdsInventoryJournalId.AsInteger;
 
@@ -812,15 +1085,52 @@ begin
   end;
 end;
 
-function TDM.LoadGoodsList : Boolean;
+procedure TDM.fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
+  AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
 begin
+  AOutput.AsString := AnsiUpperCase(AInputs[0].AsString);
+end;
+
+function TDM.LoadGoodsList : Boolean;
+  var sql: string;
+begin
+  Result := False;
   if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
   begin
-    WaitThread := TWaitThread.Create(true);
-    WaitThread.FreeOnTerminate := true;
-    WaitThread.TaskName := 'LoadGoodsList';
-    WaitThread.Start;
-    Result := True;
+    cdsGoodsList.DisableControls;
+    try
+      cdsGoodsList.Close;
+      cdsGoodsList.CreateDataSet;
+
+      sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName FROM Goods';
+      sql := sql + #13#10'WHERE isErased = 0';
+
+      if FFilterGoods <> '' then
+      begin
+        if not FFilterGoodsEAN then
+        begin
+          sql := sql + #13#10'and (';
+          sql := sql + #13#10' NameUpper LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+          sql := sql + #13#10'OR Article LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+          sql := sql + #13#10'OR EAN LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+          sql := sql + #13#10'OR Code LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+          sql := sql + #13#10')';
+        end else sql := sql + #13#10'AND EAN LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+      end;
+
+      sql := sql + #13#10'ORDER BY NameUpper';
+      sql := sql + #13#10'LIMIT ' + IntToStr(FLimitList);
+
+      LoadSQLite(cdsGoodsList, sql);
+
+      Result := cdsGoodsList.Active;
+      if cdsGoodsList.RecordCount >= FLimitList then
+        frmMain.lGoodsSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' комплектующих'
+      else frmMain.lGoodsSelect.Text := 'Найдено ' + IntToStr(cdsGoodsList.RecordCount) + ' комплектующих';
+      if FFilterGoodsEAN then frmMain.lGoodsSelect.Text := frmMain.lGoodsSelect.Text + ' по штрихкоду'
+    finally
+      cdsGoodsList.EnableControls;
+    end;
   end else DM.DownloadGoods;
 end;
 
@@ -830,18 +1140,9 @@ begin
   if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
   begin
 
-    if FileExists(FGoodsFile) then cdsGoods.LoadFromFile(FGoodsFile);
+    LoadSQLiteData(cdsGoods, 'Goods');
 
   end else DownloadGoods;
-end;
-
-procedure TDM.SaveGoods;
-begin
-
-  if cdsGoods.Active then
-  begin
-    cdsGoods.SaveToFile(FGoodsFile);
-  end;
 end;
 
 // Иницилизация хранилища результатов сканирования
@@ -945,7 +1246,9 @@ begin
       cdsInventoryGoods.Post;
     end;
   end;
-
+  frmMain.edInventScanBarCode.Text := '';
+  frmMain.edInventScanPartNumber.Text := '';
+  frmMain.edInventScanАmount.Text := '1';
   SaveInventoryGoods;
 end;
 

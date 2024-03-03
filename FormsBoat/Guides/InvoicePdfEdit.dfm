@@ -50,22 +50,22 @@
       Left = 0
       Top = 0
       Width = 652
-      Height = 26
+      Height = 35
       Align = dalTop
       BarManager = BarManager
     end
     object cxRightSplitter: TcxSplitter
       Left = 648
-      Top = 26
+      Top = 35
       Width = 4
-      Height = 461
+      Height = 452
       AlignSplitter = salRight
     end
     object Panel1: TPanel
       Left = 0
-      Top = 26
+      Top = 35
       Width = 249
-      Height = 461
+      Height = 452
       Align = alLeft
       Caption = 'Panel1'
       TabOrder = 2
@@ -73,9 +73,11 @@
         Left = 1
         Top = 19
         Width = 243
-        Height = 441
+        Height = 432
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 0
+        ExplicitTop = 18
         object cxGrid2DBBandedTableView1: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DocumentDS
@@ -139,6 +141,14 @@
             Position.ColIndex = 1
             Position.RowIndex = 0
           end
+          object DocDateUnloading: TcxGridDBBandedColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
+            DataBinding.FieldName = 'DateUnloading'
+            Options.Editing = False
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 2
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGrid2DBBandedTableView1
@@ -148,7 +158,7 @@
         Left = 244
         Top = 19
         Width = 4
-        Height = 441
+        Height = 432
         AlignSplitter = salRight
         Control = cxGrid2
       end
@@ -170,9 +180,9 @@
     end
     object PanelDocView: TPanel
       Left = 249
-      Top = 26
+      Top = 35
       Width = 399
-      Height = 461
+      Height = 452
       Align = alClient
       Caption = 'PanelDocView'
       ShowCaption = False
@@ -330,7 +340,7 @@
     Left = 12
     Top = 366
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 23
     Width = 182
   end
   object cxLabel19: TcxLabel
@@ -355,7 +365,7 @@
     Style.Font.Name = 'Tahoma'
     Style.Font.Style = [fsBold]
     Style.IsFontAssigned = True
-    TabOrder = 27
+    TabOrder = 26
     Width = 84
   end
   object cxLabel11: TcxLabel
@@ -1075,7 +1085,7 @@
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (

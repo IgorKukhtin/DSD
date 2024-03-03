@@ -34,7 +34,7 @@ type
     Document: TDocument;
     spGetDocument: TdsdStoredProc;
     spInvoicePdf_DateUnloading: TdsdStoredProc;
-    spDelete_FilesNotUploaded: TdsdStoredProc;
+    spUpdate_PostedToDropBox: TdsdStoredProc;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
@@ -206,7 +206,7 @@ procedure TMainForm.fCopyFile;
   var DateStart : TDateTime;
       FileName: String;
       MovementId: Integer;
-      isFilesUploaded: Boolean;
+      isPostedToDropBox: Boolean;
       //searchResult : TSearchRec;
 begin
 
@@ -223,7 +223,7 @@ begin
       if not ClientDataSet.Active then Exit;
 
       MovementId := 0;
-      isFilesUploaded := False;
+      isPostedToDropBox := False;
       ClientDataSet.First;
       GaugeCopyFile.MaxValue := ClientDataSet.RecordCount;
       GaugeCopyFile.Progress := 0;
@@ -231,10 +231,11 @@ begin
       begin
 
         // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-        if (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and isFilesUploaded then
+        if (MovementId <> 0) and (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and not isPostedToDropBox then
         begin
-          spDelete_FilesNotUploaded.ParamByName('inId').Value := MovementId;
-          spDelete_FilesNotUploaded.Execute;
+          spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
+          spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+          spUpdate_PostedToDropBox.Execute;
         end;
 
         // Проверим создание папки выгрузки
@@ -275,7 +276,7 @@ begin
         spInvoicePdf_DateUnloading.Execute;
 
         MovementId := ClientDataSet.FieldByName('MovementId').AsInteger;
-        isFilesUploaded := ClientDataSet.FieldByName('isFilesUploaded').AsBoolean;
+        isPostedToDropBox := ClientDataSet.FieldByName('isPostedToDropBox').AsBoolean;
 
         ClientDataSet.Next;
         GaugeCopyFile.Progress := ClientDataSet.RecNo;
@@ -283,10 +284,11 @@ begin
       GaugeCopyFile.Progress := 0;
 
       // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-      if (MovementId <> 0) and isFilesUploaded then
+      if (MovementId <> 0) and not isPostedToDropBox then
       begin
-        spDelete_FilesNotUploaded.ParamByName('inId').Value := MovementId;
-        spDelete_FilesNotUploaded.Execute;
+        spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
+        spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+        spUpdate_PostedToDropBox.Execute;
       end;
 
       DateSend := DateStart;

@@ -118,6 +118,7 @@ type
     edReceiptNumber: TcxTextEdit;
     cxLabel11: TcxLabel;
     edAmount_diff: TcxCurrencyEdit;
+    DocDateUnloading: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

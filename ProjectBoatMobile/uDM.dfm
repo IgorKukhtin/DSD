@@ -6,8 +6,8 @@ object DM: TDM
   object cdsInventoryJournal: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 120
-    Top = 48
+    Left = 128
+    Top = 144
     object cdsInventoryJournalId: TIntegerField
       FieldName = 'Id'
     end
@@ -45,8 +45,8 @@ object DM: TDM
   object cdsInventory: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 304
-    Top = 56
+    Left = 312
+    Top = 152
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
     end
@@ -83,8 +83,8 @@ object DM: TDM
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 472
-    Top = 48
+    Left = 480
+    Top = 160
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
     end
@@ -144,8 +144,8 @@ object DM: TDM
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 648
-    Top = 48
+    Left = 656
+    Top = 160
     object cdsInventoryGoodsMovementId: TIntegerField
       FieldName = 'MovementId'
     end
@@ -191,8 +191,8 @@ object DM: TDM
   object cdsGoods: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 112
-    Top = 168
+    Left = 120
+    Top = 264
     object cdsGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -223,8 +223,8 @@ object DM: TDM
   object cdsGoodsList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 296
-    Top = 176
+    Left = 312
+    Top = 264
     object cdsGoodsListId: TIntegerField
       FieldName = 'Id'
     end
@@ -248,8 +248,30 @@ object DM: TDM
     object cdsGoodsListMeasureName: TWideStringField
       FieldName = 'MeasureName'
     end
-    object cdsGoodsListisErased: TBooleanField
-      FieldName = 'isErased'
-    end
+  end
+  object conMain: TFDConnection
+    Params.Strings = (
+      'DriverID=SQLite'
+      'LockingMode=Exclusive')
+    LoginPrompt = False
+    Left = 124
+    Top = 32
+  end
+  object fdGUIxWaitCursor: TFDGUIxWaitCursor
+    Provider = 'FMX'
+    Left = 288
+    Top = 32
+  end
+  object fdDriverLink: TFDPhysSQLiteDriverLink
+    Left = 456
+    Top = 32
+  end
+  object fdfAnsiUpperCase: TFDSQLiteFunction
+    DriverLink = fdDriverLink
+    FunctionName = 'AnsiUpperCase'
+    ArgumentsCount = 1
+    OnCalculate = fdfAnsiUpperCaseCalculate
+    Left = 608
+    Top = 32
   end
 end

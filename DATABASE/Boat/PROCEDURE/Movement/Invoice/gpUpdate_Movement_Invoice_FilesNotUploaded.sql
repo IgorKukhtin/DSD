@@ -5,9 +5,10 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Invoice_FilesNotUploaded(Integer, Bool
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Invoice_FilesNotUploaded(
     IN inMovementId                Integer   , -- ключ объекта <Документ>
  INOUT ioisFilesNotUploaded        Boolean   , -- Временно не выгружать файлы в DropBox    
+   OUT outisPostedToDropBox        Boolean   , -- Отправлено в DropBox
     IN inSession                   TVarChar    -- сессия пользователя
 )
-RETURNS Boolean AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -29,6 +30,17 @@ BEGIN
    
    -- сохранили свойство <Временно не выгружать файлы в DropBox  >
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_FilesNotUploaded(), inMovementId, ioisFilesNotUploaded);
+
+   -- сохранили свойство <Отправлено в DropBox>
+   IF ioisFilesNotUploaded = FALSE
+   THEN
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PostedToDropBox(), inMovementId, False);
+   END IF;
+   
+   outisPostedToDropBox := COALESCE((SELECT COALESCE (MovementBoolean_PostedToDropBox.ValueData, FALSE)
+                                     FROM MovementBoolean AS MovementBoolean_PostedToDropBox
+                                     WHERE MovementBoolean_PostedToDropBox.MovementId = inMovementId
+                                       AND MovementBoolean_PostedToDropBox.DescId = zc_MovementBoolean_PostedToDropBox()), FALSE);
    
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, False);
