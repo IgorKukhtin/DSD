@@ -16,7 +16,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_PostedToDropBox() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_PostedToDropBox'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_PostedToDropBox', 'Отправлено в DropBox'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PostedToDropBox');
+  SELECT 'zc_MovementBoolean_PostedToDropBox', 'Отправлять в DropBox'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_PostedToDropBox');
 
 
 /*-------------------------------------------------------------------------------

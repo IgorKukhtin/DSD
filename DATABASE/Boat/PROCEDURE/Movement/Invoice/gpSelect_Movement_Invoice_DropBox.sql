@@ -36,10 +36,10 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH
-          tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                    AS  MovementId
-                                 , Movement_Invoice.InvNumber                             AS  InvNumber
-                                 , MovementBoolean_FilesNotUploaded.ValueData IS NOT NULL AS isFilesUploaded
-                                 , MovementBoolean_PostedToDropBox.ValueData IS NOT NULL  AS isPostedToDropBox
+          tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                         AS  MovementId
+                                 , Movement_Invoice.InvNumber                                  AS  InvNumber
+                                 , COALESCE(MovementBoolean_FilesNotUploaded.ValueData, False) AS isFilesUploaded
+                                 , COALESCE(MovementBoolean_PostedToDropBox.ValueData, True)   AS isPostedToDropBox
                                  , Object_InvoicePdf.*
                             FROM Object AS Object_InvoicePdf
                                  INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId

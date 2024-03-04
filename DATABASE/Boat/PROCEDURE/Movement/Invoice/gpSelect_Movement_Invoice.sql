@@ -257,7 +257,7 @@ BEGIN
                        , MovementDesc_Parent.ItemName               AS DescName_parent
 
                        , COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) ::Boolean AS isFilesNotUploaded
-                       , COALESCE (MovementBoolean_PostedToDropBox.ValueData, FALSE) ::Boolean  AS isPostedToDropBox
+                       , COALESCE (MovementBoolean_PostedToDropBox.ValueData, True)   ::Boolean AS isPostedToDropBox
 
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
                        /*, CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
@@ -386,9 +386,9 @@ BEGIN
                                                      ON ObjectFloat_InvoicePdf_MovmentId.ValueData = tmpData.Id
                                                     AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
 
-                              INNER JOIN ObjectDate AS ObjectDate_DateUnloading
-                                                    ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
-                                                   AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
+                              LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
+                                                   ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
+                                                  AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
                                                    
                          GROUP BY tmpData.Id                          
                          )
@@ -482,7 +482,8 @@ BEGIN
       , tmpData.InvNumber_parent
       , tmpData.DescName_parent
       , tmpData.isFilesNotUploaded
-      , tmpData.isPostedToDropBox
+      , (tmpData.isPostedToDropBox AND NOT tmpData.isFilesNotUploaded AND COALESCE(tmpDateUnloading.Id, 0) <> 0) AND
+        (COALESCE(tmpData.AmountIn, 0) <> 0 OR COALESCE(tmpData.AmountOut, 0) <> 0) AS isPostedToDropBox
       , tmpDateUnloading.DateUnloading
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета

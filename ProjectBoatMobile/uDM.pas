@@ -158,7 +158,7 @@ type
 
     procedure InitInventoryGoods;
     procedure SaveInventoryGoods;
-    procedure AddInventoryGoods(AList : Boolean = False);
+    procedure AddInventoryGoods(AGoodsId : Integer; AAmount, APartNumber : String);
     procedure DeleteInventoryGoods;
     function isInventoryGoodsSend : Boolean;
 
@@ -391,9 +391,9 @@ function TWaitThread.LoadGoodsList: string;
 begin
   frmMain.lwGoods.Visible := False;
   frmMain.lGoodsSelect.Visible := False;
+  if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
+  else nID := 0;
   try
-    if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
-    else nID := 0;
     DM.LoadGoodsList;
   finally
     if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
@@ -667,7 +667,7 @@ begin
       ASrc.EnableControls;
     end;
   Except on E: Exception do
-    //Add_SQLiteLog('Ошибка сохранения таблицы: ' + ATableName + ' - ' + E.Message);
+    raise Exception.Create('Ошибка сохранения в локальную базу. ' + E.Message);
   end;
 end;
 
@@ -675,7 +675,6 @@ procedure TDM.LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
   var  DataSetProvider: TDataSetProvider;
        ClientDataSet: TClientDataSet;
        FDQuery: TDataSet;
-       I: Integer;
 begin
 
   if not Connect then Exit;
@@ -717,7 +716,7 @@ begin
 
     end;
   Except on E: Exception do
-    // Add_SQLiteLog('Ошибка загрузки таблицы '+ ATableName + ' - ' + E.Message);
+    raise Exception.Create('Ошибка чтенич из локальной базы. ' + E.Message);
   end;
 end;
 
@@ -725,7 +724,6 @@ procedure TDM.LoadSQLite(ADst: TClientDataSet; ASQL: String);
   var  DataSetProvider: TDataSetProvider;
        ClientDataSet: TClientDataSet;
        FDQuery: TFDQuery;
-       I: Integer;
 begin
 
   if not Connect then Exit;
@@ -762,7 +760,7 @@ begin
       DataSetProvider.Free;
     end;
   Except on E: Exception do
-    // Add_SQLiteLog('Ошибка загрузки таблицы '+ ATableName + ' - ' + E.Message);
+    raise Exception.Create('Ошибка чтенич из локальной базы. ' + E.Message);
   end;
 end;
 
@@ -1185,42 +1183,20 @@ end;
 
 
 // Добавить товар для вставки в инвентаризацию
-procedure TDM.AddInventoryGoods(AList : Boolean = False);
+procedure TDM.AddInventoryGoods(AGoodsId : Integer; AAmount, APartNumber : String);
   var nAmount : Currency;
 begin
 
-  if TryStrToCurr(frmMain.edInventScanАmount.Text, nAmount) then nAmount := 1;
+    if not TryStrToCurr(AAmount, nAmount) then nAmount := 1;
 
-  if AList then
-  begin
-    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsListId.AsInteger,frmMain.edInventScanPartNumber.Text]), []) then
+    if not cdsGoods.Active then LoadSQLiteData(cdsGoods, 'Goods');;
+
+    if not cdsGoods.Locate('Id', AGoodsId, []) then
     begin
-      cdsInventoryGoods.Edit;
-      if cdsInventoryGoodsisSend.AsBoolean = False then
-        cdsInventoryGoodsAmount.AsFloat := cdsInventoryGoodsAmount.AsFloat + nAmount
-      else cdsInventoryGoodsAmount.AsFloat := nAmount;
-      cdsInventoryGoodsisSend.AsBoolean := False;
-      cdsInventoryGoods.Post;
-    end else
-    begin
-      cdsInventoryGoods.Last;
-      cdsInventoryGoods.Append;
-      cdsInventoryGoodsMovementId.AsInteger := cdsInventoryId.AsInteger;
-      cdsInventoryGoodsGoodsId.AsInteger := cdsGoodsListId.AsInteger;
-      cdsInventoryGoodsGoodsCode.AsInteger := cdsGoodsListCode.AsInteger;
-      cdsInventoryGoodsGoodsName.AsString := cdsGoodsListName.AsString;
-      cdsInventoryGoodsGoodsGroupName.AsString := cdsGoodsListGoodsGroupName.AsString;
-      cdsInventoryGoodsArticle.AsString := cdsGoodsListArticle.AsString;
-      cdsInventoryGoodsMeasureName.AsString := cdsGoodsListMeasureName.AsString;
-      cdsInventoryGoodsAmount.AsFloat := nAmount;
-      cdsInventoryGoodsPartNumber.AsString := frmMain.edInventScanPartNumber.Text;
-      cdsInventoryGoodsisSend.AsBoolean := False;
-      cdsInventoryGoodsDeleteId.AsInteger := 0;
-      cdsInventoryGoods.Post;
+      raise Exception.Create('Ошибка позиционироания на товар.');
     end;
-  end else
-  begin
-    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsId.AsInteger,frmMain.edInventScanPartNumber.Text]), []) then
+
+    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsId.AsInteger,APartNumber]), []) then
     begin
       cdsInventoryGoods.Edit;
       if cdsInventoryGoodsisSend.AsBoolean = False then
@@ -1240,17 +1216,16 @@ begin
       cdsInventoryGoodsArticle.AsString := cdsGoodsArticle.AsString;
       cdsInventoryGoodsMeasureName.AsString := cdsGoodsMeasureName.AsString;
       cdsInventoryGoodsAmount.AsFloat := nAmount;
-      cdsInventoryGoodsPartNumber.AsString := frmMain.edInventScanPartNumber.Text;
+      cdsInventoryGoodsPartNumber.AsString := APartNumber;
       cdsInventoryGoodsisSend.AsBoolean := False;
       cdsInventoryGoodsDeleteId.AsInteger := 0;
       cdsInventoryGoods.Post;
     end;
-  end;
-  frmMain.edInventScanBarCode.Text := '';
-  frmMain.edInventScanPartNumber.Text := '';
-  frmMain.edInventScanАmount.Text := '1';
-  SaveInventoryGoods;
+
+    SaveInventoryGoods;
 end;
+
+
 
 procedure TDM.DeleteInventoryGoods;
 begin
