@@ -220,6 +220,12 @@ type
     Panel6: TPanel;
     Panel7: TPanel;
     Panel8: TPanel;
+    pPassword: TPanel;
+    ppWebServer: TPopup;
+    pWebServerTest: TPanel;
+    Label18: TLabel;
+    pWebServerMain: TPanel;
+    Label19: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -282,13 +288,16 @@ type
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure bppInventScanCloseClick(Sender: TObject);
+    procedure pPasswordClick(Sender: TObject);
+    procedure pWebServerClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
     FCameraScanBarCode: TCameraComponent;
     FObr: TFObr;
-    FWebServer: string;
+    FisTestWebServer: boolean;
+    FPasswordLabelClick: Integer;
     FINIFile: string;
     FPermissionState: boolean;
     FisZebraScaner: boolean;
@@ -372,6 +381,7 @@ begin
 
   FormatSettings.DecimalSeparator := '.';
   FisBecomeForeground := False;
+  FPasswordLabelClick := 0;
 
   SearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
@@ -392,12 +402,17 @@ begin
   SettingsFile := TIniFile.Create(FINIFile);
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
-    FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
+    FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
     FDateDownloadGoods := SettingsFile.ReadDateTime('Params', 'DateDownloadGoods', IncDay(Now, - 2));
   finally
     FreeAndNil(SettingsFile);
   end;
+
+  if FisTestWebServer then
+    PasswordLabel.Text := 'Пароль (тестовый сервер)'
+  else PasswordLabel.Text := 'Пароль';
+
   FPermissionState := True;
   // установка вертикального положения экрана телефона
   {$IFDEF ANDROID}
@@ -1140,6 +1155,9 @@ begin
       if pProgress.Visible then
         exit
       else
+      if ppWebServer.IsOpen then
+        ppWebServer.IsOpen := false
+      else
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
       else
@@ -1178,7 +1196,9 @@ begin
     exit;
   end;
 
-  if gc_WebService = '' then gc_WebService := FWebServer;
+  if FisTestWebServer then
+    gc_WebService := WebServerTest
+  else gc_WebService := WebServer;
 
   Wait(True);
   try
@@ -1192,6 +1212,7 @@ begin
     end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
     if Assigned(gc_User) then lUser.Text := gc_User.Login;
+    if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
 
     Wait(False);
 
@@ -1223,6 +1244,7 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
+  DM.LoadGoods;
 end;
 
 procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
@@ -1332,6 +1354,7 @@ begin
       lUser.Text := '';
       ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, Password, gc_User);
       if Assigned(gc_User) then lUser.Text := gc_User.Login;
+      if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
 
       Wait(False);
 
@@ -1357,8 +1380,44 @@ begin
   finally
     if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then
       ReturnPriorForm
-    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
+    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then
+    begin
+      SwitchToForm(tiMain, nil);
+      DM.LoadGoods;
+    end;
   end;
+end;
+
+// клик по паролю для изменения сервера
+procedure TfrmMain.pPasswordClick(Sender: TObject);
+begin
+  Inc(FPasswordLabelClick);
+  if FPasswordLabelClick = 3 then
+  begin
+    FPasswordLabelClick := 0;
+    if LoginEdit.Text = 'Админ' then ppWebServer.IsOpen := True;
+  end;
+end;
+
+procedure TfrmMain.pWebServerClick(Sender: TObject);
+  var SettingsFile : TIniFile;
+begin
+  ppWebServer.IsOpen := False;
+
+  FisTestWebServer := TPanel(Sender).Tag = 1;
+
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    SettingsFile.WriteBool('Params', 'isTestWebServer', FisTestWebServer);
+    FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+
+  if FisTestWebServer then
+    PasswordLabel.Text := 'Пароль (тестовый сервер)'
+  else PasswordLabel.Text := 'Пароль'
 end;
 
 procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);

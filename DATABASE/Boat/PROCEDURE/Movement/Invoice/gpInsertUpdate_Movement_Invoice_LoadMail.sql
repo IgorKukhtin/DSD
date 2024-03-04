@@ -61,7 +61,7 @@ BEGIN
     vbPartner := TRIM(inSubject);
     vbPos := Length(vbPartner);
     vbAmountStr := '';
-    WHILE SUBSTRING(vbPartner, vbPos, 1) <> ' ' LOOP
+    WHILE SUBSTRING(vbPartner, vbPos, 1) <> ' ' AND vbPos > 1 LOOP
 
       IF SUBSTRING(vbPartner, vbPos, 1) in ('.',',','0','1','2','3','4','5','6','7','8','9')
       THEN
@@ -116,4 +116,5 @@ $BODY$
 
 */
 
--- select * from gpInsertUpdate_Movement_Invoice_LoadMail(ioId := 0, inSubject := 'NUMAN 1234,56', inSession := '5');
+-- 
+select * from gpInsertUpdate_Movement_Invoice_LoadMail(ioId := 0, inSubject := 'Schlauchland', inSession := '5');;
