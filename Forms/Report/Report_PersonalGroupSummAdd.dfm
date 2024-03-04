@@ -1,25 +1,25 @@
 inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1077#1084#1080#1103' '#1051#1091#1095#1096#1077#1081' '#1073#1088#1080#1075#1072#1076#1099'>'
   ClientHeight = 319
-  ClientWidth = 954
+  ClientWidth = 819
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 970
+  ExplicitWidth = 835
   ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 954
+    Width = 819
     Height = 262
     TabOrder = 3
     ExplicitWidth = 954
     ExplicitHeight = 262
     ClientRectBottom = 262
-    ClientRectRight = 954
+    ClientRectRight = 819
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 954
       ExplicitHeight = 262
       inherited cxGrid: TcxGrid
-        Width = 954
+        Width = 819
         Height = 262
         ExplicitLeft = 3
         ExplicitWidth = 954
@@ -61,12 +61,11 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
           object MemberCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1092#1080#1079'. '#1083#1080#1094#1086')'
             DataBinding.FieldName = 'MemberCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 40
+            Width = 61
           end
           object MemberName: TcxGridDBColumn
             Caption = #1060#1080#1079'. '#1083#1080#1094#1086
@@ -84,7 +83,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 182
+            Width = 152
           end
           object PositionLevelName: TcxGridDBColumn
             Caption = #1056#1072#1079#1088#1103#1076
@@ -106,6 +105,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             DataBinding.FieldName = 'NormHour'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -116,12 +116,21 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1080#1079' '#1076#1086#1082'. '#1055#1088#1077#1084#1080#1080
             Options.Editing = False
             Width = 83
+          end
+          object isSkip: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1091#1083' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isSkip'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object Hour_work: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1095#1072#1089#1086#1074
@@ -144,14 +153,6 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             HeaderHint = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1086#1075#1091#1083#1086#1074
             Width = 70
           end
-          object isSkip: TcxGridDBColumn
-            Caption = #1055#1088#1086#1075#1091#1083' ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'isSkip'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object SummAdd: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'SummAdd'
@@ -166,7 +167,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
     end
   end
   inherited Panel: TPanel
-    Width = 954
+    Width = 819
     ExplicitWidth = 954
     inherited deStart: TcxDateEdit
       Left = 112
