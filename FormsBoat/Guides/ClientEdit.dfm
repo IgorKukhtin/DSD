@@ -50,7 +50,7 @@ object ClientEditForm: TClientEditForm
     Width = 576
     Height = 353
     TabOrder = 2
-    Properties.ActivePage = Main
+    Properties.ActivePage = Detail
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 353
     ClientRectRight = 576
@@ -225,7 +225,7 @@ object ClientEditForm: TClientEditForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 19
+        TabOrder = 18
         Width = 130
       end
       object cxLabel14: TcxLabel
@@ -1146,8 +1146,8 @@ object ClientEditForm: TClientEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 329
-    Top = 139
+    Left = 369
+    Top = 155
   end
   object GuidesPLZ: TdsdGuides
     KeyField = 'Id'

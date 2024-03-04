@@ -1,5 +1,6 @@
 --
 DROP FUNCTION IF EXISTS gpUpdate_Object_MoneyPlace (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_MoneyPlace (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_MoneyPlace(
     IN inId              Integer,       -- ключ объекта <Бренд>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_MoneyPlace(
     IN inCityName        TVarChar,
     IN inCountryName     TVarChar,
     IN inTaxKindId       Integer ,
+    IN inInfoMoneyId     Integer ,
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS VOID

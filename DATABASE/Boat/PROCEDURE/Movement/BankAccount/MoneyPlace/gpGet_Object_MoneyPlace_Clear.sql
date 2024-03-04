@@ -40,7 +40,9 @@ BEGIN
         , '' ::TVarChar AS CityName
         , '' ::TVarChar AS CountryName
         , 0  ::Integer  AS TaxKindId
-        , '' ::TVarChar AS TaxKindName
+        , '' ::TVarChar AS TaxKindName  
+        , 0  ::Integer  AS InfoMoneyId
+        , '' ::TVarChar AS InfoMoneyName
 
   INTO outId, outCode, outName, outIBAN, outStreet, outStreet_add, outTaxNumber, outPLZ, outCityName, outCountryName, outTaxKindId, outTaxKindName, outInfoMoneyId, outInfoMoneyName
 

@@ -120,6 +120,9 @@ type
     cxPageControl1: TcxPageControl;
     Main: TcxTabSheet;
     cxTabSheet1: TcxTabSheet;
+    edInfoMoney_moneyplace: TcxButtonEdit;
+    cxLabel24: TcxLabel;
+    GuidesInfoMoney_moneyplace: TdsdGuides;
   private
     { Private declarations }
   public

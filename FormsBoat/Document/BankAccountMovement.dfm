@@ -1,8 +1,8 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 583
-  ClientWidth = 478
-  ExplicitWidth = 484
+  ClientWidth = 475
+  ExplicitWidth = 481
   ExplicitHeight = 612
   PixelsPerInch = 96
   TextHeight = 13
@@ -386,6 +386,7 @@
     object cxTabSheet1: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
+      ExplicitLeft = 3
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191
@@ -529,7 +530,7 @@
         Left = 2
         Top = 211
         TabOrder = 20
-        Width = 271
+        Width = 273
       end
       object cxButton4: TcxButton
         Left = 154
@@ -550,6 +551,23 @@
         ParentShowHint = False
         ShowHint = True
         TabOrder = 22
+      end
+      object edInfoMoney_moneyplace: TcxButtonEdit
+        Left = 2
+        Top = 262
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 23
+        Width = 273
+      end
+      object cxLabel24: TcxLabel
+        Left = 2
+        Top = 239
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
     end
   end
@@ -1566,8 +1584,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 223
-    Top = 229
+    Left = 143
+    Top = 245
   end
   object spGet_PrePay: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InvoiceKind_byDesc'
@@ -1839,6 +1857,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountIn'
         Value = Null
         Component = ceAmountIn
@@ -1860,6 +1894,20 @@
         Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2058,6 +2106,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 448
@@ -2170,6 +2226,21 @@
         Name = 'outInfoMoneyName'
         Value = Null
         Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2314,9 +2385,53 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 453
     Top = 66
+  end
+  object GuidesInfoMoney_moneyplace: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney_moneyplace
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 69
+    Top = 300
   end
 end
