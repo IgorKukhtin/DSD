@@ -3,29 +3,26 @@
   ClientHeight = 569
   ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1161
-  ExplicitHeight = 625
+  ExplicitWidth = 1155
+  ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 66
     Width = 1139
-    Height = 307
+    Height = 316
     TabOrder = 3
-    ExplicitTop = 66
     ExplicitWidth = 1139
-    ExplicitHeight = 307
-    ClientRectBottom = 307
+    ExplicitHeight = 316
+    ClientRectBottom = 316
     ClientRectRight = 1139
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
-      ExplicitHeight = 307
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1139
-        Height = 307
-        ExplicitTop = 2
+        Height = 316
         ExplicitWidth = 1139
-        ExplicitHeight = 307
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -185,18 +182,18 @@
             DataBinding.FieldName = 'isFilesNotUploaded'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+            HeaderHint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 77
           end
           object isPostedToDropBox: TcxGridDBColumn [3]
-            Caption = #1054#1090#1087#1088#1072#1074'. '#1074' DropBox'
+            Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
             DataBinding.FieldName = 'isPostedToDropBox'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+            HeaderHint = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
-            Width = 68
+            Width = 80
           end
           object InvoiceKindName: TcxGridDBColumn [4]
             Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
@@ -849,9 +846,9 @@
       TabOrder = 12
     end
     object cxButton6: TcxButton
-      Left = 340
+      Left = 334
       Top = 42
-      Width = 127
+      Width = 137
       Height = 25
       Action = actFilesNotUploaded
       ParentShowHint = False
@@ -859,9 +856,9 @@
       TabOrder = 13
     end
     object cxButton9: TcxButton
-      Left = 340
+      Left = 334
       Top = 8
-      Width = 127
+      Width = 137
       Height = 25
       Action = actUpdate_PostedToDropBox
       ParentShowHint = False
@@ -2409,8 +2406,9 @@
           StoredProc = spUpdate_FilesNotUploaded
         end>
       Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 88
+      Hint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 82
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1090#1083#1086#1078#1080#1090#1100'/'#1042#1082#1083#1102#1095#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox?'
     end
     object actUpdate_PostedToDropBox: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2421,9 +2419,9 @@
         item
           StoredProc = spUpdate_PostedToDropBox
         end>
-      Caption = #1044#1072'/'#1053#1077#1090' '#1086#1090#1087#1088'. DropBox'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1072'  '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 88
+      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1074#1090#1086#1088#1085#1091#1102' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 81
     end
   end
   inherited MasterDS: TDataSource
@@ -2470,7 +2468,7 @@
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
