@@ -231,10 +231,10 @@ begin
       begin
 
         // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-        if (MovementId <> 0) and (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and not isPostedToDropBox then
+        if (MovementId <> 0) and (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and isPostedToDropBox then
         begin
           spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
-          spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+          spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := True;
           spUpdate_PostedToDropBox.Execute;
         end;
 
@@ -284,10 +284,10 @@ begin
       GaugeCopyFile.Progress := 0;
 
       // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-      if (MovementId <> 0) and not isPostedToDropBox then
+      if (MovementId <> 0) and isPostedToDropBox then
       begin
         spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
-        spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+        spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := True;
         spUpdate_PostedToDropBox.Execute;
       end;
 
