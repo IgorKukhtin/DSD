@@ -25,9 +25,32 @@ BEGIN
                                               );
    END IF;
    
+   IF NOT EXISTS(SELECT ObjectFloat_InvoicePdf_MovmentId.ObjectId
+                 FROM ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
+                 WHERE ObjectFloat_InvoicePdf_MovmentId.ValueData = inMovementId                                            
+                   AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId())
+   THEN
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Изменение признака невозможно. Нет файлов п счету!'
+                                              , inProcedureName := 'gpUpdate_Movement_Invoice_PostedToDropBox'
+                                              , inUserId        := vbUserId
+                                              );   
+   END IF;
+   
+   IF NOT EXISTS(SELECT MovementFloat_Amount.MovementId
+                 FROM MovementFloat AS MovementFloat_Amount
+                 WHERE MovementFloat_Amount.MovementId = inMovementId
+                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                   AND COALESCE(MovementFloat_Amount.ValueData, 0) <> 0)
+   THEN
+        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Изменение признака невозможно. Не установлена сумма счета!'
+                                              , inProcedureName := 'gpUpdate_Movement_Invoice_PostedToDropBox'
+                                              , inUserId        := vbUserId
+                                              );   
+   END IF;
+
    ioisPostedToDropBox := NOT ioisPostedToDropBox;
    
-   -- сохранили свойство <Отправлено в DropBox>
+   -- сохранили свойство <Временно не выгружать файлы в DropBox  >
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PostedToDropBox(), inMovementId, ioisPostedToDropBox);
    
    -- сохранили протокол

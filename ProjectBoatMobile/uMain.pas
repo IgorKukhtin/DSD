@@ -281,7 +281,6 @@ type
     procedure lwGoodsSearchChange(Sender: TObject);
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
-    procedure ppInventScanClosePopup(Sender: TObject);
     procedure bppInventScanCloseClick(Sender: TObject);
   private
     { Private declarations }
@@ -296,6 +295,7 @@ type
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
     FDateDownloadGoods: TDateTime;
+    FGoodsId: Integer;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
@@ -304,7 +304,8 @@ type
     procedure DownloadGoods(const AResult: TModalResult);
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
-    procedure ShowppInventScan;
+    procedure ConfppInventScanClose(const AResult: TModalResult);
+    procedure ShowppInventScan(AGoodsId: Integer);
 
     {$IFDEF ANDROID}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
@@ -326,7 +327,8 @@ uses System.IOUtils, FMX.SearchBox, Authentication, Storage, CommonData, CursorU
 {$R *.fmx}
 
 const
-  WebServer = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+  WebServer = 'http://217.92.58.239:11011/projectBoat_utf8/index.php';
+  WebServerTest = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
 
 function SearshBox(AListView: TListView): TSearchBox;
 var
@@ -553,8 +555,27 @@ end;
 {$ENDIF}
 
 procedure TfrmMain.bppInventScanCloseClick(Sender: TObject);
+  var nAmount: Currency;
 begin
-  ppInventScan.IsOpen := false;
+
+  if not TryStrToCurr(edInventScanАmount.Text, nAmount) then nAmount := 1;
+
+  if Panel6.Visible and (edInventScanPartNumber.Text = '') then
+    TDialogService.MessageDialog('Не заполнен <S/N>.'#13#13'Сохранить ?',
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
+  else if Panel5.Visible and (nAmount = 1) then
+    TDialogService.MessageDialog('Не изменено количество.'#13#13'Сохранить ?',
+      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
+  else
+  begin
+    ppInventScan.Visible := false;
+    sbScan.Enabled := True;
+    sbBack.Enabled := True;
+    Panel3.Enabled := True;
+    lwInventoryScan.Enabled := True;
+
+    DM.AddInventoryGoods(FGoodsID, edInventScanАmount.Text, edInventScanPartNumber.Text);
+  end;
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
@@ -879,13 +900,27 @@ begin
   DM.DownloadInventoryJournal;
 end;
 
-procedure TfrmMain.ShowppInventScan;
+procedure TfrmMain.ShowppInventScan(AGoodsId: Integer);
 begin
   sbScan.Enabled := False;
   sbBack.Enabled := False;
   Panel3.Enabled := False;
   lwInventoryScan.Enabled := False;
-  ppInventScan.IsOpen := True;
+
+  FGoodsId := AGoodsId;
+  edInventScanBarCode.Text := '';
+  edInventScanPartNumber.Text := '';
+  edInventScanАmount.Text := '1';
+
+  Panel6.Visible := RadioButtonInvScan2.IsChecked or RadioButtonInvScan4.IsChecked;
+  Panel5.Visible := RadioButtonInvScan3.IsChecked or RadioButtonInvScan4.IsChecked;
+
+  if Panel5.Visible and Panel6.Visible then
+    ppInventScan.Height := Panel5.Height + Panel6.Height
+  else if Panel5.Visible then ppInventScan.Height := Panel5.Height
+  else if Panel6.Visible then ppInventScan.Height := Panel6.Height;
+
+  ppInventScan.Visible := True;
 end;
 
 // Поиск товара для вставки в инвентаризацию по введеному коду
@@ -912,14 +947,14 @@ begin
       DM.cdsGoods.Filtered := True;
       if DM.cdsGoods.RecordCount = 1 then
       begin
-        DM.AddInventoryGoods;
+        if RadioButtonInvScan1.IsChecked then
+          DM.AddInventoryGoods(DM.cdsGoodsId.AsInteger, '1', '')
+        else ShowppInventScan(DM.cdsGoodsId.AsInteger);
       end else if DM.cdsGoods.RecordCount > 1 then
       begin
         SearshBox(lwGoods).Text := edInventScanBarCode.Text;
         DM.FilterGoodsEAN := True;
-        if RadioButtonInvScan1.IsChecked then
-          bInventScanSearchClick(Sender)
-        else ShowppInventScan;
+        bInventScanSearchClick(Sender);
         Exit;
       end else ShowMessage('Товар с штрихкодом ' + edInventScanBarCode.Text + ' не найден.');
     finally
@@ -927,7 +962,7 @@ begin
       DM.cdsGoods.Filter := '';
     end;
   finally
-    if not ppInventScan.IsOpen then edInventScanBarCode.Text := '';
+    edInventScanBarCode.Text;
   end;
 end;
 
@@ -949,8 +984,8 @@ begin
   begin
     if RadioButtonInvScan1.IsChecked then
     begin
-      DM.AddInventoryGoods(True);
-    end else ShowppInventScan;
+      DM.AddInventoryGoods(DM.cdsGoodsListId.AsInteger, '1', '');
+    end else ShowppInventScan(DM.cdsGoodsListId.AsInteger);
   end;
 end;
 
@@ -1108,8 +1143,8 @@ begin
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
       else
-      if ppInventScan.IsOpen then
-        ppInventScan.IsOpen := false
+      if ppInventScan.Visible then
+        bppInventScanCloseClick(Sender)
       else
       if tcMain.ActiveTab = tiStart then
         TDialogService.MessageDialog('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], TMsgDlgBtn.mbCancel, -1, OnCloseDialog)
@@ -1170,6 +1205,7 @@ begin
       Wait(False);
 
       ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
+      Exit;
     end;
     //
   end;
@@ -1225,6 +1261,20 @@ procedure TfrmMain.CreateInventory(const AResult: TModalResult);
 begin
   if AResult = mrYes then if DM.GetInventoryActive(True) then
     SwitchToForm(tiInventoryScan, nil);
+end;
+
+procedure TfrmMain.ConfppInventScanClose(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    ppInventScan.Visible := false;
+    sbScan.Enabled := True;
+    sbBack.Enabled := True;
+    Panel3.Enabled := True;
+    lwInventoryScan.Enabled := True;
+
+    DM.AddInventoryGoods(FGoodsID, edInventScanАmount.Text, edInventScanPartNumber.Text);
+  end;
 end;
 
 procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
@@ -1309,14 +1359,6 @@ begin
       ReturnPriorForm
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
   end;
-end;
-
-procedure TfrmMain.ppInventScanClosePopup(Sender: TObject);
-begin
-  sbScan.Enabled := True;
-  sbBack.Enabled := True;
-  Panel3.Enabled := True;
-  lwInventoryScan.Enabled := True;
 end;
 
 procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);

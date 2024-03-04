@@ -23,6 +23,7 @@
       inherited cxGrid: TcxGrid
         Width = 1139
         Height = 307
+        ExplicitTop = 2
         ExplicitWidth = 1139
         ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -193,7 +194,7 @@
             DataBinding.FieldName = 'isPostedToDropBox'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' DropBox'
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -856,6 +857,16 @@
       ParentShowHint = False
       ShowHint = True
       TabOrder = 13
+    end
+    object cxButton9: TcxButton
+      Left = 340
+      Top = 8
+      Width = 127
+      Height = 25
+      Action = actUpdate_PostedToDropBox
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 14
     end
   end
   object cxGrid_Item: TcxGrid [3]
@@ -2401,6 +2412,19 @@
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1090#1082#1083#1102#1095#1077#1085#1080#1077' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 88
     end
+    object actUpdate_PostedToDropBox: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PostedToDropBox
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PostedToDropBox
+        end>
+      Caption = #1044#1072'/'#1053#1077#1090' '#1086#1090#1087#1088'. DropBox'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1072'  '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 88
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -3233,5 +3257,31 @@
     PackSize = 1
     Left = 951
     Top = 176
+  end
+  object spUpdate_PostedToDropBox: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Invoice_PostedToDropBox'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisPostedToDropBox'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isPostedToDropBox'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 951
+    Top = 240
   end
 end

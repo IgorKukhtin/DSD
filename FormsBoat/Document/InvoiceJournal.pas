@@ -166,6 +166,9 @@ type
     DateUnloading: TcxGridDBColumn;
     bbSave_Invoice: TdxBarButton;
     isPostedToDropBox: TcxGridDBColumn;
+    spUpdate_PostedToDropBox: TdsdStoredProc;
+    actUpdate_PostedToDropBox: TdsdExecStoredProc;
+    cxButton9: TcxButton;
   private
     { Private declarations }
   public
