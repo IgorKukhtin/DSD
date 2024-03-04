@@ -1493,7 +1493,9 @@ uses
   Goods_ScaleDialog in '..\..\Forms\Guides\Goods_ScaleDialog.pas' {Goods_ScaleDialogForm: TParentForm},
   ContractPartner_Object in '..\..\Forms\Guides\ContractPartner_Object.pas' {ContractPartner_ObjectForm: TParentForm},
   PersonalGroupSummAddJournal in '..\..\Forms\Document\PersonalGroupSummAddJournal.pas' {PersonalGroupSummAddJournalForm: TParentForm},
-  PersonalGroupSummAdd in '..\..\Forms\Document\PersonalGroupSummAdd.pas' {PersonalGroupSummAddForm: TParentForm};
+  PersonalGroupSummAdd in '..\..\Forms\Document\PersonalGroupSummAdd.pas' {PersonalGroupSummAddForm: TParentForm},
+  Report_PersonalGroupSummAddDialog in '..\..\Forms\Report\Report_PersonalGroupSummAddDialog.pas' {Report_PersonalGroupSummAddDialogForm: TParentForm},
+  Report_PersonalGroupSummAdd in '..\..\Forms\Report\Report_PersonalGroupSummAdd.pas' {Report_PersonalGroupSummAddForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

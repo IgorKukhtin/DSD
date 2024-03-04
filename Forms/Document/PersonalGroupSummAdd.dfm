@@ -1185,6 +1185,9 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
       end
       item
         Control = edPersonalGroup
+      end
+      item
+        Control = edNormHour
       end>
     GetStoredProc = spGet
     Left = 314
