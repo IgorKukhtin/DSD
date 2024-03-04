@@ -46,8 +46,8 @@ BEGIN
             , 0        ::TFloat     AS NormHour
             , ''       :: TVarChar  AS Comment
 
-            , 0                     AS PersonalServiceListId
-            , ''       :: TVarChar  AS PersonalServiceListName
+            , Object_PersonalServiceList.Id        AS PersonalServiceListId
+            , Object_PersonalServiceList.ValueData AS PersonalServiceListName
             , 0                     AS UnitId
             , ''       :: TVarChar  AS UnitName
             , 0                     AS PersonalGroupId
@@ -56,6 +56,7 @@ BEGIN
             , CAST (FALSE AS Boolean) AS isMask
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = 298695   --" Премії виробництво" 
        ;
      ELSE
      RETURN QUERY 
