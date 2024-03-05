@@ -302,7 +302,6 @@ BEGIN
 3456962,
 3456965,
 3713924)*/
-                                INNER JOIN _tmpGoods on _tmpGoods.goodsid = MIContainer.ObjectId_Analyzer
                                 INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -399,7 +398,6 @@ BEGIN
 3456962,
 3456965,
 3713924)*/
-                                INNER JOIN _tmpGoods on _tmpGoods.GoodsId = MovementItem.ObjectId
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
@@ -473,7 +471,6 @@ BEGIN
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE  
-                                INNER JOIN _tmpGoods on _tmpGoods.GoodsId = MovementItem.ObjectId
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
