@@ -181,5 +181,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Object_MobileGoods (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_MobileGoods (inShowAll:= FALSE, inSession := zfCalc_UserAdmin())

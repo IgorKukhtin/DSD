@@ -30,7 +30,7 @@ type
     cbTimer: TCheckBox;
     PanelError: TPanel;
     PanelInfo: TPanel;
-    BitSendUnscheduled: TBitBtn;
+    BtnLoadUnscheduled: TBitBtn;
     Document: TDocument;
     spGetDocument: TdsdStoredProc;
     spInvoicePdf_DateUnloading: TdsdStoredProc;
@@ -41,7 +41,7 @@ type
     procedure cbTimerClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SetDateSend(Value : TDateTime);
-    procedure BitSendUnscheduledClick(Sender: TObject);
+    procedure BtnLoadUnscheduledClick(Sender: TObject);
   private
 
     FUserName: String;
@@ -370,7 +370,7 @@ begin
     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.BitSendUnscheduledClick(Sender: TObject);
+procedure TMainForm.BtnLoadUnscheduledClick(Sender: TObject);
 begin
   Timer.Enabled := False;
   try

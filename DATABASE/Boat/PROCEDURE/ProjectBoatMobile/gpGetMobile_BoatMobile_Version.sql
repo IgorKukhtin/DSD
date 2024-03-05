@@ -40,5 +40,4 @@ END;$BODY$
  21.03.19                                                                    * APIKey
 */
 -- тест
--- 
-SELECT * FROM gpGetMobile_BoatMobile_Version (inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGetMobile_BoatMobile_Version (inSession:= zfCalc_UserAdmin())

@@ -80,14 +80,14 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 4
   end
-  object BitSendUnscheduled: TBitBtn
+  object BtnLoadUnscheduled: TBitBtn
     Left = 232
     Top = 160
     Width = 109
     Height = 25
     Caption = 'Send unscheduled'
     TabOrder = 5
-    OnClick = BitSendUnscheduledClick
+    OnClick = BtnLoadUnscheduledClick
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_DropBox'
