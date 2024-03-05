@@ -302,6 +302,7 @@ BEGIN
 3456962,
 3456965,
 3713924)*/
+                                INNER JOIN _tmpGoods on _tmpGoods.goodsid = MIContainer.ObjectId_Analyzer
                                 INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                               AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -398,6 +399,7 @@ BEGIN
 3456962,
 3456965,
 3713924)*/
+                                INNER JOIN _tmpGoods on _tmpGoods.GoodsId = MovementItem.ObjectId
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
@@ -470,7 +472,8 @@ BEGIN
                            FROM Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
-                                                       AND MovementItem.isErased   = FALSE
+                                                       AND MovementItem.isErased   = FALSE  
+                                INNER JOIN _tmpGoods on _tmpGoods.GoodsId = MovementItem.ObjectId
                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
@@ -616,10 +619,10 @@ BEGIN
                           , tmp.juridicalid
                           , tmp.JuridicalCode
                           , tmp.JuridicalName
-                          , tmp.RetailName
+                         -- , tmp.RetailName
                          -- , tmp.RetailReportName
-                          , tmp.AreaName, tmp.PartnerTagName
-                          , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+                         -- , tmp.AreaName, tmp.PartnerTagName
+                         -- , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
                           , tmp.PartnerId
                           , tmp.PartnerCode
                           , tmp.PartnerName
@@ -695,10 +698,10 @@ BEGIN
                           , tmp.JuridicalCode
                           , tmp.JuridicalName
                           , tmp.trademarkid              
-                          , tmp.RetailName
+                         -- , tmp.RetailName
                          -- , tmp.RetailReportName
-                          , tmp.AreaName, tmp.PartnerTagName
-                          , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+                         -- , tmp.AreaName, tmp.PartnerTagName
+                         -- , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
                           , tmp.infomoneyid
                           , tmp.PartnerId
                           , tmp.PartnerCode
@@ -709,6 +712,10 @@ BEGIN
                           , tmp.ContractTagName
                           , tmp.ContractTagGroupName
        ) 
+
+      , tmpPartnerAddress AS (SELECT * 
+                              FROM Object_Partner_Address_View
+                              )
 
 
        -- результат
@@ -777,10 +784,11 @@ BEGIN
        FROM (
        SELECT Object_GoodsGroup.ValueData AS GoodsGroupName, ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
             , COALESCE (_tmpMI.MovementId_test, 0) AS MovementId_test
-            , CASE WHEN COALESCE (tmp.Sale_Summ, 0) = 0 AND COALESCE (_tmpMI.Sale_SummVAT, 0) > 0
+            /*, CASE WHEN COALESCE (tmp.Sale_Summ, 0) = 0 AND COALESCE (_tmpMI.Sale_SummVAT, 0) > 0
                    THEN _tmpMI.MovementId_test
                    ELSE COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)
-              END:: Integer AS GoodsCode
+              END:: Integer AS GoodsCode */   
+            , COALESCE (_tmpMI.GoodsCode, tmp.GoodsCode)  :: Integer AS GoodsCode
             , COALESCE (_tmpMI.GoodsName, tmp.GoodsName)         :: TVarChar AS GoodsName
             , COALESCE (_tmpMI.GoodsKindId, tmp.GoodsKindId)                 AS GoodsKindId
             , COALESCE (_tmpMI.GoodsKindName, tmp.GoodsKindName) :: TVarChar AS GoodsKindName
@@ -798,12 +806,22 @@ BEGIN
             , COALESCE (_tmpMI.JuridicalCode, tmp.JuridicalCode)   :: Integer  AS JuridicalCode
             , COALESCE (_tmpMI.JuridicalName, tmp.JuridicalName)   :: TVarChar AS JuridicalName
 
-            , COALESCE (tmp.RetailName, Object_Retail.ValueData)             :: TVarChar AS RetailName
-           -- , COALESCE (tmp.RetailReportName, Object_RetailReport.ValueData) :: TVarChar AS RetailReportName
+           -- , COALESCE (tmp.RetailName, Object_Retail.ValueData)             :: TVarChar AS RetailName
+           -- , COALESCE (tmp.RetailReportName, Object_RetailReport.ValueData) :: TVarChar AS RetailReportName  
+           , Object_Retail.ValueData       :: TVarChar AS RetailName
            , Object_RetailReport.ValueData :: TVarChar AS RetailReportName
 
-            , tmp.AreaName, tmp.PartnerTagName
+           /* , tmp.AreaName, tmp.PartnerTagName
             , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
+            */
+
+            , View_Partner_Address.AreaName
+            , View_Partner_Address.PartnerTagName
+            , ObjectString_Address.ValueData AS Address
+            , View_Partner_Address.RegionName
+            , View_Partner_Address.ProvinceName
+            , View_Partner_Address.CityKindName
+            , View_Partner_Address.CityName
 
             , COALESCE (tmp.PartnerId,   Object_Partner.Id)         :: Integer AS PartnerId
             , COALESCE (tmp.PartnerCode, Object_Partner.ObjectCode) :: Integer AS PartnerCode
@@ -930,8 +948,13 @@ BEGIN
 
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = COALESCE (_tmpMI.InfoMoneyId, tmp.InfoMoneyId)
 
+          LEFT JOIN tmpPartnerAddress AS View_Partner_Address ON View_Partner_Address.PartnerId = COALESCE (tmp.PartnerId, Object_Partner.Id)
+          LEFT JOIN ObjectString AS ObjectString_Address
+                                 ON ObjectString_Address.ObjectId = COALESCE (tmp.PartnerId, Object_Partner.Id)
+                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (tmp.PartnerId,   Object_Partner.Id)
+                               ON ObjectLink_Partner_Personal.ObjectId = COALESCE (tmp.PartnerId, Object_Partner.Id)
                               AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
           LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Partner_Personal.ChildObjectId
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
@@ -940,7 +963,7 @@ BEGIN
           LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (tmp.PartnerId,   Object_Partner.Id)
+                               ON ObjectLink_Partner_PersonalTrade.ObjectId = COALESCE (tmp.PartnerId, Object_Partner.Id)
                               AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
           LEFT JOIN Object_Personal_View AS View_PersonalTrade ON View_PersonalTrade.PersonalId = ObjectLink_Partner_PersonalTrade.ChildObjectId
           
@@ -998,4 +1021,6 @@ union
 select 2 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH_old(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185 , inPaidKindId := 3 
 , inTradeMarkId := 0 , inGoodsGroupId := 0 , inInfoMoneyId := 8962 , inIsPartner := 'True' , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inisContract := 'False' , inIsOLAP := 'True' ,  inSession :=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
 
+
+--where partnerid = 5727453
 */
