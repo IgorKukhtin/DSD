@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_Inventory()
+-- Function: gpInsertUpdate_Movement_MobileInventory()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileInventory (Boolean, TVarChar);
 
@@ -28,6 +28,7 @@ BEGIN
                                                  AND MovementLinkObject_Unit.ObjectId = vbUnitId
                     
                WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
+                 AND Movement.OperDate <= CURRENT_DATE + INTERVAL '10 DAY'
                  AND Movement.DescId = zc_Movement_Inventory()
                  AND Movement.StatusId = zc_Enum_Status_UnComplete())
      THEN
@@ -47,7 +48,7 @@ BEGIN
        outMovementId := 0;
      END IF;
      
-     IF COALESCE(outMovementId, 0) = 0
+     IF inisCreateNew = TRUE AND COALESCE(outMovementId, 0) = 0
      THEN
        -- Создали <Документ>
        outMovementId := lpInsertUpdate_Movement_Inventory (ioId                := 0
@@ -71,6 +72,4 @@ $BODY$
  */
 
 -- тест
---
-
-SELECT * FROM  gpInsertUpdate_Movement_MobileInventory (False, zfCalc_UserAdmin());
+-- SELECT * FROM  gpInsertUpdate_Movement_MobileInventory (False, zfCalc_UserAdmin());

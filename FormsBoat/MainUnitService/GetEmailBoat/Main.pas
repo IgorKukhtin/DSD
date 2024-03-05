@@ -59,10 +59,12 @@ type
     spInsertUpdate_Invoice: TdsdStoredProc;
     PanelInfo: TPanel;
     spInsertUpdate_InvoicePdf: TdsdStoredProc;
+    BtnLoadUnscheduled: TBitBtn;
     procedure BtnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
     procedure cbTimerClick(Sender: TObject);
+    procedure BtnLoadUnscheduledClick(Sender: TObject);
   private
     vbEmailKindDesc :String;// Важный параметр - Определяет "Загрузка Прайса" ИЛИ "Загрузка ММО"
 
@@ -70,6 +72,7 @@ type
     vbOnTimer :TDateTime;// время когда сработал таймер
 
     vbArrayMail :TArrayMail; // массив почтовых ящиков
+    FLoadUnscheduled: Boolean;// отправить внепланово
 
     function GetArrayList_Index_byUserName (ArrayList : TArrayMail; UserName, EmailKindDesc : String):Integer;//находит Индекс в массиве по значению Host
 
@@ -151,6 +154,8 @@ begin
   finally
     Ini.free;
   end;
+
+  FLoadUnscheduled := False;
 
   // ЗАХАРДКОДИЛ - Важный параметр - Определяет "Загрузка Счетов"
   vbEmailKindDesc:= 'zc_Enum_EmailKind_Mail_InvoiceKredit';
@@ -311,7 +316,7 @@ begin
      for ii := 0 to Length(vbArrayMail)-1 do
      begin
        // если после предыдущей обработки прошло > onTime МИНУТ
-       if (NOW - vbArrayMail[ii].BeginTime) * 24 * 60 > vbArrayMail[ii].onTime
+       if FLoadUnscheduled or ((NOW - vbArrayMail[ii].BeginTime) * 24 * 60 > vbArrayMail[ii].onTime)
        then try
            PanelHost.Caption:= 'Start Mail (0.1) : '+vbArrayMail[ii].UserName+' ('+vbArrayMail[ii].Host+') for '+FormatDateTime('dd.mm.yyyy hh:mm:ss',StartTime);
            PanelHost.Invalidate;
@@ -650,6 +655,7 @@ begin
        BtnStart.Enabled:= vbIsBegin = false;
        PanelInfo.Caption:= 'Цикл завершен.';
        PanelInfo.Invalidate;
+       FLoadUnscheduled:= false;
        //
        if isErr_exit= false
        then
@@ -662,6 +668,24 @@ begin
      end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.BtnLoadUnscheduledClick(Sender: TObject);
+begin
+  Timer.Enabled := False;
+  try
+    if MessageDlg('Производить внеплановую звгрузку?', mtConfirmation,
+      [mbYes, mbCancel], 0) = mrYes then
+    begin
+      vbOnTimer:= NOW;
+      Timer.Interval := 60;
+      FLoadUnscheduled := True;
+    end else Timer.Interval := 1000 * 10;
+
+  finally
+    cbTimer.Caption:= 'Timer ON ' + FloatToStr(Timer.Interval / 1000) + ' seccc ' + '('+FormatDateTime('dd.mm.yyyy hh:mm:ss',vbOnTimer)+')';
+    Timer.Enabled := True;
+  end;
+end;
+
 procedure TMainForm.BtnStartClick(Sender: TObject);
 begin
      // типа, время когда сработал таймера
