@@ -330,4 +330,17 @@ object DM: TDM
     Left = 1056
     Top = 32
   end
+  object cdsOrderInternal: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 712
+    Top = 240
+    object cdsOrderInternalMovementItemId: TIntegerField
+      FieldName = 'MovementItemId'
+    end
+    object cdsOrderInternalInvNumber_Full: TWideStringField
+      FieldName = 'InvNumber_Full'
+      Size = 255
+    end
+  end
 end

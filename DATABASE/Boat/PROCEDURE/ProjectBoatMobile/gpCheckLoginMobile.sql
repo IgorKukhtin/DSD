@@ -62,7 +62,7 @@ BEGIN
                                        );
 
         
-        IF vbUserId <> zfCalc_UserAdmin() :: Integer
+       /* IF vbUserId <> zfCalc_UserAdmin() :: Integer
         THEN
             -- проверим его устр-во
             -- не забыть написать код
@@ -76,7 +76,7 @@ BEGIN
             -- сохранили свойство <Версия SDK устр-ва>
             PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_User_MobileVesionSDK(), vbUserId, inVesionSDK);
 
-        END IF;
+        END IF;*/
 
     END IF;
 

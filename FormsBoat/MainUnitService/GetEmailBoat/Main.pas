@@ -623,6 +623,7 @@ begin
      isErr_exit:= false;
      Timer.Enabled:= false;
      BtnStart.Enabled:= false;
+     BtnLoadUnscheduled.Enabled:= false;
 
      try
 
@@ -653,6 +654,7 @@ begin
      finally
        Timer.Enabled:= true;
        BtnStart.Enabled:= vbIsBegin = false;
+       BtnLoadUnscheduled.Enabled:= vbIsBegin = false;
        PanelInfo.Caption:= 'Цикл завершен.';
        PanelInfo.Invalidate;
        FLoadUnscheduled:= false;
