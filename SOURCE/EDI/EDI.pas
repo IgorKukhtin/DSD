@@ -581,7 +581,15 @@ begin
                 FIdFTP.Get(List[i], Stream);
                 FileData := Utf8ToAnsi(Stream.DataString);
                 // Начало документа <?xml
-                FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
+                if pos('<?xml', FileData) > 0 then
+                begin
+                  FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
+                end else
+                begin
+                  // Если нет <?xml то берем по <ЕлектроннийДокумент>
+                  FileData := '<?xml version="1.0" encoding="utf-8"?>'#13#10 +
+                              copy(FileData, pos('<ЕлектроннийДокумент>', FileData), MaxInt);
+                end;
                 FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>',
                   FileData) + 21);
                 try

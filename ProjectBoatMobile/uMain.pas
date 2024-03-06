@@ -203,8 +203,8 @@ type
     bMinusAmount: TButton;
     tiProductionUnion: TTabItem;
     Panel4: TPanel;
-    Edit1: TEdit;
-    EditButton1: TEditButton;
+    edOrderInternalBarCode: TEdit;
+    bOrderInternalOkClick: TEditButton;
     Image17: TImage;
     Label17: TLabel;
     ppInventScan: TPopup;
@@ -230,6 +230,11 @@ type
     Image21: TImage;
     Rectangle1: TRectangle;
     Rectangle2: TRectangle;
+    pOrderInternal: TPanel;
+    Label20: TLabel;
+    edInvNumber_Full: TEdit;
+    BindSourceDB6: TBindSourceDB;
+    LinkControlToField6: TLinkControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -295,6 +300,7 @@ type
     procedure pPasswordClick(Sender: TObject);
     procedure pWebServerClick(Sender: TObject);
     procedure bppInventScanCancelClick(Sender: TObject);
+    procedure bOrderInternalOkClickClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -533,6 +539,39 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
+// Открытие Внутреннего заказа
+procedure TfrmMain.bOrderInternalOkClickClick(Sender: TObject);
+  var Code: Integer;
+begin
+
+  if Length(edOrderInternalBarCode.Text) > 12 then
+    edOrderInternalBarCode.Text := Copy(edOrderInternalBarCode.Text, 1, Length(edOrderInternalBarCode.Text) - 1);
+
+  if edOrderInternalBarCode.Text = '' then Exit;
+
+  try
+
+    if COPY(edOrderInternalBarCode.Text, 1, 3) <> '224' then
+    begin
+      ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
+      Exit;
+    end;
+
+    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, 4, 9), Code) then
+    begin
+      ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
+      Exit;
+    end;
+
+    if not DM.DownloadOrderInternal(Code) then Exit;
+
+
+  finally
+    pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
+    edOrderInternalBarCode.Text := '';
+  end;
+end;
+
 // Сборка Узла / Лодки
 procedure TfrmMain.bProductionUnionClick(Sender: TObject);
 begin
@@ -757,6 +796,9 @@ begin
       lCaption.Text := 'Сборка Узла / Лодки';
       bGoodsChoice.Visible := False;
       FDataWedgeBarCode.OnScanResult := OnScanProductionUnion;
+
+      DM.cdsOrderInternal.Close;
+      pOrderInternal.Visible := False;
     end
   end;
 end;
@@ -1082,6 +1124,9 @@ begin
 
     DM.qryInventoryGoods.Close;
     DM.cdsGoods.Close;
+  end else if tcMain.ActiveTab = tiProductionUnion then
+  begin
+    DM.cdsOrderInternal.Close;
   end;
 
   ReturnPriorForm;
@@ -1460,7 +1505,9 @@ end;
 procedure TfrmMain.OnScanProductionUnion(Sender: TObject; AData_String: String);
 begin
 
-//
+  edOrderInternalBarCode.Text := AData_String;
+
+  bOrderInternalOkClickClick(Sender);
 end;
 
 end.

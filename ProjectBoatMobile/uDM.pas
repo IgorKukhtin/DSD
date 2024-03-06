@@ -153,6 +153,9 @@ type
     qryInventoryGoodsAmount: TFloatField;
     fdcUTF16NoCase: TFDSQLiteCollation;
     qryInventoryGoodsDeleteId: TIntegerField;
+    cdsOrderInternal: TClientDataSet;
+    cdsOrderInternalMovementItemId: TIntegerField;
+    cdsOrderInternalInvNumber_Full: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -187,6 +190,10 @@ type
     function DownloadInventoryJournal : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
     function DownloadInventoryList : Boolean;
+
+    function DownloadOrderInternal(AId : Integer) : Boolean;
+
+
 
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
 
@@ -1402,6 +1409,41 @@ begin
   finally
     FreeAndNil(StoredProc);
     cdsInventoryList.EnableControls;
+  end;
+end;
+
+{ начитка внутреннего заказа + производство}
+function TDM.DownloadOrderInternal(AId : Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if AId = 0 then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsOrderInternal.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MovementItem_MobileOrderInternal';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
+    StoredProc.DataSet := cdsOrderInternal;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsOrderInternal.Active;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsOrderInternal.EnableControls;
   end;
 end;
 
