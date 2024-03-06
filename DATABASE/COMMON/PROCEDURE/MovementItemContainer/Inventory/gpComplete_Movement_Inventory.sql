@@ -83,7 +83,7 @@ BEGIN
           , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE)      AS isPartionDate_Unit
           , COALESCE (ObjectBoolean_PartionGoodsKind_From.ValueData, TRUE)  AS isPartionGoodsKind_Unit
           
-          , lfGet_Object_Unit_isPartionCell (Movement.OperDate, MovementLinkObject_From.ObjectId) AS isPartionCell_Unit
+          , lfGet_Object_Unit_isPartionCell (Movement.OperDate + INTERVAL '1 DAY', MovementLinkObject_From.ObjectId) AS isPartionCell_Unit
 
           , COALESCE (ObjectLink_ObjectFrom_Juridical.ChildObjectId, zc_Juridical_Basis()) AS JuridicalId_Basis
           , COALESCE (ObjectLink_ObjectFrom_Business.ChildObjectId, 0)      AS BusinessId
