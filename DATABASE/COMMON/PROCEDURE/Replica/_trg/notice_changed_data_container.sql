@@ -66,6 +66,6 @@ BEGIN
   RETURN current_row;
 
 END;
-END;
+
 $BODY$
   LANGUAGE plpgsql VOLATILE;
