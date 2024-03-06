@@ -81,8 +81,17 @@ BEGIN
                      LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
                                                ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
                                               AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                     LEFT JOIN MovementLinkObject AS MLO_Unit
+                                                  ON MLO_Unit.MovementId = Movement.Id
+                                                 AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAll
+                                               ON MovementBoolean_ClosedAll.MovementId = Movement.Id
+                                              AND MovementBoolean_ClosedAll.DescId     = zc_MovementBoolean_ClosedAll()
                 WHERE (MovementBoolean_Closed.ValueData = TRUE
                     OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                      )
+                  AND (COALESCE (MLO_Unit.ObjectId, 0)     <> COALESCE (inUnitId, 0)
+                    OR MovementBoolean_ClosedAll.ValueData = TRUE
                       )
                )
      --OR vbUserId = 5
@@ -109,8 +118,17 @@ BEGIN
                               LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAuto
                                                         ON MovementBoolean_ClosedAuto.MovementId = Movement.Id
                                                        AND MovementBoolean_ClosedAuto.DescId = zc_MovementBoolean_ClosedAuto()
+                              LEFT JOIN MovementLinkObject AS MLO_Unit
+                                                           ON MLO_Unit.MovementId = Movement.Id
+                                                          AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_ClosedAll
+                                                        ON MovementBoolean_ClosedAll.MovementId = Movement.Id
+                                                       AND MovementBoolean_ClosedAll.DescId     = zc_MovementBoolean_ClosedAll()
                          WHERE (MovementBoolean_Closed.ValueData = TRUE
                              OR (MovementBoolean_ClosedAuto.ValueData = TRUE AND MovementDate_TimeClose.ValueData <= CURRENT_TIMESTAMP)
+                               )
+                           AND (COALESCE (MLO_Unit.ObjectId, 0)     <> COALESCE (inUnitId, 0)
+                             OR MovementBoolean_ClosedAll.ValueData = TRUE
                                )
                          LIMIT 1
                         )
