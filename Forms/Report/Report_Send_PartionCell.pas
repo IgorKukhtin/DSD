@@ -68,6 +68,9 @@ type
     Color_8: TcxGridDBColumn;
     Color_9: TcxGridDBColumn;
     Color_10: TcxGridDBColumn;
+    isPartionCell: TcxGridDBColumn;
+    OperDate_min: TcxGridDBColumn;
+    OperDate_max: TcxGridDBColumn;
   private
     { Private declarations }
   public

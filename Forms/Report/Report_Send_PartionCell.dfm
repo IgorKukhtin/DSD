@@ -180,7 +180,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Width = 45
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1096#1090'.)'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -208,6 +208,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object isPartionCell: TcxGridDBColumn
+            Caption = #1055#1086' '#1071#1095#1077#1081#1082#1072#1084
+            DataBinding.FieldName = 'isPartionCell'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1103#1095#1077#1081#1082#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 60
           end
           object PartionCellName_1: TcxGridDBColumn
             Caption = '1.1 '#1071#1095#1077#1081#1082#1072
@@ -556,6 +565,24 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
+            Width = 55
+          end
+          object OperDate_min: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089
+            DataBinding.FieldName = 'OperDate_min'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object OperDate_max: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1086
+            DataBinding.FieldName = 'OperDate_max'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
         end
@@ -1476,6 +1503,32 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_min'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperDate_max'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inMovementId'
         Value = Null
