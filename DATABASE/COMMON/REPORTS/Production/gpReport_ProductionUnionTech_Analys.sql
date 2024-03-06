@@ -11,22 +11,22 @@ CREATE OR REPLACE FUNCTION gpReport_ProductionUnionTech_Analys(
     IN inisPeriodOrder     Boolean,     --
     IN inSession           TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (MovementId          Integer
-             , MovementItemId      Integer
-             , InvNumber           TVarChar
-             , OperDate            TVarChar --TDateTime
-             , FromId_prod         Integer
-             , FromName_prod       TVarChar
-             , ToId_prod            Integer
-             , ToName_prod          TVarChar
+RETURNS TABLE (MovementId            Integer
+             , MovementItemId        Integer
+             , InvNumber             TVarChar
+             , OperDate              TDateTime --TDateTime
+             , FromId_prod           Integer
+             , FromName_prod         TVarChar
+             , ToId_prod             Integer
+             , ToName_prod           TVarChar
              , MovementId_order      Integer
              , MovementItemId_order  Integer
              , InvNumber_order       TVarChar
-             , OperDate_order        TVarChar --TDateTime
-             , OperDate_cuter  TVarChar
-             , OperDate_real   TVarChar
-             --, OperDate_ContainerMin  TVarChar
-             , OperDate_ContainerMax  TVarChar
+             , OperDate_order        TDateTime --TDateTime
+             , OperDate_cuter        TDateTime
+             , OperDate_real         TDateTime
+           --, OperDate_ContainerMin TVarChar
+             , OperDate_ContainerMax TDateTime
             
              , GoodsId             Integer
              , GoodsCode           Integer
@@ -543,7 +543,7 @@ BEGIN
             , tmp.isPartionDate
             , tmp.isOrderSecond
             , ObjectFloat_TermProduction.ValueData :: TFloat AS TermProduction
-            , CASE WHEN tmp.isPartionDate = TRUE THEN zfConvert_DateToString (tmp.OperDate) ELSE '*' || zfConvert_DateToString (MIDate_PartionGoods.ValueData)  END :: TVarChar AS PartionGoodsDate
+            , CASE WHEN tmp.isPartionDate = TRUE THEN tmp.OperDate ELSE (MIDate_PartionGoods.ValueData)  END :: TDateTime AS PartionGoodsDate
             , (CASE WHEN tmp.isPartionDate = TRUE THEN tmp.OperDate ELSE MIDate_PartionGoods.ValueData END
              + (COALESCE (ObjectFloat_TermProduction.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime AS PartionGoodsDateClose
        FROM tmpAll AS tmp
@@ -678,12 +678,12 @@ BEGIN
        , tmpDataAll AS (SELECT _tmpListMaster.MovementId              AS MovementId
                                , _tmpListMaster.MovementItemId        AS MovementItemId
                                , _tmpListMaster.InvNumber             AS InvNumber
-                               , zfConvert_DateToString (_tmpListMaster.OperDate)       ::TVarChar AS OperDate
-                               --, _tmpListMaster.FromId_prod           AS FromId_prod 
+                               , _tmpListMaster.OperDate  ::TDateTime AS OperDate
+                             --, _tmpListMaster.FromId_prod           AS FromId_prod 
                                , tmpMIContainer.FromId                AS FromId_prod
                                , tmpMIContainer.ToId                  AS ToId_prod
                                , _tmpListMaster.MovementId_order      AS MovementId_order
-                               ,  zfConvert_DateToString (_tmpListMaster.OperDate_order)::TVarChar AS OperDate_order
+                               ,  _tmpListMaster.OperDate_order ::TDateTime AS OperDate_order
                                , _tmpListMaster.InvNumber_order       AS InvNumber_order
                                , _tmpListMaster.MovementItemId_order  AS MovementItemId_order
                                , _tmpListMaster.GoodsId
@@ -768,12 +768,12 @@ BEGIN
             , tmp.MovementId_order
             , tmp.MovementItemId_order
             , tmp.InvNumber_order
-            , tmp.OperDate_order 
+            , tmp.OperDate_order :: TDateTime
           
-            , tmp.OperDate_cuter
-            , tmp.OperDate_real
+            , tmp.OperDate_cuter :: TDateTime
+            , tmp.OperDate_real  :: TDateTime
             --, MIN (tmp.OperDate_ContainerMin) AS OperDate_ContainerMin
-            , MAX (tmp.OperDate_ContainerMax) AS OperDate_ContainerMax 
+            , MAX (tmp.OperDate_ContainerMax) :: TDateTime AS OperDate_ContainerMax 
 
             , tmp.GoodsId
             , tmp.GoodsCode
@@ -961,7 +961,7 @@ BEGIN
     SELECT    tmpData.MovementId
             , tmpData.MovementItemId
             , tmpData.InvNumber :: TVarChar
-            , tmpData.OperDate  :: TVarChar    
+            , tmpData.OperDate  :: TDateTime
             , tmpData.FromId_prod   :: Integer
             , tmpData.FromName_prod :: TVarChar 
             , tmpData.ToId_prod   :: Integer
@@ -970,12 +970,12 @@ BEGIN
             , tmpData.MovementId_order
             , tmpData.MovementItemId_order
             , tmpData.InvNumber_order :: TVarChar
-            , tmpData.OperDate_order  :: TVarChar 
+            , tmpData.OperDate_order  :: TDateTime 
             
-            , zfConvert_DateTimeToString (tmpData.OperDate_cuter)         :: TVarChar AS OperDate_cuter
-            , zfConvert_DateTimeToString (tmpData.OperDate_real)          :: TVarChar AS OperDate_real
-           -- , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
-            , zfConvert_DateTimeToString (tmpData.OperDate_ContainerMax)  :: TVarChar AS OperDate_ContainerMax    --zfConvert_DateToString
+            ,  (tmpData.OperDate_cuter)         :: TDateTime AS OperDate_cuter
+            ,  (tmpData.OperDate_real)          :: TDateTime AS OperDate_real
+         -- ,  (tmpData.OperDate_ContainerMin)  :: TVarChar AS OperDate_ContainerMin    --zfConvert_DateToString
+            , (tmpData.OperDate_ContainerMax)  :: TDateTime AS OperDate_ContainerMax    --zfConvert_DateToString
             , tmpData.GoodsId
             , tmpData.GoodsCode 
             , tmpData.GoodsName       :: TVarChar
