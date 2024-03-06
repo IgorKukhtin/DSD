@@ -780,7 +780,7 @@ end if;
                           , tmpGoods_PackLimit AS (SELECT DISTINCT
                                                           ObjectLink_Goods.ChildObjectId     AS GoodsId
                                                         , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
-                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) + CASE WHEN vbUserId = 5 then 0 else 0 end AS DayLimit
                                                    FROM ObjectBoolean AS ObjectBoolean_PackLimit
                                                         INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
                                                                          AND Object.isErased = FALSE
@@ -834,15 +834,38 @@ end if;
                                                - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                  AS Amount_result
 
+                                                 -- сколько надо на DayLimit ДНЕЙ
+                                               , CASE WHEN inIsByDay = FALSE THEN tmpGoods_PackLimit.DayLimit * _tmpMI_Child.CountForecast ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 0  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 1  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 2  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 3  THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 4  THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 5  THEN 1 * _tmpMI_Child.Plan6 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 6  THEN 1 * _tmpMI_Child.Plan7 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 7  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 8  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 9  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 10 THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 11 THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 12 THEN (tmpGoods_PackLimit.DayLimit - 12) * _tmpMI_Child.CountForecast ELSE 0 END
+                                                 AS Amount_result_DayLimit
+
+                                                 -- остаток + сколько уже распределили
+                                               , _tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult
+                                                 AS Amount_result_old
+                                                 --
+                                               , tmpGoods_PackLimit.GoodsId AS GoodsId_DayLimit
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
-                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_Child.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_Child.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_Child.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.Amount - COALESCE (tmpMI_summ.AmountResult, 0) > 0
@@ -901,6 +924,7 @@ end if;
 
                                              AND (tmpGoods_PackLimit.DayLimit >= vbNumber
                                                OR tmpGoods_PackLimit.GoodsId IS NULL
+                                               OR vbUserId = 5
                                                  )
                                                 )
                                          )
@@ -925,11 +949,20 @@ end if;
                                         -- tmpMI_all.Amount_master
 
                               END AS Amount_result
+
+                            , tmpMI_all.Amount_result_DayLimit
+                            , tmpMI_all.Amount_result_old
+                            , tmpMI_all.GoodsId_DayLimit
                        FROM tmpMI_all
                             INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
                                                      AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
                       ) AS tmpResult
-                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
+                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId
+                   -- если есть условие в днях, проверяем
+                   AND (tmpResult.Amount_result_old + tmpResult.Amount_result <= tmpResult.Amount_result_DayLimit
+                     OR tmpResult.GoodsId_DayLimit IS NULL
+                       )
+                ;
 
                  -- теперь следуюющий
                  vbNumber := vbNumber + 0.1;
@@ -996,7 +1029,7 @@ end if;
                           , tmpGoods_PackLimit AS (SELECT DISTINCT
                                                           ObjectLink_Goods.ChildObjectId     AS GoodsId
                                                         , ObjectLink_GoodsKind.ChildObjectId AS GoodsKindId
-                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0) AS DayLimit
+                                                        , COALESCE (ObjectFloat_PackLimit.ValueData, 0)  + CASE WHEN vbUserId = 0 then 1 else 0 end AS DayLimit
                                                    FROM ObjectBoolean AS ObjectBoolean_PackLimit
                                                         INNER JOIN Object ON Object.Id       = ObjectBoolean_PackLimit.ObjectId
                                                                          AND Object.isErased = FALSE
@@ -1050,15 +1083,38 @@ end if;
                                                - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                  AS Amount_result
 
+                                                 -- сколько надо на DayLimit ДНЕЙ
+                                               , CASE WHEN inIsByDay = FALSE THEN tmpGoods_PackLimit.DayLimit * _tmpMI_Child.CountForecast ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 0  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 1  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 2  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 3  THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 4  THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 5  THEN 1 * _tmpMI_Child.Plan6 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 6  THEN 1 * _tmpMI_Child.Plan7 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 7  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 8  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 9  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 10 THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 11 THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 12 THEN (tmpGoods_PackLimit.DayLimit - 12) * _tmpMI_Child.CountForecast ELSE 0 END
+                                                 AS Amount_result_DayLimit
+
+                                                 -- остаток + сколько уже распределили
+                                               , _tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult
+                                                 AS Amount_result_old
+                                                 --
+                                               , tmpGoods_PackLimit.GoodsId AS GoodsId_DayLimit
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
-                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_Child.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_Child.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_Child.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1113,6 +1169,7 @@ end if;
 
                                              AND (tmpGoods_PackLimit.DayLimit >= vbNumber
                                                OR tmpGoods_PackLimit.GoodsId IS NULL
+                                               OR vbUserId = 5
                                                  )
                                                 )
 
@@ -1137,11 +1194,20 @@ end if;
                                         -- tmpMI_all.Amount_master
 
                               END AS Amount_result
+
+                            , tmpMI_all.Amount_result_DayLimit
+                            , tmpMI_all.Amount_result_old
+                            , tmpMI_all.GoodsId_DayLimit
                        FROM tmpMI_all
                             INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
                                                      AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
                       ) AS tmpResult
-                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
+                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId
+                   -- если есть условие в днях, проверяем
+                   AND (tmpResult.Amount_result_old + tmpResult.Amount_result <= tmpResult.Amount_result_DayLimit
+                     OR tmpResult.GoodsId_DayLimit IS NULL
+                       )
+                ;
 
                  -- теперь следуюющий
                  vbNumber := vbNumber + 0.1;
@@ -1261,15 +1327,39 @@ end if;
                                                - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                  AS Amount_result
 
+                                                 -- сколько надо на DayLimit ДНЕЙ
+                                               , CASE WHEN inIsByDay = FALSE THEN tmpGoods_PackLimit.DayLimit * _tmpMI_Child.CountForecast ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 0  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 1  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 2  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 3  THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 4  THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 5  THEN 1 * _tmpMI_Child.Plan6 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 6  THEN 1 * _tmpMI_Child.Plan7 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 7  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 8  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 9  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 10 THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 11 THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 12 THEN (tmpGoods_PackLimit.DayLimit - 12) * _tmpMI_Child.CountForecast ELSE 0 END
+                                                 AS Amount_result_DayLimit
+
+                                                 -- остаток + сколько уже распределили
+                                               , _tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult
+                                                 AS Amount_result_old
+                                                 --
+                                               , tmpGoods_PackLimit.GoodsId AS GoodsId_DayLimit
+
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
-                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_Child.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_Child.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_Child.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNext - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1323,6 +1413,7 @@ end if;
 
                                              AND (tmpGoods_PackLimit.DayLimit >= vbNumber
                                                OR tmpGoods_PackLimit.GoodsId IS NULL
+                                               OR vbUserId = 5
                                                  )
                                                 )
                                          )
@@ -1346,11 +1437,20 @@ end if;
                                         -- tmpMI_all.Amount_master
 
                               END AS Amount_result
+
+                            , tmpMI_all.Amount_result_DayLimit
+                            , tmpMI_all.Amount_result_old
+                            , tmpMI_all.GoodsId_DayLimit
                        FROM tmpMI_all
                             INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
                                                      AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
                       ) AS tmpResult
-                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
+                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId
+                   -- если есть условие в днях, проверяем
+                   AND (tmpResult.Amount_result_old + tmpResult.Amount_result <= tmpResult.Amount_result_DayLimit
+                     OR tmpResult.GoodsId_DayLimit IS NULL
+                       )
+                ;
 
                  -- теперь следуюющий
                  vbNumber := vbNumber + 0.1;
@@ -1493,15 +1593,39 @@ end if;
                                                - (_tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult)
                                                  AS Amount_result
 
+                                                 -- сколько надо на DayLimit ДНЕЙ
+                                               , CASE WHEN inIsByDay = FALSE THEN tmpGoods_PackLimit.DayLimit * _tmpMI_Child.CountForecast ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 0  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 1  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 2  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 3  THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 4  THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 5  THEN 1 * _tmpMI_Child.Plan6 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 6  THEN 1 * _tmpMI_Child.Plan7 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 7  THEN 1 * _tmpMI_Child.Plan1 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 8  THEN 1 * _tmpMI_Child.Plan2 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 9  THEN 1 * _tmpMI_Child.Plan3 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 10 THEN 1 * _tmpMI_Child.Plan4 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 11 THEN 1 * _tmpMI_Child.Plan5 ELSE 0 END
+                                               + CASE WHEN inIsByDay = TRUE AND tmpGoods_PackLimit.DayLimit > 12 THEN (tmpGoods_PackLimit.DayLimit - 12) * _tmpMI_Child.CountForecast ELSE 0 END
+                                                 AS Amount_result_DayLimit
+
+                                                 -- остаток + сколько уже распределили
+                                               , _tmpMI_Child.RemainsStart + _tmpMI_Child.AmountResult + _tmpMI_Child.AmountSecondResult + _tmpMI_Child.AmountNextResult + _tmpMI_Child.AmountNextSecondResult
+                                                 AS Amount_result_old
+                                                 --
+                                               , tmpGoods_PackLimit.GoodsId AS GoodsId_DayLimit
+
+
                                           FROM _tmpMI_master
                                                INNER JOIN _tmpMI_Child ON _tmpMI_Child.GoodsId_complete     = _tmpMI_master.GoodsId
                                                                       AND _tmpMI_Child.GoodsKindId_complete = _tmpMI_master.GoodsKindId
                                                LEFT JOIN tmpMI_summ  ON tmpMI_summ.GoodsId_master     = _tmpMI_master.GoodsId
                                                                     AND tmpMI_summ.GoodsKindId_master = _tmpMI_master.GoodsKindId
                                                LEFT JOIN _tmpGoods_delik ON _tmpGoods_delik.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_master.GoodsId
-                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_master.GoodsId
-                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_master.GoodsKindId
+                                               LEFT JOIN tmpGoods_PackOrder_noLimit ON tmpGoods_PackOrder_noLimit.GoodsId = _tmpMI_Child.GoodsId
+                                               LEFT JOIN tmpGoods_PackLimit ON tmpGoods_PackLimit.GoodsId     = _tmpMI_Child.GoodsId
+                                                                           AND tmpGoods_PackLimit.GoodsKindId = _tmpMI_Child.GoodsKindId
 
                                           WHERE -- если есть что распределять
                                                 _tmpMI_master.AmountNextSecond - COALESCE (tmpMI_summ.AmountResult, 0) > 0 -- если есть что распределять
@@ -1555,6 +1679,7 @@ end if;
 
                                              AND (tmpGoods_PackLimit.DayLimit >= vbNumber
                                                OR tmpGoods_PackLimit.GoodsId IS NULL
+                                               OR vbUserId = 5
                                                  )
                                                 )
                                          )
@@ -1578,11 +1703,20 @@ end if;
                                         -- tmpMI_all.Amount_master
 
                               END AS Amount_result
+
+                            , tmpMI_all.Amount_result_DayLimit
+                            , tmpMI_all.Amount_result_old
+                            , tmpMI_all.GoodsId_DayLimit
                        FROM tmpMI_all
                             INNER JOIN tmpMI_all_summ ON tmpMI_all_summ.GoodsId_master     = tmpMI_all.GoodsId_master
                                                      AND tmpMI_all_summ.GoodsKindId_master = tmpMI_all.GoodsKindId_master
                       ) AS tmpResult
-                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId;
+                 WHERE tmpResult.MovementItemId = _tmpMI_Child.MovementItemId
+                   -- если есть условие в днях, проверяем
+                   AND (tmpResult.Amount_result_old + tmpResult.Amount_result <= tmpResult.Amount_result_DayLimit
+                     OR tmpResult.GoodsId_DayLimit IS NULL
+                       )
+                ;
 
                  -- теперь следуюющий
                  vbNumber := vbNumber + 0.1;
