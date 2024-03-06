@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1040#1074#1090#1086'-'#1079#1072#1075#1088#1091#1079#1082#1072' '#1087#1086#1095#1090#1099
-  ClientHeight = 396
+  ClientHeight = 408
   ClientWidth = 984
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,9 +15,9 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object BtnStart: TBitBtn
-    Left = 250
-    Top = 353
-    Width = 75
+    Left = 216
+    Top = 344
+    Width = 109
     Height = 25
     Caption = 'Start !!!'
     TabOrder = 0
@@ -103,7 +103,7 @@ object MainForm: TMainForm
   end
   object cbTimer: TCheckBox
     Left = 344
-    Top = 357
+    Top = 348
     Width = 400
     Height = 17
     Caption = 'Timer ON '
@@ -137,6 +137,15 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 7
+  end
+  object BtnLoadUnscheduled: TBitBtn
+    Left = 216
+    Top = 375
+    Width = 109
+    Height = 25
+    Caption = 'Losd unscheduled'
+    TabOrder = 8
+    OnClick = BtnLoadUnscheduledClick
   end
   object IdMessage: TIdMessage
     AttachmentEncoding = 'UUE'

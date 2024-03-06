@@ -216,10 +216,20 @@ type
     lGoodsSelect: TLabel;
     bppInventScanClose: TSpeedButton;
     Image20: TImage;
-    Panel5: TPanel;
-    Panel6: TPanel;
-    Panel7: TPanel;
-    Panel8: TPanel;
+    pPassword: TPanel;
+    ppWebServer: TPopup;
+    pWebServerTest: TPanel;
+    Label18: TLabel;
+    pWebServerMain: TPanel;
+    Label19: TLabel;
+    lInventScanBtn: TLayout;
+    lInventScanPartNumber: TLayout;
+    lInventScanАmount: TLayout;
+    Layout14: TLayout;
+    bppInventScanCancel: TSpeedButton;
+    Image21: TImage;
+    Rectangle1: TRectangle;
+    Rectangle2: TRectangle;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -282,13 +292,17 @@ type
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure bppInventScanCloseClick(Sender: TObject);
+    procedure pPasswordClick(Sender: TObject);
+    procedure pWebServerClick(Sender: TObject);
+    procedure bppInventScanCancelClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
     FCameraScanBarCode: TCameraComponent;
     FObr: TFObr;
-    FWebServer: string;
+    FisTestWebServer: boolean;
+    FPasswordLabelClick: Integer;
     FINIFile: string;
     FPermissionState: boolean;
     FisZebraScaner: boolean;
@@ -305,6 +319,8 @@ type
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
     procedure ConfppInventScanClose(const AResult: TModalResult);
+    procedure ConfppInventScanCancel(const AResult: TModalResult);
+
     procedure ShowppInventScan(AGoodsId: Integer);
 
     {$IFDEF ANDROID}
@@ -372,6 +388,7 @@ begin
 
   FormatSettings.DecimalSeparator := '.';
   FisBecomeForeground := False;
+  FPasswordLabelClick := 0;
 
   SearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
@@ -392,12 +409,17 @@ begin
   SettingsFile := TIniFile.Create(FINIFile);
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
-    FWebServer := SettingsFile.ReadString('LOGIN', 'WebServer', WebServer);
+    FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
     FDateDownloadGoods := SettingsFile.ReadDateTime('Params', 'DateDownloadGoods', IncDay(Now, - 2));
   finally
     FreeAndNil(SettingsFile);
   end;
+
+  if FisTestWebServer then
+    PasswordLabel.Text := 'Пароль (тестовый сервер)'
+  else PasswordLabel.Text := 'Пароль';
+
   FPermissionState := True;
   // установка вертикального положения экрана телефона
   {$IFDEF ANDROID}
@@ -498,13 +520,7 @@ end;
 
 procedure TfrmMain.bAddAmountClick(Sender: TObject);
 begin
-  if tcMain.ActiveTab = tiInventoryScan then
-  begin
-    DM.cdsInventoryGoods.Edit;
-    DM.cdsInventoryGoodsAmount.AsFloat := DM.cdsInventoryGoodsAmount.AsFloat + StrToFloatDef(lAmount.Text, 0);
-    DM.cdsInventoryGoods.Post;
-    DM.SaveInventoryGoods;
-  end;
+  if tcMain.ActiveTab = tiInventoryScan then DM.UpdateInventoryGoods(DM.qryInventoryGoodsAmount.AsFloat + StrToFloatDef(lAmount.Text, 0));
 
   ppEnterAmount.IsOpen := false;
 end;
@@ -512,13 +528,7 @@ end;
 // отнимание количества товаров от введенных ранее
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
 begin
-  if tcMain.ActiveTab = tiInventoryScan then
-  begin
-    DM.cdsInventoryGoods.Edit;
-    DM.cdsInventoryGoodsAmount.AsFloat := DM.cdsInventoryGoodsAmount.AsFloat - StrToFloatDef(lAmount.Text, 0);
-    DM.cdsInventoryGoods.Post;
-    DM.SaveInventoryGoods;
-  end;
+  if tcMain.ActiveTab = tiInventoryScan then DM.UpdateInventoryGoods(DM.qryInventoryGoodsAmount.AsFloat - StrToFloatDef(lAmount.Text, 0));
 
   ppEnterAmount.IsOpen := false;
 end;
@@ -532,13 +542,7 @@ end;
 // присвоение количества товаров
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
-  if tcMain.ActiveTab = tiInventoryScan then
-  begin
-    DM.cdsInventoryGoods.Edit;
-    DM.cdsInventoryGoodsAmount.AsFloat := StrToFloatDef(lAmount.Text, 0);
-    DM.cdsInventoryGoods.Post;
-    DM.SaveInventoryGoods;
-  end;
+  if tcMain.ActiveTab = tiInventoryScan then DM.UpdateInventoryGoods(StrToFloatDef(lAmount.Text, 0));
 
   ppEnterAmount.IsOpen := false;
 end;
@@ -554,16 +558,22 @@ begin
 end;
 {$ENDIF}
 
+procedure TfrmMain.bppInventScanCancelClick(Sender: TObject);
+begin
+  TDialogService.MessageDialog('Не cохранять выбранную комплектующую?',
+    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanCancel)
+end;
+
 procedure TfrmMain.bppInventScanCloseClick(Sender: TObject);
   var nAmount: Currency;
 begin
 
   if not TryStrToCurr(edInventScanАmount.Text, nAmount) then nAmount := 1;
 
-  if Panel6.Visible and (edInventScanPartNumber.Text = '') then
+  if lInventScanPartNumber.Visible and (edInventScanPartNumber.Text = '') then
     TDialogService.MessageDialog('Не заполнен <S/N>.'#13#13'Сохранить ?',
       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
-  else if Panel5.Visible and (nAmount = 1) then
+  else if lInventScanАmount.Visible and (nAmount = 1) then
     TDialogService.MessageDialog('Не изменено количество.'#13#13'Сохранить ?',
       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
   else
@@ -574,7 +584,7 @@ begin
     Panel3.Enabled := True;
     lwInventoryScan.Enabled := True;
 
-    DM.AddInventoryGoods(FGoodsID, edInventScanАmount.Text, edInventScanPartNumber.Text);
+    DM.AddInventoryGoods(FGoodsID, nAmount, edInventScanPartNumber.Text);
   end;
 end;
 
@@ -738,7 +748,7 @@ begin
     if tcMain.ActiveTab = tiInventoryScan then
     begin
       lCaption.Text := 'Вставка товара в инвентаризацию';
-      DM.InitInventoryGoods;
+      DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
     end
     else
@@ -910,17 +920,24 @@ begin
   FGoodsId := AGoodsId;
   edInventScanBarCode.Text := '';
   edInventScanPartNumber.Text := '';
-  edInventScanАmount.Text := '1';
+  edInventScanАmount.Text := '';
 
-  Panel6.Visible := RadioButtonInvScan2.IsChecked or RadioButtonInvScan4.IsChecked;
-  Panel5.Visible := RadioButtonInvScan3.IsChecked or RadioButtonInvScan4.IsChecked;
+  lInventScanPartNumber.Visible := RadioButtonInvScan2.IsChecked or RadioButtonInvScan4.IsChecked;
+  lInventScanАmount.Visible := RadioButtonInvScan3.IsChecked or RadioButtonInvScan4.IsChecked;
 
-  if Panel5.Visible and Panel6.Visible then
-    ppInventScan.Height := Panel5.Height + Panel6.Height
-  else if Panel5.Visible then ppInventScan.Height := Panel5.Height
-  else if Panel6.Visible then ppInventScan.Height := Panel6.Height;
+  if lInventScanАmount.Visible and lInventScanPartNumber.Visible then
+    ppInventScan.Height := lInventScanАmount.Height + lInventScanPartNumber.Height
+  else if lInventScanАmount.Visible then ppInventScan.Height := lInventScanАmount.Height
+  else if lInventScanPartNumber.Visible then ppInventScan.Height := lInventScanPartNumber.Height;
 
+  ppInventScan.Height := ppInventScan.Height + lInventScanBtn.Height + 6;
+
+  ppInventScan.Position.Y := pBack.Height + 10;
+  ppInventScan.Position.X := (pBack.Width - ppInventScan.Width) / 2;
   ppInventScan.Visible := True;
+
+  if lInventScanPartNumber.Visible then edInventScanPartNumber.SetFocus
+  else edInventScanАmount.SetFocus;
 end;
 
 // Поиск товара для вставки в инвентаризацию по введеному коду
@@ -948,7 +965,7 @@ begin
       if DM.cdsGoods.RecordCount = 1 then
       begin
         if RadioButtonInvScan1.IsChecked then
-          DM.AddInventoryGoods(DM.cdsGoodsId.AsInteger, '1', '')
+          DM.AddInventoryGoods(DM.cdsGoodsId.AsInteger, 1, '')
         else ShowppInventScan(DM.cdsGoodsId.AsInteger);
       end else if DM.cdsGoods.RecordCount > 1 then
       begin
@@ -962,7 +979,7 @@ begin
       DM.cdsGoods.Filter := '';
     end;
   finally
-    edInventScanBarCode.Text;
+    edInventScanBarCode.Text := '';
   end;
 end;
 
@@ -984,7 +1001,7 @@ begin
   begin
     if RadioButtonInvScan1.IsChecked then
     begin
-      DM.AddInventoryGoods(DM.cdsGoodsListId.AsInteger, '1', '');
+      DM.AddInventoryGoods(DM.cdsGoodsListId.AsInteger, 1, '');
     end else ShowppInventScan(DM.cdsGoodsListId.AsInteger);
   end;
 end;
@@ -1057,13 +1074,13 @@ begin
   end
   else if (tcMain.ActiveTab = tiInventoryScan)  then
   begin
-    if DM.cdsInventoryGoods.RecordCount > 0 then
+    if DM.qryInventoryGoods.RecordCount > 0 then
     begin
       TDialogService.MessageDialog('Отправить введенные в инвентаризацию дааные на сервер?', TMsgDlgType.mtWarning,
         [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackInventoryScan);
     end;
 
-    DM.cdsInventoryGoods.Close;
+    DM.qryInventoryGoods.Close;
     DM.cdsGoods.Close;
   end;
 
@@ -1140,6 +1157,9 @@ begin
       if pProgress.Visible then
         exit
       else
+      if ppWebServer.IsOpen then
+        ppWebServer.IsOpen := false
+      else
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
       else
@@ -1178,7 +1198,9 @@ begin
     exit;
   end;
 
-  if gc_WebService = '' then gc_WebService := FWebServer;
+  if FisTestWebServer then
+    gc_WebService := WebServerTest
+  else gc_WebService := WebServer;
 
   Wait(True);
   try
@@ -1192,6 +1214,7 @@ begin
     end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
 
     if Assigned(gc_User) then lUser.Text := gc_User.Login;
+    if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
 
     Wait(False);
 
@@ -1223,6 +1246,7 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
+  DM.LoadGoods;
 end;
 
 procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
@@ -1264,6 +1288,7 @@ begin
 end;
 
 procedure TfrmMain.ConfppInventScanClose(const AResult: TModalResult);
+  var nAmount: Currency;
 begin
   if AResult = mrYes then
   begin
@@ -1273,7 +1298,21 @@ begin
     Panel3.Enabled := True;
     lwInventoryScan.Enabled := True;
 
-    DM.AddInventoryGoods(FGoodsID, edInventScanАmount.Text, edInventScanPartNumber.Text);
+    if not TryStrToCurr(edInventScanАmount.Text, nAmount) then nAmount := 1;
+
+    DM.AddInventoryGoods(FGoodsID, nAmount, edInventScanPartNumber.Text);
+  end;
+end;
+
+procedure TfrmMain.ConfppInventScanCancel(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    ppInventScan.Visible := false;
+    sbScan.Enabled := True;
+    sbBack.Enabled := True;
+    Panel3.Enabled := True;
+    lwInventoryScan.Enabled := True;
   end;
 end;
 
@@ -1282,16 +1321,16 @@ procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
   const ItemObject: TListItemDrawable);
 begin
   if Assigned(ItemObject) and (ItemObject.Name = 'DeleteButton') then
-    TDialogService.MessageDialog('Удалить товар "' + DM.cdsInventoryGoodsGoodsName.AsString +
+    TDialogService.MessageDialog('Удалить товар "' + DM.qryInventoryGoodsGoodsName.AsString +
          '" подготовленный к вставке в инвентаризацию ?',
          TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
   else
   // вызов формы для редактирования количества выбранного товара
   if Assigned(ItemObject) and ((ItemObject.Name = 'Amount') or (ItemObject.Name = 'MeasureName')) and
-     not DM.cdsInventoryGoods.IsEmpty and (DM.cdsInventoryGoodsisSend.AsBoolean = False) then
+     not DM.qryInventoryGoods.IsEmpty then
   begin
     lAmount.Text := '0';
-    lMeasure.Text := DM.cdsInventoryGoodsMeasureName.AsString;
+    lMeasure.Text := DM.qryInventoryGoodsMeasureName.AsString;
 
     ppEnterAmount.IsOpen := true;
   end;
@@ -1332,6 +1371,7 @@ begin
       lUser.Text := '';
       ErrorMessage := TAuthentication.CheckLoginCode(TStorageFactory.GetStorage, Password, gc_User);
       if Assigned(gc_User) then lUser.Text := gc_User.Login;
+      if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
 
       Wait(False);
 
@@ -1357,13 +1397,54 @@ begin
   finally
     if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then
       ReturnPriorForm
-    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then SwitchToForm(tiMain, nil);
+    else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then
+    begin
+      SwitchToForm(tiMain, nil);
+      DM.LoadGoods;
+    end;
   end;
 end;
 
-procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);
+// клик по паролю для изменения сервера
+procedure TfrmMain.pPasswordClick(Sender: TObject);
 begin
-  SearshBox(lwGoods).Text := Copy(AData_String, 1, Length(AData_String) - 1);
+  Inc(FPasswordLabelClick);
+  if FPasswordLabelClick = 3 then
+  begin
+    FPasswordLabelClick := 0;
+    if LoginEdit.Text = 'Админ' then ppWebServer.IsOpen := True;
+  end;
+end;
+
+procedure TfrmMain.pWebServerClick(Sender: TObject);
+  var SettingsFile : TIniFile;
+begin
+  ppWebServer.IsOpen := False;
+  FPasswordLabelClick := 0;
+
+  FisTestWebServer := TPanel(Sender).Tag = 1;
+
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    SettingsFile.WriteBool('Params', 'isTestWebServer', FisTestWebServer);
+    FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+
+  if FisTestWebServer then
+    PasswordLabel.Text := 'Пароль (тестовый сервер)'
+  else PasswordLabel.Text := 'Пароль'
+end;
+
+procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);
+  var S: String;
+begin
+  S := AData_String;
+  while COPY(S, 1, 1) = '0' do S := COPY(S, 2, Length(S));
+
+  SearshBox(lwGoods).Text := S;
 end;
 
 // Обрабатываем отсканированный товар для инвентаризации

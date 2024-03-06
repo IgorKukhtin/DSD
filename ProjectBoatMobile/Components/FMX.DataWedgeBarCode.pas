@@ -184,17 +184,21 @@ end;
 
 {$IFDEF ANDROID}
 procedure TDataWedgeBarCode.BroadcastReceiverOnReceive(csContext: JContext; csIntent: JIntent);
+  var cDATA_STRING, cLABEL_TYPE: String;
 begin
   if csIntent = Nil then Exit;
+
+  cDATA_STRING := JStringToString(csIntent.getStringExtra(StringToJString(DATA_STRING_TAG)));
+  cLABEL_TYPE := JStringToString(csIntent.getStringExtra(StringToJString(LABEL_TYPE_TAG)));
+
+  if (POS('EAN', cLABEL_TYPE) > 0) or (POS('UPCA', cLABEL_TYPE) > 0) then cDATA_STRING := Copy(cDATA_STRING, 1, Length(cDATA_STRING) - 1);
 
   if Assigned(FOnScanResultDetails) then
       FOnScanResultDetails(Self, JStringToString(csIntent.getAction),
                                  JStringToString(csIntent.getStringExtra(StringToJString(SOURCE_TAG))),
-                                 JStringToString(csIntent.getStringExtra(StringToJString(LABEL_TYPE_TAG))),
-                                 JStringToString(csIntent.getStringExtra(StringToJString(DATA_STRING_TAG))));
+                                 cLABEL_TYPE, cDATA_STRING);
 
-  if Assigned(FOnScanResult) then
-      FOnScanResult(Self, JStringToString(csIntent.getStringExtra(StringToJString(DATA_STRING_TAG))));
+  if Assigned(FOnScanResult) then FonScanResult(Self, cDATA_STRING);
 
 end;
 {$ENDIF}

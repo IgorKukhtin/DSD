@@ -70,5 +70,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpGet_Movement_MobileInventory (inMovementId := 2741, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_MobileInventory (inMovementId := 2741, inSession:= zfCalc_UserAdmin())

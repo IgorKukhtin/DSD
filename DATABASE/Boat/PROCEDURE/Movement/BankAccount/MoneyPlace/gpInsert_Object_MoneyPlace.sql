@@ -1,5 +1,6 @@
 --
 DROP FUNCTION IF EXISTS gpInsert_Object_MoneyPlace (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Object_MoneyPlace (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Object_MoneyPlace(
     INOUT ioId              Integer,       -- ключ объекта <Бренд>
@@ -13,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsert_Object_MoneyPlace(
     INOUT ioCityName        TVarChar,
     INOUT ioCountryName     TVarChar,
     INOUT ioTaxKindId       Integer ,
+    INOUT ioInfoMoneyId     Integer ,
+      OUT outInfoMoneyName  TVarChar,
        IN inAmountIn        TFloat  ,
        IN inAmountOut       TFloat  ,
        IN inSession         TVarChar       -- сессия пользователя
@@ -112,11 +115,13 @@ BEGIN
                                         , inDayCalendar  := 0                    :: TFloat
                                         , inDayBank      := 0                    :: TFloat
                                         , inBankId       := 0                    :: Integer
-                                        , inInfoMoneyId  := zc_Enum_InfoMoney_10101()  ::Integer
+                                        , inInfoMoneyId  := COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_10101())  ::Integer
                                         , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
                                         , inSession      := (-1 * vbUserId)      :: TVarChar
                                          ) AS tmp;
+        --
+        outInfoMoneyName := (SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_10101())::Integer);
    END IF;
 
    --
@@ -147,13 +152,16 @@ BEGIN
                                         , inDayCalendar  := 0                    :: TFloat
                                         , inDayBank      := 0                    :: TFloat
                                         , inBankId       := 0                    :: Integer
-                                        , inInfoMoneyId  := zc_Enum_InfoMoney_30101()  ::Integer
+                                        , inInfoMoneyId  := COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_30101())  ::Integer
                                         , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
                                         , inSession      := (-1 * vbUserId)      :: TVarChar
                                         ) AS tmp;
+        --
+        outInfoMoneyName := (SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_30101())::Integer);
    END IF;
 
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

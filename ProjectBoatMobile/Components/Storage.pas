@@ -338,7 +338,7 @@ begin
                     10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                     10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
                   else
-                    raise E;
+                    raise Exception.Create(E.Message);
                   end;
                 End;
               End

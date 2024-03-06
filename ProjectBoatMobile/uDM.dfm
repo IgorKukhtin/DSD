@@ -1,13 +1,13 @@
 object DM: TDM
   OnCreate = DataModuleCreate
   Height = 643
-  Width = 1018
+  Width = 1202
   PixelsPerInch = 144
   object cdsInventoryJournal: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 128
-    Top = 144
+    Top = 240
     object cdsInventoryJournalId: TIntegerField
       FieldName = 'Id'
     end
@@ -45,8 +45,8 @@ object DM: TDM
   object cdsInventory: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 312
-    Top = 152
+    Left = 320
+    Top = 240
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
     end
@@ -83,8 +83,8 @@ object DM: TDM
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 480
-    Top = 160
+    Left = 496
+    Top = 240
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
     end
@@ -138,61 +138,11 @@ object DM: TDM
       FieldName = 'Summa'
     end
   end
-  object cdsInventoryGoods: TClientDataSet
-    Aggregates = <>
-    FieldDefs = <>
-    IndexDefs = <>
-    Params = <>
-    StoreDefs = True
-    Left = 656
-    Top = 160
-    object cdsInventoryGoodsMovementId: TIntegerField
-      FieldName = 'MovementId'
-    end
-    object cdsInventoryGoodsGoodsId: TIntegerField
-      FieldName = 'GoodsId'
-    end
-    object cdsInventoryGoodsGoodsCode: TIntegerField
-      FieldName = 'GoodsCode'
-    end
-    object cdsInventoryGoodsGoodsName: TWideStringField
-      FieldName = 'GoodsName'
-      Size = 255
-    end
-    object cdsInventoryGoodsArticle: TWideStringField
-      FieldName = 'Article'
-      Size = 40
-    end
-    object cdsInventoryGoodsEAN: TWideStringField
-      FieldName = 'EAN'
-      Size = 40
-    end
-    object cdsInventoryGoodsGoodsGroupName: TWideStringField
-      FieldName = 'GoodsGroupName'
-      Size = 255
-    end
-    object cdsInventoryGoodsMeasureName: TWideStringField
-      FieldName = 'MeasureName'
-    end
-    object cdsInventoryGoodsPartNumber: TWideStringField
-      FieldName = 'PartNumber'
-      Size = 255
-    end
-    object cdsInventoryGoodsAmount: TFloatField
-      FieldName = 'Amount'
-    end
-    object cdsInventoryGoodsisSend: TBooleanField
-      FieldName = 'isSend'
-    end
-    object cdsInventoryGoodsDeleteId: TIntegerField
-      FieldName = 'DeleteId'
-    end
-  end
   object cdsGoods: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 120
-    Top = 264
+    Left = 112
+    Top = 352
     object cdsGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -224,7 +174,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 312
-    Top = 264
+    Top = 352
     object cdsGoodsListId: TIntegerField
       FieldName = 'Id'
     end
@@ -263,7 +213,7 @@ object DM: TDM
     Top = 32
   end
   object fdDriverLink: TFDPhysSQLiteDriverLink
-    Left = 456
+    Left = 680
     Top = 32
   end
   object fdfAnsiUpperCase: TFDSQLiteFunction
@@ -271,7 +221,113 @@ object DM: TDM
     FunctionName = 'AnsiUpperCase'
     ArgumentsCount = 1
     OnCalculate = fdfAnsiUpperCaseCalculate
-    Left = 608
+    Left = 856
+    Top = 32
+  end
+  object tblInventoryGoods: TFDTable
+    Connection = conMain
+    TableName = 'InventoryGoods'
+    Left = 116
+    Top = 148
+    object tblInventoryGoodsMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object tblInventoryGoodsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tblInventoryGoodsPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 30
+    end
+    object tblInventoryGoodsAmount: TFloatField
+      FieldName = 'Amount'
+    end
+  end
+  object qryMeta: TFDMetaInfoQuery
+    Connection = conMain
+    MetaInfoKind = mkCatalogs
+    Left = 420
+    Top = 32
+  end
+  object qryMeta2: TFDMetaInfoQuery
+    Connection = conMain
+    MetaInfoKind = mkCatalogs
+    Left = 522
+    Top = 35
+  end
+  object qryInventoryGoods: TFDQuery
+    OnCalcFields = qryInventoryGoodsCalcFields
+    Connection = conMain
+    SQL.Strings = (
+      'SELECT IG.MovementId'
+      '     , IG.GoodsId'
+      '     , G.Code          AS GoodsCode'
+      '     , G.Name          AS GoodsName'
+      '     , G.Article'
+      '     , G.EAN'
+      '     , G.GoodsGroupName'
+      '     , G.MeasureName'
+      '     , IG.PartNumber'
+      '     , IG.Amount'
+      ''
+      'FROM InventoryGoods AS IG'
+      ''
+      '     LEFT JOIN Goods G ON G.Id = IG.GoodsId'
+      ''
+      'WHERE IG.MovementId = :MovementId')
+    Left = 100
+    Top = 485
+    ParamData = <
+      item
+        Name = 'MOVEMENTID'
+        ParamType = ptInput
+      end>
+    object qryInventoryGoodsMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object qryInventoryGoodsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object qryInventoryGoodsGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object qryInventoryGoodsGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object qryInventoryGoodsArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object qryInventoryGoodsEAN: TWideStringField
+      FieldName = 'EAN'
+      Size = 40
+    end
+    object qryInventoryGoodsGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object qryInventoryGoodsMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object qryInventoryGoodsPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object qryInventoryGoodsAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object qryInventoryGoodsDeleteId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'DeleteId'
+      Calculated = True
+    end
+  end
+  object fdcUTF16NoCase: TFDSQLiteCollation
+    DriverLink = fdDriverLink
+    CollationName = 'UTF16NoCase'
+    Flags = [sfIgnoreCase]
+    Left = 1056
     Top = 32
   end
 end

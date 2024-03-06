@@ -10,7 +10,8 @@ uses
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Phys.SQLiteWrapper.Stat, FireDAC.FMXUI.Wait, FireDAC.Comp.Client,
   FireDAC.Comp.UI, FireDAC.Stan.Param, FireDAC.DApt, Datasnap.Provider,
-  FMX.Forms, FireDAC.Phys.SQLiteWrapper
+  FMX.Forms, FireDAC.Phys.SQLiteWrapper, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.Comp.DataSet, System.Generics.Collections
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
@@ -46,6 +47,30 @@ type
   protected
     procedure Execute; override;
   end;
+
+  { классы для создания БД на основе TFDTable модуля TDM }
+  TDataSets = TObjectList<TFDTable>;
+
+  TStructure = Class(TObject)
+  private
+    FDataSets: TDataSets;
+    FLastDataSet: TFDTable;
+    FIndexes: TStringList;
+    function GetDataSet(const ATableName: String): TFDTable;
+    function GetIndex(const AIndex: integer): string;
+    function GetIndexCount: integer;
+    procedure MakeIndex(ATable: TFDTable);
+    procedure MakeDopIndex(ATable: TFDTable);
+  public
+    Constructor Create;
+    Destructor Destroy; override;
+    procedure OpenDS(ATable: TFDTable);
+    procedure AddTable(ATable: TFDTable);
+    property DataSets: TDataSets read FDataSets;
+    property DataSet[const ATableName: String]: TFDTable read GetDataSet;
+    property Indexes[const AIndex: integer]: string read GetIndex;
+    property IndexCount: integer read GetIndexCount;
+  End;
 
   TDM = class(TDataModule)
     cdsInventoryJournal: TClientDataSet;
@@ -85,7 +110,6 @@ type
     cdsInventoryListAmountRemains_curr: TFloatField;
     cdsInventoryListPrice: TFloatField;
     cdsInventoryListSumma: TFloatField;
-    cdsInventoryGoods: TClientDataSet;
     cdsInventoryUnitId: TIntegerField;
     cdsGoods: TClientDataSet;
     cdsGoodsId: TIntegerField;
@@ -95,19 +119,7 @@ type
     cdsGoodsEAN: TWideStringField;
     cdsGoodsGoodsGroupName: TWideStringField;
     cdsGoodsMeasureName: TWideStringField;
-    cdsInventoryGoodsGoodsId: TIntegerField;
-    cdsInventoryGoodsGoodsCode: TIntegerField;
-    cdsInventoryGoodsGoodsName: TWideStringField;
-    cdsInventoryGoodsArticle: TWideStringField;
-    cdsInventoryGoodsEAN: TWideStringField;
-    cdsInventoryGoodsGoodsGroupName: TWideStringField;
-    cdsInventoryGoodsMeasureName: TWideStringField;
-    cdsInventoryGoodsAmount: TFloatField;
-    cdsInventoryGoodsPartNumber: TWideStringField;
     cdsInventoryListPartNumber: TWideStringField;
-    cdsInventoryGoodsMovementId: TIntegerField;
-    cdsInventoryGoodsisSend: TBooleanField;
-    cdsInventoryGoodsDeleteId: TIntegerField;
     cdsGoodsList: TClientDataSet;
     cdsGoodsListId: TIntegerField;
     cdsGoodsListCode: TIntegerField;
@@ -121,18 +133,45 @@ type
     fdDriverLink: TFDPhysSQLiteDriverLink;
     fdfAnsiUpperCase: TFDSQLiteFunction;
     cdsGoodsisErased: TBooleanField;
+    tblInventoryGoods: TFDTable;
+    tblInventoryGoodsGoodsId: TIntegerField;
+    tblInventoryGoodsAmount: TFloatField;
+    tblInventoryGoodsPartNumber: TWideStringField;
+    tblInventoryGoodsMovementId: TIntegerField;
+    qryMeta: TFDMetaInfoQuery;
+    qryMeta2: TFDMetaInfoQuery;
+    qryInventoryGoods: TFDQuery;
+    qryInventoryGoodsMovementId: TIntegerField;
+    qryInventoryGoodsGoodsId: TIntegerField;
+    qryInventoryGoodsGoodsCode: TIntegerField;
+    qryInventoryGoodsGoodsName: TWideStringField;
+    qryInventoryGoodsArticle: TWideStringField;
+    qryInventoryGoodsEAN: TWideStringField;
+    qryInventoryGoodsGoodsGroupName: TWideStringField;
+    qryInventoryGoodsMeasureName: TWideStringField;
+    qryInventoryGoodsPartNumber: TWideStringField;
+    qryInventoryGoodsAmount: TFloatField;
+    fdcUTF16NoCase: TFDSQLiteCollation;
+    qryInventoryGoodsDeleteId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
+    procedure qryInventoryGoodsCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
-    FInventoryGoodsFile: String;
+    FConnected: Boolean;
+
     FFilterGoods: String;
     FFilterGoodsEAN: Boolean;
     FLimitList : Integer;
+
+    procedure InitStructure;
   public
     { Public declarations }
     function Connect: Boolean;
+    function CheckStructure: Boolean;
+    procedure CreateIndexes;
+
     procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
     procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
     procedure LoadSQLite(ADst: TClientDataSet; ASQL: String);
@@ -156,15 +195,16 @@ type
 
     procedure LoadGoods;
 
-    procedure InitInventoryGoods;
-    procedure SaveInventoryGoods;
-    procedure AddInventoryGoods(AGoodsId : Integer; AAmount, APartNumber : String);
+    procedure OpenInventoryGoods;
+    procedure AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber : String);
+    procedure UpdateInventoryGoods(AAmount: Currency);
     procedure DeleteInventoryGoods;
     function isInventoryGoodsSend : Boolean;
 
     procedure UploadAllData;
     procedure UploadInventoryGoods;
 
+    property Connected: Boolean read FConnected;
     property FilterGoods : String read FFilterGoods write FFilterGoods;
     property FilterGoodsEAN : Boolean read FFilterGoodsEAN write FFilterGoodsEAN default False;
     property LimitList : Integer read FLimitList write FLimitList default 300;
@@ -173,6 +213,7 @@ type
 
 var
   DM: TDM;
+  Structure: TStructure;
   ProgressThread : TProgressThread;
   WaitThread : TWaitThread;
 
@@ -409,14 +450,14 @@ end;
 function TWaitThread.UploadInventoryGoods: string;
 var
   StoredProc : TdsdStoredProc;
-  CDS: TClientDataSet;
+  FDQuery: TFDQuery;
 begin
 
   StoredProc := TdsdStoredProc.Create(nil);
+  FDQuery := TFDQuery.Create(nil);
   try
     StoredProc.OutputType := otResult;
 
-    CDS := TClientDataSet.Create(Nil);
     StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_MobileInventory';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
@@ -426,33 +467,24 @@ begin
     StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, '');
 
     try
-      CDS.LoadFromFile(DM.FInventoryGoodsFile);
-      if CDS.IsEmpty then Exit;
-      CDS.IndexFieldNames := 'MovementId;GoodsId;PartNumber';
-      CDS.Filter := 'isSend = False';
-      CDS.Filtered := True;
-      CDS.First;
-      while not CDS.Eof do
+
+      FDQuery.Connection := DM.conMain;
+      FDQuery.SQL.Text := 'Select MovementId, GoodsId, Amount, PartNumber FROM InventoryGoods';
+      FDQuery.Open;
+
+      FDQuery.First;
+      while not FDQuery.Eof do
       begin
         StoredProc.ParamByName('ioId').Value := 0;
-        StoredProc.ParamByName('inMovementId').Value := CDS.FieldByName('MovementId').AsInteger;
-        StoredProc.ParamByName('inGoodsId').Value := CDS.FieldByName('GoodsId').AsInteger;
-        StoredProc.ParamByName('inAmount').Value := CDS.FieldByName('Amount').AsInteger;
-        StoredProc.ParamByName('inPartNumber').Value := CDS.FieldByName('PartNumber').AsString;
+        StoredProc.ParamByName('inMovementId').Value := FDQuery.FieldByName('MovementId').AsInteger;
+        StoredProc.ParamByName('inGoodsId').Value := FDQuery.FieldByName('GoodsId').AsInteger;
+        StoredProc.ParamByName('inAmount').Value := FDQuery.FieldByName('Amount').AsInteger;
+        StoredProc.ParamByName('inPartNumber').Value := FDQuery.FieldByName('PartNumber').AsString;
         StoredProc.Execute(false, false, false);
 
-        CDS.Edit;
-        CDS.FieldByName('isSend').AsBoolean := True;
-        CDS.Post;
-        CDS.SaveToFile(DM.FInventoryGoodsFile);
-
-        CDS.First;
+        FDQuery.Delete;
+        FDQuery.First;
       end;
-
-      CDS.Filtered := False;
-      CDS.Filter := 'isSend = True';
-      CDS.Filtered := True;
-      while not CDS.Eof do CDS.Delete;
 
     except
       on E : Exception do
@@ -461,9 +493,8 @@ begin
       end;
     end;
   finally
-    CDS.SaveToFile(DM.FInventoryGoodsFile);
     FreeAndNil(StoredProc);
-    FreeAndNil(CDS);
+    FreeAndNil(FDQuery);
   end;
 
 end;
@@ -532,19 +563,118 @@ begin
   end;
 end;
 
+{ TStructure }
+
+procedure TStructure.AddTable(ATable: TFDTable);
+begin
+  if not FDataSets.Contains(ATable) then
+  begin
+    MakeIndex(ATable);
+    MakeDopIndex(ATable);
+    FDataSets.Add(ATable);
+  end;
+end;
+
+constructor TStructure.Create;
+begin
+  inherited Create;
+  FDataSets := TDataSets.Create(False);
+  FIndexes := TStringList.Create;
+end;
+
+destructor TStructure.Destroy;
+begin
+  FreeAndNil(FIndexes);
+  freeAndNil(FDataSets);
+  inherited;
+end;
+
+function TStructure.GetDataSet(const ATableName: String): TFDTable;
+var
+  T: TFDTable;
+begin
+  if Assigned(FLastDataSet) AND SameText(FLastDataSet.TableName, ATableName)
+  then
+    Exit(FLastDataSet);
+
+  for T in DataSets do
+    if SameText(T.TableName, ATableName) then
+    begin
+      FLastDataSet := T;
+      Exit(FLastDataSet);
+    end;
+  result := nil;
+end;
+
+function TStructure.GetIndex(const AIndex: integer): string;
+begin
+  if (AIndex >=0) and (AIndex < FIndexes.Count)  then
+    Result := FIndexes[AIndex]
+  else
+    Result := '';
+end;
+
+function TStructure.GetIndexCount: integer;
+begin
+  Result := FIndexes.Count;
+end;
+
+procedure TStructure.OpenDS(ATable: TFDTable);
+begin
+  if ATable.Active then
+    Exit;
+  ATable.IndexName := '';
+  ATable.Open;
+  MakeIndex(ATable);
+end;
+
+procedure TStructure.MakeIndex(ATable: TFDTable);
+var
+  IndexName: String;
+begin
+  if (ATable.IndexDefs.Count = 0) then
+  Begin
+    IndexName := 'PK_' + ATable.TableName;
+
+    if SameText(ATable.TableName, 'InventoryGoods') then
+      FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS ' + IndexName + ' ON ' + ATable.TableName + ' (MovementId, GoodsId, PartNumber COLLATE UTF16NoCase)')
+    else
+    if SameText(ATable.Fields[0].FieldName, 'Id') and (ATable.Fields[0].DataType <> ftAutoInc) then
+      FIndexes.Add('CREATE UNIQUE INDEX IF NOT EXISTS `' + IndexName + '` ON `' + ATable.TableName + '` (`Id`)');
+  End;
+end;
+
+procedure TStructure.MakeDopIndex(ATable: TFDTable);
+begin
+//  if SameText(ATable.TableName, 'Object_GoodsListSale') then
+//  begin
+//    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsId` ON `' + ATable.TableName + '` (`GoodsId`)');
+//    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_GoodsKindId` ON `' + ATable.TableName + '` (`GoodsKindId`)');
+//    FIndexes.Add('CREATE INDEX IF NOT EXISTS `idx_GoodsListSale_PartnerId` ON `' + ATable.TableName + '` (`PartnerId`)');
+//  end
+End;
+
 { TDM }
 
 procedure TDM.DataModuleCreate(Sender: TObject);
 begin
+  InitStructure;
+  FConnected := Connect;
+
   FLimitList := 300;
   FFilterGoods := '';
   FFilterGoodsEAN := False;
-  // Определим имена файлов
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  FInventoryGoodsFile := TPath.Combine(TPath.GetDocumentsPath, 'InventoryGoods.dat');
-  {$ELSE}
-  FInventoryGoodsFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'InventoryGoods.dat');
-  {$ENDIF}
+end;
+
+procedure TDM.InitStructure;
+var
+  C: TComponent;
+begin
+  for C in Self do
+    if C is TFDTable then
+    begin
+      Structure.AddTable((C as TFDTable));
+    end;
 end;
 
 function TDM.Connect: Boolean;
@@ -560,8 +690,9 @@ begin
 
   try
     conMain.Connected := True;
-    conMain.ExecSQL('VACUUM;');
     fdfAnsiUpperCase.Active := True;
+    fdcUTF16NoCase.Active := True;
+    conMain.ExecSQL('VACUUM;');
   except
     ON E: Exception DO
     begin
@@ -572,8 +703,199 @@ begin
   if not conMain.Connected then
     Exit(False);
 
+  if not CheckStructure then
+  begin
+    conMain.Connected := False;
+    Exit(False);
+  end
+  else
+    CreateIndexes;
 
   result := conMain.Connected;
+end;
+
+{ проверка структуры БД }
+function TDM.CheckStructure: Boolean;
+var
+  T: TFDTable;
+  F: TField;
+  ChangeStructure: Boolean;
+  TempTable: TFDTable;
+  J: Integer;
+
+  DestDataType: TFDDataType;
+  DestSize: LongWord;
+  DestPrec, DestScale: Integer;
+  DestAttrs: TFDDataAttributes;
+
+  TempTableName: string;
+  InsertSQL: string;
+  Error: boolean;
+begin
+  // Check Tables
+  qryMeta.Active := False;
+  qryMeta.MetaInfoKind := mkTables;
+  try
+    qryMeta.Active := True;
+  except
+    ON E: Exception Do
+    Begin
+      //WriteLogE(E.Message);
+      Exit(False);
+    End;
+  end;
+  for T in Structure.DataSets do
+  begin
+    if not qryMeta.Locate('TABLE_NAME', T.TableName, [loCaseInsensitive]) then
+    begin
+      try
+        T.CreateTable(False);
+      except
+        ON E: Exception DO
+        Begin
+          //WriteLog(E.Message);
+          Exit(False);
+        End;
+      end;
+    end
+    else
+    begin
+      qryMeta2.Active := False;
+      qryMeta2.MetaInfoKind := mkTableFields;
+      qryMeta2.ObjectName := T.TableName;
+      try
+        qryMeta2.Active := True;
+      except
+        ON E: Exception Do
+        Begin
+          //WriteLogE(E.Message);
+          Exit(False);
+        End;
+      end;
+      ChangeStructure := False;
+      for F in T.Fields do
+      Begin
+        if F.FieldKind <> fkData then
+          Continue;
+        if not qryMeta2.Locate('TABLE_NAME;COLUMN_NAME',
+          VarArrayOf([T.TableName, F.FieldName]), [loCaseInsensitive]) then
+        Begin
+          ChangeStructure := True;
+          break;
+        End
+        else
+        Begin
+          TFDFormatOptions.FieldDef2ColumnDef(F, DestDataType, DestSize,
+            DestPrec, DestScale, DestAttrs);
+          if (Integer(DestDataType) <> qryMeta2.FieldByName('COLUMN_DATATYPE')
+            .AsInteger) or
+            (Integer(DestSize) <> qryMeta2.FieldByName('COLUMN_LENGTH')
+            .AsInteger) then
+          Begin
+            ChangeStructure := True;
+            break;
+          End;
+        End;
+      End;
+
+      if not ChangeStructure then
+      begin
+        qryMeta2.First;
+        while not qryMeta2.Eof do
+        Begin
+          if (T.FindField(qryMeta2.FieldByName('COLUMN_NAME').AsString) = nil)
+            or (T.FindField(qryMeta2.FieldByName('COLUMN_NAME').AsString)
+            .FieldKind <> fkData) then
+          begin
+            ChangeStructure := True;
+            break;
+          end;
+          qryMeta2.Next;
+        End;
+      end;
+
+      if ChangeStructure then
+      Begin
+        TempTable := TFDTable.Create(nil);
+        T.DisableConstraints;
+        Error := false;
+        try
+          TempTableName := T.TableName + '_temp_for_recreate';
+          conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
+          conMain.ExecSQL('ALTER TABLE ' + T.TableName + ' RENAME TO ' + TempTableName);
+
+          TempTable.Connection := conMain;
+          TempTable.TableName := TempTableName;
+          TempTable.Open;
+          conMain.StartTransaction;
+          try
+            T.CreateTable(False);
+            Structure.OpenDS(T);
+            TempTable.First;
+
+            InsertSQL := '';
+            for J := 0 to TempTable.FieldCount - 1 do
+              if T.FindField(TempTable.Fields[J].FieldName) <> nil then
+                InsertSQL := InsertSQL + TempTable.Fields[J].FieldName + ',';
+
+            delete(InsertSQL, Length(InsertSQL), 1);
+            InsertSQL := 'insert into ' + T.TableName + ' (' + InsertSQL + ') select ' + InsertSQL + ' from ' + TempTableName;
+            conMain.ExecSQL(InsertSQL);
+
+            conMain.Commit;
+          except
+            on E: Exception do
+            Begin
+              //WriteLogE(E.Message);
+              Error := true;
+              conMain.Rollback;
+              Exit(False);
+            End;
+          end;
+        finally
+          T.EnableConstraints;
+          TempTable.Close;
+          freeAndNil(TempTable);
+
+          if Error then
+          begin
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + T.TableName);
+            conMain.ExecSQL('ALTER TABLE ' + TempTableName + ' RENAME TO ' + T.TableName);
+          end
+          else
+          begin
+            conMain.ExecSQL('DROP TABLE IF EXISTS ' + TempTableName);
+          end;
+        end;
+      End;
+    end;
+
+  end;
+
+  result := True;
+end;
+
+{ создание индексов }
+procedure TDM.CreateIndexes;
+var
+  i : integer;
+  qryCreateIndex : TFDQuery;
+begin
+  if Structure.IndexCount > 0 then
+  begin
+    qryCreateIndex := TFDQuery.Create(nil);
+    try
+      qryCreateIndex.Connection := DM.conMain;
+
+      for i := 0 to Structure.IndexCount - 1 do
+      begin
+        qryCreateIndex.SQL.Text := Structure.Indexes[i];
+        qryCreateIndex.ExecSQL;
+      end;
+    finally
+      FreeAndNil(qryCreateIndex);
+    end;
+  end;
 end;
 
 procedure TDM.SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
@@ -603,7 +925,7 @@ begin
           ftDateTime : S := S + 'DateTime';
           ftString, ftWideString :
             if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
-              S := S + 'VarWideChar(255)'
+              S := S + 'NVarChar(255)'
             else S := S + 'TEXT';
           ftMemo, ftWideMemo : S := S + 'TEXT';
           ftFloat, ftCurrency : S := S + 'Float';
@@ -614,7 +936,7 @@ begin
       end;
 
       for J := 0 to High(Res) do
-        S := S + ', ' + Res[J] + 'Upper VarWideChar(255)';
+        S := S + ', ' + Res[J] + 'Upper NVarChar(255)';
 
       S := S + ')';
 
@@ -683,7 +1005,7 @@ begin
     try
 
       // Проверяем наличие таблицы
-      conMain.ExecSQL('SELECT COUNT(*) AS CounrTable FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''', Nil, FDQuery);
+      conMain.ExecSQL('SELECT * FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''', Nil, FDQuery);
 
       if FDQuery.RecordCount < 1 then Exit;
 
@@ -944,7 +1266,7 @@ begin
 
     StoredProc.StoredProcName := 'gpInsertUpdate_Movement_MobileInventory';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inisCreateNew', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inisCreateNew', ftBoolean, ptInput, AisCreate);
     StoredProc.Params.AddParam('outMovementId', ftInteger, ptOutput, 0);
 
     try
@@ -1139,117 +1461,159 @@ begin
   begin
 
     LoadSQLiteData(cdsGoods, 'Goods');
+    if not cdsGoods.Active then DownloadGoods;
 
   end else DownloadGoods;
 end;
 
 // Иницилизация хранилища результатов сканирования
-procedure TDM.InitInventoryGoods;
+procedure TDM.OpenInventoryGoods;
 begin
-
-  if not cdsInventoryGoods.Active then
-  begin
-
-    if FileExists(FInventoryGoodsFile) then cdsInventoryGoods.LoadFromFile(FInventoryGoodsFile);
-
-    if not cdsInventoryGoods.Active then cdsInventoryGoods.CreateDataSet;
-
-    try
-      cdsInventoryGoods.Filtered := False;
-      cdsInventoryGoods.Filter := 'isSend = True';
-      cdsInventoryGoods.Filtered := True;
-      while not cdsInventoryGoods.Eof do cdsInventoryGoods.Delete;
-    finally
-      cdsInventoryGoods.Filtered := False;
-      cdsInventoryGoods.Filter := '';
-    end;
-  end;
-
-  cdsInventoryGoods.Filtered := False;
-  cdsInventoryGoods.Filter := 'MovementId = ' + cdsInventoryId.AsString;
-  cdsInventoryGoods.Filtered := True;
+  qryInventoryGoods.Close;
+  qryInventoryGoods.ParamByName('MovementId').Value := cdsInventoryId.AsInteger;
+  qryInventoryGoods.Open;
 end;
 
-// Сохраним введенные данные по инвентаризации
-procedure TDM.SaveInventoryGoods;
+procedure TDM.qryInventoryGoodsCalcFields(DataSet: TDataSet);
 begin
-
-  if cdsInventoryGoods.Active then
-  begin
-
-    cdsInventoryGoods.SaveToFile(FInventoryGoodsFile);
-  end;
+  DataSet.FieldByName('DeleteId').AsInteger := 0;
 end;
-
 
 // Добавить товар для вставки в инвентаризацию
-procedure TDM.AddInventoryGoods(AGoodsId : Integer; AAmount, APartNumber : String);
-  var nAmount : Currency;
+procedure TDM.AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber : String);
+  var FDQuery: TFDQuery;
 begin
 
-    if not TryStrToCurr(AAmount, nAmount) then nAmount := 1;
+  FDQuery := TFDQuery.Create(nil);
+  try
+    FDQuery.Connection := conMain;
+    FDQuery.SQL.Text := 'Select * FROM InventoryGoods ' +
+                        'WHERE MovementId = :MovementId AND GoodsId = :GoodsId AND AnsiUpperCase(PartNumber) = AnsiUpperCase(:PartNumber)';
+    FDQuery.ParamByName('MovementId').AsInteger := cdsInventoryId.AsInteger;
+    FDQuery.ParamByName('GoodsId').AsInteger := AGoodsId;
+    FDQuery.ParamByName('PartNumber').AsString := APartNumber;
+    FDQuery.Open;
 
-    if not cdsGoods.Active then LoadSQLiteData(cdsGoods, 'Goods');;
-
-    if not cdsGoods.Locate('Id', AGoodsId, []) then
+    if FDQuery.IsEmpty then
     begin
-      raise Exception.Create('Ошибка позиционироания на товар.');
-    end;
-
-    if cdsInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger,cdsGoodsId.AsInteger,APartNumber]), []) then
-    begin
-      cdsInventoryGoods.Edit;
-      if cdsInventoryGoodsisSend.AsBoolean = False then
-        cdsInventoryGoodsAmount.AsFloat := cdsInventoryGoodsAmount.AsFloat + nAmount
-      else cdsInventoryGoodsAmount.AsFloat := nAmount;
-      cdsInventoryGoodsisSend.AsBoolean := False;
-      cdsInventoryGoods.Post;
+      FDQuery.Insert;
+      FDQuery.FieldByName('MovementId').AsInteger := cdsInventoryId.AsInteger;
+      FDQuery.FieldByName('GoodsId').AsInteger := AGoodsId;
+      FDQuery.FieldByName('PartNumber').AsString := APartNumber;
+      FDQuery.FieldByName('Amount').AsFloat := AAmount;
+      FDQuery.Post;
     end else
     begin
-      cdsInventoryGoods.Last;
-      cdsInventoryGoods.Append;
-      cdsInventoryGoodsMovementId.AsInteger := cdsInventoryId.AsInteger;
-      cdsInventoryGoodsGoodsId.AsInteger := cdsGoodsId.AsInteger;
-      cdsInventoryGoodsGoodsCode.AsInteger := cdsGoodsCode.AsInteger;
-      cdsInventoryGoodsGoodsName.AsString := cdsGoodsName.AsString;
-      cdsInventoryGoodsGoodsGroupName.AsString := cdsGoodsGoodsGroupName.AsString;
-      cdsInventoryGoodsArticle.AsString := cdsGoodsArticle.AsString;
-      cdsInventoryGoodsMeasureName.AsString := cdsGoodsMeasureName.AsString;
-      cdsInventoryGoodsAmount.AsFloat := nAmount;
-      cdsInventoryGoodsPartNumber.AsString := APartNumber;
-      cdsInventoryGoodsisSend.AsBoolean := False;
-      cdsInventoryGoodsDeleteId.AsInteger := 0;
-      cdsInventoryGoods.Post;
+      FDQuery.Edit;
+      FDQuery.FieldByName('Amount').AsFloat := FDQuery.FieldByName('Amount').AsFloat + AAmount;
+      FDQuery.Post;
     end;
 
-    SaveInventoryGoods;
+  finally
+    FDQuery.Free;
+  end;
+
+  qryInventoryGoods.DisableControls;
+  try
+    OpenInventoryGoods;
+    qryInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([cdsInventoryId.AsInteger, AGoodsId, APartNumber]), [loCaseInsensitive])
+  finally
+    qryInventoryGoods.EnableControls;
+  end;
 end;
 
+// Добавить товар для вставки в инвентаризацию
+procedure TDM.UpdateInventoryGoods(AAmount: Currency);
+  var FDQuery: TFDQuery;
+      nMovementId, nGoodsId: Integer;
+      cPartNumber: String;
+begin
 
+  if qryInventoryGoods.Active and not qryInventoryGoods.IsEmpty then
+  begin
+    FDQuery := TFDQuery.Create(nil);
+    try
+      FDQuery.Connection := conMain;
+      FDQuery.SQL.Text := 'Select * FROM InventoryGoods ' +
+                          'WHERE MovementId = :MovementId AND GoodsId = :GoodsId AND AnsiUpperCase(PartNumber) = AnsiUpperCase(:PartNumber)';
+      FDQuery.ParamByName('MovementId').AsInteger := qryInventoryGoods.FieldByName('MovementId').AsInteger;
+      FDQuery.ParamByName('GoodsId').AsInteger := qryInventoryGoods.FieldByName('GoodsId').AsInteger;
+      FDQuery.ParamByName('PartNumber').AsString := qryInventoryGoods.FieldByName('PartNumber').AsString;
+      FDQuery.Open;
+
+      if not FDQuery.IsEmpty then
+      begin
+        FDQuery.Edit;
+        FDQuery.FieldByName('Amount').AsFloat := AAmount;
+        FDQuery.Post;
+      end;
+
+    finally
+      FDQuery.Free;
+    end;
+
+    qryInventoryGoods.DisableControls;
+    try
+      nMovementId := qryInventoryGoods.FieldByName('MovementId').AsInteger;
+      nGoodsId := qryInventoryGoods.FieldByName('GoodsId').AsInteger;
+      cPartNumber := qryInventoryGoods.FieldByName('PartNumber').AsString;
+
+      OpenInventoryGoods;
+      qryInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([nMovementId, nGoodsId, cPartNumber]), [loCaseInsensitive])
+    finally
+      qryInventoryGoods.EnableControls;
+    end;
+  end;
+end;
 
 procedure TDM.DeleteInventoryGoods;
+  var FDQuery: TFDQuery;
+      nPos: Integer;
 begin
-  if cdsInventoryGoods.Active and not cdsInventoryGoods.IsEmpty then
+
+  if qryInventoryGoods.Active and not qryInventoryGoods.IsEmpty then
   begin
-    cdsInventoryGoods.Delete;
-    SaveInventoryGoods;
+    FDQuery := TFDQuery.Create(nil);
+    try
+      FDQuery.Connection := conMain;
+      FDQuery.SQL.Text := 'Select * FROM InventoryGoods ' +
+                          'WHERE MovementId = :MovementId AND GoodsId = :GoodsId AND AnsiUpperCase(PartNumber) = AnsiUpperCase(:PartNumber)';
+      FDQuery.ParamByName('MovementId').AsInteger := qryInventoryGoods.FieldByName('MovementId').AsInteger;
+      FDQuery.ParamByName('GoodsId').AsInteger := qryInventoryGoods.FieldByName('GoodsId').AsInteger;
+      FDQuery.ParamByName('PartNumber').AsString := qryInventoryGoods.FieldByName('PartNumber').AsString;
+      FDQuery.Open;
+
+      if not FDQuery.IsEmpty then FDQuery.Delete;
+
+    finally
+      FDQuery.Free;
+    end;
+
+    nPos := qryInventoryGoods.RecNo - 1;
+    qryInventoryGoods.DisableControls;
+    try
+      OpenInventoryGoods;
+      if (nPos > 0) and (nPos < qryInventoryGoods.RecordCount) then qryInventoryGoods.RecNo := nPos;
+    finally
+      qryInventoryGoods.EnableControls;
+    end;
   end;
 end;
 
 // Проверим необходимость отправки инвентаризаций
 function TDM.isInventoryGoodsSend : Boolean;
+  var FDQuery: TFDQuery;
 begin
-
+  FDQuery := TFDQuery.Create(nil);
   try
-    if cdsInventoryGoods.Active then cdsInventoryGoods.Close;
+    FDQuery.Connection := conMain;
+    FDQuery.SQL.Text := 'Select * FROM InventoryGoods LIMIT 1';
+    FDQuery.Open;
 
-    if FileExists(FInventoryGoodsFile) then cdsInventoryGoods.LoadFromFile(FInventoryGoodsFile);
+    Result := FDQuery.IsEmpty;
 
-    if not cdsInventoryGoods.Active then cdsInventoryGoods.CreateDataSet;
-
-    Result := not cdsInventoryGoods.Locate('isSend', False, []);
   finally
-    cdsInventoryGoods.Close;
+    FDQuery.Free;
   end;
 end;
 
@@ -1269,4 +1633,9 @@ begin
   WaitThread.Start;
 end;
 
+initialization
+  Structure := TStructure.Create;
+  Randomize;
+finalization
+  FreeAndNil(Structure);
 end.
