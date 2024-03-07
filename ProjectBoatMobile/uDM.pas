@@ -156,6 +156,11 @@ type
     cdsOrderInternal: TClientDataSet;
     cdsOrderInternalMovementItemId: TIntegerField;
     cdsOrderInternalInvNumber_Full: TWideStringField;
+    cdsOrderInternalInvNumberFull_OrderClient: TWideStringField;
+    cdsOrderInternalGoodsName: TWideStringField;
+    cdsOrderInternalAmount: TFloatField;
+    cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField;
+    cdsOrderInternalMovementPUId: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -192,8 +197,7 @@ type
     function DownloadInventoryList : Boolean;
 
     function DownloadOrderInternal(AId : Integer) : Boolean;
-
-
+    function InsertProductionUnion(AId : Integer) : Boolean;
 
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
 
@@ -229,7 +233,7 @@ implementation
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 uses System.IOUtils, System.DateUtils, System.ZLib, System.RegularExpressions,
-     FMX.Dialogs, uMain;
+     FMX.Dialogs, Storage, uMain;
 
 {$R *.dfm}
 
@@ -366,7 +370,7 @@ begin
     except
       on E : Exception do
       begin
-        Result := E.Message;
+        Result := GetTextMessage(E);
         exit;
       end;
     end;
@@ -394,7 +398,7 @@ begin
   except
     on E : Exception do
     begin
-      Result := E.Message;
+      Result := GetTextMessage(E);
       exit;
     end;
   end;
@@ -496,7 +500,7 @@ begin
     except
       on E : Exception do
       begin
-        Result := E.Message;
+        Result := GetTextMessage(E);
       end;
     end;
   finally
@@ -1444,6 +1448,39 @@ begin
   finally
     FreeAndNil(StoredProc);
     cdsOrderInternal.EnableControls;
+  end;
+end;
+
+{ Создание документа производства}
+function TDM.InsertProductionUnion(AId : Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if AId = 0 then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpInsertUpdate_Movement_MobileProductionUnion';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
+    StoredProc.DataSet := cdsOrderInternal;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := True;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(E.Message);
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
   end;
 end;
 

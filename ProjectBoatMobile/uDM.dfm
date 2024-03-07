@@ -342,5 +342,23 @@ object DM: TDM
       FieldName = 'InvNumber_Full'
       Size = 255
     end
+    object cdsOrderInternalInvNumberFull_OrderClient: TWideStringField
+      FieldName = 'InvNumberFull_OrderClient'
+      Size = 255
+    end
+    object cdsOrderInternalGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsOrderInternalAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsOrderInternalMovementPUId: TIntegerField
+      FieldName = 'MovementPUId'
+    end
+    object cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField
+      FieldName = 'InvNumberFull_ProductionUnion'
+      Size = 255
+    end
   end
 end
