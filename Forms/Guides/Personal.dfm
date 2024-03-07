@@ -168,7 +168,7 @@ object PersonalForm: TPersonalForm
         Width = 80
       end
       object CardSecond: TcxGridDBColumn
-        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+        Caption = #8470' '#1082#1072#1088#1090'.'#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
         DataBinding.FieldName = 'CardSecond'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -176,7 +176,7 @@ object PersonalForm: TPersonalForm
         Width = 115
       end
       object BankSecondName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082' ('#1060'2)'
+        Caption = #1041#1072#1085#1082' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
         DataBinding.FieldName = 'BankSecondName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -417,7 +417,7 @@ object PersonalForm: TPersonalForm
         Width = 115
       end
       object CardBankSecond: TcxGridDBColumn
-        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2)'
+        Caption = #8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' '#1047#1055' ('#1060'2) ('#1042#1086#1089#1090#1086#1082')'
         DataBinding.FieldName = 'CardBankSecond'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
