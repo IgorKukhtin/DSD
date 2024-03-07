@@ -12,7 +12,11 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , MemberId_Personal Integer
              , INN TVarChar, Code1C TVarChar, Card TVarChar, CardSecond TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar 
-             , CardBank TVarChar, CardBankSecond TVarChar
+             , CardBank TVarChar, CardBankSecond TVarChar 
+             , CardBankSecondTwo TVarChar, CardIBANSecondTwo TVarChar, CardSecondTwo TVarChar
+             , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar 
+             , BankSecondTwoId Integer, BankSecondTwoName TVarChar
+             , BankSecondDiffId Integer, BankSecondDiffName TVarChar
              , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -577,7 +581,16 @@ BEGIN
                                                          AND MIFloat_SummAvCardSecondRecalc.DescId = zc_MIFloat_SummAvCardSecondRecalc()
                          GROUP BY tmpMI.MemberId_Personal
                         )
-
+     , tmpObjectString_Member AS (SELECT *
+                                  FROM ObjectString
+                                  WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpAll.MemberId_Personal FROM tmpAll)
+                                  ) 
+     
+     , tmoObjectLink_Member AS (SELECT *
+                                FROM ObjectLink
+                                WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpAll.MemberId_Personal FROM tmpAll)
+                                ) 
+     
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -585,13 +598,26 @@ BEGIN
             , Object_Personal.ValueData                     AS PersonalName
             , tmpAll.MemberId_Personal
             , ObjectString_Member_INN.ValueData             AS INN
-            , ObjectString_Code1C.ValueData                 AS Code1C
+            , ObjectString_Member_Code1C.ValueData                 AS Code1C
             , ObjectString_Member_Card.ValueData            AS Card
             , ObjectString_Member_CardSecond.ValueData      AS CardSecond
             , ObjectString_Member_CardIBAN.ValueData        AS CardIBAN
             , ObjectString_Member_CardIBANSecond.ValueData  AS CardIBANSecond  
             , ObjectString_Member_CardBank.ValueData        ::TVarChar  AS CardBank
-            , ObjectString_Member_CardBankSecond.ValueData  ::TVarChar  AS CardBankSecond
+            , ObjectString_Member_CardBankSecond.ValueData  ::TVarChar  AS CardBankSecond 
+            
+            , ObjectString_Member_CardBankSecondTwo.ValueData  ::TVarChar  AS CardBankSecondTwo
+            , ObjectString_Member_CardIBANSecondTwo.ValueData  ::TVarChar  AS CardIBANSecondTwo
+            , ObjectString_Member_CardSecondTwo.ValueData      ::TVarChar  AS CardSecondTwo
+            , ObjectString_Member_CardBankSecondDiff.ValueData ::TVarChar  AS CardBankSecondDiff
+            , ObjectString_Member_CardIBANSecondDiff.ValueData ::TVarChar  AS CardIBANSecondDiff
+            , ObjectString_Member_CardSecondDiff.ValueData     ::TVarChar  AS CardSecondDiff
+
+            , Object_BankSecondTwo.Id          AS BankSecondTwoId
+            , Object_BankSecondTwo.ValueData   AS BankSecondTwoName
+            , Object_BankSecondDiff.Id         AS BankSecondDiffId
+            , Object_BankSecondDiff.ValueData  AS BankSecondDiffName
+            
             , CASE WHEN tmpAll.MovementItemId > 0 AND 1=0 /*vbUserId <> 5*/ THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
               -- ‰‡Ú‡ Û‚ÓÎ¸ÌÂÌËˇ
@@ -750,9 +776,9 @@ BEGIN
             LEFT JOIN tmpMI_card_b2 ON tmpMI_card_b2.MemberId_Personal = tmpAll.MemberId_Personal
                                    AND tmpAll.Ord = 1
 
-            LEFT JOIN ObjectString AS ObjectString_Code1C
-                                   ON ObjectString_Code1C.ObjectId = tmpAll.PersonalId
-                                  AND ObjectString_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
+            LEFT JOIN ObjectString AS ObjectString_Member_Code1C
+                                   ON ObjectString_Member_Code1C.ObjectId = tmpAll.PersonalId
+                                  AND ObjectString_Member_Code1C.DescId    = zc_ObjectString_Personal_Code1C()
 
             LEFT JOIN tmpPersonalServiceList_check ON tmpPersonalServiceList_check.PersonalServiceListId = tmpAll.PersonalServiceListId
 
@@ -988,28 +1014,57 @@ BEGIN
                                  ON ObjectDate_DateIn.ObjectId = tmpAll.PersonalId
                                 AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
 
-            LEFT JOIN ObjectString AS ObjectString_Member_INN
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_INN
                                    ON ObjectString_Member_INN.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_INN.DescId = zc_ObjectString_Member_INN()
-            LEFT JOIN ObjectString AS ObjectString_Member_Card
+                                  AND ObjectString_Member_INN.DescId = zc_ObjectString_member_INN()
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_Card
                                    ON ObjectString_Member_Card.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_Card.DescId = zc_ObjectString_Member_Card()
-            LEFT JOIN ObjectString AS ObjectString_Member_CardSecond
+                                  AND ObjectString_Member_Card.DescId = zc_ObjectString_member_Card()
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardSecond
                                    ON ObjectString_Member_CardSecond.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_CardSecond.DescId = zc_ObjectString_Member_CardSecond()
-            LEFT JOIN ObjectString AS ObjectString_Member_CardBank
+                                  AND ObjectString_Member_CardSecond.DescId = zc_ObjectString_member_CardSecond()
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardBank
                                    ON ObjectString_Member_CardBank.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_CardBank.DescId = zc_ObjectString_Member_CardBank()
-            LEFT JOIN ObjectString AS ObjectString_Member_CardBankSecond
+                                  AND ObjectString_Member_CardBank.DescId = zc_ObjectString_member_CardBank()
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardBankSecond
                                    ON ObjectString_Member_CardBankSecond.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
+                                  AND ObjectString_Member_CardBankSecond.DescId = zc_ObjectString_member_CardBankSecond()
 
-            LEFT JOIN ObjectString AS ObjectString_Member_CardIBAN
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardIBAN
                                    ON ObjectString_Member_CardIBAN.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_CardIBAN.DescId = zc_ObjectString_Member_CardIBAN()
-            LEFT JOIN ObjectString AS ObjectString_Member_CardIBANSecond
+                                  AND ObjectString_Member_CardIBAN.DescId = zc_ObjectString_member_CardIBAN()
+            LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardIBANSecond
                                    ON ObjectString_Member_CardIBANSecond.ObjectId = tmpAll.MemberId_Personal
-                                  AND ObjectString_Member_CardIBANSecond.DescId = zc_ObjectString_Member_CardIBANSecond()
+                                  AND ObjectString_Member_CardIBANSecond.DescId = zc_ObjectString_member_CardIBANSecond()
+
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardBankSecondTwo
+                                 ON ObjectString_Member_CardBankSecondTwo.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardBankSecondTwo.DescId = zc_ObjectString_member_CardBankSecondTwo()
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardIBANSecondTwo
+                                 ON ObjectString_Member_CardIBANSecondTwo.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardIBANSecondTwo.DescId = zc_ObjectString_member_CardIBANSecondTwo()
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardSecondTwo
+                                 ON ObjectString_Member_CardSecondTwo.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardSecondTwo.DescId = zc_ObjectString_member_CardSecondTwo()
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardBankSecondDiff
+                                 ON ObjectString_Member_CardBankSecondDiff.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardBankSecondDiff.DescId = zc_ObjectString_member_CardBankSecondDiff()
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardIBANSecondDiff
+                                 ON ObjectString_Member_CardIBANSecondDiff.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardIBANSecondDiff.DescId = zc_ObjectString_member_CardIBANSecondDiff()
+          LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardSecondDiff
+                                 ON ObjectString_Member_CardSecondDiff.ObjectId = tmpAll.MemberId_Personal 
+                                AND ObjectString_Member_CardSecondDiff.DescId = zc_ObjectString_member_CardSecondDiff()
+
+         LEFT JOIN tmoObjectLink_Member AS ObjectLink_Member_BankSecondTwo
+                              ON ObjectLink_Member_BankSecondTwo.ObjectId = tmpAll.MemberId_Personal
+                             AND ObjectLink_Member_BankSecondTwo.DescId = zc_ObjectLink_Member_BankSecondTwo()
+         LEFT JOIN Object AS Object_BankSecondTwo ON Object_BankSecondTwo.Id = ObjectLink_Member_BankSecondTwo.ChildObjectId
+         LEFT JOIN tmoObjectLink_Member AS ObjectLink_Member_BankSecondDiff
+                              ON ObjectLink_Member_BankSecondDiff.ObjectId = tmpAll.MemberId_Personal
+                             AND ObjectLink_Member_BankSecondDiff.DescId = zc_ObjectLink_Member_BankSecondDiff()
+         LEFT JOIN Object AS Object_BankSecondDiff ON Object_BankSecondDiff.Id = ObjectLink_Member_BankSecondDiff.ChildObjectId
+         
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
@@ -1052,6 +1107,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.03.24         * CardBankSecondDiff, CardBankSecondTwo
  31.01.24         * CardBank, CardBankSecond
  04.07.23         *
  02.05.23         *
