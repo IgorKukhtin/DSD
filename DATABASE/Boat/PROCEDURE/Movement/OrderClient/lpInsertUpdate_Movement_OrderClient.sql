@@ -218,31 +218,37 @@ BEGIN
                        AND MovementItem.DescId = zc_MI_Master()
                        AND MovementItem.ObjectId = inProductId
                     );
-         -- сохраняем лодку в строчную часть
-         vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
-                                      FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
-                                      WHERE gpSelect.MovementId_OrderClient = ioId
-                                     )
-                    -- Результат
-                    SELECT tmp.ioId
-                    FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
-                                                                , inMovementId    := ioId
-                                                                , inGoodsId       := inProductId
-                                                                , inAmount        := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id), 1)
-                                                                  -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-                                                                , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
-                                                                  -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
-                                                                , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
-                                                                  -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
-                                                                , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
-                                                                  --
-                                                                , inCountForPrice := 1  ::TFloat
-                                                                , inComment       := COALESCE ((SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMI_Id AND MIS.DescId = zc_MIString_Comment()), '')
-                                                                , inUserId        := inUserId
-                                                                 ) AS tmp
-                   );
-         -- сохранили протокол
-         PERFORM lpInsert_MovementItemProtocol (vbMI_Id, inUserId, vbIsInsert);
+
+         IF EXISTS (SELECT 1 FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect WHERE gpSelect.MovementId_OrderClient = ioId AND gpSelect.Basis_summ > 0)
+         THEN
+             -- сохраняем лодку в строчную часть
+             vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+                                          FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
+                                          WHERE gpSelect.MovementId_OrderClient = ioId
+                                         )
+                        -- Результат
+                        SELECT tmp.ioId
+                        FROM lpInsertUpdate_MovementItem_OrderClient (ioId            := vbMI_Id
+                                                                    , inMovementId    := ioId
+                                                                    , inGoodsId       := inProductId
+                                                                    , inAmount        := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id), 1)
+                                                                      -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
+                                                                    , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                                      -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
+                                                                    , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                                      -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
+                                                                    , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                                      --
+                                                                    , inCountForPrice := 1  ::TFloat
+                                                                    , inComment       := COALESCE ((SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMI_Id AND MIS.DescId = zc_MIString_Comment()), '')
+                                                                    , inUserId        := inUserId
+                                                                     ) AS tmp
+                       );
+             -- сохранили протокол
+             PERFORM lpInsert_MovementItemProtocol (vbMI_Id, inUserId, vbIsInsert);
+
+         END IF;
+
 
          -- пересчитали Итоговые суммы
          PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (ioId);

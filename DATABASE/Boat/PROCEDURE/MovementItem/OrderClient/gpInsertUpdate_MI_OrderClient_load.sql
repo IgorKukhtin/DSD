@@ -279,6 +279,22 @@ END IF;
          IF TRIM (inValue4) ILIKE '3 x Flush fitting padeyes c\/w tie down starps and fixings' THEN inValue1:= 'b280_aoav_8_0'; END IF;
      END IF;
 
+ 
+     -- кривой первый символ
+     IF TRIM (inValue4) ILIKE '%3 x Flush fitting padeyes c/w tie down starps and fixings' AND inValue1 <> ''
+        AND 1 = (SELECT COUNT(*)
+                 FROM Object
+                      JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
+                 WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE
+                )
+     THEN -- 160 = ascii(' 3 x Flush fitting padeyes c/w tie down starps and fixings')
+          inValue4:= (SELECT Object.ValueData
+                      FROM Object
+                           JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
+                      WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE
+                      ORDER BY Object.Id
+                     );
+     END IF;
 
 
      --***IF inValue1 = 'b280_t_4' AND inValue2 ILIKE 'SCRUBBED' THEN inValue1:= 'b280_t_1'; END IF;
@@ -915,7 +931,7 @@ END IF;
                                          JOIN ObjectString AS OS ON OS.ObjectId = Object.Id AND OS.DescId = zc_ObjectString_Id_Site() AND OS.ValueData = inValue1
                                     WHERE Object.DescId = zc_Object_ProdOptions() AND Object.isErased = FALSE
                                       -- !!!временно ошибка Id_Site одинаковый!!!
-                                      AND (Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END
+                                      AND (Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN TRIM (inValue4) ELSE TRIM (inValue2) END
                                         OR SUBSTRING (inValue1 FROM LENGTH(inValue1) FOR 1) <> '_'
                                           )
                                     ORDER BY Object.Id
@@ -994,7 +1010,7 @@ END IF;
          END IF;
          -- 6.1. Проверка - Name Options должен соответствовать
          IF (inTitle ILIKE 'devices' OR inTitle ILIKE 'light' OR inTitle ILIKE 'accessories' OR inTitle ILIKE 'title')
-            AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProdOptionsId AND Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END AND Object.isErased = FALSE)
+            AND NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = vbProdOptionsId AND Object.ValueData ILIKE CASE WHEN inTitle4 ILIKE 'variant_title' THEN TRIM (inValue4) ELSE TRIM (inValue2) END AND Object.isErased = FALSE)
             -- !!!временно ошибка Id_Site одинаковый!!!
             AND SUBSTRING (inValue1 FROM LENGTH(inValue1) FOR 1) <> '_'
          THEN
@@ -1026,7 +1042,7 @@ END IF;
 
              RAISE EXCEPTION 'Ошибка.Для <%> назвние Опции должно быть = <%> в загрузке установлено = <%>.'
                             , inValue1, lfGet_Object_ValueData_sh (vbProdOptionsId)
-                            , CASE WHEN inTitle4 ILIKE 'variant_title' THEN inValue4 ELSE inValue2 END
+                            , CASE WHEN inTitle4 ILIKE 'variant_title' THEN TRIM (inValue4) ELSE TRIM (inValue2) END
                              ;
          END IF;
 
@@ -1825,7 +1841,7 @@ vbProdOptItemsId
 
      END IF;
 
-
+/
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
