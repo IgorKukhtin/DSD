@@ -45,6 +45,7 @@ type
   end;
 
   function ConvertXMLParamToStrings(XMLParam: String): String;
+  function GetTextMessage(E: Exception): string;
 
 implementation
 
@@ -104,6 +105,15 @@ type
 
   var
     IdHTTPWork: TIdHTTPWork;
+
+function GetTextMessage(E: Exception): string;
+begin
+   if pos('context', AnsilowerCase(E.Message)) = 0 then
+      Result := E.Message
+   else
+      // Выбрасываем все что после Context
+      Result := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1);
+end;
 
 function TStorage.GetConnection: string;
 begin

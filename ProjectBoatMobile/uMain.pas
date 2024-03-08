@@ -235,6 +235,20 @@ type
     edInvNumber_Full: TEdit;
     BindSourceDB6: TBindSourceDB;
     LinkControlToField6: TLinkControlToField;
+    edInvNumberFull_OrderClient: TEdit;
+    Label21: TLabel;
+    LinkControlToField7: TLinkControlToField;
+    edOIGoodsName: TEdit;
+    Label22: TLabel;
+    edOIAmount: TEdit;
+    Label23: TLabel;
+    LinkControlToField8: TLinkControlToField;
+    LinkControlToField9: TLinkControlToField;
+    pProductionUnion: TPanel;
+    edInvNumberFull_ProductionUnion: TEdit;
+    Label24: TLabel;
+    LinkControlToField10: TLinkControlToField;
+    bpProductionUnion: TButton;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -301,6 +315,7 @@ type
     procedure pWebServerClick(Sender: TObject);
     procedure bppInventScanCancelClick(Sender: TObject);
     procedure bOrderInternalOkClickClick(Sender: TObject);
+    procedure bpProductionUnionClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -326,6 +341,7 @@ type
     procedure CreateInventory(const AResult: TModalResult);
     procedure ConfppInventScanClose(const AResult: TModalResult);
     procedure ConfppInventScanCancel(const AResult: TModalResult);
+    procedure ProductionUnionInsert(const AResult: TModalResult);
 
     procedure ShowppInventScan(AGoodsId: Integer);
 
@@ -403,12 +419,17 @@ begin
 
   FDataWedgeBarCode := TDataWedgeBarCode.Create(Nil);
 
-  // получение настроек из ini файла
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  // Проверка наличия сканера
+  {$IF DEFINED(ANDROID)}
   FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
-  FINIFile := TPath.Combine(TPath.GetDocumentsPath, 'settings.ini');
   {$ELSE}
   FisZebraScaner := False;
+  {$ENDIF}
+
+  // получение настроек из ini файла
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  FINIFile := TPath.Combine(TPath.GetDocumentsPath, 'settings.ini');
+  {$ELSE}
   FINIFile := TPath.Combine(ExtractFilePath(ParamStr(0)), 'settings.ini');
   {$ENDIF}
 
@@ -565,9 +586,13 @@ begin
 
     if not DM.DownloadOrderInternal(Code) then Exit;
 
+    if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
+      ShowMessage('По заказу уже создана сборку узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
 
   finally
+    bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
     pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
+    pProductionUnion.Visible := pOrderInternal.Visible and (DM.cdsOrderInternalMovementPUId.AsInteger <> 0);
     edOrderInternalBarCode.Text := '';
   end;
 end;
@@ -625,6 +650,37 @@ begin
 
     DM.AddInventoryGoods(FGoodsID, nAmount, edInventScanPartNumber.Text);
   end;
+end;
+
+procedure TfrmMain.ProductionUnionInsert(const AResult: TModalResult);
+begin
+  if (AResult = mrYes) and (DM.cdsOrderInternalMovementItemId.AsInteger <> 0) then
+  begin
+    try
+      try
+        DM.InsertProductionUnion(DM.cdsOrderInternalMovementItemId.AsInteger)
+      except
+        on E : Exception do
+        begin
+          ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
+        end;
+      end;
+      DM.DownloadOrderInternal(DM.cdsOrderInternalMovementItemId.AsInteger);
+      if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
+        ShowMessage('По заказу создана сборка узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
+    finally
+      bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
+      pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
+      pProductionUnion.Visible := pOrderInternal.Visible and (DM.cdsOrderInternalMovementPUId.AsInteger <> 0);
+    end;
+  end;
+end;
+
+// Формирование документа сборки
+procedure TfrmMain.bpProductionUnionClick(Sender: TObject);
+begin
+  TDialogService.MessageDialog('Формировать документ сборки узла/лодки?',
+    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ProductionUnionInsert)
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
@@ -799,6 +855,7 @@ begin
 
       DM.cdsOrderInternal.Close;
       pOrderInternal.Visible := False;
+      pProductionUnion.Visible := pOrderInternal.Visible;
     end
   end;
 end;
@@ -1272,7 +1329,7 @@ begin
     begin
       Wait(False);
 
-      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
+      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + GetTextMessage(E));
       Exit;
     end;
     //
@@ -1429,7 +1486,7 @@ begin
       begin
         Wait(False);
         ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно';
-        ShowMessage(ErrorMessage+#13#10 + E.Message);
+        ShowMessage(ErrorMessage+#13#10 + GetTextMessage(E));
         exit;
       end;
       //
