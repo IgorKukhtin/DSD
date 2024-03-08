@@ -109,7 +109,7 @@ BEGIN
 
          , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsId   ELSE tmpSelect.MaterialOptionsId   END) :: Integer  AS MaterialOptionsId
          , MAX (CASE WHEN tmpSelect.NPP_pcp = 1 THEN tmpSelect.MaterialOptionsName ELSE tmpSelect.MaterialOptionsName END) :: TVarChar AS MaterialOptionsName
-         , ''  :: TVarChar AS Id_Site
+         , MAX (tmpSelect.Id_Site) :: TVarChar AS  Id_Site
          , tmpSelect.CodeVergl
 
          , MIN (tmpSelect.NPP) :: Integer AS NPP

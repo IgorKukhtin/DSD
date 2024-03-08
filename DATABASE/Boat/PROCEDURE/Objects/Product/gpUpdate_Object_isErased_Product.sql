@@ -23,15 +23,24 @@ BEGIN
    IF inIsErased = TRUE
    THEN
        -- Удаляем Документ
-       PERFORM lpSetErased_Movement (inMovementId := (SELECT MLO.MovementId FROM MovementLinkObject AS MLO WHERE MLO.ObjectId = inObjectId AND MLO.DescId = zc_MovementLinkObject_Product())
+       PERFORM lpSetErased_Movement (inMovementId := MLO.MovementId
                                    , inUserId     := vbUserId
-                                    );
+                                    )
+       FROM MovementLinkObject AS MLO
+       WHERE MLO.ObjectId = inObjectId
+         AND MLO.DescId = zc_MovementLinkObject_Product()
+        ;
+
    ELSEIF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO JOIN Movement ON Movement.Id = MLO.MovementId AND Movement.StatusId = zc_Enum_Status_Erased() WHERE MLO.ObjectId = inObjectId AND MLO.DescId = zc_MovementLinkObject_Product())
    THEN
        -- восстановили Документ
-       PERFORM lpUnComplete_Movement (inMovementId := (SELECT MLO.MovementId FROM MovementLinkObject AS MLO WHERE MLO.ObjectId = inObjectId AND MLO.DescId = zc_MovementLinkObject_Product())
+       PERFORM lpUnComplete_Movement (inMovementId := MLO.MovementId
                                     , inUserId     := vbUserId
-                                     );
+                                     )
+       FROM MovementLinkObject AS MLO
+       WHERE MLO.ObjectId = inObjectId
+         AND MLO.DescId = zc_MovementLinkObject_Product()
+        ;
    END IF;
    
 
