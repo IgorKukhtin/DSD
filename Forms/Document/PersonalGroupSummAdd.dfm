@@ -1353,6 +1353,7 @@ object PersonalGroupSummAddForm: TPersonalGroupSummAddForm
     IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
+        Guides = GuidesUnit
       end>
     ActionItemList = <
       item

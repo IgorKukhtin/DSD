@@ -11,25 +11,29 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
     Width = 819
     Height = 262
     TabOrder = 3
-    ExplicitWidth = 954
+    ExplicitWidth = 819
     ExplicitHeight = 262
     ClientRectBottom = 262
     ClientRectRight = 819
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 954
+      ExplicitWidth = 819
       ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 819
         Height = 262
-        ExplicitLeft = 3
-        ExplicitWidth = 954
+        ExplicitWidth = 819
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = SummAdd
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Hour_work
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -38,9 +42,14 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
               Column = MemberName
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = SummAdd
+            end
+            item
+              Format = ',0.'
+              Kind = skSum
+              Column = Hour_work
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -157,7 +166,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080
             DataBinding.FieldName = 'SummAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -168,7 +177,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
   end
   inherited Panel: TPanel
     Width = 819
-    ExplicitWidth = 954
+    ExplicitWidth = 819
     inherited deStart: TcxDateEdit
       Left = 112
       EditValue = 45292d
