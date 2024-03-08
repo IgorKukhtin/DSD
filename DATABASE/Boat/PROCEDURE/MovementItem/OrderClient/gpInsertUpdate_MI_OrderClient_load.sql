@@ -1841,7 +1841,7 @@ vbProdOptItemsId
 
      END IF;
 
-/
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
