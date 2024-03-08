@@ -19,7 +19,6 @@ RETURNS TABLE (
         , PositionLevelName TVarChar
         , PersonalGroupId Integer
         , PersonalGroupName TVarChar
-        
         , NormHour   TFloat
         , TotalSumm  TFloat
         , Hour_work  TFloat
@@ -27,8 +26,6 @@ RETURNS TABLE (
         , Summ_Hour  TFloat
         , SummAdd    TFloat
         , isSkip     Boolean
-        
-        
 )
 AS
 $BODY$
@@ -55,14 +52,21 @@ BEGIN
   , tmpMovement AS (
                     SELECT Movement.*
                          , MovementLinkObject_Unit.ObjectId AS UnitId
+                         , MovementLinkObject_PersonalGroup.ObjectId AS PersonalGroupId
                     FROM Movement
                          INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                       AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
+
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalGroup
+                                                      ON MovementLinkObject_PersonalGroup.MovementId = Movement.Id
+                                                     AND MovementLinkObject_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                        -- LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = MovementLinkObject_PersonalGroup.ObjectId
                     WHERE Movement.OperDate = inOperDate
                       AND Movement.DescId = zc_Movement_PersonalGroupSummAdd()
-                     -- AND Movement.StatusId = zc_Enum_Status_Complete()
+                      --AND Movement.StatusId <> zc_Enum_Status_Erased()
+                      AND Movement.StatusId = zc_Enum_Status_Complete()
                     )
 
   , tmpMFloat_NormHour AS (SELECT MovementFloat_NormHour.*
@@ -116,8 +120,6 @@ BEGIN
                               JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                              INNER JOIN (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement) AS tmp
-                                                                                               ON tmp.UnitId = MovementLinkObject_Unit.ObjectId
                               JOIN MovementItem AS MI_SheetWorkTime
                                                 ON MI_SheetWorkTime.MovementId = Movement.Id
                                                AND MI_SheetWorkTime.isErased = FALSE
@@ -140,6 +142,10 @@ BEGIN
                               LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                                                                ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                                                               AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                              INNER JOIN (SELECT DISTINCT tmpMovement.UnitId, COALESCE (tmpMovement.PersonalGroupId,0) AS PersonalGroupId
+                                          FROM tmpMovement) AS tmp
+                                                            ON tmp.UnitId = MovementLinkObject_Unit.ObjectId
+                                                           AND (tmp.PersonalGroupId = COALESCE(MIObject_PersonalGroup.ObjectId, 0) OR COALESCE (tmp.PersonalGroupId,0) = 0)
 
                          --WHERE (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0)
                          GROUP BY COALESCE(MI_SheetWorkTime.ObjectId, 0)
@@ -171,6 +177,7 @@ BEGIN
                     , tmpSheetWorkTime.UnitId
                     , tmpSheetWorkTime.Amount          AS Hour_work
                     , tmpSheetWorkTime.Day_skip        AS Day_skip
+                    , CASE WHEN COALESCE (tmpSkip.Day_skip,0) <> 0 THEN TRUE ELSE FALSE END AS isSkip 
                    -- , ShortName
                FROM tmpMovement
                    LEFT JOIN tmpMFloat_NormHour AS MovementFloat_NormHour
@@ -180,8 +187,16 @@ BEGIN
                    INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement.Id
                    
                    INNER JOIN tmpSheetWorkTime ON tmpSheetWorkTime.PositionId = tmpMI.PositionId
-                                             AND COALESCE (tmpSheetWorkTime.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
-                                             AND COALESCE (tmpSheetWorkTime.Amount,0) > 0                   
+                                              AND COALESCE (tmpSheetWorkTime.PositionLevelId,0) = COALESCE (tmpMI.PositionLevelId,0)
+                                              AND COALESCE (tmpSheetWorkTime.Amount,0) > 0
+                                              AND tmpSheetWorkTime.UnitId = tmpMovement.UnitId
+                                              AND COALESCE (tmpSheetWorkTime.PersonalGroupId,0) = COALESCE (tmpMovement.PersonalGroupId,0)   
+                   --привязываем еще раз чтоб по физ. лицу привязать прогулы (если прогул по любой должности нет премии)
+                   LEFT JOIN (SELECT tmp.MemberId, SUM (COALESCE (tmp.Day_skip,0)) AS Day_skip
+                              FROM tmpSheetWorkTime AS tmp
+                              WHERE COALESCE (tmp.Day_skip,0) <> 0
+                              GROUP BY tmp.MemberId) AS tmpSkip
+                                                     ON tmpSkip.MemberId = tmpSheetWorkTime.MemberId
                ) 
   
 
@@ -202,8 +217,11 @@ BEGIN
         , tmpRes.Hour_work  ::TFloat
         , tmpRes.Day_skip   ::TFloat
         , tmpRes.Summ_Hour  ::TFloat
-        , CASE WHEN tmpRes.Hour_work >= 72 THEN tmpRes.TotalSumm ELSE tmpRes.Summ_hour * tmpRes.Hour_work END ::TFloat AS SummAdd
-        , CASE WHEN COALESCE (tmpRes.Day_skip,0) <> 0 THEN TRUE ELSE FALSE END ::Boolean AS isSkip
+        , CASE WHEN tmpRes.Hour_work <=72 OR tmpRes.isSkip = TRUE THEN 0
+               WHEN tmpRes.Hour_work >= tmpRes.NormHour THEN tmpRes.TotalSumm
+               ELSE tmpRes.Summ_hour * tmpRes.Hour_work
+          END ::TFloat AS SummAdd
+        , tmpRes.isSkip ::Boolean AS isSkip
         
    FROM tmpRes
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpRes.MemberId
@@ -224,7 +242,7 @@ $BODY$
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.08.21         *
+ 05.03.24         *
 */
 
 -- тест
