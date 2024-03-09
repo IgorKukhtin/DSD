@@ -39,7 +39,7 @@ BEGIN
                    WHEN inNPP = 0
                    THEN zc_Color_White() -- 'Не запланировано'
 
-                   ELSE zc_Color_Red() --'Удален'
+                   ELSE zc_Color_White() -- zc_Color_Red() --'Удален'
 
                END
             );
