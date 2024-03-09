@@ -4191,6 +4191,9 @@ object OrderClientForm: TOrderClientForm
         end
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -6584,6 +6587,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 288
     Top = 360
@@ -6806,6 +6810,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 824
     Top = 384
@@ -7210,6 +7215,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 768
     Top = 240
@@ -7240,6 +7246,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 808
     Top = 264
@@ -7335,6 +7342,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 952
     Top = 304
@@ -7380,6 +7388,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 728
     Top = 256
@@ -7450,6 +7459,7 @@ object OrderClientForm: TOrderClientForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 480
     Top = 360
