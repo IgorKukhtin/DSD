@@ -89,15 +89,31 @@ BEGIN
                  ELSE (tmp.outFileName ||'.csv')
             END                       :: TVarChar AS Subject
           , ''                        :: TBlob    AS Body
-          , gpGet_Mail.Value                      AS AddressFrom
+
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu777@gmail.com'
+                 ELSE gpGet_Mail.Value
+            END :: TVarChar                      AS AddressFrom
+
           , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
                  ELSE tmpExportJuridical.ContactPersonMail --|| ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
-          , gpGet_Host.Value                     AS Host
-          , gpGet_Port.Value                     AS Port
-          , gpGet_User.Value                     AS UserName
-          , gpGet_Password.Value                 AS Password
+
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'imap.gmail.com' -- 'smtp.ua.fm' 
+                 ELSE gpGet_Host.Value
+            END :: TVarChar                       AS Host
+
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN '993' 
+                 ELSE gpGet_Port.Value
+            END :: TVarChar                       AS Port
+
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu777@gmail.com'
+                 ELSE gpGet_User.Value
+            END :: TVarChar                      AS UserName
+
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'et' -- 'q' 
+                 ELSE gpGet_Password.Value
+            END :: TVarChar                      AS Password
 
      FROM gpGet_PersonalService_FileNameCSV (inMovementId, inParam, inSession) AS tmp
           LEFT JOIN tmpExportJuridical ON 1 = 1
