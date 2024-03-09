@@ -1,6 +1,4 @@
 inherited AncestorDBGrid_boatForm: TAncestorDBGrid_boatForm
-  ExplicitWidth = 591
-  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -58,6 +56,9 @@ inherited AncestorDBGrid_boatForm: TAncestorDBGrid_boatForm
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
+    inherited actRefresh: TdsdDataSetRefresh
+      ImageIndex = 90
+    end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
@@ -124,6 +125,7 @@ inherited AncestorDBGrid_boatForm: TAncestorDBGrid_boatForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 520
     Top = 264
