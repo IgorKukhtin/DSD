@@ -2634,7 +2634,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49203
       ErasedFieldName = 'isErased'
       DataSource = ProdColorItemsDS
     end
@@ -2649,7 +2649,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 16430
+      ShortCut = 49205
       ErasedFieldName = 'isErased'
       DataSource = ProdOptItemsDS
     end
@@ -2664,7 +2664,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49201
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2679,7 +2679,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 16430
+      ShortCut = 49206
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdOptItemsDS
@@ -2695,7 +2695,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49204
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ProdColorItemsDS
@@ -2711,7 +2711,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49202
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
