@@ -154,7 +154,8 @@ BEGIN
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '|| tmpInvoice.InsertName ::TVarChar)  ::TVarChar AS Text3
             
-            , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
+            , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber
+
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   
             
@@ -208,6 +209,10 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
                                 AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
+
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = Object_Client.Id
+                              AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
 
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = Object_Client.Id

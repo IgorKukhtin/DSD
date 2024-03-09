@@ -279,6 +279,12 @@ END IF;
          IF TRIM (inValue4) ILIKE '3 x Flush fitting padeyes c\/w tie down starps and fixings' THEN inValue1:= 'b280_aoav_8_0'; END IF;
      END IF;
 
+
+     -- замена - Schwarz=black для order=6393
+     IF inTitle ILIKE 'moldings' AND inTitle2 ILIKE 'color_title' AND inValue2 ILIKE TRIM ('Schwarz')
+     THEN
+         inValue2:= 'Black';
+     END IF;
  
      -- кривой первый символ
      IF TRIM (inValue4) ILIKE '%3 x Flush fitting padeyes c/w tie down starps and fixings' AND inValue1 <> ''
