@@ -43,6 +43,44 @@ type
     edVATPercent: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
     edTransportSumm_load: TcxCurrencyEdit;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel3: TcxLabel;
+    edFrom: TcxButtonEdit;
+    GuidesFrom: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edProduct: TcxButtonEdit;
+    GuidesProduct: TdsdGuides;
+    cxLabel31: TcxLabel;
+    cxLabel32: TcxLabel;
+    cxLabel8: TcxLabel;
+    edBasis_summ_orig: TcxCurrencyEdit;
+    edBasis_summ2_orig: TcxCurrencyEdit;
+    edBasis_summ1_orig: TcxCurrencyEdit;
+    edSummDiscount1: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    edSummDiscount2: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    edSummDiscount3: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    cxLabel38: TcxLabel;
+    edSummDiscount_total: TcxCurrencyEdit;
+    cxLabel39: TcxLabel;
+    edBasis_summ: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    cxLabel28: TcxLabel;
+    edBasis_summ_transport: TcxCurrencyEdit;
+    cxLabel30: TcxLabel;
+    edBasisWVAT_summ_transport: TcxCurrencyEdit;
+    spGet: TdsdStoredProc;
+    spUpdate_summ_after: TdsdStoredProc;
+    spUpdate_summ_before: TdsdStoredProc;
+    HeaderExit: THeaderExit;
+    EnterMoveNext: TEnterMoveNext;
+    actUpdate_summ_before: TdsdDataSetRefresh;
+    actUpdate_summ_after: TdsdInsertUpdateGuides;
+    spUpdate_before: TdsdStoredProc;
+    spUpdate_after: TdsdStoredProc;
   private
     { Private declarations }
   public
