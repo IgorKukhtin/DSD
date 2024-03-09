@@ -196,10 +196,10 @@ inherited PriceListJournalForm: TPriceListJournalForm
     Width = 782
     ExplicitWidth = 782
     inherited deStart: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45292d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42370d
+      EditValue = 45292d
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -589,6 +589,10 @@ inherited PriceListJournalForm: TPriceListJournalForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

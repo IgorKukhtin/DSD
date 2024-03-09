@@ -2615,7 +2615,7 @@ object ProductionUnionForm: TProductionUnionForm
         end>
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -4412,6 +4412,7 @@ object ProductionUnionForm: TProductionUnionForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 483
     Top = 177
@@ -4870,6 +4871,7 @@ object ProductionUnionForm: TProductionUnionForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 360
@@ -5218,6 +5220,7 @@ object ProductionUnionForm: TProductionUnionForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 67
     Top = 505
@@ -5464,6 +5467,7 @@ object ProductionUnionForm: TProductionUnionForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 995
     Top = 425

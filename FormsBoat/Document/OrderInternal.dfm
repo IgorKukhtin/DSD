@@ -1286,6 +1286,9 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1888,7 +1891,6 @@ object OrderInternalForm: TOrderInternalForm
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Category = 0
     end
     object bbGridToExel: TdxBarButton
@@ -2692,9 +2694,9 @@ object OrderInternalForm: TOrderInternalForm
         item
           StoredProc = spSelectMI_DetailAll
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -4507,6 +4509,7 @@ object OrderInternalForm: TOrderInternalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 296
     Top = 392
@@ -4568,6 +4571,7 @@ object OrderInternalForm: TOrderInternalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 728
     Top = 192
@@ -4750,6 +4754,7 @@ object OrderInternalForm: TOrderInternalForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 747
     Top = 505
@@ -5021,6 +5026,7 @@ object OrderInternalForm: TOrderInternalForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1003
     Top = 449

@@ -957,7 +957,7 @@ object OrderPartnerForm: TOrderPartnerForm
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     Properties.ReadOnly = False
-    TabOrder = 6
+    TabOrder = 5
     Width = 125
   end
   object Panel_btn: TPanel
@@ -1651,9 +1651,9 @@ object OrderPartnerForm: TOrderPartnerForm
         item
           StoredProc = spSelectMI_Child
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1768,7 +1768,7 @@ object OrderPartnerForm: TOrderPartnerForm
           StoredProc = spUnErasedMIMaster
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       ImageIndex = 8
       ShortCut = 49220
       ErasedFieldName = 'isErased'
@@ -2012,7 +2012,7 @@ object OrderPartnerForm: TOrderPartnerForm
       Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 16433
       ImageIndex = 0
     end
@@ -3334,6 +3334,7 @@ object OrderPartnerForm: TOrderPartnerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 728
     Top = 208
@@ -3381,6 +3382,7 @@ object OrderPartnerForm: TOrderPartnerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 816
     Top = 224

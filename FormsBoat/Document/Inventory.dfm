@@ -1157,9 +1157,9 @@ object InventoryForm: TInventoryForm
         item
           StoredProc = spBarcode_null
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -2465,6 +2465,7 @@ object InventoryForm: TInventoryForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 171
     Top = 401
@@ -2932,6 +2933,7 @@ object InventoryForm: TInventoryForm
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 888
     Top = 336
@@ -2969,6 +2971,7 @@ object InventoryForm: TInventoryForm
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 718
     Top = 361
