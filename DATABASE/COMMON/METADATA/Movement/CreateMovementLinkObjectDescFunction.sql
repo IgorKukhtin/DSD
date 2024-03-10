@@ -576,12 +576,29 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_UserKeyId() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_UserKeyId', 'Чей файловый ключ использовался при пробитии чека.' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_UserKeyId');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankSecond_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecond_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BankSecond_num', 'Банк - 2ф.(Восток)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecond_num');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankSecondTwo_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecondTwo_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BankSecondTwo_num', 'Банк - 2ф.(ОТП)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecondTwo_num');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankSecondDiff_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecondDiff_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_BankSecondDiff_num', 'Банк - 2ф.(личный)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankSecondDiff_num');
+
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 10.03.24         * zc_MovementLinkObject_BankSecond
+                    zc_MovementLinkObject_BankSecondTwo_num
+                    zc_MovementLinkObject_BankSecondDiff_num
  22.05.23                                                                                     * zc_MovementLinkObject_MemberSignCarrier, zc_MovementLinkObject_MemberSignConsignor
  19.04.23         * zc_MovementLinkObject_StatusInsert
  20.02.23                                                                                     * zc_MovementLinkObject_UserKeyId
