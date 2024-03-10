@@ -142,6 +142,11 @@ begin
   // Процесс аутентификации
   if FindCmdLineSwitch('autologin_a', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'asdasxq1', gc_User);
+     //
+     TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
+     TStorageFactory.GetStorage.LoadReportPriorityList(gc_User.Session);
+     TStorageFactory.GetStorage.LoadStoredProcList(gc_User.Session);
+     //
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
@@ -150,6 +155,11 @@ begin
   else
   if FindCmdLineSwitch('autologin', true) then begin
      TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Климентьев К.И.', 'asdasxq1', gc_User);
+     //
+     TStorageFactory.GetStorage.LoadReportList(gc_User.Session);
+     TStorageFactory.GetStorage.LoadReportPriorityList(gc_User.Session);
+     TStorageFactory.GetStorage.LoadStoredProcList(gc_User.Session);
+     //
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
