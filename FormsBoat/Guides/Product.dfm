@@ -428,14 +428,31 @@
           Options.Editing = False
           Width = 100
         end
+        object isReserve: TcxGridDBColumn
+          Caption = #1056#1077#1079#1077#1088#1074#1072#1094#1080#1103
+          DataBinding.FieldName = 'isReserve'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 80
+        end
+        object Comment: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          DataBinding.FieldName = 'Comment'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 85
+        end
         object DateStart: TcxGridDBColumn
           Caption = #1053#1072#1095#1072#1083#1086' '#1087#1083#1072#1085
           DataBinding.FieldName = 'DateStart'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1055#1083#1072#1085#1086#1074#1072#1103' '#1076#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1089#1073#1086#1088#1082#1080
           Options.Editing = False
-          Width = 64
+          Width = 60
         end
         object DateBegin: TcxGridDBColumn
           Caption = #1057#1073#1086#1088#1082#1072' '#1087#1083#1072#1085
@@ -487,6 +504,7 @@
         object OperDate_BankAccount: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
           DataBinding.FieldName = 'OperDate_BankAccount'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1086#1087#1083#1072#1090#1099
@@ -499,6 +517,7 @@
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
@@ -972,14 +991,6 @@
           HeaderHint = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
           Options.Editing = False
           Width = 66
-        end
-        object Comment: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-          DataBinding.FieldName = 'Comment'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 179
         end
         object InsertDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'

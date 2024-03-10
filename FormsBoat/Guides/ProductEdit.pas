@@ -302,6 +302,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
+    cbReserve: TcxCheckBox;
   private
     { Private declarations }
   public

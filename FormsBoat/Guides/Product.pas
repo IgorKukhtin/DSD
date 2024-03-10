@@ -259,6 +259,7 @@ type
     OperDate_BankAccount: TcxGridDBColumn;
     Amount_BankAccount: TcxGridDBColumn;
     Amount_Invoice: TcxGridDBColumn;
+    isReserve: TcxGridDBColumn;
   private
     { Private declarations }
   public

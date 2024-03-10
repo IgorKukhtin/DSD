@@ -237,8 +237,8 @@ object ProductEditForm: TProductEditForm
         Width = 273
       end
       object cbBasicConf: TcxCheckBox
-        Left = 148
-        Top = 8
+        Left = 149
+        Top = 3
         Caption = #1041#1072#1079#1086#1074#1072#1103' '#1082#1086#1085#1092'.'
         ParentFont = False
         Style.Font.Charset = DEFAULT_CHARSET
@@ -248,13 +248,15 @@ object ProductEditForm: TProductEditForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 24
+        Visible = False
         Width = 155
       end
       object cbProdColorPattern: TcxCheckBox
         Left = 148
-        Top = 36
+        Top = -6
         Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088
         TabOrder = 26
+        Visible = False
         Width = 152
       end
       object cxLabel14: TcxLabel
@@ -710,6 +712,20 @@ object ProductEditForm: TProductEditForm
         Properties.ReadOnly = True
         TabOrder = 74
         Width = 148
+      end
+      object cbReserve: TcxCheckBox
+        Left = 151
+        Top = 23
+        Caption = #1056#1077#1079#1077#1088#1074#1072#1094#1080#1103
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -16
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 75
+        Width = 155
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -2637,6 +2653,14 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsReserve'
+        Value = Null
+        Component = cbReserve
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsProdColorPattern'
         Value = Null
         Component = cbProdColorPattern
@@ -3010,6 +3034,13 @@ object ProductEditForm: TProductEditForm
         Name = 'isBasicConf'
         Value = Null
         Component = cbBasicConf
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReserve'
+        Value = Null
+        Component = cbReserve
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
