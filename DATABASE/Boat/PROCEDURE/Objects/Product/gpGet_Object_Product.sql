@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              
              , OperPrice_load       TFloat
              , TransportSumm_load   TFloat
-             , isBasicConf Boolean, isProdColorPattern Boolean   --40
+             , isBasicConf Boolean, isReserve Boolean, isProdColorPattern Boolean   --40
 
              , MovementId_Invoice Integer
              , OperDate_Invoice   TDateTime
@@ -121,6 +121,7 @@ BEGIN
            , CAST (0 AS TFloat)        AS TransportSumm_load
 
            , CAST (TRUE AS Boolean)    AS isBasicConf
+           , CAST (FALSE AS Boolean)   AS isReserve
            , CAST (TRUE AS Boolean)    AS isProdColorPattern
 
            , CAST (0 AS Integer)       AS MovementId_Invoice --43
@@ -350,6 +351,7 @@ BEGIN
          , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
+         , COALESCE (ObjectBoolean_Reserve.ValueData, FALSE)   :: Boolean AS isReserve
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
 
          , tmpInvoice_First.MovementId_Invoice :: Integer    AS MovementId_Invoice
@@ -389,9 +391,14 @@ BEGIN
            ) ::TFloat AS AmountIn_remAll
 
      FROM Object AS Object_Product
+          -- включать базовую Комплектацию 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                   ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
                                  AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()
+          -- Предварительный заказ с нейизвестной конфигурацией
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Reserve
+                                  ON ObjectBoolean_Reserve.ObjectId = Object_Product.Id
+                                 AND ObjectBoolean_Reserve.DescId   = zc_ObjectBoolean_Product_Reserve()
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Hours
                                 ON ObjectFloat_Hours.ObjectId = Object_Product.Id

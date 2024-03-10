@@ -32,6 +32,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderClient());
      vbUserId := lpGetUserBySession (inSession);
+     
+     RETURN;
 
      IF inIsBefore = FALSE
      THEN

@@ -762,6 +762,9 @@ END IF;
                                               , inIsBasicConf           := -- включать базовую Комплектацию
                                                                            COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Product_BasicConf() AND OB.ObjectId = ioProductId)
                                                                                    , TRUE)
+                                              , inIsReserve             := --Предварительный заказ с нейизвестной конфигурацией
+                                                                           COALESCE ((SELECT OB.ValueData FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_Product_Reserve() AND OB.ObjectId = ioProductId)
+                                                                                   , FALSE)
                                               , inIsProdColorPattern    := -- автоматически добавить все Items Boat Structure
                                                                            NOT EXISTS (SELECT 1
                                                                                        FROM Object AS Object_ProdColorItems

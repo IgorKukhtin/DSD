@@ -5,6 +5,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, TFloat
                                                     , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, TFloat
+                                                    , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -16,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
     IN inReceiptProdModelId    Integer   ,    --
     IN inClientId              Integer   ,    --
     IN inIsBasicConf           Boolean   ,    -- включать базовую Комплектацию
+    IN inIsReserve             Boolean   ,    -- Предварительный заказ с нейизвестной конфигурацией
     IN inIsProdColorPattern    Boolean   ,    -- автоматически добавить все Items Boat Structure
     IN inHours                 TFloat    ,
     IN inDiscountTax           TFloat    ,
@@ -147,6 +153,8 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Product_BasicConf(), ioId, inIsBasicConf);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Product_Reserve(), ioId, inIsReserve);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Product_Hours(), ioId, inHours);

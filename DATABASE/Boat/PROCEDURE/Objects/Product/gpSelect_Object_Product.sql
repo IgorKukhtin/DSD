@@ -124,6 +124,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , Basis_summ_calc TFloat
 
              , isBasicConf Boolean
+             , isReserve Boolean
 
              , StateText   TVarChar
              , StateColor  Integer
@@ -296,6 +297,9 @@ BEGIN
 
                            -- !!!учитываем ли в стоимости ВСЮ БАЗОВУЮ конфигурацию!!
                          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) AS isBasicConf
+                           -- !!!Предварительный заказ с нейизвестной конфигурацией!!
+                         , COALESCE (ObjectBoolean_Reserve.ValueData, FALSE) AS isReserve
+                         
                            -- % скидки №1
                          , COALESCE (tmpOrderClient.DiscountTax, 0)     AS DiscountTax
                            -- % скидки №2
@@ -336,6 +340,9 @@ BEGIN
                          LEFT JOIN ObjectBoolean AS ObjectBoolean_BasicConf
                                                  ON ObjectBoolean_BasicConf.ObjectId = Object_Product.Id
                                                 AND ObjectBoolean_BasicConf.DescId   = zc_ObjectBoolean_Product_BasicConf()
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Reserve
+                                                 ON ObjectBoolean_Reserve.ObjectId = Object_Product.Id
+                                                AND ObjectBoolean_Reserve.DescId   = zc_ObjectBoolean_Product_Reserve()
 
                          LEFT JOIN ObjectLink AS ObjectLink_Model
                                               ON ObjectLink_Model.ObjectId = Object_Product.Id
@@ -372,6 +379,7 @@ BEGIN
  , tmpReceiptProdModelChild_all AS (SELECT tmpProduct.MovementId_OrderClient
                                          , tmpProduct.Id          AS ProductId
                                          , tmpProduct.isBasicConf AS isBasicConf
+                                         , tmpProduct.isReserve   AS isReserve
                                            -- % скидки №1
                                          , tmpProduct.DiscountTax
                                            -- % скидки №2
@@ -654,6 +662,7 @@ BEGIN
 
                        --, COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
                        , Object_Product.isBasicConf      AS isBasicConf
+                       , Object_Product.isReserve        AS isReserve
 
                          -- Цена продажи с сайта - без НДС, Basis+options
                        , Object_Product.OperPrice_load
@@ -970,6 +979,7 @@ BEGIN
            END :: TFloat AS Basis_summ_calc
 
          , tmpResAll.isBasicConf
+         , tmpResAll.isReserve
 
            -- Состояние
          , zfCalc_Order_State (tmpResAll.isSale
