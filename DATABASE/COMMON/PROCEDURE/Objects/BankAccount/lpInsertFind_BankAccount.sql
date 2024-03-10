@@ -31,11 +31,15 @@ BEGIN
 
 
    SELECT Id INTO vbBankAccountId
-     FROM Object_BankAccount_View
-    WHERE BankId = vbBankId AND JuridicalId = inJuridicalId AND Name = inBankAccount;
+   FROM (SELECT *
+         FROM Object_BankAccount_View
+         WHERE BankId = vbBankId AND JuridicalId = inJuridicalId AND Name ILIKE TRIM (inBankAccount)
+           AND isErased = FALSE
+         ORDER BY Object_BankAccount_View.Id DESC
+        ) AS Object_BankAccount_View;
 
 
-   IF COALESCE (inBankAccount, '') = ''
+   IF TRIM (COALESCE (inBankAccount, '')) = ''
    THEN
        RAISE EXCEPTION 'Ошибка.Р.сч. пусто для <%> <%> <%> <%>'
                      , inBankMFO
@@ -51,7 +55,7 @@ BEGIN
      -- RAISE EXCEPTION 'Ошибка.Расчетный счет <%> у юридического лица <%> не найден.', inBankAccount, lfGet_Object_ValueData (inJuridicalId);
 
      -- сохранили <Объект>
-     vbBankAccountId := lpInsertUpdate_Object(vbBankAccountId, zc_Object_BankAccount(), 0, inBankAccount);
+     vbBankAccountId := lpInsertUpdate_Object(vbBankAccountId, zc_Object_BankAccount(), 0, TRIM (inBankAccount));
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountId, inJuridicalId);
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), vbBankAccountId, vbBankId);
@@ -61,11 +65,12 @@ BEGIN
 
    END IF;
 
+   -- Результат
    RETURN vbBankAccountId;
 
+
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_BankAccount(TVarChar, TVarChar, TVarChar, Integer, Integer) OWNER TO postgres;
+ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*

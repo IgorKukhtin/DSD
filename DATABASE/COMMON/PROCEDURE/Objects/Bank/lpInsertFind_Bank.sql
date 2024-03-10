@@ -15,35 +15,56 @@ BEGIN
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankAccount());
 
    -- Ищем Банк по МФО. Если не находим, то добавляем
-   SELECT Object_Bank_View.Id, Object_Bank_View.BankName INTO vbBankId, vbBankName 
-          FROM Object_Bank_View 
-         WHERE Object_Bank_View.MFO = inBankMFO;
+   SELECT Object_Bank_View.Id, Object_Bank_View.BankName INTO vbBankId, vbBankName
+   FROM (SELECT *
+         FROM Object_Bank_View
+         WHERE Object_Bank_View.MFO ILIKE TRIM (inBankMFO)
+           AND Object_Bank_View.isErased = FALSE
+         ORDER BY Object_Bank_View.Id DESC
+         LIMIT 1
+        ) AS Object_Bank_View;
 
-   IF COALESCE (vbBankId, 0) = 0 THEN
+
+   IF COALESCE (vbBankId, 0) = 0
+   THEN
       -- Если код не установлен, определяем его каи последний+1
       vbCode := lfGet_ObjectCode (0, zc_Object_Bank());
+
       -- проверка прав уникальности для свойства <МФО>
-      PERFORM lpCheckUnique_ObjectString_ValueData (vbBankId, zc_Object_Bank(), inBankMFO);
+      -- PERFORM lpCheckUnique_ObjectString_ValueData (vbBankId, zc_Object_Bank(), inBankMFO);
+
+      IF TRIM (COALESCE (inBankName, '')) = '' AND 1=1
+      THEN
+          RAISE EXCEPTION 'Ошибка.Значение Банк пусто для MFO = <%>.'
+                        , inBankMFO
+                         ;
+
+      END IF;
+
       -- сохранили <Объект>
-      vbBankId := lpInsertUpdate_Object (vbBankId, zc_Object_Bank(), vbCode, inBankName);
+      vbBankId := lpInsertUpdate_Object (vbBankId, zc_Object_Bank(), vbCode, TRIM (inBankName));
 
-      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_MFO(), vbBankId, inBankMFO);
+      PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_MFO(), vbBankId, TRIM (inBankMFO));
 
       -- сохранили протокол
       PERFORM lpInsert_ObjectProtocol (vbBankId, inUserId);
 
    END IF;
-   IF COALESCE(vbBankName, '') = '' AND (inBankName<>'') THEN
-      UPDATE Object SET ValueData = inBankName WHERE Id = vbBankId;
+
+   IF TRIM (COALESCE(vbBankName, '')) = '' AND TRIM (inBankName) <>''
+   THEN
+      UPDATE Object SET ValueData = TRIM (inBankName) WHERE Id = vbBankId;
       -- сохранили протокол
       PERFORM lpInsert_ObjectProtocol (vbBankId, inUserId);
    END IF;
 
+
+   -- Результат
    RETURN vbBankId;
 
+
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Bank(TVarChar, TVarChar, Integer) OWNER TO postgres;  
+ LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
