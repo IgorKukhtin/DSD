@@ -613,7 +613,7 @@ BEGIN
                       -- если нужны все
                       AND inIsShowAll = TRUE
                       -- или так или есть связь с комплектующим ?
-                      AND (tmpProdOptions.SalePrice > 0 OR tmpProdOptions.GoodsId > 0)
+                      --AND (tmpProdOptions.SalePrice > 0 OR tmpProdOptions.GoodsId > 0)
                    )
          -- свойства для GoodsId
        , tmpGoods AS (SELECT tmpObject.GoodsId                          AS GoodsId

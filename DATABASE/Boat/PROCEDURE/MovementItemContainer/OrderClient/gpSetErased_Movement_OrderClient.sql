@@ -19,10 +19,15 @@ BEGIN
                                 , inUserId     := vbUserId);
 
     -- Удаляем Лодку
-    PERFORM lpUpdate_Object_isErased (inObjectId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Product())
+    PERFORM lpUpdate_Object_isErased (inObjectId:= MLO.ObjectId
                                     , inIsErased:= TRUE
                                     , inUserId  := vbUserId
-                                     );
+                                     )
+    FROM MovementLinkObject AS MLO
+    WHERE MLO.MovementId = inMovementId
+      AND MLO.DescId     = zc_MovementLinkObject_Product()
+      AND MLO.ObjectId   > 0
+    ;
 
 END;
 $BODY$
