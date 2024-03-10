@@ -1495,7 +1495,9 @@ uses
   PersonalGroupSummAddJournal in '..\..\Forms\Document\PersonalGroupSummAddJournal.pas' {PersonalGroupSummAddJournalForm: TParentForm},
   PersonalGroupSummAdd in '..\..\Forms\Document\PersonalGroupSummAdd.pas' {PersonalGroupSummAddForm: TParentForm},
   Report_PersonalGroupSummAddDialog in '..\..\Forms\Report\Report_PersonalGroupSummAddDialog.pas' {Report_PersonalGroupSummAddDialogForm: TParentForm},
-  Report_PersonalGroupSummAdd in '..\..\Forms\Report\Report_PersonalGroupSummAdd.pas' {Report_PersonalGroupSummAddForm: TParentForm};
+  Report_PersonalGroupSummAdd in '..\..\Forms\Report\Report_PersonalGroupSummAdd.pas' {Report_PersonalGroupSummAddForm: TParentForm},
+  BankSecondNum in '..\..\Forms\Document\BankSecondNum.pas' {BankSecondNumForm: TParentForm},
+  BankSecondNumJournal in '..\..\Forms\Document\BankSecondNumJournal.pas' {BankSecondNumJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

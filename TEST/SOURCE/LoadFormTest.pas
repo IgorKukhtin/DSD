@@ -29,6 +29,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountContractFormTest;
     procedure LoadBankAccountDocumentFormTest;
+    procedure LoadBankSecondNumFormTest;
     procedure LoadBankStatementFormTest;
     procedure LoadBarCodeBoxFormTest;
     procedure LoadBonusKindFormTest;
@@ -306,6 +307,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
 end;
+
+
+procedure TLoadFormTest.LoadBankSecondNumFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankSecondNumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankSecondNumJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankSecondNumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankSecondNumForm');
+end;
+
 
 procedure TLoadFormTest.LoadBankStatementFormTest;
 begin

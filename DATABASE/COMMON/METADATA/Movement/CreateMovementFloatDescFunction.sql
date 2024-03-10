@@ -712,11 +712,25 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_NormHour() RETURNS Integer AS $BODY$
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_NormHour', 'Норма времени' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NormHour');  
  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_BankSecond_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecond_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_BankSecond_num', '№ по приоритету для Банк - 2ф.(Восток)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecond_num');  
  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_BankSecondTwo_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecondTwo_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_BankSecondTwo_num', '№ по приоритету для Банк - 2ф.(ОТП)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecondTwo_num');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_BankSecondDiff_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecondDiff_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_BankSecondDiff_num', '№ по приоритету для Банк - 2ф.(личный)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_BankSecondDiff_num');  
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 10.03.24         * zc_MovementFloat_BankSecond_num
+                    zc_MovementFloat_BankSecondTwo_num
+                    zc_MovementFloat_BankSecondDiff_num
  28.02.24         * zc_MovementFloat_NormHour
  08.11.23         * zc_MovementFloat_RoundPrice
                     zc_MovementFloat_DiffPrice       

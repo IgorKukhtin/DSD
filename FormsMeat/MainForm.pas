@@ -1474,6 +1474,8 @@ type
     miPersonalGroupSummAdd: TMenuItem;
     actReport_PersonalGroupSummAdd: TdsdOpenForm;
     miReport_PersonalGroupSummAdd: TMenuItem;
+    actBankSecondNum: TdsdOpenForm;
+    miBankSecondNum: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
