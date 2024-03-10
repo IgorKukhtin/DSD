@@ -38,6 +38,15 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
+   -- Замена
+   IF inIsEnabled = FALSE
+   THEN
+       IF COALESCE (ioId, 0) = 0
+       THEN
+           inIsEnabled:= TRUE;
+       END IF;
+   END IF;
+
    -- Проверка
    IF COALESCE (ioProdOptionsId, 0) = 0
    THEN
@@ -249,7 +258,7 @@ BEGIN
 
      IF inIsEnabled = FALSE
      THEN
-                -- Проверка
+       -- Проверка
        IF COALESCE (ioId, 0) = 0
        THEN
            RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Элемент не может быть удален.'

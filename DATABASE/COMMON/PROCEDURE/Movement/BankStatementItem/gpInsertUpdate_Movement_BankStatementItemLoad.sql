@@ -219,15 +219,15 @@ BEGIN
     -- сохранили свойство <Сумма операции>
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), vbMovementItemId, vbAmountCurrency);
      -- сохранили свойство <ОКПО>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO (), vbMovementItemId, inOKPO);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO (), vbMovementItemId, TRIM (inOKPO));
      -- сохранили свойство <Юридическое лицо>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName (), vbMovementItemId, inJuridicalName);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName (), vbMovementItemId, TRIM (inJuridicalName));
      -- сохранили свойство <Комментарий>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment (), vbMovementItemId, inComment);
      -- сохранили свойство <Расчетный счет>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankAccount (), vbMovementItemId, inBankAccount);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankAccount (), vbMovementItemId, TRIM (inBankAccount));
      -- сохранили свойство <МФО>
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankMFO (), vbMovementItemId, inBankMFO);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankMFO (), vbMovementItemId, TRIM (inBankMFO));
     -- сохранили свойство <Название банка>
     IF TRIM (COALESCE (inBankName, '')) = ''
     THEN
@@ -235,7 +235,7 @@ BEGIN
         inBankName:= COALESCE((SELECT Object.ValueData FROM Object WHERE Object.Id = vbBankId), '');
     END IF;
     --
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId, inBankName);
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_BankName (), vbMovementItemId, TRIM (inBankName));
      -- сохранили свойство <Валюта>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Currency (), vbMovementItemId, vbCurrencyId);
      -- сохранили свойство <Валюта партнера>
