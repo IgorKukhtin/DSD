@@ -112,7 +112,10 @@ BEGIN
          vbCarId           := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_Transport AND MLO.DescId = zc_MovementLinkObject_Car() AND vbMovementDescId_Transport = zc_Movement_Transport()
                                    UNION SELECT MILO.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = MI.Id AND MILO.DescId = zc_MILinkObject_Car() WHERE MI.MovementId = vbMovementId_Transport AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND vbMovementDescId_Transport = zc_Movement_TransportService()
                                         ), 0);
-         inCarTrailerId    := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_Transport AND MLO.DescId = zc_MovementLinkObject_CarTrailer()), 0);
+         inCarTrailerId    := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_Transport AND MLO.DescId = zc_MovementLinkObject_CarTrailer()
+                                   UNION SELECT MILO.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = MI.Id AND MILO.DescId = zc_MILinkObject_CarTrailer() WHERE MI.MovementId = vbMovementId_Transport AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND vbMovementDescId_Transport = zc_Movement_TransportService()
+                                        ), 0);
+
          inPersonalDriverId:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId_Transport AND MLO.DescId = zc_MovementLinkObject_PersonalDriver() AND vbMovementDescId_Transport = zc_Movement_Transport()
                                    UNION SELECT MILO.ObjectId FROM MovementItem AS MI JOIN MovementItemLinkObject AS MILO ON MILO.MovementItemId = MI.Id AND MILO.DescId = zc_MILinkObject_MemberExternal() WHERE MI.MovementId = vbMovementId_Transport AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE AND vbMovementDescId_Transport = zc_Movement_TransportService()
                                         ), 0);
