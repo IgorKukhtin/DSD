@@ -16,7 +16,10 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , CardBankSecondTwo TVarChar, CardIBANSecondTwo TVarChar, CardSecondTwo TVarChar
              , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar 
              , BankSecondTwoId Integer, BankSecondTwoName TVarChar
-             , BankSecondDiffId Integer, BankSecondDiffName TVarChar
+             , BankSecondDiffId Integer, BankSecondDiffName TVarChar  
+             , BankSecondId_num Integer, BankSecondName_num TVarChar
+             , BankSecondTwoId_num Integer, BankSecondTwoName_num TVarChar
+             , BankSecondDiffId_num Integer, BankSecondDiffName_num TVarChar
              , isMain Boolean, isOfficial Boolean, DateOut TDateTime, DateIn TDateTime
              , PersonalCode_to Integer, PersonalName_to TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
@@ -45,9 +48,13 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
              , SummTransport TFloat, SummTransportAdd TFloat, SummTransportAddLong TFloat, SummTransportTaxi TFloat, SummPhone TFloat
              , Amount_avance TFloat, Amount_avance_ps TFloat
-             , SummAvance TFloat, SummAvanceRecalc TFloat
-             , TotalSummChild TFloat, SummDiff TFloat
+             , SummAvance TFloat, SummAvanceRecalc TFloat  
+             
+             , Summ_BankSecond_num TFloat
+             , Summ_BankSecondTwo_num TFloat
+             , Summ_BankSecondDiff_num TFloat
 
+             , TotalSummChild TFloat, SummDiff TFloat
              , DayCount_child TFloat
              , WorkTimeHoursOne_child TFloat
              , Price_child TFloat
@@ -569,6 +576,15 @@ BEGIN
                                                    )
                )
 
+     , MILO_num AS (SELECT *
+                    FROM MovementItemLinkObject
+                    WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpAll.MovementItemId FROM tmpAll)
+                      AND MovementItemLinkObject.DescId IN (zc_MILinkObject_BankSecond_num()
+                                                          , zc_MILinkObject_BankSecondTwo_num() 
+                                                          , zc_MILinkObject_BankSecondDiff_num()
+                                                       )
+                   )
+
      , tmpMI_card_b2 AS (SELECT tmpMI.MemberId_Personal
                               , SUM (COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS Summ_calc
                          FROM tmpMI
@@ -617,6 +633,14 @@ BEGIN
             , Object_BankSecondTwo.ValueData   AS BankSecondTwoName
             , Object_BankSecondDiff.Id         AS BankSecondDiffId
             , Object_BankSecondDiff.ValueData  AS BankSecondDiffName
+
+            , Object_BankSecond_num.Id             AS BankSecondId_num
+            , Object_BankSecond_num.ValueData      AS BankSecondName_num
+            , Object_BankSecondTwo_num.Id          AS BankSecondTwoId_num
+            , Object_BankSecondTwo_num.ValueData   AS BankSecondTwoName_num
+            , Object_BankSecondDiff_num.Id         AS BankSecondDiffId_num
+            , Object_BankSecondDiff_num.ValueData  AS BankSecondDiffName_num            
+            
             
             , CASE WHEN tmpAll.MovementItemId > 0 AND 1=0 /*vbUserId <> 5*/ THEN COALESCE (MIBoolean_Main.ValueData, FALSE) ELSE COALESCE (ObjectBoolean_Personal_Main.ValueData, FALSE) END :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
@@ -730,9 +754,12 @@ BEGIN
             , ( 1 * tmpMIContainer_pay.Amount_avance)    :: TFloat AS Amount_avance
             , ( 1 * tmpMIContainer_pay.Amount_avance_ps) :: TFloat AS Amount_avance_ps
 
-
             , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
-            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc
+            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc   
+            
+            , MIFloat_Summ_BankSecond_num.ValueData        ::TFloat AS Summ_BankSecond_num
+            , MIFloat_Summ_BankSecondTwo_num.ValueData     ::TFloat AS Summ_BankSecondTwo_num
+            , MIFloat_Summ_BankSecondDiff_num.ValueData    ::TFloat AS Summ_BankSecondDiff_num
 
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff
@@ -979,6 +1006,16 @@ BEGIN
                                         ON MIFloat_DayPriceNalog.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayPriceNalog.DescId = zc_MIFloat_DayPriceNalog()
 
+            LEFT JOIN MIFloat AS MIFloat_Summ_BankSecond_num
+                              ON MIFloat_Summ_BankSecond_num.MovementItemId = tmpAll.MovementItemId
+                             AND MIFloat_Summ_BankSecond_num.DescId = zc_MIFloat_Summ_BankSecond_num()
+            LEFT JOIN MIFloat AS MIFloat_Summ_BankSecondTwo_num
+                              ON MIFloat_Summ_BankSecondTwo_num.MovementItemId = tmpAll.MovementItemId
+                             AND MIFloat_Summ_BankSecondTwo_num.DescId = zc_MIFloat_Summ_BankSecondTwo_num()
+            LEFT JOIN MIFloat AS MIFloat_Summ_BankSecondDiff_num
+                              ON MIFloat_Summ_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
+                             AND MIFloat_Summ_BankSecondDiff_num.DescId = zc_MIFloat_Summ_BankSecondDiff_num()
+
             LEFT JOIN MIBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -1084,6 +1121,22 @@ BEGIN
                           AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
             LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
 
+            LEFT JOIN MILO_num AS MILinkObject_BankSecond_num
+                               ON MILinkObject_BankSecond_num.MovementItemId = tmpAll.MovementItemId
+                              AND MILinkObject_BankSecond_num.DescId = zc_MILinkObject_BankSecond_num()
+            LEFT JOIN Object AS Object_BankSecond_num ON Object_BankSecond_num.Id = MILinkObject_BankSecond_num.ObjectId
+
+            LEFT JOIN MILO_num AS MILinkObject_BankSecondTwo_num
+                               ON MILinkObject_BankSecondTwo_num.MovementItemId = tmpAll.MovementItemId
+                              AND MILinkObject_BankSecondTwo_num.DescId = zc_MILinkObject_BankSecondTwo_num()
+            LEFT JOIN Object AS Object_BankSecondTwo_num ON Object_BankSecondTwo_num.Id = MILinkObject_BankSecondTwo_num.ObjectId
+
+            LEFT JOIN MILO_num AS MILinkObject_BankSecondDiff_num
+                               ON MILinkObject_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
+                              AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
+            LEFT JOIN Object AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId
+
+
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
             LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
 
@@ -1107,6 +1160,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.03.24         * ..._num
  07.03.24         * CardBankSecondDiff, CardBankSecondTwo
  31.01.24         * CardBank, CardBankSecond
  04.07.23         *

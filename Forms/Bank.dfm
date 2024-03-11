@@ -3,7 +3,7 @@ object BankForm: TBankForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1073#1072#1085#1082#1086#1074
   ClientHeight = 376
-  ClientWidth = 520
+  ClientWidth = 612
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object BankForm: TBankForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 520
+    Width = 612
     Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 520
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -41,7 +42,6 @@ object BankForm: TBankForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -51,31 +51,31 @@ object BankForm: TBankForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 39
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 130
       end
       object clMFO: TcxGridDBColumn
         Caption = #1052#1060#1054
         DataBinding.FieldName = 'MFO'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 104
       end
       object SWIFT: TcxGridDBColumn
         Caption = ' SWIFT'
         DataBinding.FieldName = 'SWIFT'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 103
       end
       object IBAN: TcxGridDBColumn
         Caption = ' IBAN'
         DataBinding.FieldName = 'IBAN'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 119
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -85,6 +85,17 @@ object BankForm: TBankForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 105
+      end
+      object SummMax: TcxGridDBColumn
+        Caption = #1054#1075#1088'. '#1089#1091#1084#1084#1099' '#1076#1083#1103' '#1041#1072#1085#1082' - '#1060'2'
+        DataBinding.FieldName = 'SummMax'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1081' '#1089#1091#1084#1084#1077' '#1076#1083#1103' '#1041#1072#1085#1082' - '#1060'2'
+        Options.Editing = False
+        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -120,8 +131,8 @@ object BankForm: TBankForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -272,10 +283,12 @@ object BankForm: TBankForm
       FormName = 'TBankEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -292,6 +305,7 @@ object BankForm: TBankForm
       FormName = 'TBankEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -299,6 +313,7 @@ object BankForm: TBankForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -330,6 +345,7 @@ object BankForm: TBankForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -337,6 +353,7 @@ object BankForm: TBankForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -345,6 +362,7 @@ object BankForm: TBankForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -383,6 +401,7 @@ object BankForm: TBankForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -390,6 +409,7 @@ object BankForm: TBankForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -429,10 +449,14 @@ object BankForm: TBankForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 328
     Top = 264
   end
@@ -447,6 +471,7 @@ object BankForm: TBankForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 80
