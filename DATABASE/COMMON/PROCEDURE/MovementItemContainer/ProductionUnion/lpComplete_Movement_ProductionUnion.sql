@@ -592,16 +592,20 @@ BEGIN
                                LEFT JOIN ContainerLinkObject AS CLO_Unit
                                                              ON CLO_Unit.ContainerId = Container.Id
                                                             AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                               INNER JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                              ON CLO_PartionGoods.ContainerId = Container.Id
-                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                          WHERE (CLO_Member.ObjectId    = vbMemberId_From
-                             AND vbMemberId_From        > 0
-                                )
-                             OR (CLO_Unit.ObjectId = vbUnitId_From
-                             AND vbUnitId_From     > 0
-                             AND Container.DescId  = zc_Container_CountAsset()
-                                )
+                               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                             ON CLO_PartionGoods.ContainerId = Container.Id
+                                                            AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                               LEFT JOIN ContainerLinkObject AS CLO_AssetTo
+                                                             ON CLO_AssetTo.ContainerId = Container.Id
+                                                            AND CLO_AssetTo.DescId      = zc_ContainerLinkObject_AssetTo()
+                          WHERE ((CLO_Member.ObjectId    = vbMemberId_From
+                              AND vbMemberId_From        > 0
+                                 )
+                              OR (CLO_Unit.ObjectId = vbUnitId_From
+                              AND vbUnitId_From     > 0
+                              AND Container.DescId  = zc_Container_CountAsset()
+                                 ))
+                            AND (CLO_PartionGoods.ObjectId > 0 OR CLO_AssetTo.ContainerId > 0)
                          )
      -- остаток с учетом движения
    , tmpContainer_rem AS (SELECT tmpContainer_list.ContainerId

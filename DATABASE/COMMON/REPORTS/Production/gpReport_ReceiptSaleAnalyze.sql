@@ -1,4 +1,4 @@
--- Function: gpReport_ReceiptSaleAnalyze()
+-- Function: gpReport_GoodsMI_ProductionUnion_Tax ()
 
 DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_ReceiptSaleAnalyze (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);

@@ -1,5 +1,7 @@
  -- Function: gpReport_GoodsMI_SaleReturnIn() - Рабочая версия
 
+--!!!DROP FUNCTION IF EXISTS gpreport_goodsmi_salereturnin (tdatetime, tdatetime, integer, integer, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, boolean, boolean, boolean, boolean, tvarchar);
+--!!!DROP FUNCTION IF EXISTS gpreport_goodsmi_salereturnin (tdatetime, tdatetime, integer, integer, integer, integer, integer, integer, integer, integer, boolean, boolean, boolean, boolean, boolean, boolean, tvarchar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 
@@ -91,6 +93,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
+
+
+    IF vbUserId = 5
+    THEN
+        RAISE EXCEPTION 'Ошибка.vbUserId = 5.';
+    END IF;
+
 /*
     IF inStartDate + (INTERVAL '3 MONTH') <= inEndDate
     THEN
