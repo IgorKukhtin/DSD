@@ -43,11 +43,10 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbId             Integer;
+   DECLARE vbId Integer;
    DECLARE vbDocumentKindId Integer;
-   DECLARE vbToId           Integer;
-   DECLARE vbUnitId         Integer;
-   DECLARE vbMovementDescId Integer;
+   DECLARE vbToId      Integer;
+   DECLARE vbUnitId    Integer;
 
    DECLARE vbWeight_goods              TFloat;
    DECLARE vbWeightTare_goods          TFloat;
@@ -72,10 +71,9 @@ BEGIN
 
 
      -- определили
-     SELECT MovementLinkObject_From.ObjectId                AS UnitId
-          , MovementLinkObject_To.ObjectId                  AS ToId
-          , MovementFloat_MovementDesc.ValueData :: Integer AS MovementDescId
-            INTO vbUnitId, vbToId, vbMovementDescId
+     SELECT MovementLinkObject_From.ObjectId          AS UnitId
+          , MovementLinkObject_To.ObjectId            AS ToId
+            INTO vbUnitId, vbToId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -83,9 +81,6 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId      = zc_MovementLinkObject_To()
-          LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
-                                  ON MovementFloat_MovementDesc.MovementId = Movement.Id
-                                 AND MovementFloat_MovementDesc.DescId     = zc_MovementFloat_MovementDesc()
      WHERE Movement.Id = inMovementId;
 
 
@@ -96,7 +91,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <%>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
-
+     
      -- проверка
      IF inBranchCode = 101
         -- Реальный вес
@@ -271,110 +266,6 @@ BEGIN
          --
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
-
-     END IF;
-
-     -- дописали св-во <Asset>
-     IF inIsAsset = TRUE
-     THEN
-         IF inBranchCode IN (1, 101)
-        AND vbUnitId = 8451
-        AND vbToId  IN (8459, 8458) -- Розподільчий комплекс + Склад База ГП
-        AND COALESCE (inAssetId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определено значение <Оборудование - 1>.';
-         END IF;
-
-         --
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
-
-     -- Розподільчий комплекс
-     ELSEIF vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459
-        AND inAssetId > 0
-        -- AND vbUserId = 5 -- !!!tmp
-     THEN
-         -- Проверка
-         IF EXISTS (SELECT 1
-                    FROM MovementItem
-                         INNER JOIN MovementItemLinkObject AS MILO_Asset
-                                                           ON MILO_Asset.MovementItemId = MovementItem.Id
-                                                          AND MILO_Asset.DescId         = zc_MILinkObject_Asset()
-                                                          AND MILO_Asset.ObjectId       = inAssetId
-                         LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                          ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                         AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-
-                         LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
-                                                    ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
-                                                   AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.DescId     = zc_MI_Master()
-                      AND MovementItem.isErased   = FALSE
-                      AND MovementItem.Id         <> COALESCE (vbId, 0)
-                      -- если другая партия или товар в этой ячейке
-                      AND (MovementItem.ObjectId <> inGoodsId
-                        OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
-                        OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
-                          )
-                   )
-         THEN
-             RAISE EXCEPTION 'Ошибка.Для Ячейки <%> %может быть сохранена только партия% <%> %с датой <%>.'
-                           , lfGet_Object_ValueData (inAssetId)
-                           , CHR (13)
-                           , CHR (13)
-                           , (SELECT DISTINCT lfGet_Object_ValueData (MovementItem.ObjectId) || '> <' || lfGet_Object_ValueData_sh (MILO_GoodsKind.ObjectId)
-                              FROM MovementItem
-                                   INNER JOIN MovementItemLinkObject AS MILO_Asset
-                                                                     ON MILO_Asset.MovementItemId = MovementItem.Id
-                                                                    AND MILO_Asset.DescId         = zc_MILinkObject_Asset()
-                                                                    AND MILO_Asset.ObjectId       = inAssetId
-                                   LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                    ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-          
-                                   LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
-                                                              ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
-                                                             AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId     = zc_MI_Master()
-                                AND MovementItem.isErased   = FALSE
-                                AND MovementItem.Id         <> COALESCE (vbId, 0)
-                                -- если другая партия или товар в этой ячейке
-                                AND (MovementItem.ObjectId <> inGoodsId
-                                  OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
-                                  OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
-                                    )
-                             )
-                           , CHR (13)
-                           , (SELECT DISTINCT zfConvert_DateToString (MID_PartionGoodsDate.ValueData)
-                              FROM MovementItem
-                                   INNER JOIN MovementItemLinkObject AS MILO_Asset
-                                                                     ON MILO_Asset.MovementItemId = MovementItem.Id
-                                                                    AND MILO_Asset.DescId         = zc_MILinkObject_Asset()
-                                                                    AND MILO_Asset.ObjectId       = inAssetId
-                                   LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                    ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-          
-                                   LEFT JOIN MovementItemDate AS MID_PartionGoodsDate
-                                                              ON MID_PartionGoodsDate.MovementItemId = MovementItem.Id
-                                                             AND MID_PartionGoodsDate.DescId         = zc_MIDate_PartionGoods()
-                              WHERE MovementItem.MovementId = inMovementId
-                                AND MovementItem.DescId     = zc_MI_Master()
-                                AND MovementItem.isErased   = FALSE
-                                AND MovementItem.Id         <> COALESCE (vbId, 0)
-                                -- если другая партия или товар в этой ячейке
-                                AND (MovementItem.ObjectId <> inGoodsId
-                                  OR COALESCE (MILO_GoodsKind.ObjectId, 0) <> COALESCE (inGoodsKindId, 0)
-                                  OR COALESCE (MID_PartionGoodsDate.ValueData, zc_DateStart()) <> COALESCE (inPartionGoodsDate, zc_DateStart())
-                                    )
-                             )
-                            ;
-         END IF;
-
-         -- дописали св-во <Asset>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
 
      END IF;
 
