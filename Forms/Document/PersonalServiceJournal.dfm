@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -120
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -269,6 +270,29 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAvCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecond_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecondTwo_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecondDiff_num
+            end
+            item
+              Position = spFooter
+              Column = TotalSumm_BankSecond_num
+            end
+            item
+              Position = spFooter
+              Column = TotalSumm_BankSecondTwo_num
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -510,6 +534,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAvCardSecondRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecond_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecondTwo_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_BankSecondDiff_num
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -699,6 +738,42 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 82
+          end
+          object TotalSumm_BankSecond_num: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1042#1086#1089#1090#1086#1082', '#1087#1086' '#1087#1088#1080#1086#1088')'
+            DataBinding.FieldName = 'TotalSumm_BankSecond_num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1042#1086#1089#1090#1086#1082', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
+            Width = 80
+          end
+          object TotalSumm_BankSecondTwo_num: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055', '#1087#1086' '#1087#1088#1080#1086#1088')'
+            DataBinding.FieldName = 'TotalSumm_BankSecondTwo_num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
+            Width = 80
+          end
+          object TotalSumm_BankSecondDiff_num: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1083#1080#1095#1085#1099#1081', '#1087#1086' '#1087#1088#1080#1086#1088')'
+            DataBinding.FieldName = 'TotalSumm_BankSecondDiff_num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1072#1088#1090#1072' '#1041#1072#1085#1082' - 2'#1092'.('#1083#1080#1095#1085#1099#1081', '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091')'
+            Width = 80
           end
           object TotalSummNalog: TcxGridDBColumn
             Caption = #1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
@@ -1163,6 +1238,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Align = alBottom
         TabOrder = 1
         Visible = False
+        ExplicitLeft = -16
+        ExplicitTop = 545
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS

@@ -966,7 +966,6 @@ uses
   SendMember in '..\..\Forms\Document\SendMember.pas' {SendMemberForm: TParentForm},
   SendMemberJournal in '..\..\Forms\Document\SendMemberJournal.pas' {SendMemberJournalForm: TParentForm},
   PersonalServiceList_Unit_Object in '..\..\Forms\Guides\PersonalServiceList_Unit_Object.pas' {PersonalServiceList_Unit_ObjectForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Guides\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   WorkTimeKindEdit in '..\..\Forms\Guides\WorkTimeKindEdit.pas' {WorkTimeKindEditForm: TParentForm},
   Report_MIProtocolDialog in '..\..\Forms\Report\Report_MIProtocolDialog.pas' {Report_MIProtocolDialogForm: TParentForm},
@@ -1497,7 +1496,8 @@ uses
   Report_PersonalGroupSummAddDialog in '..\..\Forms\Report\Report_PersonalGroupSummAddDialog.pas' {Report_PersonalGroupSummAddDialogForm: TParentForm},
   Report_PersonalGroupSummAdd in '..\..\Forms\Report\Report_PersonalGroupSummAdd.pas' {Report_PersonalGroupSummAddForm: TParentForm},
   BankSecondNum in '..\..\Forms\Document\BankSecondNum.pas' {BankSecondNumForm: TParentForm},
-  BankSecondNumJournal in '..\..\Forms\Document\BankSecondNumJournal.pas' {BankSecondNumJournalForm: TParentForm};
+  BankSecondNumJournal in '..\..\Forms\Document\BankSecondNumJournal.pas' {BankSecondNumJournalForm: TParentForm},
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

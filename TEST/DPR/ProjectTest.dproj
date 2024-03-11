@@ -3195,10 +3195,6 @@
 				<Form>PersonalServiceList_Unit_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
-				<Form>PersonalServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5232,6 +5228,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankSecondNumJournal.pas">
 				<Form>BankSecondNumJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalService.pas">
+				<Form>PersonalServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
