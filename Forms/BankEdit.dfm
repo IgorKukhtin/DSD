@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1073#1072#1085#1082#1072
-  ClientHeight = 378
+  ClientHeight = 399
   ClientWidth = 346
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 80
-    Top = 335
+    Left = 66
+    Top = 366
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 335
+    Left = 216
+    Top = 366
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -110,6 +110,21 @@
     TabOrder = 13
     Width = 273
   end
+  object cxLabel12: TcxLabel
+    Left = 40
+    Top = 303
+    Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1086#1081' '#1089#1091#1084#1084#1077' '#1076#1083#1103' '#1041#1072#1085#1082' - '#1060'2'
+  end
+  object ceSummMax: TcxCurrencyEdit
+    Left = 40
+    Top = 326
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 15
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -154,12 +169,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -167,6 +184,7 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMFO'
@@ -174,6 +192,7 @@
         Component = edMFO
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inSWIFT'
@@ -181,6 +200,7 @@
         Component = edSWIFT
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inIBAN'
@@ -188,12 +208,22 @@
         Component = edIBAN
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummMax'
+        Value = Null
+        Component = ceSummMax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -205,6 +235,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 8
@@ -220,23 +251,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -244,24 +279,35 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MFO'
         Value = ''
         Component = edMFO
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'SWIFT'
         Value = Null
         Component = edSWIFT
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'IBAN'
         Value = Null
         Component = edIBAN
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummMax'
+        Value = Null
+        Component = ceSummMax
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 192
@@ -272,6 +318,7 @@
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -280,6 +327,7 @@
         Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -287,6 +335,7 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 141

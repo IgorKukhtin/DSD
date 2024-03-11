@@ -35,7 +35,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummHouseAdd TFloat
              , TotalSummAvance TFloat, TotalSummAvanceRecalc TFloat
              , TotalSummAvCardSecond TFloat, TotalSummAvCardSecondRecalc TFloat
-             , PriceNalog TFloat
+             , PriceNalog TFloat                                               
+             , TotalSumm_BankSecond_num TFloat, TotalSumm_BankSecondTwo_num TFloat, TotalSumm_BankSecondDiff_num TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -269,6 +270,10 @@ BEGIN
            
            , MovementFloat_PriceNalog.ValueData                   :: TFloat AS PriceNalog
 
+           , MovementFloat_TotalSumm_BankSecond_num.ValueData          AS TotalSumm_BankSecond_num
+           , MovementFloat_TotalSumm_BankSecondTwo_num.ValueData       AS TotalSumm_BankSecondTwo_num
+           , MovementFloat_TotalSumm_BankSecondDiff_num.ValueData      AS TotalSumm_BankSecondDiff_num
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
@@ -465,6 +470,16 @@ BEGIN
                                     ON MovementFloat_PriceNalog.MovementId = Movement.Id
                                    AND MovementFloat_PriceNalog.DescId = zc_MovementFloat_PriceNalog()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_BankSecond_num
+                                    ON MovementFloat_TotalSumm_BankSecond_num.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_BankSecond_num.DescId = zc_MovementFloat_TotalSumm_BankSecond_num()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_BankSecondTwo_num
+                                    ON MovementFloat_TotalSumm_BankSecondTwo_num.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_BankSecondTwo_num.DescId = zc_MovementFloat_TotalSumm_BankSecondTwo_num()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm_BankSecondDiff_num
+                                    ON MovementFloat_TotalSumm_BankSecondDiff_num.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm_BankSecondDiff_num.DescId = zc_MovementFloat_TotalSumm_BankSecondDiff_num()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -507,6 +522,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.03.24         * 
  15.02.24         * is4000
  04.07.23         * PriceNalog
  02.05.23         *

@@ -1016,6 +1016,17 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_CountForAmount', 'Коэфф перевода из кол-ва поставщика' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountForAmount');
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Summ_BankSecond_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecond_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Summ_BankSecond_num', 'Карта Банк - 2ф.(Восток, по приоритету)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecond_num');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Summ_BankSecondTwo_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecondTwo_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Summ_BankSecondTwo_num', 'Карта Банк - 2ф.(ОТП, по приоритету)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecondTwo_num');
+
+ CREATE OR REPLACE FUNCTION zc_MIFloat_Summ_BankSecondDiff_num() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecondDiff_num'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_Summ_BankSecondDiff_num', 'Карта Банк- 2ф.(личный, по приоритету)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecondDiff_num');
 
 
 
@@ -1702,6 +1713,9 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 11.03.24         * zc_MIFloat_Summ_BankSecond_num
+                    zc_MIFloat_Summ_BankSecondTwo_num
+                    zc_MIFloat_Summ_BankSecondDiff_num
  23.01.24                                                                                                     * zc_MIFloat_SummRounding, zc_MIFloat_SummRounding_curr
  28.12.23         * zc_MIFloat_PartionCell_Amount_...
  08.11.23         * zc_MIFloat_CountForAmount
