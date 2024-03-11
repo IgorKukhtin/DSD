@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Bank(Integer,Integer,TVarChar,TVarChar,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Bank(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Bank(
  INOUT ioId	                 Integer,       -- ключ объекта < Банк>
@@ -9,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Bank(
     IN inName                TVarChar,      -- Название объекта <Банк>
     IN inMFO                 TVarChar,      -- МФО
     IN inSWIFT               TVarChar,      -- SWIFT
-    IN inIBAN                TVarChar,      -- IBAN
+    IN inIBAN                TVarChar,      -- IBAN 
+    IN inSummMax             TFloat  ,
     IN inJuridicalId         Integer,       -- Юр. лицо
     IN inSession             TVarChar       -- сессия пользователя
 )
@@ -55,6 +57,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_SWIFT(), ioId, inSWIFT);
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Bank_IBAN(), ioId, inIBAN);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Bank_SummMax(), ioId, inSummMax);
+
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Bank_Juridical(), ioId, inJuridicalId);
 
    -- сохранили протокол
@@ -63,12 +68,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Bank (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Bank (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.03.24         *
  26.01.15                         * Подправил список параметров на ALTER FUNCTION
  10.10.14                                                       *
  08.05.14                                        * add lpCheckRight

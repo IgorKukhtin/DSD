@@ -1336,7 +1336,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsGroupProperty_ColorReport() RETUR
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsGroupProperty(), 'zc_ObjectFloat_GoodsGroupProperty_ColorReport', 'Цвет текста в "отчет по отгрузке"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsGroupProperty_ColorReport');
 
-
+    
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Bank_SummMax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_SummMax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_Bank_SummMax', 'Ограничение по максимальной сумме для Банк - Ф2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_SummMax');
+    
+    
      
  
 --!!! АПТЕКА
@@ -2538,6 +2543,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.03.24         * zc_ObjectFloat_Bank_SummMax
  16.02.24         * zc_ObjectFloat_GoodsByGoodsKind_PackLimit
  27.12.23         * zc_ObjectFloat_PartionCell_...
  27.12.23                                                                                      * zc_ObjectFloat_CashSettings_SmashSumSend
