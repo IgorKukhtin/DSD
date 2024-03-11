@@ -30,22 +30,6 @@ BEGIN
                                , PartNumber TVarChar, PartionModelId Integer, isAsset Boolean
                                 ) ON COMMIT DROP;
 
-     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_PartionCell'))
-     THEN
-         DELETE FROM _tmpItem_PartionCell;
-
-     ELSE
-         -- таблица - 
-         CREATE TEMP TABLE _tmpItem_PartionCell (MovementItemId Integer
-                                               , MIContainerId_To BigInt, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer
-                                               , PartionCellId Integer, DescId_PartionCell Integer
-                                               , PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime
-                                               , OperCount TFloat
-                                               , PartionGoodsId_From Integer, PartionGoodsId_To Integer
-                                               , Ord Integer
-                                                ) ON COMMIT DROP;
-     END IF;
-
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemSumm'))
      THEN
@@ -55,11 +39,10 @@ BEGIN
      END IF;
 
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerDescId Integer, MIContainerId_To BigInt, ContainerId_GoodsTo Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_GoodsFrom Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerDescId Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_GoodsFrom Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
 
-END;
-$BODY$
+END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
