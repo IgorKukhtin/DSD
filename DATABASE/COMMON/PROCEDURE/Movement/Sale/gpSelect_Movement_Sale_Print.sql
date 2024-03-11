@@ -1892,6 +1892,11 @@ END IF;
     || ', ' || inSession
               ;*/
 
+     IF vbUserId = 5 AND 1=0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Admin Нет прав';
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

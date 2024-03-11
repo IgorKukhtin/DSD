@@ -13,7 +13,7 @@ $BODY$
 BEGIN
 
      -- Розподільчий комплекс
-     IF inUnitId = zc_Unit_RK() AND inOperDate >= '15.02.2024'
+     IF inUnitId = zc_Unit_RK() AND inOperDate >= '30.03.2024'
      THEN RETURN TRUE;
      ELSE RETURN FALSE;
      END IF;

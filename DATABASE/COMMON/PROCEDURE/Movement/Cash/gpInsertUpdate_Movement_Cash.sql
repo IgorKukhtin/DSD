@@ -355,6 +355,11 @@ BEGIN
                                               , inUserId     := vbUserId);
          END IF;
      -- END IF;
+     
+     IF vbUserId = 5 AND 1=1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Admin Нет прав';
+     END IF;
 
 END;
 $BODY$
