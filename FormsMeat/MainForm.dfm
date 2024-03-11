@@ -9579,7 +9579,7 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 115
+      ShortCut = 49217
       ImageIndex = 1
       FormName = 'TPromoForm'
       FormNameParam.Value = ''
