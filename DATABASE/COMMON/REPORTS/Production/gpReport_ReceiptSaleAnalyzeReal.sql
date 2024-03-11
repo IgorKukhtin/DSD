@@ -33,41 +33,9 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     -- !!!пересчет –ецептур, временно захардкодил!!!
-    IF vbUserId <> 5 OR (inStartDate >= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
-                                             -- последний день предыдущего мес€ца
-                                             THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
-                
-                                             -- последний день ƒ¬ј мес€ца назад
-                                             ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
-                                         END)
-                      OR inEndDate   >= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
-                                             -- последний день предыдущего мес€ца
-                                             THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
-                
-                                             -- последний день ƒ¬ј мес€ца назад
-                                             ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
-                                         END)
-                        )
-    THEN PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
-    END IF;
+    IF vbUserId <> 5 THEN PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt(); END IF;
     -- !!!пересчет –ецептур, временно захардкодил!!!
-    IF vbUserId <> 5 OR (inStartDate >= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
-                                             -- последний день предыдущего мес€ца
-                                             THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
-                
-                                             -- последний день ƒ¬ј мес€ца назад
-                                             ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
-                                         END)
-                      OR inEndDate   >= (CASE WHEN EXTRACT (DAY FROM CURRENT_DATE) >= 15
-                                             -- последний день предыдущего мес€ца
-                                             THEN DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY'
-                
-                                             -- последний день ƒ¬ј мес€ца назад
-                                             ELSE DATE_TRUNC ('MONTH', DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 DAY') -INTERVAL '1 DAY'
-                                         END)
-                        )
-    THEN PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
-    END IF;
+    IF vbUserId <> 5 THEN PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0); END IF;
 
 
      CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyId Integer, TradeMarkId Integer, MeasureId Integer, Weight TFloat) ON COMMIT DROP;
@@ -633,7 +601,7 @@ BEGIN
                    -- ??? 1 или 2???
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ1_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm2_bon
                    -- ??? 1 или 3 ???
-                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ1_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm3_bon
+                 , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ2_bon / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm3_bon
 
                  , SUM (tmpAll.OperCount_sale * CASE WHEN ObjectFloat_Value.ValueData <> 0 THEN CAST (tmpAll.Summ_pl / ObjectFloat_Value.ValueData AS NUMERIC (16, 3)) ELSE 0 END) AS newSumm_pl
 
@@ -1136,8 +1104,8 @@ BEGIN
 
              -- сумма бонусы
            , tmpResult.newSumm1_bon :: TFloat AS Summ1_bon
-           , tmpResult.newSumm2_bon :: TFloat AS Summ2_bon
-           , tmpResult.newSumm3_bon :: TFloat AS Summ3_bon
+           , tmpResult.newSumm2_bon :: TFloat AS Summ1_bon
+           , tmpResult.newSumm3_bon :: TFloat AS Summ1_bon
 
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
