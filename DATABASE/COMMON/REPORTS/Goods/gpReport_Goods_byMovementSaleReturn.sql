@@ -1,4 +1,4 @@
- -- FunctiON: gpReport_Goods_byMovementSaleReturn ()
+-- FunctiON: gpReport_Goods_byMovementSaleReturn ()
 
 DROP FUNCTION IF EXISTS gpReport_Goods_byMovementSaleReturn (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
@@ -251,6 +251,7 @@ BEGIN
 
     -- Результат для 1-ой страницы
     OPEN Cursor1 FOR
+    -- Результат для 4-ой страницы      /*аналог 1-ой стр*/
        WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 1)
 
        SELECT *
@@ -265,7 +266,7 @@ BEGIN
                , SUM (tmpData.ReturnAmountPartner)  :: TFloat   AS ReturnAmountPartner
                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
-               , FALSE                     AS isTop
+               , FALSE AS isTop
                , zc_Color_Red() :: Integer AS ColorRecord
                , 1 AS Num
                , 1 AS Num2
@@ -377,7 +378,7 @@ BEGIN
 
         UNION ALL
           -- 3.2.
-          SELECT Object_GoodsTag.ValueData          :: TVarChar AS GroupName
+          SELECT Object_GoodsGroupPropertyParent.ValueData          :: TVarChar AS GroupName
                , SUM (tmpData.SaleAmount)           :: TFloat   AS SaleAmount
                , SUM (tmpData.SaleAmountPartner)    :: TFloat   AS SaleAmountPartner
                , SUM (tmpData.ReturnAmount)         :: TFloat   AS ReturnAmount
@@ -385,16 +386,17 @@ BEGIN
                , SUM (tmpData.SaleAmount - tmpData.ReturnAmount)               :: TFloat AS Amount
                , SUM (tmpData.SaleAmountPartner - tmpData.ReturnAmountPartner) :: TFloat AS AmountPartner
                , FALSE AS isTop
-               , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord
+               , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord    
                , 3 AS Num
-               , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsTag.ValueData)   AS Integer) AS Num2
+               , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsGroupPropertyParent.ValueData)   AS Integer) AS Num2
           FROM tmpData
-               LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
+               LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = tmpData.GoodsGroupPropertyId_Parent
                LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
-                                     ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id
-                                    AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsTag_ColorReport()
+                                     ON ObjectFloat_ColorReport.ObjectId = Object_GoodsGroupPropertyParent.Id
+                                    AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsGroupProperty_ColorReport()
           WHERE tmpData.GoodsPlatformId = 416935 ---'%Алан%'
-          GROUP BY Object_GoodsTag.ValueData, COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
+          GROUP BY Object_GoodsGroupPropertyParent.ValueData
+                 , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
           ) AS tmp;
 
@@ -403,6 +405,7 @@ BEGIN
 
     -- Результат для 2-ой страницы
     OPEN Cursor2 FOR
+    -- Результат для 5-ой страницы     /*аналог 2-ой стр*/
        WITH tmpData AS (SELECT _tmpData.* FROM _tmpData  WHERE _tmpData.GroupNum = 2)
 
        SELECT *
@@ -547,7 +550,7 @@ BEGIN
 
         UNION ALL
           -- 3.2.
-           SELECT Object_GoodsTag.ValueData           :: TVarChar AS GroupName
+           SELECT Object_GoodsGroupPropertyParent.ValueData  :: TVarChar AS GroupName
                 , SUM (tmpData.SaleAmountSh)          :: TFloat   AS SaleAmountSh
                 , SUM (tmpData.SaleAmountPartnerSh)   :: TFloat   AS SaleAmountPartnerSh
                 , SUM (tmpData.ReturnAmountSh)        :: TFloat   AS ReturnAmountSh
@@ -564,13 +567,14 @@ BEGIN
                 , FALSE AS isTop
                 , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black()) :: Integer  AS ColorRecord
                 , 3 AS Num
-                , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsTag.ValueData)   AS Integer) AS Num2
+                , CAST (ROW_NUMBER() OVER (ORDER BY Object_GoodsGroupPropertyParent.ValueData)   AS Integer) AS Num2
            FROM tmpData
-                LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = tmpData.GoodsTagId
+                LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = tmpData.GoodsGroupPropertyId_Parent 
                 LEFT JOIN ObjectFloat AS ObjectFloat_ColorReport
-                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsTag.Id
-                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsTag_ColorReport()
-           GROUP BY Object_GoodsTag.ValueData, COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
+                                      ON ObjectFloat_ColorReport.ObjectId = Object_GoodsGroupPropertyParent.Id
+                                     AND ObjectFloat_ColorReport.DescId = zc_ObjectFloat_GoodsGroupProperty_ColorReport()
+           GROUP BY Object_GoodsGroupPropertyParent.ValueData
+                  , COALESCE (ObjectFloat_ColorReport.ValueData, zc_Color_Black())
 
         UNION ALL
           -- 4.1.
@@ -619,9 +623,10 @@ BEGIN
            GROUP BY Object_Goods.ValueData
 
            ) AS tmp
-    ;
+          ;
 
   RETURN NEXT Cursor2;
+
 
     -- Результат для 3-ой страницы Данные для графика
     OPEN Cursor3 FOR
