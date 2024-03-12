@@ -2470,14 +2470,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1258
-        Height = 642
+        Height = 612
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
@@ -2566,14 +2563,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
         Width = 1258
-        Height = 642
+        Height = 612
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
@@ -4040,6 +4034,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
+    object actUpdateMask: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMask
+        end>
+      Caption = 'actUpdateMask'
+    end
     object actInsertUpdate_byMemberMinus: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
@@ -4050,17 +4055,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           StoredProc = spInsertUpdate_byMemberMinus
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1091#1076#1077#1088#1078#1072#1085#1080#1103
-    end
-    object actUpdate_Compensation: TdsdExecStoredProc
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Compensation
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Compensation
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
     end
     object macUpdate_Compensation: TMultiAction
       Category = 'Update'
@@ -4080,27 +4074,47 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
       ImageIndex = 56
     end
-    object actUpdateCardSecond: TdsdExecStoredProc
+    object actUpdate_Compensation: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_CardSecond
+      StoredProc = spUpdate_Compensation
       StoredProcList = <
         item
-          StoredProc = spUpdate_CardSecond
+          StoredProc = spUpdate_Compensation
         end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
     end
-    object actUpdateCardSecondCash: TdsdExecStoredProc
+    object macUpdateCardSecond_num: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateCardSecond_num
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086 +
+        #1076') - 2'#1092'.?'
+      InfoAfterExecute = 
+        #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2' +
+        #1092'.'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+      ImageIndex = 89
+    end
+    object actUpdateCardSecond_num: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_CardSecondCash
+      StoredProc = spUpdate_CardSecond_num
       StoredProcList = <
         item
-          StoredProc = spUpdate_CardSecondCash
+          StoredProc = spUpdate_CardSecond_num
         end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
     end
     object macUpdateCardSecond: TMultiAction
       Category = 'Update'
@@ -4118,6 +4132,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
       ImageIndex = 74
     end
+    object actUpdateCardSecond: TdsdExecStoredProc
+      Category = 'Update'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CardSecond
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CardSecond
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
+    end
     object macUpdateCardSecondCash: TMultiAction
       Category = 'Update'
       MoveParams = <>
@@ -4134,16 +4159,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
       ImageIndex = 27
     end
-    object actUpdateMask: TdsdExecStoredProc
+    object actUpdateCardSecondCash: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMask
+      StoredProc = spUpdate_CardSecondCash
       StoredProcList = <
         item
-          StoredProc = spUpdateMask
+          StoredProc = spUpdate_CardSecondCash
         end>
-      Caption = 'actUpdateMask'
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1082#1072#1089#1089#1072') - 2'#1092'.'
     end
     object actUpdateSummNalogRet: TdsdExecStoredProc
       Category = 'Update'
@@ -5442,6 +5467,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateCardSecond_num'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateSummNalogRet'
         end
         item
@@ -5558,6 +5591,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbUpdateCardSecond4000: TdxBarButton
       Action = macUpdateCardSecond4000
+      Category = 0
+    end
+    object bbUpdateCardSecond_num: TdxBarButton
+      Action = macUpdateCardSecond_num
       Category = 0
     end
   end
@@ -8434,5 +8471,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 544
     Top = 400
+  end
+  object spUpdate_CardSecond_num: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_CardSecond_num'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 592
+    Top = 312
   end
 end

@@ -345,6 +345,10 @@ type
     bbUpdateCardSecond4000: TdxBarButton;
     SummCardSecondRecalc_00807: TcxGridDBColumn;
     SummCardSecondRecalc_005: TcxGridDBColumn;
+    macUpdateCardSecond_num: TMultiAction;
+    actUpdateCardSecond_num: TdsdExecStoredProc;
+    spUpdate_CardSecond_num: TdsdStoredProc;
+    bbUpdateCardSecond_num: TdxBarButton;
   private
     { Private declarations }
   public

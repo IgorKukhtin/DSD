@@ -258,8 +258,8 @@ object DM: TDM
       '     LEFT JOIN Goods G ON G.Id = IG.GoodsId'
       ''
       'WHERE IG.MovementId = :MovementId')
-    Left = 108
-    Top = 549
+    Left = 124
+    Top = 533
     ParamData = <
       item
         Name = 'MOVEMENTID'
@@ -316,7 +316,7 @@ object DM: TDM
   object cdsOrderInternal: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 712
+    Left = 1048
     Top = 304
     object cdsOrderInternalMovementItemId: TIntegerField
       FieldName = 'MovementItemId'
@@ -412,6 +412,60 @@ object DM: TDM
     end
     object tbPartionCellisLoad: TBooleanField
       FieldName = 'isLoad'
+    end
+  end
+  object cdsInventoryItemEdit: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 688
+    Top = 304
+    object cdsInventoryItemEditId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsInventoryItemEditGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsInventoryItemEditGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsInventoryItemEditGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsInventoryItemEditArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 100
+    end
+    object cdsInventoryItemEditPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object cdsInventoryItemEditGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsInventoryItemEditPartnerName: TWideStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsInventoryItemEditPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsInventoryItemEditPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object cdsInventoryItemEditOperCount: TFloatField
+      FieldName = 'OperCount'
+    end
+    object cdsInventoryItemEditTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object cdsInventoryItemEditAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsInventoryItemEditAmountDiff: TFloatField
+      FieldName = 'AmountDiff'
     end
   end
 end

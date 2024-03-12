@@ -431,7 +431,7 @@ object frmMain: TfrmMain
       Size.Height = 484.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 0
+      TabIndex = 8
       TabOrder = 1
       TabPosition = None
       OnChange = ChangeMainPageUpdate
@@ -460,7 +460,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -10681,6 +10681,9 @@ object frmMain: TfrmMain
           MultiResBitmap.LoadSize = 1
           MultiResBitmap = <
             item
+            end
+            item
+              Scale = 1.500000000000000000
             end>
           Align = Client
           MarginWrapMode = Center
@@ -11512,6 +11515,9 @@ object frmMain: TfrmMain
           object imInventoryStatus: TImage
             MultiResBitmap = <
               item
+              end
+              item
+                Scale = 1.500000000000000000
               end>
             Position.X = 2.000000000000000000
             Position.Y = 28.000000000000000000
@@ -11984,7 +11990,7 @@ object frmMain: TfrmMain
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -11993,14 +11999,14 @@ object frmMain: TfrmMain
         Text = 'tiInventoryItemEdit'
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
-        object Edit1: TEdit
+        object edIIEGoodsGroup: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 12
+          TabOrder = 22
           ReadOnly = True
           TextSettings.Font.Size = 11.000000000000000000
           Position.X = 88.000000000000000000
-          Position.Y = 8.000000000000000000
+          Position.Y = 3.000000000000000000
           Size.Width = 241.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
@@ -12009,18 +12015,18 @@ object frmMain: TfrmMain
         object Label14: TLabel
           StyledSettings = [Family, Style, FontColor]
           Position.X = 16.000000000000000000
-          Position.Y = 13.000000000000000000
+          Position.Y = 8.000000000000000000
           Size.Width = 45.000000000000000000
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Size = 11.000000000000000000
           Text = #1043#1088#1091#1087#1087#1072
-          TabOrder = 5
+          TabOrder = 11
         end
-        object Edit2: TEdit
+        object edIIEPartnerName: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 11
+          TabOrder = 21
           ReadOnly = True
           TextSettings.Font.Size = 11.000000000000000000
           Position.X = 88.000000000000000000
@@ -12039,11 +12045,11 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TextSettings.Font.Size = 11.000000000000000000
           Text = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-          TabOrder = 4
+          TabOrder = 10
         end
-        object Edit3: TEdit
+        object edIIEArticle: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 9
+          TabOrder = 19
           ReadOnly = True
           TextSettings.Font.Size = 11.000000000000000000
           Position.X = 16.000000000000000000
@@ -12057,17 +12063,17 @@ object frmMain: TfrmMain
           StyledSettings = [Family, Style, FontColor]
           Position.X = 16.000000000000000000
           Position.Y = 75.000000000000000000
-          Size.Width = 64.000000000000000000
+          Size.Width = 94.000000000000000000
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Size = 11.000000000000000000
           Text = 'Artikel Nr'
-          TabOrder = 2
+          TabOrder = 8
         end
-        object Edit4: TEdit
+        object edIIEGoodsCode: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 8
+          TabOrder = 18
           ReadOnly = True
           TextSettings.Font.Size = 11.000000000000000000
           Position.X = 189.000000000000000000
@@ -12081,17 +12087,17 @@ object frmMain: TfrmMain
           StyledSettings = [Family, Style, FontColor]
           Position.X = 189.000000000000000000
           Position.Y = 75.000000000000000000
-          Size.Width = 64.000000000000000000
+          Size.Width = 84.000000000000000000
           Size.Height = 23.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Font.Size = 11.000000000000000000
           Text = 'Interne Nr'
-          TabOrder = 1
+          TabOrder = 7
         end
-        object Edit5: TEdit
+        object edIIEGoodsName: TEdit
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Anchors = [akLeft, akTop, akRight]
-          TabOrder = 10
+          TabOrder = 20
           ReadOnly = True
           TextSettings.Font.Size = 11.000000000000000000
           Position.X = 79.000000000000000000
@@ -12110,7 +12116,271 @@ object frmMain: TfrmMain
           Size.PlatformDefault = False
           TextSettings.Font.Size = 11.000000000000000000
           Text = #1053#1072#1079#1074#1072#1085#1080#1077
+          TabOrder = 9
+        end
+        object edIIEAmountDiff: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 17
+          ReadOnly = True
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 189.000000000000000000
+          Position.Y = 192.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label27: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 189.000000000000000000
+          Position.Y = 171.000000000000000000
+          Size.Width = 132.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1079#1085#1080#1094#1072')'
+          TabOrder = 5
+        end
+        object edIIEAmountRemains: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 14
+          ReadOnly = True
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 17.000000000000000000
+          Position.Y = 192.000000000000000000
+          Size.Width = 151.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label28: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 17.000000000000000000
+          Position.Y = 171.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.)'
+          TabOrder = 6
+        end
+        object edIIETotalCountEnter: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 16
+          ReadOnly = True
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 187.000000000000000000
+          Position.Y = 250.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label29: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 188.000000000000000000
+          Position.Y = 229.000000000000000000
+          Size.Width = 132.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = #1048#1058#1054#1043#1054' ('#1074#1074#1086#1076')'
           TabOrder = 3
+        end
+        object edIIEOperCount: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 13
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 16.000000000000000000
+          Position.Y = 250.000000000000000000
+          Size.Width = 151.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label30: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 16.000000000000000000
+          Position.Y = 229.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = #1050#1086#1083'-'#1074#1086
+          TabOrder = 4
+        end
+        object edIIEPartionCell: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 15
+          ReadOnly = True
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 187.000000000000000000
+          Position.Y = 308.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+          object EllipsesEditButton1: TEllipsesEditButton
+            CanFocus = False
+            Cursor = crArrow
+            TabOrder = 0
+          end
+        end
+        object Label32: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 188.000000000000000000
+          Position.Y = 287.000000000000000000
+          Size.Width = 132.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+          TabOrder = 1
+        end
+        object edIIEPartNumber: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 12
+          ReadOnly = True
+          TextSettings.Font.Size = 11.000000000000000000
+          Position.X = 16.000000000000000000
+          Position.Y = 308.000000000000000000
+          Size.Width = 151.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label33: TLabel
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 16.000000000000000000
+          Position.Y = 287.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 11.000000000000000000
+          Text = 'S/N'
+          TabOrder = 2
+        end
+        object bIIEOk: TSpeedButton
+          Position.X = 16.000000000000000000
+          Position.Y = 364.000000000000000000
+          Size.Width = 131.000000000000000000
+          Size.Height = 36.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'EnterStyle'
+          Text = 'Ok'
+          OnClick = bIIEOkClick
+          object Image20: TImage
+            MultiResBitmap.Height = 32
+            MultiResBitmap.Width = 32
+            MultiResBitmap = <
+              item
+                Width = 32
+                Height = 32
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+                  F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  0480494441545847ED965B4C1C5518C7FF73DB815D965D76D9E522D882427115
+                  010969BD00DEC036696B6BDAD4A88D69EC436BD2F8D0E88B461E6C7CF1122F0D
+                  A4B6F141830FDA6AB1692321546B7DB0B14949138D44CC0A05D4526ECB2E3077
+                  BF33CC6EA0805085A7F6B7F9E7EC9EF37DF3FDE7CC997316B7B86978F0085EAA
+                  FD0845CECF14BCD3AE1A77BE0FF9C9E3DEF6D2D282F7041E11A73BC5AA1AA87E
+                  1BD95585A1AECDD5BB1B2BF31F8624F255CE508A5533B0E11D048AEF085DDC54
+                  F574D96D722982723E7CDE40AD339C62550CECFC1C42FEDAACF31B2B77AE094A
+                  B743D70DA4891E0432B2D7479AE072C26C56C540424F3FD350B13D121459710D
+                  BAA9522111C1CC1C9F2F8C0A27CC66C50DD41FC3A1BAF2C6C6B05C0C8D15B754
+                  E8D06099A01908C3EDC6FD4EA8CD8A1AA8398CBA9A48CDAB45FE7BA0692A346B
+                  DA3660981A4CD340A6DB8F0CAFA7C109B75939034DE0D715E59E28CBAB81AAEA
+                  50CC29A82619A0E9D74C05D318C735F50A544DCF77326C56CCC0E3C542F3DD6B
+                  AAB32D1D98D4C76D4DE9714C9B1318B3FA7171A013DFFD74F6E3584CD9EEA4D8
+                  704EFBBFD8F021CA2BEF2DBD5C9A5B0943A30E7AE016359C6822AE0DE3D7E82F
+                  7D7FF40DEDBD70001D76C22C9634F050338A7D59F2219EC7DAC9ABCA96CE0318
+                  7686526CFDC2D3555E5651C1EB3215B7A83895172D4CA8C3E8EEEEFE7A70507F
+                  E6F2CB4838E17358D440C35BF02024BD16CCF11D0C85B2249337D0F3735F6BFB
+                  6EFD3927C4A6FE08B695440ABFCA7467C1D0E9CEC9002759884F8F23DA33D072
+                  F679BCE8842EC882061E398AFDBE90E7F54038235792649A561382C8616C2486
+                  DEE878C18FFB31E08462EB97E97DB98581425D99B9734102144541DF6F23EF9E
+                  7B01079DB04599B7081B3F153B0A22BE665F9E2B5731A6119B1C43421BC704DD
+                  91E4E5E0CB10DE7042F1D851ECF204C4C28412A74537019566794A8B63F0F7D1
+                  96E51467CC33601AE60F8909CDD40D1D1667C0B448F431E83DB678139EA06BCF
+                  03C7E065B1EE80F4A62073B4DBE9E004B6F04C0C45E3A73AF758FF3AEDB359F0
+                  11D4B5A0C4ED973EC8CA97370A2E1EBA4ADB18C151344F67EA9FDDB17D8682F6
+                  DC759EA820F330750B22C58D0E4CF59CDEA195D8C1CB4470DA39F49EC648CF09
+                  B3355CAB4E49694283EC11E9CDA2FB23F11207CE4495E0C253341B61B63E5CB2
+                  80C9510D435794FBFACFD08E73032CF91AD26C34F8F3E4565F383D64D244D023
+                  02C79309CA64A6049187A61818EC9E78F6FB7DF8CC495B364B1A603CDA869C4C
+                  DED5E60B66AEA7D2300C7AD59C4CD6FEDD3F72F29B5DE69C1D6EB92CCB40921D
+                  E7A45381807FB31173D98F43707198C2D8E4D5B144B8E38985379AA5B8A1B3E0
+                  78BDB625DA35DA96960DB8C434085E0DBD17127BFF6BF1C560B372BD98D1D482
+                  DD7632FD529355606DFAC4F5ADD3958C49EAFAFCA4E6C12ECA069205681F4B29
+                  9D9446F290324899A41C92FFAF4B3A6F6624EE3AFF8A7E584B20E6C4B01C3789
+                  E5D0A160FFF5627D22895D9B69B639F67D8E33D6260DCDFE9E4C642DBB708844
+                  872E1DF133176763D7482A89C10E42B671CC6E9362BF6736951958DF2D6E6A80
+                  7F005291A375B1AA27910000000049454E44AE426082}
+                FileName = 'C:\DSD\ProjectBoatMobile\img\Check.png'
+              end>
+            Align = Left
+            HitTest = False
+            Size.Width = 41.000000000000000000
+            Size.Height = 36.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object bIIECancel: TSpeedButton
+          Anchors = [akTop, akRight]
+          Position.X = 188.000000000000000000
+          Position.Y = 364.000000000000000000
+          Size.Width = 142.000000000000000000
+          Size.Height = 36.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'EnterStyle'
+          Text = #1054#1090#1084#1077#1085#1072
+          OnClick = bIIECancelClick
+          object Image21: TImage
+            MultiResBitmap.Height = 30
+            MultiResBitmap.Width = 30
+            MultiResBitmap = <
+              item
+                Width = 30
+                Height = 30
+                PNG = {
+                  89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+                  A2000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  02EB49444154484BED96CF4F134114C767F68727680FD4DD6D2B24DD16880924
+                  1C68A5EA0552FE010D7F8131FA279918FD034CF44E68B8586C81AB8981B61C50
+                  FB9B03550FDA76C7F726B3A5DB6EBBDB1E38F1499A85B7B3FB9D37EF3B6F96DC
+                  715B50717590DBDE5E9565F97D8F90BDA7D96C4584A7E2687757932CEB932549
+                  AF9F1C1C7C15E13E92B8F6C967320F5559CE07743DA548523EBFB3A38B5BBEC1
+                  6714424E829A960281CFF84E71AB8F4318338525C845D7D783E6E6A662ACAC84
+                  A9AA9EE632998818E209CF5455F35A3C1E8EA552EAE2C6469050FA05E26B6208
+                  C7212C4BD23BC834B0B0B4C4E37A3CAEEAA66940DC57E63846A2F45433CD07C6
+                  EAEA3D8C2D442214329F83657FC307091CC2508F67BF9ACDEFD5B3B37F224420
+                  6B35EC23733B5303268ACF8830A9954A9D76AB555514654F843823E6C2172894
+                  16EE9B66342C668DD4CBE54EAD58AC757BBDAD61C3F16724A9A0C562513B5304
+                  45EBA5524D26E451727FBF2AC21C57574F233E8B28E22A8CF811A79476671145
+                  C60A2368162ACBC77A221186BADDBCB858C4175729634C1BBE777EDEA995CB55
+                  D2EDA6D2878775111E61A230C2DDAC2827066C0F87694000AFC3313FA288A730
+                  326ED907F1B3BC83F8124626894F2B8A38F6B12794BACE144CC6AF7F7B3DDF89
+                  F85F6A17F70E32699FBBE199311725E478B00D22B8BCB6C110DE5E13094391E5
+                  829FDE3E51D83E6560CB4446DC5B2C56A1AE15F8FBA6BD26122A4CC0F073AA8D
+                  15C64CED53C6B14FD14817173530DA169CD7A946B9FCD3D1DB97975518EFD9DB
+                  5D6B3CAEA66EEE1DE776AF9A8F084F236A338BB8437816519B69C51D35C66FA4
+                  F95068D1212A8CC43A9DE4A4E600DF550DABDB4D63FD87DD1E0885C232631F44
+                  88E310EE59D68B76BDDEBEBABCB4F0FF412379F55E04C7588C25C1703F6CC35D
+                  552AECBAD1F80D49BDE283042335C60F3398CDD19CAECFB79BCD8A9F863F8C7D
+                  AA41A691EB56EB0F61EC713A9BFD266E735C5DCDBF0A197B0BBFE7D38ADAF07D
+                  4CE947F8BD1C16BDE31621E43FE14EF19B5D319D9B0000000049454E44AE4260
+                  82}
+                FileName = 'C:\DSD\ProjectBoatMobile\img\Cancel.png'
+              end>
+            Align = Left
+            HitTest = False
+            Size.Width = 41.000000000000000000
+            Size.Height = 36.000000000000000000
+            Size.PlatformDefault = False
+          end
         end
       end
       object tiProductionUnion: TTabItem
@@ -14428,6 +14698,83 @@ object frmMain: TfrmMain
       Control = edInvNumberFull_ProductionUnion
       Track = False
     end
+    object LinkControlToField11: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'GoodsGroupName'
+      Control = edIIEGoodsGroup
+      Track = False
+    end
+    object LinkControlToField12: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'PartnerName'
+      Control = edIIEPartnerName
+      Track = False
+    end
+    object LinkControlToField13: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'Article'
+      Control = edIIEArticle
+      Track = False
+    end
+    object LinkControlToField14: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'GoodsCode'
+      Control = edIIEGoodsCode
+      Track = False
+    end
+    object LinkControlToField15: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'GoodsName'
+      Control = edIIEGoodsName
+      Track = False
+    end
+    object LinkControlToField16: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'AmountRemains'
+      Control = edIIEAmountRemains
+      Track = False
+    end
+    object LinkControlToField17: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'AmountDiff'
+      Control = edIIEAmountDiff
+      Track = False
+    end
+    object LinkControlToField18: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'OperCount'
+      Control = edIIEOperCount
+      Track = False
+    end
+    object LinkControlToField19: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'TotalCount'
+      Control = edIIETotalCountEnter
+      Track = False
+    end
+    object LinkControlToField20: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'PartNumber'
+      Control = edIIEPartNumber
+      Track = False
+    end
+    object LinkControlToField21: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'PartionCellName'
+      Control = edIIEPartionCell
+      Track = False
+    end
   end
   object BindSourceDB2: TBindSourceDB
     DataSet = DM.cdsInventory
@@ -14458,5 +14805,11 @@ object frmMain: TfrmMain
     ScopeMappings = <>
     Left = 160
     Top = 264
+  end
+  object BindSourceDB7: TBindSourceDB
+    DataSet = DM.cdsInventoryItemEdit
+    ScopeMappings = <>
+    Left = 152
+    Top = 256
   end
 end

@@ -176,6 +176,21 @@ type
     cdsGoodsEANId: TIntegerField;
     cdsGoodsEANEAN: TWideStringField;
     cdsGoodsEANCode: TIntegerField;
+    cdsInventoryItemEdit: TClientDataSet;
+    cdsInventoryItemEditId: TIntegerField;
+    cdsInventoryItemEditGoodsId: TIntegerField;
+    cdsInventoryItemEditGoodsCode: TIntegerField;
+    cdsInventoryItemEditGoodsName: TWideStringField;
+    cdsInventoryItemEditArticle: TWideStringField;
+    cdsInventoryItemEditPartNumber: TWideStringField;
+    cdsInventoryItemEditGoodsGroupName: TWideStringField;
+    cdsInventoryItemEditPartnerName: TWideStringField;
+    cdsInventoryItemEditOperCount: TFloatField;
+    cdsInventoryItemEditTotalCount: TFloatField;
+    cdsInventoryItemEditAmountRemains: TFloatField;
+    cdsInventoryItemEditAmountDiff: TFloatField;
+    cdsInventoryItemEditPartionCellId: TIntegerField;
+    cdsInventoryItemEditPartionCellName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -196,7 +211,7 @@ type
     procedure CreateIndexes;
 
     //procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
-    procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
+    //procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
     procedure LoadSQLite(ADst: TClientDataSet; ASQL: String);
 
     function GetCurrentVersion: string;
@@ -214,6 +229,8 @@ type
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
 
+    function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+    function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
 
 
@@ -1121,54 +1138,54 @@ end;
 //  end;
 //end;
 
-procedure TDM.LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
-  var  DataSetProvider: TDataSetProvider;
-       ClientDataSet: TClientDataSet;
-       FDQuery: TDataSet;
-begin
-
-  if not Connect then Exit;
-
-  try
-    try
-
-      // Проверяем наличие таблицы
-      conMain.ExecSQL('SELECT * FROM sqlite_master WHERE type = ''table'' AND name= ''' + AnsiUpperCase(ATableName) + '''', Nil, FDQuery);
-
-      if FDQuery.RecordCount < 1 then Exit;
-
-      FDQuery.Close;
-      TFDQuery(FDQuery).SQL.Text := 'select * FROM ' + ATableName;
-
-      DataSetProvider := TDataSetProvider.Create(Application);
-      DataSetProvider.Name := 'DataSetProvider';
-      DataSetProvider.DataSet := FDQuery;
-      ClientDataSet := TClientDataSet.Create(Application);
-      ClientDataSet.ProviderName := DataSetProvider.Name;
-      try
-
-        ClientDataSet.Active := True;
-
-        ADst.DisableControls;
-        if ADst.Active then ADst.Close;
-        try
-          ADst.AppendData(ClientDataSet.Data, False);
-        finally
-          ADst.EnableControls;
-        end;
-
-      finally
-        if Assigned(FDQuery) then FDQuery.Free;
-        ClientDataSet.Free;
-        DataSetProvider.Free;
-      end;
-    finally
-
-    end;
-  Except on E: Exception do
-    raise Exception.Create('Ошибка чтенич из локальной базы. ' + E.Message);
-  end;
-end;
+//procedure TDM.LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
+//  var  DataSetProvider: TDataSetProvider;
+//       ClientDataSet: TClientDataSet;
+//       FDQuery: TDataSet;
+//begin
+//
+//  if not Connect then Exit;
+//
+//  try
+//    try
+//
+//      // Проверяем наличие таблицы
+//      conMain.ExecSQL('SELECT * FROM sqlite_master WHERE type = ''table'' AND name= ''' + AnsiUpperCase(ATableName) + '''', Nil, FDQuery);
+//
+//      if FDQuery.RecordCount < 1 then Exit;
+//
+//      FDQuery.Close;
+//      TFDQuery(FDQuery).SQL.Text := 'select * FROM ' + ATableName;
+//
+//      DataSetProvider := TDataSetProvider.Create(Application);
+//      DataSetProvider.Name := 'DataSetProvider';
+//      DataSetProvider.DataSet := FDQuery;
+//      ClientDataSet := TClientDataSet.Create(Application);
+//      ClientDataSet.ProviderName := DataSetProvider.Name;
+//      try
+//
+//        ClientDataSet.Active := True;
+//
+//        ADst.DisableControls;
+//        if ADst.Active then ADst.Close;
+//        try
+//          ADst.AppendData(ClientDataSet.Data, False);
+//        finally
+//          ADst.EnableControls;
+//        end;
+//
+//      finally
+//        if Assigned(FDQuery) then FDQuery.Free;
+//        ClientDataSet.Free;
+//        DataSetProvider.Free;
+//      end;
+//    finally
+//
+//    end;
+//  Except on E: Exception do
+//    raise Exception.Create('Ошибка чтенич из локальной базы. ' + E.Message);
+//  end;
+//end;
 
 procedure TDM.LoadSQLite(ADst: TClientDataSet; ASQL: String);
   var  DataSetProvider: TDataSetProvider;
@@ -1568,6 +1585,66 @@ begin
   end;
 end;
 
+{ поиск товара по штрихкоду в базе}
+function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpGet_Goods_MobilebyBarcode';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarcode);
+    StoredProc.Params.AddParam('GoodsId', ftInteger, ptOutput, 0);
+    StoredProc.Params.AddParam('CountGoods', ftInteger, ptOutput, 0);
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      AId := StoredProc.ParamByName('GoodsId').Value;
+      ACount := StoredProc.ParamByName('CountGoods').Value;
+      Result := True;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+{ Начитка информации по строке инвентаризации}
+function TDM.GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  Result := False;
+  cdsInventoryItemEdit.Close;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
+    StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
+    StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
+    StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, APartNumber);
+    StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, AAmount);
+
+    StoredProc.DataSet := cdsInventoryItemEdit;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      Result := True;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+
 { Создание документа производства}
 function TDM.InsertProductionUnion(AId : Integer) : Boolean;
 var
@@ -1656,8 +1733,8 @@ begin
   if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
 
-    LoadSQLiteData(cdsGoodsEan, 'Goods');
-    if not cdsGoods.Active then DownloadDict;
+    LoadSQLite(cdsGoodsEan, 'SELECT Id, Code, EAN FROM Tovar');
+    if not cdsGoodsEAN.Active then DownloadDict;
 
   end else DownloadDict;
 end;

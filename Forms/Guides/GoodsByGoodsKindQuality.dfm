@@ -219,7 +219,9 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
         Width = 150
       end
       object Value7: TcxGridDBColumn
-        Caption = #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072' - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1089#1077#1088#1074#1077#1088#1091#1074#1072#1083#1100#1085#1072' '#1085#1072#1088#1110#1079#1082#1072', '#8470'12'
+        Caption = 
+          #1042#1072#1082#1091#1091#1084#1085#1072' '#1091#1087#1072#1082#1086#1074#1082#1072'/'#1075#1072#1079'.'#1089#1077#1088#1077#1076'. - '#1058#1077#1088#1084#1110#1085' '#1079#1073#1077#1088#1110#1075#1072#1085#1085#1103' '#1089#1077#1088#1074#1077#1088#1091#1074#1072#1083#1100#1085#1072' '#1085 +
+          #1072#1088#1110#1079#1082#1072', '#8470'12'
         DataBinding.FieldName = 'Value7'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -690,6 +692,7 @@ object GoodsByGoodsKindQualityForm: TGoodsByGoodsKindQualityForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 216
