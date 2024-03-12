@@ -417,6 +417,14 @@ BEGIN
               LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                    ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = Object.Id
                                   AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
+                                   ON ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsBasis.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis()
+              LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain
+                                   ON ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId = Object.Id
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsMain.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
+
               LEFT JOIN tmpFind ON tmpFind.GoodsId     = ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
                                AND tmpFind.GoodsKindId = ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId
                                AND tmpFind.Ord     = 1
@@ -436,6 +444,8 @@ BEGIN
            AND (ObjectLink_GoodsBasis.ObjectId > 0
              OR ObjectLink_GoodsMain.ObjectId  > 0
              OR tmpFind.GoodsId                > 0
+             OR ObjectLink_GoodsByGoodsKind_GoodsBasis.ObjectId > 0
+             OR ObjectLink_GoodsByGoodsKind_GoodsMain.ObjectId  > 0
                )
         ) AS tmp;
 
