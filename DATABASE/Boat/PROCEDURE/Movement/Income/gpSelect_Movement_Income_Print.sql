@@ -79,11 +79,82 @@ OPEN Cursor1 FOR
 
 
     OPEN Cursor2 FOR
-      SELECT
-            MovementItem.*
-       FROM MovementItem
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.isErased   = false;
+
+       WITH tmpMI AS (SELECT MovementItem.Id
+                           , MovementItem.ObjectId AS GoodsId
+                           , MovementItem.PartionId
+                           , MovementItem.Amount
+                           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
+                             -- Цена продажи
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+
+                      FROM MovementItem 
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                           LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                       ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                                       ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+
+                     )
+       -- Результат
+       SELECT tmpMI.Id
+            , tmpMI.PartionId
+            , Object_Goods.Id          AS GoodsId
+            , Object_Goods.ObjectCode  AS GoodsCode
+            , Object_Goods.ValueData   AS GoodsName
+
+            , ObjectString_Article.ValueData        AS Article
+            , ObjectString_ArticleVergl.ValueData   AS ArticleVergl
+
+            , Object_GoodsGroup.Id                  AS GoodsGroupId
+            , Object_GoodsGroup.ValueData           AS GoodsGroupName
+            , ObjectString_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+            , Object_Measure.ValueData              AS MeasureName
+            , Object_GoodsTag.ValueData             AS GoodsTagName
+            , Object_GoodsType.ValueData            AS GoodsTypeName
+            , Object_GoodsSize.ValueData            AS GoodsSizeName
+            , Object_ProdColor.ValueData            AS ProdColorName
+
+            , tmpMI.Amount
+       
+            , tmpMI.OperPrice      ::TFloat AS OperPrice
+            , tmpMI.CountForPrice  ::TFloat AS CountForPrice
+              -- Цена продажи
+            , tmpMI.OperPriceList  ::TFloat AS OperPriceList
+       
+            , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
+            , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
+       
+       FROM tmpMI
+            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
+
+            LEFT JOIN Object AS Object_Goods      ON Object_Goods.Id      = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = Object_PartionGoods.GoodsGroupId
+            LEFT JOIN Object AS Object_Measure    ON Object_Measure.Id    = Object_PartionGoods.MeasureId
+            LEFT JOIN Object AS Object_GoodsTag   ON Object_GoodsTag.Id   = Object_PartionGoods.GoodsTagId
+            LEFT JOIN Object AS Object_GoodsType  ON Object_GoodsType.Id  = Object_PartionGoods.GoodsTypeId
+            LEFT JOIN Object AS Object_GoodsSize  ON Object_GoodsSize.Id  = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_ProdColor  ON Object_ProdColor.Id  = Object_PartionGoods.ProdColorId
+       
+            LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                   ON ObjectString_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
+            LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                   ON ObjectString_ArticleVergl.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_ArticleVergl.DescId   = zc_ObjectString_ArticleVergl()
+
+       WHERE tmpMI.Amount <> 0;
 
     RETURN NEXT Cursor2;
 
@@ -96,5 +167,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.     Воробкало А.А.
  21.04.17         * восстановлна из рез.копии gpSelect_Movement_Sale_Print
 */
+
 -- тест
---select * from gpSelect_Movement_Income_Print(inMovementId := 3897397 ,  inSession := '3');
+-- SELECT * FROM gpSelect_Movement_Income_Print(inMovementId := 3897397 ,  inSession := '3');
