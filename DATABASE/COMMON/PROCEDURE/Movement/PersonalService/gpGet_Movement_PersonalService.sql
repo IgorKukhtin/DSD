@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberId         Integer     --
              , MemberName       TVarChar    -- ФИО (пользователь) - ведомость начисления 
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
+             , MovementId_BankSecondNum Integer, InvNumber_BankSecondNum TVarChar
               )
 AS
 $BODY$
@@ -63,6 +64,8 @@ BEGIN
              , 0                     	 AS InfoMoneyId
              , CAST ('' AS TVarChar) 	 AS InfoMoneyName
              , CAST ('' AS TVarChar) 	 AS InfoMoneyName_all
+             , 0                         AS MovementId_BankSecondNum
+             , '' ::TVarChar             AS InvNumber_BankSecondNum
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -94,6 +97,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyName
            , View_InfoMoney.InfoMoneyName_all
+
+           , Movement_BankSecondNum.Id            AS MovementId_BankSecondNum
+           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId, MovementDesc_BankSecondNum.ItemName, Movement_BankSecondNum.InvNumber, Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -143,6 +149,12 @@ BEGIN
 
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_60101()
 
+            LEFT JOIN MovementLinkMovement AS MLM_BankSecond_num
+                                           ON MLM_BankSecond_num.MovementId = Movement.Id
+                                          AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
+            LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id = MLM_BankSecond_num.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_BankSecondNum ON MovementDesc_BankSecondNum.Id = Movement_BankSecondNum.DescId
+
        WHERE Movement.Id =  inMovementId;
 
        END IF;
@@ -156,6 +168,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.03.24         *
  05.07.23         *
  16.11.21         *
  28.04.21         *

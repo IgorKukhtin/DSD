@@ -294,7 +294,6 @@ BEGIN
            
            , Movement_BankSecondNum.Id                  AS MovementId_BankSecondNum
            , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId, MovementDesc_BankSecondNum.ItemName, Movement_BankSecondNum.InvNumber, Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
-           
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
