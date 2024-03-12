@@ -45,7 +45,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , is4000 Boolean
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
-             , MemberName     TVarChar
+             , MemberName     TVarChar 
+             , MovementId_BankSecondNum Integer, InvNumber_BankSecondNum TVarChar
               )
 AS
 $BODY$
@@ -290,6 +291,10 @@ BEGIN
            , tmpSign.strSignNo 
 
            , Object_Member.ValueData                    AS MemberName 
+           
+           , Movement_BankSecondNum.Id                  AS MovementId_BankSecondNum
+           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId, MovementDesc_BankSecondNum.ItemName, Movement_BankSecondNum.InvNumber, Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
+           
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -510,6 +515,11 @@ BEGIN
                                       ON MovementBoolean_4000.MovementId = Movement.Id
                                      AND MovementBoolean_4000.DescId = zc_MovementBoolean_4000()                                     
 
+            LEFT JOIN MovementLinkMovement AS MLM_BankSecond_num
+                                           ON MLM_BankSecond_num.MovementId = Movement.Id
+                                          AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
+            LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id = MLM_BankSecond_num.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_BankSecondNum ON MovementDesc_BankSecondNum.Id = Movement_BankSecondNum.DescId
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
       where vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828
