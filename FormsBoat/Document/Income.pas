@@ -320,6 +320,7 @@ type
     PartionCellCode: TcxGridDBColumn;
     PartionCellName: TcxGridDBColumn;
     actOpenPartionCellForm: TOpenChoiceForm;
+    bbPrint: TdxBarButton;
   private
   public
   end;

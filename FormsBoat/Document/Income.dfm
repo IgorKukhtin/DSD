@@ -1318,9 +1318,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GridCost: TcxGrid
         Left = 0
         Top = 0
@@ -2249,6 +2246,14 @@ object IncomeForm: TIncomeForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintStickerOne'
         end
         item
@@ -2281,6 +2286,10 @@ object IncomeForm: TIncomeForm
       Hint = #1053#1086#1074#1099#1081' '#1090#1086#1074#1072#1088
       Visible = ivAlways
       ImageIndex = 48
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2496,8 +2505,8 @@ object IncomeForm: TIncomeForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
