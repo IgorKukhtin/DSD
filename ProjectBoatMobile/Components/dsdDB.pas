@@ -126,7 +126,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; //***12.07.2016 add AnyExecPack
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True; AMaxAtempt: Byte = 10): string; //***12.07.2016 add AnyExecPack
     function ParamByName(const Value: string): TdsdParam;
     // XML הכÿ גûחמגא םא סונגונו
     function GetXML: String;
@@ -254,7 +254,7 @@ begin
   inherited;
 end;
 
-function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
+function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True; AMaxAtempt: Byte = 10): string;
 begin
   result := '';
   if ACursorHourGlass then
@@ -263,9 +263,9 @@ begin
     if (OutputType = otDataSet) then DataSetRefresh;
     if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
     if (OutputType = otResult) then
-       FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+       FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otBlob) then
-        result := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+        result := TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
     if (OutputType = otMultiExecute) then
         MultiExecute(ExecPack, AnyExecPack); //***12.07.2016 add AnyExecPack
   finally

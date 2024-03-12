@@ -72,8 +72,6 @@ type
     cxLabel30: TcxLabel;
     edBasisWVAT_summ_transport: TcxCurrencyEdit;
     spGet: TdsdStoredProc;
-    spUpdate_summ_after: TdsdStoredProc;
-    spUpdate_summ_before: TdsdStoredProc;
     HeaderExit: THeaderExit;
     EnterMoveNext: TEnterMoveNext;
     actUpdate_summ_before: TdsdDataSetRefresh;

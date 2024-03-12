@@ -38,7 +38,8 @@ RETURNS TABLE (Id Integer
               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , Basis_summ_transport    TFloat
                -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , BasisWVAT_summ_transport TFloat
+             , BasisWVAT_summ_transport TFloat 
+             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer
               )
 AS
 $BODY$
@@ -118,6 +119,14 @@ BEGIN
             -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
           , tmpSummProduct.BasisWVAT_summ_transport
 
+         --  при открытии сохраняем текущие значения в расчетные
+         , ( lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0))) ::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummReal.ValueData, 0))::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm_load)::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0) )::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.Basis_summ_transport)    ::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.BasisWVAT_summ_transport)::integer
+          
         FROM Movement AS Movement_OrderClient
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement_OrderClient.Id

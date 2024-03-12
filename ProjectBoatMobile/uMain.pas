@@ -231,16 +231,45 @@ type
     Image15: TImage;
     Image16: TImage;
     Image22: TImage;
-    Edit1: TEdit;
+    edIIEGoodsGroup: TEdit;
     Label14: TLabel;
-    Edit2: TEdit;
+    edIIEPartnerName: TEdit;
     Label15: TLabel;
-    Edit3: TEdit;
+    edIIEArticle: TEdit;
     Label16: TLabel;
-    Edit4: TEdit;
+    edIIEGoodsCode: TEdit;
     Label25: TLabel;
-    Edit5: TEdit;
+    edIIEGoodsName: TEdit;
     Label26: TLabel;
+    edIIEAmountDiff: TEdit;
+    Label27: TLabel;
+    edIIEAmountRemains: TEdit;
+    Label28: TLabel;
+    edIIETotalCountEnter: TEdit;
+    Label29: TLabel;
+    edIIEOperCount: TEdit;
+    Label30: TLabel;
+    edIIEPartionCell: TEdit;
+    Label32: TLabel;
+    edIIEPartNumber: TEdit;
+    Label33: TLabel;
+    EllipsesEditButton1: TEllipsesEditButton;
+    bIIEOk: TSpeedButton;
+    Image20: TImage;
+    bIIECancel: TSpeedButton;
+    Image21: TImage;
+    BindSourceDB7: TBindSourceDB;
+    LinkControlToField11: TLinkControlToField;
+    LinkControlToField12: TLinkControlToField;
+    LinkControlToField13: TLinkControlToField;
+    LinkControlToField14: TLinkControlToField;
+    LinkControlToField15: TLinkControlToField;
+    LinkControlToField16: TLinkControlToField;
+    LinkControlToField17: TLinkControlToField;
+    LinkControlToField18: TLinkControlToField;
+    LinkControlToField19: TLinkControlToField;
+    LinkControlToField20: TLinkControlToField;
+    LinkControlToField21: TLinkControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -307,6 +336,8 @@ type
     procedure bpProductionUnionClick(Sender: TObject);
     procedure RadioButtonInvScan2Change(Sender: TObject);
     procedure bInventScanClick(Sender: TObject);
+    procedure bIIECancelClick(Sender: TObject);
+    procedure bIIEOkClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -796,15 +827,16 @@ begin
     end else
     if tcMain.ActiveTab = tiInventoryScan then
     begin
-      lCaption.Text := 'Вставка комплектующих в инвентаризацию';
+      lCaption.Text := 'Сканирование/выбор комплектующих в инвентаризацию';
       DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
     end
     else
     if tcMain.ActiveTab = tiInventoryItemEdit then
     begin
-      lCaption.Text := 'Вставка комплектующих в инвентаризации';
-      //DM.OpenInventoryItemEdit;
+      lCaption.Text := 'Добавить в Инвентаризацию';
+      sbBack.Visible := false;
+      edIIEPartNumber.ReadOnly := not FisInventScanSN;
     end
     else
     if tcMain.ActiveTab = tiProductionUnion then
@@ -906,12 +938,18 @@ begin
 //  SwitchToForm(tiInventoryJournal, nil);
 end;
 
-// начитка информации журнала инвентаризаций
+// начитка информации строка инвентаризации
 procedure TfrmMain.ShowInventoryItemEdit;
 begin
   if FGoodsId = 0 then Exit;
 
-  SwitchToForm(tiInventoryItemEdit, nil);
+  if not DM.GetMIInventory(FGoodsId, 0, '', 1) then
+  begin
+
+  end;
+
+  if DM.cdsInventoryItemEdit.Active then
+    SwitchToForm(tiInventoryItemEdit, nil);
 end;
 
 // Сборка Узла / Лодки
@@ -988,7 +1026,9 @@ procedure TfrmMain.bInventScanClick(Sender: TObject);
 begin
   FGoodsId := 0;
   FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
-  sbScanClick(Sender);
+//  sbScanClick(Sender);
+
+  OnScanResultInventoryScan(Sender, '871949')
 end;
 
 // Выбор товара
@@ -1017,6 +1057,27 @@ procedure TfrmMain.bGoodsRefreshClick(Sender: TObject);
 begin
   TDialogService.MessageDialog('Загрузить справочник Комплектующих?',
        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadGoods)
+end;
+
+// Отмена добавление в инвентаризацию
+procedure TfrmMain.bIIECancelClick(Sender: TObject);
+begin
+  DM.cdsInventoryItemEdit.Close;
+  ReturnPriorForm;
+end;
+
+// Добавление в инвентаризацию
+procedure TfrmMain.bIIEOkClick(Sender: TObject);
+begin
+  if FisInventScanSN and (Trim(DM.cdsInventoryItemEditPartNumber.AsString) = '') then
+  begin
+    ShowMessage('Не заполнен серийный номер.');
+    edIIEPartNumber.SetFocus;
+    Exit;
+  end;
+
+  DM.cdsInventoryItemEdit.Close;
+  ReturnPriorForm;
 end;
 
 // переход на форму отображения информации
@@ -1245,7 +1306,7 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
-  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.LoadGoodsEAN;
+  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
 end;
 
 procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
@@ -1370,7 +1431,7 @@ begin
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then
     begin
       SwitchToForm(tiMain, nil);
-      if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.LoadGoodsEAN;
+      if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
     end;
   end;
 end;
@@ -1419,7 +1480,7 @@ end;
 
 // Обрабатываем отсканированный товар для инвентаризации
 procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
-  var Code: Integer; Data_String: String;
+  var Code, nId, nCount: Integer; Data_String: String;
 begin
 
   Data_String := AData_String;
@@ -1428,6 +1489,25 @@ begin
     Data_String := Copy(Data_String, 1, Length(Data_String) - 1);
 
   if Data_String = '' then Exit;
+
+  // С начало ищем на сервере независимо от режима работы
+  if DM.GetGoodsBarcode(Data_String, nId, nCount) then
+  begin
+    if nCount = 1 then
+    begin
+      FGoodsId := nId;
+      ShowInventoryItemEdit;
+    end else if nCount > 1 then
+    begin
+      SearshBox(lwGoods).Text := Data_String;
+      DM.FilterGoodsEAN := True;
+      bInventScanSearchClick(Sender);
+      Exit;
+    end else ShowMessage('Товар с штрихкодом ' + AData_String + ' не найден.');
+    exit;
+  end;
+
+  // Если с сервером не вышло ищем локально
   if not DM.cdsGoodsEAN.Active then DM.LoadGoodsEAN;
 
   try
@@ -1442,6 +1522,7 @@ begin
     DM.cdsGoodsEAN.Filtered := True;
     if DM.cdsGoodsEAN.RecordCount = 1 then
     begin
+      FGoodsId := DM.cdsGoodsEANId.AsInteger;
       ShowInventoryItemEdit;
     end else if DM.cdsGoodsEAN.RecordCount > 1 then
     begin

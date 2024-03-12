@@ -72,7 +72,8 @@ BEGIN
                 + COALESCE (MovementFloat_SummPost.ValueData,0)
                 + COALESCE (MovementFloat_SummPack.ValueData,0)
                 + COALESCE (MovementFloat_SummInsur.ValueData,0)
-                - COALESCE (MovementFloat_TotalSummTaxMVAT.ValueData,0)) :: TFloat AS Summ4
+                - COALESCE (MovementFloat_TotalSummTaxMVAT.ValueData,0)) :: TFloat AS Summ4   
+             
         FROM Movement AS Movement_Income
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_Income.Id
