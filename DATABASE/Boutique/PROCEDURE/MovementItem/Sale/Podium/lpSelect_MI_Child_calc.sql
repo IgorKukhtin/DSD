@@ -295,6 +295,7 @@ BEGIN
                                       , inAmountEUR              := inAmountEUR
                                       , inAmountCard             := inAmountCard
                                       , inAmountDiscount_EUR     := inAmountDiscount_EUR
+                                      , inAmountDiscDiff_EUR     := 0
                                        
                                       , inisDiscount             := inisDiscount
                                       , inisChangeEUR            := inisChangeEUR
@@ -398,6 +399,7 @@ BEGIN
                                         , inAmountEUR              := inAmountEUR
                                         , inAmountCard             := inAmountCard
                                         , inAmountDiscount_EUR     := ROUND(zfCalc_CurrencyTo (vbAmountDiff - (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), inCurrencyValueEUR, 1), 2)
+                                        , inAmountDiscDiff_EUR     := 0
                                          
                                         , inisDiscount             := inisDiscount
                                         , inisChangeEUR            := inisChangeEUR
@@ -495,6 +497,7 @@ BEGIN
                                         , inAmountEUR              := inAmountEUR
                                         , inAmountCard             := inAmountCard
                                         , inAmountDiscount_EUR     := vbAmountDiscount_EUR + COALESCE(vbAmountRemains_EUR, 0) - Round(COALESCE(vbAmountRemains_EUR, 0))
+                                        , inAmountDiscDiff_EUR     := 0
                                          
                                         , inisDiscount             := inisDiscount
                                         , inisChangeEUR            := inisChangeEUR

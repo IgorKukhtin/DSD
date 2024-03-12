@@ -140,7 +140,8 @@ $BODY$
 
    DECLARE vbAmountPay_GRN       TFloat;
    DECLARE vbAmountPay_EUR       TFloat;   
-   DECLARE vbAmountDiffLeft_GRN  TFloat;   
+   DECLARE vbAmountDiscDiff_EUR  TFloat;
+   DECLARE vbAmountDiscount      TFloat;   
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -342,7 +343,36 @@ BEGIN
        inAmountDiscount_EUR := COALESCE (inAmountToPay_EUR, 0) - vbAmountPay_EUR - inAmountRemains_EUR + inAmountDiscount_EUR;
        inisAmountRemains_EUR := False;
      END IF;
-                                                      
+     
+     -- Определим Дополнительная скидка евро по округлению сдачи - если есть
+     SELECT CASE WHEN (Res.AmountGRN_Over + Res.AmountUSD_Over_GRN + Res.AmountEUR_Over_GRN + Res.AmountCARD_Over) > 0 
+                 THEN Res.AmountDiff - (Res.AmountGRN_Over + Res.AmountUSD_Over_GRN + Res.AmountEUR_Over_GRN + Res.AmountCARD_Over)
+                 ELSE 0 END
+     INTO vbAmountDiscount           
+     FROM lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD       := inCurrencyValueUSD
+                                      , inCurrencyValueInUSD     := inCurrencyValueInUSD
+                                      , inCurrencyValueEUR       := inCurrencyValueEUR
+                                      , inCurrencyValueInEUR     := inCurrencyValueInEUR
+                                      , inCurrencyValueCross     := inCurrencyValueCross
+
+                                      , inAmountToPay_EUR        := inAmountToPay_EUR 
+                                       
+                                      , inAmountGRN              := inAmountGRN
+                                      , inAmountUSD              := inAmountUSD
+                                      , inAmountEUR              := inAmountEUR
+                                      , inAmountCard             := inAmountCard
+                                      , inAmountDiscount_EUR     := inAmountDiscount_EUR
+                                      , inAmountDiscDiff_EUR     := 0
+                                       
+                                      , inisDiscount             := inisDiscount
+                                      , inisChangeEUR            := inisChangeEUR                                       
+                                      , inisAmountDiff           := inisAmountDiff
+                                      , inAmountDiff             := inAmountManualDiff
+                                      , inCurrencyId_Client      := inCurrencyId_Client 
+                                      , inUserId                 := vbUserId) AS Res;
+     
+     vbAmountDiscDiff_EUR := ROUND(zfCalc_CurrencyTo ( COALESCE (vbAmountDiscount, 0), inCurrencyValueEUR, 1), 2);
+                                                           
      -- Результат
      RETURN QUERY
       SELECT -- К оплате, грн - здесь округлили
@@ -366,9 +396,10 @@ BEGIN
              -- Дополнительная скидка - ГРН
            , Res.AmountDiscount                                                  AS AmountDiscount
              -- Дополнительная скидка - ГРН
-           , round(Res.AmountDiscount)::TFloat                                   AS AmountDiscRound
+           , ROUND(Res.AmountDiscount + ROUND(zfCalc_CurrencyFrom ( COALESCE (Res.AmountDiscDiff_EUR, 0), inCurrencyValueEUR, 1), 2))::TFloat   AS AmountDiscRound
              -- Округление - ГРН
-           , (Res.AmountDiscount - round(Res.AmountDiscount))::TFloat            AS AmountDiscDiff
+           , (Res.AmountDiscount + ROUND(zfCalc_CurrencyFrom ( COALESCE (Res.AmountDiscDiff_EUR, 0), inCurrencyValueEUR, 1), 2) - 
+             ROUND(Res.AmountDiscount + ROUND(zfCalc_CurrencyFrom ( COALESCE (Res.AmountDiscDiff_EUR, 0), inCurrencyValueEUR, 1), 2)))::TFloat  AS AmountDiscDiff
              -- Округлениее курсов - ГРН
            , Res.AmountRounding
 
@@ -376,9 +407,10 @@ BEGIN
              -- Дополнительная скидка - EUR
            , Res.AmountDiscount_EUR                                              AS AmountDiscount_EUR
              -- Дополнительная скидка - EUR
-           , round(Res.AmountDiscount_EUR)::TFloat                               AS AmountDiscRound_EUR
+           , round(Res.AmountDiscount_EUR + Res.AmountDiscDiff_EUR)::TFloat      AS AmountDiscRound_EUR
              -- Округление - EUR
-           , (Res.AmountDiscount_EUR - round(Res.AmountDiscount_EUR))::TFloat    AS AmountDiscDiff_EUR
+           , (Res.AmountDiscount_EUR + Res.AmountDiscDiff_EUR - 
+             round(Res.AmountDiscount_EUR + Res.AmountDiscDiff_EUR))::TFloat     AS AmountDiscDiff_EUR
              -- Округлениее курсов - EUR
            , Res.AmountRounding_EUR
 
@@ -443,6 +475,7 @@ BEGIN
                                        , inAmountEUR              := inAmountEUR
                                        , inAmountCard             := inAmountCard
                                        , inAmountDiscount_EUR     := inAmountDiscount_EUR
+                                       , inAmountDiscDiff_EUR     := vbAmountDiscDiff_EUR
                                        
                                        , inisDiscount             := inisDiscount
                                        , inisChangeEUR            := inisChangeEUR                                       

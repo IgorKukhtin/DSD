@@ -13,8 +13,8 @@ uses
 begin
   dsdProject := prBoat;
   Application.Initialize;
-  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TDM, DM);
+  Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
 

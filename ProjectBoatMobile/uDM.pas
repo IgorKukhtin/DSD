@@ -39,9 +39,10 @@ type
     TaskName : string;
 
     procedure SetTaskName(AName : string);
+    function DoLoadDict(ATableName, AProcName : string; tbDict: TFDTable): string;
 
     function UpdateProgram: string;
-    function LoadGoods: string;
+    function LoadDict: string;
     function LoadGoodsList: string;
     function UploadInventoryGoods: string;
   protected
@@ -111,14 +112,7 @@ type
     cdsInventoryListPrice: TFloatField;
     cdsInventoryListSumma: TFloatField;
     cdsInventoryUnitId: TIntegerField;
-    cdsGoods: TClientDataSet;
-    cdsGoodsId: TIntegerField;
-    cdsGoodsCode: TIntegerField;
-    cdsGoodsName: TWideStringField;
-    cdsGoodsArticle: TWideStringField;
-    cdsGoodsEAN: TWideStringField;
-    cdsGoodsGoodsGroupName: TWideStringField;
-    cdsGoodsMeasureName: TWideStringField;
+    cdsGoodsEAN: TClientDataSet;
     cdsInventoryListPartNumber: TWideStringField;
     cdsGoodsList: TClientDataSet;
     cdsGoodsListId: TIntegerField;
@@ -132,7 +126,6 @@ type
     fdGUIxWaitCursor: TFDGUIxWaitCursor;
     fdDriverLink: TFDPhysSQLiteDriverLink;
     fdfAnsiUpperCase: TFDSQLiteFunction;
-    cdsGoodsisErased: TBooleanField;
     tblInventoryGoods: TFDTable;
     tblInventoryGoodsGoodsId: TIntegerField;
     tblInventoryGoodsAmount: TFloatField;
@@ -161,6 +154,28 @@ type
     cdsOrderInternalAmount: TFloatField;
     cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField;
     cdsOrderInternalMovementPUId: TIntegerField;
+    tbGoods: TFDTable;
+    tbGoodsId: TIntegerField;
+    tbGoodsCode: TIntegerField;
+    tbGoodsName: TWideStringField;
+    tbGoodsArticle: TWideStringField;
+    tbGoodsEAN: TWideStringField;
+    tbGoodsGoodsGroupName: TWideStringField;
+    tbGoodsMeasureName: TWideStringField;
+    tbGoodsisErased: TBooleanField;
+    tbGoodsNameUpper: TWideStringField;
+    tbGoodsArticleUpper: TWideStringField;
+    tbGoodsisLoad: TBooleanField;
+    tbPartionCell: TFDTable;
+    tbPartionCellId: TIntegerField;
+    tbPartionCellCode: TIntegerField;
+    tbPartionCellName: TWideStringField;
+    tbPartionCellLevel: TFloatField;
+    tbPartionCellComment: TWideStringField;
+    tbPartionCellisLoad: TBooleanField;
+    cdsGoodsEANId: TIntegerField;
+    cdsGoodsEANEAN: TWideStringField;
+    cdsGoodsEANCode: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -180,7 +195,7 @@ type
     function CheckStructure: Boolean;
     procedure CreateIndexes;
 
-    procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
+    //procedure SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
     procedure LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
     procedure LoadSQLite(ADst: TClientDataSet; ASQL: String);
 
@@ -191,7 +206,7 @@ type
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure UpdateProgram(const AResult: TModalResult);
 
-    function DownloadGoods : Boolean;
+    function DownloadDict : Boolean;
     function DownloadInventoryJournal : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
     function DownloadInventoryList : Boolean;
@@ -204,7 +219,7 @@ type
 
     function LoadGoodsList : Boolean;
 
-    procedure LoadGoods;
+    procedure LoadGoodsEAN;
 
     procedure OpenInventoryGoods;
     procedure AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber : String);
@@ -405,25 +420,101 @@ begin
   {$ENDIF}
 end;
 
-// Получение справочника Комплектующих
-function TWaitThread.LoadGoods: string;
+// Получение справочников
+function TWaitThread.DoLoadDict(ATableName, AProcName : string; tbDict: TFDTable): string;
 var
   StoredProc : TdsdStoredProc;
+  cdsDict: TClientDataSet;
+  Params: TFDParams;
+  ListUpper: TStringList;
+  InsertList, UpdateList, ParamList: String;
+  I: Integer;
 begin
 
   StoredProc := TdsdStoredProc.Create(nil);
+  cdsDict := TClientDataSet.Create(nil);
+  Params := TFDParams.Create;
+  ListUpper := TStringList.Create;
   try
     StoredProc.OutputType := otDataSet;
 
-    StoredProc.StoredProcName := 'gpSelect_Object_MobileGoods';
+    StoredProc.StoredProcName := AProcName;
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
-    StoredProc.DataSet := DM.cdsGoods;
+    StoredProc.DataSet := cdsDict;
 
     try
       StoredProc.Execute(false, false, false);
-      frmMain.DateDownloadGoods := Now;
-      DM.SaveSQLiteData(DM.cdsGoods, 'Goods', 'Name,Article')
+
+      // Заливаем данные построчно т.к. через JSON UTF-8 не проходит
+
+      // Создаем параметры и строку полей
+      InsertList :=  ''; UpdateList :=  ''; ParamList :=  '';
+      for I := 0 to tbDict.Fields.Count - 1 do
+      begin
+        if Assigned(cdsDict.Fields.FindField(tbDict.Fields.Fields[I].FieldName)) or
+           (AnsiUpperCase(tbDict.Fields.Fields[I].FieldName) = AnsiUpperCase('isLoad')) then
+        begin
+          if I > 0 then
+          begin
+            InsertList := InsertList + ', ';
+            UpdateList := UpdateList + ', ';
+            ParamList := ParamList + ', ';
+          end;
+          InsertList := InsertList + tbDict.Fields.Fields[I].FieldName;
+          UpdateList := UpdateList + tbDict.Fields.Fields[I].FieldName + ' = :' + tbDict.Fields.Fields[I].FieldName;
+          ParamList := ParamList + ':' + tbDict.Fields.Fields[I].FieldName;
+
+          if AnsiUpperCase(tbDict.Fields.Fields[I].FieldName) = AnsiUpperCase('isLoad') then
+            Params.Add(AnsiUpperCase(tbDict.Fields.Fields[I].FieldName), True, ptInput)
+          else Params.Add(AnsiUpperCase(tbDict.Fields.Fields[I].FieldName), Null, ptInput);
+        end else if Pos(AnsiUpperCase('Upper'), AnsiUpperCase(tbDict.Fields.Fields[I].FieldName)) > 0 then
+        begin
+
+        end;
+      end;
+
+      // Если есть isLoad то сбросим
+      if Assigned(Params.FindParam('isLoad')) then
+        Synchronize(procedure
+                    begin
+                      DM.conMain.ExecSQL('UPDATE ' + ATableName + ' SET isLoad = False');
+                    end);
+
+      // Загрузим все
+      cdsDict.First;
+      while not cdsDict.Eof do
+      begin
+        for I := 0 to Params.Count - 1 do
+          if (AnsiUpperCase(Params.Items[I].Name) <> AnsiUpperCase('isLoad')) and
+             (Pos('UPPER', Params.Items[I].Name) = 0) then
+          begin
+            if not cdsDict.FieldByName(Params.Items[I].Name).IsNull and
+               (cdsDict.FieldByName(Params.Items[I].Name).DataType in [ftString, ftWideString, ftMemo, ftWideMemo]) then
+              Params.Items[I].AsWideString :=  cdsDict.FieldByName(Params.Items[I].Name).AsWideString
+            else Params.Items[I].Value :=  cdsDict.FieldByName(Params.Items[I].Name).Value;
+          end;
+
+        for I := 0 to ListUpper.Count - 1 do
+          if not cdsDict.FieldByName(ListUpper.Strings[I]).IsNull then
+            Params.ParamByName(ListUpper.Strings[I] + 'Upper').AsWideString :=  AnsiUpperCase(cdsDict.FieldByName(ListUpper.Strings[I]).AsWideString)
+          else Params.ParamByName(ListUpper.Strings[I] + 'Upper').Value :=  Null;
+
+        Synchronize(procedure
+                    begin
+                      if DM.conMain.ExecSQL('UPDATE ' + ATableName + ' SET ' + UpdateList + ' WHERE ' + Params.Items[0].Name + ' = ' + cdsDict.FieldByName(Params.Items[0].Name).AsString, Params) = 0 then
+                        DM.conMain.ExecSQL('INSERT INTO ' + ATableName + ' (' + InsertList + ')  SELECT ' + ParamList, Params);
+                    end);
+        cdsDict.Next;
+      end;
+
+      // Если есть isLoad то удалим что небыло в загрузке
+      if Assigned(Params.FindParam('isLoad')) then
+        Synchronize(procedure
+                    begin
+                      DM.conMain.ExecSQL('DELETE FROM ' + ATableName + ' WHERE isLoad = False');
+                    end);
+
     except
       on E : Exception do
       begin
@@ -431,10 +522,37 @@ begin
       end;
     end;
   finally
+    FreeAndNil(ListUpper);
+    FreeAndNil(Params);
+    FreeAndNil(cdsDict);
     FreeAndNil(StoredProc);
-    frmMain.DateDownloadGoods := Now;
-    if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'LoadGoodsList';
   end;
+end;
+
+
+// Получение всех справочников
+function TWaitThread.LoadDict: string;
+begin
+
+  try
+    // Получение справочника Комплектующих
+    SetTaskName('Получение справочника Комплектующих');
+    DoLoadDict(DM.tbGoods.TableName, 'gpSelect_Object_MobileGoods', DM.tbGoods);
+
+      // Получение справочника Ячейки хранения
+    SetTaskName('Получение справочника Ячейки хранения');
+    DoLoadDict(DM.tbPartionCell.TableName, 'gpSelect_Object_MobilePartionCell', DM.tbPartionCell);
+
+    frmMain.DateDownloadDict := Now;
+
+    if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'LoadGoodsList';
+  except
+    on E : Exception do
+    begin
+      Result := E.Message;
+    end;
+  end;
+
 end;
 
 // Открытие справочника Комплектующих
@@ -535,10 +653,9 @@ begin
       Res := UpdateProgram;
     end;
 
-    if (Res = '') and (TaskName = 'LoadGoods') then
+    if (Res = '') and (TaskName = 'LoadDict') then
     begin
-      SetTaskName('Получение справочника Комплектующих');
-      Res := LoadGoods;
+      Res := LoadDict;
     end;
 
     if (Res = '') and (TaskName = 'LoadGoodsList') then
@@ -909,100 +1026,100 @@ begin
   end;
 end;
 
-procedure TDM.SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
-  var I, J : Integer; S : string;
-      AParams: TFDParams;
-      Res: TArray<string>;
-begin
-  if not Connect and not ASrc.Active then Exit;
-
-  Res := TRegEx.Split(AUpperField, ',');
-
-  try
-    ASrc.DisableControls;
-    try
-
-        // Удаляем новую если вдркг остался мусор
-      conMain.ExecSQL('drop table if exists ' + ATableName+ 'New');
-
-        // Создаем новую таблицу
-      S :=  'CREATE TABLE ' + ATableName + 'New (';
-      for I := 0 to ASrc.FieldCount - 1 do
-      begin
-        if I > 0 then S := S + ', ';
-        S := S + ASrc.Fields.Fields[I].FieldName + ' ';
-        case ASrc.Fields.Fields[I].DataType of
-          ftInteger, ftLargeint : S := S + 'Integer';
-          ftDateTime : S := S + 'DateTime';
-          ftString, ftWideString :
-            if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
-              S := S + 'NVarChar(255)'
-            else S := S + 'TEXT';
-          ftMemo, ftWideMemo : S := S + 'TEXT';
-          ftFloat, ftCurrency : S := S + 'Float';
-          ftBoolean : S := S + 'Boolean';
-        else
-          ;
-        end;
-      end;
-
-      for J := 0 to High(Res) do
-        S := S + ', ' + Res[J] + 'Upper NVarChar(255)';
-
-      S := S + ')';
-
-      conMain.ExecSQL(S);
-
-        // Заливаем данные построчно т.к. через JSON UTF-8 не проходит
-      AParams := TFDParams.Create;
-      try
-        S :=  '';
-        for I := 0 to ASrc.Fields.Count - 1 do
-        begin
-          if I > 0 then S := S + ', ';
-          S := S + ':' + ASrc.Fields.Fields[I].FieldName;
-          AParams.Add(ASrc.Fields.Fields[I].FieldName, Null, ptInput);
-        end;
-
-        for J := 0 to High(Res) do
-        begin
-          S := S + ', :' + Res[J] + 'Upper';
-          AParams.Add(Res[J] + 'Upper', Null, ptInput);
-        end;
-
-        ASrc.First;
-        while not ASrc.Eof do
-        begin
-          for I := 0 to ASrc.Fields.Count - 1 do
-            if not ASrc.Fields.Fields[I].IsNull and (ASrc.Fields.Fields[I].DataType in [ftString, ftWideString, ftMemo, ftWideMemo]) then
-              AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).AsWideString :=  ASrc.Fields.Fields[I].AsWideString
-            else AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).Value :=  ASrc.Fields.Fields[I].Value;
-
-          for J := 0 to High(Res) do
-            AParams.ParamByName(Res[J] + 'Upper').AsWideString := AnsiUpperCase(ASrc.FieldByName(Res[J]).AsWideString);
-
-          conMain.ExecSQL('INSERT INTO ' + ATableName + 'New SELECT ' + S, AParams);
-
-          ASrc.Next;
-        end;
-
-      finally
-        AParams.Free;
-      end;
-
-        // Удаляем предыдущий вариант
-      conMain.ExecSQL('drop table if exists ' + ATableName);
-
-        // Переименовываем
-      conMain.ExecSQL('ALTER TABLE ' + ATableName + 'New RENAME TO ' + ATableName);
-
-    finally
-      ASrc.EnableControls;
-    end;
-  Except on E: Exception do
-    raise Exception.Create('Ошибка сохранения в локальную базу. ' + E.Message);
-  end;
-end;
+//procedure TDM.SaveSQLiteData(ASrc: TClientDataSet; ATableName, AUpperField: String);
+//  var I, J : Integer; S : string;
+//      AParams: TFDParams;
+//      Res: TArray<string>;
+//begin
+//  if not Connect and not ASrc.Active then Exit;
+//
+//  Res := TRegEx.Split(AUpperField, ',');
+//
+//  try
+//    ASrc.DisableControls;
+//    try
+//
+//        // Удаляем новую если вдркг остался мусор
+//      conMain.ExecSQL('drop table if exists ' + ATableName+ 'New');
+//
+//        // Создаем новую таблицу
+//      S :=  'CREATE TABLE ' + ATableName + 'New (';
+//      for I := 0 to ASrc.FieldCount - 1 do
+//      begin
+//        if I > 0 then S := S + ', ';
+//        S := S + ASrc.Fields.Fields[I].FieldName + ' ';
+//        case ASrc.Fields.Fields[I].DataType of
+//          ftInteger, ftLargeint : S := S + 'Integer';
+//          ftDateTime : S := S + 'DateTime';
+//          ftString, ftWideString :
+//            if (ASrc.Fields.Fields[I].Size > 0) and (ASrc.Fields.Fields[I].Size <= 255) then
+//              S := S + 'NVarChar(255)'
+//            else S := S + 'TEXT';
+//          ftMemo, ftWideMemo : S := S + 'TEXT';
+//          ftFloat, ftCurrency : S := S + 'Float';
+//          ftBoolean : S := S + 'Boolean';
+//        else
+//          ;
+//        end;
+//      end;
+//
+//      for J := 0 to High(Res) do
+//        S := S + ', ' + Res[J] + 'Upper NVarChar(255)';
+//
+//      S := S + ')';
+//
+//      conMain.ExecSQL(S);
+//
+//        // Заливаем данные построчно т.к. через JSON UTF-8 не проходит
+//      AParams := TFDParams.Create;
+//      try
+//        S :=  '';
+//        for I := 0 to ASrc.Fields.Count - 1 do
+//        begin
+//          if I > 0 then S := S + ', ';
+//          S := S + ':' + ASrc.Fields.Fields[I].FieldName;
+//          AParams.Add(ASrc.Fields.Fields[I].FieldName, Null, ptInput);
+//        end;
+//
+//        for J := 0 to High(Res) do
+//        begin
+//          S := S + ', :' + Res[J] + 'Upper';
+//          AParams.Add(Res[J] + 'Upper', Null, ptInput);
+//        end;
+//
+//        ASrc.First;
+//        while not ASrc.Eof do
+//        begin
+//          for I := 0 to ASrc.Fields.Count - 1 do
+//            if not ASrc.Fields.Fields[I].IsNull and (ASrc.Fields.Fields[I].DataType in [ftString, ftWideString, ftMemo, ftWideMemo]) then
+//              AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).AsWideString :=  ASrc.Fields.Fields[I].AsWideString
+//            else AParams.ParamByName(ASrc.Fields.Fields[I].FieldName).Value :=  ASrc.Fields.Fields[I].Value;
+//
+//          for J := 0 to High(Res) do
+//            AParams.ParamByName(Res[J] + 'Upper').AsWideString := AnsiUpperCase(ASrc.FieldByName(Res[J]).AsWideString);
+//
+//          conMain.ExecSQL('INSERT INTO ' + ATableName + 'New SELECT ' + S, AParams);
+//
+//          ASrc.Next;
+//        end;
+//
+//      finally
+//        AParams.Free;
+//      end;
+//
+//        // Удаляем предыдущий вариант
+//      conMain.ExecSQL('drop table if exists ' + ATableName);
+//
+//        // Переименовываем
+//      conMain.ExecSQL('ALTER TABLE ' + ATableName + 'New RENAME TO ' + ATableName);
+//
+//    finally
+//      ASrc.EnableControls;
+//    end;
+//  Except on E: Exception do
+//    raise Exception.Create('Ошибка сохранения в локальную базу. ' + E.Message);
+//  end;
+//end;
 
 procedure TDM.LoadSQLiteData(ADst: TClientDataSet; ATableName: String);
   var  DataSetProvider: TDataSetProvider;
@@ -1016,7 +1133,7 @@ begin
     try
 
       // Проверяем наличие таблицы
-      conMain.ExecSQL('SELECT * FROM sqlite_master WHERE type = ''table'' AND name= ''' + ATableName + '''', Nil, FDQuery);
+      conMain.ExecSQL('SELECT * FROM sqlite_master WHERE type = ''table'' AND name= ''' + AnsiUpperCase(ATableName) + '''', Nil, FDQuery);
 
       if FDQuery.RecordCount < 1 then Exit;
 
@@ -1255,12 +1372,12 @@ begin
   end;
 end;
 
-{ начитка товаров }
-function TDM.DownloadGoods : Boolean;
+{ начитка справочников }
+function TDM.DownloadDict : Boolean;
 begin
   WaitThread := TWaitThread.Create(true);
   WaitThread.FreeOnTerminate := true;
-  WaitThread.TaskName := 'LoadGoods';
+  WaitThread.TaskName := 'LoadDict';
   WaitThread.Start;
   Result := True;
 end;
@@ -1494,7 +1611,7 @@ function TDM.LoadGoodsList : Boolean;
   var sql: string;
 begin
   Result := False;
-  if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
+  if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
     cdsGoodsList.DisableControls;
     try
@@ -1530,19 +1647,19 @@ begin
     finally
       cdsGoodsList.EnableControls;
     end;
-  end else DM.DownloadGoods;
+  end else DM.DownloadDict;
 end;
 
-procedure TDM.LoadGoods;
+procedure TDM.LoadGoodsEAN;
 begin
 
-  if (frmMain.DateDownloadGoods >= IncDay(Now, - 1)) then
+  if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
 
-    LoadSQLiteData(cdsGoods, 'Goods');
-    if not cdsGoods.Active then DownloadGoods;
+    LoadSQLiteData(cdsGoodsEan, 'Goods');
+    if not cdsGoods.Active then DownloadDict;
 
-  end else DownloadGoods;
+  end else DownloadDict;
 end;
 
 // Иницилизация хранилища результатов сканирования

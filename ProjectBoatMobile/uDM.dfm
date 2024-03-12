@@ -6,8 +6,8 @@ object DM: TDM
   object cdsInventoryJournal: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 128
-    Top = 240
+    Left = 112
+    Top = 304
     object cdsInventoryJournalId: TIntegerField
       FieldName = 'Id'
     end
@@ -45,8 +45,8 @@ object DM: TDM
   object cdsInventory: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 320
-    Top = 240
+    Left = 312
+    Top = 304
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
     end
@@ -84,7 +84,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 496
-    Top = 240
+    Top = 304
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
     end
@@ -138,43 +138,26 @@ object DM: TDM
       FieldName = 'Summa'
     end
   end
-  object cdsGoods: TClientDataSet
+  object cdsGoodsEAN: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 112
-    Top = 352
-    object cdsGoodsId: TIntegerField
+    Top = 416
+    object cdsGoodsEANId: TIntegerField
       FieldName = 'Id'
     end
-    object cdsGoodsCode: TIntegerField
+    object cdsGoodsEANCode: TIntegerField
       FieldName = 'Code'
     end
-    object cdsGoodsName: TWideStringField
-      FieldName = 'Name'
-      Size = 255
-    end
-    object cdsGoodsArticle: TWideStringField
-      FieldName = 'Article'
-    end
-    object cdsGoodsEAN: TWideStringField
+    object cdsGoodsEANEAN: TWideStringField
       FieldName = 'EAN'
-    end
-    object cdsGoodsGoodsGroupName: TWideStringField
-      FieldName = 'GoodsGroupName'
-      Size = 255
-    end
-    object cdsGoodsMeasureName: TWideStringField
-      FieldName = 'MeasureName'
-    end
-    object cdsGoodsisErased: TBooleanField
-      FieldName = 'isErased'
     end
   end
   object cdsGoodsList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 312
-    Top = 352
+    Left = 304
+    Top = 416
     object cdsGoodsListId: TIntegerField
       FieldName = 'Id'
     end
@@ -227,8 +210,8 @@ object DM: TDM
   object tblInventoryGoods: TFDTable
     Connection = conMain
     TableName = 'InventoryGoods'
-    Left = 116
-    Top = 148
+    Left = 516
+    Top = 164
     object tblInventoryGoodsMovementId: TIntegerField
       FieldName = 'MovementId'
     end
@@ -275,8 +258,8 @@ object DM: TDM
       '     LEFT JOIN Goods G ON G.Id = IG.GoodsId'
       ''
       'WHERE IG.MovementId = :MovementId')
-    Left = 100
-    Top = 485
+    Left = 108
+    Top = 549
     ParamData = <
       item
         Name = 'MOVEMENTID'
@@ -334,7 +317,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     Left = 712
-    Top = 240
+    Top = 304
     object cdsOrderInternalMovementItemId: TIntegerField
       FieldName = 'MovementItemId'
     end
@@ -359,6 +342,76 @@ object DM: TDM
     object cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField
       FieldName = 'InvNumberFull_ProductionUnion'
       Size = 255
+    end
+  end
+  object tbGoods: TFDTable
+    Connection = conMain
+    TableName = 'Goods'
+    Left = 116
+    Top = 166
+    object tbGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tbGoodsCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object tbGoodsName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object tbGoodsArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 100
+    end
+    object tbGoodsEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object tbGoodsGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object tbGoodsMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object tbGoodsisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object tbGoodsNameUpper: TWideStringField
+      FieldName = 'NameUpper'
+      Size = 255
+    end
+    object tbGoodsArticleUpper: TWideStringField
+      FieldName = 'ArticleUpper'
+      Size = 100
+    end
+    object tbGoodsisLoad: TBooleanField
+      FieldName = 'isLoad'
+    end
+  end
+  object tbPartionCell: TFDTable
+    Connection = conMain
+    TableName = 'PartionCell'
+    Left = 276
+    Top = 166
+    object tbPartionCellId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tbPartionCellCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object tbPartionCellName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object tbPartionCellLevel: TFloatField
+      FieldName = 'Level'
+    end
+    object tbPartionCellComment: TWideStringField
+      FieldName = 'Comment'
+      Size = 255
+    end
+    object tbPartionCellisLoad: TBooleanField
+      FieldName = 'isLoad'
     end
   end
 end
