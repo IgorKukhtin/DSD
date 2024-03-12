@@ -1,5 +1,5 @@
 ﻿inherited BankSecondNumForm: TBankSecondNumForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
   ClientHeight = 317
   ClientWidth = 512
   ExplicitWidth = 518
@@ -65,15 +65,15 @@
     Caption = #8470' '#1087#1086' '#1087#1088#1080#1086#1088#1080#1090#1077#1090#1091' '#1076#1083#1103' '#1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055') '
   end
   object cxLabel10: TcxLabel [9]
-    Left = 8
+    Left = 289
     Top = 216
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [10]
-    Left = 8
+    Left = 289
     Top = 237
     TabOrder = 6
-    Width = 496
+    Width = 215
   end
   object edInvNumber: TcxTextEdit [11]
     Left = 8
@@ -148,6 +148,23 @@
     TabOrder = 19
     Width = 259
   end
+  object cxLabel30: TcxLabel [20]
+    Left = 8
+    Top = 216
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099
+  end
+  object edInvNumberPersonalService: TcxButtonEdit [21]
+    Left = 8
+    Top = 237
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 259
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
   end
@@ -170,8 +187,15 @@
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_PersonalService'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 88
+    Left = 248
+    Top = 272
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankSecondNum'
@@ -197,6 +221,14 @@
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_PersonalService'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -267,6 +299,14 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_PersonalService'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_PersonalService'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -365,9 +405,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_PersonalService'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_PersonalService'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 212
+    Left = 336
+    Top = 228
   end
   object GuidesBankSecond_num: TdsdGuides
     KeyField = 'Id'
@@ -449,5 +504,49 @@
       end>
     Left = 120
     Top = 174
+  end
+  object GuidesPersonalService: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberPersonalService
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesPersonalService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 153
+    Top = 214
   end
 end

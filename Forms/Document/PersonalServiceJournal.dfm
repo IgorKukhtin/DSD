@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -120
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -1228,6 +1227,15 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderHint = #1076#1072#1085#1085#1099#1077' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'. (>=4000)'
             Width = 70
           end
+          object InvNumber_BankSecondNum: TcxGridDBColumn
+            Caption = #1044#1086#1082'. '#1055#1088#1080#1086#1088'. '#1088#1072#1089#1087#1088#1077#1076'. '#1047#1055' - '#1060'2'
+            DataBinding.FieldName = 'InvNumber_BankSecondNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2'
+            Options.Editing = False
+            Width = 100
+          end
         end
       end
       object ExportXmlGrid: TcxGrid
@@ -1238,8 +1246,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitLeft = -16
-        ExplicitTop = 545
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS

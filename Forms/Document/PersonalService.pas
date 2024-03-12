@@ -349,6 +349,11 @@ type
     actUpdateCardSecond_num: TdsdExecStoredProc;
     spUpdate_CardSecond_num: TdsdStoredProc;
     bbUpdateCardSecond_num: TdxBarButton;
+    actOpenBankSecondNumForm: TdsdOpenForm;
+    cxLabel30: TcxLabel;
+    edBankSecondNum: TcxButtonEdit;
+    GuidesBankSecondNum: TdsdGuides;
+    bbOpenBankSecondNumForm: TdxBarButton;
   private
     { Private declarations }
   public

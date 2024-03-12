@@ -153,6 +153,7 @@ type
     mactExportF2_xls: TMultiAction;
     bbtExportF2_xls: TdxBarButton;
     is4000: TcxGridDBColumn;
+    InvNumber_BankSecondNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

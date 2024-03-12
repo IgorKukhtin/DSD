@@ -1,13 +1,16 @@
 -- Function: gpGet_Movement_BankSecondNum()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_BankSecondNum (Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Movement_BankSecondNum (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_BankSecondNum (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankSecondNum(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inOperDate          TDateTime, -- дата Документа
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inMovementId                 Integer  , -- ключ Документа 
+    IN inMovementId_PersonalService Integer  ,
+    IN inOperDate                   TDateTime, -- дата Документа
+    IN inSession                    TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , MovementId_PersonalService Integer, InvNumber_PersonalService TVarChar
              , BankSecond_num TFloat
              , BankSecondTwo_num TFloat
              , BankSecondDiff_num TFloat
@@ -33,10 +36,12 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_BankSecondNum_seq') AS TVarChar) AS InvNumber
-             , inOperDate                                 AS OperDate
+             , COALESCE (MovementDate_ServiceDate.ValueData, DATE_TRUNC ('MONTH', inOperDate)) :: TDateTime AS OperDate
              , Object_Status.Code                         AS StatusCode
              , Object_Status.Name                         AS StatusName
 
+             , Movement_PersonalService.Id                AS MovementId_PersonalService
+             , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
              , CAST (0 as TFloat)                         AS BankSecond_num
              , CAST (0 as TFloat)                         AS BankSecondTwo_num
              , CAST (0 as TFloat)                         AS BankSecondDiff_num
@@ -56,7 +61,13 @@ BEGIN
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
-               LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis()
+               LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Enum_Currency_Basis() 
+
+               LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = inMovementId_PersonalService 
+
+               LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                      ON MovementDate_ServiceDate.MovementId = Movement_PersonalService.Id
+                                     AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
           ;
 
      ELSE
@@ -69,6 +80,9 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
+
+           , Movement_PersonalService.Id                AS MovementId_PersonalService
+           , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
 
            , MovementFloat_BankSecond_num.ValueData      ::TFloat AS BankSecond_num
            , MovementFloat_BankSecondTwo_num.ValueData   ::TFloat AS BankSecondTwo_num
@@ -139,6 +153,12 @@ BEGIN
                                         AND MovementLinkObject_BankSecondDiff_num.DescId = zc_MovementLinkObject_BankSecondDiff_num()
             LEFT JOIN Object AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MovementLinkObject_BankSecondDiff_num.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MLM_BankSecond_num
+                                           ON MLM_BankSecond_num.MovementChildId = Movement.Id
+                                          AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
+            LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = MLM_BankSecond_num.MovementId
+
+
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_BankSecondNum();
 
@@ -151,8 +171,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.03.24         *
  10.03.24         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_BankSecondNum (inMovementId:= 40874, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());
+--SELECT * FROM gpGet_Movement_BankSecondNum (inMovementId:= 40874, inMovementId_PersonalService:=0, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());

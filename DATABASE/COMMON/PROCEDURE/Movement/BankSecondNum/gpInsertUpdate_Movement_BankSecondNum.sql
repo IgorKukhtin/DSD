@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Movement_BankSecondNum()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankSecondNum (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankSecondNum (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankSecondNum (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankSecondNum(
  INOUT ioId                     Integer   , -- Ключ объекта <Документ >
     IN inInvNumber              TVarChar  , -- Номер документа
     IN inOperDate               TDateTime , -- Дата 
+    IN inMovementId_PersonalService Integer, -- ведомость начисления
     IN inBankSecondId_num       Integer   , -- 
     IN inBankSecondTwoId_num    Integer   , --  
     IN inBankSecondDiffId_num   Integer   , -- 
@@ -15,7 +17,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankSecondNum(
     IN inComment                TVarChar  , -- Примечание
     IN inSession                TVarChar    -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId   Integer;
@@ -52,6 +54,9 @@ BEGIN
      -- Примечание
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     -- сохранили связь с документом <Ведомость начисления и приоритет начисления>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_BankSecondNum(), inMovementId_PersonalService, ioId);
+     
      IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <Дата создания>

@@ -1,25 +1,25 @@
 inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 751
-  ClientWidth = 1258
-  ExplicitWidth = 1274
+  ClientWidth = 1469
+  ExplicitWidth = 1485
   ExplicitHeight = 790
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 1258
+    Width = 1469
     Height = 636
     ExplicitTop = 115
     ExplicitWidth = 1258
     ExplicitHeight = 636
     ClientRectBottom = 636
-    ClientRectRight = 1258
+    ClientRectRight = 1469
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1258
       ExplicitHeight = 612
       inherited cxGrid: TcxGrid
-        Width = 1258
+        Width = 1469
         Height = 217
         ExplicitWidth = 1258
         ExplicitHeight = 217
@@ -1895,11 +1895,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 222
-        Width = 1258
+        Width = 1469
         Height = 161
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 1258
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -2268,20 +2269,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 217
-        Width = 1258
+        Width = 1469
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitWidth = 1258
       end
       object cxGrid2: TcxGrid
         Left = 0
         Top = 389
-        Width = 1258
+        Width = 1469
         Height = 138
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
+        ExplicitWidth = 1258
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -2423,22 +2426,24 @@ inherited PersonalServiceForm: TPersonalServiceForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 383
-        Width = 1258
+        Width = 1469
         Height = 6
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
+        ExplicitWidth = 1258
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
         Top = 527
-        Width = 1258
+        Width = 1469
         Height = 85
         Align = alBottom
         TabOrder = 5
         Visible = False
+        ExplicitWidth = 1258
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -2470,14 +2475,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitWidth = 1258
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1258
+        Width = 1469
         Height = 612
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1258
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2563,14 +2570,17 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitWidth = 1258
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
-        Width = 1258
+        Width = 1469
         Height = 612
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 181
+        ExplicitTop = -134
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -2894,10 +2904,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1258
+    Width = 1469
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1258
+    ExplicitLeft = -8
+    ExplicitTop = 7
+    ExplicitWidth = 1469
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -3062,10 +3074,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 22
-      Width = 243
+      Width = 326
     end
     object edPriceNalog: TcxCurrencyEdit
-      Left = 1079
+      Left = 1077
       Top = 61
       EditValue = '0'
       Properties.DecimalPlaces = 4
@@ -3078,6 +3090,23 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Left = 1079
       Top = 43
       Caption = #1057#1090#1072#1074#1082#1072' '#1085#1072#1083#1086#1075#1072
+    end
+    object cxLabel30: TcxLabel
+      Left = 1169
+      Top = 43
+      Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2'
+    end
+    object edBankSecondNum: TcxButtonEdit
+      Left = 1169
+      Top = 61
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 234
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -4090,6 +4119,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actOpenBankSecondNumForm
+        end
+        item
           Action = actUpdateCardSecond_num
         end
         item
@@ -5078,6 +5110,48 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2'
       ImageIndex = 43
     end
+    object actOpenBankSecondNumForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
+      ImageIndex = 56
+      FormName = 'TBankSecondNumForm'
+      FormNameParam.Value = 'TBankSecondNumForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = GuidesBankSecondNum
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_PersonalService'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -5597,6 +5671,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = macUpdateCardSecond_num
       Category = 0
     end
+    object bbOpenBankSecondNumForm: TdxBarButton
+      Action = actOpenBankSecondNumForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 726
@@ -5865,6 +5943,21 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = edPriceNalog
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_BankSecondNum'
+        Value = Null
+        Component = GuidesBankSecondNum
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_BankSecondNum'
+        Value = Null
+        Component = GuidesBankSecondNum
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -8488,5 +8581,50 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 592
     Top = 312
+  end
+  object GuidesBankSecondNum: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankSecondNum
+    DisableGuidesOpen = True
+    Key = '0'
+    FormNameParam.Value = 'TBankSecondNumJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBankSecondNumJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesBankSecondNum
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesBankSecondNum
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 1265
+    Top = 54
   end
 end

@@ -44,6 +44,9 @@ type
     cxLabel2: TcxLabel;
     edBankSecondDiff_num: TcxButtonEdit;
     GuidesBankSecondDiff_num: TdsdGuides;
+    cxLabel30: TcxLabel;
+    edInvNumberPersonalService: TcxButtonEdit;
+    GuidesPersonalService: TdsdGuides;
   private
     { Private declarations }
   public
