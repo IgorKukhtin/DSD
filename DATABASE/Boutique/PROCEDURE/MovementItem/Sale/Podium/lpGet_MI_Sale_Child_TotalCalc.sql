@@ -1,6 +1,6 @@
 -- Function: lpGet_MI_Sale_Child_TotalCalc()
 
-DROP FUNCTION IF EXISTS lpGet_MI_Sale_Child_TotalCalc (TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TFloat, Boolean, Boolean, Boolean,TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpGet_MI_Sale_Child_TotalCalc (TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TFloat, TFloat, Boolean, Boolean, Boolean,TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGet_MI_Sale_Child_TotalCalc(
 
@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpGet_MI_Sale_Child_TotalCalc(
     IN inAmountEUR           TFloat   , --
     IN inAmountCard          TFloat   , --
     IN inAmountDiscount_EUR  TFloat   , -- всегда EUR
+    IN inAmountDiscDiff_EUR  TFloat   , -- всегда EUR
         
     IN inisDiscount          Boolean  , -- Списать остаток
     IN inisChangeEUR         Boolean  , -- Расчет от евро
@@ -44,6 +45,8 @@ RETURNS TABLE (-- Информативно - для Диалога
              , AmountCard          TFloat
                -- Дополнительная скидка евро
              , AmountDiscount_EUR  TFloat
+               -- Дополнительная скидка евро по округлению сдачи
+             , AmountDiscDiff_EUR  TFloat
 
                -- Дополнительная скидка грн.
              , AmountDiscount      TFloat
@@ -135,8 +138,8 @@ BEGIN
      IF inAmountCard < 0 THEN inAmountCard :=0; END IF;
      -- IF inAmountDiscount_EUR < 0 THEN inAmountDiscount_EUR :=0; END IF;
 
-     vbAmountToPay_EUR := CASE WHEN COALESCE(inAmountToPay_EUR, 0) - COALESCE(inAmountDiscount_EUR, 0) > 0 
-                               THEN COALESCE (inAmountToPay_EUR, 0) - COALESCE(inAmountDiscount_EUR, 0) ELSE 0 END;
+     vbAmountToPay_EUR := CASE WHEN COALESCE(inAmountToPay_EUR, 0) - COALESCE(inAmountDiscount_EUR, 0) - COALESCE(inAmountDiscDiff_EUR, 0) > 0 
+                               THEN COALESCE (inAmountToPay_EUR, 0) - COALESCE(inAmountDiscount_EUR, 0) - COALESCE(inAmountDiscDiff_EUR, 0) ELSE 0 END;
 
      vbAmountToPay_EUR_Calc := COALESCE (vbAmountToPay_EUR, 0);
 
@@ -390,6 +393,7 @@ BEGIN
            , inAmountEUR
            , inAmountCard
            , inAmountDiscount_EUR
+           , inAmountDiscDiff_EUR
 
              -- Дополнительная скидка - ГРН
            , vbAmountDiscount  :: TFloat              AS AmountDiscount
@@ -449,7 +453,8 @@ BEGIN
                         ELSE zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD, 1) END, 2) +
              Round(zfCalc_CurrencyFrom (inAmountEUR - vbAmountOverpay_EUR, inCurrencyValueEUR, 1), 2) +
              Round(zfCalc_CurrencyFrom (vbAmountOverpay_EUR, inCurrencyValueInEUR, 1), 2) +                   
-             Round(vbAmountRest, 2) + vbAmountDiscount + vbAmountRounding - vbAmountDiff)) :: TFloat AS AmountDiffFull_GRN
+             Round(vbAmountRest, 2) + vbAmountDiscount + ROUND(zfCalc_CurrencyFrom ( COALESCE (inAmountDiscDiff_EUR, 0), inCurrencyValueEUR, 1), 2) + 
+             vbAmountRounding - vbAmountDiff)) :: TFloat AS AmountDiffFull_GRN
 
            , (COALESCE(inAmountToPay_EUR, 0) -
              (inAmountEUR - vbAmountOverpay_EUR +
@@ -460,7 +465,7 @@ BEGIN
                         THEN (inAmountCard - vbAmountOverpay_Card) / inCurrencyValueEUR
                         ELSE (inAmountCard - vbAmountOverpay_Card) / inCurrencyValueEUR /* inCurrencyValueUSD / inCurrencyValueCross*/ END, 2) +
              Round((inAmountUSD - vbAmountOverpay_USD) / inCurrencyValueCross, 2) +
-             Round(vbAmountRest_EUR, 2) + inAmountDiscount_EUR + vbAmountRounding_EUR)) :: TFloat AS AmountDiffFull_EUR
+             Round(vbAmountRest_EUR, 2) + inAmountDiscount_EUR + inAmountDiscDiff_EUR + vbAmountRounding_EUR)) :: TFloat AS AmountDiffFull_EUR
       ;
 
 END;
@@ -476,15 +481,15 @@ $BODY$
 -- тест
 -- 
 
-/*
-select AmountDiscount_EUR, AmountRemains, AmountRest_EUR 
-from lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inCurrencyValueCross := 1.09 , 
+
+select AmountDiscount_EUR, AmountDiscount
+from lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inCurrencyValueCross := 1.0868 , 
                                    inAmountToPay_EUR := 451 , 
-                                   inAmountGRN := 0 , inAmountUSD := 300 , inAmountEUR := 0 , inAmountCard := 0 , inAmountDiscount_EUR := -0.23 , 
-                                   inisDiscount := False, inisChangeEUR := 'False' , inisAmountDiff := 'False' , inAmountDiff := 0 , 
-                                   inCurrencyId_Client := 18101 ,  inUserId := 2);*/
+                                   inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 0 , inAmountCard := 0 , inAmountDiscount_EUR := 0 , inAmountDiscDiff_EUR := 0.79,
+                                   inisDiscount := False, inisChangeEUR := 'False' , inisAmountDiff := 'True' , inAmountDiff := 400, 
+                                   inCurrencyId_Client := 18101 ,  inUserId := 2);
                                             
-select AmountDiscount_EUR, AmountRemains_EUR, AmountRest_EUR
+/*select AmountDiscount_EUR, AmountRemains_EUR, AmountRest_EUR
 from gpGet_MI_Sale_Child_Total(inisGRN := 'False' , inisUSD := 'True' , inisEUR := 'False' , inisCard := 'False' , inisDiscount := 'False' , 
                                inisGRNOld := 'False' , inisUSDOld := 'True' , inisEUROld := 'False' , inisCardOld := 'False' , inisDiscountOld := 'False' , 
                                inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inCurrencyValueCross := 1.01 , 
@@ -492,4 +497,4 @@ from gpGet_MI_Sale_Child_Total(inisGRN := 'False' , inisUSD := 'True' , inisEUR 
                                inAmountGRN := 0 , inAmountUSD := 300 , inAmountEUR := 0 , inAmountCard := 0 , inAmountDiscount_EUR := 0 , inAmountDiscount := 0 ,
                                inisChangeEUR := 'False' , inAmountRemains := 0 , 
                                inisAmountRemains_EUR := 'True' , inAmountRemains_EUR := 160 , inisAmountDiff := 'False' , inAmountManualDiff := 0 , 
-                               inCurrencyId_Client := 18101 ,  inSession := '2');
+                               inCurrencyId_Client := 18101 ,  inSession := '2');*/

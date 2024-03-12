@@ -519,6 +519,7 @@ BEGIN
                                                   , inAmountDiscount_EUR     := CASE WHEN ABS(vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff) >= 1 
                                                                                      THEN vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff 
                                                                                      ELSE ROUND(vbAmountDiscount_EUR - tmpMI.AmountDiscount_EUR_Diff) END
+                                                  , inAmountDiscDiff_EUR     := 0
                                                    
                                                   , inisDiscount             := ABS(vbAmountDiscount_EUR + tmpMI.AmountDiscount_EUR_Diff) >= 1 OR ABS(vbAmountDiscount_GRN) >= 5 AND (tmpMI.AmountOver_GRN + vbAmountDiscount_GRN) = 0 AND (tmpMI.AmountOver_GRN) > 0
                                                   , inisChangeEUR            := tmpMI.isChangeEUR

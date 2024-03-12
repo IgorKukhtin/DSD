@@ -169,17 +169,8 @@ type
     bGoodsRefresh: TSpeedButton;
     Image14: TImage;
     Panel3: TPanel;
-    Label14: TLabel;
-    Label16: TLabel;
-    edInventScanBarCode: TEdit;
-    edInventScanPartNumber: TEdit;
-    Label15: TLabel;
-    edInventScanАmount: TEdit;
-    Image15: TImage;
     bInventScanSearch: TSpeedButton;
-    Image16: TImage;
     lwInventoryScan: TListView;
-    bInventScanOk: TEditButton;
     BindSourceDB5: TBindSourceDB;
     LinkListControlToField4: TLinkListControlToField;
     ppEnterAmount: TPopup;
@@ -207,29 +198,14 @@ type
     bOrderInternalOkClick: TEditButton;
     Image17: TImage;
     Label17: TLabel;
-    ppInventScan: TPopup;
-    pInventScan: TPanel;
-    RadioButtonInvScan1: TRadioButton;
-    RadioButtonInvScan2: TRadioButton;
-    RadioButtonInvScan3: TRadioButton;
-    RadioButtonInvScan4: TRadioButton;
     lGoodsSelect: TLabel;
-    bppInventScanClose: TSpeedButton;
-    Image20: TImage;
     pPassword: TPanel;
     ppWebServer: TPopup;
     pWebServerTest: TPanel;
     Label18: TLabel;
     pWebServerMain: TPanel;
     Label19: TLabel;
-    lInventScanBtn: TLayout;
-    lInventScanPartNumber: TLayout;
-    lInventScanАmount: TLayout;
-    Layout14: TLayout;
-    bppInventScanCancel: TSpeedButton;
-    Image21: TImage;
     Rectangle1: TRectangle;
-    Rectangle2: TRectangle;
     pOrderInternal: TPanel;
     Label20: TLabel;
     edInvNumber_Full: TEdit;
@@ -249,6 +225,22 @@ type
     Label24: TLabel;
     LinkControlToField10: TLinkControlToField;
     bpProductionUnion: TButton;
+    tiInventoryItemEdit: TTabItem;
+    bInventScanSN: TSpeedButton;
+    bInventScan: TSpeedButton;
+    Image15: TImage;
+    Image16: TImage;
+    Image22: TImage;
+    Edit1: TEdit;
+    Label14: TLabel;
+    Edit2: TEdit;
+    Label15: TLabel;
+    Edit3: TEdit;
+    Label16: TLabel;
+    Edit4: TEdit;
+    Label25: TLabel;
+    Edit5: TEdit;
+    Label26: TLabel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -265,6 +257,7 @@ type
     procedure ShowProductionUnion;
     procedure ShowInventoryJournal;
     procedure ShowInventory;
+    procedure ShowInventoryItemEdit;
     procedure ShowInventoryScan;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
@@ -293,11 +286,10 @@ type
     procedure bInventoryJournalRefreshClick(Sender: TObject);
     procedure bInventScanSearchClick(Sender: TObject);
     procedure edInventScanАmountChangeTracking(Sender: TObject);
-    procedure bInventScanOkClick(Sender: TObject);
     procedure lwInventoryScanItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
-    procedure SetDateDownloadGoods(Values : TDateTime);
+    procedure SetDateDownloadDict(Values : TDateTime);
     procedure b0Click(Sender: TObject);
     procedure bDotClick(Sender: TObject);
     procedure bClearAmountClick(Sender: TObject);
@@ -306,16 +298,15 @@ type
     procedure bMinusAmountClick(Sender: TObject);
     procedure bUploadClick(Sender: TObject);
     procedure bProductionUnionClick(Sender: TObject);
-    procedure RadioButtonInvScan4Click(Sender: TObject);
     procedure lwGoodsSearchChange(Sender: TObject);
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
-    procedure bppInventScanCloseClick(Sender: TObject);
     procedure pPasswordClick(Sender: TObject);
     procedure pWebServerClick(Sender: TObject);
-    procedure bppInventScanCancelClick(Sender: TObject);
     procedure bOrderInternalOkClickClick(Sender: TObject);
     procedure bpProductionUnionClick(Sender: TObject);
+    procedure RadioButtonInvScan2Change(Sender: TObject);
+    procedure bInventScanClick(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -329,7 +320,8 @@ type
     FisZebraScaner: boolean;
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
-    FDateDownloadGoods: TDateTime;
+    FDateDownloadDict: TDateTime;
+    FisInventScanSN : Boolean;
     FGoodsId: Integer;
 
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
@@ -339,11 +331,7 @@ type
     procedure DownloadGoods(const AResult: TModalResult);
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
-    procedure ConfppInventScanClose(const AResult: TModalResult);
-    procedure ConfppInventScanCancel(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
-
-    procedure ShowppInventScan(AGoodsId: Integer);
 
     {$IFDEF ANDROID}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
@@ -352,7 +340,7 @@ type
     procedure Wait(AWait: Boolean);
   public
     { Public declarations }
-    property DateDownloadGoods: TDateTime read FDateDownloadGoods write SetDateDownloadGoods;
+    property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
   end;
 
 var
@@ -411,6 +399,7 @@ begin
   FormatSettings.DecimalSeparator := '.';
   FisBecomeForeground := False;
   FPasswordLabelClick := 0;
+  FisInventScanSN := False;
 
   SearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
@@ -438,7 +427,7 @@ begin
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
     FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
-    FDateDownloadGoods := SettingsFile.ReadDateTime('Params', 'DateDownloadGoods', IncDay(Now, - 2));
+    FDateDownloadDict := SettingsFile.ReadDateTime('Params', 'DateDownloadDict', IncDay(Now, - 2));
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -508,14 +497,14 @@ begin
   FFormsStack.Free;
 end;
 
-procedure TfrmMain.SetDateDownloadGoods(Values : TDateTime);
+procedure TfrmMain.SetDateDownloadDict(Values : TDateTime);
   var SettingsFile : TIniFile;
 begin
   // Сохраним в ini файла
   SettingsFile := TIniFile.Create(FINIFile);
   try
-    FDateDownloadGoods := Values;
-    SettingsFile.WriteDateTime('Params', 'DateDownloadGoods', FDateDownloadGoods);
+    FDateDownloadDict := Values;
+    SettingsFile.WriteDateTime('Params', 'DateDownloadDict', FDateDownloadDict);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -530,7 +519,7 @@ begin
     lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
-// ввод числа (для редактирования количества товара)
+// ввод числа (для редактирования количества комплектующих)
 procedure TfrmMain.b0Click(Sender: TObject);
 begin
   if lAmount.Text = '0' then
@@ -539,7 +528,7 @@ begin
   lAmount.Text := lAmount.Text + TButton(Sender).Text;
 end;
 
-// очистка количества товаров
+// очистка количества комплектующих
 procedure TfrmMain.bClearAmountClick(Sender: TObject);
 begin
   lAmount.Text := '0';
@@ -552,7 +541,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
-// отнимание количества товаров от введенных ранее
+// отнимание количества комплектующих от введенных ранее
 procedure TfrmMain.bMinusAmountClick(Sender: TObject);
 begin
   if tcMain.ActiveTab = tiInventoryScan then DM.UpdateInventoryGoods(DM.qryInventoryGoodsAmount.AsFloat - StrToFloatDef(lAmount.Text, 0));
@@ -603,7 +592,7 @@ begin
   ShowProductionUnion;
 end;
 
-// присвоение количества товаров
+// присвоение количества комплектующих
 procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 begin
   if tcMain.ActiveTab = tiInventoryScan then DM.UpdateInventoryGoods(StrToFloatDef(lAmount.Text, 0));
@@ -621,36 +610,6 @@ begin
   Result := True;
 end;
 {$ENDIF}
-
-procedure TfrmMain.bppInventScanCancelClick(Sender: TObject);
-begin
-  TDialogService.MessageDialog('Не cохранять выбранную комплектующую?',
-    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanCancel)
-end;
-
-procedure TfrmMain.bppInventScanCloseClick(Sender: TObject);
-  var nAmount: Currency;
-begin
-
-  if not TryStrToCurr(edInventScanАmount.Text, nAmount) then nAmount := 1;
-
-  if lInventScanPartNumber.Visible and (edInventScanPartNumber.Text = '') then
-    TDialogService.MessageDialog('Не заполнен <S/N>.'#13#13'Сохранить ?',
-      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
-  else if lInventScanАmount.Visible and (nAmount = 1) then
-    TDialogService.MessageDialog('Не изменено количество.'#13#13'Сохранить ?',
-      TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ConfppInventScanClose)
-  else
-  begin
-    ppInventScan.Visible := false;
-    sbScan.Enabled := True;
-    sbBack.Enabled := True;
-    Panel3.Enabled := True;
-    lwInventoryScan.Enabled := True;
-
-    DM.AddInventoryGoods(FGoodsID, nAmount, edInventScanPartNumber.Text);
-  end;
-end;
 
 procedure TfrmMain.ProductionUnionInsert(const AResult: TModalResult);
 begin
@@ -694,14 +653,9 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
-procedure TfrmMain.RadioButtonInvScan4Click(Sender: TObject);
+procedure TfrmMain.RadioButtonInvScan2Change(Sender: TObject);
 begin
-  If Not (Sender is TRadioButton) Then // Защитимся от не выспавшегося самого себя
-    Exit;
-  RadioButtonInvScan1.IsChecked := TRadioButton(Sender).Tag = 0;
-  RadioButtonInvScan2.IsChecked := TRadioButton(Sender).Tag = 1;
-  RadioButtonInvScan3.IsChecked := TRadioButton(Sender).Tag = 2;
-  RadioButtonInvScan4.IsChecked := TRadioButton(Sender).Tag = 3;
+
 end;
 
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
@@ -791,7 +745,7 @@ begin
     begin
       imLogo.Visible := true;
       sbBack.Visible := false;
-      DM.cdsGoods.Close;
+      DM.cdsGoodsEAN.Close;
     end
     else
     begin
@@ -842,9 +796,15 @@ begin
     end else
     if tcMain.ActiveTab = tiInventoryScan then
     begin
-      lCaption.Text := 'Вставка товара в инвентаризацию';
+      lCaption.Text := 'Вставка комплектующих в инвентаризацию';
       DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
+    end
+    else
+    if tcMain.ActiveTab = tiInventoryItemEdit then
+    begin
+      lCaption.Text := 'Вставка комплектующих в инвентаризации';
+      //DM.OpenInventoryItemEdit;
     end
     else
     if tcMain.ActiveTab = tiProductionUnion then
@@ -946,6 +906,14 @@ begin
 //  SwitchToForm(tiInventoryJournal, nil);
 end;
 
+// начитка информации журнала инвентаризаций
+procedure TfrmMain.ShowInventoryItemEdit;
+begin
+  if FGoodsId = 0 then Exit;
+
+  SwitchToForm(tiInventoryItemEdit, nil);
+end;
+
 // Сборка Узла / Лодки
 procedure TfrmMain.ShowProductionUnion;
 begin
@@ -983,7 +951,7 @@ begin
 
   imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
 
-  if not DM.cdsGoods.Active then DM.LoadGoods;
+  if not DM.cdsGoodsEan.Active then DM.LoadGoodsEAN;
 
   SwitchToForm(tiInventoryScan, nil);
 end;
@@ -1009,84 +977,18 @@ begin
   DM.DownloadInventoryJournal;
 end;
 
-procedure TfrmMain.ShowppInventScan(AGoodsId: Integer);
-begin
-  sbScan.Enabled := False;
-  sbBack.Enabled := False;
-  Panel3.Enabled := False;
-  lwInventoryScan.Enabled := False;
-
-  FGoodsId := AGoodsId;
-  edInventScanBarCode.Text := '';
-  edInventScanPartNumber.Text := '';
-  edInventScanАmount.Text := '';
-
-  lInventScanPartNumber.Visible := RadioButtonInvScan2.IsChecked or RadioButtonInvScan4.IsChecked;
-  lInventScanАmount.Visible := RadioButtonInvScan3.IsChecked or RadioButtonInvScan4.IsChecked;
-
-  if lInventScanАmount.Visible and lInventScanPartNumber.Visible then
-    ppInventScan.Height := lInventScanАmount.Height + lInventScanPartNumber.Height
-  else if lInventScanАmount.Visible then ppInventScan.Height := lInventScanАmount.Height
-  else if lInventScanPartNumber.Visible then ppInventScan.Height := lInventScanPartNumber.Height;
-
-  ppInventScan.Height := ppInventScan.Height + lInventScanBtn.Height + 6;
-
-  ppInventScan.Position.Y := pBack.Height + 10;
-  ppInventScan.Position.X := (pBack.Width - ppInventScan.Width) / 2;
-  ppInventScan.Visible := True;
-
-  if lInventScanPartNumber.Visible then edInventScanPartNumber.SetFocus
-  else edInventScanАmount.SetFocus;
-end;
-
-// Поиск товара для вставки в инвентаризацию по введеному коду
-procedure TfrmMain.bInventScanOkClick(Sender: TObject);
-  var Code: Integer;
-begin
-
-  if Length(edInventScanBarCode.Text) > 12 then
-    edInventScanBarCode.Text := Copy(edInventScanBarCode.Text, 1, Length(edInventScanBarCode.Text) - 1);
-
-  if edInventScanBarCode.Text = '' then Exit;
-  if not DM.cdsGoods.Active then DM.LoadGoods;
-
-  try
-    try
-      if COPY(edInventScanBarCode.Text, 1, 2) = '00' then
-      begin
-        if not TryStrToInt(edInventScanBarCode.Text, Code) then
-        begin
-          ShowMessage('Не правельный штрихкод ' + edInventScanBarCode.Text);
-          Exit;
-        end else DM.cdsGoods.Filter := 'Code = ' + IntToStr(Code);
-      end else DM.cdsGoods.Filter := 'EAN LIKE ''' + edInventScanBarCode.Text + '%''';
-      DM.cdsGoods.Filtered := True;
-      if DM.cdsGoods.RecordCount = 1 then
-      begin
-        if RadioButtonInvScan1.IsChecked then
-          DM.AddInventoryGoods(DM.cdsGoodsId.AsInteger, 1, '')
-        else ShowppInventScan(DM.cdsGoodsId.AsInteger);
-      end else if DM.cdsGoods.RecordCount > 1 then
-      begin
-        SearshBox(lwGoods).Text := edInventScanBarCode.Text;
-        DM.FilterGoodsEAN := True;
-        bInventScanSearchClick(Sender);
-        Exit;
-      end else ShowMessage('Товар с штрихкодом ' + edInventScanBarCode.Text + ' не найден.');
-    finally
-      DM.cdsGoods.Filtered := False;
-      DM.cdsGoods.Filter := '';
-    end;
-  finally
-    edInventScanBarCode.Text := '';
-  end;
-end;
-
 // Поиск товара для вставки в инвентаризацию
 procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
 begin
   ShowGoods;
   bGoodsChoice.Visible := True;
+end;
+
+procedure TfrmMain.bInventScanClick(Sender: TObject);
+begin
+  FGoodsId := 0;
+  FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
+  sbScanClick(Sender);
 end;
 
 // Выбор товара
@@ -1098,10 +1000,8 @@ begin
   ReturnPriorForm;
   if (tcMain.ActiveTab = tiInventoryScan)  then
   begin
-    if RadioButtonInvScan1.IsChecked then
-    begin
-      DM.AddInventoryGoods(DM.cdsGoodsListId.AsInteger, 1, '');
-    end else ShowppInventScan(DM.cdsGoodsListId.AsInteger);
+    FGoodsId := DM.cdsGoodsListId.AsInteger;
+    ShowInventoryItemEdit;
   end;
 end;
 
@@ -1180,7 +1080,7 @@ begin
     end;
 
     DM.qryInventoryGoods.Close;
-    DM.cdsGoods.Close;
+    DM.cdsGoodsEAN.Close;
   end else if tcMain.ActiveTab = tiProductionUnion then
   begin
     DM.cdsOrderInternal.Close;
@@ -1265,9 +1165,6 @@ begin
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
       else
-      if ppInventScan.Visible then
-        bppInventScanCloseClick(Sender)
-      else
       if tcMain.ActiveTab = tiStart then
         TDialogService.MessageDialog('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], TMsgDlgBtn.mbCancel, -1, OnCloseDialog)
       else
@@ -1348,7 +1245,7 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
-  DM.LoadGoods;
+  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.LoadGoodsEAN;
 end;
 
 procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
@@ -1375,7 +1272,7 @@ end;
 
 procedure TfrmMain.DownloadGoods(const AResult: TModalResult);
 begin
-  if AResult = mrYes then DM.DownloadGoods;
+  if AResult = mrYes then DM.DownloadDict;
 end;
 
 procedure TfrmMain.UploadAllData(const AResult: TModalResult);
@@ -1387,35 +1284,6 @@ procedure TfrmMain.CreateInventory(const AResult: TModalResult);
 begin
   if AResult = mrYes then if DM.GetInventoryActive(True) then
     SwitchToForm(tiInventoryScan, nil);
-end;
-
-procedure TfrmMain.ConfppInventScanClose(const AResult: TModalResult);
-  var nAmount: Currency;
-begin
-  if AResult = mrYes then
-  begin
-    ppInventScan.Visible := false;
-    sbScan.Enabled := True;
-    sbBack.Enabled := True;
-    Panel3.Enabled := True;
-    lwInventoryScan.Enabled := True;
-
-    if not TryStrToCurr(edInventScanАmount.Text, nAmount) then nAmount := 1;
-
-    DM.AddInventoryGoods(FGoodsID, nAmount, edInventScanPartNumber.Text);
-  end;
-end;
-
-procedure TfrmMain.ConfppInventScanCancel(const AResult: TModalResult);
-begin
-  if AResult = mrYes then
-  begin
-    ppInventScan.Visible := false;
-    sbScan.Enabled := True;
-    sbBack.Enabled := True;
-    Panel3.Enabled := True;
-    lwInventoryScan.Enabled := True;
-  end;
 end;
 
 procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
@@ -1502,7 +1370,7 @@ begin
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then
     begin
       SwitchToForm(tiMain, nil);
-      DM.LoadGoods;
+      if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.LoadGoodsEAN;
     end;
   end;
 end;
@@ -1551,11 +1419,42 @@ end;
 
 // Обрабатываем отсканированный товар для инвентаризации
 procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
+  var Code: Integer; Data_String: String;
 begin
 
-  edInventScanBarCode.Text := AData_String;
+  Data_String := AData_String;
 
-  bInventScanOkClick(Sender);
+  if Length(Data_String) > 12 then
+    Data_String := Copy(Data_String, 1, Length(Data_String) - 1);
+
+  if Data_String = '' then Exit;
+  if not DM.cdsGoodsEAN.Active then DM.LoadGoodsEAN;
+
+  try
+    if COPY(Data_String, 1, 2) = '00' then
+    begin
+      if not TryStrToInt(Data_String, Code) then
+      begin
+        ShowMessage('Не правельный штрихкод ' + AData_String);
+        Exit;
+      end else DM.cdsGoodsEAN.Filter := 'Code = ' + IntToStr(Code);
+    end else DM.cdsGoodsEAN.Filter := 'EAN LIKE ''' + Data_String + '%''';
+    DM.cdsGoodsEAN.Filtered := True;
+    if DM.cdsGoodsEAN.RecordCount = 1 then
+    begin
+      ShowInventoryItemEdit;
+    end else if DM.cdsGoodsEAN.RecordCount > 1 then
+    begin
+      SearshBox(lwGoods).Text := Data_String;
+      DM.FilterGoodsEAN := True;
+      bInventScanSearchClick(Sender);
+      Exit;
+    end else ShowMessage('Товар с штрихкодом ' + AData_String + ' не найден.');
+  finally
+    DM.cdsGoodsEAN.Filtered := False;
+    DM.cdsGoodsEAN.Filter := '';
+  end;
+
 end;
 
 // Обрабатываем отсканированный товар для производства
