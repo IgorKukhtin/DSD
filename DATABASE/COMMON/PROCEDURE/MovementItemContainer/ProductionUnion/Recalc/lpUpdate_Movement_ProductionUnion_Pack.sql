@@ -864,10 +864,17 @@ BEGIN
                        -- тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                        FROM tmpResult_master
-                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
+                            INNER JOIN ObjectLink AS OL_GoodsMain
+                                                  ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
                                                  AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
-                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
-                                                 AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                            INNER JOIN ObjectLink AS OL_Goods
+                                                  ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
+                                                 AND OL_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                            /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                     ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                    AND ObjectBoolean_Order.ValueData = TRUE*/
+
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                          AND tmpResult_master.GoodsId_child > 0
                          AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
@@ -876,6 +883,10 @@ BEGIN
                        FROM tmpReceipt_find 
                             INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
                             INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                            /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                     ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                    AND ObjectBoolean_Order.ValueData = TRUE*/
                        WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                       UNION
                        -- + могут делаться из самих себя
@@ -887,6 +898,10 @@ BEGIN
                              INNER JOIN ObjectLink AS OL_Goods
                                                    ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
                                                   AND OL_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                             /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                      ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                     AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                     AND ObjectBoolean_Order.ValueData = TRUE*/
                              LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
                                        ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
                                                AND tmp.ContainerId = tmpResult_master.ContainerId
