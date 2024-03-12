@@ -38,6 +38,7 @@ $BODY$
    DECLARE vbSummTax TFloat;
    DECLARE vbTransportsumm_load TFloat;  
    DECLARE vbVATPercent TFloat;
+   DECLARE vbTotalSumm TFloat;
    DECLARE vbisVat Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -115,11 +116,23 @@ BEGIN
 
          -- Получаем сохраненные параметры - для расчета в эдит форме
 
-         SELECT tmp.DiscountTax, tmp.DiscountNextTax, tmp.SummTax, tmp.SummReal, tmp.Basis_summ_transport, tmp.BasisWVAT_summ_transport, tmp.TransportSumm_load, tmp.VATPercent
+         /*SELECT tmp.DiscountTax, tmp.DiscountNextTax, tmp.SummTax, tmp.SummReal, tmp.Basis_summ_transport, tmp.BasisWVAT_summ_transport, tmp.TransportSumm_load, tmp.VATPercent
         INTO vbDiscountTax, vbDiscountNextTax, vbSummTax, vbSummReal, vbBasis_summ_transport, vbBasisWVAT_summ_transport, vbTransportSumm_load, vbVATPercent
          FROM gpGet_Movement_OrderClientEdit(inId, inSession) AS tmp;
-         
+          */
      --  RAISE EXCEPTION 'Ошибка. inIsEdit %    -  %.', vbSummTax, ioSummTax;
+         IF inIsEdit = FALSE
+         THEN
+          vbSummTax        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTax());
+          vbSummReal       := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummReal()); 
+          vbTotalSumm      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm());
+          vbTransportSumm_load      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_load());
+          vbVATPercent     := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_VATPercent()); 
+          vbisVat          := FALSE;
+          vbBasis_summ_transport    := (COALESCE (vbTotalSumm,0) - COALESCE (vbSummTax,0) + COALESCE (vbTransportSumm_load,0));
+          vbBasisWVAT_summ_transport:= zfCalc_SummWVAT (vbBasis_summ_transport, vbVATPercent);
+
+         END IF;
    
          IF inIsEdit = TRUE
          THEN
