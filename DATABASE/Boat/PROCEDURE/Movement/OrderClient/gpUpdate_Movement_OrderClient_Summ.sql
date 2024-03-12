@@ -163,7 +163,8 @@ BEGIN
              RETURN;
          END IF;
 
-         
+           RAISE EXCEPTION 'Ошибка. vbSummTax   %    -  %.', vbSummTax, ioSummTax;
+           
          IF COALESCE (vbVATPercent,0) <> COALESCE (inVATPercent,0)
          THEN  
 
@@ -204,7 +205,8 @@ BEGIN
          
          --- изменилась ручн. скидка
          ELSEIF COALESCE (vbSummTax,0) <> COALESCE (ioSummTax,0)
-         THEN         
+         THEN  
+             RAISE EXCEPTION 'Ошибка. inIsEdit %    -  %.', vbSummTax, ioSummTax;  
              IF COALESCE (ioSummTax,0) <> 0
              THEN
                  ioSummReal := outBasis_summ - COALESCE (ioSummTax,0); 
@@ -212,7 +214,7 @@ BEGIN
                 ioSummReal :=0;
               END IF;   
               --
-              ioBasis_summ_transport := outBasis_summ + COALESCE (inTransportSumm_load,0) - COALESCE (ioSummTax,0);
+              --ioBasis_summ_transport := outBasis_summ + COALESCE (inTransportSumm_load,0) - COALESCE (ioSummTax,0);
          -- 
          END IF;      
          
