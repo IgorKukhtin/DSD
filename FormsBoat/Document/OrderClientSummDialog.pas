@@ -32,7 +32,6 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     edSummReal: TcxCurrencyEdit;
-    cxLabel37: TcxLabel;
     cxLabel36: TcxLabel;
     edSummTax: TcxCurrencyEdit;
     cxLabel33: TcxLabel;

@@ -4204,11 +4204,8 @@ object OrderClientForm: TOrderClientForm
       Category = 'NPP'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateMovement_Summ
+      StoredProc = spGet
       StoredProcList = <
-        item
-          StoredProc = spUpdateMovement_Summ
-        end
         item
           StoredProc = spGet
         end>
