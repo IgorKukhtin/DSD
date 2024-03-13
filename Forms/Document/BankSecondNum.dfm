@@ -116,7 +116,7 @@
   end
   object cxLabel4: TcxLabel [16]
     Left = 8
-    Top = 114
+    Top = 112
     Caption = #1041#1072#1085#1082' - 2'#1092'.('#1054#1058#1055')'
   end
   object edBankSecondTwo_num: TcxButtonEdit [17]
@@ -219,7 +219,8 @@
       item
         Name = 'inoperdate'
         Value = 0d
-        Component = ceOperDate
+        Component = FormParams
+        ComponentItem = 'operdate'
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -329,8 +330,15 @@
       item
         Name = 'OperDate'
         Value = 0d
-        Component = ceOperDate
+        Component = FormParams
+        ComponentItem = 'OperDate'
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ServiceDate'
+        Value = Null
+        Component = ceOperDate
         MultiSelectSeparator = ','
       end
       item

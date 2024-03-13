@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_BankSecondNum(
     IN inSession                    TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , MovementId_PersonalService Integer, InvNumber_PersonalService TVarChar
+             , MovementId_PersonalService Integer, InvNumber_PersonalService TVarChar, ServiceDate TDateTime
              , BankSecond_num TFloat
              , BankSecondTwo_num TFloat
              , BankSecondDiff_num TFloat
@@ -42,6 +42,7 @@ BEGIN
 
              , Movement_PersonalService.Id                AS MovementId_PersonalService
              , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
+             , COALESCE (MovementDate_ServiceDate.ValueData, NULL) :: TDateTime AS ServiceDate
              , CAST (0 as TFloat)                         AS BankSecond_num
              , CAST (0 as TFloat)                         AS BankSecondTwo_num
              , CAST (0 as TFloat)                         AS BankSecondDiff_num
@@ -78,12 +79,14 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
+           
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
 
            , Movement_PersonalService.Id                AS MovementId_PersonalService
            , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
-
+           , COALESCE (MovementDate_ServiceDate.ValueData, NULL) :: TDateTime AS ServiceDate
+           
            , MovementFloat_BankSecond_num.ValueData      ::TFloat AS BankSecond_num
            , MovementFloat_BankSecondTwo_num.ValueData   ::TFloat AS BankSecondTwo_num
            , MovementFloat_BankSecondDiff_num.ValueData  ::TFloat AS BankSecondDiff_num
@@ -158,6 +161,9 @@ BEGIN
                                           AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
             LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = MLM_BankSecond_num.MovementId
 
+            LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                   ON MovementDate_ServiceDate.MovementId = Movement_PersonalService.Id
+                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_BankSecondNum();
