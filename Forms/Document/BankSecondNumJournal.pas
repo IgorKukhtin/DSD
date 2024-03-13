@@ -24,11 +24,12 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
   TBankSecondNumJournalForm = class(TAncestorJournalForm)
+    BankSecondName_num: TcxGridDBColumn;
+    BankSecond_num: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -40,17 +41,11 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    actPrintGroup: TdsdPrintAction;
-    actPrintSaleOrder: TdsdPrintAction;
-    actPrintSaleOrderTax: TdsdPrintAction;
-    spGetImportSettingId: TdsdStoredProc;
-    actDoLoad: TExecuteImportSettingsAction;
-    actGetImportSetting: TdsdExecStoredProc;
-    actStartLoad: TMultiAction;
-    actGet_Exception: TdsdExecStoredProc;
-    actDelete_Movement: TdsdExecStoredProc;
-    BankSecondName_num: TcxGridDBColumn;
-    macInsertMask: TMultiAction;
+    bbPrintGroup: TdxBarButton;
+    bbPrintSaleOrder: TdxBarButton;
+    bbPrintSaleOrderTax: TdxBarButton;
+    BankName_Num: TcxGridDBColumn;
+    InvNumber_PersonalService: TcxGridDBColumn;
   private
     { Private declarations }
   public

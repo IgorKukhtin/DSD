@@ -10,12 +10,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankSecondNum(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , MovementId_PersonalService Integer, InvNumber_PersonalService TVarChar, ServiceDate TDateTime
              , BankSecond_num TFloat
              , BankSecondTwo_num TFloat
              , BankSecondDiff_num TFloat
              , BankSecondId_num Integer, BankSecondName_num TVarChar
              , BankSecondTwoId_num Integer, BankSecondTwoName_num TVarChar
              , BankSecondDiffId_num Integer, BankSecondDiffName_num TVarChar
+             , BankName_Num TVarChar
              , Comment TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , UpdateDate TDateTime, UpdateName TVarChar
@@ -33,12 +35,29 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpMovement AS (SELECT Movement.*
-                          FROM tmpStatus
-                               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                            AND Movement.DescId = zc_Movement_BankSecondNum()
-                                            AND Movement.StatusId = tmpStatus.StatusId
-                          )
+      
+         , tmpPersonalService AS (SELECT Movement_PersonalService.Id AS MovementId_PersonalService
+                                       , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService 
+                                       , MovementDate_ServiceDate.ValueData  AS ServiceDate
+                                  FROM MovementDate AS MovementDate_ServiceDate 
+                                       INNER JOIN Movement AS Movement_PersonalService
+                                                           ON Movement_PersonalService.Id = MovementDate_ServiceDate.MovementId
+                                                          AND Movement_PersonalService.DescId = zc_Movement_PersonalService()
+                                  WHERE MovementDate_ServiceDate.ValueData BETWEEN inStartDate AND inEndDate
+                                    AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                                  )
+         , tmpBankSecondNum AS (SELECT MLM_BankSecond_num.* 
+                                FROM MovementLinkMovement AS MLM_BankSecond_num
+                                WHERE MLM_BankSecond_num.MovementId IN (SELECT DISTINCT tmpPersonalService.MovementId_PersonalService FROM tmpPersonalService)
+                                  AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
+                                )
+ 
+         , tmpMovement AS (SELECT Movement.*
+                           FROM tmpStatus
+                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND Movement.DescId = zc_Movement_BankSecondNum()
+                                             AND Movement.StatusId = tmpStatus.StatusId
+                           )
 
        ----------
        SELECT
@@ -47,6 +66,10 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
+
+           , tmpPersonalService.MovementId_PersonalService                AS MovementId_PersonalService
+           , tmpPersonalService.InvNumber_PersonalService    :: TVarChar  AS InvNumber_PersonalService
+           , COALESCE (tmpPersonalService.ServiceDate, NULL) :: TDateTime AS ServiceDate
 
            , MovementFloat_BankSecond_num.ValueData      ::TFloat AS BankSecond_num
            , MovementFloat_BankSecondTwo_num.ValueData   ::TFloat AS BankSecondTwo_num
@@ -58,6 +81,20 @@ BEGIN
            , Object_BankSecondTwo_num.ValueData         AS BankSecondTwoName_num
            , Object_BankSecondDiff_num.Id               AS BankSecondDiffId_num
            , Object_BankSecondDiff_num.ValueData        AS BankSecondDiffName_num
+           
+           , ('1.'||CASE WHEN COALESCE (MovementFloat_BankSecond_num.ValueData,0) = 1     THEN COALESCE (Object_BankSecond_num.ValueData,'Восток')
+                         WHEN COALESCE (MovementFloat_BankSecondTwo_num.ValueData,0) = 1  THEN COALESCE (Object_BankSecondTwo_num.ValueData,'ОТП')
+                         WHEN COALESCE (MovementFloat_BankSecondDiff_num.ValueData,0) = 1 THEN COALESCE (Object_BankSecondDiff_num.ValueData,'Личный')
+                    END
+                         
+          || ' 2.'||CASE WHEN COALESCE (MovementFloat_BankSecond_num.ValueData,0) = 2     THEN COALESCE (Object_BankSecond_num.ValueData,'Восток')
+                         WHEN COALESCE (MovementFloat_BankSecondTwo_num.ValueData,0) = 2  THEN COALESCE (Object_BankSecondTwo_num.ValueData,'ОТП')
+                         WHEN COALESCE (MovementFloat_BankSecondDiff_num.ValueData,0) = 2 THEN COALESCE (Object_BankSecondDiff_num.ValueData,'Личный')
+                    END
+          || ' 3.'||CASE WHEN COALESCE (MovementFloat_BankSecond_num.ValueData,0) = 3     THEN COALESCE (Object_BankSecond_num.ValueData,'Восток')
+                         WHEN COALESCE (MovementFloat_BankSecondTwo_num.ValueData,0) = 3  THEN COALESCE (Object_BankSecondTwo_num.ValueData,'ОТП')
+                         WHEN COALESCE (MovementFloat_BankSecondDiff_num.ValueData,0) = 3 THEN COALESCE (Object_BankSecondDiff_num.ValueData,'Личный')
+                    END ) ::TVarChar AS BankName_Num
 
            , MovementString_Comment.ValueData       AS Comment
 
@@ -65,7 +102,14 @@ BEGIN
            , Object_Insert.ValueData                AS InsertName         
            , MovementDate_Update.ValueData          AS UpdateDate
            , Object_Update.ValueData                AS UpdateName
-       FROM tmpMovement AS Movement
+       FROM tmpPersonalService
+       
+            INNER JOIN MovementLinkMovement AS MLM_BankSecond_num
+                                            ON MLM_BankSecond_num.MovementId = tmpPersonalService.MovementId_PersonalService   --- = Movement.Id
+                                           AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
+           
+            LEFT JOIN Movement ON Movement.Id = MLM_BankSecond_num.MovementChildId
+            LEFT JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -130,4 +174,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankSecondNum (inStartDate:= '30.01.2016', inEndDate:= '01.02.2016', inIsErased := FALSE, inJuridicalBasisId:= 0, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_BankSecondNum (inStartDate:= '01.02.2024', inEndDate:= '31.03.2024', inIsErased := FALSE, inJuridicalBasisId:= 0, inSession:= '2')

@@ -83,8 +83,9 @@ UPDATE Object
            , Object.ValueData  AS Name 
            , ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
                                        , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2))::Integer
-                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
+                                       --, zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
                                        , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4))::Integer
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
                                 ) ::Integer AS Ord
 
            , Object.isErased   AS isErased

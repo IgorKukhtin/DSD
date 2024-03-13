@@ -38,11 +38,12 @@ BEGIN
            , ObjectFloat_RowHeight.ValueData    ::TFloat  AS RowHeight    
            , ObjectString_Comment.ValueData     ::TVarChar AS Comment
            
-           , ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
+           , (ROW_NUMBER() OVER (ORDER BY ObjectFloat_Level.ValueData
                                        , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=2))::Integer
-                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
+                                       
                                        , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=4))::Integer
-                                ) ::Integer AS Ord
+                                       , zfConvert_StringToNumber (zfCalc_Word_Split (inValue:= Object.ValueData, inSep:= '-', inIndex:=3))::Integer
+                                )  -  1 )::Integer AS Ord
 
            , Object.isErased   AS isErased
 
