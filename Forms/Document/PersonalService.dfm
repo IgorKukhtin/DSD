@@ -2470,9 +2470,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 1258
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2481,7 +2478,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1258
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2567,9 +2563,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 1258
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -2578,8 +2571,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitLeft = 181
-        ExplicitTop = -134
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -3848,16 +3839,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
     end
-    object actUpdate_PriceNalog: TdsdExecStoredProc [47]
-      Category = 'Update'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PriceNalog
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_PriceNalog
-        end>
-    end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -3890,7 +3871,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [53]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [52]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3917,7 +3898,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [56]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [55]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4134,10 +4115,52 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1050#1072#1088#1090#1072' '#1041#1053' ('#1074#1074#1086#1076') - 2'#1092'.'
       ImageIndex = 89
     end
+    object actOpenBankSecondNumForm: TdsdOpenForm
+      Category = 'Update'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
+      ImageIndex = 89
+      FormName = 'TBankSecondNumForm'
+      FormNameParam.Value = 'TBankSecondNumForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = ''
+          Component = GuidesBankSecondNum
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId_PersonalService'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actUpdateCardSecond_num: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
       StoredProc = spUpdate_CardSecond_num
       StoredProcList = <
         item
@@ -5058,8 +5081,27 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object macUpdate_PriceNalog: TMultiAction
+      Category = 'Update'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPriceNalogDialog
+        end
+        item
+          Action = actUpdate_PriceNalog
+        end
+        item
+          Action = actRefreshMaster
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2?'
+      InfoAfterExecute = #1053#1072#1083#1086#1075#1080' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2'
+      ImageIndex = 43
+    end
     object actPriceNalogDialog: TExecuteDialog
-      Category = 'DSDLib'
+      Category = 'Update'
       MoveParams = <>
       Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080
@@ -5088,66 +5130,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macUpdate_PriceNalog: TMultiAction
+    object actUpdate_PriceNalog: TdsdExecStoredProc
       Category = 'Update'
       MoveParams = <>
-      ActionList = <
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceNalog
+      StoredProcList = <
         item
-          Action = actPriceNalogDialog
-        end
-        item
-          Action = actUpdate_PriceNalog
-        end
-        item
-          Action = actRefreshMaster
+          StoredProc = spUpdate_PriceNalog
         end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2?'
-      InfoAfterExecute = #1053#1072#1083#1086#1075#1080' '#1079#1072#1087#1086#1083#1085#1077#1085#1099
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2'
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1085#1072#1083#1086#1075#1080' '#1060'2'
-      ImageIndex = 43
-    end
-    object actOpenBankSecondNumForm: TdsdOpenForm
-      Category = 'DSDLib'
-      TabSheet = tsMain
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1047#1055' - '#1060'2>'
-      ImageIndex = 56
-      FormName = 'TBankSecondNumForm'
-      FormNameParam.Value = 'TBankSecondNumForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = ''
-          Component = GuidesBankSecondNum
-          ComponentItem = 'Key'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 42132d
-          Component = edOperDate
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'MovementId_PersonalService'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
