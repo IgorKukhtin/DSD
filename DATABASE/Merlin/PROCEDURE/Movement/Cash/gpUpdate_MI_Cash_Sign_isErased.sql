@@ -80,7 +80,7 @@ BEGIN
          END IF;
 
          -- Удаляем ОДНУ подпись
-         PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= -1 * vbUserId);
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= vbId_mi, inUserId:= vbUserId);
 
      END IF;
 
