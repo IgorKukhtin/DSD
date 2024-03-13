@@ -25,10 +25,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Intege
                                                                         , Integer, Integer, Integer, Integer, Integer, Integer);*/
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService_item (Integer, Integer, Integer, Boolean
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
-                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                         , TVarChar, TVarChar
-                                                                        , Integer, Integer, Integer, Integer, Integer, Integer);
+                                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -40,6 +40,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inSummCardRecalc      TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф.
     IN inSummCardSecondCash  TFloat    , -- Карта БН (касса) - 2ф.
+    IN inSummAvCardSecondRecalc TFloat    , -- Карта БН (ввод) - 2ф. аванс
     IN inSummNalogRecalc     TFloat    , -- Налоги - удержания с ЗП (ввод)
     IN inSummNalogRetRecalc  TFloat    , -- Налоги - возмещение к ЗП (ввод)
     IN inSummMinus           TFloat    , -- Сумма удержания
@@ -69,6 +70,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService_item(
     IN inPositionId          Integer   , -- Должность
     IN inMemberId            Integer   , -- Физ лицо (кому начисляют алименты)
     IN inPersonalServiceListId   Integer   , -- Ведомость начисления
+    IN inFineSubjectId          Integer   , -- вид нарушения
+    IN inUnitFineSubjectId      Integer   , -- Кем налагается взыскание
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -85,6 +88,7 @@ BEGIN
                                                      , inSummCardRecalc         := inSummCardRecalc
                                                      , inSummCardSecondRecalc   := inSummCardSecondRecalc
                                                      , inSummCardSecondCash     := inSummCardSecondCash
+                                                     , inSummAvCardSecondRecalc := inSummAvCardSecondRecalc
                                                      , inSummNalogRecalc        := inSummNalogRecalc
                                                      , inSummNalogRetRecalc     := inSummNalogRetRecalc
                                                      , inSummMinus              := inSummMinus
@@ -110,8 +114,8 @@ BEGIN
                                                      , inPositionId             := inPositionId
                                                      , inMemberId               := inMemberId
                                                      , inPersonalServiceListId  := inPersonalServiceListId
-                                                     , inFineSubjectId          := 0
-                                                     , inUnitFineSubjectId      := 0
+                                                     , inFineSubjectId          := inFineSubjectId
+                                                     , inUnitFineSubjectId      := inUnitFineSubjectId
                                                      , inUserId                 := inUserId
                                                       ) AS tmp;
 END;

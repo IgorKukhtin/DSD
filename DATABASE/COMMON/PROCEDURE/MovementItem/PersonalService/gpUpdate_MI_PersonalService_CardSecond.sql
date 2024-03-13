@@ -618,6 +618,14 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 -- !!!тест 
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
 -- RAISE EXCEPTION 'ок' ;
+
+     IF vbUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Admin <%>'
+                       , (SELECT SUM (_tmpMI.SummCardSecondRecalc) FROM _tmpMI)
+                        ;
+     END IF;
+
 IF vbUserId = 5 and 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok   %'
