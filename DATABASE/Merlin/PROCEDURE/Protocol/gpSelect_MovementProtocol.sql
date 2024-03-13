@@ -66,7 +66,11 @@ BEGIN
             SELECT
                MovementItemProtocol.Id,
                MovementItemProtocol.OperDate,
-               MovementItemProtocol.ProtocolData::Text AS ProtocolData,
+               -- MovementItemProtocol.ProtocolData::Text AS ProtocolData,
+               ('<XML>'  || '<Field FieldName = "MovementItemId" FieldValue = "' || MovementItem.Id :: TVarChar || '"/>'
+                         || '<Field FieldName = "DescId" FieldValue = "' || MovementItem.DescId :: TVarChar || '"/>'
+                         || RIGHT (MovementItemProtocol.ProtocolData, LENGTH (MovementItemProtocol.ProtocolData) - 5)
+               ) ::Text AS ProtocolData,
                Object_User.ValueData AS UserName,
                Movement.InvNumber,
                Movement.OperDate AS MovementOperDate,
