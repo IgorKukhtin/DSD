@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , CardBank TVarChar, CardBankSecond TVarChar 
              , CardBankSecondTwo TVarChar, CardIBANSecondTwo TVarChar, CardSecondTwo TVarChar
              , CardBankSecondDiff TVarChar, CardIBANSecondDiff TVarChar, CardSecondDiff TVarChar 
+             , BankId Integer, BankName TVarChar
+             , BankSecondId Integer, BankSecondName TVarChar
              , BankSecondTwoId Integer, BankSecondTwoName TVarChar
              , BankSecondDiffId Integer, BankSecondDiffName TVarChar  
              , BankSecondId_num Integer, BankSecondName_num TVarChar
@@ -612,7 +614,10 @@ BEGIN
      , tmoObjectLink_Member AS (SELECT *
                                 FROM ObjectLink
                                 WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpAll.MemberId_Personal FROM tmpAll)  
-                                  AND ObjectLink.DescId IN (zc_ObjectLink_Member_BankSecondTwo(), zc_ObjectLink_Member_BankSecondDiff())
+                                  AND ObjectLink.DescId IN (zc_ObjectLink_Member_Bank()
+                                                          , zc_ObjectLink_Member_BankSecond()
+                                                          , zc_ObjectLink_Member_BankSecondTwo()
+                                                          , zc_ObjectLink_Member_BankSecondDiff())
                                 ) 
 
      , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
@@ -670,6 +675,10 @@ BEGIN
             , ObjectString_Member_CardIBANSecondDiff.ValueData ::TVarChar  AS CardIBANSecondDiff
             , ObjectString_Member_CardSecondDiff.ValueData     ::TVarChar  AS CardSecondDiff
 
+            , Object_Bank.Id                   AS BankId
+            , Object_Bank.ValueData            AS BankName
+            , Object_BankSecond.Id             AS BankSecondId
+            , Object_BankSecond.ValueData      AS BankSecondName
             , Object_BankSecondTwo.Id          AS BankSecondTwoId
             , Object_BankSecondTwo.ValueData   AS BankSecondTwoName
             , Object_BankSecondDiff.Id         AS BankSecondDiffId
@@ -1118,7 +1127,15 @@ BEGIN
           LEFT JOIN tmpObjectString_Member AS ObjectString_Member_CardSecondDiff
                                  ON ObjectString_Member_CardSecondDiff.ObjectId = tmpAll.MemberId_Personal 
                                 AND ObjectString_Member_CardSecondDiff.DescId = zc_ObjectString_member_CardSecondDiff()
-
+          --из справичника физ лица
+          LEFT JOIN tmoObjectLink_Member AS ObjectLink_Member_Bank
+                                         ON ObjectLink_Member_Bank.ObjectId = tmpAll.MemberId_Personal
+                                        AND ObjectLink_Member_Bank.DescId = zc_ObjectLink_Member_Bank()
+          LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Member_Bank.ChildObjectId
+          LEFT JOIN tmoObjectLink_Member AS ObjectLink_Member_BankSecond
+                                         ON ObjectLink_Member_BankSecond.ObjectId = tmpAll.MemberId_Personal
+                                        AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
+          LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
           LEFT JOIN tmoObjectLink_Member AS ObjectLink_Member_BankSecondTwo
                                          ON ObjectLink_Member_BankSecondTwo.ObjectId = tmpAll.MemberId_Personal
                                         AND ObjectLink_Member_BankSecondTwo.DescId = zc_ObjectLink_Member_BankSecondTwo()
@@ -1127,50 +1144,50 @@ BEGIN
                                          ON ObjectLink_Member_BankSecondDiff.ObjectId = tmpAll.MemberId_Personal
                                         AND ObjectLink_Member_BankSecondDiff.DescId = zc_ObjectLink_Member_BankSecondDiff()
           LEFT JOIN Object AS Object_BankSecondDiff ON Object_BankSecondDiff.Id = ObjectLink_Member_BankSecondDiff.ChildObjectId
-         
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
-                                    ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
-                                   AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+          --
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
+                                  ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
+                                 AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
-                                    ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id
-                                   AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_BankOut
+                                  ON ObjectBoolean_BankOut.ObjectId = Object_PersonalServiceList.Id
+                                 AND ObjectBoolean_BankOut.DescId = zc_ObjectBoolean_PersonalServiceList_BankOut()
 
-            LEFT JOIN MILO AS MILinkObject_FineSubject
-                           ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
-                          AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
-            LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
+          LEFT JOIN MILO AS MILinkObject_FineSubject
+                         ON MILinkObject_FineSubject.MovementItemId = tmpAll.MovementItemId
+                        AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
+          LEFT JOIN Object AS Object_FineSubject ON Object_FineSubject.Id = MILinkObject_FineSubject.ObjectId
 
-            LEFT JOIN MILO AS MILinkObject_UnitFineSubject
-                           ON MILinkObject_UnitFineSubject.MovementItemId = tmpAll.MovementItemId
-                          AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
-            LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
+          LEFT JOIN MILO AS MILinkObject_UnitFineSubject
+                         ON MILinkObject_UnitFineSubject.MovementItemId = tmpAll.MovementItemId
+                        AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
+          LEFT JOIN Object AS Object_UnitFineSubject ON Object_UnitFineSubject.Id = MILinkObject_UnitFineSubject.ObjectId
+          --
+          LEFT JOIN MILO_num AS MILinkObject_BankSecond_num
+                             ON MILinkObject_BankSecond_num.MovementItemId = tmpAll.MovementItemId
+                            AND MILinkObject_BankSecond_num.DescId = zc_MILinkObject_BankSecond_num()
+          LEFT JOIN Object AS Object_BankSecond_num ON Object_BankSecond_num.Id = MILinkObject_BankSecond_num.ObjectId
 
-            LEFT JOIN MILO_num AS MILinkObject_BankSecond_num
-                               ON MILinkObject_BankSecond_num.MovementItemId = tmpAll.MovementItemId
-                              AND MILinkObject_BankSecond_num.DescId = zc_MILinkObject_BankSecond_num()
-            LEFT JOIN Object AS Object_BankSecond_num ON Object_BankSecond_num.Id = MILinkObject_BankSecond_num.ObjectId
+          LEFT JOIN MILO_num AS MILinkObject_BankSecondTwo_num
+                             ON MILinkObject_BankSecondTwo_num.MovementItemId = tmpAll.MovementItemId
+                            AND MILinkObject_BankSecondTwo_num.DescId = zc_MILinkObject_BankSecondTwo_num()
+          LEFT JOIN Object AS Object_BankSecondTwo_num ON Object_BankSecondTwo_num.Id = MILinkObject_BankSecondTwo_num.ObjectId
 
-            LEFT JOIN MILO_num AS MILinkObject_BankSecondTwo_num
-                               ON MILinkObject_BankSecondTwo_num.MovementItemId = tmpAll.MovementItemId
-                              AND MILinkObject_BankSecondTwo_num.DescId = zc_MILinkObject_BankSecondTwo_num()
-            LEFT JOIN Object AS Object_BankSecondTwo_num ON Object_BankSecondTwo_num.Id = MILinkObject_BankSecondTwo_num.ObjectId
+          LEFT JOIN MILO_num AS MILinkObject_BankSecondDiff_num
+                             ON MILinkObject_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
+                            AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
+          LEFT JOIN Object AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId
+          --
+          LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
+          LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
 
-            LEFT JOIN MILO_num AS MILinkObject_BankSecondDiff_num
-                               ON MILinkObject_BankSecondDiff_num.MovementItemId = tmpAll.MovementItemId
-                              AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
-            LEFT JOIN Object AS Object_BankSecondDiff_num ON Object_BankSecondDiff_num.Id = MILinkObject_BankSecondDiff_num.ObjectId
+          LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
+                                      AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
+                                      AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
+                                      AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (Object_Personal.PositionLevelId, 0)     
 
-            LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
-            LEFT JOIN tmpMIChild_Hours ON tmpMIChild_Hours.ParentId = tmpAll.MovementItemId
-
-            LEFT JOIN tmpMIContainer_pay ON tmpMIContainer_pay.MemberId    = tmpAll.MemberId_Personal
-                                        AND tmpMIContainer_pay.PositionId  = tmpAll.PositionId
-                                        AND tmpMIContainer_pay.UnitId      = tmpAll.UnitId
-                                        AND COALESCE (tmpMIContainer_pay.PositionLevelId, 0) = COALESCE (Object_Personal.PositionLevelId, 0)     
-
-            LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
-                                                AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
+          LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
+                                              AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
       ;
 
  END;
@@ -1220,4 +1237,4 @@ $BODY$
 --select * from gpSelect_MovementItem_PersonalService22(inMovementId := 27102444 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
 --select * from gpSelect_MovementItem_PersonalService(inMovementId := 27099657 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
 --select * from gpSelect_MovementItem_PersonalService(inMovementId := 27428409 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '9457');
-select * from gpSelect_MovementItem_PersonalService(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '5');
+--select * from gpSelect_MovementItem_PersonalService(inMovementId := 0 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '5');
