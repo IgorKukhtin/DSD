@@ -116,13 +116,13 @@ type
     procedure FillOutputParams(XML: String);
     function GetDataSet: TDataSet;
     procedure SetDataSet(const Value: TDataSet);
-    procedure DataSetRefresh;
-    procedure MultiDataSetRefresh;
+    procedure DataSetRefresh(AMaxAtempt: Byte = 10);
+    procedure MultiDataSetRefresh(AMaxAtempt: Byte = 10);
     procedure SetStoredProcName(const Value: String);
     function GetDataSetType: string;
     function getChanged: boolean;
     property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
-    procedure MultiExecute(ExecPack, AnyExecPack: boolean); //***12.07.2016 add AnyExecPack
+    procedure MultiExecute(ExecPack, AnyExecPack: boolean; AMaxAtempt: Byte = 10); //***12.07.2016 add AnyExecPack
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -207,7 +207,7 @@ begin
   FisFunction := False;
 end;
 
-procedure TdsdStoredProc.DataSetRefresh;
+procedure TdsdStoredProc.DataSetRefresh(AMaxAtempt: Byte = 10);
 var B: TBookMark;
     FStringStream: TBytesStream;
 begin
@@ -222,7 +222,7 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then begin
          try
-           FStringStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+           FStringStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
            try
              TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
            finally
@@ -260,14 +260,14 @@ begin
   if ACursorHourGlass then
     Screen_Cursor_crHourGlass;
   try
-    if (OutputType = otDataSet) then DataSetRefresh;
-    if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
+    if (OutputType = otDataSet) then DataSetRefresh(AMaxAtempt);
+    if (OutputType = otMultiDataSet) then MultiDataSetRefresh(AMaxAtempt);
     if (OutputType = otResult) then
        FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otBlob) then
         result := TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
     if (OutputType = otMultiExecute) then
-        MultiExecute(ExecPack, AnyExecPack); //***12.07.2016 add AnyExecPack
+        MultiExecute(ExecPack, AnyExecPack, AMaxAtempt); //***12.07.2016 add AnyExecPack
   finally
     if ACursorHourGlass then
       Screen_Cursor_crDefault;
@@ -492,7 +492,7 @@ begin
            '</xml>';
 end;
 
-procedure TdsdStoredProc.MultiDataSetRefresh;
+procedure TdsdStoredProc.MultiDataSetRefresh(AMaxAtempt: Byte = 10);
 var B: TBookMark;
     i: integer;
     XMLResult: OleVariant;
@@ -501,7 +501,7 @@ begin
    for I := 0 to DataSets.Count - 1 do
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
           DataSets[i].DataSet.Post;
-  XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+  XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
   try
     for I := 0 to DataSets.Count - 1 do begin
        if DataSets[i].DataSet.Active then
@@ -528,7 +528,7 @@ begin
   end;
 end;
 
-procedure TdsdStoredProc.MultiExecute(ExecPack, AnyExecPack: boolean);
+procedure TdsdStoredProc.MultiExecute(ExecPack, AnyExecPack: boolean; AMaxAtempt: Byte = 10);
 begin
   // Заполняем значение Data + 12.07.2016 а если AnyExecPack - то Всегда
   if (not ExecPack) or (AnyExecPack = true) then
@@ -539,7 +539,7 @@ begin
   if (CurrentPackSize = PackSize) or ExecPack then begin
      CurrentPackSize := 0;
      try
-       TStorageFactory.GetStorage.ExecuteProc(GetXML);
+       TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
      finally
        FDataXML := '';
      end;

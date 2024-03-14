@@ -220,10 +220,14 @@ object DM: TDM
     end
     object tblInventoryGoodsPartNumber: TWideStringField
       FieldName = 'PartNumber'
-      Size = 30
+      Size = 50
     end
     object tblInventoryGoodsAmount: TFloatField
       FieldName = 'Amount'
+    end
+    object tblInventoryGoodsPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
     end
   end
   object qryMeta: TFDMetaInfoQuery
@@ -466,6 +470,22 @@ object DM: TDM
     end
     object cdsInventoryItemEditAmountDiff: TFloatField
       FieldName = 'AmountDiff'
+    end
+  end
+  object cdsDictList: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 496
+    Top = 416
+    object cdsDictListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsDictListCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object cdsDictListName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
     end
   end
 end
