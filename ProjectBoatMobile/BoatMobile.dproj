@@ -105,6 +105,18 @@
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Android64' and '$(Cfg_2)'=='true') or '$(Cfg_2_Android64)'!=''">
+        <Cfg_2_Android64>true</Cfg_2_Android64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='OSX64' and '$(Cfg_2)'=='true') or '$(Cfg_2_OSX64)'!=''">
+        <Cfg_2_OSX64>true</Cfg_2_OSX64>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
         <Cfg_2_Win32>true</Cfg_2_Win32>
         <CfgParent>Cfg_2</CfgParent>
@@ -146,16 +158,16 @@
         <VerInfo_Keys>package=com.embarcadero.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_LauncherIcon36>img\BoatMobile_36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>img\BoatMobile_48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>img\BoatMobile_72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>img\BoatMobile_96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>img\BoatMobile_144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>img\BoatMobile_192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>img\BoatMobile_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>img\BoatMobile_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>img\BoatMobile_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>img\BoatMobile_960x720.png</Android_SplashImage960>
         <Android_NotificationIcon24>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png</Android_NotificationIcon24>
         <Android_NotificationIcon36>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png</Android_NotificationIcon36>
         <Android_NotificationIcon48>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_48x48.png</Android_NotificationIcon48>
@@ -164,28 +176,34 @@
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
         <VerInfo_Build>1</VerInfo_Build>
         <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
+        <DCC_UnitSearchPath>.\Library\Android\armeabi-v7a;C:\DSD\ProjectBoatMobile\Library\Android\armeabi-v7a;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <Android_SplashGravity>fill</Android_SplashGravity>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;IndyProtocols;dbxcds;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDACCommon;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACCommonDriver;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnapCommon;dbrtl;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Keys>package=com.embarcadero.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_36x36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_48x48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_72x72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_96x96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_144x144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>$(BDS)\bin\Artwork\Android\FM_LauncherIcon_192x192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_LauncherIcon36>img\BoatMobile_36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>img\BoatMobile_48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>img\BoatMobile_72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>img\BoatMobile_96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>img\BoatMobile_144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>img\BoatMobile_192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>img\BoatMobile_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>img\BoatMobile_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>img\BoatMobile_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>img\BoatMobile_960x720.png</Android_SplashImage960>
         <Android_NotificationIcon24>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_24x24.png</Android_NotificationIcon24>
         <Android_NotificationIcon36>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_36x36.png</Android_NotificationIcon36>
         <Android_NotificationIcon48>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_48x48.png</Android_NotificationIcon48>
         <Android_NotificationIcon72>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_72x72.png</Android_NotificationIcon72>
         <Android_NotificationIcon96>$(BDS)\bin\Artwork\Android\FM_NotificationIcon_96x96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.1.0.dex.jar;annotation-1.2.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;asynclayoutinflater-1.0.0.dex.jar;billing-4.0.0.dex.jar;biometric-1.1.0.dex.jar;browser-1.0.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;coordinatorlayout-1.0.0.dex.jar;core-1.5.0-rc02.dex.jar;core-common-2.1.0.dex.jar;core-runtime-2.1.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;firebase-annotations-16.0.0.dex.jar;firebase-common-20.0.0.dex.jar;firebase-components-17.0.0.dex.jar;firebase-datatransport-18.0.0.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.0.0.dex.jar;firebase-installations-interop-17.0.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-22.0.0.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;legacy-support-core-ui-1.0.0.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.2.0.dex.jar;lifecycle-livedata-2.0.0.dex.jar;lifecycle-livedata-core-2.2.0.dex.jar;lifecycle-runtime-2.2.0.dex.jar;lifecycle-service-2.0.0.dex.jar;lifecycle-viewmodel-2.2.0.dex.jar;lifecycle-viewmodel-savedstate-2.2.0.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;play-services-ads-20.1.0.dex.jar;play-services-ads-base-20.1.0.dex.jar;play-services-ads-identifier-17.0.0.dex.jar;play-services-ads-lite-20.1.0.dex.jar;play-services-base-17.5.0.dex.jar;play-services-basement-17.6.0.dex.jar;play-services-cloud-messaging-16.0.0.dex.jar;play-services-drive-17.0.0.dex.jar;play-services-games-21.0.0.dex.jar;play-services-location-18.0.0.dex.jar;play-services-maps-17.0.1.dex.jar;play-services-measurement-base-18.0.0.dex.jar;play-services-measurement-sdk-api-18.0.0.dex.jar;play-services-places-placereport-17.0.0.dex.jar;play-services-stats-17.0.0.dex.jar;play-services-tasks-17.2.0.dex.jar;print-1.0.0.dex.jar;room-common-2.1.0.dex.jar;room-runtime-2.1.0.dex.jar;savedstate-1.0.0.dex.jar;slidingpanelayout-1.0.0.dex.jar;sqlite-2.0.1.dex.jar;sqlite-framework-2.0.1.dex.jar;swiperefreshlayout-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.0.0.dex.jar;transport-runtime-3.0.0.dex.jar;user-messaging-platform-1.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.1.0.dex.jar</EnabledSysJars>
+        <DCC_UnitSearchPath>.\Library\Android\arm64-v8a;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Build>1</VerInfo_Build>
+        <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
+        <Android_SplashGravity>fill</Android_SplashGravity>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
         <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;IndyProtocols;dbxcds;ZCoreD28;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;ZDbcD28;ZComponentD28;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDACCommon;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;TKRBarCodeSannerPkgD28;DataSnapNativeClient;FireDACCommonDriver;ZPlainD28;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnapCommon;fmxase;dbrtl;ZParseSqlD28;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -214,6 +232,7 @@
         <iPad_SpotLight80>$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png</iPad_SpotLight80>
         <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
         <iPad_Notification40>$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png</iPad_Notification40>
+        <DCC_UnitSearchPath>.\Library\iOSDevice;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSSimARM64)'!=''">
         <DCC_UsePackage>fmx;DbxCommonDriver;bindengine;IndyIPCommon;emsclient;IndyProtocols;dbxcds;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDACCommon;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACCommonDriver;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnapCommon;fmxase;dbrtl;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -246,6 +265,12 @@
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleVersion=1.0.0;CFBundleShortVersionString=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;NSCalendarsUsageDescription=The reason for accessing the calendar data;NSRemindersUsageDescription=The reason for accessing the reminders;NSCameraUsageDescription=The reason for accessing the camera;NSMicrophoneUsageDescription=The reason for accessing the microphone;NSMotionUsageDescription=The reason for accessing the accelerometer;NSDesktopFolderUsageDescription=The reason for accessing the Desktop folder;NSDocumentsFolderUsageDescription=The reason for accessing the Documents folder;NSDownloadsFolderUsageDescription=The reason for accessing the Downloads folder;NSNetworkVolumesUsageDescription=The reason for accessing files on a network volume;NSRemovableVolumesUsageDescription=The reason for accessing files on a removable volume;NSSpeechRecognitionUsageDescription=The reason for requesting to send user data to Apple&apos;s speech recognition servers;ITSAppUsesNonExemptEncryption=false</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UnitSearchPath>.\Library\macOS64;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_OSXARM64)'!=''">
         <DCC_UsePackage>DataSnapServer;fmx;DbxCommonDriver;bindengine;IndyIPCommon;FireDACCommonODBC;emsclient;IndyProtocols;dbxcds;DBXFirebirdDriver;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;fmxdae;CustomIPTransport;FireDACMSSQLDriver;IndySystem;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;bindcompdbx;rtl;FireDACMySQLDriver;DBXSqliteDriver;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;dsnap;DBXOracleDriver;DBXInformixDriver;fmxobj;DataSnapNativeClient;FireDACCommonDriver;IndyIPClient;bindcompfmx;inetdb;FireDACASADriver;fmxFireDAC;DBXMySQLDriver;DataSnapCommon;fmxase;dbrtl;FireDACOracleDriver;DataSnapIndy10ServerTransport;DBXInterBaseDriver;FireDACMongoDBDriver;FireDACTDataDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;tethering;CloudService;DBXSybaseASADriver;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -261,8 +286,11 @@
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+        <UWP_DelphiLogo44>img\BoatMobile_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>img\BoatMobile_150.png</UWP_DelphiLogo150>
+        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>dxPSdxSpreadSheetLnkRS28;vclwinx;DataSnapServer;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;DBXMSSQLDriver;FireDACCommonODBC;emsclient;cxExportRS28;dxHttpIndyRequestRS28;appanalytics;IndyProtocols;vclx;dxTileControlRS28;dbxcds;vcledge;dxPSdxDBOCLnkRS28;ZCoreD28;cxPivotGridOLAPRS28;dxPSPrVwRibbonRS28;ProjectDesignComponent_D28;dxGDIPlusRS28;DBXFirebirdDriver;dxCoreRS28;cxPivotGridRS28;dxPSCoreRS28;FireDACSqliteDriver;DbxClientDriver;dxSpreadSheetRS28;dxSkinsCoreRS28;soapmidas;dxBarRS28;dxADOServerModeRS28;dxWizardControlRS28;dbexpress;inet;dxServerModeRS28;vcltouch;cxTreeListRS28;ZDbcD28;dxBarDBNavRS28;ZComponentD28;FireDACDBXDriver;fmxdae;dxPScxCommonRS28;dxNavBarRS28;CustomIPTransport;FireDACMSSQLDriver;ProjectComponent_D28;dxSpreadSheetReportDesignerRS28;dxComnRS28;GMLib_D28_VCL;IndySystem;cxVerticalGridRS28;dxmdsRS28;dxRichEditControlRS28;cxSchedulerGridRS28;dxPSdxOCLnkRS28;dxPScxSchedulerLnkRS28;dxPsPrVwAdvRS28;vclFireDAC;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;dxPSdxDBTVLnkRS28;dxRibbonCustomizationFormRS28;bindcompdbx;dxGaugeControlRS28;rtl;FireDACMySQLDriver;dxDockingRS28;dxPDFViewerRS28;DBXSqliteDriver;dxBarExtItemsRS28;dxPSdxFCLnkRS28;dxorgcRS28;DBXSybaseASEDriver;dxSpreadSheetCoreConditionalFormattingDialogsRS28;dxPSRichEditControlLnkRS28;vclimg;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;dsnap;FireDACDb2Driver;GMLib_D28;DBXOracleDriver;DBXInformixDriver;cxSchedulerRibbonStyleEventEditorRS28;dxPScxTLLnkRS28;fmxobj;bindcompvclsmp;DataSnapNativeClient;dxFlowChartRS28;DatasnapConnectorsFreePascal;emshosting;dxPScxVGridLnkRS28;dxPScxPivotGridLnkRS28;FireDACCommonDriver;ZPlainD28;IndyIPClient;dxCloudServiceLibraryRS28;cxLibraryRS28;bindcompvclwinx;emsedge;bindcompfmx;dxPSdxPDFViewerLnkRS28;inetdb;dxSpreadSheetCoreRS28;cxSchedulerTreeBrowserRS28;FireDACASADriver;dxTabbedMDIRS28;vclactnband;fmxFireDAC;dxFireDACServerModeRS28;FireDACInfxDriver;DBXMySQLDriver;VclSmp;dxPSdxLCLnkRS28;DataSnapCommon;fmxase;dxdbtrRS28;DBXOdbcDriver;dbrtl;FireDACOracleDriver;dxPSLnksRS28;FireDACMSAccDriver;DataSnapIndy10ServerTransport;DataSnapConnectors;ZParseSqlD28;vcldsnap;DBXInterBaseDriver;FireDACMongoDBDriver;dxSpreadSheetConditionalFormattingDialogsRS28;FireDACTDataDriver;dxOrgChartAdvancedCustomizeFormRS28;vcldb;dxDBXServerModeRS28;cxSchedulerRS28;dxRibbonRS28;dxFlowChartLayoutsRS28;dxPScxExtCommonRS28;dxdborRS28;dxRichEditControlCoreRS28;bindcomp;dxPScxGridLnkRS28;IndyCore;RESTBackendComponents;cxPivotGridChartRS28;dxBarExtDBItemsRS28;cxTreeListdxBarPopupMenuRS28;dxFlowChartAdvancedCustomizeFormRS28;FireDACADSDriver;RESTComponents;IndyIPServer;vcl;dsnapxml;adortl;dsnapcon;DataSnapClient;DataSnapProviderClient;dxtrmdRS28;DBXDb2Driver;dxPSdxGaugeControlLnkRS28;dxSpellCheckerRS28;cxGridRS28;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;tethering;dxMapControlRS28;bindcompvcl;CloudService;DBXSybaseASADriver;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -316,7 +344,6 @@
         <Android_SplashImage640>img\BoatMobile_640x480.png</Android_SplashImage640>
         <Android_SplashImage960>img\BoatMobile_960x720.png</Android_SplashImage960>
         <Android_SplashGravity>fill</Android_SplashGravity>
-        <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice64)'!=''">
         <DCC_iOSMinimumVersion>8.0</DCC_iOSMinimumVersion>
@@ -338,6 +365,7 @@
         <UWP_DelphiLogo44>img\BoatMobile_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>img\BoatMobile_150.png</UWP_DelphiLogo150>
         <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -350,6 +378,14 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
         <VerInfo_Build>1</VerInfo_Build>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Android64)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_OSX64)'!=''">
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -607,6 +643,218 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Release" Class="Android_SplashImage960">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Release" Class="iPad_AppIcon152">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png" Configuration="Debug" Class="iPad_AppIcon167">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_167x167.png" Configuration="Release" Class="iPad_AppIcon167">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png" Configuration="Debug" Class="iPad_LaunchDark2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPadDark@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPad_LaunchDark2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPadDark@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png" Configuration="Debug" Class="iPad_Launch2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPad@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png" Configuration="Release" Class="iPad_Launch2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPad@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png" Configuration="Debug" Class="iPad_Notification40">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPad_Notification40">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Debug" Class="iPad_Setting58">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPad_Setting58">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Debug" Class="iPad_SpotLight80">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPad_SpotLight80">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png" Configuration="Debug" Class="iOS_AppStore1024">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_1024x1024.png" Configuration="Release" Class="iOS_AppStore1024">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png" Configuration="Debug" Class="iPhone_AppIcon120">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_120x120.png" Configuration="Release" Class="iPhone_AppIcon120">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Release" Class="iPhone_AppIcon180">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png" Configuration="Debug" Class="iPhone_LaunchDark2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png" Configuration="Release" Class="iPhone_LaunchDark2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png" Configuration="Debug" Class="iPhone_LaunchDark3x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png" Configuration="Release" Class="iPhone_LaunchDark3x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhoneDark@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png" Configuration="Debug" Class="iPhone_Launch2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhone@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png" Configuration="Release" Class="iPhone_Launch2x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhone@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png" Configuration="Debug" Class="iPhone_Launch3x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhone@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png" Configuration="Release" Class="iPhone_Launch3x">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>FM_LaunchScreenImage_iPhone@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png" Configuration="Debug" Class="iPhone_Notification40">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_40x40.png" Configuration="Release" Class="iPhone_Notification40">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png" Configuration="Debug" Class="iPhone_Notification60">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_NotificationIcon_60x60.png" Configuration="Release" Class="iPhone_Notification60">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png" Configuration="Debug" Class="iPhone_Setting58">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPhone_Setting58">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png" Configuration="Debug" Class="iPhone_Setting87">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SettingIcon_87x87.png" Configuration="Release" Class="iPhone_Setting87">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png" Configuration="Debug" Class="iPhone_Spotlight120">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_120x120.png" Configuration="Release" Class="iPhone_Spotlight120">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80">
+                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -872,6 +1120,66 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.launchscreen" Configuration="Debug" Class="ProjectiOSLaunchScreen">
+                    <Platform Name="iOSDevice64">
+                        <Operation>64</Operation>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>BoatMobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.launchscreen" Configuration="Release" Class="ProjectiOSLaunchScreen">
+                    <Platform Name="iOSDevice64">
+                        <Operation>64</Operation>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>BoatMobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Library\macOS64\libzbar.dylib" Configuration="Debug" Class="File">
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libzbar.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Library\macOS64\libzbar.dylib" Configuration="Release" Class="File">
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS\</RemoteDir>
+                        <RemoteName>libzbar.dylib</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -893,6 +1201,18 @@
                 <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="iOSDevice64">
+                        <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="iOSDevice64">
+                        <RemoteDir>StartUp\Documents\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1027,20 +1347,6 @@
                 <DeployFile LocalName="img\BoatMobile_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
                     <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="libzbar.so" Configuration="Debug" Class="File">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a\</RemoteDir>
-                        <RemoteName>libzbar.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="libzbar.so" Configuration="Debug" Class="File">
-                    <Platform Name="Android64">
-                        <RemoteDir>library\lib\armeabi-v7a\</RemoteDir>
-                        <RemoteName>libzbar.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
