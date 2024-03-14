@@ -115,11 +115,6 @@ BEGIN
      ELSE
 
          -- Получаем сохраненные параметры - для расчета в эдит форме
-
-         /*SELECT tmp.DiscountTax, tmp.DiscountNextTax, tmp.SummTax, tmp.SummReal, tmp.Basis_summ_transport, tmp.BasisWVAT_summ_transport, tmp.TransportSumm_load, tmp.VATPercent
-        INTO vbDiscountTax, vbDiscountNextTax, vbSummTax, vbSummReal, vbBasis_summ_transport, vbBasisWVAT_summ_transport, vbTransportSumm_load, vbVATPercent
-         FROM gpGet_Movement_OrderClientEdit(inId, inSession) AS tmp;
-          */
          --  RAISE EXCEPTION 'Ошибка. inIsEdit %    -  %.', vbSummTax, ioSummTax;
          IF inIsEdit = FALSE
          THEN
@@ -163,11 +158,11 @@ BEGIN
              RETURN;
          END IF;
 
-          -- RAISE EXCEPTION 'Ошибка. vbSummTax   %    -  %.', vbSummTax, ioSummTax;
+        --   RAISE EXCEPTION 'Ошибка. vbSummTax   %    -  %.', vbSummTax, ioSummTax;
          --процент НДС  
          IF COALESCE (vbVATPercent,0) <> COALESCE (inVATPercent,0)
          THEN  
-
+             --RAISE EXCEPTION '1 Ошибка. VATPercent %    -  %.', vbVATPercent, inVATPercent;  
              IF COALESCE (vbisVat, False) = FALSE
              THEN
                  ioBasisWVAT_summ_transport := zfCalc_SummWVAT (vbBasis_summ_transport, inVATPercent);
@@ -178,7 +173,8 @@ BEGIN
              END IF; 
          --сумма со скидкой и транспортом без НДС
          ELSEIF COALESCE (vbBasis_summ_transport,0) <> COALESCE (ioBasis_summ_transport,0)
-         THEN   
+         THEN 
+             --RAISE EXCEPTION '2 Ошибка. Basis_summ_transport %    -  %.', vbBasis_summ_transport, ioBasis_summ_transport;    
              --
              ioSummTax := (outBasis_summ - (COALESCE (ioBasis_summ_transport,0) - COALESCE (inTransportSumm_load,0)));
              --
@@ -187,44 +183,31 @@ BEGIN
          -- сумма с НДС
          ELSEIF COALESCE (vbBasisWVAT_summ_transport,0) <> COALESCE (ioBasisWVAT_summ_transport,0)
          THEN  
+             --RAISE EXCEPTION '3 Ошибка. BasisWVAT_summ_transport %    -  %.', vbBasisWVAT_summ_transport, ioBasisWVAT_summ_transport;  
              --   
              ioSummTax := (outBasis_summ - (zfCalc_Summ_NoVAT (ioBasisWVAT_summ_transport, inVATPercent) - COALESCE (inTransportSumm_load,0)) );
              --
              PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), inId, True);
-         --
-         ELSEIF COALESCE (vbSummReal,0) <> COALESCE (ioSummReal,0)
-         THEN
-             ---
-             ioSummTax:= COALESCE (outBasis_summ, 0) - ioSummReal; 
-             
-             /*IF ioSummReal > 0
-             THEN
-                 ioSummTax:= COALESCE (outBasis_summ, 0) - ioSummReal; 
-                 ioBasis_summ_transport := ioSummReal + COALESCE (inTransportSumm_load,0);
-             ELSE
-                 ioSummReal:= 0;  
-                 ioSummTax := 0;
-                 ioBasis_summ_transport := (COALESCE (outBasis_summ,0) + COALESCE (inTransportSumm_load,0));
-             END IF;*/
-
+         
          --- изменилась ручн. скидка
          ELSEIF COALESCE (vbSummTax,0) <> COALESCE (ioSummTax,0)
          THEN  
-            -- RAISE EXCEPTION 'Ошибка. inIsEdit %    -  %.', vbSummTax, ioSummTax;  
+
+            --RAISE EXCEPTION '4 Ошибка. SummTax %    -  %.', vbSummTax, ioSummTax;  
              ioSummReal := outBasis_summ - COALESCE (ioSummTax,0); 
 
-             /*IF COALESCE (ioSummTax,0) <> 0
-             THEN
-                 ioSummReal := outBasis_summ - COALESCE (ioSummTax,0); 
-              ELSE 
-                ioSummReal :=0;
-              END IF;
-              */   
-              --
-              --ioBasis_summ_transport := outBasis_summ + COALESCE (inTransportSumm_load,0) - COALESCE (ioSummTax,0);
-         -- 
+         --
+         ELSEIF COALESCE (vbSummReal,0) <> COALESCE (ioSummReal,0)
+         THEN
+            --RAISE EXCEPTION '5 Ошибка. SummReal %    -  %.', vbSummReal, ioSummReal;  
+             ---
+             ioSummTax:= COALESCE (outBasis_summ, 0) - ioSummReal; 
+             
          END IF;      
          
+        --RAISE EXCEPTION '6 Ошибка. inIsEdit %    -  %.', vbSummTax, ioSummTax;  
+
+         ioSummReal := outBasis_summ - COALESCE (ioSummTax,0); 
          ioBasis_summ_transport := (COALESCE (outBasis_summ,0) - COALESCE (ioSummTax) + COALESCE (inTransportSumm_load,0)); 
          ioBasisWVAT_summ_transport := zfCalc_SummWVAT (ioBasis_summ_transport, inVATPercent);       
           

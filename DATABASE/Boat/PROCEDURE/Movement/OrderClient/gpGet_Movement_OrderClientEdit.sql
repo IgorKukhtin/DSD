@@ -120,7 +120,7 @@ BEGIN
           , tmpSummProduct.BasisWVAT_summ_transport
 
          --  при открытии сохраняем текущие значения в расчетные
-         , ( lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0))) ::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0)) ::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummReal.ValueData, 0))::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm_load)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0) )::integer
