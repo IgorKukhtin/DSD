@@ -18,10 +18,10 @@ uses
   Androidapi.JNI.Support
   {$ENDIF};
 
-CONST
-  DataBaseFileName = 'BoatMobile.sdb';
-
 type
+
+  TDictType = (dtPartionCell);
+
   { отдельный поток для показа бегущего круга }
   TProgressThread = class(TThread)
   private
@@ -43,8 +43,10 @@ type
 
     function UpdateProgram: string;
     function LoadDict: string;
-    function LoadGoodsList: string;
+    function OpenDictList: string;
+    function OpenGoodsList: string;
     function UploadInventoryGoods: string;
+    function OpenInventoryGoods: string;
   protected
     procedure Execute; override;
   end;
@@ -191,6 +193,11 @@ type
     cdsInventoryItemEditAmountDiff: TFloatField;
     cdsInventoryItemEditPartionCellId: TIntegerField;
     cdsInventoryItemEditPartionCellName: TWideStringField;
+    cdsDictList: TClientDataSet;
+    cdsDictListId: TIntegerField;
+    cdsDictListCode: TIntegerField;
+    cdsDictListName: TWideStringField;
+    tblInventoryGoodsPartionCellName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -199,9 +206,16 @@ type
     { Private declarations }
     FConnected: Boolean;
 
+    // Ограничение количества строк для справочника
+    FLimitList : Integer;
+
+    // Выбор из справочника коплектующих
     FFilterGoods: String;
     FFilterGoodsEAN: Boolean;
-    FLimitList : Integer;
+
+    // Выбор из справочника
+    FDictType: TDictType;
+    FFilterDict: String;
 
     procedure InitStructure;
   public
@@ -232,14 +246,16 @@ type
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
+    function UploadMIInventory: Boolean;
 
-
+    function LoadDictList : Boolean;
     function LoadGoodsList : Boolean;
+    function LoadGoodsListId(AId : Integer) : Boolean;
 
     procedure LoadGoodsEAN;
 
     procedure OpenInventoryGoods;
-    procedure AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber : String);
+    procedure AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber, APartionCell : String);
     procedure UpdateInventoryGoods(AAmount: Currency);
     procedure DeleteInventoryGoods;
     function isInventoryGoodsSend : Boolean;
@@ -248,11 +264,19 @@ type
     procedure UploadInventoryGoods;
 
     property Connected: Boolean read FConnected;
+    property LimitList : Integer read FLimitList write FLimitList default 300;
+    property DictType: TDictType read FDictType write FDictType;
+    property FilterDict : String read FFilterDict write FFilterDict;
     property FilterGoods : String read FFilterGoods write FFilterGoods;
     property FilterGoodsEAN : Boolean read FFilterGoodsEAN write FFilterGoodsEAN default False;
-    property LimitList : Integer read FLimitList write FLimitList default 300;
 
   end;
+
+const
+  DataBaseFileName = 'BoatMobile.sdb';
+
+  DictTypeName: Array[0..Ord(High(TDictType))] of String = ('Ячейки хранения');
+  DictTypeTableName: Array[0..Ord(High(TDictType))] of String = ('PartionCell');
 
 var
   DM: TDM;
@@ -445,13 +469,14 @@ var
   Params: TFDParams;
   ListUpper: TStringList;
   InsertList, UpdateList, ParamList: String;
-  I: Integer;
+  I, J: Integer;
 begin
 
   StoredProc := TdsdStoredProc.Create(nil);
   cdsDict := TClientDataSet.Create(nil);
   Params := TFDParams.Create;
   ListUpper := TStringList.Create;
+  ListUpper.Sorted := True;
   try
     StoredProc.OutputType := otDataSet;
 
@@ -470,7 +495,9 @@ begin
       for I := 0 to tbDict.Fields.Count - 1 do
       begin
         if Assigned(cdsDict.Fields.FindField(tbDict.Fields.Fields[I].FieldName)) or
-           (AnsiUpperCase(tbDict.Fields.Fields[I].FieldName) = AnsiUpperCase('isLoad')) then
+           (AnsiUpperCase(tbDict.Fields.Fields[I].FieldName) = AnsiUpperCase('isLoad')) or
+           (Pos(AnsiUpperCase('Upper'), AnsiUpperCase(tbDict.Fields.Fields[I].FieldName)) > 0) and
+           Assigned(cdsDict.Fields.FindField(Copy(tbDict.Fields.Fields[I].FieldName, 1, Length(tbDict.Fields.Fields[I].FieldName) - 5)))  then
         begin
           if I > 0 then
           begin
@@ -485,52 +512,54 @@ begin
           if AnsiUpperCase(tbDict.Fields.Fields[I].FieldName) = AnsiUpperCase('isLoad') then
             Params.Add(AnsiUpperCase(tbDict.Fields.Fields[I].FieldName), True, ptInput)
           else Params.Add(AnsiUpperCase(tbDict.Fields.Fields[I].FieldName), Null, ptInput);
-        end else if Pos(AnsiUpperCase('Upper'), AnsiUpperCase(tbDict.Fields.Fields[I].FieldName)) > 0 then
-        begin
 
+          if not Assigned(cdsDict.Fields.FindField(tbDict.Fields.Fields[I].FieldName)) and 
+             (Pos(AnsiUpperCase('Upper'), AnsiUpperCase(tbDict.Fields.Fields[I].FieldName)) > 0) and
+             Assigned(cdsDict.Fields.FindField(Copy(tbDict.Fields.Fields[I].FieldName, 1, Length(tbDict.Fields.Fields[I].FieldName) - 5))) then
+             ListUpper.Add(AnsiUpperCase(tbDict.Fields.Fields[I].FieldName));
+          
         end;
       end;
 
       // Если есть isLoad то сбросим
       if Assigned(Params.FindParam('isLoad')) then
-        Synchronize(procedure
-                    begin
+//        Synchronize(procedure
+//                    begin
                       DM.conMain.ExecSQL('UPDATE ' + ATableName + ' SET isLoad = False');
-                    end);
+//                    end);
 
       // Загрузим все
       cdsDict.First;
       while not cdsDict.Eof do
       begin
         for I := 0 to Params.Count - 1 do
-          if (AnsiUpperCase(Params.Items[I].Name) <> AnsiUpperCase('isLoad')) and
-             (Pos('UPPER', Params.Items[I].Name) = 0) then
+          if (AnsiUpperCase(Params.Items[I].Name) <> AnsiUpperCase('isLoad')) then
           begin
-            if not cdsDict.FieldByName(Params.Items[I].Name).IsNull and
+            if ListUpper.Find(AnsiUpperCase(Params.Items[I].Name), j) then
+            begin
+              if not cdsDict.FieldByName(Copy(Params.Items[I].Name, 1, Length(Params.Items[I].Name) - 5)).IsNull  then
+                Params.Items[I].AsWideString :=   AnsiUpperCase(cdsDict.FieldByName(Copy(Params.Items[I].Name, 1, Length(Params.Items[I].Name) - 5)).AsWideString)
+              else Params.Items[I].Value :=  Null;
+            end else if not cdsDict.FieldByName(Params.Items[I].Name).IsNull and
                (cdsDict.FieldByName(Params.Items[I].Name).DataType in [ftString, ftWideString, ftMemo, ftWideMemo]) then
               Params.Items[I].AsWideString :=  cdsDict.FieldByName(Params.Items[I].Name).AsWideString
             else Params.Items[I].Value :=  cdsDict.FieldByName(Params.Items[I].Name).Value;
           end;
 
-        for I := 0 to ListUpper.Count - 1 do
-          if not cdsDict.FieldByName(ListUpper.Strings[I]).IsNull then
-            Params.ParamByName(ListUpper.Strings[I] + 'Upper').AsWideString :=  AnsiUpperCase(cdsDict.FieldByName(ListUpper.Strings[I]).AsWideString)
-          else Params.ParamByName(ListUpper.Strings[I] + 'Upper').Value :=  Null;
-
-        Synchronize(procedure
-                    begin
+//        Synchronize(procedure
+//                    begin
                       if DM.conMain.ExecSQL('UPDATE ' + ATableName + ' SET ' + UpdateList + ' WHERE ' + Params.Items[0].Name + ' = ' + cdsDict.FieldByName(Params.Items[0].Name).AsString, Params) = 0 then
                         DM.conMain.ExecSQL('INSERT INTO ' + ATableName + ' (' + InsertList + ')  SELECT ' + ParamList, Params);
-                    end);
+//                    end);
         cdsDict.Next;
       end;
 
       // Если есть isLoad то удалим что небыло в загрузке
       if Assigned(Params.FindParam('isLoad')) then
-        Synchronize(procedure
-                    begin
+//        Synchronize(procedure
+//                    begin
                       DM.conMain.ExecSQL('DELETE FROM ' + ATableName + ' WHERE isLoad = False');
-                    end);
+//                    end);
 
     except
       on E : Exception do
@@ -562,7 +591,8 @@ begin
 
     frmMain.DateDownloadDict := Now;
 
-    if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'LoadGoodsList';
+    if frmMain.tcMain.ActiveTab = frmMain.tiGoods then TaskName := 'OpenGoodsList';
+    if frmMain.tcMain.ActiveTab = frmMain.tiDictList then TaskName := 'OpenDictsList';
   except
     on E : Exception do
     begin
@@ -572,8 +602,24 @@ begin
 
 end;
 
+// Открытие справочника
+function TWaitThread.OpenDictList: string;
+begin
+  frmMain.lwDictList.Visible := False;
+  frmMain.lDictListSelect.Visible := False;
+  try
+    DM.LoadDictList;
+  finally
+    Synchronize(procedure
+              begin
+                frmMain.lwDictList.Visible := True;
+                frmMain.lDictListSelect.Visible := True;
+              end);
+  end;
+end;
+
 // Открытие справочника Комплектующих
-function TWaitThread.LoadGoodsList: string;
+function TWaitThread.OpenGoodsList: string;
   var nID: Integer;
 begin
   frmMain.lwGoods.Visible := False;
@@ -632,6 +678,7 @@ begin
         FDQuery.First;
       end;
 
+      if frmMain.tcMain.ActiveTab = frmMain.tiInventoryScan then TaskName := 'OpeenInventoryGoods';
     except
       on E : Exception do
       begin
@@ -643,6 +690,20 @@ begin
     FreeAndNil(FDQuery);
   end;
 
+end;
+
+// Открытие списка не отправлено
+function TWaitThread.OpenInventoryGoods: string;
+begin
+  frmMain.lwInventoryScan.Visible := False;
+  try
+    DM.OpenInventoryGoods;
+  finally
+    Synchronize(procedure
+              begin
+                frmMain.lwInventoryScan.Visible := True;
+              end);
+  end;
 end;
 
 procedure TWaitThread.Execute;
@@ -675,16 +736,28 @@ begin
       Res := LoadDict;
     end;
 
-    if (Res = '') and (TaskName = 'LoadGoodsList') then
+    if (Res = '') and (TaskName = 'OpenGoodsList') then
     begin
       SetTaskName('Открытие справочника Комплектующих');
-      Res := LoadGoodsList;
+      Res := OpenGoodsList;
+    end;
+
+    if (Res = '') and (TaskName = 'OpenDictList') then
+    begin
+      SetTaskName('Открытие справочника');
+      Res := OpenDictList;
     end;
 
     if (Res = '') and (TaskName = 'UploadInventoryGoods') or (TaskName = 'UploadAll') then
     begin
       SetTaskName('Отправка инвентаризаций');
       Res := UploadInventoryGoods;
+    end;
+
+    if (Res = '') and (TaskName = 'OpeenInventoryGoods') then
+    begin
+      SetTaskName('Открытие списка не отправлено');
+      Res := OpenInventoryGoods;
     end;
 
   finally
@@ -1644,6 +1717,39 @@ begin
   end;
 end;
 
+// Отправить строку инвентаризации
+function TDM.UploadMIInventory: Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    try
+      StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_MobileInventory';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+      StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
+      StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, cdsInventoryItemEditGoodsId.AsInteger);
+      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditOperCount.AsFloat);
+      StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, cdsInventoryItemEditPartNumber.AsWideString);
+      StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsInventoryItemEditPartionCellName.AsWideString);
+
+      StoredProc.Execute(false, false, false, 2);
+
+      Result := True;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+
+end;
+
 
 { Создание документа производства}
 function TDM.InsertProductionUnion(AId : Integer) : Boolean;
@@ -1684,13 +1790,67 @@ begin
   AOutput.AsString := AnsiUpperCase(AInputs[0].AsString);
 end;
 
+function TDM.LoadDictList : Boolean;
+  var sql: string;
+      tbDict: TFDTable;
+      nId: Integer;
+begin
+  cdsDictList.DisableControls;
+  if DM.cdsDictList.Active then nID := DM.cdsDictListId.AsInteger
+  else nID := 0;
+
+  try
+
+    cdsDictList.Close;
+    cdsDictList.CreateDataSet;
+
+    tbDict := Structure.DataSet[DictTypeTableName[Ord(FDictType)]];
+
+     sql := 'SELECT Id, Code, Name FROM ' + DictTypeTableName[Ord(FDictType)];
+    if Assigned(tbDict.Fields.FindField('isErased')) then
+      sql := sql + #13#10'WHERE isErased = 0'
+    else sql := sql + #13#10'WHERE 1 = 1';
+
+    if Assigned(tbDict.Fields.FindField('NameUpper')) then
+    begin
+      if FFilterDict <> '' then
+      begin
+        sql := sql + #13#10'AND NameUpper LIKE ''%' + AnsiUpperCase(FFilterDict) + '%''';
+      end;
+      sql := sql + #13#10'ORDER BY NameUpper COLLATE UTF16NoCase';
+    end else
+    begin
+      if FFilterDict <> '' then
+      begin
+        sql := sql + #13#10'AND AnsiUpperCase(Name) LIKE ''%' + AnsiUpperCase(FFilterDict) + '%''';
+      end;
+      sql := sql + #13#10'ORDER BY Name COLLATE UTF16NoCase';
+    end;
+
+    sql := sql + #13#10'LIMIT ' + IntToStr(FLimitList);
+
+    LoadSQLite(cdsDictList, sql);
+
+    Result := cdsDictList.Active;
+    if cdsDictList.RecordCount >= FLimitList then
+      frmMain.lDictListSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+    else frmMain.lDictListSelect.Text := 'Найдено ' + IntToStr(cdsDictList.RecordCount) + ' записей';
+  finally
+    if DM.cdsDictList.Active and (nID <> 0) then DM.cdsDictList.Locate('Id', nId, []);
+    cdsDictList.EnableControls;
+  end;
+end;
+
 function TDM.LoadGoodsList : Boolean;
   var sql: string;
+      nId: Integer;
 begin
   Result := False;
   if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
     cdsGoodsList.DisableControls;
+    if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
+    else nID := 0;
     try
       cdsGoodsList.Close;
       cdsGoodsList.CreateDataSet;
@@ -1722,9 +1882,28 @@ begin
       else frmMain.lGoodsSelect.Text := 'Найдено ' + IntToStr(cdsGoodsList.RecordCount) + ' комплектующих';
       if FFilterGoodsEAN then frmMain.lGoodsSelect.Text := frmMain.lGoodsSelect.Text + ' по штрихкоду'
     finally
+      if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
       cdsGoodsList.EnableControls;
     end;
   end else DM.DownloadDict;
+end;
+
+function TDM.LoadGoodsListId(AId : Integer) : Boolean;
+  var sql: string;
+begin
+  try
+
+    cdsGoodsList.Close;
+    cdsGoodsList.CreateDataSet;
+
+    sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName FROM Goods';
+    sql := sql + #13#10'WHERE Id = ' + IntToStr(AId);
+
+    LoadSQLite(cdsGoodsList, sql);
+
+    Result := cdsGoodsList.Active and (cdsGoodsList.RecordCount = 1);
+  finally
+  end;
 end;
 
 procedure TDM.LoadGoodsEAN;
@@ -1733,7 +1912,7 @@ begin
   if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
 
-    LoadSQLite(cdsGoodsEan, 'SELECT Id, Code, EAN FROM Tovar');
+    LoadSQLite(cdsGoodsEan, 'SELECT Id, Code, EAN FROM Goods');
     if not cdsGoodsEAN.Active then DownloadDict;
 
   end else DownloadDict;
@@ -1753,7 +1932,7 @@ begin
 end;
 
 // Добавить товар для вставки в инвентаризацию
-procedure TDM.AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber : String);
+procedure TDM.AddInventoryGoods(AGoodsId : Integer; AAmount: Currency; APartNumber, APartionCell : String);
   var FDQuery: TFDQuery;
 begin
 
@@ -1773,12 +1952,14 @@ begin
       FDQuery.FieldByName('MovementId').AsInteger := cdsInventoryId.AsInteger;
       FDQuery.FieldByName('GoodsId').AsInteger := AGoodsId;
       FDQuery.FieldByName('PartNumber').AsString := APartNumber;
+      FDQuery.FieldByName('PartionCellName').AsString := APartionCell;
       FDQuery.FieldByName('Amount').AsFloat := AAmount;
       FDQuery.Post;
     end else
     begin
       FDQuery.Edit;
       FDQuery.FieldByName('Amount').AsFloat := FDQuery.FieldByName('Amount').AsFloat + AAmount;
+      FDQuery.FieldByName('PartionCellName').AsString := APartionCell;
       FDQuery.Post;
     end;
 

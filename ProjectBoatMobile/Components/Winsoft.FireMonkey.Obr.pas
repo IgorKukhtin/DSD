@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------------
 //
-// Optical Barcode Recognision Component for FireMonkey
+// Optical Barcode Recognition Component for FireMonkey
 //
-// Copyright (c) 2013-2016 WINSOFT
+// Copyright (c) 2013-2021 WINSOFT
 //
 // ---------------------------------------------------------------------
 
@@ -30,6 +30,14 @@ interface
   {$define DXE8PLUS}
 {$ifend}
 
+{$if CompilerVersion >= 33} // Delphi 10.3 or higher
+  {$define D103PLUS}
+{$ifend}
+
+{$if CompilerVersion >= 35} // Delphi 11 or higher
+  {$define D11PLUS}
+{$ifend}
+
 {$ifdef IOS}
   {$ifdef CPUARM}
     {$define IOS_DEVICE}
@@ -37,6 +45,14 @@ interface
     {$define IOS_SIMULATOR}
   {$endif CPUARM}
 {$endif IOS}
+
+{$ifdef WIN32}
+{$HPPEMIT '#pragma link "Winsoft.FireMonkey.ObrP.lib"'}
+{$endif WIN32}
+
+{$ifdef WIN64}
+{$HPPEMIT '#pragma link "Winsoft.FireMonkey.ObrP.a"'}
+{$endif WIN64}
 
 uses
   {$ifdef MSWINDOWS} Winapi.Windows, {$endif MSWINDOWS}
@@ -67,6 +83,7 @@ type
     syCode39          =  39, // Code 39
     syPdf417          =  57, // PDF417
     syQrCode          =  64, // QR Code
+    sySqCode          =  80, // SQ Code
     syCode93          =  93, // Code 93
     syCode128         = 128  // Code 128
   );
@@ -86,11 +103,13 @@ type
     coEnableCheckDigit,    // enable check digit when optional
     coReturnCheckDigit,    // return check digit when present
     coFullAscii,           // enable full ASCII character set
+    coBinary,              // don't convert binary data to text
     coBooleanConfigCount,  // number of boolean decoder configs
     coMinDataLength = $20, // minimum data length for valid decode
     coMaxDataLength,       // maximum data length for valid decode
     coUncertainty = $40,   // required video consistency frames
     coPositionData = $80,  // enable scanner to collect position data
+    coTryInverted = $81,   // if fails to decode, test inverted
     coDensityX = $100,     // image scanner vertical scan density
     coDensityY             // image scanner horizontal scan density
   );
@@ -117,9 +136,12 @@ type
 type
   TObrImageFormat = (foY800, foGray);
 
+  TFObr = class;
+
   TObrSymbol = class
   private
     FHandle: zbar_symbol_t;
+    [weak] FObr: TFObr;
     function GetData: TBytes;
     function GetDataAnsi: string;
     function GetDataUtf8: string;
@@ -137,7 +159,7 @@ type
     function GetSymbologyAddon: TObrSymbologyAddon;
     function GetSymbologyAddonName: string;
   public
-    constructor Create(Handle: Pointer);
+    constructor Create(Obr: TFObr; Handle: Pointer);
     property Handle: Pointer read FHandle stored False;
     property CacheCount: Integer read GetCacheCount stored False;
     property Data: TBytes read GetData stored False;
@@ -192,7 +214,7 @@ type
 
   TObrSymbolDynArray = array of TObrSymbol;
 
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32 {$ifndef DXE2} or pidiOSSimulator or pidiOSDevice or pidAndroid {$endif DXE2} {$ifdef DXE8PLUS} or pidiOSDevice64 {$endif DXE8PLUS})]
+  [ComponentPlatformsAttribute(pidWin32 or pidWin64 {$ifdef D103PLUS} or pidAndroid32Arm or pidAndroid64Arm {$else} {$ifndef DXE2} or pidAndroid {$endif DXE2} {$endif D103PLUS} {$ifdef DXE8PLUS} or pidiOSDevice64 {$endif DXE8PLUS})]
   TFObr = class(TComponent)
   private
     FActive: Boolean;
@@ -201,6 +223,10 @@ type
     FImageScanner: TObrImageScanner;
     FPicture: TBitmap;
     FPictureData: TByteDynArray;
+    FScanLeft: Integer;
+    FScanHeight: Integer;
+    FScanTop: Integer;
+    FScanWidth: Integer;
     FOnBarcodeDetected: TNotifyEvent;
     function GetAbout: string;
     function GetActive: Boolean;
@@ -210,11 +236,15 @@ type
     function GetBarcode(Index: Integer): TObrSymbol;
     function GetBarcodeCount: Integer;
     procedure FreeBarcodes;
+    procedure SetScanLeft(Value: Integer);
+    procedure SetScanHeight(Value: Integer);
+    procedure SetScanWidth(Value: Integer);
+    procedure SetScanTop(Value: Integer);
   protected
     procedure CheckActive;
     procedure Loaded; override;
     procedure PictureChanged(Sender: TObject);
-    function PictureData(var Width, Height: Integer): TByteDynArray;
+    function GetPictureData(var Width, Height: Integer): TByteDynArray;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -228,6 +258,10 @@ type
     property About: string read GetAbout write SetEmpty stored False;
     property Active: Boolean read GetActive write SetActive default False;
     property Picture: TBitmap read FPicture write SetPicture;
+    property ScanLeft: Integer read FScanLeft write SetScanLeft default 0;
+    property ScanHeight: Integer read FScanHeight write SetScanHeight default 0;
+    property ScanTop: Integer read FScanTop write SetScanTop default 0;
+    property ScanWidth: Integer read FScanWidth write SetScanWidth default 0;
     property OnBarcodeDetected: TNotifyEvent read FOnBarcodeDetected write FOnBarcodeDetected;
   end;
 
@@ -237,10 +271,18 @@ function SymbologyName(Symbology: TObrSymbology): string;
 function SymbologyAddonName(SymbologyAddon: TObrSymbologyAddon): string;
 
 {$ifdef IOS_DEVICE}
+{$define STATIC_LIBRARY}
+{$endif IOS_DEVICE}
+
+{$ifdef ANDROID}
+{$define STATIC_LIBRARY}
+{$endif ANDROID}
+
+{$ifdef STATIC_LIBRARY}
 const
   LibZBar = 'libzbar.a';
 
-function zbar_version(var major, minor: LongWord): Integer; cdecl; external LibZBar;
+function zbar_version(var major, minor, patch: LongWord): Integer; cdecl; external LibZBar;
 procedure zbar_set_verbosity(verbosity: Integer); cdecl; external LibZBar;
 procedure zbar_increase_verbosity; cdecl; external LibZBar;
 function zbar_get_symbol_name(sym: zbar_symbol_type_t): PAnsiChar; cdecl; external LibZBar;
@@ -428,7 +470,7 @@ var
   zbar_scanner_get_width: zbar_scanner_get_width_t;
   zbar_scanner_get_edge: zbar_scanner_get_edge_t;
   zbar_scanner_get_color: zbar_scanner_get_color_t;
-{$endif IOS_DEVICE}
+{$endif STATIC_LIBRARY}
 
 function LoadedLibrary: Boolean;
 procedure LoadLibrary;
@@ -566,8 +608,9 @@ end;
 
 // TObrSymbol
 
-constructor TObrSymbol.Create(Handle: Pointer);
+constructor TObrSymbol.Create(Obr: TFObr; Handle: Pointer);
 begin
+  FObr := Obr;
   FHandle := Handle;
   Check(FHandle <> nil, SZBarSymbolIsNull);
 end;
@@ -606,12 +649,12 @@ end;
 
 function TObrSymbol.GetLocationX(Index: Integer): Integer;
 begin
-  Result := zbar_symbol_get_loc_x(FHandle, Index);
+  Result := zbar_symbol_get_loc_x(FHandle, Index) + FObr.FScanLeft;
 end;
 
 function TObrSymbol.GetLocationY(Index: Integer): Integer;
 begin
-  Result := zbar_symbol_get_loc_y(FHandle, Index);
+  Result := zbar_symbol_get_loc_y(FHandle, Index) + FObr.FScanTop;
 end;
 
 function TObrSymbol.GetModifiers: TObrModifiers;
@@ -764,8 +807,8 @@ end;
 
 destructor TFObr.Destroy;
 begin
-  FreeAndNil(FPicture);
   Active := False;
+  FreeAndNil(FPicture);
   inherited Destroy;
 end;
 
@@ -779,7 +822,7 @@ end;
 
 function TFObr.GetAbout: string;
 begin
-  Result := 'Version 2.8, Copyright (c) 2013-2016 WINSOFT, http://www.winsoft.sk';
+  Result := 'Version 3.6, Copyright (c) 2013-2021 WINSOFT, https://www.winsoft.sk';
 end;
 
 procedure TFObr.SetEmpty(const Value: string);
@@ -833,9 +876,12 @@ end;
 
 procedure TFObr.PictureChanged(Sender: TObject);
 begin
-  FreeAndNil(FImage);
-  FPictureData := nil;
-  FreeBarcodes;
+  if not (csLoading in ComponentState) then
+  begin
+    FreeAndNil(FImage);
+    FPictureData := nil;
+    FreeBarcodes;
+  end;
 end;
 
 procedure TFObr.Configure(Symbology: TObrSymbology; Addon: TObrSymbologyAddon; Config: TObrConfig; Value: Integer);
@@ -846,7 +892,7 @@ end;
 
 procedure TFObr.Scan;
 var
-  Width, Height, BarcodeCount, i: Integer;
+  Width, Height, BarcodeCount, I: Integer;
   Symbol: Pointer;
 begin
   CheckActive;
@@ -858,7 +904,10 @@ begin
     if FPicture.IsEmpty then
       Exit;
 
-    FPictureData := PictureData(Width, Height);
+    FPictureData := GetPictureData(Width, Height);
+    if FPictureData = nil then
+      Exit;
+
     FImage := TObrImage.Create(foY800, Width, Height, FPictureData, Width * Height);
 
     BarcodeCount := FImageScanner.Scan(FImage);
@@ -867,9 +916,9 @@ begin
       SetLength(FBarcodes, BarcodeCount);
 
       Symbol := zbar_image_first_symbol(FImage.Handle);
-      for i := 0 to BarcodeCount - 1 do
+      for I := 0 to BarcodeCount - 1 do
       begin
-        FBarcodes[i] := TObrSymbol.Create(Symbol);
+        FBarcodes[I] := TObrSymbol.Create(Self, Symbol);
         Symbol := zbar_symbol_next(Symbol);
       end;
 
@@ -890,33 +939,68 @@ begin
   Result := FBarcodes[Index];
 end;
 
-function TFObr.PictureData(var Width, Height: Integer): TByteDynArray;
+function TFObr.GetPictureData(var Width, Height: Integer): TByteDynArray;
 var
 {$ifndef DXE2}
   Data: TBitmapData;
 {$endif DXE2}
-  i, x, y: Integer;
+  FromX, ToX, FromY, ToY: Integer;
+  I, X, Y: Integer;
   Color: TAlphaColor;
 begin
+  Result := nil;
 {$ifndef DXE2}
+  {$ifdef D11PLUS}
   if FPicture.Map(TMapAccess.Read, Data) then
+  {$else}
+  if FPicture.Map(TMapAccess.maRead, Data) then
+  {$endif D11PLUS}
   try
 {$endif DXE2}
     Width := FPicture.Width;
     Height := FPicture.Height;
+
+    FromX := ScanLeft;
+    if FromX >= Width then
+      Exit;
+
+    FromY := ScanTop;
+    if FromY >= Height then
+      Exit;
+
+    if ScanWidth = 0 then
+      ToX := Width - 1
+    else
+    begin
+      ToX := FromX + ScanWidth - 1;
+      if ToX >= Width then
+        ToX := Width - 1;
+    end;
+
+    if ScanHeight = 0 then
+      ToY := Height - 1
+    else
+    begin
+      ToY := FromY + ScanHeight - 1;
+      if ToY >= Height then
+        ToY := Height - 1;
+    end;
+
+    Width := ToX - FromX + 1;
+    Height := ToY - FromY + 1;
     SetLength(Result, Width * Height);
 
-    i := 0;
-    for y := 0 to Height - 1 do
-      for x := 0 to Width - 1 do
+    I := 0;
+    for Y := FromY to ToY do
+      for X := FromX to ToX do
       begin
 {$ifndef DXE2}
-        Color := Data.GetPixel(x, y);
+        Color := Data.GetPixel(X, Y);
 {$else}
-        Color := FPicture.Pixels[x, y];
+        Color := FPicture.Pixels[X, Y];
 {$endif DXE2}
-        Result[i] := Byte(Round(0.299 * (Color and $ff) + 0.587 * ((Color shr 8) and $ff) + 0.114 * ((Color shr 16) and $ff)));
-        Inc(i);
+        Result[I] := Byte(Round(0.299 * (Color and $ff) + 0.587 * ((Color shr 8) and $ff) + 0.114 * ((Color shr 16) and $ff)));
+        Inc(I);
       end;
 {$ifndef DXE2}
   finally
@@ -925,29 +1009,73 @@ begin
 {$endif DXE2}
 end;
 
+procedure TFObr.SetScanLeft(Value: Integer);
+begin
+  if Value <> FScanLeft then
+  begin
+    FScanLeft := Value;
+    if FScanLeft < 0 then
+      FScanLeft := 0;
+    PictureChanged(Self);
+  end;
+end;
+
+procedure TFObr.SetScanHeight(Value: Integer);
+begin
+  if Value <> FScanHeight then
+  begin
+    FScanHeight := Value;
+    if FScanHeight < 0 then
+      FScanHeight := 0;
+    PictureChanged(Self);
+  end;
+end;
+
+procedure TFObr.SetScanTop(Value: Integer);
+begin
+  if Value <> FScanTop then
+  begin
+    FScanTop := Value;
+    if FScanTop < 0 then
+      FScanTop := 0;
+    PictureChanged(Self);
+  end;
+end;
+
+procedure TFObr.SetScanWidth(Value: Integer);
+begin
+  if Value <> FScanWidth then
+  begin
+    FScanWidth := Value;
+    if FScanWidth < 0 then
+      FScanWidth := 0;
+    PictureChanged(Self);
+  end;
+end;
+
 // ZBar library
 
 function LoadedLibrary: Boolean;
 begin
-{$ifdef IOS_DEVICE}
+{$ifdef STATIC_LIBRARY}
   Result := True;
 {$else}
   Result := ZBarLibrary <> 0;
-{$endif IOS_DEVICE}
+{$endif STATIC_LIBRARY}
 end;
 
 procedure UnloadLibrary;
 begin
-{$ifndef IOS_DEVICE}
+{$ifndef STATIC_LIBRARY}
   if LoadedLibrary then
   begin
     FreeLibrary(ZBarLibrary);
     ZBarLibrary := 0;
   end;
-{$endif IOS_DEVICE}
+{$endif STATIC_LIBRARY}
 end;
 
-{$ifndef IOS_DEVICE}
+{$ifndef STATIC_LIBRARY}
 procedure CheckLoadLibrary(const Name: string; var Handle: HMODULE);
 begin
   Handle := SafeLoadLibrary(PChar(Name));
@@ -969,10 +1097,6 @@ end;
 
 function GetLibraryExtension: string;
 begin
-{$ifdef ANDROID}
-   Result := 'so';
-{$endif ANDROID}
-
 {$ifdef MSWINDOWS}
    Result := 'dll';
 {$endif MSWINDOWS}
@@ -984,17 +1108,13 @@ end;
 
 function GetLibraryPath(const Name: string): string;
 begin
-{$ifdef ANDROID}
-  Result := TPath.Combine(TPath.GetLibraryPath, Name + '.' + GetLibraryExtension);
-{$else}
   Result := Name + '.' + GetLibraryExtension;
-{$endif ANDROID}
 end;
-{$endif IOS_DEVICE}
+{$endif STATIC_LIBRARY}
 
 {$IFDEF TRIAL}
 var WasTrial: Boolean;
-    {$ENDIF TRIAL}
+{$ENDIF TRIAL}
 
 procedure LoadLibrary;
 begin
@@ -1003,16 +1123,16 @@ begin
   begin
     WasTrial := True;
     ShowMessage(
-      'OBR for FireMonkey, Copyright (c) 2013-2016 WINSOFT' + #13#10#13#10 +
+      'OBR for FireMonkey, Copyright (c) 2013-2021 WINSOFT' + #13#10#13#10 +
       'A trial version of OBR component started.' + #13#10#13#10 +
       'Please note that trial version is supposed to be used for evaluation only. ' +
-      'If you wish to distribute OBR component as part of your application ' +
-      'you must register from website at http://www.winsoft.sk' + #13#10#13#10 +
+      'If you wish to distribute OBR component as part of your application, ' +
+      'you must register from website at https://www.winsoft.sk.' + #13#10#13#10 +
       'Thank you for trialing OBR component.');
   end;
   {$ENDIF TRIAL}
 
-{$ifndef IOS_DEVICE}
+{$ifndef STATIC_LIBRARY}
   if not LoadedLibrary then
   begin
 
@@ -1121,7 +1241,7 @@ begin
     zbar_scanner_get_edge := CheckGetProcAddress('zbar_scanner_get_edge');
     zbar_scanner_get_color := CheckGetProcAddress('zbar_scanner_get_color');
   end;
-{$endif IOS_DEVICE}
+{$endif STATIC_LIBRARY}
 end;
 
 end.

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_MobileInventory()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileInventory (Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileInventory (Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileInventory(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileInventory(
     IN inGoodsId                            Integer   , -- Товары
     IN inAmount                             TFloat    , -- Количество
     IN inPartNumber                         TVarChar  , --
+    IN inPartionCellName                    TVarChar  , -- код или название
     IN inSession                            TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -89,22 +90,62 @@ BEGIN
        vbComment := '';  
      END IF;
 
+     --находим ячейку хранения, если нет такой создаем
+     IF COALESCE (inPartionCellName, '') <> '' THEN
+         -- !!!поиск ИД !!!
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (inPartionCellName) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (inPartionCellName)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли ошибка
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не найдена ячейка с кодом <%>.', inPartionCellName;
+             END IF;
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inPartionCellName))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+             --если не нашли Создаем
+             IF COALESCE (vbPartionCellId,0) = 0
+             THEN
+                 --
+                 vbPartionCellId := gpInsertUpdate_Object_PartionCell (ioId	     := 0                                            ::Integer
+                                                                     , inCode    := lfGet_ObjectCode(0, zc_Object_PartionCell()) ::Integer
+                                                                     , inName    := TRIM (inPartionCellName)                          ::TVarChar
+                                                                     , inLevel   := 0           ::TFloat
+                                                                     , inComment := ''          ::TVarChar
+                                                                     , inSession := inSession   ::TVarChar
+                                                                      );
 
+             END IF;
+         END IF;
+         --
+     END IF;
+     
      -- определяются параметры из документа
-     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId             := ioId
-                                                 , inMovementId      := inMovementId
-                                                 , inMovementId_OrderClient := vbMovementId_OrderClient
-                                                 , inGoodsId         := inGoodsId
-                                                 , inPartnerId       := vbPartnerId
-                                                 , inPartionCellId   := vbPartionCellId
-                                                 , ioAmount          := inAmount
-                                                 , inTotalCount      := inAmount
-                                                 , inTotalCount_old  := inAmount
-                                                 , ioPrice           := vbPrice
-                                                 , inPartNumber      := inPartNumber
-                                                 , inComment         := vbComment
-                                                 , inUserId          := vbUserId
-                                                  ) AS tmp;
+     SELECT tmp.ioId
+     INTO ioId
+     FROM lpInsertUpdate_MovementItem_Inventory (ioId             := ioId
+                                               , inMovementId      := inMovementId
+                                               , inMovementId_OrderClient := vbMovementId_OrderClient
+                                               , inGoodsId         := inGoodsId
+                                               , inPartnerId       := vbPartnerId
+                                               , inPartionCellId   := vbPartionCellId
+                                               , ioAmount          := inAmount
+                                               , inTotalCount      := inAmount
+                                               , inTotalCount_old  := inAmount
+                                               , ioPrice           := vbPrice
+                                               , inPartNumber      := inPartNumber
+                                               , inComment         := vbComment
+                                               , inUserId          := vbUserId
+                                                ) AS tmp;
 
 END;
 $BODY$
@@ -117,4 +158,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_MobileInventory(ioId := 0, inMovementId := 946, inGoodsId := 9718, inAmount := 2, inPartNumber := '', inSession := zfCalc_UserAdmin())
+-- 
+SELECT * FROM gpInsertUpdate_MovementItem_MobileInventory(ioId := 0, inMovementId := 3172, inGoodsId := 9718, inAmount := 1, inPartNumber := '', inPartionCellName := '', inSession := zfCalc_UserAdmin())

@@ -253,10 +253,9 @@ type
     Label32: TLabel;
     edIIEPartNumber: TEdit;
     Label33: TLabel;
-    EllipsesEditButton1: TEllipsesEditButton;
-    bIIEOk: TSpeedButton;
+    bIIEOk: TButton;
     Image20: TImage;
-    bIIECancel: TSpeedButton;
+    bIIECancel: TButton;
     Image21: TImage;
     BindSourceDB7: TBindSourceDB;
     LinkControlToField11: TLinkControlToField;
@@ -270,6 +269,20 @@ type
     LinkControlToField19: TLinkControlToField;
     LinkControlToField20: TLinkControlToField;
     LinkControlToField21: TLinkControlToField;
+    pInventoryItemEdit: TPanel;
+    tiDictList: TTabItem;
+    Panel5: TPanel;
+    bDictChoice: TSpeedButton;
+    Image23: TImage;
+    bDictRefresh: TSpeedButton;
+    Image24: TImage;
+    lDictListSelect: TLabel;
+    lwDictList: TListView;
+    BindSourceDB8: TBindSourceDB;
+    LinkListControlToField5: TLinkListControlToField;
+    bIIEOpenDictPartionCell: TEditButton;
+    Image25: TImage;
+    lMain: TLayout;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -283,6 +296,7 @@ type
       Shift: TShiftState);
     procedure ShowInformation;
     procedure ShowGoods;
+    procedure ShowDictList(ADictType : TDictType);
     procedure ShowProductionUnion;
     procedure ShowInventoryJournal;
     procedure ShowInventory;
@@ -314,7 +328,7 @@ type
     procedure bGoodsChoiceClick(Sender: TObject);
     procedure bInventoryJournalRefreshClick(Sender: TObject);
     procedure bInventScanSearchClick(Sender: TObject);
-    procedure edInventScanАmountChangeTracking(Sender: TObject);
+    procedure edАmountChangeTracking(Sender: TObject);
     procedure lwInventoryScanItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
@@ -327,7 +341,7 @@ type
     procedure bMinusAmountClick(Sender: TObject);
     procedure bUploadClick(Sender: TObject);
     procedure bProductionUnionClick(Sender: TObject);
-    procedure lwGoodsSearchChange(Sender: TObject);
+    procedure lwDictListChange(Sender: TObject);
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure pPasswordClick(Sender: TObject);
@@ -338,8 +352,19 @@ type
     procedure bInventScanClick(Sender: TObject);
     procedure bIIECancelClick(Sender: TObject);
     procedure bIIEOkClick(Sender: TObject);
+    procedure bIIEOpenDictPartionCellClick(Sender: TObject);
+    procedure bDictRefreshClick(Sender: TObject);
+    procedure bDictChoiceClick(Sender: TObject);
+    procedure FormVirtualKeyboardHidden(Sender: TObject;
+      KeyboardVisible: Boolean; const Bounds: TRect);
+    procedure FormVirtualKeyboardShown(Sender: TObject;
+      KeyboardVisible: Boolean; const Bounds: TRect);
   private
     { Private declarations }
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+    FKBBounds: TRectF;
+    FNeedOffset: Boolean;
+    {$ENDIF}
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
     FCameraScanBarCode: TCameraComponent;
@@ -355,11 +380,20 @@ type
     FisInventScanSN : Boolean;
     FGoodsId: Integer;
 
+    FDictUpdateDataSet: TDataSet;
+    FDictUpdateField: String;
+
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+    procedure CalcContentBoundsProc(Sender: TObject;
+                                    var ContentBounds: TRectF);
+    procedure RestorePosition;
+    procedure UpdateKBBounds;
+    {$ENDIF}
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
     procedure DeleteInventoryGoods(const AResult: TModalResult);
     procedure BackInventoryScan(const AResult: TModalResult);
-    procedure DownloadGoods(const AResult: TModalResult);
+    procedure DownloadDict(const AResult: TModalResult);
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
@@ -379,7 +413,8 @@ var
 
 implementation
 
-uses System.IOUtils, FMX.SearchBox, Authentication, Storage, CommonData, CursorUtils;
+uses System.IOUtils, System.Math, FMX.SearchBox, Authentication, Storage,
+     CommonData, CursorUtils;
 
 {$R *.fmx}
 
@@ -387,7 +422,7 @@ const
   WebServer = 'http://217.92.58.239:11011/projectBoat_utf8/index.php';
   WebServerTest = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
 
-function SearshBox(AListView: TListView): TSearchBox;
+function GetSearshBox(AListView: TListView): TSearchBox;
 var
   AIdx: Integer;
 begin
@@ -425,14 +460,18 @@ var
   SettingsFile : TIniFile;
 begin
 
-  //Application.OnIdle := MobileIdle;
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  VKAutoShowMode := TVKAutoShowMode.Always;
+  vsbMain.OnCalcContentBounds := CalcContentBoundsProc;
+  {$ENDIF}
 
   FormatSettings.DecimalSeparator := '.';
   FisBecomeForeground := False;
   FPasswordLabelClick := 0;
   FisInventScanSN := False;
 
-  SearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
+  GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
+  GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
 
   FFormsStack := TStack<TFormStackItem>.Create;
@@ -539,6 +578,29 @@ begin
   finally
     FreeAndNil(SettingsFile);
   end;
+end;
+
+procedure TfrmMain.bDictChoiceClick(Sender: TObject);
+begin
+  if DM.cdsDictList.IsEmpty then Exit;
+
+  if Assigned(FDictUpdateDataSet) and (FDictUpdateField <> '') then
+  begin
+    FDictUpdateDataSet.Edit;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Id')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Id').AsVariant := DM.cdsDictListId.AsVariant;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Name')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Name').AsVariant := DM.cdsDictListName.AsVariant;
+    FDictUpdateDataSet.Post;
+  end;
+
+  sbBackClick(Sender);
+end;
+
+procedure TfrmMain.bDictRefreshClick(Sender: TObject);
+begin
+  TDialogService.MessageDialog('Загрузить справочники?',
+       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadDict)
 end;
 
 procedure TfrmMain.bDotClick(Sender: TObject);
@@ -805,6 +867,12 @@ begin
       FDataWedgeBarCode.OnScanResult := OnScanResultGoods;
     end
     else
+    if tcMain.ActiveTab = tiDictList then
+    begin
+      lCaption.Text := 'Выбор из справочника'#13#10 + DictTypeName[Ord(DM.DictType)];
+      bDictChoice.Visible := Assigned(FDictUpdateDataSet);
+    end
+    else
     if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
@@ -827,7 +895,7 @@ begin
     end else
     if tcMain.ActiveTab = tiInventoryScan then
     begin
-      lCaption.Text := 'Сканирование/выбор комплектующих в инвентаризацию';
+      lCaption.Text := 'Сканирование/выбор комплектующих';
       DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
     end
@@ -836,7 +904,6 @@ begin
     begin
       lCaption.Text := 'Добавить в Инвентаризацию';
       sbBack.Visible := false;
-      edIIEPartNumber.ReadOnly := not FisInventScanSN;
     end
     else
     if tcMain.ActiveTab = tiProductionUnion then
@@ -852,8 +919,7 @@ begin
   end;
 end;
 
-// Ввод только числа
-procedure TfrmMain.edInventScanАmountChangeTracking(Sender: TObject);
+procedure TfrmMain.edАmountChangeTracking(Sender: TObject);
 Var FEdit : TEdit;
     FFloat : Single;
 begin
@@ -911,6 +977,12 @@ begin
   SwitchToForm(tiInformation, nil);
 end;
 
+procedure TfrmMain.lwDictListChange(Sender: TObject);
+begin
+  DM.FilterDict := TSearchBox(Sender).Text;
+  DM.LoadDictList;
+end;
+
 procedure TfrmMain.lwGoodsChange(Sender: TObject);
 begin
   DM.FilterGoods := TSearchBox(Sender).Text;
@@ -920,9 +992,20 @@ end;
 // начитка информации справочника товаров
 procedure TfrmMain.ShowGoods;
 begin
-  DM.FilterGoods := SearshBox(lwGoods).Text;
+  DM.FilterGoods := GetSearshBox(lwGoods).Text;
   DM.LoadGoodsList;
   if tcMain.ActiveTab <> tiGoods then SwitchToForm(tiGoods, nil);
+end;
+
+// начитка информации справочника
+procedure TfrmMain.ShowDictList(ADictType : TDictType);
+begin
+  DM.DictType := ADictType;
+  DM.FilterDict := '';
+  if GetSearshBox(lwDictList).Text <> '' then
+    GetSearshBox(lwDictList).Text := ''
+  else DM.LoadDictList;
+  if tcMain.ActiveTab <> tiDictList then SwitchToForm(tiDictList, nil);
 end;
 
 // начитка информации журнала инвентаризаций
@@ -945,7 +1028,22 @@ begin
 
   if not DM.GetMIInventory(FGoodsId, 0, '', 1) then
   begin
+     if not DM.LoadGoodsListId(FGoodsId) then Exit;
 
+     DM.cdsInventoryItemEdit.Close;
+     DM.cdsInventoryItemEdit.CreateDataSet;
+     DM.cdsInventoryItemEdit.Insert;
+
+     DM.cdsInventoryItemEditId.AsInteger := 0;
+     DM.cdsInventoryItemEditGoodsId.AsInteger := FGoodsId;
+     DM.cdsInventoryItemEditGoodsCode.AsInteger := DM.cdsGoodsListCode.AsInteger;
+     DM.cdsInventoryItemEditGoodsName.AsString := DM.cdsGoodsListName.AsString;
+     DM.cdsInventoryItemEditArticle.AsString := DM.cdsGoodsListArticle.AsString;
+     DM.cdsInventoryItemEditPartNumber.AsString := '';
+     DM.cdsInventoryItemEditGoodsGroupName.AsString := DM.cdsGoodsListGoodsGroupName.AsString;
+     DM.cdsInventoryItemEditOperCount.AsFloat := 1;
+
+     DM.cdsInventoryItemEdit.Post;
   end;
 
   if DM.cdsInventoryItemEdit.Active then
@@ -1018,6 +1116,7 @@ end;
 // Поиск товара для вставки в инвентаризацию
 procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
 begin
+  FisInventScanSN := False;
   ShowGoods;
   bGoodsChoice.Visible := True;
 end;
@@ -1026,18 +1125,18 @@ procedure TfrmMain.bInventScanClick(Sender: TObject);
 begin
   FGoodsId := 0;
   FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
-//  sbScanClick(Sender);
+  sbScanClick(Sender);
 
-  OnScanResultInventoryScan(Sender, '871949')
+  // OnScanResultInventoryScan(Sender, '871949')
 end;
 
 // Выбор товара
 procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
 begin
-  DM.FilterGoodsEAN := False;
   if lwGoods.ItemCount = 0 then Exit;
 
-  ReturnPriorForm;
+  sbBackClick(Sender);
+
   if (tcMain.ActiveTab = tiInventoryScan)  then
   begin
     FGoodsId := DM.cdsGoodsListId.AsInteger;
@@ -1048,7 +1147,7 @@ end;
 // переход на форму справочника товаров
 procedure TfrmMain.bGoodsClick(Sender: TObject);
 begin
-  SearshBox(lwGoods).Text := '';
+  GetSearshBox(lwGoods).Text := '';
   ShowGoods;
 end;
 
@@ -1056,7 +1155,7 @@ end;
 procedure TfrmMain.bGoodsRefreshClick(Sender: TObject);
 begin
   TDialogService.MessageDialog('Загрузить справочник Комплектующих?',
-       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadGoods)
+       TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadDict)
 end;
 
 // Отмена добавление в инвентаризацию
@@ -1076,8 +1175,23 @@ begin
     Exit;
   end;
 
+  if DM.cdsInventoryItemEdit.State in dsEditModes then DM.cdsInventoryItemEdit.Post;
+
+  if not DM.UploadMIInventory then
+  begin
+    DM.AddInventoryGoods(DM.cdsInventoryItemEditGoodsId.AsInteger, DM.cdsInventoryItemEditOperCount.AsFloat,
+                         DM.cdsInventoryItemEditPartNumber.AsString, DM.cdsInventoryItemEditPartionCellName.AsString);
+  end else if not DM.qryInventoryGoods.IsEmpty then DM.UploadInventoryGoods;
+
   DM.cdsInventoryItemEdit.Close;
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bIIEOpenDictPartionCellClick(Sender: TObject);
+begin
+  FDictUpdateDataSet := DM.cdsInventoryItemEdit;
+  FDictUpdateField := 'PartionCell';
+  ShowDictList(dtPartionCell);
 end;
 
 // переход на форму отображения информации
@@ -1120,7 +1234,12 @@ end;
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
 begin
-  if (tcMain.ActiveTab = tiGoods)  then
+  if (tcMain.ActiveTab = tiDictList)  then
+  begin
+    FDictUpdateDataSet := Nil;
+    FDictUpdateField := '';
+    DM.cdsDictList.Close;
+  end else if (tcMain.ActiveTab = tiGoods)  then
   begin
     DM.FilterGoodsEAN := False;
   end else if (tcMain.ActiveTab = tiInventoryJournal)  then
@@ -1226,6 +1345,9 @@ begin
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
       else
+      if tcMain.ActiveTab = tiInventoryItemEdit then
+        exit
+      else
       if tcMain.ActiveTab = tiStart then
         TDialogService.MessageDialog('Закрыть программу?', TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], TMsgDlgBtn.mbCancel, -1, OnCloseDialog)
       else
@@ -1237,6 +1359,52 @@ begin
   end;
 end;
 
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+procedure TfrmMain.CalcContentBoundsProc(Sender: TObject;
+                                       var ContentBounds: TRectF);
+begin
+  if FNeedOffset and (FKBBounds.Top > 0) then
+  begin
+    ContentBounds.Bottom := Max(ContentBounds.Bottom,
+                                2 * ClientHeight - FKBBounds.Top);
+  end;
+end;
+
+procedure TfrmMain.RestorePosition;
+begin
+  vsbMain.ViewportPosition := PointF(vsbMain.ViewportPosition.X, 0);
+  lMain.Align := TAlignLayout.Client;
+  vsbMain.RealignContent;
+end;
+
+procedure TfrmMain.UpdateKBBounds;
+var
+  LFocused : TControl;
+  LFocusRect: TRectF;
+begin
+  FNeedOffset := False;
+  if Assigned(Focused) then
+  begin
+    LFocused := TControl(Focused.GetObject);
+    LFocusRect := LFocused.AbsoluteRect;
+    LFocusRect.Offset(vsbMain.ViewportPosition);
+    if (LFocusRect.IntersectsWith(TRectF.Create(FKBBounds))) and
+       (LFocusRect.Bottom > FKBBounds.Top) then
+    begin
+      FNeedOffset := True;
+      lMain.Align := TAlignLayout.Horizontal;
+      vsbMain.RealignContent;
+      Application.ProcessMessages;
+      vsbMain.ViewportPosition :=
+        PointF(vsbMain.ViewportPosition.X,
+               LFocusRect.Bottom - FKBBounds.Top);
+    end;
+  end;
+  if not FNeedOffset then
+    RestorePosition;
+end;
+{$ENDIF}
+
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
   deInventoryStartDate.DateTime := IncDay(Date, -7);
@@ -1244,6 +1412,29 @@ begin
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(nil);
+end;
+
+procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
+  KeyboardVisible: Boolean; const Bounds: TRect);
+begin
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  FKBBounds.Create(0, 0, 0, 0);
+  FNeedOffset := False;
+  RestorePosition;
+  {$ENDIF}
+end;
+
+procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
+  KeyboardVisible: Boolean; const Bounds: TRect);
+begin
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  if Focused.GetObject is TEdit then
+    TEdit(Focused.GetObject).CaretPosition := Length(TEdit(Focused.GetObject).Text);
+  FKBBounds := TRectF.Create(Bounds);
+  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
+  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
+  UpdateKBBounds;
+  {$ENDIF}
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -1309,10 +1500,6 @@ begin
   if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
 end;
 
-procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
-begin
-end;
-
 // Покажим инвентаризацию
 procedure TfrmMain.lwInventoryJournalItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
@@ -1331,7 +1518,7 @@ begin
   if AResult = mrYes then DM.DeleteInventoryGoods;
 end;
 
-procedure TfrmMain.DownloadGoods(const AResult: TModalResult);
+procedure TfrmMain.DownloadDict(const AResult: TModalResult);
 begin
   if AResult = mrYes then DM.DownloadDict;
 end;
@@ -1475,7 +1662,7 @@ begin
   S := AData_String;
   while COPY(S, 1, 1) = '0' do S := COPY(S, 2, Length(S));
 
-  SearshBox(lwGoods).Text := S;
+  GetSearshBox(lwGoods).Text := S;
 end;
 
 // Обрабатываем отсканированный товар для инвентаризации
@@ -1499,7 +1686,7 @@ begin
       ShowInventoryItemEdit;
     end else if nCount > 1 then
     begin
-      SearshBox(lwGoods).Text := Data_String;
+      GetSearshBox(lwGoods).Text := Data_String;
       DM.FilterGoodsEAN := True;
       bInventScanSearchClick(Sender);
       Exit;
@@ -1526,7 +1713,7 @@ begin
       ShowInventoryItemEdit;
     end else if DM.cdsGoodsEAN.RecordCount > 1 then
     begin
-      SearshBox(lwGoods).Text := Data_String;
+      GetSearshBox(lwGoods).Text := Data_String;
       DM.FilterGoodsEAN := True;
       bInventScanSearchClick(Sender);
       Exit;

@@ -27,7 +27,7 @@ BEGIN
        INTO vbCountGoods, vbGoodsId
        FROM Object
        WHERE Object.DescId   = zc_Object_Goods()
-         AND Object.Id = inBarCode::Integer;     
+         AND Object.ObjectCode = inBarCode::Integer;     
      ELSE
        SELECT COUNT(*), MAX(Object.Id)
        INTO vbCountGoods, vbGoodsId
