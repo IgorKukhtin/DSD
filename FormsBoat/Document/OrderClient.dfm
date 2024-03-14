@@ -26,6 +26,8 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -24
+    ExplicitTop = -51
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -386,21 +388,14 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel26: TcxLabel
-      Left = 680
+      Left = 672
       Top = 121
       Hint = 
         #1048#1058#1054#1043#1054' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087 +
         #1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
-      Caption = 'Total LP ('#1074#1074#1086#1076') :'
-      ParentFont = False
+      Caption = 'C'#1091#1084#1084#1072' '#1087#1086#1089#1083#1077' '#1089#1082#1080#1076#1082#1080':'
       ParentShowHint = False
       ShowHint = True
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -11
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
     end
     object cxLabel27: TcxLabel
       Left = 859
@@ -576,7 +571,7 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel40: TcxLabel
-      Left = 693
+      Left = 696
       Top = 98
       Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
       Caption = #1057#1082#1080#1076#1082#1072' ('#1074#1074#1086#1076') :'
@@ -1765,9 +1760,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2781,9 +2773,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2841,9 +2830,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -5403,7 +5389,7 @@ object OrderClientForm: TOrderClientForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 614
-    Top = 207
+    Top = 255
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -5620,8 +5606,7 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'ioSummReal'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'SummReal_real'
+        Component = edSummReal
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -7228,8 +7213,8 @@ object OrderClientForm: TOrderClientForm
   object ChildCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 592
-    Top = 231
+    Left = 576
+    Top = 271
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
