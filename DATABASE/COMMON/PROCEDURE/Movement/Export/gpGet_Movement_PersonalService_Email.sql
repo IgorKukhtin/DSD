@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService_Email(
     IN inParam                Integer,    -- = 1 ƒЋя CardSecond, INN, SummCardSecondRecalc, PersonalName 
                                           --CSV  = 2 ƒЋя CardBankSecond, SummCardSecondRecalc
                                           --XLS  = 3 ƒЋя CardBankSecond, SummCardSecondRecalc
+                                          --XLS  = 4 ƒЋя распределение по приоритету
     IN inSession              TVarChar    -- сесси€ пользовател€
 )
 RETURNS TABLE (Subject TVarChar, Body TBlob, AddressFrom TVarChar, AddressTo TVarChar
@@ -85,7 +86,7 @@ BEGIN
                                                                                      )
                                                                   , inSession    := inSession)
                                                                    )
-     SELECT CASE WHEN inParam = 3 THEN (tmp.outFileName || '.xls') 
+     SELECT CASE WHEN inParam IN (3, 4)  THEN (tmp.outFileName || '.xls') 
                  ELSE (tmp.outFileName ||'.csv')
             END                       :: TVarChar AS Subject
           , ''                        :: TBlob    AS Body

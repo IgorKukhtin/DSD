@@ -5,7 +5,6 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_mail_xls (Integer, Int
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_mail_xls(
     IN inMovementId           Integer,
     IN inParam                Integer,    --XLS  = 3 ДЛЯ CardBankSecond, SummCardSecondRecalc
-
     IN inSession              TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (CardBankSecond          TVarChar
@@ -34,7 +33,7 @@ BEGIN
 
      -- Проверка
      IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
-        AND vbUserId <> 5
+        AND vbUserId <>  5 
      THEN
          RAISE EXCEPTION 'Ошибка.<%> № <%> от <%> % в статусе <%>.%Для отправки необходимо установить статус документа в <%>.'
                        , lfGet_Object_ValueData_sh ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()))
@@ -118,7 +117,6 @@ BEGIN
              ;
 
      END IF;
-
 
      -- сохранили свойство <Сформирована Выгрузка (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
