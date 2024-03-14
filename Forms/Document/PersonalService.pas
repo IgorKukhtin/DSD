@@ -361,7 +361,7 @@ type
     actGet_Export_EmailF2_prior_xls: TdsdExecStoredProc;
     actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc;
     actSelect_ExportF2_prior_xls: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbExportF2_Prior_xls: TdxBarButton;
   private
     { Private declarations }
   public

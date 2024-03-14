@@ -5703,7 +5703,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbExportF2_Prior_xls'
         end>
     end
     object bbOpenReportRecalcForm: TdxBarButton
@@ -5759,7 +5759,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Action = actOpenBankSecondNumForm
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbExportF2_Prior_xls: TdxBarButton
       Action = mactExportF2_Prior_xls
       Category = 0
     end
