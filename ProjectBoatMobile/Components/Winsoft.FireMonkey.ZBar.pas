@@ -104,6 +104,7 @@ type
     ZBAR_CODE39      =    39, // Code 39
     ZBAR_PDF417      =    57, // PDF417
     ZBAR_QRCODE      =    64, // QR Code
+    ZBAR_SQCODE      =    80, // SQ Code
     ZBAR_CODE93      =    93, // Code 93
     ZBAR_CODE128     =   128, // Code 128
     ZBAR_SYMBOL      = $00ff, // DEPRECATED: mask for base symbol type
@@ -150,11 +151,13 @@ type
     ZBAR_CFG_ADD_CHECK,         // enable check digit when optional
     ZBAR_CFG_EMIT_CHECK,        // return check digit when present
     ZBAR_CFG_ASCII,             // enable full ASCII character set
+    ZBAR_CFG_BINARY,            // don't convert binary data to text
     ZBAR_CFG_NUM,               // number of boolean decoder configs
     ZBAR_CFG_MIN_LEN = $20,     // minimum data length for valid decode
     ZBAR_CFG_MAX_LEN,           // maximum data length for valid decode
     ZBAR_CFG_UNCERTAINTY = $40, // required video consistency frames
     ZBAR_CFG_POSITION = $80,    // enable scanner to collect position data
+    ZBAR_CFG_TEST_INVERTED,     // if fails to decode, test inverted
     ZBAR_CFG_X_DENSITY = $100,  // image scanner vertical scan density
     ZBAR_CFG_Y_DENSITY          // image scanner horizontal scan density
   );
@@ -181,7 +184,7 @@ const
 // @param minor set to the running minor version (unless NULL)
 // @returns 0
 type
-  zbar_version_t = function(var major, minor: LongWord): Integer; cdecl;
+  zbar_version_t = function(var major, minor, patch: LongWord): Integer; cdecl;
 
 // set global library debug level
 // @param verbosity desired debug level. higher values create more spew
@@ -610,6 +613,17 @@ type
 // @see zbar_decoder_set_config()
   zbar_processor_set_config_t = function(processor: zbar_processor_t; symbology: zbar_symbol_type_t; config: zbar_config_t; value: Integer): Integer; cdecl;
 
+// set video control value
+// @returns 0 for success, non-0 for failure
+// @see zbar_video_set_control()
+  zbar_processor_set_control_t = function(processor: zbar_processor_t; control_name: PAnsiChar; value: Integer): Integer; cdecl;
+
+// get video control value
+// @returns 0 for success, non-0 for failure
+// @see zbar_video_get_control()
+
+  zbar_processor_get_control_t = function(processor: zbar_processor_t; control_name: PAnsiChar; out value: Integer): Integer; cdecl;
+
 // parse configuration string using zbar_parse_config()
 // and apply to processor using zbar_processor_set_config().
 // @returns 0 for success, non-0 for failure
@@ -617,7 +631,7 @@ type
 // @see zbar_processor_set_config()
 function zbar_processor_parse_config(processor: zbar_processor_t; config_string: PAnsiChar): Integer; cdecl;
 
-// retrieve the current state of the ouput window
+// retrieve the current state of the output window
 // @returns 1 if the output window is currently displayed, 0 if not.
 // @returns -1 if an error occurs
 type
@@ -665,6 +679,10 @@ type
 // @returns >0 if symbols were successfully decoded,
 // 0 if no symbols were found or -1 if an error occurs
   zbar_process_image_t = function(processor: zbar_processor_t; image: zbar_image_t): Integer; cdecl;
+
+// enable dbus IPC API.
+// @returns 0 successful
+  zbar_processor_request_dbus_t = function(proc: zbar_processor_t; req_dbus_enabled: Integer): Integer; cdecl;
 
 // display detail for last processor error to stderr
 // @returns a non-zero value suitable for passing to exit()
@@ -744,12 +762,27 @@ type
   zbar_video_enable_t = function(video: zbar_video_t; enable: Integer): Integer; cdecl;
 
 // retrieve next captured image.  blocks until an image is available.
-// <p>Implementation note:<br>
-// Platform dependent part, performing actual blocking, is done through
-// zbar_video_s#dq function pointer.
-  // Implementations of zbar_video_s#dq are in zbar/video directory.
 // @returns NULL if video is not enabled or an error occurs
   zbar_video_next_image_t = function(video: zbar_video_t): zbar_image_t; cdecl;
+
+// set video control value (integer).
+// @returns 0 for success, non-0 for failure
+// @see zbar_processor_set_control()
+  zbar_video_set_control_t = function(video: zbar_video_t; control_name: PAnsiChar; value: Integer): Integer; cdecl;
+
+// get video control value (integer).
+// @returns 0 for success, non-0 for failure
+// @see zbar_processor_get_control()
+  zbar_video_get_control_t = function(video: zbar_video_t; control_name: PAnsiChar; out value: Integer): Integer; cdecl;
+
+// get available controls from video source
+// @returns 0 for success, non-0 for failure
+  zbar_video_get_controls_t = function(video: zbar_video_t; index: Integer): Pointer {video_controls_s}; cdecl;
+
+//* get available video resolutions from video source
+// @returns 0 for success, non-0 for failure
+  
+  zbar_video_get_resolutions = function(vdo: zbar_video_t; index: Integer): Pointer {video_resolution_s}; cdecl;
 
 // display detail for last video error to stderr
 // @returns a non-zero value suitable for passing to exit()
@@ -845,11 +878,20 @@ type
 // @returns the previously registered handler
   zbar_image_scanner_set_data_handler_t = function(scanner: zbar_image_scanner_t; handler: zbar_image_data_handler_t; const userdata: Pointer): zbar_image_data_handler_t; cdecl;
 
+// request sending decoded codes via D-Bus
+// @see zbar_processor_parse_config()
+  zbar_image_scanner_request_dbus_t = function(scanner: zbar_image_scanner_t; req_dbus_enabled: Integer): Integer; cdecl;
+
 // set config for indicated symbology (0 for all) to specified value.
 // @returns 0 for success, non-0 for failure (config does not apply to
 // specified symbology, or value out of range)
 // @see zbar_decoder_set_config()
   zbar_image_scanner_set_config_t = function(scanner: zbar_image_scanner_t; symbology: zbar_symbol_type_t; config: zbar_config_t; value: Integer): Integer; cdecl;
+
+// get config for indicated symbology
+// @returns 0 for success, non-0 for failure (config does not apply to
+// specified symbology, or value out of range). On success, *value is filled.
+  zbar_image_scanner_get_config_t = function(scanner: zbar_image_scanner_t; symbology: zbar_symbol_type_t; config: zbar_config_t; out value: Integer): Integer; cdecl;
 
 // parse configuration string using zbar_parse_config()
 // and apply to image scanner using zbar_image_scanner_set_config().
@@ -909,6 +951,11 @@ type
 // @returns 0 for success, non-0 for failure (config does not apply to
 // specified symbology, or value out of range)
   zbar_decoder_set_config_t = function(decoder: zbar_decoder_t; symbology: zbar_symbol_type_t; config: zbar_config_t; value: Integer): Integer; cdecl;
+
+// get config for indicated symbology
+// @returns 0 for success, non-0 for failure (config does not apply to
+// specified symbology, or value out of range). On success, *value is filled.
+  zbar_decoder_get_config_t = function(decoder: zbar_decoder_t; symbology: zbar_symbol_type_t; config: zbar_config_t; out value: Integer): Integer; cdecl;
 
 // parse configuration string using zbar_parse_config()
 // and apply to decoder using zbar_decoder_set_config()

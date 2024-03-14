@@ -361,8 +361,10 @@ type
       KeyboardVisible: Boolean; const Bounds: TRect);
   private
     { Private declarations }
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     FKBBounds: TRectF;
     FNeedOffset: Boolean;
+    {$ENDIF}
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
     FCameraScanBarCode: TCameraComponent;
@@ -381,10 +383,12 @@ type
     FDictUpdateDataSet: TDataSet;
     FDictUpdateField: String;
 
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
                                     var ContentBounds: TRectF);
     procedure RestorePosition;
     procedure UpdateKBBounds;
+    {$ENDIF}
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
     procedure DeleteInventoryGoods(const AResult: TModalResult);
@@ -456,7 +460,7 @@ var
   SettingsFile : TIniFile;
 begin
 
-  {$IF DEFINED(ANDROID)}
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   VKAutoShowMode := TVKAutoShowMode.Always;
   vsbMain.OnCalcContentBounds := CalcContentBoundsProc;
   {$ENDIF}
@@ -1355,6 +1359,7 @@ begin
   end;
 end;
 
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
 procedure TfrmMain.CalcContentBoundsProc(Sender: TObject;
                                        var ContentBounds: TRectF);
 begin
@@ -1398,6 +1403,7 @@ begin
   if not FNeedOffset then
     RestorePosition;
 end;
+{$ENDIF}
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
@@ -1411,7 +1417,7 @@ end;
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
-  {$IF DEFINED(ANDROID)}
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   FKBBounds.Create(0, 0, 0, 0);
   FNeedOffset := False;
   RestorePosition;
@@ -1421,7 +1427,7 @@ end;
 procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
-  {$IF DEFINED(ANDROID)}
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   if Focused.GetObject is TEdit then
     TEdit(Focused.GetObject).CaretPosition := Length(TEdit(Focused.GetObject).Text);
   FKBBounds := TRectF.Create(Bounds);

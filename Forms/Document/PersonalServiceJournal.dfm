@@ -1484,16 +1484,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Hint = #1069#1082#1089#1087#1086#1088#1090' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1047#1055' '#1085#1072' '#1082#1072#1088#1090#1086#1095#1082#1091' '#1076#1083#1103' "'#1056#1072#1081#1092#1092#1072#1081#1079#1077#1085'"'
       ImageIndex = 61
     end
-    object actExport_GridF2_xls: TExportGrid [10]
-      Category = 'Export_Email'
-      MoveParams = <>
-      Grid = ExportXmlGrid
-      Caption = 'actExport_GridF2_xls'
-      OpenAfterCreate = False
-      DefaultFileName = 'Report_'
-      Separator = ';'
-      DefaultFileExt = 'XLS'
-    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TPersonalServiceForm'
       FormNameParam.Name = 'TPersonalServiceForm'
@@ -1534,7 +1524,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           StoredProc = spSelect
         end>
     end
-    object actPrint: TdsdPrintAction [29]
+    object actPrint: TdsdPrintAction [28]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1585,7 +1575,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [30]
+    object actPrint_All: TdsdPrintAction [29]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1635,7 +1625,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Detail: TdsdPrintAction [31]
+    object actPrint_Detail: TdsdPrintAction [30]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1687,7 +1677,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [34]
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [33]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1999,6 +1989,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       DefaultFileName = 'Report_'
       DefaultFileExt = 'XML'
     end
+    object actExport_GridF2_xls: TExportGrid
+      Category = 'Export_Email'
+      MoveParams = <>
+      Grid = ExportXmlGrid
+      Caption = 'actExport_GridF2_xls'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      Separator = ';'
+      DefaultFileExt = 'XLS'
+    end
     object actSMTPFileCSV: TdsdSMTPFileAction
       Category = 'Export_Email'
       MoveParams = <>
@@ -2200,6 +2200,71 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       ImageIndex = 53
+    end
+    object actGet_Export_EmailF2_prior_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_EmailF2_prior_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_EmailF2_prior_xls
+        end>
+      Caption = 'actGet_Export_EmailF2_xls'
+    end
+    object actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Export_FileNameF2_prior_xls
+      StoredProcList = <
+        item
+          StoredProc = spGet_Export_FileNameF2_prior_xls
+        end>
+      Caption = 'actGet_Export_FileNameF2_xls'
+    end
+    object actSelect_ExportF2_prior_xls: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelect_ExportF2_prior_xls
+      StoredProcList = <
+        item
+          StoredProc = spSelect_ExportF2_prior_xls
+        end>
+      Caption = 'actSelect_ExportF2_xls'
+    end
+    object mactExportF2_prior_xls: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_EmailF2_prior_xls
+        end
+        item
+          Action = actGet_Export_FileNameF2_prior_xls
+        end
+        item
+          Action = actSelect_ExportF2_prior_xls
+        end
+        item
+          Action = actExport_GridF2_xls
+        end
+        item
+          Action = actSMTPFileCSV
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077 +
+        ' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2 '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = 
+        #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2 '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090 +
+        #1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
+      ImageIndex = 89
     end
   end
   inherited MasterDS: TDataSource
@@ -2499,6 +2564,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         item
           Visible = True
           ItemName = 'bbtExportF2_xls'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportF2_prior_xls'
         end>
     end
     object bbSeparator1: TdxBarSeparator
@@ -2510,6 +2579,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     end
     object bbtExportF2_xls: TdxBarButton
       Action = mactExportF2_xls
+      Category = 0
+    end
+    object bbExportF2_prior_xls: TdxBarButton
+      Action = mactExportF2_prior_xls
       Category = 0
     end
   end
@@ -3411,5 +3484,112 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 1040
     Top = 520
+  end
+  object spGet_Export_EmailF2_prior_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PersonalService_Email'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 376
+  end
+  object spSelect_ExportF2_prior_xls: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PersonalServiceNum_mail_xls'
+    DataSet = ExportCDS
+    DataSets = <
+      item
+        DataSet = ExportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 432
+  end
+  object spGet_Export_FileNameF2_prior_xls: TdsdStoredProc
+    StoredProcName = 'gpGet_PersonalService_FileNameCSV'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actExport_GridF2_xls
+        ComponentItem = 'DefaultFileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDefaultFileExt'
+        Value = Null
+        Component = actExport_GridF2_xls
+        ComponentItem = 'DefaultFileExt'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEncodingANSI'
+        Value = Null
+        Component = actExport_GridF2_xls
+        ComponentItem = 'EncodingANSI'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFileName'
+        Value = Null
+        Component = actSMTPFileCSV
+        ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 480
   end
 end

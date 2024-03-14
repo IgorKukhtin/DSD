@@ -154,6 +154,14 @@ type
     bbtExportF2_xls: TdxBarButton;
     is4000: TcxGridDBColumn;
     InvNumber_BankSecondNum: TcxGridDBColumn;
+    spGet_Export_EmailF2_prior_xls: TdsdStoredProc;
+    spSelect_ExportF2_prior_xls: TdsdStoredProc;
+    spGet_Export_FileNameF2_prior_xls: TdsdStoredProc;
+    mactExportF2_prior_xls: TMultiAction;
+    actGet_Export_EmailF2_prior_xls: TdsdExecStoredProc;
+    actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc;
+    actSelect_ExportF2_prior_xls: TdsdExecStoredProc;
+    bbExportF2_prior_xls: TdxBarButton;
   private
     { Private declarations }
   public

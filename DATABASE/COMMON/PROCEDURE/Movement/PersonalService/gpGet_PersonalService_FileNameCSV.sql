@@ -4,9 +4,10 @@ DROP FUNCTION IF EXISTS gpGet_PersonalService_FileNameCSV (Integer, Integer, TVa
 
 CREATE OR REPLACE FUNCTION gpGet_PersonalService_FileNameCSV(
     IN inMovementId           Integer   ,  
-    IN inParam                Integer,    -- = 1 ДЛЯ CardSecond, INN, SummCardSecondRecalc, PersonalName 
+    IN inParam                Integer,    -- = 1 ДЛЯ 4CardSecond, INN, SummCardSecondRecalc, PersonalName 
                                           --CSV  = 2 ДЛЯ CardBankSecond, SummCardSecondRecalc
                                           --XLS  = 3 ДЛЯ CardBankSecond, SummCardSecondRecalc
+                                          --XLS  = 4 ДЛЯ распределение по приоритету
    OUT outFileName            TVarChar  ,
    OUT outFileNamePrefix      TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
@@ -25,13 +26,15 @@ BEGIN
      SELECT ('PersonalService_' || CURRENT_DATE) AS outFileNamePrefix
 
           , Object_PersonalServiceList.ValueData 
-            ||CASE WHEN inParam = 2 OR inParam = 3 THEN ' по № карты' ELSE '' END
+            ||CASE WHEN inParam = 2 OR inParam = 3 THEN ' по № карты'
+                   WHEN inParam = 4 THEN ' Распределение по банкам Ф2'
+                   ELSE '' END
             ||'_'||zfCalc_MonthName(MovementDate_ServiceDate.ValueData)  
              ::TVarChar AS outFileName
 
-          , CASE WHEN inParam = 3 THEN '.xls' ELSE '.csv' END ::TVarChar  AS outDefaultFileExt
+          , CASE WHEN inParam IN (3,4) THEN '.xls' ELSE '.csv' END ::TVarChar  AS outDefaultFileExt
 
-          , CASE WHEN inParam = 3 THEN FALSE ELSE TRUE END    ::Boolean   AS outEncodingANSI
+          , CASE WHEN inParam IN (3,4) THEN FALSE ELSE TRUE END    ::Boolean   AS outEncodingANSI
    INTO outFileNamePrefix, outFileName, outDefaultFileExt, outEncodingANSI
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
@@ -52,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.03.24         *
  08.02.24         *
  17.11.21         *
 */
