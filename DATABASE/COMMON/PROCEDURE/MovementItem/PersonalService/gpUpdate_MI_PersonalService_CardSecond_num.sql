@@ -863,6 +863,7 @@ END IF;
                                              , CASE WHEN _tmpMI.Num_1 = 1 THEN _tmpMI.SummCard_1
                                                     WHEN _tmpMI.Num_2 = 1 THEN _tmpMI.SummCard_2
                                                     WHEN _tmpMI.Num_3 = 1 THEN _tmpMI.SummCard_3
+                                                    ELSE 0
                                                END
                                               )
              -- здесь всегда ОТП
@@ -870,6 +871,7 @@ END IF;
                                              , CASE WHEN _tmpMI.Num_1 = 2 THEN _tmpMI.SummCard_1
                                                     WHEN _tmpMI.Num_2 = 2 THEN _tmpMI.SummCard_2
                                                     WHEN _tmpMI.Num_3 = 2 THEN _tmpMI.SummCard_3
+                                                    ELSE 0
                                                END
                                               )
              -- здесь всегда Личный
@@ -877,6 +879,7 @@ END IF;
                                              , CASE WHEN _tmpMI.Num_1 = 3 THEN _tmpMI.SummCard_1
                                                     WHEN _tmpMI.Num_2 = 3 THEN _tmpMI.SummCard_2
                                                     WHEN _tmpMI.Num_3 = 3 THEN _tmpMI.SummCard_3
+                                                    ELSE 0
                                                END
                                               )
      FROM

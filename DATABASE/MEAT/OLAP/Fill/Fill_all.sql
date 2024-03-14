@@ -1,44 +1,38 @@
 -- Function: FillSoldTable
 
-DROP FUNCTION IF EXISTS FillSoldTable (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS Fill_all (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS Fill_0 (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION FillSoldTable(
+CREATE OR REPLACE FUNCTION Fill_all(
     IN inStartDate    TDateTime ,
     IN inEndDate      TDateTime ,
     IN inSession      TVarChar       -- сессия пользователя
 )
-RETURNS VOId
+RETURNS TEXT
 -- RETURNS SETOF refcursor
 AS
 $BODY$
+  DECLARE vb1 TEXT;
+  DECLARE vb2 TEXT;
+  DECLARE vb3 TEXT;
 BEGIN
-  -- inStartDate:='01.06.2014';
+
+    RAISE INFO 'Период <%> + <%>', '01.03.2023', '31.03.2023';
+
+    --RAISE EXCEPTION 'Период <%> + <%>', '01.03.2023', '31.03.2023';
+
   --
-  DELETE FROM SoldTable WHERE OperDate BETWEEN inStartDate AND inEndDate;
+  vb1:=
+  (SELECT * 
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+  , 'DELETE FROM SoldTable WHERE OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023'''
+  )); 
 
 
-/*
-update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
-FROM (with tmpGoodsByGoodsKind AS (SELECT
-                                      ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS Id 
-                                    , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
-                                    , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
-                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
-                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
-                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                               )
-      select * from tmpGoodsByGoodsKind
-     ) AS tmpGoodsByGoodsKind
-where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
-  AND tmpGoodsByGoodsKind.GoodsKindId = SoldTable .GoodsKindId
-  AND SoldTable.OperDate BETWEEN '01.12.2020' AND '01.01.2021'
-  AND GoodsByGoodsKindId IS NULL
-
-*/
-  --
-  INSERT INTO SoldTable (OperDate
+  vb2:=
+  (SELECT * 
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+, '  INSERT INTO SoldTable (OperDate
                        , AccountId
                        , BranchId, JuridicalGroupId, JuridicalId, PartnerId, InfoMoneyId, PaidKindId, PaidKindId_bonus, RetailId, RetailReportId
                        , AreaId, PartnerTagId
@@ -122,7 +116,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM tmpAnalyzer
                               INNER JOIN MovementItemContainer AS MIContainer
                                                                ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
-                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MIContainer.OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023''
                               INNER JOIN ContainerLinkObject AS CLO_Juridical
                                                              ON CLO_Juridical.ContainerId = CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Service(), zc_Movement_PriceCorrective()) THEN MIContainer.ContainerId ELSE MIContainer.ContainerId_Analyzer END
                                                             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -196,7 +190,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM Movement
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MovementItemContainer.OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023''
                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                                   AND Container.ObjectId = zc_Enum_Account_50401() -- !!!Расходы будущих периодов + Услуги по маркетингу!!!
 
@@ -305,7 +299,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                          FROM Movement
                               INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                               AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                                              AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                              AND MovementItemContainer.OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023''
                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                                   AND Container.ObjectId = zc_Enum_Account_70301() -- !!!
                               -- НАЛ
@@ -838,7 +832,7 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
    FROM Movement
         JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                   AND MovementItemContainer.DescId = zc_MIContainer_Summ()
-                                  AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                  AND MovementItemContainer.OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023''
         JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                       AND Container.DescId = zc_Container_Summ()
         INNER JOIN ContainerLinkObject AS CLO_InfoMoney ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -881,11 +875,15 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
            , ObjectLink_Juridical_RetailReport.ChildObjectId
            , ObjectLink_Contract_ContractTag.ChildObjectId
            , ObjectLink_ContractTag_ContractTagGroup.ChildObjectId
-   ;
+   '
+
+  )); 
 
 
-    --
-    UPDATE SoldTable SET               -- Прибыль (только реализ)
+  vb3:=
+  (SELECT * 
+  FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+  , 'UPDATE SoldTable SET               -- Прибыль (только реализ)
                          Sale_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0)
                                        -- Прибыль с учетом бонусов (только реализ)
                   , SaleBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
@@ -893,26 +891,16 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , SaleReturn_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0)
                                        -- Прибыль с учетом !!!возврата!!! и бонусов
             , SaleReturnBonus_Profit = COALESCE(Sale_Summ, 0) - COALESCE(Sale_SummCost, 0) - COALESCE(Return_Summ, 0) - COALESCE(BonusBasis, 0) - COALESCE(Bonus, 0)
-    WHERE OperDate BETWEEN inStartDate AND inEndDate;
+    WHERE OperDate BETWEEN ''01.03.2023'' AND ''31.03.2023'''
+
+  )); 
 
 
-
-    IF DATE_TRUNC ('MONTH', CURRENT_TIMESTAMP) = DATE_TRUNC ('MONTH', inEndDate)
-       AND (EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 8 OR EXTRACT (DAY FROM CURRENT_TIMESTAMP) > 1)
-    THEN
-        -- сохранили <По какую дату включительно сформированы данные Олап Продажа/возврат>
-        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GlobalConst_ActualBankStatement(), zc_Enum_GlobalConst_EndDateOlapSR(), inEndDate);
-
-        -- сохранили <Дата формирования данных Олап Продажа/возврат>
-        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_GlobalConst_ActualBankStatement(), zc_Enum_GlobalConst_ProtocolDateOlapSR(), CURRENT_TIMESTAMP);
-
-    END IF;
-
+  return (vb1 || ' * ' || vb2 || ' * ' || vb3) :: Text;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION FillSoldTable (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -922,73 +910,5 @@ ALTER FUNCTION FillSoldTable (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
  25.11.14                                        * add Sale_SummCost Return_SummCost
  19.11.14                         * add
 */
-/*
-SELECT object_p.ValueData, object_g.ValueData, object_gk.ValueData, sum (Sale_Summ)
-, DATE_TRUNC ('month', OperDate)
-FROM SoldTable
-left join object as object_p on object_p.Id = PartnerId
-left join object as object_g on object_g.Id = GoodsId
-left join object as object_gk on object_gk.Id = GoodsKindId
-where OperDate BETWEEN '01.06.2014' and  '31.12.2014'
-group by object_p.ValueData, object_g.ValueData , object_gk.ValueData
-, DATE_TRUNC ('month', OperDate)
-*/
-
-/*
--- !!!check goods params
---
---      select * from Object where id = 8451
--- update SoldTable set GoodsByGoodsKindId = tmpGoodsByGoodsKind.Id
- select distinct SoldTable .GoodsId FROM SoldTable, 
--- FROM 
-    (select Object.Id AS GoodsId
-           , ObjectLink_Goods_Business.ChildObjectId               AS BusinessId
-           , ObjectLink_Goods_GoodsPlatform.ChildObjectId          AS GoodsPlatformId
-           , ObjectLink_Goods_TradeMark.ChildObjectId              AS TradeMarkId
-           , ObjectLink_Goods_GoodsGroupAnalyst.ChildObjectId      AS GoodsGroupAnalystId
-           , ObjectLink_Goods_GoodsTag.ChildObjectId               AS GoodsTagId
-           , ObjectLink_Goods_GoodsGroup.ChildObjectId             AS GoodsGroupId
-           , ObjectLink_Goods_GoodsGroupStat.ChildObjectId         AS GoodsGroupStatId
-           , ObjectLink_Goods_Measure.ChildObjectId                AS MeasureId
-      from Object
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
-                                ON ObjectLink_Goods_Business.ObjectId = Object.Id
-                               AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsPlatform
-                                ON ObjectLink_Goods_GoodsPlatform.ObjectId = Object.Id
-                               AND ObjectLink_Goods_GoodsPlatform.DescId = zc_ObjectLink_Goods_GoodsPlatform()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                ON ObjectLink_Goods_TradeMark.ObjectId = Object.Id
-                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupAnalyst
-                                ON ObjectLink_Goods_GoodsGroupAnalyst.ObjectId = Object.Id
-                               AND ObjectLink_Goods_GoodsGroupAnalyst.DescId = zc_ObjectLink_Goods_GoodsGroupAnalyst()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsTag
-                                ON ObjectLink_Goods_GoodsTag.ObjectId = Object.Id
-                               AND ObjectLink_Goods_GoodsTag.DescId = zc_ObjectLink_Goods_GoodsTag()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object.Id
-                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupStat
-                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = Object.Id
-                               AND ObjectLink_Goods_GoodsGroupStat.DescId = zc_ObjectLink_Goods_GoodsGroupStat()
-           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                ON ObjectLink_Goods_Measure.ObjectId = Object.Id
-                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-      
-     ) AS tmp
-where tmp.GoodsId  = SoldTable .GoodsId
-  AND SoldTable.OperDate BETWEEN '01.01.2022' AND '31.08.2022'
-  AND (coalesce (tmp.BusinessId, 0) <> tmp.BusinessId
-    OR coalesce (tmp.GoodsPlatformId, 0) <> tmp.GoodsPlatformId
-    OR coalesce (tmp.TradeMarkId, 0) <> tmp.TradeMarkId
-    OR coalesce (tmp.GoodsGroupAnalystId, 0) <> tmp.GoodsGroupAnalystId
-    OR coalesce (tmp.GoodsTagId, 0) <> tmp.GoodsTagId
-    OR coalesce (tmp.GoodsGroupId, 0) <> tmp.GoodsGroupId
-    OR coalesce (tmp.GoodsGroupStatId, 0) <> tmp.GoodsGroupStatId
-    OR coalesce (tmp.MeasureId, 0) <> tmp.MeasureId
-      )
-*/
 -- тест
--- SELECT * FROM SoldTable where OperDate = '03.09.2015'
--- SELECT * FROM FillSoldTable ('01.11.2022', '30.11.2022', zfCalc_UserAdmin())
+-- SELECT * FROM Fill_all (null, null, zfCalc_UserAdmin())

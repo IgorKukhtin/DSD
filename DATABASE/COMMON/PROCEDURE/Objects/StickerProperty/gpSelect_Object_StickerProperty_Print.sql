@@ -77,7 +77,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
 
              , BranchCode        Integer
               )
-ASDECLARE vbGoodsPropertyId Integer;
+AS
 $BODY$
     DECLARE vbUserId Integer;
 
@@ -89,7 +89,7 @@ $BODY$
     DECLARE vbAddLeft2      Integer;
     DECLARE vbAddLine       Integer;
 
-    
+    DECLARE vbGoodsPropertyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -221,8 +221,8 @@ BEGIN
                 END;*/
      -- При какой длине Level2 - StickerSort и StickerNorm - выводятся в 2 строки
      vbParam2:= COALESCE ((SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2_70_70() AND ObF.ValueData > 0 AND inIs70_70 = TRUE)
-                        , (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2() AND ObF.ValueData > 0)
-                        , 30);
+                        , 100 + (SELECT ObF.ValueData :: Integer FROM ObjectFloat AS ObF WHERE ObF.ObjectId = vbStickerFileId AND ObF.DescId = zc_ObjectFloat_StickerFile_Level2() AND ObF.ValueData > 0)
+                        , 100 + 30);
                 /*CASE vbAddLeft
                      WHEN 40 -- тм Повна Чаша (Фоззи)
                           THEN 20
