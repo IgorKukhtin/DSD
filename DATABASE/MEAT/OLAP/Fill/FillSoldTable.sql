@@ -410,14 +410,14 @@ where tmpGoodsByGoodsKind.GoodsId     = SoldTable .GoodsId
                  , 0          AS BonusKindId
                  , 0 ::TFloat AS BonusTax
             FROM tmpOperation_SaleReturn
-                 INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
+                 /*INNER JOIN ObjectLink AS ObjectLink_InfoMoneyDestination
                                        ON ObjectLink_InfoMoneyDestination.ObjectId = tmpOperation_SaleReturn.InfoMoneyId
                                       AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
                                       AND ObjectLink_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100() -- !!!Доходы + Продукция!!!
                                                                                           , zc_Enum_InfoMoneyDestination_30200() -- !!!Доходы + Мясное сырье!!!
                                                                                           , zc_Enum_InfoMoneyDestination_30300() -- !!!Доходы + Переработка!!!
                                                                                           , zc_Enum_InfoMoneyDestination_30500() -- !!!Доходы + Прочие доходы!!!
-                                                                                           )
+                                                                                           )*/
            UNION ALL
             SELECT tmpBonus.OperDate
 
