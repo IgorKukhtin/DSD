@@ -375,6 +375,11 @@ type
     llBankSecondName: TcxGridDBColumn;
     llPersonalName: TcxGridDBColumn;
     Panel1: TPanel;
+    actReport_Open: TdsdOpenForm;
+    bbReport_Open: TdxBarButton;
+    spSelectPrint_Num: TdsdStoredProc;
+    actPrint_Num: TdsdPrintAction;
+    bbPrint_Num: TdxBarButton;
   private
     { Private declarations }
   public

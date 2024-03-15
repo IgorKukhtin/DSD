@@ -83,7 +83,7 @@ BEGIN
                                                       ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                      AND ObjectString_Member_INN.DescId = zc_ObjectString_member_INN()
                      
-                              LEFT JOIN ObjectString AS ObjectString_CardBankSecond
+                               LEFT JOIN ObjectString AS ObjectString_CardBankSecond
                                                       ON ObjectString_CardBankSecond.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                      AND ObjectString_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
                                LEFT JOIN ObjectString AS ObjectString_CardBankSecondTwo

@@ -3,7 +3,6 @@ inherited Cash_PersonalForm: TCash_PersonalForm
   ClientHeight = 507
   ClientWidth = 982
   AddOnFormData.isSingle = True
-  ExplicitLeft = -89
   ExplicitWidth = 998
   ExplicitHeight = 546
   PixelsPerInch = 96
@@ -2178,8 +2177,8 @@ inherited Cash_PersonalForm: TCash_PersonalForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 384
-    Top = 56
+    Left = 488
+    Top = 48
   end
   object GuidesCash: TdsdGuides
     KeyField = 'Id'
