@@ -223,7 +223,7 @@ BEGIN
                                  AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
              LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
 
-       WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_30200())
+       WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_30200(), zc_Enum_InfoMoneyDestination_30300())
           OR Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_30101()
                                                  , zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_30102()
                                                  , zc_Enum_InfoMoney_30103()
