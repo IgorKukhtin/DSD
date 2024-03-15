@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdInternetAction;
+  dxSkinXmas2008Blue, dsdInternetAction, Vcl.StdCtrls;
 
 type
   TPersonalServiceForm = class(TAncestorDocumentForm)
@@ -362,6 +362,19 @@ type
     actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc;
     actSelect_ExportF2_prior_xls: TdsdExecStoredProc;
     bbExportF2_Prior_xls: TdxBarButton;
+    ExportXmlGrid_num: TcxGrid;
+    cxGridDBTableView_num: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    ExportCDS_num: TClientDataSet;
+    ExportDS_num: TDataSource;
+    llBankSecond_num: TcxGridDBColumn;
+    actExport_GridF2_prior_xls: TExportGrid;
+    llINN: TcxGridDBColumn;
+    llCardBankSecond: TcxGridDBColumn;
+    llBankSecondName: TcxGridDBColumn;
+    llPersonalName: TcxGridDBColumn;
+    Panel1: TPanel;
   private
     { Private declarations }
   public

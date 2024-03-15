@@ -200,7 +200,8 @@ BEGIN
             -- Cумма откорректированной скидки, без НДС
           , COALESCE (MovementFloat_SummTax.ValueData, 0)  :: TFLoat AS SummTax
             -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-          , CASE WHEN MovementFloat_SummTax.ValueData <> 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData ELSE 0 END :: TFloat AS SummReal
+          --, CASE WHEN MovementFloat_SummTax.ValueData <> 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData ELSE 0 END :: TFloat AS SummReal
+          , CASE WHEN COALESCE (MovementFloat_SummReal.ValueData, 0) = 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0) ELSE COALESCE (MovementFloat_SummReal.ValueData, 0) END :: TFloat AS SummReal
           , COALESCE (MovementFloat_SummReal.ValueData, 0) :: TFLoat AS SummReal_real
             -- 
           , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP

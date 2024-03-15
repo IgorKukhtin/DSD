@@ -11,7 +11,7 @@ RETURNS TABLE (CardBankSecond    TVarChar
              , BankSecondName    TVarChar
              , INN               TVarChar
              , PersonalName      TVarChar
-             , BankSecond_num    TFloat     
+             , BankSecond_num    NUMERIC (16,2)     
              
               )
 AS
@@ -169,7 +169,7 @@ BEGIN
                    , tmpAll.BankSecondName   ::TVarChar
                    , tmpAll.INN              ::TVarChar
                    , tmpAll.PersonalName     ::TVarChar
-                   , tmpAll.BankSecond_num   ::TFloat
+                   , tmpAll.BankSecond_num   ::NUMERIC (16,2)  
               FROM tmpAll
              UNION ALL
               --итого
@@ -177,7 +177,7 @@ BEGIN
                    , ''  ::TVarChar
                    , ''  ::TVarChar
                    , ''  ::TVarChar
-                   , (SUM (tmpAll.BankSecond_num)) :: TFloat
+                   , (SUM (tmpAll.BankSecond_num)) :: NUMERIC (16,2)
               FROM tmpAll
              ;
 

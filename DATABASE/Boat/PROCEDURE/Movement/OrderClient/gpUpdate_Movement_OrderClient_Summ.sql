@@ -97,8 +97,12 @@ BEGIN
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm_order (inId);
 
-     -- расчет после !!!пересчета!!!
-     IF ioSummReal > 0
+     -- расчет после !!!пересчета!!!      
+     ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
+                   - ioSummReal
+                    ;
+                    
+   /*  IF ioSummReal > 0
      THEN
          ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
                    - ioSummReal
@@ -106,7 +110,7 @@ BEGIN
      ELSE
          ioSummReal:= 0;
      END IF;
-
+    */
      -- сохранили значение <Cумма откорректированной скидки, без НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), inId, ioSummTax); 
      -- сохранили значение <ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС>
