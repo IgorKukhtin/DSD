@@ -134,7 +134,7 @@
       end
       object cxLabel4: TcxLabel
         Left = 14
-        Top = 373
+        Top = 372
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object ceDriverCertificate: TcxTextEdit
@@ -220,7 +220,7 @@
       end
       object cxLabel13: TcxLabel
         Left = 14
-        Top = 334
+        Top = 331
         Caption = #1041#1072#1085#1082' '#1072#1083#1080#1084#1077#1085#1090#1099'('#1091#1076#1077#1088#1078'.)'
       end
       object ceBankChild: TcxButtonEdit
@@ -391,6 +391,17 @@
         Properties.ReadOnly = True
         TabOrder = 53
         Width = 130
+      end
+      object cxLabel56: TcxLabel
+        Left = 318
+        Top = 331
+        Caption = #1058#1077#1083#1077#1092#1086#1085
+      end
+      object edPhone: TcxTextEdit
+        Left = 318
+        Top = 350
+        TabOrder = 55
+        Width = 320
       end
     end
     object tsContact: TcxTabSheet
@@ -823,8 +834,8 @@
     Top = 399
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 592
-    Top = 367
+    Left = 480
+    Top = 431
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
@@ -1014,6 +1025,14 @@
         Name = 'inCardSecondDiff'
         Value = Null
         Component = ceCardSecondDiff
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = edPhone
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1629,6 +1648,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = Null
+        Component = edPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 432
     Top = 40
@@ -1663,8 +1689,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 8
-    Top = 456
+    Left = 40
+    Top = 448
   end
   object spGetMemberContact: TdsdStoredProc
     StoredProcName = 'gpGet_Object_MemberContact'
@@ -1724,8 +1750,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 415
+    Left = 536
+    Top = 455
   end
   object GuidesBank: TdsdGuides
     KeyField = 'Id'
@@ -2311,8 +2337,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 447
+    Left = 464
+    Top = 463
   end
   object GuidesBankSecondTwo: TdsdGuides
     KeyField = 'Id'

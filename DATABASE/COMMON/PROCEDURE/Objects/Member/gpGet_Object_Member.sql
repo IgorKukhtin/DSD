@@ -63,7 +63,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PSP_S TVarChar
              , PSP_N TVarChar
              , PSP_W TVarChar
-             , PSP_D TVarChar
+             , PSP_D TVarChar     
+             , Phone TVarChar
               )
 AS
 $BODY$
@@ -162,7 +163,8 @@ BEGIN
            , CAST ('' as TVarChar) AS PSP_S
            , CAST ('' as TVarChar) AS PSP_N
            , CAST ('' as TVarChar) AS PSP_W
-           , CAST ('' as TVarChar) AS PSP_D
+           , CAST ('' as TVarChar) AS PSP_D 
+           , CAST ('' as TVarChar) AS Phone
            ;
    ELSE
        RETURN QUERY
@@ -292,7 +294,9 @@ BEGIN
             , ObjectString_PSP_S.ValueData                AS PSP_S
             , ObjectString_PSP_N.ValueData                AS PSP_N
             , ObjectString_PSP_W.ValueData                AS PSP_W
-            , ObjectString_PSP_D.ValueData                AS PSP_D
+            , ObjectString_PSP_D.ValueData                AS PSP_D  
+            
+            , ObjectString_Phone.ValueData                AS Phone
         FROM Object AS Object_Member
              LEFT JOIN tmpPersonal ON tmpPersonal.ord = 1
              LEFT JOIN Object AS Object_Unit                ON Object_Unit.Id                = tmpPersonal.UnitId
@@ -501,6 +505,10 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_PSP_D
                                 ON ObjectString_PSP_D.ObjectId = Object_Member.Id
                                AND ObjectString_PSP_D.DescId = zc_ObjectString_Member_PSP_D()
+
+         LEFT JOIN ObjectString AS ObjectString_Phone
+                                ON ObjectString_Phone.ObjectId = Object_Member.Id
+                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
         WHERE Object_Member.Id = inId;
      
    END IF;
@@ -512,6 +520,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.03.24         * 
  27.09.21         * UnitMobile
  09.09.21         *
  06.02.20         * add isNotCompensation
