@@ -13,7 +13,7 @@ $BODY$
 BEGIN
 
      -- Розподільчий комплекс
-     IF inUnitId = zc_Unit_RK() AND inOperDate >= '30.03.2024'
+     IF inUnitId = zc_Unit_RK() AND inOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell() - INTERVAL '0 DAY'
      THEN RETURN TRUE;
      ELSE RETURN FALSE;
      END IF;
@@ -22,7 +22,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
+  
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
