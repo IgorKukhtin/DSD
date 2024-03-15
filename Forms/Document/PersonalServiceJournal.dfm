@@ -21,9 +21,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       ExplicitHeight = 624
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 539
+        Height = 544
         ExplicitWidth = 1221
-        ExplicitHeight = 539
+        ExplicitHeight = 544
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1238,39 +1238,108 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           end
         end
       end
-      object ExportXmlGrid: TcxGrid
+      object Panel1: TPanel
         Left = 0
-        Top = 539
+        Top = 544
         Width = 1221
-        Height = 85
+        Height = 80
         Align = alBottom
+        Caption = 'Panel1'
         TabOrder = 1
         Visible = False
-        object ExportXmlGridDBTableView: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ExportDS
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.IncSearch = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Deleting = False
-          OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.CellAutoHeight = True
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.GroupByBox = False
-          OptionsView.Header = False
-          object RowData: TcxGridDBColumn
-            DataBinding.FieldName = 'RowData'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
+        object ExportXmlGrid: TcxGrid
+          Left = 764
+          Top = 1
+          Width = 456
+          Height = 78
+          Align = alRight
+          TabOrder = 0
+          Visible = False
+          object ExportXmlGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ExportDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsBehavior.IncSearch = True
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
+            OptionsView.CellAutoHeight = True
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            object RowData: TcxGridDBColumn
+              DataBinding.FieldName = 'RowData'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
+            end
+          end
+          object ExportXmlGridLevel: TcxGridLevel
+            GridView = ExportXmlGridDBTableView
           end
         end
-        object ExportXmlGridLevel: TcxGridLevel
-          GridView = ExportXmlGridDBTableView
+        object ExportXmlGrid_num: TcxGrid
+          Left = 308
+          Top = 1
+          Width = 456
+          Height = 78
+          Align = alRight
+          TabOrder = 1
+          object cxGridDBTableView1: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ExportDS_num
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsBehavior.IncSearch = True
+            OptionsData.CancelOnExit = False
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
+            OptionsView.CellAutoHeight = True
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            OptionsView.Header = False
+            object llCardBankSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardBankSecond'
+              MinWidth = 120
+            end
+            object llBankSecondName: TcxGridDBColumn
+              DataBinding.FieldName = 'BankSecondName'
+              MinWidth = 120
+            end
+            object llINN: TcxGridDBColumn
+              DataBinding.FieldName = 'INN'
+              MinWidth = 100
+            end
+            object llPersonalName: TcxGridDBColumn
+              DataBinding.FieldName = 'PersonalName'
+              MinWidth = 150
+            end
+            object llBankSecond_num: TcxGridDBColumn
+              DataBinding.FieldName = 'BankSecond_num'
+              PropertiesClassName = 'TcxCurrencyEditProperties'
+              MinWidth = 156
+              Width = 156
+            end
+            object cxGridDBColumn1: TcxGridDBColumn
+              DataBinding.FieldName = 'RowData'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              MinWidth = 120
+              VisibleForCustomization = False
+              Width = 120
+            end
+          end
+          object cxGridLevel1: TcxGridLevel
+            GridView = cxGridDBTableView1
+          end
         end
       end
     end
@@ -1370,7 +1439,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end>
       Caption = 'actGet_Export_FileNameCSV'
     end
-    object actGet_Export_EmailCSVF2: TdsdExecStoredProc [5]
+    object actExport_GridF2_proir_xls: TExportGrid [5]
+      Category = 'Export_Email'
+      MoveParams = <>
+      Grid = ExportXmlGrid_num
+      Caption = 'actExport_GridF2_xls'
+      OpenAfterCreate = False
+      DefaultFileName = 'Report_'
+      Separator = ';'
+      DefaultFileExt = 'XLS'
+    end
+    object actGet_Export_EmailCSVF2: TdsdExecStoredProc [6]
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1381,7 +1460,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end>
       Caption = 'actGet_Export_EmailCSV'
     end
-    object actExport_dbf: TdsdStoredProcExportToFile [6]
+    object actExport_dbf: TdsdStoredProcExportToFile [7]
       Category = 'Export_dbf'
       MoveParams = <>
       dsdStoredProcName = spSelectExport_dbf
@@ -1425,7 +1504,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Left = 1192
       Top = 216
     end
-    object actSelect_ExportCSVF2: TdsdExecStoredProc [7]
+    object actSelect_ExportCSVF2: TdsdExecStoredProc [8]
       Category = 'Export_Email'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1436,7 +1515,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         end>
       Caption = 'actSelect_ExportCSV'
     end
-    object mactExportCSV_F2: TMultiAction [8]
+    object mactExportCSV_F2: TMultiAction [9]
       Category = 'Export_Email'
       MoveParams = <>
       ActionList = <
@@ -1466,7 +1545,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       ImageIndex = 53
     end
-    object macExport_dbf: TMultiAction [9]
+    object macExport_dbf: TMultiAction [10]
       Category = 'Export_dbf'
       MoveParams = <>
       ActionList = <
@@ -1524,7 +1603,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           StoredProc = spSelect
         end>
     end
-    object actPrint: TdsdPrintAction [28]
+    object actPrint: TdsdPrintAction [29]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1575,7 +1654,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_All: TdsdPrintAction [29]
+    object actPrint_All: TdsdPrintAction [30]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1625,7 +1704,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Detail: TdsdPrintAction [30]
+    object actPrint_Detail: TdsdPrintAction [31]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -1677,7 +1756,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertUpdateMISignYes: TdsdExecStoredProc [33]
+    object actInsertUpdateMISignYes: TdsdExecStoredProc [34]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2248,7 +2327,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actSelect_ExportF2_prior_xls
         end
         item
-          Action = actExport_GridF2_xls
+          Action = actExport_GridF2_proir_xls
         end
         item
           Action = actSMTPFileCSV
@@ -2795,8 +2874,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 160
-    Top = 408
+    Left = 864
+    Top = 632
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
@@ -3055,8 +3134,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   end
   object ExportDS: TDataSource
     DataSet = ExportCDS
-    Left = 232
-    Top = 520
+    Left = 808
+    Top = 616
   end
   object ExportEmailDS: TDataSource
     DataSet = ExportEmailCDS
@@ -3513,10 +3592,10 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   end
   object spSelect_ExportF2_prior_xls: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalServiceNum_mail_xls'
-    DataSet = ExportCDS
+    DataSet = ExportCDS_num
     DataSets = <
       item
-        DataSet = ExportCDS
+        DataSet = ExportCDS_num
       end>
     Params = <
       item
@@ -3559,7 +3638,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outFileName'
         Value = Null
-        Component = actExport_GridF2_xls
+        Component = actExport_GridF2_proir_xls
         ComponentItem = 'DefaultFileName'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3567,7 +3646,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outDefaultFileExt'
         Value = Null
-        Component = actExport_GridF2_xls
+        Component = actExport_GridF2_proir_xls
         ComponentItem = 'DefaultFileExt'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -3575,7 +3654,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'outEncodingANSI'
         Value = Null
-        Component = actExport_GridF2_xls
+        Component = actExport_GridF2_proir_xls
         ComponentItem = 'EncodingANSI'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3591,5 +3670,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 1144
     Top = 480
+  end
+  object ExportCDS_num: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 400
+    Top = 624
+  end
+  object ExportDS_num: TDataSource
+    DataSet = ExportCDS_num
+    Left = 344
+    Top = 608
   end
 end

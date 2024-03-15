@@ -11,18 +11,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1474
     Height = 644
     ExplicitTop = 115
-    ExplicitWidth = 1469
-    ExplicitHeight = 699
+    ExplicitWidth = 1474
+    ExplicitHeight = 644
     ClientRectBottom = 644
     ClientRectRight = 1474
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1469
-      ExplicitHeight = 675
+      ExplicitWidth = 1474
+      ExplicitHeight = 620
       inherited cxGrid: TcxGrid
         Width = 1474
         Height = 250
-        ExplicitWidth = 1469
-        ExplicitHeight = 306
+        ExplicitWidth = 1474
+        ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1913,8 +1913,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitTop = 311
-        ExplicitWidth = 1469
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDs
@@ -2287,8 +2285,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 306
-        ExplicitWidth = 1469
       end
       object cxGrid2: TcxGrid
         Left = 0
@@ -2299,9 +2295,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         PopupMenu = PopupMenu
         TabOrder = 3
         Visible = False
-        ExplicitLeft = -8
-        ExplicitTop = 388
-        ExplicitWidth = 1469
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -2450,8 +2443,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         AlignSplitter = salBottom
         Control = cxGrid2
         Visible = False
-        ExplicitTop = 472
-        ExplicitWidth = 1469
       end
       object Panel1: TPanel
         Left = 0
@@ -2470,9 +2461,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Align = alRight
           TabOrder = 1
           Visible = False
-          ExplicitLeft = 768
-          ExplicitTop = 128
-          ExplicitHeight = 115
           object ExportXmlGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ExportDS
@@ -2508,7 +2496,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Height = 58
           Align = alLeft
           TabOrder = 0
-          ExplicitHeight = 115
           object cxGridDBTableView_num: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ExportDS_num
@@ -2569,8 +2556,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitWidth = 1469
-      ExplicitHeight = 675
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2579,8 +2564,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1469
-        ExplicitHeight = 675
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -2666,8 +2649,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitWidth = 1469
-      ExplicitHeight = 675
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -2676,8 +2657,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1469
-        ExplicitHeight = 675
         object cxGridDBTableViewChild_all: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS_all
@@ -3004,7 +2983,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
     Width = 1474
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1469
+    ExplicitWidth = 1474
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8

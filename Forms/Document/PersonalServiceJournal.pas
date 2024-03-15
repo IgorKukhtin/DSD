@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdInternetAction;
+  dsdInternetAction, Vcl.StdCtrls;
 
 type
   TPersonalServiceJournalForm = class(TAncestorJournalForm)
@@ -162,6 +162,13 @@ type
     actGet_Export_FileNameF2_prior_xls: TdsdExecStoredProc;
     actSelect_ExportF2_prior_xls: TdsdExecStoredProc;
     bbExportF2_prior_xls: TdxBarButton;
+    Panel1: TPanel;
+    ExportXmlGrid_num: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    ExportCDS_num: TClientDataSet;
+    ExportDS_num: TDataSource;
+    actExport_GridF2_proir_xls: TExportGrid;
   private
     { Private declarations }
   public
