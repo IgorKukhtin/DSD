@@ -161,6 +161,8 @@ type
     cedBankSecondDiff: TcxButtonEdit;
     GuidesBankSecondTwo: TdsdGuides;
     GuidesBankSecondDiff: TdsdGuides;
+    cxLabel56: TcxLabel;
+    edPhone: TcxTextEdit;
   private
     { Private declarations }
   public

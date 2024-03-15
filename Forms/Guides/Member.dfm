@@ -651,6 +651,14 @@ object MemberForm: TMemberForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085
+        DataBinding.FieldName = 'Phone'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -2162,6 +2170,15 @@ object MemberForm: TMemberForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'CardSecondDiff'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhone'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Phone'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

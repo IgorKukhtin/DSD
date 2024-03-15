@@ -11,8 +11,7 @@ RETURNS TABLE (CardBankSecond    TVarChar
              , BankSecondName    TVarChar
              , INN               TVarChar
              , PersonalName      TVarChar
-             , BankSecond_num    TFloat     
-             
+             , BankSecond_num    NUMERIC (16,2)     
               )
 AS
 $BODY$
@@ -83,7 +82,7 @@ BEGIN
                                                       ON ObjectString_Member_INN.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                      AND ObjectString_Member_INN.DescId = zc_ObjectString_member_INN()
                      
-                              LEFT JOIN ObjectString AS ObjectString_CardBankSecond
+                               LEFT JOIN ObjectString AS ObjectString_CardBankSecond
                                                       ON ObjectString_CardBankSecond.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                                      AND ObjectString_CardBankSecond.DescId = zc_ObjectString_Member_CardBankSecond()
                                LEFT JOIN ObjectString AS ObjectString_CardBankSecondTwo
@@ -169,7 +168,7 @@ BEGIN
                    , tmpAll.BankSecondName   ::TVarChar
                    , tmpAll.INN              ::TVarChar
                    , tmpAll.PersonalName     ::TVarChar
-                   , CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0))   ::TFloat
+                   , CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0))   ::NUMERIC (16,2) 
               FROM tmpAll
              UNION ALL
               --итого
@@ -177,7 +176,7 @@ BEGIN
                    , ''  ::TVarChar
                    , ''  ::TVarChar
                    , ''  ::TVarChar
-                   , (SUM (CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0))) :: TFloat
+                   , (SUM (CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0)))) :: NUMERIC (16,2)
               FROM tmpAll
              ;
 

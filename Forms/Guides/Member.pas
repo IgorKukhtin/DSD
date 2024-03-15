@@ -189,6 +189,7 @@ type
     CardBank_search: TcxGridDBColumn;
     edCardBank_search: TcxTextEdit;
     cxLabel7: TcxLabel;
+    Phone: TcxGridDBColumn;
   private
     { Private declarations }
   public

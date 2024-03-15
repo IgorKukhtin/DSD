@@ -73,7 +73,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PSP_N TVarChar
              , PSP_W TVarChar
              , PSP_D TVarChar
-             , GLN TVarChar
+             , GLN TVarChar    
+             , Phone TVarChar
               )
 AS
 $BODY$
@@ -249,7 +250,9 @@ end if;
          , ObjectString_PSP_W.ValueData                AS PSP_W
          , ObjectString_PSP_D.ValueData                AS PSP_D
 
-         , ObjectString_GLN.ValueData      :: TVarChar AS GLN
+         , ObjectString_GLN.ValueData      :: TVarChar AS GLN  
+         
+         , ObjectString_Phone.ValueData    :: TVarChar AS Phone
      FROM Object AS Object_Member
           LEFT JOIN (SELECT View_Personal.MemberId
                      FROM Object_Personal_View AS View_Personal
@@ -462,6 +465,10 @@ end if;
                                 ON ObjectString_GLN.ObjectId = Object_Member.Id
                                AND ObjectString_GLN.DescId = zc_ObjectString_Member_GLN()
 
+         LEFT JOIN ObjectString AS ObjectString_Phone
+                                ON ObjectString_Phone.ObjectId = Object_Member.Id
+                               AND ObjectString_Phone.DescId = zc_ObjectString_Member_Phone()
+
          LEFT JOIN ObjectFloat AS ObjectFloat_SummerFuel
                                ON ObjectFloat_SummerFuel.ObjectId = Object_Member.Id
                               AND ObjectFloat_SummerFuel.DescId = zc_ObjectFloat_Member_Summer()
@@ -652,6 +659,7 @@ end if;
            , CAST ('' as TVarChar) AS PSP_W
            , CAST ('' as TVarChar) AS PSP_D
            , CAST ('' as TVarChar) AS GLN
+           , CAST ('' as TVarChar) AS Phone
     ;
 
 END;
