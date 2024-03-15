@@ -607,7 +607,10 @@ end if;
                  END
        ;
 
-    -- RAISE EXCEPTION 'Ошибка.<%>', (select count(*) from _tmpItem_group);
+-- INSERT INTO _tmpMaster (ContainerId, UnitId, isInfoMoney_80401, StartCount, StartSumm, IncomeCount, IncomeSumm, calcCount, calcSumm, calcCount_external, calcSumm_external, OutCount, OutSumm)
+--    RAISE EXCEPTION 'Ошибка.<%>', (select _tmpMaster.IncomeCount from _tmpMaster where _tmpMaster.ContainerId = 156902)
+--    , (select _tmpMaster.IncomeSumm from _tmpMaster where _tmpMaster.ContainerId = 156902)
+--    ;
 
 
      -- !!!Оптимизация!!!
@@ -1481,7 +1484,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                               AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
             -- Розподільчий комплекс
             WHERE _tmpMaster.UnitId = zc_Unit_RK()
-              AND inStartDate >= '01.02.2024'
+              AND inStartDate       >= lfGet_Object_Unit_PartionDate_isPartionCell()
             GROUP BY CLO_Goods.ObjectId
                    , COALESCE (CLO_GoodsKind.ObjectId, 0)
                    , COALESCE (CLO_InfoMoney.ObjectId, 0)
@@ -1521,7 +1524,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
             FROM _tmpMaster
                  -- LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
             WHERE (_tmpMaster.UnitId <> zc_Unit_RK()
-                OR inStartDate < '01.02.2024'
+                OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
                   )
 /*(((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
@@ -1600,7 +1603,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
               AND _tmpMaster.InfoMoneyId        = COALESCE (CLO_InfoMoney.ObjectId, 0)
               AND _tmpMaster.InfoMoneyId_Detail = COALESCE (CLO_InfoMoneyDetail.ObjectId, 0)
               -- !!!
-              AND inStartDate >= '01.02.2024'
+              AND inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
              ;
 
      END IF;

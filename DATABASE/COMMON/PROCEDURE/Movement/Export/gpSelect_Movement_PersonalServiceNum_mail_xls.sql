@@ -12,7 +12,6 @@ RETURNS TABLE (CardBankSecond    TVarChar
              , INN               TVarChar
              , PersonalName      TVarChar
              , BankSecond_num    NUMERIC (16,2)     
-             
               )
 AS
 $BODY$
@@ -169,7 +168,7 @@ BEGIN
                    , tmpAll.BankSecondName   ::TVarChar
                    , tmpAll.INN              ::TVarChar
                    , tmpAll.PersonalName     ::TVarChar
-                   , tmpAll.BankSecond_num   ::NUMERIC (16,2)  
+                   , CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0))   ::NUMERIC (16,2) 
               FROM tmpAll
              UNION ALL
               --итого
@@ -177,7 +176,7 @@ BEGIN
                    , ''  ::TVarChar
                    , ''  ::TVarChar
                    , ''  ::TVarChar
-                   , (SUM (tmpAll.BankSecond_num)) :: NUMERIC (16,2)
+                   , (SUM (CAST (tmpAll.BankSecond_num AS NUMERIC (16, 0)))) :: NUMERIC (16,2)
               FROM tmpAll
              ;
 

@@ -1600,7 +1600,7 @@
     Width = 1272
     Height = 64
     Align = alBottom
-    TabOrder = 8
+    TabOrder = 7
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -3825,6 +3825,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 656
     Top = 112
@@ -3904,6 +3905,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 416
     Top = 384
@@ -4021,6 +4023,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsChildId_top'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outGoodsChildName'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'GoodsChildName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioValue'
         Value = Null
         Component = Child1CDS
@@ -4055,10 +4073,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outinReceiptLevelName'
+        Name = 'outReceiptLevelName'
         Value = Null
         Component = Child1CDS
-        ComponentItem = 'inReceiptLevelName'
+        ComponentItem = 'ReceiptLevelName'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDescName'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'DescName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -4254,6 +4280,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 680
     Top = 376

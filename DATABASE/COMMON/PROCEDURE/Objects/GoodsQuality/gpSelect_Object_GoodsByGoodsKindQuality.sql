@@ -174,7 +174,7 @@ BEGIN
                                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100()
-                                                                          , zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200()
+                                                                          , zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200(), zc_Enum_InfoMoneyDestination_30300()
                                                                           , zc_Enum_InfoMoneyDestination_10100()
                                                                            )
                     )

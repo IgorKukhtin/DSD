@@ -176,6 +176,54 @@ END IF;
 --                             SELECT 2365   AS GoodsId -- 135
                             )
             /*, tmp_new as  (SELECT DISTINCT HistoryCost.ContainerId
+SELECT 5183877 AS ContainerId
+union all select 5183878
+union all select 5183880
+union all select 5183881
+union all select 5183882
+union all select 5183883
+union all select 5183888
+union all select 5183889
+union all select 5184011
+union all select 5184012
+union all select 5184014
+union all select 5184015
+union all select 5184016
+union all select 5184017
+union all select 5184022
+union all select 5184023
+
+
+union all select 141104
+union all select 156529
+union all select 156533
+union all select 156561
+union all select 402870
+union all select 402871
+union all select 422852
+union all select 422853
+union all select 588740
+union all select 1404522
+union all select 3708226
+union all select 5113320
+
+union all select 141236
+union all select 156899
+union all select 156901
+union all select 156902
+union all select 436189
+union all select 436190
+union all select 436191
+union all select 4521509
+
+union all select 133067
+union all select 150467
+union all select 150468
+union all select 150469
+union all select 401240
+union all select 401241
+union all select 422555
+union all select 3708081            
                              FROM Container AS Container_Summ
                                   INNER JOIN Container ON Container.Id = Container_Summ.ParentId
                                                       AND Container.ObjectId = 6883420 
