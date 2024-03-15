@@ -169,6 +169,9 @@ type
     ExportCDS_num: TClientDataSet;
     ExportDS_num: TDataSource;
     actExport_GridF2_proir_xls: TExportGrid;
+    spSelectPrint_Num: TdsdStoredProc;
+    actPrint_Num: TdsdPrintAction;
+    bbPrint_Num: TdxBarButton;
   private
     { Private declarations }
   public

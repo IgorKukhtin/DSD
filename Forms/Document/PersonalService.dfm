@@ -5490,6 +5490,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbSubPrint'
         end

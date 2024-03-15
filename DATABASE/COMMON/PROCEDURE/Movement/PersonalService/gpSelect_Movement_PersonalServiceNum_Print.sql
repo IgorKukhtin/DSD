@@ -105,7 +105,7 @@ BEGIN
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
            */
        WHERE Movement.Id = inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+      --   AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
 
@@ -124,6 +124,9 @@ BEGIN
                          AND MovementItemFloat.DescId IN (zc_MIFloat_Summ_BankSecond_num()
                                                         , zc_MIFloat_Summ_BankSecondTwo_num()
                                                         , zc_MIFloat_Summ_BankSecondDiff_num()
+                                                        , zc_MIFloat_SummCardSecond()   
+                                                        , zc_MIFloat_SummCardSecondRecalc()
+                                                        , zc_MIFloat_SummCardSecondCash()
                                                         )
                       )
 
@@ -132,6 +135,8 @@ BEGIN
                         , MILinkObject_Position.ObjectId             AS PositionId
                         , MILinkObject_BankSecondDiff_num.ObjectId   AS BankSecondDiffId_num
 
+                        , SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0)) AS SummCardSecond
+                        , SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData,0))      AS SummCardSecondCash
                         , SUM (COALESCE (MIFloat_Summ_BankSecond_num.ValueData,0))     AS Summ_BankSecond_num
                         , SUM (COALESCE (MIFloat_Summ_BankSecondTwo_num.ValueData,0))  AS Summ_BankSecondTwo_num
                         , SUM (COALESCE (MIFloat_Summ_BankSecondDiff_num.ValueData,0)) AS Summ_BankSecondDiff_num
@@ -144,9 +149,20 @@ BEGIN
                                                          ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                         AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
 
-           LEFT JOIN MovementItemLinkObject AS MILinkObject_BankSecondDiff_num
-                                             ON MILinkObject_BankSecondDiff_num.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_BankSecondDiff_num
+                                                         ON MILinkObject_BankSecondDiff_num.MovementItemId = MovementItem.Id
+                                                        AND MILinkObject_BankSecondDiff_num.DescId = zc_MILinkObject_BankSecondDiff_num()
+
+                        LEFT JOIN tmpMIFloat AS MIFloat_SummCardSecond
+                                             ON MIFloat_SummCardSecond.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummCardSecond.DescId = zc_MIFloat_SummCardSecond()
+                        LEFT JOIN MovementItemFloat AS MIFloat_SummCardSecondRecalc
+                                                    ON MIFloat_SummCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_SummCardSecondRecalc.DescId = zc_MIFloat_SummCardSecondRecalc()
+
+                        LEFT JOIN tmpMIFloat AS MIFloat_SummCardSecondCash
+                                             ON MIFloat_SummCardSecondCash.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummCardSecondCash.DescId = zc_MIFloat_SummCardSecondCash()
 
                         LEFT JOIN tmpMIFloat AS MIFloat_Summ_BankSecond_num
                                              ON MIFloat_Summ_BankSecond_num.MovementItemId = MovementItem.Id
@@ -163,7 +179,9 @@ BEGIN
                         , MILinkObject_BankSecondDiff_num.ObjectId
                    HAVING 0 <> SUM (COALESCE (MIFloat_Summ_BankSecond_num.ValueData,0))
                        OR 0 <> SUM (COALESCE (MIFloat_Summ_BankSecondTwo_num.ValueData,0))
-                       OR 0 <> SUM (COALESCE (MIFloat_Summ_BankSecondDiff_num.ValueData,0))
+                       OR 0 <> SUM (COALESCE (MIFloat_Summ_BankSecondDiff_num.ValueData,0)) 
+                       OR 0 <> SUM (COALESCE (MIFloat_SummCardSecond.ValueData,0) + COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0))
+                       OR 0 <> SUM (COALESCE (MIFloat_SummCardSecondCash.ValueData,0))
                   )
 
        --------------
@@ -184,6 +202,8 @@ BEGIN
             , tmpAll.Summ_BankSecond_num        :: TFloat
             , tmpAll.Summ_BankSecondTwo_num     :: TFloat
             , tmpAll.Summ_BankSecondDiff_num    :: TFloat
+            , tmpAll.SummCardSecond             :: TFloat
+            , tmpAll.SummCardSecondCash         :: TFloat
 
        FROM tmpAll
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
