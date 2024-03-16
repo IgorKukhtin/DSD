@@ -133,6 +133,7 @@ BEGIN
                                                        , inReceiptLevelId_top := 0
                                                        , inReceiptLevelId     := NULL
                                                        , inGoodsChildId       := inGoodsChildId
+                                                       , inGoodsChildId_top   := NULL
                                                        , ioValue              := tmpSendMI.Value :: TVarChar
                                                        , ioValue_service      := ''              :: TVarChar
                                                        , ioForCount           := tmpSendMI.ForCount

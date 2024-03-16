@@ -10,7 +10,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, NUMERIC (16, 8), NUMERIC (16, 8), TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
@@ -23,11 +24,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
     IN inReceiptLevelId_top  Integer   ,
     IN inReceiptLevelId      Integer   ,
     IN inGoodsChildId        Integer   ,
- INOUT ioValue               TVarChar    ,
- INOUT ioValue_service       TVarChar    ,
+    IN inGoodsChildId_top    Integer   ,
+   OUT outGoodsChildName     TVarChar  ,
+ INOUT ioValue               TVarChar  ,
+ INOUT ioValue_service       TVarChar  ,
  INOUT ioForCount            TFloat    ,
     IN inIsEnabled           Boolean   ,
    OUT outReceiptLevelName   TVarChar  ,
+   OUT outDescName           TVarChar  ,
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -85,11 +89,24 @@ BEGIN
                                               );
    END IF;
 
-   -- переопределяем
-   IF COALESCE (inReceiptLevelId, 0) = 0
+   -- замена
+   IF COALESCE (inReceiptLevelId, 0) = 0 AND inReceiptLevelId_top > 0
    THEN
        inReceiptLevelId := inReceiptLevelId_top;
    END IF;
+   -- вернули в грид
+   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
+
+   -- замена
+   IF COALESCE (inGoodsChildId, 0) = 0 AND inGoodsChildId_top > 0
+   THEN
+       inGoodsChildId:= inGoodsChildId_top;
+   END IF;
+   -- вернули в грид
+   outGoodsChildName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = inGoodsChildId);
+
+   -- вернули в грид
+   outDescName:= (SELECT ObjectDesc.ItemName FROM Object JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId WHERE Object.Id = inGoodsChildId);
 
 
    IF inIsEnabled = FALSE
@@ -140,6 +157,7 @@ BEGIN
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel(), ioId, inReceiptLevelId);
+       
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_GoodsChild(), ioId, inGoodsChildId);
 
@@ -173,8 +191,6 @@ BEGIN
    END IF;
 
 
-   outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
-   
    -- возвращаем в грид
    ioValue        := CAST (vbValue         / CASE WHEN ioForCount > 0 THEN ioForCount ELSE 1 END AS TVarChar);
    ioValue_service:= CAST (vbValue_service AS TVarChar);

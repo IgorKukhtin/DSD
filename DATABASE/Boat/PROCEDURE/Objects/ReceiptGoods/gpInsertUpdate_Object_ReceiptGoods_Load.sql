@@ -1022,6 +1022,7 @@ end if;
                                                                                  , inReceiptLevelId_top := 0                    ::Integer
                                                                                  , inReceiptLevelId     := vbReceiptLevelId     ::Integer
                                                                                  , inGoodsChildId       := vbGoods_GoodsChildId ::Integer
+                                                                                 , inGoodsChildId_top   := NULL
                                                                                  , ioValue              := vbAmount             ::TVarChar
                                                                                  , ioValue_service      :='0'                   ::TVarChar
                                                                                  , ioForCount           := vbForCount
@@ -1059,6 +1060,7 @@ end if;
                                                               , inReceiptLevelId_top := 0
                                                               , inReceiptLevelId     := 0
                                                               , inGoodsChildId       := 0
+                                                              , inGoodsChildId_top   := 0
                                                               , ioValue              := '0'
                                                               , ioValue_service      :='0'
                                                               , ioForCount           := 0
@@ -1083,6 +1085,7 @@ end if;
                                                               , inReceiptLevelId_top := 0
                                                               , inReceiptLevelId     := 0
                                                               , inGoodsChildId       := 0
+                                                              , inGoodsChildId_top   := NULL
                                                               , ioValue              := '0'
                                                               , ioValue_service      :='0'
                                                               , ioForCount           := 0

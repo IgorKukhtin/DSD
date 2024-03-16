@@ -1260,6 +1260,7 @@ BEGIN
                                                                   , inReceiptLevelId_top  := NULL
                                                                   , inReceiptLevelId      := _tmpReceiptItems_new.ReceiptLevelId
                                                                   , inGoodsChildId        := _tmpReceiptItems_new.GoodsId_child
+                                                                  , inGoodsChildId_top    := NULL
                                                                   , ioValue               := _tmpReceiptItems_new.OperCount :: TVarChar
                                                                   , ioValue_service       := '0'
                                                                   , ioForCount            := _tmpReceiptItems_new.ForCount
@@ -1290,6 +1291,7 @@ BEGIN
                                                                   , inReceiptLevelId_top  := NULL
                                                                   , inReceiptLevelId      := _tmpReceiptProdModel.ReceiptLevelId
                                                                   , inGoodsChildId        := _tmpReceiptItems_new.GoodsId_child
+                                                                  , inGoodsChildId_top    := NULL
                                                                   , ioValue               := _tmpReceiptProdModel.Value :: TVarChar
                                                                   , ioValue_service       := '0'
                                                                   , ioForCount            := _tmpReceiptProdModel.ForCount

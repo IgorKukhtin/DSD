@@ -245,6 +245,7 @@ BEGIN
                                                        , inReceiptLevelId_top := 0
                                                        , inReceiptLevelId     := _tmpReceiptGoodsChild_mask.ReceiptLevelId
                                                        , inGoodsChildId       := _tmpReceiptGoodsChild_mask.GoodsChildId
+                                                       , inGoodsChildId_top   := NULL
                                                        , ioValue              := _tmpReceiptGoodsChild_mask.Value         :: TVarChar
                                                        , ioValue_service      := _tmpReceiptGoodsChild_mask.Value_service :: TVarChar
                                                        , ioForCount           := _tmpReceiptGoodsChild_mask.ForCount

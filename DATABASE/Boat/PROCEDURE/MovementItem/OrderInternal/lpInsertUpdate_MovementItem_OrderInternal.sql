@@ -131,7 +131,7 @@ BEGIN
        AND MovementItem.ParentId   = ioId
        AND MovementItem.isErased   = FALSE;
 
-     --
+     -- Заливается сборка
      PERFORM lpInsertUpdate_MI_OrderInternal_Child (ioId                     := 0
                                                   , inParentId               := ioId
                                                   , inMovementId             := inMovementId
@@ -297,8 +297,111 @@ BEGIN
              AND EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Product())
            
           ) AS tmpMI
-    ;
+          ;
 
+     -- Заливаются работы
+     -- Заливается сборка
+     PERFORM lpInsertUpdate_MI_OrderInternal_Detail (ioId                     := 0
+                                                  , inParentId               := ioId
+                                                  , inMovementId             := inMovementId
+                                                  , inReceiptServiceId       := tmpMI.ReceiptServiceId
+                                                  , inPersonalId             := NULL
+                                                  , inAmount                 := 0
+                                                  , inOperPrice              := 0
+                                                  , inHours                  := tmpMI.Value_hour
+                                                  , inSumm                   := 0
+                                                  , inComment                := ''
+                                                  , inUserId                 := inUserId
+                                                   )
+     FROM (WITH -- OrderInternal - существующие Работы
+                tmpMI_Detail AS (SELECT MovementItem.ObjectId AS ReceiptServiceId
+                                 FROM MovementItem
+                                 WHERE MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Detail()
+                                   AND MovementItem.isErased   = FALSE
+                                   AND MovementItem.ParentId   = ioId
+                                )
+                -- OrderClient - Узлы - Child
+              , tmpOrderClient AS (SELECT -- узел
+                                          MI_Child.ObjectId AS GoodsId
+                                          -- Узел (базовый) - для него поиск списка работ
+                                        , COALESCE (MILinkObject_GoodsBasis.ObjectId, MI_Child.ObjectId) AS GoodsId_basis
+                                         -- Шаблон сборка Узла
+                                        , MILinkObject_ReceiptGoods.ObjectId AS ReceiptGoodsId
+                                   FROM MovementItem AS MI_Child
+                                        -- Узел (базовый) 
+                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
+                                                                         ON MILinkObject_GoodsBasis.MovementItemId = MI_Child.Id
+                                                                        AND MILinkObject_GoodsBasis.DescId         = zc_MILinkObject_GoodsBasis()
+                                        -- Шаблон сборка Узла
+                                        LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptGoods
+                                                                         ON MILinkObject_ReceiptGoods.MovementItemId = MI_Child.Id
+                                                                        AND MILinkObject_ReceiptGoods.DescId         = zc_MILinkObject_ReceiptGoods()
+                                   WHERE MI_Child.MovementId = inMovementId_OrderClient
+                                     AND MI_Child.DescId     = zc_MI_Child()
+                                     AND MI_Child.isErased   = FALSE
+                                  )
+                      -- шаблон сборки Узла - Работы
+                    , tmpReceiptItems AS (SELECT -- реальный узел - с заменой если надо на ПФ
+                                                 COALESCE (ObjectLink_GoodsChild.ChildObjectId, tmpOrderClient.GoodsId) AS GoodsId
+                                                 -- Узел (базовый) - для него поиск списка работ
+                                               , tmpOrderClient.GoodsId_basis
+                                                 -- Шаблон сборка Узла
+                                               , tmpOrderClient.ReceiptGoodsId
+                                                 -- Шаблон сборка Узла
+                                               , Object_ReceiptGoods.Id AS ReceiptGoodsId_find
+      
+                                                 -- Работы
+                                               , Object_ReceiptService.Id         AS ReceiptServiceId
+                                               
+                                                 -- Часы?
+                                               , ObjectFloat_ReceiptGoodsChild_Value.ValueData AS Value_hour
+      
+                                          FROM tmpOrderClient
+                                               -- находим шаблон - или базовый ?или реальный? ?или Шаблон?
+                                               INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                                     ON ObjectLink_Goods.ChildObjectId = tmpOrderClient.GoodsId_basis -- tmpOrderClient.GoodsId
+                                                                    AND ObjectLink_Goods.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                               INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_Goods.ObjectId -- tmpOrderClient.ReceiptGoodsId
+                                                                                       AND Object_ReceiptGoods.isErased = FALSE
+                                               INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                                     ON ObjectLink_ReceiptGoods.ChildObjectId = Object_ReceiptGoods.Id
+                                                                    AND ObjectLink_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                               INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id = ObjectLink_ReceiptGoods.ObjectId
+                                                                                            AND Object_ReceiptGoods.isErased = FALSE
+                                               INNER JOIN ObjectLink AS ObjectLink_Object
+                                                                     ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                                    AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                               -- только если работы
+                                               INNER JOIN Object AS Object_ReceiptService
+                                                                 ON Object_ReceiptService.Id     = ObjectLink_Object.ChildObjectId
+                                                                AND Object_ReceiptService.DescId = zc_Object_ReceiptService()
+                                               -- Value
+                                               LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptGoodsChild_Value
+                                                                     ON ObjectFloat_ReceiptGoodsChild_Value.ObjectId  = Object_ReceiptGoodsChild.Id
+                                                                    AND ObjectFloat_ReceiptGoodsChild_Value.DescId    = zc_ObjectFloat_ReceiptGoodsChild_Value()
+      
+                                               -- GoodsId_child
+                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+      
+                                          WHERE Object_ReceiptGoodsChild.DescId   = zc_Object_ReceiptGoodsChild()
+                                            AND Object_ReceiptGoodsChild.isErased = FALSE
+                                            -- без него
+                                            -- AND  IS NULL
+                                         )
+              -- Результат - какие работы надо добавить
+              SELECT tmpReceiptItems.ReceiptServiceId   AS ReceiptServiceId
+                   , tmpReceiptItems.Value_hour
+              FROM tmpReceiptItems
+                   LEFT JOIN tmpMI_Detail ON tmpMI_Detail.ReceiptServiceId = tmpReceiptItems.ReceiptServiceId
+              -- только те, кого не добавили
+              WHERE tmpMI_Detail.ReceiptServiceId IS NULL
+                -- Реальный узел
+                AND tmpReceiptItems.GoodsId = inGoodsId
+          ) AS tmpMI
+          ;
 
 END;
 $BODY$

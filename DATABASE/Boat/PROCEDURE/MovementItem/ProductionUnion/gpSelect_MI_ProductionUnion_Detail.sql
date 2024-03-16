@@ -63,6 +63,34 @@ BEGIN
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
                       )
+          -- OrderClient - Узлы - Child
+        , tmpOrderClient AS (SELECT tmpMovement.MovementId_order
+                                    -- узел
+                                  , MI_Child.ObjectId AS GoodsId
+                                  -- Узел (базовый) - для него поиск списка работ
+                                  , COALESCE (MILinkObject_GoodsBasis.ObjectId, MI_Child.ObjectId) AS GoodsId_basis
+                                  -- Шаблон сборка Узла
+                                  , MILinkObject_ReceiptGoods.ObjectId AS ReceiptGoodsId
+                             FROM (SELECT DISTINCT tmpMI_Master.MovementId_order :: Integer AS MovementId_order FROM tmpMI_Master
+                                  ) AS tmpMovement
+                                  INNER JOIN MovementItem AS MI_Child
+                                                          ON MI_Child.MovementId = tmpMovement.MovementId_order
+                                                         AND MI_Child.DescId     = zc_MI_Child()
+                                                         AND MI_Child.isErased   = FALSE
+                                  -- Узел (базовый) 
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
+                                                                   ON MILinkObject_GoodsBasis.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_GoodsBasis.DescId         = zc_MILinkObject_GoodsBasis()
+                                  -- Шаблон сборка Узла
+                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_ReceiptGoods
+                                                                   ON MILinkObject_ReceiptGoods.MovementItemId = MovementItem.Id
+                                                                  AND MILinkObject_ReceiptGoods.DescId         = zc_MILinkObject_ReceiptGoods()
+                             GROUP BY tmpMI_Master.MovementItemId
+                                    , MovementItem.ObjectId
+                                    , MILinkObject_Personal.ObjectId
+                                    , MovementItem.MovementId
+                            )
+
      -- OrderInternal - Detail
    , tmpMI_OrderInternal AS (SELECT tmpMI_Master.MovementItemId                 AS ParentId
                                   , MovementItem.MovementId                     AS MovementId
