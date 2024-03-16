@@ -255,19 +255,21 @@ BEGIN
 
 
          -- расчет после !!!пересчета!!!
-         IF ioSummReal > 0
+         /*IF ioSummReal > 0
          THEN
              ioSummTax:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0)
                        - ioSummReal
                         ;
          ELSE
              ioSummReal:= 0;
-         END IF;
+         END IF;*/
+         
+         ioSummReal:= COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_TotalSumm()), 0) - ioSummTax; 
 
          -- сохранили значение <Cумма откорректированной скидки, без НДС>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax(), ioId, ioSummTax);
          -- сохранили значение <ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);
+         --PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal(), ioId, ioSummReal);  --расчетное
 
      ELSE
          -- пересчитали Итоговые суммы по накладной
@@ -287,6 +289,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.03.24         *
  01.06.23         * inTransportSumm_load
  15.05.23         *
  23.02.21         *

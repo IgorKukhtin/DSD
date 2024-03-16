@@ -4,7 +4,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
   ClientHeight = 276
-  ClientWidth = 734
+  ClientWidth = 767
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -1168,6 +1168,52 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         Value = 0.000000000000000000
         Component = edTransportSumm_load
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasis_summ1_orig'
+        Value = Null
+        Component = edBasis_summ1_orig
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasis_summ2_orig'
+        Value = Null
+        Component = edBasis_summ2_orig
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBasis_summ_transport'
+        Value = Null
+        Component = edBasis_summ_transport
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBasisWVAT_summ_transport'
+        Value = Null
+        Component = edBasisWVAT_summ_transport
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEdit'
+        Value = True
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

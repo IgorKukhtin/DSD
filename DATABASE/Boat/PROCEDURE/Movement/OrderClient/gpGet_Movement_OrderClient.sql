@@ -200,9 +200,8 @@ BEGIN
             -- Cумма откорректированной скидки, без НДС
           , COALESCE (MovementFloat_SummTax.ValueData, 0)  :: TFLoat AS SummTax
             -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-          --, CASE WHEN MovementFloat_SummTax.ValueData <> 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData ELSE 0 END :: TFloat AS SummReal
-          , CASE WHEN COALESCE (MovementFloat_SummReal.ValueData, 0) = 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0) ELSE COALESCE (MovementFloat_SummReal.ValueData, 0) END :: TFloat AS SummReal
-          , COALESCE (MovementFloat_SummReal.ValueData, 0) :: TFLoat AS SummReal_real
+          , (COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0)) :: TFloat AS SummReal
+          , (COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0)) :: TFLoat AS SummReal_real
             -- 
           , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
@@ -301,10 +300,6 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_NPP
                                     ON MovementFloat_NPP.MovementId = Movement_OrderClient.Id
                                    AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
-
-            LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                    ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
-                                   AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
 
             LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                     ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id

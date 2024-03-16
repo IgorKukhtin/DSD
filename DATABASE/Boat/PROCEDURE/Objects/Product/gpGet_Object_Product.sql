@@ -167,8 +167,10 @@ BEGIN
                              , MovementFloat_OperPrice_load.ValueData     AS OperPrice_load
                              , MovementFloat_TransportSumm_load.ValueData AS TransportSumm_load
                              , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
-                             , MovementFloat_SummReal.ValueData AS SummReal
+                             --, MovementFloat_SummReal.ValueData AS SummReal 
+                             , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_SummTax.ValueData, 0)) :: TFloat AS SummReal
                              , MovementFloat_SummTax.ValueData  AS SummTax
+                             , COALESCE (MovementFloat_TotalSumm.ValueData, 0) AS TotalSumm
                         FROM Movement
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -192,9 +194,10 @@ BEGIN
                              LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                                      ON MovementFloat_SummTax.MovementId = Movement.Id
                                                     AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
-                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
-                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+                            
+                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
                              LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
                                                      ON MovementFloat_OperPrice_load.MovementId = Movement.Id
@@ -323,7 +326,7 @@ BEGIN
          , tmpOrderClient.NPP         :: TFloat    AS NPP_OrderClient
 
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-         , (zfCalc_Summ_NoVAT (MovementFloat_TotalSumm.ValueData, tmpOrderClient.VATPercent)
+         , (zfCalc_Summ_NoVAT (tmpOrderClient.TotalSumm, tmpOrderClient.VATPercent)
             -- минус откорректированная скидка
           - COALESCE (tmpOrderClient.SummTax, 0)
             -- плюс Транспорт
@@ -331,7 +334,7 @@ BEGIN
            ) :: TFloat AS TotalSummMVAT
 
            -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-         , (MovementFloat_TotalSumm.ValueData
+         , (tmpOrderClient.TotalSumm
             -- минус откорректированная скидка
           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
@@ -339,7 +342,7 @@ BEGIN
            ) :: TFloat AS TotalSummPVAT
 
            -- ИТОГО НДС
-         , zfCalc_Summ_VAT (MovementFloat_TotalSumm.ValueData
+         , zfCalc_Summ_VAT (tmpOrderClient.TotalSumm
                             -- минус откорректированная скидка
                           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
                             -- плюс Транспорт
@@ -381,7 +384,7 @@ BEGIN
            -- итого остаток к оплате по всем счетам
          , (COALESCE (tmpInvoice.AmountIn, 0) - COALESCE (tmpBankAccount.AmountIn,0))              ::TFloat AS AmountIn_rem
            -- итого остаток к оплате за лодку
-         , (COALESCE (MovementFloat_TotalSumm.ValueData,0)
+         , (COALESCE (tmpOrderClient.TotalSumm,0)
             -- минус откорректированная скидка
           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
@@ -468,9 +471,9 @@ BEGIN
 
           LEFT JOIN tmpOrderClient ON 1=1
 
-          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+          /*LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
-                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm() */
           -- данные первого счета
           LEFT JOIN tmpInvoice AS tmpInvoice_First ON tmpInvoice_First.Ord = 1
           -- ИТОГО оплата по первому счету
