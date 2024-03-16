@@ -24,7 +24,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Height = 31
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1034
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -107,7 +106,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1034
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -587,12 +585,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = 
           #1048#1058#1054#1043#1054' '#1088#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084 +
           #1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         Options.Editing = False
+        VisibleForCustomization = False
         Width = 75
       end
       object TotalSumm: TcxGridDBColumn
@@ -757,7 +757,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Height = 41
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1034
     object btnInsert: TcxButton
       Left = 42
       Top = 7

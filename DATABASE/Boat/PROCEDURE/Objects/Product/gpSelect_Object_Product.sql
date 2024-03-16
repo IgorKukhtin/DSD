@@ -178,7 +178,8 @@ BEGIN
                               , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load
                               , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
                               , MovementFloat_SummTax.ValueData             AS SummTax
-                              , MovementFloat_SummReal.ValueData            AS SummReal
+                              --, MovementFloat_SummReal.ValueData            AS SummReal 
+                              , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_SummTax.ValueData, 0)) :: TFloat AS SummReal
                               , Object_InfoMoney_View.InfoMoneyId
                               , Object_InfoMoney_View.InfoMoneyName_all
                                 -- % НДС Заказ клиента
@@ -218,9 +219,9 @@ BEGIN
                                                       ON MovementFloat_NPP.MovementId = Movement.Id
                                                      AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
 
-                             LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                                     ON MovementFloat_SummReal.MovementId = Movement.Id
-                                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
+                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
                              LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                                      ON MovementFloat_SummTax.MovementId = Movement.Id

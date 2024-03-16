@@ -93,8 +93,8 @@ BEGIN
             -- Cумма откорректированной скидки, без НДС
           , COALESCE (MovementFloat_SummTax.ValueData, 0)  :: TFLoat AS SummTax
             -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-          , CASE WHEN MovementFloat_SummTax.ValueData <> 0 THEN COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData ELSE 0 END :: TFloat AS SummReal
-          , COALESCE (MovementFloat_SummReal.ValueData, 0) :: TFLoat AS SummReal_real
+          , (COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0)) :: TFloat AS SummReal
+          , (COALESCE (tmpSummProduct.Basis_summ, 0) - COALESCE (MovementFloat_SummTax.ValueData,0)) :: TFLoat AS SummReal_real
             -- 
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
           ,  tmpSummProduct.Basis_summ1_orig        ::TFloat
@@ -121,7 +121,7 @@ BEGIN
 
          --  при открытии сохраняем текущие значения в расчетные
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0)) ::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummReal.ValueData, 0))::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm_load)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0) )::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.Basis_summ_transport)    ::integer

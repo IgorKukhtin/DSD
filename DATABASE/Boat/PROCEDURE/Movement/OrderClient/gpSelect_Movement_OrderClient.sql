@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
 
              , SummTax TFloat
              , SummReal TFloat
-             , TotalSumm_calc TFloat
+             --, TotalSumm_calc TFloat
                --
              , NPP Integer, NPP_2 Integer
                --
@@ -298,15 +298,9 @@ BEGIN
                -- Cумма откорректированной скидки, без НДС
              , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax
                -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-             , MovementFloat_SummReal.ValueData ::TFloat AS SummReal
+             , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_SummTax.ValueData, 0)) :: TFloat AS SummReal
                -- ИТОГО расчетная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-             , CASE WHEN MovementFloat_SummReal.ValueData > 0
-                         THEN MovementFloat_SummReal.ValueData
-                    ELSE
-                         -- ИТОГО с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-                         COALESCE (MovementFloat_TotalSumm.ValueData, 0)
-                       - COALESCE (MovementFloat_SummTax.ValueData, 0)
-               END ::TFloat AS TotalSumm_calc
+             --, (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_SummTax.ValueData, 0) ) ::TFloat AS TotalSumm_calc  
 
                --
              , Movement_OrderClient.NPP
@@ -543,10 +537,6 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                      ON MovementFloat_TotalSummMVAT.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_TotalSummMVAT.DescId     = zc_MovementFloat_TotalSummMVAT()
-
-             LEFT JOIN MovementFloat AS MovementFloat_SummReal
-                                     ON MovementFloat_SummReal.MovementId = Movement_OrderClient.Id
-                                    AND MovementFloat_SummReal.DescId = zc_MovementFloat_SummReal()
 
              LEFT JOIN MovementFloat AS MovementFloat_SummTax
                                      ON MovementFloat_SummTax.MovementId = Movement_OrderClient.Id
