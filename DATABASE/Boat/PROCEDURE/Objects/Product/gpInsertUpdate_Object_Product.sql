@@ -55,6 +55,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;
    --DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
    DECLARE vbAmount TFloat;
 
    /*DECLARE vbDateStart TDateTime;
@@ -220,8 +221,18 @@ BEGIN
                                               , inComment            := ''
                                               , inUserId             := vbUserId
                                               ) AS tmp;
-   ELSEIF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_OrderClient AND Movement.StatusId = zc_Enum_Status_Complete())
-   THEN
+   ELSE
+       -- 
+       vbStatusId:= (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId_OrderClient);
+       
+       -- Распроводим Документ
+       IF vbStatusId = zc_Enum_Status_Complete()
+       THEN
+           PERFORM lpUnComplete_Movement (inMovementId := inMovementId_OrderClient
+                                        , inUserId     := vbUserId
+                                         );
+       END IF;
+   
        -- пересохраняем
        PERFORM lpInsertUpdate_Movement_OrderClient(ioId               := inMovementId_OrderClient  ::Integer
                                                  , inInvNumber        := tmp.InvNumber ::TVarChar
@@ -249,7 +260,16 @@ BEGIN
                                                  , inComment          := tmp.Comment               ::TVarChar
                                                  , inUserId           := vbUserId     ::Integer
                                                   )
-       FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, inOperDate_OrderClient, inSession) AS tmp;
+       FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, inOperDate_OrderClient, inSession) AS tmp
+      ;
+
+
+       -- Проводим Документ
+       IF vbStatusId = zc_Enum_Status_Complete()
+       THEN
+           PERFORM lpComplete_Movement_OrderClient (inMovementId_OrderClient, FALSE, vbUserId);
+       END IF;
+
    END IF;
 
 

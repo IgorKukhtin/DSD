@@ -1027,6 +1027,38 @@ $BODY$
  08.10.20         *
 */
 
+/*
+ -- исправл€ютс€ суммы журнал/лодки
+ SELECT  *
+    --, lpInsertUpdate_MovementFloat_TotalSumm_order (MovementId_OrderClient_2)
+ FROM (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+            , gpSelect.*
+            , MovementId_OrderClient AS MovementId_OrderClient_2
+            --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), MovementItem.Id, gpSelect.Basis_summ)
+            --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, gpSelect.Basis_summ_orig)
+            --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_BasisPrice(), MovementItem.Id, gpSelect.Basis_summ1_orig)
+
+       FROM gpSelect_Object_Product (0, FALSE, FALSE, '5' :: TVarChar) AS gpSelect                                           
+            INNER JOIN MovementItem ON MovementItem.MovementId = MovementId_OrderClient
+                                   AND MovementItem.DescId     IN (zc_MI_Master())
+                                   AND MovementItem.isErased   = false
+      
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                        ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
+                                        ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
+                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+            LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice
+                                        ON MIFloat_BasisPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_BasisPrice.DescId         = zc_MIFloat_BasisPrice()
+      
+       WHERE MIFloat_OperPrice.ValueData      <> gpSelect.Basis_summ
+          OR MIFloat_OperPriceList.ValueData  <> gpSelect.Basis_summ_orig
+          OR MIFloat_BasisPrice.ValueData     <> gpSelect.Basis_summ1_orig
+      ) as tmp
+*/
+
 -- тест
 --
 -- SELECT * FROM gpSelect_Object_Product (254225, false, true, zfCalc_UserAdmin())
