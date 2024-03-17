@@ -48,7 +48,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar, DateBegin TDateTime
+             , ProductId Integer, ProductName TVarChar, ProductName_Full TVarChar, Comment_Product TVarChar, isReserve_Product Boolean, DateBegin TDateTime
              , ReceiptProdModelId Integer, ReceiptProdModelCode Integer, ReceiptProdModelName TVarChar
              , BrandId Integer, BrandName TVarChar
              , ModelId Integer, ModelName TVarChar
@@ -80,6 +80,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , StateText TVarChar, StateColor Integer
+             , Ord Integer
               )
 
 AS
@@ -324,6 +325,9 @@ BEGIN
              , Object_Product.Id                            AS ProductId
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased) AS ProductName_Full
+             , ObjectString_Product_Comment.ValueData       AS Comment_Product
+             , COALESCE (ObjectBoolean_Product_Reserve.ValueData, FALSE) :: Boolean AS isReserve_Product
+
              , Movement_OrderClient.DateBegin               AS DateBegin
 
              , Object_ReceiptProdModel.Id                   AS ReceiptProdModelId
@@ -449,6 +453,9 @@ BEGIN
                                        , COALESCE (tmpOrderInternal_1.ObjectDescId, tmpOrderInternal_2.ObjectDescId)
                                        , COALESCE (tmpProductionUnion_1.ObjectDescId, tmpProductionUnion_2.ObjectDescId)
                                         ) ::Integer AS StateColor
+
+               -- ¹ ï/ï
+             , ROW_NUMBER() OVER (ORDER BY Movement_OrderClient.Id ASC) :: Integer AS Ord
 
         FROM Movement_OrderClient
 
@@ -615,6 +622,13 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_DateSale
                                   ON ObjectDate_DateSale.ObjectId = Object_Product.Id
                                  AND ObjectDate_DateSale.DescId = zc_ObjectDate_Product_DateSale()
+             LEFT JOIN ObjectString AS ObjectString_Product_Comment
+                                    ON ObjectString_Product_Comment.ObjectId = Object_Product.Id
+                                   AND ObjectString_Product_Comment.DescId   = zc_ObjectString_Product_Comment()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Product_Reserve
+                                     ON ObjectBoolean_Product_Reserve.ObjectId = Object_Product.Id
+                                    AND ObjectBoolean_Product_Reserve.DescId   = zc_ObjectBoolean_Product_Reserve()
+
 
              LEFT JOIN ObjectLink AS ObjectLink_Product_ReceiptProdModel
                                   ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id

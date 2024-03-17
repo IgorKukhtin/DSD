@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ProductId Integer, ProductName TVarChar, BrandId Integer, BrandName TVarChar, CIN TVarChar, DateBegin TDateTime
+             , isReserve_Product Boolean
              , Comment TVarChar
              , isChild_Recalc Boolean
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar, Comment_Invoice TVarChar
@@ -117,6 +118,7 @@ BEGIN
                  , CAST ('' AS TVarChar)     AS BrandName
                  , CAST ('' AS TVarChar)     AS CIN
                  , (inOperDate + INTERVAL '1 MONTH') :: TDateTime AS DateBegin
+                 , FALSE          :: Boolean AS isReserve_Product
                  , CAST ('' AS TVarChar)     AS Comment
                  , FALSE :: Boolean          AS isChild_Recalc
                  , 0                         AS MovementId_Invoice
@@ -218,6 +220,7 @@ BEGIN
           , Object_Brand.ValueData                     AS BrandName
           , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS CIN
           , ObjectDate_DateBegin.ValueData             AS DateBegin
+          , COALESCE (ObjectBoolean_Product_Reserve.ValueData, FALSE) :: Boolean AS isReserve_Product
 
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
           --, EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE) :: Boolean AS isChild_Recalc
@@ -280,6 +283,10 @@ BEGIN
                                          ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Product_Reserve
+                                    ON ObjectBoolean_Product_Reserve.ObjectId = Object_Product.Id
+                                   AND ObjectBoolean_Product_Reserve.DescId   = zc_ObjectBoolean_Product_Reserve()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId = Movement_OrderClient.Id

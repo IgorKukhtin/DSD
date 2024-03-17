@@ -97,7 +97,7 @@ BEGIN
                                              );
    END IF;
    -- проверка - должен быть CIN
-   IF COALESCE (inCIN, '') = '' AND inMovementId_OrderClient > 0
+   IF COALESCE (inCIN, '') = '' AND inMovementId_OrderClient > 0 AND inIsReserve = FALSE
    THEN
       RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <CIN Nr.>' :: TVarChar
                                             , inProcedureName := 'gpInsertUpdate_Object_Product'    :: TVarChar
@@ -106,14 +106,14 @@ BEGIN
    END IF;
 
    -- Проверка
-   IF COALESCE (inClientId, 0) = 0 AND COALESCE (inClientId, 0) <> -1
+   IF COALESCE (inClientId, 0) = 0 AND COALESCE (inClientId, 0) <> -1 AND inIsReserve = FALSE
    THEN
        RAISE EXCEPTION 'Ошибка.Должен быть определен <Kunden>(%).', inClientId ;
    END IF;
 
 
    -- Проверка
-   IF COALESCE (inModelId, 0) = 0
+   IF COALESCE (inModelId, 0) = 0 AND inIsReserve = FALSE
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должна быть определена <Model>' :: TVarChar
                                              , inProcedureName := 'gpInsertUpdate_Object_Product'
@@ -122,7 +122,7 @@ BEGIN
    END IF;
 
    -- Проверка
-   IF COALESCE (inReceiptProdModelId, 0) = 0
+   IF COALESCE (inReceiptProdModelId, 0) = 0 AND inIsReserve = FALSE
    THEN
        RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Должен быть определен <Шаблон сборки Модели>' :: TVarChar
                                              , inProcedureName := 'gpInsertUpdate_Object_Product'
@@ -212,7 +212,7 @@ BEGIN
                                               , ioSummTax            := ioSummTax
                                               , ioSummReal           := ioSummReal
                                               , inTransportSumm_load := inTransportSumm_load
-                                              , inFromId             := inClientId
+                                              , inFromId             := CASE WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                               , inToId               := 33349 -- Склад Лодки
                                               , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
                                               , inProductId          := ioId
@@ -241,7 +241,7 @@ BEGIN
                                                  , ioSummTax          := ioSummTax                 ::TFloat
                                                  , ioSummReal         := ioSummReal                ::TFloat
                                                  , inTransportSumm_load := inTransportSumm_load
-                                                 , inFromId           := inClientId
+                                                 , inFromId           := CASE WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
                                                  , inProductId        := ioId                      ::Integer
