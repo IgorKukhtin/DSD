@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074'>'
   ClientHeight = 558
-  ClientWidth = 1272
+  ClientWidth = 1332
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@
   object PanelMaster: TPanel
     Left = 0
     Top = 88
-    Width = 1272
+    Width = 1332
     Height = 225
     Align = alTop
     BevelEdges = [beLeft]
@@ -30,7 +30,7 @@
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1272
+      Width = 1332
       Height = 208
       Align = alClient
       PopupMenu = PopupMenu
@@ -41,72 +41,12 @@
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_goods
-          end>
+        DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
             Column = Name
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPrice_summ_goods
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_colPat
-          end
-          item
-            Format = ',0.00##'
-            Kind = skSum
-            Column = EKPriceWVAT_summ_goods
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -214,31 +154,6 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
-        end
-        object ArticleVergl: TcxGridDBColumn
-          Caption = 'Vergl. Nr'
-          DataBinding.FieldName = 'ArticleVergl'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
-          Options.Editing = False
-          Width = 70
-        end
-        object GoodsGroupNameFull: TcxGridDBColumn
-          Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-          DataBinding.FieldName = 'GoodsGroupNameFull'
-          PropertiesClassName = 'TcxButtonEditProperties'
-          Properties.Buttons = <
-            item
-              Default = True
-              Kind = bkEllipsis
-            end>
-          Properties.ReadOnly = True
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Width = 150
         end
         object GoodsGroupName: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
@@ -381,81 +296,6 @@
           Options.Editing = False
           Width = 100
         end
-        object EKPrice_summ: TcxGridDBColumn
-          Caption = 'Total EK'
-          DataBinding.FieldName = 'EKPrice_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPriceWVAT_summ: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-          DataBinding.FieldName = 'EKPriceWVAT_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ_goods: TcxGridDBColumn
-          Caption = 'Total EK (art.)'
-          DataBinding.FieldName = 'EKPrice_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ_colPat: TcxGridDBColumn
-          Caption = 'Total EK (Items)'
-          DataBinding.FieldName = 'EKPrice_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (Items Boat Structure)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPriceWVAT_summ_goods: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (art.)'
-          DataBinding.FieldName = 'EKPriceWVAT_summ_goods'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' ('#1082#1086#1084#1087#1083#1077#1082#1090'.)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPriceWVAT_summ_colPat: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items)'
-          DataBinding.FieldName = 'EKPriceWVAT_summ_colPat'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057' (Items Boat Structure)'
-          Options.Editing = False
-          Width = 70
-        end
         object BasisPrice: TcxGridDBColumn
           Caption = 'Ladenpreis'
           DataBinding.FieldName = 'BasisPrice'
@@ -466,19 +306,6 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
-          Options.Editing = False
-          Width = 70
-        end
-        object BasisPriceWVAT: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-          DataBinding.FieldName = 'BasisPriceWVAT'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
           Options.Editing = False
           Width = 70
         end
@@ -546,7 +373,7 @@
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1272
+      Width = 1332
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1091#1079#1083#1086#1074
@@ -555,16 +382,16 @@
       TabOrder = 1
     end
     object clReceiptGoods: TcxLabel
-      Left = 107
-      Top = 63
+      Left = 259
+      Top = 183
       Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
-      Caption = #1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074':'
+      Caption = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1080#1079' '#1064#1072#1073#1083#1086#1085#1072' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1083#1086#1074':'
       ParentShowHint = False
       ShowHint = True
     end
     object edReceiptGoods: TcxButtonEdit
-      Left = 232
-      Top = 46
+      Left = 468
+      Top = 182
       Properties.Buttons = <
         item
           Default = True
@@ -578,7 +405,7 @@
   object PanelGoods: TPanel
     Left = 0
     Top = 318
-    Width = 575
+    Width = 635
     Height = 176
     Align = alClient
     BevelEdges = [beLeft]
@@ -587,7 +414,7 @@
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
-      Width = 575
+      Width = 635
       Height = 159
       Align = alClient
       PopupMenu = PopupMenuColor
@@ -1025,7 +852,7 @@
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 575
+      Width = 635
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -1037,13 +864,13 @@
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 313
-    Width = 1272
+    Width = 1332
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
   end
   object PanelProdColorPattern: TPanel
-    Left = 583
+    Left = 643
     Top = 318
     Width = 689
     Height = 176
@@ -1502,7 +1329,7 @@
     end
   end
   object cxSplitterRight: TcxSplitter
-    Left = 575
+    Left = 635
     Top = 318
     Width = 8
     Height = 176
@@ -1512,7 +1339,7 @@
   object Panel5: TPanel
     Left = 0
     Top = 0
-    Width = 1272
+    Width = 1332
     Height = 62
     Align = alTop
     TabOrder = 5
@@ -1529,7 +1356,7 @@
       Style.IsFontAssigned = True
     end
     object edSearchArticle: TcxTextEdit
-      Left = 111
+      Left = 120
       Top = 37
       TabOrder = 1
       DesignSize = (
@@ -1538,15 +1365,15 @@
       Width = 110
     end
     object lbReceiptLevel: TcxLabel
-      Left = 14
+      Left = 757
       Top = 9
       Hint = #1069#1090#1072#1087' '#1089#1073#1086#1088#1082#1080
-      Caption = 'Level:'
+      Caption = '2.1.'#1047#1072#1087#1086#1083#1085#1103#1090#1100' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' Level :'
       ParentShowHint = False
       ShowHint = True
     end
     object edReceiptLevel: TcxButtonEdit
-      Left = 50
+      Left = 951
       Top = 8
       Properties.Buttons = <
         item
@@ -1555,15 +1382,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 171
+      Width = 220
     end
     object cxLabel4: TcxLabel
-      Left = 467
+      Left = 177
       Top = 9
-      Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080':'
+      Caption = '1.1.'#1047#1072#1087#1086#1083#1085#1103#1090#1100' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' :'
     end
     object edUnit: TcxButtonEdit
-      Left = 557
+      Left = 426
       Top = 8
       Properties.Buttons = <
         item
@@ -1575,15 +1402,15 @@
       Width = 194
     end
     object cxLabel15: TcxLabel
-      Left = 953
-      Top = 9
-      Caption = #1057#1073#1086#1088#1082#1072' '#1059#1079#1083#1072' '#1055#1060':'
+      Left = 700
+      Top = 38
+      Caption = '2.2.'#1047#1072#1087#1086#1083#1085#1103#1090#1100' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' '#1057#1073#1086#1088#1082#1072' '#1059#1079#1083#1072' '#1055#1060' :'
       ParentShowHint = False
       ShowHint = True
     end
     object edGoodsChild: TcxButtonEdit
-      Left = 1045
-      Top = 8
+      Left = 951
+      Top = 37
       Properties.Buttons = <
         item
           Default = True
@@ -1591,13 +1418,13 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 7
-      Width = 194
+      Width = 220
     end
   end
   object Panel_btn: TPanel
     Left = 0
     Top = 494
-    Width = 1272
+    Width = 1332
     Height = 64
     Align = alBottom
     TabOrder = 7
@@ -1713,12 +1540,12 @@
     end
   end
   object cxLabel1: TcxLabel
-    Left = 414
+    Left = 247
     Top = 38
-    Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' ('#1059#1079#1077#1083' '#1055#1060'):'
+    Caption = '1.2.'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1059#1079#1083#1072' '#1055#1060' :'
   end
   object edUnitChild: TcxButtonEdit
-    Left = 557
+    Left = 426
     Top = 37
     Properties.Buttons = <
       item
@@ -1944,7 +1771,6 @@
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Category = 0
     end
     object bbInsert: TdxBarButton
@@ -2288,9 +2114,9 @@
         item
           StoredProc = spSelect_child1
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -4187,7 +4013,6 @@
     Top = 208
     object N1: TMenuItem
       Action = actRefresh
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     end
     object N2: TMenuItem
       Action = actInsert
@@ -4638,7 +4463,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 392
+    Left = 1144
+    Top = 65528
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -4666,8 +4492,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1135
-    Top = 3
+    Left = 559
+    Top = 65531
   end
   object spInsUpd_Unit: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_Unit'
@@ -4815,8 +4641,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 688
-    Top = 8
+    Left = 1080
+    Top = 24
   end
   object GuidesUnitChild: TdsdGuides
     KeyField = 'Id'
@@ -4844,7 +4670,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 631
+    Left = 447
     Top = 35
   end
   object spInsUpd_UnitChild: TdsdStoredProc

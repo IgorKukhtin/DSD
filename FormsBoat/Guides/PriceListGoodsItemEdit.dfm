@@ -39,17 +39,17 @@
   end
   object cxLabel3: TcxLabel
     Left = 24
-    Top = 94
+    Top = 100
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object cxLabel2: TcxLabel
     Left = 138
-    Top = 94
+    Top = 100
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object edStartDate: TcxDateEdit
     Left = 24
-    Top = 114
+    Top = 120
     EditValue = 42236d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -58,7 +58,7 @@
   end
   object edEndDate: TcxDateEdit
     Left = 138
-    Top = 114
+    Top = 120
     EditValue = 42236d
     Properties.ReadOnly = True
     Properties.SaveTime = False
@@ -68,12 +68,12 @@
   end
   object Код: TcxLabel
     Left = 24
-    Top = 3
-    Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077':'
+    Top = 9
+    Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1084#1086#1076#1077#1083#1080' / '#1054#1087#1094#1080#1080':'
   end
   object edGoods: TcxButtonEdit
     Left = 24
-    Top = 22
+    Top = 28
     Properties.Buttons = <
       item
         Default = True
@@ -85,12 +85,12 @@
   end
   object cxLabel1: TcxLabel
     Left = 24
-    Top = 144
+    Top = 150
     Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057':'
   end
   object cePriceNoVAT: TcxCurrencyEdit
     Left = 24
-    Top = 168
+    Top = 174
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
@@ -99,12 +99,12 @@
   end
   object cxLabel4: TcxLabel
     Left = 177
-    Top = 144
+    Top = 150
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057':'
   end
   object cePriceWVAT: TcxCurrencyEdit
     Left = 177
-    Top = 168
+    Top = 174
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.UseDisplayFormatWhenEditing = True
@@ -113,19 +113,19 @@
   end
   object cxLabel18: TcxLabel
     Left = 25
-    Top = 49
+    Top = 55
     Caption = 'Artikel Nr'
   end
   object edArticle: TcxTextEdit
     Left = 24
-    Top = 67
+    Top = 73
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 90
   end
   object ceCode: TcxCurrencyEdit
     Left = 138
-    Top = 67
+    Top = 73
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
@@ -134,12 +134,12 @@
   end
   object cxLabel6: TcxLabel
     Left = 138
-    Top = 49
+    Top = 55
     Caption = 'Interne Nr'
   end
   object ActionList: TActionList
     Left = 288
-    Top = 16
+    Top = 22
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -203,7 +203,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -211,14 +211,14 @@
       end
       item
         Name = 'outStartDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'outEndDate'
-        Value = ''
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -248,7 +248,7 @@
       end>
     PackSize = 1
     Left = 243
-    Top = 62
+    Top = 68
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -273,13 +273,13 @@
       end
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 248
-    Top = 48
+    Top = 54
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_ObjectHistory_PriceListItem'
@@ -288,7 +288,7 @@
     Params = <
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'StartDate'
         DataType = ftDateTime
@@ -341,14 +341,14 @@
       end
       item
         Name = 'StartDate'
-        Value = ''
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
-        Value = ''
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -369,7 +369,7 @@
       end>
     PackSize = 1
     Left = 88
-    Top = 145
+    Top = 151
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -384,11 +384,11 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 168
-    Top = 99
+    Top = 105
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
-    Top = 104
+    Top = 110
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -430,6 +430,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 16
+    Top = 22
   end
 end

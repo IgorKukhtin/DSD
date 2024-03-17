@@ -25,9 +25,6 @@
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 63
-    ExplicitWidth = 643
-    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -43,7 +40,6 @@
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -52,13 +48,13 @@
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
-        Width = 206
+        Width = 150
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
-        Width = 188
+        Width = 150
       end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -68,7 +64,7 @@
         Properties.DisplayFormat = ',0.00##;-,0.00##'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 235
+        Width = 120
       end
       object isErased: TcxGridDBColumn
         DataBinding.FieldName = 'isErased'
@@ -108,7 +104,7 @@
     object cxLabel4: TcxLabel
       Left = 202
       Top = 1
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1080' '#1084#1086#1076#1077#1083#1080' / '#1054#1087#1094#1080#1080
     end
     object edGoods: TcxButtonEdit
       Left = 202
@@ -212,6 +208,10 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -258,10 +258,9 @@
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbInsert: TdxBarButton
       Action = actInsert
@@ -292,9 +291,9 @@
         item
           StoredProc = dsdStoredProc
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -407,7 +406,7 @@
         end
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'StartDate'
           DataType = ftDateTime
@@ -416,7 +415,7 @@
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = ClientDataSet
           ComponentItem = 'EndDate'
           DataType = ftDateTime
@@ -496,11 +495,13 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 336
     Top = 168

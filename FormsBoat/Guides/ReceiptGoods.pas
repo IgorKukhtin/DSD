@@ -255,7 +255,6 @@ type
     macErasedGoods_child1: TMultiAction;
     bbErasedGoods_child1: TdxBarButton;
     Value_child_ch1: TcxGridDBColumn;
-    ArticleVergl: TcxGridDBColumn;
     ArticleVergl_ch1: TcxGridDBColumn;
     actFormClose: TdsdFormClose;
     actSetVisible_ProdColorItems: TBooleanSetVisibleAction;
