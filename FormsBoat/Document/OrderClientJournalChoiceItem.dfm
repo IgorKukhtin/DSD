@@ -221,14 +221,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderHint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
         Width = 80
       end
-      object InvNumberPartner: TcxGridDBColumn
-        Caption = 'External Nr'
-        DataBinding.FieldName = 'InvNumberPartner'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
       object InvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
@@ -250,7 +242,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1090#1089#1103' '#1079#1072#1074#1077#1088#1096#1080#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1083#1086#1076#1082#1080
+        HeaderHint = #1050#1086#1075#1076#1072' '#1087#1083#1072#1085#1080#1088#1091#1077#1090#1089#1103' '#1079#1072#1074#1077#1088#1096#1080#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1079#1072#1082#1072#1079#1072
         Width = 70
       end
       object FromName: TcxGridDBColumn
@@ -263,21 +255,12 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Width = 100
       end
       object ToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091
+        Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
         DataBinding.FieldName = 'ToName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1050#1086#1084#1091
         Width = 91
-      end
-      object PaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
       end
       object EngineNum: TcxGridDBColumn
         Caption = 'Engine Nr.'
@@ -306,15 +289,6 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 100
-      end
-      object BrandName: TcxGridDBColumn
-        Caption = 'Brand'
-        DataBinding.FieldName = 'BrandName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
       end
       object ModelName: TcxGridDBColumn
         Caption = #1052#1086#1076#1077#1083#1100
@@ -368,6 +342,7 @@ object OrderClientJournalChoiceItemForm: TOrderClientJournalChoiceItemForm
         Width = 95
       end
       object BarCode: TcxGridDBColumn
+        Caption = #1064'/'#1050
         DataBinding.FieldName = 'BarCode'
         Visible = False
         Options.Editing = False

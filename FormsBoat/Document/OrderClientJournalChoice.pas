@@ -52,11 +52,10 @@ type
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     PopupMenu: TPopupMenu;
-    PriceWithVAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
     TotalCount: TcxGridDBColumn;
-    TotalSummMVAT: TcxGridDBColumn;
+    TotalSumm_transport: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
     TotalSummVAT: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
@@ -68,7 +67,6 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    InvNumberPartner: TcxGridDBColumn;
     actMovementProtocolOpenForm: TdsdOpenForm;
     bbMovementProtocol: TdxBarButton;
     spSelectPrintOld: TdsdStoredProc;

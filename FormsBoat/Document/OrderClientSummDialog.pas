@@ -42,7 +42,7 @@ type
     edVATPercent: TcxCurrencyEdit;
     cxLabel27: TcxLabel;
     edTransportSumm_load: TcxCurrencyEdit;
-    edInvNumberPartner: TcxTextEdit;
+    edInvNumber: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;

@@ -65,7 +65,6 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    PriceWithVAT: TcxGridDBColumn;
     VATPercent: TcxGridDBColumn;
     DiscountTax: TcxGridDBColumn;
     TotalCount: TcxGridDBColumn;
@@ -156,6 +155,7 @@ type
     cxLabel4: TcxLabel;
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     InvNumber_Invoice: TcxGridDBColumn;
+    SummDiscount: TcxGridDBColumn;
   private
   public
   end;
