@@ -246,58 +246,6 @@ object OrderInternalForm: TOrderInternalForm
                 Format = ',0.####'
                 Kind = skSum
                 Column = Amount
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
               end>
             DataController.Summary.FooterSummaryItems = <
               item
@@ -306,29 +254,9 @@ object OrderInternalForm: TOrderInternalForm
                 Column = Amount
               end
               item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
                 Format = 'C'#1090#1088#1086#1082': ,0'
                 Kind = skCount
                 Column = GoodsName
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
               end>
             DataController.Summary.SummaryGroups = <>
             Images = dmMain.SortImageList
@@ -604,50 +532,6 @@ object OrderInternalForm: TOrderInternalForm
               item
                 Format = ',0.####'
                 Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
                 Column = AmountReserv_ch3
               end
               item
@@ -661,18 +545,6 @@ object OrderInternalForm: TOrderInternalForm
                 Column = AmountSend_ch3
               end>
             DataController.Summary.FooterSummaryItems = <
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
               item
                 Format = 'C'#1090#1088#1086#1082': ,0'
                 Kind = skCount
@@ -891,58 +763,6 @@ object OrderInternalForm: TOrderInternalForm
               item
                 Format = ',0.####'
                 Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
                 Column = Hours_ch4
               end
               item
@@ -957,29 +777,9 @@ object OrderInternalForm: TOrderInternalForm
                 Column = Amount_ch4
               end
               item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
                 Format = 'C'#1090#1088#1086#1082': ,0'
                 Kind = skCount
                 Column = PersonalName_ch4
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
-              end
-              item
-                Format = ',0.####'
-                Kind = skSum
               end
               item
                 Format = ',0.####'
@@ -1286,9 +1086,6 @@ object OrderInternalForm: TOrderInternalForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -1304,58 +1101,7 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = Amount_ch5
             end
             item
               Format = ',0.####'
@@ -1370,56 +1116,28 @@ object OrderInternalForm: TOrderInternalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_ch54
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = 'C'#1090#1088#1086#1082': ,0'
-              Kind = skCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount_ch5
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Hours_ch5
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summ_ch54
+              Column = Summ_ch5
             end
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skSum
               Column = ReceiptServiceName_ch5
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Hours_ch5
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_ch5
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1518,7 +1236,7 @@ object OrderInternalForm: TOrderInternalForm
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object Summ_ch54: TcxGridDBColumn
+          object Summ_ch5: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1055#1083#1072#1085
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
