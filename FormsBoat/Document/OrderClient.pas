@@ -480,6 +480,7 @@ type
     actSetVisible_Grid: TBooleanSetVisibleAction;
     cxButton1: TcxButton;
     mactCompleteMovement_andSave: TMultiAction;
+    cbReserve: TcxCheckBox;
   private
   public
   end;

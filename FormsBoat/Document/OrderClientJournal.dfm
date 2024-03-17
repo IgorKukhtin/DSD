@@ -263,6 +263,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object Ord: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'Ord'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object StateText: TcxGridDBColumn
         Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
         DataBinding.FieldName = 'StateText'
@@ -388,6 +396,22 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 91
+      end
+      object isReserve_Product: TcxGridDBColumn
+        Caption = #1056#1077#1079#1077#1088#1074#1072#1094#1080#1103
+        DataBinding.FieldName = 'isReserve_Product'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Comment_Product: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Boat)'
+        DataBinding.FieldName = 'Comment_Product'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object ProductName: TcxGridDBColumn
         Caption = 'Boat'

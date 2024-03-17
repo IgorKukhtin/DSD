@@ -156,6 +156,9 @@ type
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;
     InvNumber_Invoice: TcxGridDBColumn;
     SummDiscount: TcxGridDBColumn;
+    Ord: TcxGridDBColumn;
+    Comment_Product: TcxGridDBColumn;
+    isReserve_Product: TcxGridDBColumn;
   private
   public
   end;

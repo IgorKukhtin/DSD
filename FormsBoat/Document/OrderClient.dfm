@@ -26,6 +26,7 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -621,6 +622,21 @@ object OrderClientForm: TOrderClientForm
       Properties.ReadOnly = True
       TabOrder = 62
       Width = 70
+    end
+    object cbReserve: TcxCheckBox
+      Left = 1206
+      Top = 88
+      Caption = #1056#1077#1079#1077#1088#1074#1072#1094#1080#1103
+      ParentFont = False
+      Properties.ReadOnly = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -16
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+      TabOrder = 63
+      Width = 133
     end
   end
   object cxPageControl: TcxPageControl
@@ -5940,6 +5956,13 @@ object OrderClientForm: TOrderClientForm
         Value = Null
         Component = edCIN
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isReserve_Product'
+        Value = Null
+        Component = cbReserve
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
