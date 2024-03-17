@@ -170,7 +170,7 @@ BEGIN
                                  , gpSelect.SummDiscount1
                                  , gpSelect.SummDiscount2
                                  , gpSelect.SummDiscount3
-                                 , gpSelect.SummDiscount_total
+                                 , gpSelect.SummDiscount AS SummDiscount_total
 
                                    -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
                                  , gpSelect.Basis_summ
@@ -235,7 +235,7 @@ BEGIN
           , MovementDate_Insert.ValueData        AS InsertDate
 
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
-          ,  tmpSummProduct.Basis_summ1_orig        ::TFloat
+          , 19:58 17.03.2024tmpSummProduct.Basis_summ1_orig        ::TFloat
             -- ИТОГО Без скидки, Сумма опций, без НДС
           , tmpSummProduct.Basis_summ2_orig         ::TFloat
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС

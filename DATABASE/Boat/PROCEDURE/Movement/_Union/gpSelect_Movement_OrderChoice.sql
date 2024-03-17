@@ -118,7 +118,7 @@ BEGIN
                                  , gpSelect.SummDiscount1
                                  , gpSelect.SummDiscount2
                                  , gpSelect.SummDiscount3
-                                 , gpSelect.SummDiscount_total
+                                 , gpSelect.SummDiscount AS SummDiscount_total
 
                                    -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
                                  , gpSelect.Basis_summ
