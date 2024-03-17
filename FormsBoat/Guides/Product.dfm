@@ -50,22 +50,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = EKPrice_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Basis_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = BasisWVAT_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = EKPrice_summ1
           end
           item
             Format = ',0.####'
@@ -73,22 +58,9 @@
             Column = Basis_summ1
           end
           item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = EKPrice_summ2
-          end
-          item
             Format = ',0.####'
             Kind = skSum
             Column = Basis_summ2
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
           end
           item
             Format = ',0.####'
@@ -138,7 +110,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = SummReal
+            Column = SummDiscount_total
           end
           item
             Format = ',0.####'
@@ -148,7 +120,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = SummDiscount_total
+            Column = SummDiscount
           end
           item
             Format = ',0.####'
@@ -189,22 +161,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = EKPrice_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
             Column = Basis_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = BasisWVAT_summ
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = EKPrice_summ1
           end
           item
             Format = ',0.####'
@@ -212,22 +169,9 @@
             Column = Basis_summ1
           end
           item
-            Format = ',0.00'
-            Kind = skSum
-          end
-          item
-            Format = ',0.####'
-            Kind = skSum
-            Column = EKPrice_summ2
-          end
-          item
             Format = ',0.####'
             Kind = skSum
             Column = Basis_summ2
-          end
-          item
-            Format = ',0.00'
-            Kind = skSum
           end
           item
             Format = ',0.####'
@@ -277,7 +221,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = SummReal
+            Column = SummDiscount_total
           end
           item
             Format = ',0.####'
@@ -287,7 +231,7 @@
           item
             Format = ',0.####'
             Kind = skSum
-            Column = SummDiscount_total
+            Column = SummDiscount
           end
           item
             Format = ',0.####'
@@ -660,45 +604,6 @@
           Options.Editing = False
           Width = 100
         end
-        object EKPrice_summ: TcxGridDBColumn
-          Caption = 'Total EK'
-          DataBinding.FieldName = 'EKPrice_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ1: TcxGridDBColumn
-          Caption = 'Total EK (Basis)'
-          DataBinding.FieldName = 'EKPrice_summ1'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (Basis)'
-          Options.Editing = False
-          Width = 70
-        end
-        object EKPrice_summ2: TcxGridDBColumn
-          Caption = 'Total EK (options)'
-          DataBinding.FieldName = 'EKPrice_summ2'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (options)'
-          Options.Editing = False
-          Width = 70
-        end
         object BasisPrice_load: TcxGridDBColumn
           Caption = '***Ladenpreis site (Basis)'
           DataBinding.FieldName = 'BasisPrice_load'
@@ -768,15 +673,15 @@
           Options.Editing = False
           Width = 80
         end
-        object SummDiscount_total: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1089#1082'. ('#1080#1090#1086#1075#1086')'
-          DataBinding.FieldName = 'SummDiscount_total'
+        object SummDiscount: TcxGridDBColumn
+          Caption = '***'#1057#1082#1080#1076#1082#1072' % '#1080#1090#1086#1075#1086
+          DataBinding.FieldName = 'SummDiscount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
+          HeaderHint = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
           Options.Editing = False
           Width = 75
         end
@@ -826,8 +731,8 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = 
-            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1086#1089#1085#1086#1074#1085#1086#1081' '#1080' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072 +
-            #1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
+            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' % '#1089#1082#1080#1076#1086#1082', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080', '#1073#1077#1079' ' +
+            #1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -840,7 +745,7 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1076#1083#1103' '#1086#1087#1094#1080#1081', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' % '#1089#1082#1080#1076#1086#1082', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
           Options.Editing = False
           Width = 70
         end
@@ -871,37 +776,8 @@
           Options.Editing = False
           Width = 80
         end
-        object SummReal: TcxGridDBColumn
-          Caption = '***Total LP ('#1074#1074#1086#1076')'
-          DataBinding.FieldName = 'SummReal'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 
-            #1048#1058#1054#1043#1054' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087 +
-            #1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
-          Options.Editing = False
-          Width = 80
-        end
-        object BasisWVAT_summ: TcxGridDBColumn
-          Caption = '***Total LP + Vat'
-          DataBinding.FieldName = 'BasisWVAT_summ'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          Visible = False
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = 
-            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044 +
-            #1057
-          Options.Editing = False
-          Width = 80
-        end
         object Basis_summ_calc: TcxGridDBColumn
-          Caption = '***Total LP ('#1088#1072#1089#1095#1077#1090')'
+          Caption = 'C'#1091#1084#1084#1072' '#1087#1086#1089#1083#1077' '#1089#1082#1080#1076#1082#1080' ('#1088#1072#1089#1095#1077#1090')'
           DataBinding.FieldName = 'Basis_summ_calc'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
@@ -909,8 +785,8 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = 
-            #1048#1058#1054#1043#1054' '#1088#1072#1089#1095#1077#1090#1085#1072#1103' '#1089#1091#1084#1084#1072', '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084 +
-            #1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
+            #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
+            #1057
           Options.Editing = False
           Width = 80
         end
@@ -946,7 +822,19 @@
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 80
+        end
+        object SummDiscount_total: TcxGridDBColumn
+          Caption = #1057#1082#1080#1076#1082#1072' '#1048#1058#1054#1043#1054
+          DataBinding.FieldName = 'SummDiscount_total'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
           Options.Editing = False
           Width = 80
         end

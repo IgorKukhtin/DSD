@@ -171,7 +171,7 @@ type
     SummDiscount1: TcxGridDBColumn;
     SummDiscount2: TcxGridDBColumn;
     SummDiscount3: TcxGridDBColumn;
-    SummDiscount_total: TcxGridDBColumn;
+    SummDiscount: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrintOffer: TdsdStoredProc;
