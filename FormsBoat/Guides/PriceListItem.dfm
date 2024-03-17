@@ -12,8 +12,8 @@ object PriceListItemForm: TPriceListItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -358,7 +358,7 @@ object PriceListItemForm: TPriceListItemForm
     EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 5
+    TabOrder = 4
     Width = 100
   end
   object lbSearchArticle: TcxLabel
@@ -1061,6 +1061,7 @@ object PriceListItemForm: TPriceListItemForm
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 192
     Top = 256
@@ -1281,6 +1282,10 @@ object PriceListItemForm: TPriceListItemForm
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 280
