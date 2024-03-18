@@ -833,9 +833,8 @@ object SendJournalForm: TSendJournalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintItemsCDS
+          DataSet = PrintHeaderCDS
           UserName = 'frxDBDHeader'
-          IndexFieldNames = 'ProductName;Article'
         end
         item
           DataSet = PrintItemsCDS
@@ -870,6 +869,7 @@ object SendJournalForm: TSendJournalForm
           Name = 'OperDate'
           Value = Null
           Component = ClientDataSet
+          ComponentItem = 'OperDate'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
