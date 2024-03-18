@@ -205,7 +205,6 @@ uses
   TranslateMessage in '..\..\FormsBoat\Guides\TranslateMessage.pas' {TranslateMessageForm: TParentForm},
   ProdColor in '..\..\FormsBoat\Guides\ProdColor.pas' {ProdColorForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoat\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
-  Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm},
   PaidKind in '..\..\FormsBoat\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   Union_ClientPartner in '..\..\FormsBoat\Guides\Union_ClientPartner.pas' {Union_ClientPartnerForm: TParentForm},
   BankAccount in '..\..\FormsBoat\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
@@ -386,7 +385,8 @@ uses
   InvoicePdfEdit in '..\..\FormsBoat\Guides\InvoicePdfEdit.pas' {InvoicePdfEditForm: TParentForm},
   EmailSettings in '..\..\FormsBoat\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm},
   EmailKind in '..\..\FormsBoat\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
-  EmailTools in '..\..\FormsBoat\Kind\EmailTools.pas' {EmailToolsForm: TParentForm};
+  EmailTools in '..\..\FormsBoat\Kind\EmailTools.pas' {EmailToolsForm: TParentForm},
+  Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
