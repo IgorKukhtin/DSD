@@ -106,6 +106,7 @@ BEGIN
                                                                                             -- Все Счета предоплата
                                                                                          , tmpMov_Invoice AS (SELECT Movement.Id
                                                                                                                    , MovementString_ReceiptNumber.ValueData AS ReceiptNumber
+                                                                                                                   , CASE WHEN MovementLinkObject_InvoiceKind.ObjectId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'receipt'  ELSE 'invoice' END AS InvoiceName
                                                                                                                    , MovementFloat_Amount.ValueData AS Amount
                                                                                                                    , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.Id) AS ord
                                                                                                               FROM Movement
@@ -113,7 +114,7 @@ BEGIN
                                                                                                                                                  ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                                                                                                                 AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
                                                                                                                                                 -- только предоплата
-                                                                                                                                                AND MovementLinkObject_InvoiceKind.ObjectId   = zc_Enum_InvoiceKind_PrePay()
+                                                                                                                                                AND MovementLinkObject_InvoiceKind.ObjectId   = CASE WHEN inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END
                                                                                                                    LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                                                                                                            ON MovementFloat_Amount.MovementId = Movement.Id
                                                                                                                                           AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -124,21 +125,23 @@ BEGIN
                                                                                                                 -- этот док Заказ Клиента
                                                                                                                 AND Movement.ParentId = inParentId
                                                                                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                                                                AND MovementFloat_Amount.ValueData > 0
                                                                                                              )
                                                                                          , tmpRes AS (SELECT tmpMov_Invoice.Ord
                                                                                                            , CASE WHEN tmpMov_Invoice.Ord = 1
-                                                                                                                       THEN 'Storno invoice ' || tmpMov_Invoice.ReceiptNumber || ' Reservation Fee '
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)
+                                                                                                                                      || CASE WHEN inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN ' Reservation Fee ' ELSE '' END
                                                                                                                   WHEN tmpMov_Invoice.Ord = 2
-                                                                                                                       THEN 'Storno invoice ' || tmpMov_Invoice.ReceiptNumber || ' First Advance-payment '
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber) || ' First Advance-payment '
                                                                                                                          || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount *100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                                                                                   WHEN tmpMov_Invoice.Ord = 3
-                                                                                                                       THEN 'Storno invoice ' || tmpMov_Invoice.ReceiptNumber||' First and Second Advance-payment '
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)||' First and Second Advance-payment '
                                                                                                                          || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
-                                                                                                                  ELSE 'Storno invoice ' || tmpMov_Invoice.ReceiptNumber||' First, Second and Third Advance-payment '
+                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                                                                                                  ELSE 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)||' First, Second and Third Advance-payment '
                                                                                                                     || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                                                                                    || '% for ' || tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                                                                                    || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                                                                              END AS Comment
 
                                                                                                       FROM tmpMov_Invoice
@@ -196,7 +199,61 @@ BEGIN
      THEN
          PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment()
                                               , ioId
-                                              , (WITH tmpProduct AS (SELECT *
+                                              , CASE WHEN inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return()) AND vbAmount < 0
+                                                          THEN
+                                                                                      (WITH tmpProduct AS (SELECT gpSelect.*
+                                                                                                           FROM gpSelect_Object_Product (inMovementId_OrderClient:= inParentId, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS gpSelect
+                                                                                                          )
+                                                                                            -- Все Счета предоплата
+                                                                                         , tmpMov_Invoice AS (SELECT Movement.Id
+                                                                                                                   , MovementString_ReceiptNumber.ValueData AS ReceiptNumber
+                                                                                                                   , CASE WHEN MovementLinkObject_InvoiceKind.ObjectId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'receipt'  ELSE 'invoice' END AS InvoiceName
+                                                                                                                   , MovementFloat_Amount.ValueData AS Amount
+                                                                                                                   , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.Id) AS ord
+                                                                                                              FROM Movement
+                                                                                                                   INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                                                                                                 ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                                                                                                                AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                                                                                                                -- только предоплата
+                                                                                                                                                AND MovementLinkObject_InvoiceKind.ObjectId   = CASE WHEN inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END
+                                                                                                                   LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                                                                                                           ON MovementFloat_Amount.MovementId = Movement.Id
+                                                                                                                                          AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                                                                                                   LEFT JOIN MovementString AS MovementString_ReceiptNumber
+                                                                                                                                            ON MovementString_ReceiptNumber.MovementId = Movement.Id
+                                                                                                                                           AND MovementString_ReceiptNumber.DescId     = zc_MovementString_ReceiptNumber()
+                                                                                                              WHERE Movement.DescId   = zc_Movement_Invoice()
+                                                                                                                -- этот док Заказ Клиента
+                                                                                                                AND Movement.ParentId = inParentId
+                                                                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                                                                                AND MovementFloat_Amount.ValueData > 0
+                                                                                                             )
+                                                                                         , tmpRes AS (SELECT tmpMov_Invoice.Ord
+                                                                                                           , CASE WHEN tmpMov_Invoice.Ord = 1
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)
+                                                                                                                                      || CASE WHEN inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN ' Reservation Fee ' ELSE '' END
+                                                                                                                  WHEN tmpMov_Invoice.Ord = 2
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber) || ' First Advance-payment '
+                                                                                                                         || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount *100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                                                                                                  WHEN tmpMov_Invoice.Ord = 3
+                                                                                                                       THEN 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)||' First and Second Advance-payment '
+                                                                                                                         || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                                                                                                         || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                                                                                                  ELSE 'Storno ' || tmpMov_Invoice.InvoiceName || '  ' || zfCalc_ReceiptNumber_print (tmpMov_Invoice.ReceiptNumber)||' First, Second and Third Advance-payment '
+                                                                                                                    || ROUND (CASE WHEN COALESCE (tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpMov_Invoice.Amount * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                                                                                                    || '% for ' || tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                                                                                             END AS Comment
+
+                                                                                                      FROM tmpMov_Invoice
+                                                                                                           LEFT JOIN tmpProduct ON 1=1
+                                                                                                      ORDER BY tmpMov_Invoice.Ord
+                                                                                                     )
+                                                                                       -- Результат
+                                                                                       SELECT STRING_AGG (tmpRes.Comment, CHR (13)) FROM tmpRes
+                                                                                      )  
+                                              
+                                           ELSE (WITH tmpProduct AS (SELECT *
                                                                      FROM gpSelect_Object_Product (inMovementId_OrderClient:= inParentId, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS tmp
                                                                     )
                                                       -- Все документы заказа, в которых указан этот Счет, возьмем первый
@@ -244,16 +301,16 @@ BEGIN
                                                  -- Результат
                                                  SELECT CASE WHEN tmpPrePay.Ord = 1 THEN 'Reservation Fee '
                                                                || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                              WHEN tmpPrePay.Ord = 2 THEN 'First Advance-payment '
                                                                || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                              WHEN tmpPrePay.Ord = 3 THEN 'First and Second Advance-payment '
                                                                || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                              ELSE /*WHEN tmpPrePay.Ord = 4 THEN*/ 'First, Second and Third Advance-payment '
                                                                || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
-                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| tmpProduct.invnumber_orderclient
+                                                               || '% for '||tmpProduct.modelname_full || ' Order: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
                                                         END
                                                  FROM tmpInvoice
                                                       LEFT JOIN tmpProduct ON tmpProduct.Id = tmpInvoice.ProductId
@@ -262,7 +319,8 @@ BEGIN
                                                       --номер предоплаты
                                                       LEFT JOIN tmpMov_PrePay AS tmpPrePay ON tmpPrePay.Id = tmpInvoice.Id
 
-                                                 ));
+                                                 )
+                                           END);
      END IF;
 
 

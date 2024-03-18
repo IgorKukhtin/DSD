@@ -68,6 +68,16 @@ BEGIN
                                                     JOIN Movement ON Movement.Id       = MovementString.MovementId
                                                                  AND Movement.DescId   = zc_Movement_Invoice()
                                                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                                   INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                                 ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                                                AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                                                AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_PrePay'
+                                                                                                                                        THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                   WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Return'
+                                                                                                                                        THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                   WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
+                                                                                                                                        THEN zc_Enum_InvoiceKind_Pay() 
+                                                                                                                              END
                                                WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                               ), 0);
          END IF;

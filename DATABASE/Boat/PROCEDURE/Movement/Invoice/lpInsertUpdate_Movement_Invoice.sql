@@ -58,8 +58,19 @@ BEGIN
                                                  WHERE ObjectLink_TaxKind.ObjectId = inObjectId
                                                    AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                 ), 0)
+                                                -- and 1=0
      THEN
-         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
+         inVATPercent:= COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                   FROM ObjectLink AS ObjectLink_TaxKind
+                                        LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                             AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+                                   WHERE ObjectLink_TaxKind.ObjectId = inObjectId
+                                     AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
+                                  ), 0);
+
+         /*RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
                        , '%'
                        , zfConvert_FloatToString (inVATPercent)
                        , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
@@ -71,21 +82,37 @@ BEGIN
                                                              WHERE ObjectLink_TaxKind.ObjectId = inObjectId
                                                                AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
                                                             ), 0))
-                        ;
+                        ;*/
      END IF;
 
 
     -- inReceiptNumber формируется только для Amount > 0
-    IF (COALESCE (inAmount, 0) <= 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Return()) OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
+    IF (COALESCE (inAmount, 0) <= 0
+    AND inInvoiceKindId NOT IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return())
+       )
+    OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
+    OR (COALESCE (inParentId, 0) = 0 AND COALESCE (inAmount, 0) <= 0)
+
     THEN
         inReceiptNumber := NULL;
     ELSE
         -- если такой номер уже найден, т.е. параллельно добавили
-        IF EXISTS (SELECT 1
+        IF TRIM (inReceiptNumber) IN ('', '0')
+         OR EXISTS (SELECT 1
                    FROM MovementString
                         JOIN Movement ON Movement.Id       = MovementString.MovementId
                                      AND Movement.DescId   = zc_Movement_Invoice()
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                      ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                     AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                     AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
+                                                                                                             THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                        WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
+                                                                                                             THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                        WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                                                                                                             THEN zc_Enum_InvoiceKind_Pay() 
+                                                                                                   END
                    WHERE MovementString.DescId    = zc_MovementString_ReceiptNumber()
                      AND MovementString.ValueData = TRIM (inReceiptNumber)
                      -- другой документ
@@ -98,6 +125,16 @@ BEGIN
                                                   JOIN Movement ON Movement.Id       = MovementString.MovementId
                                                                AND Movement.DescId   = zc_Movement_Invoice()
                                                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                  INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                                ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                                               AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                                               AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
+                                                                                                                                       THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
+                                                                                                                                       THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                                                                                                                                       THEN zc_Enum_InvoiceKind_Pay() 
+                                                                                                                             END
                                              WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                             ), 0);
             -- !!!проверка уникальности!!! - потом добавить
