@@ -392,7 +392,8 @@ BEGIN
                                     THEN ROUND(zfCalc_CurrencyTo (vbAmountDiscount_GRN, vbCurrencyValue_EUR, 1), 2)
                                     ELSE 0 END :: TFloat  AS AmountDiscount_EUR_Diff
 
-                             , tmpRes.AmountUSD > 0 AND (tmpRes.AmountRounding_ForUSD <> tmpRes.AmountRounding_ForEUR AND (tmpRes.AmountRounding_ForEUR + vbAmountRounding_GRN)::TFloat = 0 OR 
+                             , tmpRes.AmountUSD > 0 AND (tmpRes.AmountGRN + tmpRes.AmountCard) > 0 AND
+                               (tmpRes.AmountRounding_ForUSD <> tmpRes.AmountRounding_ForEUR AND (tmpRes.AmountRounding_ForEUR + vbAmountRounding_GRN)::TFloat = 0 OR 
                                tmpRes.AmountUSDOver_GRN > 0 AND tmpRes.AmountUSDOver_GRN = Round(tmpRes.AmountUSDOver / vbCurrencyValue_Cross * vbCurrencyValueIn_EUR, 2))            AS isChangeEUR
                                    
                         FROM tmpRes
@@ -546,4 +547,4 @@ $BODY$
 -- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());
 
 
-select AmountDiscount_EUR from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589  ,  inSession := '2');
+select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589 ,  inSession := '2');

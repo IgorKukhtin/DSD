@@ -131,6 +131,7 @@ BEGIN
      inCurrencyValueCross := CASE WHEN inCurrencyValueCross > 0 THEN inCurrencyValueCross ELSE 1 END;
      
      --raise notice 'Value: %  % % % % %  % % % %' , inAmountToPay_EUR, inAmountGRN, inAmountUSD, inAmountEUR, inAmountCard, inisDiscount, inAmountDiscount_EUR, inisChangeEUR, inisAmountDiff, inAmountDiff;
+     
 
      IF inAmountGRN < 0 THEN inAmountGRN := 0; END IF;
      IF inAmountUSD < 0 THEN inAmountUSD := 0; END IF;
@@ -303,9 +304,11 @@ BEGIN
      vbAmountRounding_EUR := Round(vbAmountToPay_EUR - vbAmountToPay_EUR_Calc, 2);
      
      vbAmountEUR_Over_GRN := Round(zfCalc_CurrencyFrom (vbAmountOverpay_EUR, inCurrencyValueInEUR, 1), 2);
-     vbAmountUSD_Over_GRN := Round(CASE WHEN inisChangeEUR = TRUE 
+     vbAmountUSD_Over_GRN := Round(zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD, 1), 2);
+     
+                                   /*CASE WHEN inisChangeEUR = TRUE 
                                         THEN zfCalc_CurrencyFrom (vbAmountOverpay_USD / inCurrencyValueCross, inCurrencyValueInEUR, 1)
-                                        ELSE zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD, 1) END, 2):: TFloat;
+                                        ELSE zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD, 1) END, 2):: TFloat;*/
      
      
      vbAmountRemains_EUR := Round(vbAmountRest_EUR);
@@ -449,7 +452,7 @@ BEGIN
                         THEN zfCalc_CurrencyFrom (inAmountUSD - vbAmountOverpay_USD, inCurrencyValueUSD, 1) 
                         ELSE zfCalc_CurrencyFrom (inAmountUSD - vbAmountOverpay_USD, inCurrencyValueUSD, 1) END, 2) +
              Round(CASE WHEN inisChangeEUR = TRUE 
-                        THEN zfCalc_CurrencyFrom (vbAmountOverpay_USD / inCurrencyValueCross, inCurrencyValueInEUR, 1)
+                        THEN zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD /*/ inCurrencyValueCross, inCurrencyValueInEUR*/, 1)
                         ELSE zfCalc_CurrencyFrom (vbAmountOverpay_USD, inCurrencyValueInUSD, 1) END, 2) +
              Round(zfCalc_CurrencyFrom (inAmountEUR - vbAmountOverpay_EUR, inCurrencyValueEUR, 1), 2) +
              Round(zfCalc_CurrencyFrom (vbAmountOverpay_EUR, inCurrencyValueInEUR, 1), 2) +                   
@@ -482,11 +485,13 @@ $BODY$
 -- 
 
 
-select AmountDiscount_EUR, AmountDiscount
+select AmountUSD_Over
+     , AmountUSD_Over_GRN
+
 from lpGet_MI_Sale_Child_TotalCalc(inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inCurrencyValueCross := 1.0868 , 
                                    inAmountToPay_EUR := 451 , 
-                                   inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 0 , inAmountCard := 0 , inAmountDiscount_EUR := 0 , inAmountDiscDiff_EUR := 0.79,
-                                   inisDiscount := False, inisChangeEUR := 'False' , inisAmountDiff := 'True' , inAmountDiff := 400, 
+                                   inAmountGRN := 0 , inAmountUSD := 300 , inAmountEUR := 176 , inAmountCard := 0 , inAmountDiscount_EUR := 0 , inAmountDiscDiff_EUR := 0,
+                                   inisDiscount := False, inisChangeEUR := True , inisAmountDiff := False , inAmountDiff := 0, 
                                    inCurrencyId_Client := 18101 ,  inUserId := 2);
                                             
 /*select AmountDiscount_EUR, AmountRemains_EUR, AmountRest_EUR

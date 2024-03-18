@@ -294,6 +294,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
---
-
-SELECT * FROM gpGet_MovementItem_MobileOrderInternal(559434, zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MovementItem_MobileOrderInternal(559434, zfCalc_UserAdmin());

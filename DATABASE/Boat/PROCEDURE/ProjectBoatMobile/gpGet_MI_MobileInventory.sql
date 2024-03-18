@@ -189,6 +189,4 @@ $BODY$
 */
 
 -- тест
--- 
-
-select * from gpGet_MI_MobileInventory(inMovementId := 3172 , inGoodsId := 19952 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');
+-- select * from gpGet_MI_MobileInventory(inMovementId := 3172 , inGoodsId := 19952 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');

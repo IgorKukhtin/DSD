@@ -79,5 +79,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpGet_Goods_MobilebyBarcode(inBarCode := '000000197941', inSession := '5');
+-- select * from gpGet_Goods_MobilebyBarcode(inBarCode := '000000197941', inSession := '5');
