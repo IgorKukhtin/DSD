@@ -130,6 +130,7 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     isInvoice_oth: TcxGridDBColumn;
     miUpdate: TMenuItem;
+    Comment_Product: TcxGridDBColumn;
   private
   public
   end;
