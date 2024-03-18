@@ -884,7 +884,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -985,6 +985,40 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = mactStartLoad_SN
       Category = 0
     end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end>
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrintPrice: TdxBarButton
+      Action = actPrintPrice
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1023,6 +1057,62 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1055#1088#1080#1093#1086#1076#1072' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
       WithoutNext = True
+    end
+    object actPrintPrice: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1094#1077#1085#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1094#1077#1085#1072')'
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomePrice'
+      ReportNameParam.Value = 'PrintMovement_IncomePrice'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
     object actGetImportSetting_Income: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -1102,15 +1192,6 @@ object IncomeJournalForm: TIncomeJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      MoveParams = <>
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -1129,8 +1210,8 @@ object IncomeJournalForm: TIncomeJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' ('#1082#1086#1083'-'#1074#1086')'
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
