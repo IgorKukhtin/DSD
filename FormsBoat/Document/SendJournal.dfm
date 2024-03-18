@@ -87,6 +87,8 @@ object SendJournalForm: TSendJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 8
+    ExplicitTop = 51
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -715,10 +717,10 @@ object SendJournalForm: TSendJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Master
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Master
         end>
       Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
       Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
@@ -731,7 +733,7 @@ object SendJournalForm: TSendJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;GoodsGroupName;GoodsName'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -739,6 +741,15 @@ object SendJournalForm: TSendJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Send_2'
@@ -811,10 +822,10 @@ object SendJournalForm: TSendJournalForm
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
         end>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Master
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Master
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -829,6 +840,7 @@ object SendJournalForm: TSendJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -836,6 +848,30 @@ object SendJournalForm: TSendJournalForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = Null
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = ClientDataSet
+          DataType = ftDateTime
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Send'
@@ -1521,6 +1557,7 @@ object SendJournalForm: TSendJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
@@ -1563,8 +1600,8 @@ object SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 336
-    Top = 264
+    Left = 720
+    Top = 176
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1639,8 +1676,8 @@ object SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 615
-    Top = 256
+    Left = 607
+    Top = 176
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edInvNumber_OrderClient

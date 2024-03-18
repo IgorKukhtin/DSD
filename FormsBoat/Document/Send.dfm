@@ -1924,10 +1924,10 @@ object SendForm: TSendForm
     object actPrint2: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Master
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Master
         end>
       Caption = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
       Hint = #1055#1077#1095#1072#1090#1100' ('#1088#1072#1089#1095#1077#1090')'
@@ -1940,7 +1940,7 @@ object SendForm: TSendForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'ReceiptLevelName;GoodsGroupName;GoodsName'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -1977,10 +1977,10 @@ object SendForm: TSendForm
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrint_Master
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrint_Master
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
