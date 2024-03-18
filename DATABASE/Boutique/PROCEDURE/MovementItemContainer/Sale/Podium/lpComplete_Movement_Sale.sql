@@ -612,7 +612,7 @@ end if;
                         , OperSumm, OperSumm_Currency
                         , ObjectId_from
                         , AccountId_from, ContainerId_from
-                        , OperSumm_from
+                        , OperSumm_from                        
                          )
         SELECT tmp.MovementItemId
              , tmp.ParentId
@@ -688,7 +688,12 @@ end if;
 
                      -- если надо - переведем сумму в Валюте в ГРН
                    -- , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() THEN MovementItem.Amount ELSE ROUND (zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData), 2) END AS OperSumm
-                   , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() THEN MovementItem.Amount ELSE ROUND (zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData), 4) END AS OperSumm
+                   , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() 
+                          THEN MovementItem.Amount 
+                          ELSE CASE WHEN MovementItem.ParentId IS NULL 
+                                    THEN COALESCE(MIFloat_AmountExchange.ValueData, Round(zfCalc_CurrencyFrom (MovementItem.Amount, COALESCE(MIFloat_CurrencyValueIn.ValueData, MIFloat_CurrencyValue.ValueData), MIFloat_ParValue.ValueData), 2)) 
+                                    ELSE ROUND (zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData), 2) END 
+                          END AS OperSumm
                    , CASE WHEN MILinkObject_Currency.ObjectId = zc_Currency_Basis() THEN 0 ELSE MovementItem.Amount END AS OperSumm_Currency
                    , MILinkObject_Currency.ObjectId AS CurrencyId
 
@@ -699,17 +704,20 @@ end if;
                      -- Счет в грн для обмен всегда - Денежные средства + Касса магазинов + касса*****
                    , CASE WHEN MovementItem.ParentId IS NULL THEN zc_Enum_Account_30201()    ELSE 0 END AS AccountId_from
                      -- Расчетная сумма в грн для обмен
-                   , CASE WHEN MovementItem.ParentId IS NULL THEN zfCalc_CurrencyFrom (MovementItem.Amount, MIFloat_CurrencyValue.ValueData, MIFloat_ParValue.ValueData) ELSE 0 END AS OperSumm_from
+                   , CASE WHEN MovementItem.ParentId IS NULL AND MILinkObject_Currency.ObjectId = zc_Currency_Basis() AND Object.DescId = zc_Object_Cash()
+                          THEN COALESCE(MIFloat_AmountExchange.ValueData, Round(zfCalc_CurrencyFrom (MovementItem.Amount, COALESCE(MIFloat_CurrencyValueIn.ValueData, MIFloat_CurrencyValue.ValueData), MIFloat_ParValue.ValueData), 2)) /*+
+                               COALESCE(DiffLeft.OperSummDiffLeft, 0)*/
+                          ELSE 0 END AS OperSumm_from
               FROM Movement
                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                           AND MovementItem.DescId     = zc_MI_Child()
                                           AND MovementItem.isErased   = FALSE
-                                          AND MovementItem.Amount     <> 0
-                   INNER JOIN MovementItem AS MI_Master
-                                           ON MI_Master.MovementId = Movement.Id
-                                          AND MI_Master.DescId     = zc_MI_Master()
-                                          AND MI_Master.Id         = MovementItem.ParentId
-                                          AND MI_Master.isErased   = FALSE
+                                         
+                   LEFT JOIN MovementItem AS MI_Master
+                                          ON MI_Master.MovementId = Movement.Id
+                                         AND MI_Master.DescId     = zc_MI_Master()
+                                         AND MI_Master.Id         = MovementItem.ParentId
+                                         AND MI_Master.isErased   = FALSE
                    LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                     ON MILinkObject_Currency.MovementItemId = MovementItem.Id
@@ -720,22 +728,51 @@ end if;
                    LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
                                               AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
+                   LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValueIn
+                                               ON MIFloat_CurrencyValueIn.MovementItemId = MovementItem.Id
+                                              AND MIFloat_CurrencyValueIn.DescId         = zc_MIFloat_CurrencyValueIn()
                    LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                               AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
+                   LEFT JOIN MovementItemFloat AS MIFloat_AmountExchange
+                                               ON MIFloat_AmountExchange.MovementItemId = MovementItem.Id
+                                              AND MIFloat_AmountExchange.DescId         = zc_MIFloat_AmountExchange()
+                   /*LEFT JOIN (SELECT SUM(COALESCE(MIFloat_SummChangePercent.ValueData, 0)) AS OperSummDiffLeft 
+                              FROM MovementItem                    
+                                   LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                               ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
+                                                              AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId     = zc_MI_Master()
+                                AND MovementItem.isErased   = FALSE) AS DiffLeft ON MovementItem.ParentId IS NULL*/                                 
               WHERE Movement.Id       = inMovementId
                 AND Movement.DescId   = zc_Movement_Sale()
+                AND (MovementItem.Amount <> 0 OR COALESCE(MIFloat_AmountExchange.ValueData, 0) <> 0)
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS tmp
         ;
 
      -- проверка что сумма оплаты ....
      IF  COALESCE ((SELECT SUM (_tmpItem_SummClient.TotalPay) FROM _tmpItem_SummClient), 0)
-      <> COALESCE ((SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) FROM _tmpPay), 0)
+      <> COALESCE ((SELECT SUM (tmpPay.OperSumm) 
+                    FROM (SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) /*- MAX(COALESCE(MIFloat_SummChangePercent.ValueData, 0))*/ AS OperSumm 
+                          FROM _tmpPay                    
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                           ON MIFloat_SummChangePercent.MovementItemId = _tmpPay.ParentId
+                                                          AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                          WHERE _tmpPay.ParentId IS NOT NULL
+                          GROUP BY _tmpPay.ParentId) AS tmpPay), 0)
      THEN
          RAISE EXCEPTION 'Ошибка. Сумма оплаты Main <%> не равна Child <%>.', (SELECT SUM (_tmpItem_SummClient.TotalPay) FROM _tmpItem_SummClient)
-                                                                            , (SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) FROM _tmpPay)
-         ;
+                                                                            , (SELECT SUM (tmpPay.OperSumm) 
+                                                                               FROM (SELECT SUM (_tmpPay.OperSumm - _tmpPay.OperSumm_from) /*- MAX(COALESCE(MIFloat_SummChangePercent.ValueData, 0))*/ AS OperSumm 
+                                                                                     FROM _tmpPay                    
+                                                                                          LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
+                                                                                                                      ON MIFloat_SummChangePercent.MovementItemId = _tmpPay.ParentId
+                                                                                                                     AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()
+                                                                                     WHERE _tmpPay.ParentId IS NOT NULL
+                                                                                     GROUP BY _tmpPay.ParentId) AS tmpPay)
+               ;
      END IF;
 
 
@@ -1409,6 +1446,7 @@ end if;
             , TRUE                                    AS isActive
        FROM _tmpPay
             LEFT JOIN _tmpItem_SummClient ON _tmpItem_SummClient.MovementItemId = _tmpPay.ParentId
+       WHERE _tmpPay.OperSumm <> 0
 
       UNION ALL
        -- проводки - ОБМЕН
@@ -1508,6 +1546,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_Sale (inMovementId:= 1100, inUserId:= zfCalc_UserAdmin() :: Integer)
-
-
-select * from gpUpdate_Status_Sale(inMovementId := 23589 , inStatusCode := 2 , inKeySMS := 0 ,  inSession := '2');

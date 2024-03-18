@@ -611,6 +611,7 @@ type
     FHideHeader: Boolean;
     FSeparator: String;
     FEncodingANSI: Boolean;
+    FnoRecreateColumns: Boolean;
     procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent;
@@ -636,6 +637,8 @@ type
     property Separator: String read FSeparator write FSeparator;
     property DefaultFileExt: String read FDefaultFileExt write FDefaultFileExt;
     property EncodingANSI: Boolean read FEncodingANSI write FEncodingANSI default false;
+    property noRecreateColumns: Boolean read FnoRecreateColumns
+      write FnoRecreateColumns default false;
   end;
 
   TdsdGridToExcel = class(TExportGrid)
@@ -2781,6 +2784,7 @@ begin
   HideHeader := False;
   EncodingANSI := False;
   FOpenAfterCreate := true;
+  FNoRecreateColumns := False;
 end;
 
 function TExportGrid.LocalExecute: Boolean;
@@ -2834,7 +2838,7 @@ begin
   if FGrid is TcxGrid then
   begin
     // грид скрыт и нужен только для выгрузки, то добавим колонки во View
-    if not FGrid.Visible then
+    if not FGrid.Visible and not FnoRecreateColumns then
     begin
       if TcxGrid(FGrid).ViewCount > 0 then
       begin

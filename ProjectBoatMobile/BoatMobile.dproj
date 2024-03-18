@@ -215,10 +215,10 @@
         <iOS_AppStore1024>img\BoatMobile_1024.png</iOS_AppStore1024>
         <iPhone_AppIcon120>img\BoatMobile_120.png</iPhone_AppIcon120>
         <iPhone_AppIcon180>img\BoatMobile_180.png</iPhone_AppIcon180>
-        <iPhone_Launch2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2x.png</iPhone_Launch2x>
-        <iPhone_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_2x.png</iPhone_LaunchDark2x>
-        <iPhone_Launch3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_3x.png</iPhone_Launch3x>
-        <iPhone_LaunchDark3x>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImageDark_3x.png</iPhone_LaunchDark3x>
+        <iPhone_Launch2x>img\BoatMobile_396x229.png</iPhone_Launch2x>
+        <iPhone_LaunchDark2x>img\BoatMobile_396x229.png</iPhone_LaunchDark2x>
+        <iPhone_Launch3x>img\BoatMobile_594x344.png</iPhone_Launch3x>
+        <iPhone_LaunchDark3x>img\BoatMobile_594x344.png</iPhone_LaunchDark3x>
         <iPhone_Spotlight80>img\BoatMobile_80.png</iPhone_Spotlight80>
         <iPhone_Spotlight120>img\BoatMobile_120.png</iPhone_Spotlight120>
         <iPhone_Setting58>img\BoatMobile_58.png</iPhone_Setting58>
@@ -227,8 +227,8 @@
         <iPhone_Notification60>img\BoatMobile_60.png</iPhone_Notification60>
         <iPad_AppIcon152>img\BoatMobile_152.png</iPad_AppIcon152>
         <iPad_AppIcon167>img\BoatMobile_167.png</iPad_AppIcon167>
-        <iPad_Launch2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImage_2x.png</iPad_Launch2x>
-        <iPad_LaunchDark2x>$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageDark_2x.png</iPad_LaunchDark2x>
+        <iPad_Launch2x>img\BoatMobile_792x458.png</iPad_Launch2x>
+        <iPad_LaunchDark2x>img\BoatMobile_792x458.png</iPad_LaunchDark2x>
         <iPad_SpotLight80>img\BoatMobile_80.png</iPad_SpotLight80>
         <iPad_Setting58>img\BoatMobile_58.png</iPad_Setting58>
         <iPad_Notification40>img\BoatMobile_40.png</iPad_Notification40>

@@ -3,7 +3,7 @@ object MemberForm: TMemberForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 458
-  ClientWidth = 925
+  ClientWidth = 1056
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,15 @@ object MemberForm: TMemberForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 96
-    Width = 925
+    Width = 1056
     Height = 362
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 96
+    ExplicitTop = 16
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -685,10 +687,11 @@ object MemberForm: TMemberForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 925
+    Width = 1056
     Height = 70
     Align = alTop
     TabOrder = 7
+    ExplicitWidth = 925
     object cxLabel13: TcxLabel
       Left = 193
       Top = 9
@@ -1131,6 +1134,14 @@ object MemberForm: TMemberForm
         item
           Visible = True
           ItemName = 'bbStartLoadCardF2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadPhone'
         end>
     end
     object bbStartLoadCardF1: TdxBarButton
@@ -1147,6 +1158,10 @@ object MemberForm: TMemberForm
       Hint = 'Separator1'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbStartLoadPhone: TdxBarButton
+      Action = macStartLoadPhone
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -1223,8 +1238,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'1)'
       ImageIndex = 41
     end
     object actGetImportSettingIBAN: TdsdExecStoredProc
@@ -1264,8 +1279,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' '#1047#1055' ('#1060'2)'
       ImageIndex = 41
     end
     object macStartLoadIBAN: TMultiAction
@@ -1283,8 +1298,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090'. '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'1)'
       ImageIndex = 69
     end
     object actGetImportSettingSecond: TdsdExecStoredProc
@@ -1829,8 +1844,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1082#1072#1088#1090' '#1089#1095#1077#1090#1072' IBAN '#1047#1055' ('#1060'2)'
       ImageIndex = 70
     end
     object actGetImportSettingIBANSecond: TdsdExecStoredProc
@@ -1872,8 +1887,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'1)'
       ImageIndex = 71
     end
     object actGetImportSettingIdCard1: TdsdExecStoredProc
@@ -1902,8 +1917,8 @@ object MemberForm: TMemberForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)?'
       InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1082#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#8470' '#1073#1072#1085#1082'. '#1082#1072#1088#1090#1086#1095#1082#1080' ('#1060'2)'
       ImageIndex = 73
     end
     object actGetImportSettingIdCard2: TdsdExecStoredProc
@@ -1916,6 +1931,36 @@ object MemberForm: TMemberForm
           StoredProc = spGetImportSettingIdCardF2
         end>
       Caption = 'actGetImportSettingIBAN'
+    end
+    object macStartLoadPhone: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingId_Phone
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1085#1086#1084#1077#1088#1086#1074' '#1090#1077#1083#1077#1092#1086#1085#1086#1074'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1085#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1085#1086#1084#1077#1088' '#1090#1077#1083#1077#1092#1086#1085#1072
+      ImageIndex = 50
+    end
+    object actGetImportSettingId_Phone: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_phone
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_phone
+        end>
+      Caption = 'actGetImportSettingPhone'
     end
   end
   object spSelect: TdsdStoredProc
@@ -2502,8 +2547,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 664
-    Top = 120
+    Left = 960
+    Top = 200
   end
   object spGetImportSettingIdSecond: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2534,8 +2579,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 128
+    Left = 448
+    Top = 144
   end
   object spGetImportSettingIdIBAN: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2566,8 +2611,8 @@ object MemberForm: TMemberForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 680
-    Top = 216
+    Left = 664
+    Top = 200
   end
   object spGetImportSettingIdIBANSecond: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2599,7 +2644,7 @@ object MemberForm: TMemberForm
       end>
     PackSize = 1
     Left = 688
-    Top = 304
+    Top = 256
   end
   object spUpdate_GLN: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Member_GLN'
@@ -2831,5 +2876,37 @@ object MemberForm: TMemberForm
     CheckBoxList = <>
     Left = 144
     Top = 280
+  end
+  object spGetImportSettingId_phone: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TMemberForm;zc_Object_ImportSetting_MemberPhone'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 960
+    Top = 264
   end
 end

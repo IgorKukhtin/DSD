@@ -1,333 +1,560 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
-  ClientHeight = 534
-  ClientWidth = 399
+  ClientHeight = 576
+  ClientWidth = 465
   AddOnFormData.isSingle = False
-  ExplicitWidth = 405
-  ExplicitHeight = 563
+  ExplicitWidth = 471
+  ExplicitHeight = 605
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 105
-    Top = 499
-    ExplicitLeft = 105
-    ExplicitTop = 499
+    Left = 8
+    Top = 552
+    Visible = False
+    ExplicitLeft = 8
+    ExplicitTop = 552
   end
   inherited bbCancel: TcxButton
-    Left = 208
-    Top = 499
-    ExplicitLeft = 208
-    ExplicitTop = 499
+    Left = 176
+    Top = 552
+    Visible = False
+    ExplicitLeft = 176
+    ExplicitTop = 552
   end
-  object Код: TcxLabel [2]
-    Left = 15
-    Top = 5
-    Caption = 'Interne Nr'
-  end
-  object cxLabel1: TcxLabel [3]
-    Left = 178
-    Top = 5
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-  end
-  object ceOperDate: TcxDateEdit [4]
-    Left = 178
-    Top = 25
-    EditValue = 44230d
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 3
-    Width = 100
-  end
-  object ceAmountIn: TcxCurrencyEdit [5]
-    Left = 15
-    Top = 123
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 4
-    Width = 84
-  end
-  object cxLabel7: TcxLabel [6]
-    Left = 15
-    Top = 103
-    Caption = 'Debet'
-  end
-  object ceAmountOut: TcxCurrencyEdit [7]
-    Left = 111
-    Top = 123
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 5
-    Width = 84
-  end
-  object cxLabel3: TcxLabel [8]
-    Left = 111
-    Top = 103
-    Caption = 'Kredit'
-  end
-  object cxLabel6: TcxLabel [9]
-    Left = 15
-    Top = 150
-    Caption = 'Lieferanten / Kunden'
-  end
-  object ceObject: TcxButtonEdit [10]
-    Left = 15
-    Top = 170
-    Properties.Buttons = <
-      item
+  object cxPageControl1: TcxPageControl [2]
+    Left = 8
+    Top = 8
+    Width = 449
+    Height = 561
+    TabOrder = 2
+    Properties.ActivePage = cxTabSheet2
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 561
+    ClientRectRight = 449
+    ClientRectTop = 24
+    object Main: TcxTabSheet
+      Caption = 'Main'
+      ImageIndex = 0
+      ExplicitWidth = 412
+      object Код: TcxLabel
+        Left = 15
+        Top = 5
+        Caption = 'Interne Nr'
+      end
+      object cxLabel1: TcxLabel
+        Left = 178
+        Top = 5
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      end
+      object ceOperDate: TcxDateEdit
+        Left = 178
+        Top = 25
+        EditValue = 44230d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 2
+        Width = 100
+      end
+      object ceAmountIn: TcxCurrencyEdit
+        Left = 15
+        Top = 123
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        TabOrder = 4
+        Width = 84
+      end
+      object cxLabel7: TcxLabel
+        Left = 15
+        Top = 103
+        Caption = 'Debet'
+      end
+      object ceAmountOut: TcxCurrencyEdit
+        Left = 111
+        Top = 123
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        TabOrder = 5
+        Width = 84
+      end
+      object cxLabel3: TcxLabel
+        Left = 111
+        Top = 103
+        Caption = 'Kredit'
+      end
+      object cxLabel6: TcxLabel
+        Left = 15
+        Top = 150
+        Caption = 'Lieferanten / Kunden'
+      end
+      object ceObject: TcxButtonEdit
+        Left = 15
+        Top = 170
+        Properties.Buttons = <
+          item
+            Action = actGuidesObjectChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 6
+        Width = 375
+      end
+      object cxLabel5: TcxLabel
+        Left = 15
+        Top = 201
+        Hint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      end
+      object ceInfoMoney: TcxButtonEdit
+        Left = 15
+        Top = 222
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 7
+        Width = 185
+      end
+      object cxLabel10: TcxLabel
+        Left = 15
+        Top = 349
+        Caption = #1058#1077#1082#1089#1090
+      end
+      object cxLabel9: TcxLabel
+        Left = 240
+        Top = 55
+        Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
+      end
+      object edPaidKind: TcxButtonEdit
+        Left = 317
+        Top = 505
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 8
+        Visible = False
+        Width = 100
+      end
+      object edInvNumber: TcxTextEdit
+        Left = 15
+        Top = 25
+        Properties.ReadOnly = True
+        TabOrder = 14
+        Text = '0'
+        Width = 96
+      end
+      object ceUnit: TcxButtonEdit
+        Left = 205
+        Top = 222
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 17
+        Width = 185
+      end
+      object cxLabel14: TcxLabel
+        Left = 205
+        Top = 201
+        Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
+      end
+      object cxLabel15: TcxLabel
+        Left = 15
+        Top = 299
+        Caption = 'Boat'
+      end
+      object ceProduct: TcxButtonEdit
+        Left = 15
+        Top = 318
+        Properties.Buttons = <
+          item
+            Default = True
+            Enabled = False
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 19
+        Width = 375
+      end
+      object cxLabel17: TcxLabel
+        Left = 284
+        Top = 5
+        Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1083#1072#1085')'
+      end
+      object cePlanDate: TcxDateEdit
+        Left = 284
+        Top = 25
+        EditValue = 42005d
+        Properties.AssignedValues.DisplayFormat = True
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 21
+        Width = 96
+      end
+      object cxLabel18: TcxLabel
+        Left = 15
+        Top = 55
+        Caption = 'Externe Nr'
+      end
+      object edInvNumberPartner: TcxTextEdit
+        Left = 15
+        Top = 75
+        Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1083#1080#1077#1085#1090#1072
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 23
+        Width = 130
+      end
+      object cxLabel19: TcxLabel
+        Left = 156
+        Top = 55
+        Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        Caption = 'Invoice No'
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object edReceiptNumber: TcxTextEdit
+        Left = 156
+        Top = 75
+        Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
+        ParentFont = False
+        ParentShowHint = False
+        Properties.ReadOnly = False
+        ShowHint = True
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 25
+        Width = 72
+      end
+      object cxLabel2: TcxLabel
+        Left = 211
+        Top = 103
+        Caption = '% '#1053#1044#1057
+      end
+      object edVATPercent: TcxCurrencyEdit
+        Left = 211
+        Top = 123
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        Properties.ReadOnly = True
+        TabOrder = 27
+        Width = 55
+      end
+      object cxLabel4: TcxLabel
+        Left = 15
+        Top = 250
+        Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
+      end
+      object ceParent: TcxButtonEdit
+        Left = 15
+        Top = 272
+        Properties.Buttons = <
+          item
+            Action = mactGuidesParentChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 29
+        Width = 375
+      end
+      object cxLabel44: TcxLabel
+        Left = 273
+        Top = 103
+        Caption = #1042#1080#1076' '#1053#1044#1057
+      end
+      object edTaxKind: TcxButtonEdit
+        Left = 273
+        Top = 123
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 30
+        Width = 117
+      end
+      object btnGoodsChoiceForm: TcxButton
+        Left = 22
+        Top = 460
+        Width = 180
+        Height = 25
         Action = actGuidesObjectChoiceForm
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 6
-    Width = 375
-  end
-  object cxLabel5: TcxLabel [11]
-    Left = 15
-    Top = 201
-    Hint = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-  end
-  object ceInfoMoney: TcxButtonEdit [12]
-    Left = 15
-    Top = 222
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 185
-  end
-  object cxLabel10: TcxLabel [13]
-    Left = 15
-    Top = 349
-    Caption = #1058#1077#1082#1089#1090
-  end
-  object cxLabel9: TcxLabel [14]
-    Left = 240
-    Top = 55
-    Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
-  end
-  object edPaidKind: TcxButtonEdit [15]
-    Left = 317
-    Top = 505
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Visible = False
-    Width = 100
-  end
-  object edInvNumber: TcxTextEdit [16]
-    Left = 15
-    Top = 25
-    Properties.ReadOnly = True
-    TabOrder = 16
-    Text = '0'
-    Width = 96
-  end
-  object ceUnit: TcxButtonEdit [17]
-    Left = 205
-    Top = 222
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 17
-    Width = 185
-  end
-  object cxLabel14: TcxLabel [18]
-    Left = 205
-    Top = 201
-    Caption = #1057#1082#1083#1072#1076'/'#1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
-  end
-  object cxLabel15: TcxLabel [19]
-    Left = 15
-    Top = 299
-    Caption = 'Boat'
-  end
-  object ceProduct: TcxButtonEdit [20]
-    Left = 15
-    Top = 318
-    Properties.Buttons = <
-      item
-        Default = True
-        Enabled = False
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 20
-    Width = 375
-  end
-  object cxLabel17: TcxLabel [21]
-    Left = 284
-    Top = 5
-    Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' ('#1087#1083#1072#1085')'
-  end
-  object cePlanDate: TcxDateEdit [22]
-    Left = 284
-    Top = 25
-    EditValue = 42005d
-    Properties.AssignedValues.DisplayFormat = True
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 22
-    Width = 96
-  end
-  object cxLabel18: TcxLabel [23]
-    Left = 15
-    Top = 55
-    Caption = 'Externe Nr'
-  end
-  object edInvNumberPartner: TcxTextEdit [24]
-    Left = 15
-    Top = 75
-    Hint = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1083#1080#1077#1085#1090#1072
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 24
-    Width = 130
-  end
-  object cxLabel19: TcxLabel [25]
-    Left = 156
-    Top = 55
-    Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
-    Caption = 'Invoice No'
-    ParentShowHint = False
-    ShowHint = True
-  end
-  object edReceiptNumber: TcxTextEdit [26]
-    Left = 156
-    Top = 75
-    Hint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
-    ParentFont = False
-    ParentShowHint = False
-    Properties.ReadOnly = False
-    ShowHint = True
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-    TabOrder = 26
-    Width = 72
-  end
-  object cxLabel2: TcxLabel [27]
-    Left = 211
-    Top = 103
-    Caption = '% '#1053#1044#1057
-  end
-  object edVATPercent: TcxCurrencyEdit [28]
-    Left = 211
-    Top = 123
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    Properties.ReadOnly = True
-    TabOrder = 28
-    Width = 55
-  end
-  object cxLabel4: TcxLabel [29]
-    Left = 15
-    Top = 250
-    Caption = #8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
-  end
-  object ceParent: TcxButtonEdit [30]
-    Left = 15
-    Top = 272
-    Properties.Buttons = <
-      item
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 31
+      end
+      object btnGuidesParentChoiceForm: TcxButton
+        Left = 208
+        Top = 460
+        Width = 180
+        Height = 25
         Action = mactGuidesParentChoiceForm
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 30
-    Width = 375
-  end
-  object cxLabel44: TcxLabel [31]
-    Left = 273
-    Top = 103
-    Caption = #1042#1080#1076' '#1053#1044#1057
-  end
-  object edTaxKind: TcxButtonEdit [32]
-    Left = 273
-    Top = 123
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 32
-    Width = 117
-  end
-  object btnGoodsChoiceForm: TcxButton [33]
-    Left = 22
-    Top = 460
-    Width = 180
-    Height = 25
-    Action = actGuidesObjectChoiceForm
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 33
-  end
-  object btnGuidesParentChoiceForm: TcxButton [34]
-    Left = 208
-    Top = 460
-    Width = 180
-    Height = 25
-    Action = mactGuidesParentChoiceForm
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 34
-  end
-  object cbAuto: TcxCheckBox [35]
-    Left = 121
-    Top = 25
-    Caption = 'Auto'
-    Properties.ReadOnly = True
-    TabOrder = 35
-    Width = 49
-  end
-  object cxLabel8: TcxLabel [36]
-    Left = 317
-    Top = 491
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    Visible = False
-  end
-  object edInvoiceKind: TcxButtonEdit [37]
-    Left = 242
-    Top = 75
-    ParentFont = False
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clBlue
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = [fsBold]
-    Style.IsFontAssigned = True
-    TabOrder = 37
-    Width = 148
-  end
-  object ceComment: TcxMemo [38]
-    Left = 15
-    Top = 369
-    TabOrder = 38
-    Height = 74
-    Width = 375
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 32
+      end
+      object cbAuto: TcxCheckBox
+        Left = 121
+        Top = 25
+        Caption = 'Auto'
+        Properties.ReadOnly = True
+        TabOrder = 35
+        Width = 49
+      end
+      object cxLabel8: TcxLabel
+        Left = 317
+        Top = 491
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        Visible = False
+      end
+      object edInvoiceKind: TcxButtonEdit
+        Left = 242
+        Top = 75
+        ParentFont = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clBlue
+        Style.Font.Height = -11
+        Style.Font.Name = 'Tahoma'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 33
+        Width = 148
+      end
+      object ceComment: TcxMemo
+        Left = 15
+        Top = 369
+        TabOrder = 36
+        Height = 74
+        Width = 375
+      end
+      object cxButton1: TcxButton
+        Left = 55
+        Top = 509
+        Width = 90
+        Height = 25
+        Action = actInsertUpdateGuides
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 37
+      end
+      object cxButton2: TcxButton
+        Left = 242
+        Top = 505
+        Width = 90
+        Height = 25
+        Action = actFormClose
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 38
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = 'Lieferanten / Kunden'
+      ImageIndex = 1
+      ExplicitLeft = -3
+      ExplicitTop = 21
+      object cxLabel11: TcxLabel
+        Left = 2
+        Top = 191
+        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+      end
+      object cxLabel20: TcxLabel
+        Left = 287
+        Top = 8
+        Caption = 'Tax Number'
+      end
+      object cxLabel12: TcxLabel
+        Left = 3
+        Top = 8
+        Caption = #1050#1086#1076
+      end
+      object edCode: TcxCurrencyEdit
+        Left = 2
+        Top = 26
+        EditValue = 0.000000000000000000
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        Properties.ReadOnly = True
+        TabOrder = 2
+        Width = 130
+      end
+      object edTaxNumber: TcxTextEdit
+        Left = 287
+        Top = 26
+        TabOrder = 3
+        Width = 160
+      end
+      object cxLabel_19: TcxLabel
+        Left = 287
+        Top = 53
+        Caption = #1058#1080#1087' '#1053#1044#1057
+      end
+      object edTaxKind_add: TcxButtonEdit
+        Left = 287
+        Top = 70
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 5
+        Width = 160
+      end
+      object edName: TcxTextEdit
+        Left = 2
+        Top = 71
+        TabOrder = 6
+        Width = 273
+      end
+      object cxLabel16: TcxLabel
+        Left = 2
+        Top = 53
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+      end
+      object cxLabel_17: TcxLabel
+        Left = 2
+        Top = 97
+        Caption = 'PLZ'
+      end
+      object edPLZ: TcxButtonEdit
+        Left = 2
+        Top = 116
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 9
+        Width = 130
+      end
+      object cxLabel21: TcxLabel
+        Left = 2
+        Top = 144
+        Caption = #1059#1083#1080#1094#1072
+      end
+      object edStreet: TcxTextEdit
+        Left = 2
+        Top = 163
+        TabOrder = 11
+        Width = 273
+      end
+      object edCountry: TcxButtonEdit
+        Left = 145
+        Top = 117
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 12
+        Width = 130
+      end
+      object cxLabel23: TcxLabel
+        Left = 145
+        Top = 97
+        Caption = #1057#1090#1088#1072#1085#1072' '
+      end
+      object cxLabel22: TcxLabel
+        Left = 287
+        Top = 97
+        Caption = #1043#1086#1088#1086#1076
+      end
+      object edCity: TcxButtonEdit
+        Left = 287
+        Top = 117
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 15
+        Width = 160
+      end
+      object edStreet_add: TcxTextEdit
+        Left = 287
+        Top = 163
+        TabOrder = 16
+        Width = 160
+      end
+      object cxLabel25: TcxLabel
+        Left = 287
+        Top = 144
+        Caption = #1059#1083#1080#1094#1072' ('#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086')'
+      end
+      object cxButton3: TcxButton
+        Left = 7
+        Top = 499
+        Width = 125
+        Height = 25
+        Action = actInsert_MoneyPlace
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 18
+      end
+      object edIBAN: TcxTextEdit
+        Left = 2
+        Top = 211
+        TabOrder = 20
+        Width = 273
+      end
+      object cxButton4: TcxButton
+        Left = 154
+        Top = 499
+        Width = 125
+        Height = 25
+        Action = actInsertUpdate_MoneyPlace
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 21
+      end
+      object cxButton5: TcxButton
+        Left = 300
+        Top = 499
+        Width = 125
+        Height = 25
+        Action = actClear_MoneyPlace
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 22
+      end
+      object edInfoMoney_moneyplace: TcxButtonEdit
+        Left = 3
+        Top = 262
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 23
+        Width = 273
+      end
+      object cxLabel24: TcxLabel
+        Left = 2
+        Top = 239
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      end
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 242
@@ -340,6 +567,15 @@
   inherited ActionList: TActionList
     Left = 269
     Top = 374
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGet_MoneyPlace
+        end>
+    end
     object actGetPrepay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -646,6 +882,53 @@
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
       ImageIndex = 7
+    end
+    object actInsert_MoneyPlace: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_MoneyPlace
+      StoredProcList = <
+        item
+          StoredProc = spInsert_MoneyPlace
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ImageIndex = 0
+    end
+    object actInsertUpdate_MoneyPlace: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MoneyPlace
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MoneyPlace
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+    end
+    object actClear_MoneyPlace: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_MoneyPlace_Clear
+      StoredProcList = <
+        item
+          StoredProc = spGet_MoneyPlace_Clear
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100
+      ImageIndex = 2
+    end
+    object actGet_MoneyPlace: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_MoneyPlace
+      StoredProcList = <
+        item
+          StoredProc = spGet_MoneyPlace
+        end>
+      Caption = 'Get_MoneyPlace'
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1128,8 +1411,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 151
-    Top = 221
+    Left = 71
+    Top = 213
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -1156,7 +1439,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 354
-    Top = 508
+    Top = 468
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1316,7 +1599,7 @@
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edTaxKind
+    LookupControl = edTaxKind_add
     DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
@@ -1402,5 +1685,646 @@
     PackSize = 1
     Left = 104
     Top = 392
+  end
+  object spGet_MoneyPlace_Clear: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_MoneyPlace_Clear'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCode'
+        Value = 0.000000000000000000
+        Component = edCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outName'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIBAN'
+        Value = ''
+        Component = edIBAN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStreet'
+        Value = ''
+        Component = edStreet
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStreet_add'
+        Value = ''
+        Component = edStreet_add
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTaxNumber'
+        Value = ''
+        Component = edTaxNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPLZ'
+        Value = ''
+        Component = edPLZ
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCityName'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCountryName'
+        Value = ''
+        Component = edCountry
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTaxKindId'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTaxKindName'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 424
+    Top = 232
+  end
+  object spGet_MoneyPlace: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_MoneyPlace'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = edCode
+        DataType = ftUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IBAN'
+        Value = ''
+        Component = edIBAN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Phone'
+        Value = ''
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Street'
+        Value = ''
+        Component = edStreet
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Street_add'
+        Value = ''
+        Component = edStreet_add
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PLZId'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PLZName'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityName'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxNumber'
+        Value = ''
+        Component = edTaxNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryId'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 421
+    Top = 274
+  end
+  object spInsert_MoneyPlace: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_MoneyPlace'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCode'
+        Value = 0.000000000000000000
+        Component = edCode
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioName'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIBAN'
+        Value = ''
+        Component = edIBAN
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStreet'
+        Value = ''
+        Component = edStreet
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStreet_add'
+        Value = ''
+        Component = edStreet_add
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTaxNumber'
+        Value = ''
+        Component = edTaxNumber
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPLZ'
+        Value = ''
+        Component = edPLZ
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCityName'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCountryName'
+        Value = ''
+        Component = edCountry
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioTaxKindId'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountIn'
+        Value = 0.000000000000000000
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountOut'
+        Value = 0.000000000000000000
+        Component = ceAmountOut
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioName'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInfoMoneyName'
+        Value = ''
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 424
+    Top = 336
+  end
+  object spUpdate_MoneyPlace: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_MoneyPlace'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = edCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName'
+        Value = ''
+        Component = edName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIBAN'
+        Value = ''
+        Component = edIBAN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStreet'
+        Value = ''
+        Component = edStreet
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStreet_add'
+        Value = ''
+        Component = edStreet_add
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxNumber'
+        Value = ''
+        Component = edTaxNumber
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPLZ'
+        Value = ''
+        Component = edPLZ
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCityName'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountryName'
+        Value = ''
+        Component = edCountry
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = ''
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 416
+    Top = 384
+  end
+  object GuidesInfoMoney_moneyplace: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInfoMoney_moneyplace
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 69
+    Top = 292
+  end
+  object GuidesPLZ: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPLZ
+    FormNameParam.Value = 'TPLZForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPLZForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPLZ
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CityName'
+        Value = ''
+        Component = edCity
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CountryName'
+        Value = ''
+        Component = edCountry
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 241
+    Top = 243
+  end
+  object GuidesCountry: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCountry
+    FormNameParam.Value = 'TCountryForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCountryForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCountry
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 177
+    Top = 123
   end
 end

@@ -190,6 +190,10 @@ type
     edCardBank_search: TcxTextEdit;
     cxLabel7: TcxLabel;
     Phone: TcxGridDBColumn;
+    spGetImportSettingId_phone: TdsdStoredProc;
+    actGetImportSettingId_Phone: TdsdExecStoredProc;
+    macStartLoadPhone: TMultiAction;
+    bbStartLoadPhone: TdxBarButton;
   private
     { Private declarations }
   public

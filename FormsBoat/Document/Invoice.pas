@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, cxMemo;
+  cxCheckBox, cxMemo, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC;
 
 type
   TInvoiceForm = class(TAncestorEditDialog_boatForm)
@@ -77,6 +77,22 @@ type
     actGetPrepay: TdsdDataSetRefresh;
     mactGuidesParentChoiceForm: TMultiAction;
     ceComment: TcxMemo;
+    cxPageControl1: TcxPageControl;
+    Main: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxButton1: TcxButton;
+    cxButton2: TcxButton;
+    spGet_MoneyPlace_Clear: TdsdStoredProc;
+    spGet_MoneyPlace: TdsdStoredProc;
+    spInsert_MoneyPlace: TdsdStoredProc;
+    spUpdate_MoneyPlace: TdsdStoredProc;
+    actInsert_MoneyPlace: TdsdExecStoredProc;
+    actInsertUpdate_MoneyPlace: TdsdExecStoredProc;
+    actGet_MoneyPlace: TdsdExecStoredProc;
+    actClear_MoneyPlace: TdsdExecStoredProc;
+    GuidesInfoMoney_moneyplace: TdsdGuides;
+    GuidesPLZ: TdsdGuides;
+    GuidesCountry: TdsdGuides;
   private
     { Private declarations }
   public

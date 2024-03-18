@@ -59,6 +59,13 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+    LoadReportFromFile('PrintMovement_IncomePrice', ReportPath + '\PrintMovement_IncomePrice.fr3');
+    exit;
+
+    LoadReportFromFile('PrintMovement_Income', ReportPath + '\PrintMovement_Income.fr3');
+    exit;
+
     LoadReportFromFile('PrintUser_Badge', ReportPath + '\PrintUser_Badge.fr3');
 
     LoadReportFromFile('PrintMovement_OrderInternalSticker', ReportPath + '\PrintMovement_OrderInternalSticker.fr3');

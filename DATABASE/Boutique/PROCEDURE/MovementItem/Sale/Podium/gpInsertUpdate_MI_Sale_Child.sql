@@ -292,9 +292,3 @@ $BODY$
 
 --select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23590 , inParentId := 116340 , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 300 , inAmountCARD := 0 , inAmountDiscount_GRN := -2635.1 , inAmountDiscount_EUR := -65 , inAmountRounding_GRN := 0 , inAmountRounding_EUR := 0 , inAmountDiff := 0 , inisChangeEUR := 'False' , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');
 
-select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23589 , inParentId := 0 , 
-                                           inAmountGRN := 0 , inAmountUSD := 500 , inAmountEUR := 0 , inAmountCARD := 0 , inAmountDiscount_EUR := -44.05 , inAmountDiff := 0 , inAmountRemains_EUR := 0 , 
-                                           inisDiscount := 'True' , inisChangeEUR := 'False' , 
-                                           inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , 
-                                           inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , 
-                                           inCurrencyValueCross := 1.01 , inParValueCross := 1 ,  inSession := '2');

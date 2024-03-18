@@ -321,6 +321,8 @@ type
     PartionCellName: TcxGridDBColumn;
     actOpenPartionCellForm: TOpenChoiceForm;
     bbPrint: TdxBarButton;
+    actPrintPrice: TdsdPrintAction;
+    bbPrintPrice: TdxBarButton;
   private
   public
   end;

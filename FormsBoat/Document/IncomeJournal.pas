@@ -138,6 +138,10 @@ type
     actChoiceGuides: TdsdChoiceGuides;
     cxLabel4: TcxLabel;
     edSearchInvNumber_Invoice: TcxTextEdit;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    actPrintPrice: TdsdPrintAction;
+    bbPrintPrice: TdxBarButton;
   private
   public
   end;
