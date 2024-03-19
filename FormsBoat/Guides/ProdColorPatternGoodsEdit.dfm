@@ -121,6 +121,16 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
         Options.Editing = False
         Width = 60
       end
+      object NPP_service_ch1: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087' '#1088#1072#1073#1086#1090
+        DataBinding.FieldName = 'NPP_service'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1087'/'#1087' - '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1088#1072#1073#1086#1090
+        Width = 73
+      end
       object DescName_ch1: TcxGridDBColumn
         Caption = #1069#1083#1077#1084#1077#1085#1090
         DataBinding.FieldName = 'DescName'
@@ -1624,6 +1634,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 176
     Top = 232
@@ -1963,6 +1974,14 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP_service'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP_service'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptGoodsId'
         Value = Null
         Component = FormParams
@@ -2058,7 +2077,7 @@ object ProdColorPatternGoodsEditForm: TProdColorPatternGoodsEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 280
+    Left = 920
+    Top = 224
   end
 end

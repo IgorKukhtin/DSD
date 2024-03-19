@@ -518,6 +518,16 @@
           Options.Editing = False
           Width = 45
         end
+        object NPP_service_ch1: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1088#1072#1073#1086#1090
+          DataBinding.FieldName = 'NPP_service'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' - '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1088#1072#1073#1086#1090
+          Width = 58
+        end
         object DescName_ch1: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
           DataBinding.FieldName = 'DescName'
@@ -979,6 +989,16 @@
           Options.Editing = False
           Width = 45
         end
+        object NPP_service_ch2: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1088#1072#1073#1086#1090
+          DataBinding.FieldName = 'NPP_service'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' - '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1088#1072#1073#1086#1090
+          Width = 52
+        end
         object ProdColorGroupName_ch2: TcxGridDBColumn
           Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
           DataBinding.FieldName = 'ProdColorGroupName'
@@ -1343,8 +1363,6 @@
     Height = 62
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -1
-    ExplicitTop = -4
     object lbSearchArticle: TcxLabel
       Left = 4
       Top = 36
@@ -3796,6 +3814,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP_service'
+        Value = Null
+        Component = Child1CDS
+        ComponentItem = 'NPP_service'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptGoodsId'
         Value = Null
         Component = MasterCDS
@@ -4182,6 +4208,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP_service'
+        Value = Null
+        Component = Child2CDS
+        ComponentItem = 'NPP_service'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptGoodsId'
         Value = Null
         Component = MasterCDS
@@ -4232,6 +4266,14 @@
         Value = '0'
         Component = Child2CDS
         ComponentItem = 'GoodsChildId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsChildId_top'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

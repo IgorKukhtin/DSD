@@ -12,11 +12,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptGoodsChild (Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptGoodsChild(
  INOUT ioId                  Integer   ,    -- ключ объекта <>
     IN inComment             TVarChar  ,    -- Название объекта
     IN inNPP                 Integer   ,
+    IN inNPP_service         Integer   ,
     IN inReceiptGoodsId      Integer   ,
     IN inObjectId            Integer   ,
     IN inProdColorPatternId  Integer   ,
@@ -136,6 +138,8 @@ BEGIN
        IF COALESCE (ioForCount, 0) <= 0 THEN ioForCount:= 1; END IF;
        PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_ForCount(), ioId, ioForCount);
        
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ReceiptGoodsChild_NPP_service(), ioId, inNPP_service :: TFloat);
 
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods(), ioId, inReceiptGoodsId);
