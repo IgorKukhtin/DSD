@@ -348,7 +348,6 @@ type
     procedure pWebServerClick(Sender: TObject);
     procedure bOrderInternalOkClickClick(Sender: TObject);
     procedure bpProductionUnionClick(Sender: TObject);
-    procedure RadioButtonInvScan2Change(Sender: TObject);
     procedure bInventScanClick(Sender: TObject);
     procedure bIIECancelClick(Sender: TObject);
     procedure bIIEOkClick(Sender: TObject);
@@ -378,6 +377,7 @@ type
     FisBecomeForeground: Boolean;
     FDateDownloadDict: TDateTime;
     FisInventScanSN : Boolean;
+    FisNextInventScan : Boolean;
     FGoodsId: Integer;
 
     FDictUpdateDataSet: TDataSet;
@@ -469,6 +469,7 @@ begin
   FisBecomeForeground := False;
   FPasswordLabelClick := 0;
   FisInventScanSN := False;
+  FisNextInventScan := False;
 
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
@@ -483,6 +484,27 @@ begin
   FisZebraScaner := Pos('Zebra', JStringToString(TJBuild.JavaClass.MANUFACTURER)) > 0;
   {$ELSE}
   FisZebraScaner := False;
+  {$ENDIF}
+
+  // установка разрешений
+  {$IFDEF ANDROID}
+  if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
+     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
+     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)) then
+  begin
+    FPermissionState := False;
+    PermissionsService.RequestPermissions([JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE),
+                                           JStringToString(TJManifest_permission.JavaClass.CAMERA),
+                                           JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)],
+      procedure(const APermissions: TClassicStringDynArray; const AGrantResults: TClassicPermissionStatusDynArray)
+      begin
+        if (Length(AGrantResults) > 1) and (AGrantResults[0] = TPermissionStatus.Granted) then
+          FPermissionState := True;
+      end);
+  end;
+
+  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(aFMXApplicationEventService)) then
+     aFMXApplicationEventService.SetApplicationEventHandler(HandleAppEvent);
   {$ENDIF}
 
   // получение настроек из ini файла
@@ -536,27 +558,6 @@ begin
     else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
   end;
 
-  // установка разрешений
-  {$IFDEF ANDROID}
-
-  if not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE)) or
-     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.CAMERA)) or
-     not PermissionsService.IsPermissionGranted(JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)) then
-  begin
-    FPermissionState := False;
-    PermissionsService.RequestPermissions([JStringToString(TJManifest_permission.JavaClass.READ_PHONE_STATE),
-                                           JStringToString(TJManifest_permission.JavaClass.CAMERA),
-                                           JStringToString(TJManifest_permission.JavaClass.WRITE_EXTERNAL_STORAGE)],
-      procedure(const APermissions: TClassicStringDynArray; const AGrantResults: TClassicPermissionStatusDynArray)
-      begin
-        if (Length(AGrantResults) > 1) and (AGrantResults[0] = TPermissionStatus.Granted) then
-          FPermissionState := True;
-      end);
-  end;
-
-  if TPlatformServices.Current.SupportsPlatformService(IFMXApplicationEventService, IInterface(aFMXApplicationEventService)) then
-     aFMXApplicationEventService.SetApplicationEventHandler(HandleAppEvent)
-  {$ENDIF}
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -746,11 +747,6 @@ begin
   tcMain.ActiveTab := TabItem;
 end;
 
-procedure TfrmMain.RadioButtonInvScan2Change(Sender: TObject);
-begin
-
-end;
-
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
@@ -898,6 +894,11 @@ begin
       lCaption.Text := 'Сканирование/выбор комплектующих';
       DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
+      if FisNextInventScan then
+      begin
+        FGoodsId := 0;
+        sbScanClick(Sender);
+      end;
     end
     else
     if tcMain.ActiveTab = tiInventoryItemEdit then
@@ -1117,6 +1118,7 @@ end;
 procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
 begin
   FisInventScanSN := False;
+  FisNextInventScan := False;
   ShowGoods;
   bGoodsChoice.Visible := True;
 end;
@@ -1125,6 +1127,7 @@ procedure TfrmMain.bInventScanClick(Sender: TObject);
 begin
   FGoodsId := 0;
   FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
+  FisNextInventScan := True;
   sbScanClick(Sender);
 
   // OnScanResultInventoryScan(Sender, '871949')
@@ -1161,6 +1164,7 @@ end;
 // Отмена добавление в инвентаризацию
 procedure TfrmMain.bIIECancelClick(Sender: TObject);
 begin
+  FisNextInventScan := False;
   DM.cdsInventoryItemEdit.Close;
   ReturnPriorForm;
 end;

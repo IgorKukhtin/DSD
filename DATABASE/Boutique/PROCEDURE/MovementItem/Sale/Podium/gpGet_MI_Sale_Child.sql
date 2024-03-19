@@ -210,23 +210,18 @@ BEGIN
 
 
      -- Расчет из Мастера
-     SELECT -- сумма к оплате ГРН - учитывается ТОЛЬКО скидка %
-            /*SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList.ValueData, 1)
-               - COALESCE (MIFloat_TotalChangePercent.ValueData, 0)
-               + COALESCE (MIFloat_SummChangePercent.ValueData, 0)
-                ) AS AmountToPay_GRN*/
-             
-            zfCalc_CurrencyFrom (   
-            SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
-               - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
-               + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)
-               + COALESCE (MIFloat_SummRounding_curr.ValueData, 0)), vbCurrencyValue_EUR, 1) AS AmountToPay_GRN   
+     SELECT -- сумма к оплате ГРН - учитывается ТОЛЬКО скидка %             
+            Round(zfCalc_CurrencyFrom (   
+            SUM (Round(zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
+                       - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
+                       + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)
+                       + COALESCE (MIFloat_SummRounding_curr.ValueData, 0))), vbCurrencyValue_EUR, 1), 2) AS AmountToPay_GRN   
 
             -- сумма к оплате EUR - учитывается ТОЛЬКО скидка %
-          , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
-               - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
-               + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)
-               + COALESCE (MIFloat_SummRounding_curr.ValueData, 0)) AS AmountToPay_EUR
+          , SUM (Round(zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData, 1)
+                       - COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)
+                       + COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)
+                       + COALESCE (MIFloat_SummRounding_curr.ValueData, 0))) AS AmountToPay_EUR
 
             -- сумма доп.скидки - Списание при округлении - всегда ГРН
           , SUM (COALESCE (MIFloat_SummChangePercent.ValueData, 0)) AS SummChangePercent_GRN
@@ -293,7 +288,7 @@ BEGIN
       ;
       
       
-     -- raise notice 'Value 0: % %   % %  % %  % % ', vbAmountToPay_GRN, vbAmountToPay_EUR, vbAmountDiscount_GRN, vbAmountDiscount_EUR, vbAmountRounding_GRN, vbAmountRounding_EUR, vbSummTotalPay_GRN, vbSummTotalPay_EUR;
+      -- raise notice 'Value 0: % %   % %  % %  % % ', vbAmountToPay_GRN, vbAmountToPay_EUR, vbAmountDiscount_GRN, vbAmountDiscount_EUR, vbAmountRounding_GRN, vbAmountRounding_EUR, vbSummTotalPay_GRN, vbSummTotalPay_EUR;
           
      -- Результат
      RETURN QUERY
@@ -547,4 +542,4 @@ $BODY$
 -- SELECT * FROM gpGet_MI_Sale_Child (inId:= 0, inMovementId := 6231, inIsDiscount:= FALSE, inIsGRN:= FALSE, inIsUSD:= FALSE, inIsEUR:= FALSE, inIsCard:= FALSE, inSession:= zfCalc_UserAdmin());
 
 
-select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23589 ,  inSession := '2');
+select * from gpGet_MI_Sale_Child(inId := 0 , inMovementId := 23599  ,  inSession := '2');

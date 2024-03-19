@@ -3,8 +3,8 @@ inherited MainForm: TMainForm
   ClientHeight = 168
   ClientWidth = 723
   KeyPreview = True
-  ExplicitWidth = 739
-  ExplicitHeight = 226
+  ExplicitWidth = 745
+  ExplicitHeight = 254
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
@@ -1058,8 +1058,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
       Hint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072
-      FormName = 'TCurrencyJournalForm'
-      FormNameParam.Value = 'TCurrencyJournalForm'
+      FormName = 'TCurrencyPodiumJournalForm'
+      FormNameParam.Value = 'TCurrencyPodiumJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
