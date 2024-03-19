@@ -3,7 +3,7 @@ object PLZ_CityForm: TPLZ_CityForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1086#1088#1086#1076#1072'>'
   ClientHeight = 376
-  ClientWidth = 563
+  ClientWidth = 650
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,12 @@ object PLZ_CityForm: TPLZ_CityForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 563
+    Width = 650
     Height = 276
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 26
-    ExplicitHeight = 309
+    ExplicitWidth = 563
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,21 +43,22 @@ object PLZ_CityForm: TPLZ_CityForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
-      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object City: TcxGridDBColumn
         Caption = #1043#1086#1088#1086#1076
         DataBinding.FieldName = 'City'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 169
+        Width = 300
       end
       object CountryName: TcxGridDBColumn
         Caption = #1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'CountryName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 300
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -68,10 +68,11 @@ object PLZ_CityForm: TPLZ_CityForm
   object Panel_btn: TPanel
     Left = 0
     Top = 335
-    Width = 563
+    Width = 650
     Height = 41
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 4
+    ExplicitWidth = 563
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -94,12 +95,11 @@ object PLZ_CityForm: TPLZ_CityForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 563
+    Width = 650
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = 8
-    ExplicitTop = -6
+    ExplicitWidth = 563
     object lbSearchName: TcxLabel
       Left = 36
       Top = 6
@@ -236,10 +236,9 @@ object PLZ_CityForm: TPLZ_CityForm
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
-      Caption = '    '
       Category = 0
-      Hint = '    '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = actChoiceGuides
@@ -264,7 +263,7 @@ object PLZ_CityForm: TPLZ_CityForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -385,6 +384,7 @@ object PLZ_CityForm: TPLZ_CityForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 304
     Top = 152

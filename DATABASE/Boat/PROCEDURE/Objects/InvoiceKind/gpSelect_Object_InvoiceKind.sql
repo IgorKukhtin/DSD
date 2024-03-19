@@ -32,7 +32,8 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Enum
                                    ON ObjectString_Enum.ObjectId = Object.Id
                                   AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
-       WHERE Object.DescId = zc_Object_InvoiceKind()
+       WHERE Object.DescId   = zc_Object_InvoiceKind()
+         AND Object.isErased = FALSE
 
       /*UNION ALL
        SELECT 0 AS Id

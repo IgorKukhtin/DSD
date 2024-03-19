@@ -3,7 +3,7 @@ object ReceiptLevelForm: TReceiptLevelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1069#1090#1072#1087#1099' '#1089#1073#1086#1088#1082#1080'>'
   ClientHeight = 376
-  ClientWidth = 517
+  ClientWidth = 689
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,14 +21,13 @@ object ReceiptLevelForm: TReceiptLevelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 517
+    Width = 689
     Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
+    ExplicitWidth = 517
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -43,7 +42,6 @@ object ReceiptLevelForm: TReceiptLevelForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -65,7 +63,7 @@ object ReceiptLevelForm: TReceiptLevelForm
         Width = 243
       end
       object ShortName: TcxGridDBColumn
-        Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -77,7 +75,7 @@ object ReceiptLevelForm: TReceiptLevelForm
         DataBinding.FieldName = 'ObjectDesc'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
@@ -115,13 +113,11 @@ object ReceiptLevelForm: TReceiptLevelForm
   object Panel5: TPanel
     Left = 0
     Top = 26
-    Width = 517
+    Width = 689
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -755
-    ExplicitTop = 0
-    ExplicitWidth = 1272
+    ExplicitWidth = 517
     object cxLabel12: TcxLabel
       Left = 5
       Top = 8
@@ -205,6 +201,10 @@ object ReceiptLevelForm: TReceiptLevelForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -227,6 +227,10 @@ object ReceiptLevelForm: TReceiptLevelForm
         item
           Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -327,7 +331,7 @@ object ReceiptLevelForm: TReceiptLevelForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -390,7 +394,7 @@ object ReceiptLevelForm: TReceiptLevelForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -405,7 +409,7 @@ object ReceiptLevelForm: TReceiptLevelForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -484,14 +488,14 @@ object ReceiptLevelForm: TReceiptLevelForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -590,6 +594,7 @@ object ReceiptLevelForm: TReceiptLevelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 216
     Top = 160

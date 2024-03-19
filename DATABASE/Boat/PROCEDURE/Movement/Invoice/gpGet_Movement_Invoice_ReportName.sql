@@ -38,32 +38,40 @@ BEGIN
        SELECT CASE WHEN COALESCE (MovementItem.Id,0) <> 0                                        ---если заполнен zc_MI_Master
                         THEN 'PrintMovement_Invoice_Master'
 
-                   WHEN MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()       --первую предоплата
-                        THEN CASE WHEN tmpMov_Parent.Ord = 1 THEN 'PrintMovement_Invoice_PrePay'
-                                  WHEN tmpMov_Parent.Ord = 2 THEN 'PrintMovement_Invoice_PrePay2'   -- 2 предоплата
+                   -- предоплата
+                   WHEN MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()
+                        THEN CASE -- первая
+                                  WHEN tmpMov_Parent.Ord = 1 THEN 'PrintMovement_Invoice_PrePay'
+                                  -- вторая
+                                  WHEN tmpMov_Parent.Ord = 2 THEN 'PrintMovement_Invoice_PrePay2'
+                                  -- первая
                                   ELSE 'PrintMovement_Invoice_PrePay'
                              END
-
-                   WHEN MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_Return()   -- возврат
+                   -- возврат
+                   WHEN MovementFloat_Amount.ValueData < 0
+                    AND MovementLinkObject_InvoiceKind.ObjectId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return())
                         THEN 'PrintMovement_Invoice_Return'
 
                    WHEN MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_Pay()       --счет
                         THEN 'PrintMovement_Invoice_Pay'
 
                    ELSE 'PrintMovement_Invoice'
+
               END AS PrintFormName
 
        FROM Movement
+            LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                    ON MovementFloat_Amount.MovementId = Movement.Id
+                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                         ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+            LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
-                                        ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
-                                       AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-           LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
-
-           LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                 AND MovementItem.DescId = zc_MI_Master()
-                                 AND MovementItem.isErased = False
-           LEFT JOIN tmpMov_Parent ON tmpMov_Parent.Id = Movement.Id
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND MovementItem.isErased = False
+            LEFT JOIN tmpMov_Parent ON tmpMov_Parent.Id = Movement.Id
 
        WHERE Movement.Id = inMovementId
        LIMIT 1

@@ -358,7 +358,7 @@ object PartnerForm: TPartnerForm
     Width = 1102
     Height = 41
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 1
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -635,7 +635,7 @@ object PartnerForm: TPartnerForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -698,7 +698,7 @@ object PartnerForm: TPartnerForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -713,7 +713,7 @@ object PartnerForm: TPartnerForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource

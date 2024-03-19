@@ -1343,6 +1343,8 @@
     Height = 62
     Align = alTop
     TabOrder = 5
+    ExplicitLeft = -1
+    ExplicitTop = -4
     object lbSearchArticle: TcxLabel
       Left = 4
       Top = 36
@@ -1794,7 +1796,6 @@
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -2279,7 +2280,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1064#1072#1073#1083#1086#1085
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2294,7 +2295,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -2404,7 +2405,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100
       ImageIndex = 2
-      ShortCut = 16430
+      ShortCut = 49202
       ErasedFieldName = 'isErased'
       DataSource = Child2DS
     end
@@ -2419,7 +2420,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49201
       ErasedFieldName = 'isErased'
       DataSource = Child1DS
     end
@@ -2434,7 +2435,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 16430
+      ShortCut = 49203
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = Child1DS
@@ -2450,7 +2451,7 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49201
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = Child1DS
@@ -3550,7 +3551,7 @@
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1091#1076#1072#1083#1077#1085#1099
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1089#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
-      ImageIndex = 77
+      ImageIndex = 52
     end
     object actFormClose: TdsdFormClose
       MoveParams = <>
