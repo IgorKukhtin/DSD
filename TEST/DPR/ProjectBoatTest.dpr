@@ -386,7 +386,13 @@ uses
   EmailSettings in '..\..\FormsBoat\Guides\EmailSettings.pas' {EmailSettingsForm: TParentForm},
   EmailKind in '..\..\FormsBoat\Kind\EmailKind.pas' {EmailKindForm: TParentForm},
   EmailTools in '..\..\FormsBoat\Kind\EmailTools.pas' {EmailToolsForm: TParentForm},
-  Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm};
+  Invoice in '..\..\FormsBoat\Document\Invoice.pas' {InvoiceForm: TParentForm},
+  ReceiptServiceGroup in '..\..\FormsBoat\Guides\ReceiptServiceGroup.pas' {ReceiptServiceGroupForm: TParentForm},
+  ReceiptServiceModel in '..\..\FormsBoat\Guides\ReceiptServiceModel.pas' {ReceiptServiceModelForm: TParentForm},
+  ReceiptServiceModelEdit in '..\..\FormsBoat\Guides\ReceiptServiceModelEdit.pas' {ReceiptServiceModelEditForm: TParentForm},
+  ReceiptServiceMaterialEdit in '..\..\FormsBoat\Guides\ReceiptServiceMaterialEdit.pas' {ReceiptServiceMaterialEditForm: TParentForm},
+  ReceiptServiceGroupEdit in '..\..\FormsBoat\Guides\ReceiptServiceGroupEdit.pas' {ReceiptServiceGroupEditForm: TParentForm},
+  ReceiptServiceMaterial in '..\..\FormsBoat\Guides\ReceiptServiceMaterial.pas' {ReceiptServiceMaterialForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
