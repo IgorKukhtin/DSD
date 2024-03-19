@@ -71,6 +71,7 @@ type
     isPartionCell: TcxGridDBColumn;
     OperDate_min: TcxGridDBColumn;
     OperDate_max: TcxGridDBColumn;
+    cbShowAll: TcxCheckBox;
   private
     { Private declarations }
   public

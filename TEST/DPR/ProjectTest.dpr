@@ -1497,7 +1497,8 @@ uses
   Report_PersonalGroupSummAdd in '..\..\Forms\Report\Report_PersonalGroupSummAdd.pas' {Report_PersonalGroupSummAddForm: TParentForm},
   BankSecondNum in '..\..\Forms\Document\BankSecondNum.pas' {BankSecondNumForm: TParentForm},
   BankSecondNumJournal in '..\..\Forms\Document\BankSecondNumJournal.pas' {BankSecondNumJournalForm: TParentForm},
-  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm};
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  PartionCellChoice in '..\..\Forms\Guides\PartionCellChoice.pas' {PartionCellChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
