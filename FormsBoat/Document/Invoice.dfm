@@ -27,7 +27,7 @@
     Width = 449
     Height = 561
     TabOrder = 2
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 561
     ClientRectRight = 449
@@ -129,7 +129,7 @@
       end
       object edPaidKind: TcxButtonEdit
         Left = 317
-        Top = 505
+        Top = 513
         Properties.Buttons = <
           item
             Default = True
