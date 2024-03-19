@@ -634,9 +634,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
-      Caption = '    '
       Category = 0
-      Hint = '    '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -712,7 +710,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1038,6 +1036,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 2
+      ShortCut = 49220
     end
     object macSetUnErased: TMultiAction
       Category = 'DSDLib'
@@ -1052,6 +1051,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 8
+      ShortCut = 49220
     end
     object macUpdateGoods_In: TMultiAction
       Category = 'Calc'
@@ -1214,6 +1214,7 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
       item
         FieldName = 'Image3'
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 232
     Top = 184
@@ -1312,6 +1313,10 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
     TextEdit = edSearchArticle
     DataSet = ClientDataSet
     Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 352
@@ -1321,6 +1326,10 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
     TextEdit = edSearchCode
     DataSet = ClientDataSet
     Column = Code
+    ColumnList = <
+      item
+        Column = Code
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 416
@@ -1330,6 +1339,10 @@ object Union_Goods_ReceiptService_limitForm: TUnion_Goods_ReceiptService_limitFo
     TextEdit = edSearchName
     DataSet = ClientDataSet
     Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
     Left = 504

@@ -1120,9 +1120,7 @@ object GoodsForm: TGoodsForm
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
-      Caption = '    '
       Category = 0
-      Hint = '    '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -1175,9 +1173,9 @@ object GoodsForm: TGoodsForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -1192,7 +1190,7 @@ object GoodsForm: TGoodsForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -1207,7 +1205,7 @@ object GoodsForm: TGoodsForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -2008,6 +2006,7 @@ object GoodsForm: TGoodsForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 232
     Top = 184

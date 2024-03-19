@@ -439,7 +439,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end

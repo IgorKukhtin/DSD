@@ -1384,7 +1384,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 8
+    TabOrder = 7
     Width = 130
   end
   object Panel_btn: TPanel
@@ -1626,6 +1626,10 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1728,7 +1732,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
       Visible = ivAlways
       ShowCaption = False
@@ -1771,7 +1774,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1059#1076#1072#1083#1080#1090#1100
       Visible = ivAlways
       ImageIndex = 2
-      ShortCut = 16430
+      ShortCut = 49202
     end
     object bbSetUnErasedOpt: TdxBarButton
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
@@ -1779,7 +1782,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Visible = ivAlways
       ImageIndex = 8
-      ShortCut = 16430
+      ShortCut = 49202
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
@@ -1989,7 +1992,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -2050,7 +2053,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1064#1072#1073#1083#1086#1085
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -2065,7 +2068,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -2220,7 +2223,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49201
       ErasedFieldName = 'isErased'
       DataSource = GoodsDS
     end
@@ -2235,7 +2238,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49201
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = GoodsDS
@@ -2863,6 +2866,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 656
     Top = 112
@@ -2933,6 +2937,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1088
     Top = 296
@@ -2994,6 +2999,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 376
     Top = 352
@@ -3513,6 +3519,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 208
     Top = 352
