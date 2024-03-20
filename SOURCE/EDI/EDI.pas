@@ -3395,6 +3395,10 @@ begin
       // Назва контрагента
       DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.Name := HeaderDataSet.FieldByName('JuridicalName_To').asString;
 
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PhoneNumber := HeaderDataSet.FieldByName('Phone_To').asString;
 
       // Глобальний номер розташування (GLN) контрагента - GLN продавця
       if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
@@ -3452,7 +3456,7 @@ begin
             // Ціна однієї одиниці без ПДВ
             LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
             // Ціна однієї одиниці з ПДВ
-            //LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
+            LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
 
             // Ставка податку (ПДВ,%):
             LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;

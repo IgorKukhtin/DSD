@@ -458,7 +458,11 @@ BEGIN
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
-           , Object_Street_View.CityName                AS CityName_To
+           --, Object_Street_View.CityName                AS CityName_To
+           , Object_Street_View.PostalCode              AS PostalCode_To
+           , COALESCE(ObjectString_CityKind_ShortName_To.ValueData||' ', '')||
+             COALESCE (Object_Street_View.CityName, '')    AS CityName_To
+                      
            , (CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN Object_Street_View.StreetKindName || ' ' ELSE '' END
              || Object_Street_View.Name
              || CASE WHEN ObjectString_HouseNumber.ValueData <> '' THEN ' д.' || ObjectString_HouseNumber.ValueData ELSE '' END
@@ -875,6 +879,14 @@ BEGIN
                                   AND ObjectString_CityKind_ShortName_From.DescId = zc_ObjectString_CityKind_ShortName()
                                   AND ObjectString_CityKind_ShortName_From.ValueData <> ''
 
+            LEFT JOIN ObjectLink AS ObjectLink_City_CityKind_To
+                                 ON ObjectLink_City_CityKind_To.ObjectId = Object_Street_View.CityId
+                                AND ObjectLink_City_CityKind_To.DescId = zc_ObjectLink_City_CityKind()
+            LEFT JOIN ObjectString AS ObjectString_CityKind_ShortName_To
+                                   ON ObjectString_CityKind_ShortName_To.ObjectId = ObjectLink_City_CityKind_To.ChildObjectId
+                                  AND ObjectString_CityKind_ShortName_To.DescId = zc_ObjectString_CityKind_ShortName()
+                                  AND ObjectString_CityKind_ShortName_To.ValueData <> ''
+
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
@@ -1227,3 +1239,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 27078112 , inSession:=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e'); -- FETCH ALL "<unnamed portal 1>";
 -- SELECT * FROM gpSelect_Movement_Sale_EDI(inMovementId := 27080288 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+
+ 

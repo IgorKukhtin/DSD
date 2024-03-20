@@ -297,10 +297,10 @@ end;
 
  procedure TLoadFormTest.LoadCurrencyMovementFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyMovementForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCurrencyMovementForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCurrencyJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyPodiumMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyPodiumMovementForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyPodiumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrencyPodiumJournalForm');
 end;
 
 procedure TLoadFormTest.LoadDiscountFormTest;
@@ -1020,15 +1020,15 @@ procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountPodiumForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountPodiumForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumForm');
+//
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountPodiumForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountPodiumForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumItemEditForm');
@@ -1474,6 +1474,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
   exit;
