@@ -374,7 +374,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     ShowHint = True
   end
   object edBasis_summ: TcxCurrencyEdit
-    Left = 649
+    Left = 653
     Top = 89
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False

@@ -303,6 +303,15 @@ type
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
     cbReserve: TcxCheckBox;
+    edBasis_summ_orig: TcxCurrencyEdit;
+    cxLabel46: TcxLabel;
+    edSummDiscount_total: TcxCurrencyEdit;
+    cxLabel47: TcxLabel;
+    cxLabel48: TcxLabel;
+    edBasis_summ: TcxCurrencyEdit;
+    spUpdate_before: TdsdStoredProc;
+    actUpdate_summ_before: TdsdDataSetRefresh;
+    EnterMoveNext: TEnterMoveNext;
   private
     { Private declarations }
   public
