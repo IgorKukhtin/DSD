@@ -61,6 +61,10 @@ type
     cxLabel8: TcxLabel;
     GuidesReceiptServiceMaterial: TdsdGuides;
     edReceiptServiceMaterial: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edNumReplace: TcxTextEdit;
+    edNPP: TcxCurrencyEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

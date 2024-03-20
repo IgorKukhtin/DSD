@@ -75,6 +75,8 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    NumReplace: TcxGridDBColumn;
+    NPP: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -168,6 +168,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptService_SalePrice() RETURNS Int
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptService(), 'zc_ObjectFloat_ReceiptService_SalePrice', 'Цена продажи без ндс' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_SalePrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReceiptService_NPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_NPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ReceiptService_NPP', zc_Object_ReceiptService(), '№ п/п' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReceiptService_NPP');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Client_DiscountTax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_DiscountTax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Client(), 'zc_ObjectFloat_Client_DiscountTax', '% скидки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Client_DiscountTax');
@@ -221,9 +226,12 @@ INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_InvoicePdf_MovementId', zc_Object_InvoicePdf(), ' документ Cчет, приход/расход' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_InvoicePdf_MovementId');
 
 
+
+        
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.03.24         * zc_ObjectFloat_ReceiptService_NPP
  12.01.24         * zc_ObjectFloat_InvoicePdf_MovmentId
  08.01.24         * zc_ObjectFloat_PartionCell_Level
  29.05.23         * zc_ObjectFloat_ProdOptions_Amount

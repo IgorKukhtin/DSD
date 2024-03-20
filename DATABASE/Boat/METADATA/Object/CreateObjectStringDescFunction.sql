@@ -325,7 +325,12 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptService_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_ReceiptService_Comment', zc_Object_ReceiptService(), 'Сокращенное обозначение' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment');
+  SELECT 'zc_ObjectString_ReceiptService_Comment', zc_Object_ReceiptService(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_Comment');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptService_NumReplace() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_NumReplace'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ReceiptService_NumReplace', zc_Object_ReceiptService(), 'Замена сырья' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptService_NumReplace');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_TranslateMessage_Name() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TranslateMessage_Name'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -391,6 +396,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.03.24         * zc_ObjectString_ReceiptService_NumReplace
  19.03.24         * zc_ObjectString_ReceiptServiceGroup_Comment
  26.12.24         * zc_ObjectString_EmailKind_CheckImport
  12.01.24         * zc_ObjectString_InvoicePdf_Comment

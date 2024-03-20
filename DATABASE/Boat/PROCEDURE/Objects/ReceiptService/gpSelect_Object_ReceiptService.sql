@@ -6,9 +6,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptService(
     IN inIsShowAll   Boolean,            --  признак показать удаленные да / нет
     IN inSession     TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
-             , Comment TVarChar
+             , Comment TVarChar , NumReplace TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , PartnerId Integer, PartnerName TVarChar
              , ReceiptServiceGroupId Integer, ReceiptServiceGroupName TVarChar
@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat 
              , Summ_PU TFloat, OperPrice_PU TFloat
+             , NPP TFloat
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased boolean)
@@ -32,10 +33,9 @@ BEGIN
       SELECT Object_ReceiptService.Id               AS Id
            , Object_ReceiptService.ObjectCode       AS Code
            , Object_ReceiptService.ValueData        AS Name  
-           , (Object_ReceiptService.ValueData ||'@'||COALESCE (Object_ReceiptServiceGroup.ValueData,'') ||'@'||COALESCE (Object_ReceiptServiceModel.ValueData,'') ||'@'||COALESCE (Object_ReceiptServiceMaterial.ValueData,'')||'@'||COALESCE (ObjectString_Comment.ValueData,'') ) :: TVarChar AS Name_search
            , ObjectString_Article.ValueData         AS Article
-           , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment 
-           
+           , COALESCE (ObjectString_Comment.ValueData, NULL)    :: TVarChar AS Comment 
+           , COALESCE (ObjectString_NumReplace.ValueData, NULL) :: TVarChar AS NumReplace           
 
            , Object_TaxKind.Id                      AS TaxKindId
            , Object_TaxKind.ValueData               AS TaxKindName
@@ -64,7 +64,9 @@ BEGIN
            --для ProductionUnion       
            -- после выбора работ, если установлен zc_ObjectLink_ReceiptService_Partner, EKPrice должен попадать в zc_MIFloat_Summ иначе должно попадать в zc_MIFloat_OperPrice
            , CASE WHEN COALESCE (Object_Partner.Id,0) <> 0 THEN COALESCE (ObjectFloat_EKPrice.ValueData,0) ELSE 0 END ::TFloat AS Summ_PU
-           , CASE WHEN COALESCE (Object_Partner.Id,0) = 0  THEN COALESCE (ObjectFloat_EKPrice.ValueData,0) ELSE 0 END ::TFloat AS OperPrice_PU
+           , CASE WHEN COALESCE (Object_Partner.Id,0) = 0  THEN COALESCE (ObjectFloat_EKPrice.ValueData,0) ELSE 0 END ::TFloat AS OperPrice_PU  
+           
+           , COALESCE (ObjectFloat_NPP.ValueData,0) ::TFloat AS NPP
 
            , Object_Insert.ValueData                AS InsertName
            , ObjectDate_Insert.ValueData            AS InsertDate
@@ -74,6 +76,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_ReceiptService.Id
                                   AND ObjectString_Comment.DescId = zc_ObjectString_ReceiptService_Comment()
+
+            LEFT JOIN ObjectString AS ObjectString_NumReplace
+                                   ON ObjectString_NumReplace.ObjectId = Object_ReceiptService.Id
+                                  AND ObjectString_NumReplace.DescId = zc_ObjectString_ReceiptService_NumReplace()
 
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = Object_ReceiptService.Id
@@ -86,6 +92,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                   ON ObjectFloat_SalePrice.ObjectId = Object_ReceiptService.Id
                                  AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                  ON ObjectFloat_NPP.ObjectId = Object_ReceiptService.Id
+                                 AND ObjectFloat_NPP.DescId = zc_ObjectFloat_ReceiptService_NPP()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner
                                  ON ObjectLink_Partner.ObjectId = Object_ReceiptService.Id

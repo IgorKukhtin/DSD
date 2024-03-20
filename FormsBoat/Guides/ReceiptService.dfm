@@ -43,6 +43,22 @@ object ReceiptServiceForm: TReceiptServiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object NumReplace: TcxGridDBColumn
+        Caption = #1047#1072#1084#1077#1085#1072' '#1089#1099#1088#1100#1103
+        DataBinding.FieldName = 'NumReplace'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -283,7 +299,7 @@ object ReceiptServiceForm: TReceiptServiceForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 96
-    Top = 64
+    Top = 128
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -303,7 +319,7 @@ object ReceiptServiceForm: TReceiptServiceForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -863,6 +879,15 @@ object ReceiptServiceForm: TReceiptServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumReplace'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NumReplace'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inArticle'
         Value = Null
         Component = MasterCDS
@@ -918,6 +943,15 @@ object ReceiptServiceForm: TReceiptServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SalePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

@@ -194,6 +194,31 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
     TabOrder = 23
     Width = 225
   end
+  object cxLabel9: TcxLabel
+    Left = 410
+    Top = 8
+    Caption = #1047#1072#1084#1077#1085#1072' '#1089#1099#1088#1100#1103
+  end
+  object edNumReplace: TcxTextEdit
+    Left = 410
+    Top = 27
+    TabOrder = 25
+    Width = 111
+  end
+  object edNPP: TcxCurrencyEdit
+    Left = 296
+    Top = 27
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 26
+    Width = 104
+  end
+  object cxLabel10: TcxLabel
+    Left = 296
+    Top = 8
+    Caption = #8470' '#1087'/'#1087
+  end
   object ActionList: TActionList
     Left = 240
     Top = 8
@@ -263,6 +288,14 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumReplace'
+        Value = Null
+        Component = edNumReplace
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -311,6 +344,14 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptServiceModelName'
         Value = Null
         Component = edReceiptServiceModel
@@ -327,7 +368,8 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 360
+    Left = 464
+    Top = 240
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -427,12 +469,14 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
       end
       item
         Name = 'ReceiptServiceGroupId'
+        Value = Null
         Component = GuidesReceiptServiceGroup
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'ReceiptServiceGroupName'
+        Value = Null
         Component = GuidesReceiptServiceGroup
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -467,9 +511,24 @@ object ReceiptServiceEditForm: TReceiptServiceEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NPP'
+        Value = Null
+        Component = edNPP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumReplace'
+        Value = Null
+        Component = edNumReplace
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
+    Left = 400
+    Top = 240
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
