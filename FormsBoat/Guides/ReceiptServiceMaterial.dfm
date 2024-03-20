@@ -314,6 +314,7 @@ object ReceiptServiceMaterialForm: TReceiptServiceMaterialForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+      ImageIndex = 90
     end
     object bbInsert: TdxBarButton
       Action = actInsert

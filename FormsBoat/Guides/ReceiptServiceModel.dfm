@@ -26,8 +26,6 @@ object ReceiptServiceModelForm: TReceiptServiceModelForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 8
-    ExplicitTop = 53
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -316,6 +314,7 @@ object ReceiptServiceModelForm: TReceiptServiceModelForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+      ImageIndex = 90
     end
     object bbInsert: TdxBarButton
       Action = actInsert

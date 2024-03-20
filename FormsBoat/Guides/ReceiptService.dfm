@@ -19,13 +19,15 @@ object ReceiptServiceForm: TReceiptServiceForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 846
-    Height = 323
+    Height = 290
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 323
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -56,6 +58,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         DataBinding.FieldName = 'Article'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 86
       end
       object Name: TcxGridDBColumn
@@ -64,6 +67,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 209
       end
       object PartnerName: TcxGridDBColumn
@@ -102,6 +106,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' ('#1076#1083#1103' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1090'/'#1091#1089#1083#1091#1075')'
+        Options.Editing = False
         Width = 70
       end
       object EKPriceWVAT: TcxGridDBColumn
@@ -126,6 +131,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057' ('#1076#1083#1103' '#1088#1072#1073#1086#1090', '#1086#1082#1072#1079#1072#1085#1085#1099#1093' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
+        Options.Editing = False
         Width = 90
       end
       object SalePriceWVAT: TcxGridDBColumn
@@ -221,9 +227,49 @@ object ReceiptServiceForm: TReceiptServiceForm
         Options.Editing = False
         Width = 78
       end
+      object Name_search: TcxGridDBColumn
+        Caption = #1055#1086#1089#1080#1082
+        DataBinding.FieldName = 'Name_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 846
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 24
+    ExplicitTop = 16
+    object lbSearchName: TcxLabel
+      Left = 2
+      Top = 6
+      Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 121
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -910,5 +956,18 @@ object ReceiptServiceForm: TReceiptServiceForm
     PackSize = 1
     Left = 392
     Top = 115
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name_search
+    ColumnList = <
+      item
+        Column = Name_search
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 504
+    Top = 120
   end
 end

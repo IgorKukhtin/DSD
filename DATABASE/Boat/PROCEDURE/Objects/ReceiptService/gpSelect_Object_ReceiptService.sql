@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptService(
     IN inIsShowAll   Boolean,            --  признак показать удаленные да / нет
     IN inSession     TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , Article TVarChar
              , Comment TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
@@ -31,9 +31,11 @@ BEGIN
    RETURN QUERY
       SELECT Object_ReceiptService.Id               AS Id
            , Object_ReceiptService.ObjectCode       AS Code
-           , Object_ReceiptService.ValueData        AS Name
+           , Object_ReceiptService.ValueData        AS Name  
+           , (Object_ReceiptService.ValueData ||'@'||COALESCE (Object_ReceiptServiceGroup.ValueData,'') ||'@'||COALESCE (Object_ReceiptServiceModel.ValueData,'') ||'@'||COALESCE (Object_ReceiptServiceMaterial.ValueData,'')||'@'||COALESCE (ObjectString_Comment.ValueData,'') ) :: TVarChar AS Name_search
            , ObjectString_Article.ValueData         AS Article
-           , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment
+           , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment 
+           
 
            , Object_TaxKind.Id                      AS TaxKindId
            , Object_TaxKind.ValueData               AS TaxKindName

@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit, cxButtonEdit;
+  cxCurrencyEdit, cxButtonEdit, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TReceiptServiceForm = class(TParentForm)
@@ -71,6 +71,11 @@ type
     actChoiceFormReceiptServiceGroup: TOpenChoiceForm;
     actChoiceFormReceiptServiceModel: TOpenChoiceForm;
     actChoiceFormReceiptServiceMaterial: TOpenChoiceForm;
+    Name_search: TcxGridDBColumn;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

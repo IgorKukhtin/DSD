@@ -108,7 +108,7 @@ object ReceiptServiceGroupForm: TReceiptServiceGroupForm
     Width = 694
     Height = 41
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 1
     object btnInsert: TcxButton
       Left = 341
       Top = 8
@@ -314,6 +314,7 @@ object ReceiptServiceGroupForm: TReceiptServiceGroupForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+      ImageIndex = 90
     end
     object bbInsert: TdxBarButton
       Action = actInsert
