@@ -879,19 +879,19 @@ object ReceiptServiceForm: TReceiptServiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inNumReplace'
+        Name = 'inArticle'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'NumReplace'
+        ComponentItem = 'Article'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inArticle'
+        Name = 'inNumReplace'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Article'
+        ComponentItem = 'NumReplace'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
