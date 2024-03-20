@@ -648,7 +648,7 @@ begin
                     FIdFTP.Put(Stream, List[i]);
                   finally
                     FIdFTP.ChangeDir(Directory);
-                    FIdFTP.Delete(List[i]);
+                    try FIdFTP.Delete(List[i]); except ShowMessage ('Повторная загрузка <'+List[i]+'>');end;
                   end;
                 End;
               end;
