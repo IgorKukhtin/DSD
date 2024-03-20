@@ -71,7 +71,6 @@ type
     actChoiceFormReceiptServiceGroup: TOpenChoiceForm;
     actChoiceFormReceiptServiceModel: TOpenChoiceForm;
     actChoiceFormReceiptServiceMaterial: TOpenChoiceForm;
-    Name_search: TcxGridDBColumn;
     Panel2: TPanel;
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;

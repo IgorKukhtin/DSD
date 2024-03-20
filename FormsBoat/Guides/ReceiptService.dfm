@@ -26,8 +26,6 @@ object ReceiptServiceForm: TReceiptServiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 323
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -227,15 +225,6 @@ object ReceiptServiceForm: TReceiptServiceForm
         Options.Editing = False
         Width = 78
       end
-      object Name_search: TcxGridDBColumn
-        Caption = #1055#1086#1089#1080#1082
-        DataBinding.FieldName = 'Name_search'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -248,8 +237,6 @@ object ReceiptServiceForm: TReceiptServiceForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = 24
-    ExplicitTop = 16
     object lbSearchName: TcxLabel
       Left = 2
       Top = 6
@@ -960,10 +947,22 @@ object ReceiptServiceForm: TReceiptServiceForm
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = MasterCDS
-    Column = Name_search
+    Column = Name
     ColumnList = <
       item
-        Column = Name_search
+        Column = Name
+      end
+      item
+        Column = ReceiptServiceGroupName
+      end
+      item
+        Column = ReceiptServiceMaterialName
+      end
+      item
+        Column = ReceiptServiceModelName
+      end
+      item
+        Column = Comment
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
