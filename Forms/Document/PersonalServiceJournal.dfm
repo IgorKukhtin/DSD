@@ -4,6 +4,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitTop = -193
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -12,7 +13,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Width = 1221
     Height = 624
     TabOrder = 3
-    ExplicitTop = 105
     ExplicitWidth = 1221
     ExplicitHeight = 624
     ClientRectBottom = 624
@@ -1289,6 +1289,12 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Width = 456
           Height = 78
           Align = alRight
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 1
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>

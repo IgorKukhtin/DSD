@@ -2495,7 +2495,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Width = 736
           Height = 58
           Align = alLeft
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -16
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
           TabOrder = 0
+          ExplicitLeft = 0
+          ExplicitTop = 6
           object cxGridDBTableView_num: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ExportDS_num
