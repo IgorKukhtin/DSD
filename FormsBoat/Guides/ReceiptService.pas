@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxButtonEdit;
 
 type
   TReceiptServiceForm = class(TParentForm)
@@ -65,6 +65,12 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdate: TdsdStoredProc;
     PartnerName: TcxGridDBColumn;
+    ReceiptServiceGroupName: TcxGridDBColumn;
+    ReceiptServiceModelName: TcxGridDBColumn;
+    ReceiptServiceMaterialName: TcxGridDBColumn;
+    actChoiceFormReceiptServiceGroup: TOpenChoiceForm;
+    actChoiceFormReceiptServiceModel: TOpenChoiceForm;
+    actChoiceFormReceiptServiceMaterial: TOpenChoiceForm;
   private
     { Private declarations }
   public

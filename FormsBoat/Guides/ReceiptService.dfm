@@ -38,7 +38,6 @@ object ReceiptServiceForm: TReceiptServiceForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -141,6 +140,50 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' c '#1053#1044#1057' ('#1076#1083#1103' '#1088#1072#1073#1086#1090', '#1086#1082#1072#1079#1072#1085#1085#1099#1093' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102')'
         Options.Editing = False
         Width = 70
+      end
+      object ReceiptServiceGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+        DataBinding.FieldName = 'ReceiptServiceGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceGroup
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 110
+      end
+      object ReceiptServiceModelName: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1084#1086#1076#1077#1083#1100')'
+        DataBinding.FieldName = 'ReceiptServiceModelName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceModel
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1084#1086#1076#1077#1083#1100')'
+        Width = 112
+      end
+      object ReceiptServiceMaterialName: TcxGridDBColumn
+        Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1057#1099#1088#1100#1077')'
+        DataBinding.FieldName = 'ReceiptServiceMaterialName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceMaterial
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 113
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -567,6 +610,90 @@ object ReceiptServiceForm: TReceiptServiceForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actChoiceFormReceiptServiceModel: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TReceiptServiceGroupForm'
+      FormName = 'TReceiptServiceModelForm'
+      FormNameParam.Value = 'TReceiptServiceModelForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceFormReceiptServiceMaterial: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TReceiptServiceGroupForm'
+      FormName = 'TReceiptServiceMaterialForm'
+      FormNameParam.Value = 'TReceiptServiceMaterialForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceMaterialId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceMaterialName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceFormReceiptServiceGroup: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TReceiptServiceGroupForm'
+      FormName = 'TReceiptServiceGroupForm'
+      FormNameParam.Value = 'TReceiptServiceGroupForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceGroupId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptServiceGroupName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptService'
@@ -686,7 +813,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Code'
@@ -707,6 +834,7 @@ object ReceiptServiceForm: TReceiptServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Article'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -715,6 +843,66 @@ object ReceiptServiceForm: TReceiptServiceForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TaxKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceGroupId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptServiceGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEKPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'EKPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSalePrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SalePrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceModelName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptServiceModelName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptServiceMaterialName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ReceiptServiceMaterialName'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

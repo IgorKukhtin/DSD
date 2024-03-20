@@ -11,6 +11,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , TaxKindId Integer, TaxKindName TVarChar, TaxKind_Value TFloat
              , PartnerId Integer, PartnerName TVarChar
+             , ReceiptServiceGroupId Integer, ReceiptServiceGroupName TVarChar
+             , ReceiptServiceModelId Integer, ReceiptServiceModelName TVarChar
+             , ReceiptServiceMaterialId Integer, ReceiptServiceMaterialName TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat 
              , Summ_PU TFloat, OperPrice_PU TFloat
@@ -38,6 +41,13 @@ BEGIN
 
            , Object_Partner.Id                      AS PartnerId
            , Object_Partner.ValueData               AS PartnerName
+
+           , Object_ReceiptServiceGroup.Id            AS ReceiptServiceGroupId
+           , Object_ReceiptServiceGroup.ValueData     AS ReceiptServiceGroupName
+           , Object_ReceiptServiceModel.Id            AS ReceiptServiceModelId
+           , Object_ReceiptServiceModel.ValueData     AS ReceiptServiceModelName
+           , Object_ReceiptServiceMaterial.Id         AS ReceiptServiceMaterialId
+           , Object_ReceiptServiceMaterial.ValueData  AS ReceiptServiceMaterialName
 
              -- цена Вх. цена без ндс
            , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
@@ -80,6 +90,21 @@ BEGIN
                                 AND ObjectLink_Partner.DescId = zc_ObjectLink_ReceiptService_Partner()
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptServiceGroup
+                                 ON ObjectLink_ReceiptServiceGroup.ObjectId = Object_ReceiptService.Id
+                                AND ObjectLink_ReceiptServiceGroup.DescId = zc_ObjectLink_ReceiptService_ReceiptServiceGroup()
+            LEFT JOIN Object AS Object_ReceiptServiceGroup ON Object_ReceiptServiceGroup.Id = ObjectLink_ReceiptServiceGroup.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptServiceModel
+                                 ON ObjectLink_ReceiptServiceModel.ObjectId = Object_ReceiptService.Id
+                                AND ObjectLink_ReceiptServiceModel.DescId = zc_ObjectLink_ReceiptService_ReceiptServiceModel()
+            LEFT JOIN Object AS Object_ReceiptServiceModel ON Object_ReceiptServiceModel.Id = ObjectLink_ReceiptServiceModel.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_ReceiptServiceMaterial
+                                 ON ObjectLink_ReceiptServiceMaterial.ObjectId = Object_ReceiptService.Id
+                                AND ObjectLink_ReceiptServiceMaterial.DescId = zc_ObjectLink_ReceiptService_ReceiptServiceMaterial()
+            LEFT JOIN Object AS Object_ReceiptServiceMaterial ON Object_ReceiptServiceMaterial.Id = ObjectLink_ReceiptServiceMaterial.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                  ON ObjectLink_TaxKind.ObjectId = Object_Partner.Id
                                 AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Partner_TaxKind()
@@ -115,6 +140,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+20.03.24          *
 24.07.23          * Partner
 11.12.20          *
 */

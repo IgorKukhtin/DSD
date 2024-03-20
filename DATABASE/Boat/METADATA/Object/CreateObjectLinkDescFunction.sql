@@ -374,6 +374,20 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_ReceiptService_Partner', 'Поставщик услуг', zc_Object_ReceiptService(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_Partner');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptService_ReceiptServiceGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptService_ReceiptServiceGroup', 'Группа Работы/Услуги', zc_Object_ReceiptService(), zc_Object_ReceiptServiceGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceGroup');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptService_ReceiptServiceModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptService_ReceiptServiceModel', 'Работы/Услуги (модель)', zc_Object_ReceiptService(), zc_Object_ReceiptServiceModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceModel');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptService_ReceiptServiceMaterial() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceMaterial'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_ReceiptService_ReceiptServiceMaterial', 'Работы/Услуги (Сырье)', zc_Object_ReceiptService(), zc_Object_ReceiptServiceMaterial() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptService_ReceiptServiceMaterial');
+
+
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ProdOptions_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProdOptions_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -501,6 +515,9 @@ SELECT 'zc_ObjectLink_EmailSettings_EmailTools', 'Параметры подключения к внешне
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 20.03.24        * zc_ObjectLink_ReceiptService_ReceiptServiceGroup
+                   zc_ObjectLink_ReceiptService_ReceiptServiceModel
+                   zc_ObjectLink_ReceiptService_ReceiptServiceMaterial
  12.01.24        * zc_ObjectLink_InvoicePdf_DocTag
                    zc_ObjectLink_EmailSettings_EmailKind
                    zc_ObjectLink_EmailSettings_EmailTools

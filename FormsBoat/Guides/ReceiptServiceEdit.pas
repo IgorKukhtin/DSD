@@ -52,6 +52,15 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edReceiptServiceGroup: TcxButtonEdit;
+    GuidesReceiptServiceGroup: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edReceiptServiceModel: TcxButtonEdit;
+    GuidesReceiptServiceModel: TdsdGuides;
+    cxLabel8: TcxLabel;
+    GuidesReceiptServiceMaterial: TdsdGuides;
+    edReceiptServiceMaterial: TcxButtonEdit;
   private
     { Private declarations }
   public
