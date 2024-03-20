@@ -112,6 +112,13 @@ BEGIN
 
        -- Результат
        SELECT tmpProduct.*
+              -- без НДС
+            , tmpProduct.Basis_summ_transport AS Basis_summ_transport_NotVAT
+              -- НДС
+            , (tmpProduct.BasisWVAT_summ_transport - tmpProduct.Basis_summ_transport) :: TFloat AS Basis_summ_transport_VAT
+              -- % НДС - Заказ Клиента
+            , tmpProduct.TaxKind_Value_Client
+
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , ''                                        ::TVarChar AS ModelGroupName
@@ -122,9 +129,20 @@ BEGIN
 
             , zfCalc_ReceiptNumber_print (tmpInvoice.ReceiptNumber :: TVarChar) AS ReceiptNumber_str
             , zfCalc_InvNumber_print (tmpProduct.InvNumber_OrderClient :: TVarChar) AS InvNumber_OrderClient_str
-            -- сумма счета
+              -- сумма счета - с НДС
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
             , tmpInvoice.AmountOut    ::TFloat AS Invoice_summOut
+
+              -- без НДС
+            , zfCalc_Summ_NoVAT (tmpInvoice.AmountIn,  tmpInvoice.VATPercent) AS Invoice_summ_NotVAT
+            , zfCalc_Summ_NoVAT (tmpInvoice.AmountOut, tmpInvoice.VATPercent) AS Invoice_summOut_NotVAT
+              -- НДС
+            , zfCalc_Summ_VAT (tmpInvoice.AmountIn,  tmpInvoice.VATPercent) AS Invoice_summ_VAT
+            , zfCalc_Summ_VAT (tmpInvoice.AmountOut, tmpInvoice.VATPercent) AS Invoice_summOut_VAT
+
+              -- % НДС - Счет
+            , tmpInvoice.VATPercent ::TFloat      AS VATPercent
+
             -- сумма педоплаты
             , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ
             --% счета от общей суммы лодки

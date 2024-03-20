@@ -71,13 +71,20 @@ BEGIN
                                                    INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                                                  ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                                                 AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                                                AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_PrePay'
-                                                                                                                                        THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                   WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Return'
-                                                                                                                                        THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                   WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
-                                                                                                                                        THEN zc_Enum_InvoiceKind_Pay() 
-                                                                                                                              END
+                                                                                AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT CASE WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_PrePay'
+                                                                                                                                                 THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Return'
+                                                                                                                                                 THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
+                                                                                                                                                 THEN zc_Enum_InvoiceKind_Pay() 
+                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Service'
+                                                                                                                                                 THEN zc_Enum_InvoiceKind_Service() 
+                                                                                                                                       END
+                                                                                                                               UNION
+                                                                                                                                SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
+                                                                                                                               UNION
+                                                                                                                                SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Service'
+                                                                                                                               )
                                                WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                               ), 0);
          END IF;

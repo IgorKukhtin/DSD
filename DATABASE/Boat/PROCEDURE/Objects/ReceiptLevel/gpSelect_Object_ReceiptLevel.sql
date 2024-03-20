@@ -51,6 +51,17 @@ BEGIN
        WHERE Object_ReceiptLevel.DescId = zc_Object_ReceiptLevel()
          AND (Object_ReceiptLevel.isErased = FALSE OR inIsShowAll = TRUE) 
          AND (COALESCE (ObjectString_ObjectDesc.ValueData, '') = inObjectDesc OR inObjectDesc= '')
+     UNION
+
+      SELECT 0 :: Integer               AS Id
+           , 0 :: Integer               AS Code
+           , 'Очистить значение' :: TVarChar         AS Name
+           , '' :: TVarChar         ShortName
+           , '' :: TVarChar         ObjectDesc
+           , '' :: TVarChar         InsertName
+           , NULL :: TDateTime AS InsertDate
+           , TRUE         AS isErased
+
        ;
 
 END;

@@ -299,6 +299,14 @@ BEGIN
           ) AS tmpMI
           ;
 
+     -- удалили - ВСЕ
+     /*PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= inUserId)
+     FROM MovementItem
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId     = zc_MI_Detail()
+       AND MovementItem.ParentId   = ioId
+       AND MovementItem.isErased   = FALSE;*/
+
      -- Заливаются работы
      -- Заливается сборка
      PERFORM lpInsertUpdate_MI_OrderInternal_Detail (ioId                     := 0
@@ -308,7 +316,7 @@ BEGIN
                                                   , inPersonalId             := NULL
                                                   , inAmount                 := 0
                                                   , inOperPrice              := 0
-                                                  , inHours                  := tmpMI.Value_hour
+                                                  , inHours                  := COALESCE (tmpMI.Value_hour, 0)
                                                   , inSumm                   := 0
                                                   , inComment                := ''
                                                   , inUserId                 := inUserId

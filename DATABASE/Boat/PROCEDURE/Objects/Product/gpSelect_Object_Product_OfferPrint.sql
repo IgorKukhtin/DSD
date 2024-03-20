@@ -135,7 +135,8 @@ BEGIN
 
        -- Результат
        SELECT tmpProduct.*
-            , (COALESCE (tmpProduct.basiswvat_summ1,0)  + COALESCE (tmpOrder.SaleWVAT_summ,0)) AS Summ_total
+            , tmpProduct.BasisWVAT_summ_transport AS BasisWVAT_summ
+            , (COALESCE (tmpProduct.BasisWVAT_summ_transport, 0)) AS Summ_total
             ,  COALESCE (tmpOrder.SaleWVAT_summ,0) :: TFloat AS SaleWVAT_summ_order
             , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
