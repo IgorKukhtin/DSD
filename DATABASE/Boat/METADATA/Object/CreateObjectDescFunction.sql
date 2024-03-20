@@ -384,9 +384,24 @@ CREATE OR REPLACE FUNCTION zc_Object_EmailTools() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_EmailTools', 'Параметры подключения к внешнему Импорту/Экспорту' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_EmailTools');
 
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptServiceGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptServiceGroup', 'Группа Работы/Услуги' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceGroup');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptServiceModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptServiceModel', 'Работы/Услуги (модель)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceModel');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptServiceMaterial() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceMaterial'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptServiceMaterial', 'Работы/Услуги (Сырье)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceMaterial');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.03.24         * zc_Object_ReceiptServiceModel
+                    zc_Object_ReceiptServiceMaterial
+                    zc_Object_ReceiptServiceGroup
  12.02.24         * zc_Object_InvoicePdf
                     zc_Object_EmailSettings
                     zc_Object_EmailKind

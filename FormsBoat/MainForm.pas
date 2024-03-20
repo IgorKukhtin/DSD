@@ -325,6 +325,12 @@ type
     miEmailSettings: TMenuItem;
     misep: TMenuItem;
     miEmailKind: TMenuItem;
+    actReceiptServiceGroup: TdsdOpenForm;
+    actReceiptServiceModel: TdsdOpenForm;
+    actReceiptServiceMaterial: TdsdOpenForm;
+    miReceiptServiceGroup: TMenuItem;
+    miReceiptServiceMaterial: TMenuItem;
+    miReceiptServiceModel: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

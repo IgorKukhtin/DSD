@@ -27,10 +27,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 0
-    ExplicitTop = 58
-    ExplicitWidth = 1272
-    ExplicitHeight = 225
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -41,8 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -6
-      ExplicitTop = 23
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -369,6 +363,16 @@
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
           Width = 40
+        end
+        object NPP_service_ch1: TcxGridDBColumn
+          Caption = #8470' '#1087'/'#1087' '#1088#1072#1073#1086#1090
+          DataBinding.FieldName = 'NPP_service'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #8470' '#1087'/'#1087' - '#1086#1095#1077#1088#1077#1076#1085#1086#1089#1090#1100' '#1088#1072#1073#1086#1090
+          Width = 58
         end
         object DescName_ch1: TcxGridDBColumn
           Caption = #1069#1083#1077#1084#1077#1085#1090
@@ -699,7 +703,6 @@
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1272
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -709,7 +712,6 @@
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitTop = 284
   end
   object cxRightSplitter: TcxSplitter
     Left = 1264
@@ -717,17 +719,12 @@
     Width = 8
     Height = 494
     AlignSplitter = salRight
-    ExplicitTop = 289
-    ExplicitHeight = 269
   end
   object cxSplitter1: TcxSplitter
     Left = 0
     Top = 64
     Width = 8
     Height = 494
-    ExplicitLeft = 567
-    ExplicitTop = 289
-    ExplicitHeight = 269
   end
   object Panel5: TPanel
     Left = 0
@@ -2281,6 +2278,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 656
     Top = 112
@@ -2328,6 +2326,22 @@
         Component = MasterCDS
         ComponentItem = 'Comment_child'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNPP_service'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP_service'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2693,6 +2707,10 @@
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     Column = Article_all_ch1
+    ColumnList = <
+      item
+        Column = Article_all_ch1
+      end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 256

@@ -1109,7 +1109,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TOrderIncomeSnabJournalForm');
+  TdsdFormS
+  torageFactory.GetStorage.Load('TOrderIncomeSnabJournalForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderIncomeSnabJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('OrderIncomeSnabJournal_byReportFormForm');
@@ -1131,12 +1132,12 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
-
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_DatePartionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_DatePartionDialogForm');
@@ -2142,6 +2143,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartionCell_listForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadReestrKindFormTest;

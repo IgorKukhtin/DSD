@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptGoodsChild(
     IN inId          Integer ,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, NPP_service Integer
              , Comment TVarChar
              , Value TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
@@ -25,18 +25,21 @@ BEGIN
        RETURN QUERY
        SELECT
               0 :: Integer            AS Id
+           , 0  :: Integer            AS NPP_service
            , '' :: TVarChar           AS Comment
            , 0  :: TFloat             AS Value
            , 0  :: Integer            AS ReceiptGoodsId
            , '' :: TVarChar           AS ReceiptGoodsName
            , 0  :: Integer            AS ObjectId
-           , '' :: TVarChar           AS ObjectName
+           , '' :: TVarChar           AS ObjectName 
+           
        ;
    ELSE
      RETURN QUERY
 
      SELECT 
            Object_ReceiptGoodsChild.Id              AS Id 
+         , ObjectFloat_NPP_service.ValueData  ::Integer AS NPP_service
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
          , ObjectFloat_Value.ValueData   ::TFloat   AS Value
@@ -54,7 +57,11 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
-                               
+ 
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                               ON ObjectFloat_NPP_service.ObjectId = Object_ReceiptGoodsChild.Id
+                              AND ObjectFloat_NPP_service.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP_service()
+                              
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptGoods
                                ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
                               AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
@@ -78,6 +85,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.03.24         *
  01.12.20         *
 */
 

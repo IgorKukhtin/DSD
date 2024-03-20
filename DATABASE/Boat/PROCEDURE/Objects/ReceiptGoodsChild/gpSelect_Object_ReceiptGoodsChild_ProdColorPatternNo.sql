@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild_ProdColorPatternNo(
     IN inIsErased        Boolean,       -- признак показать удаленные да / нет 
     IN inSession         TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, NPP Integer, NPP_calc Integer, Comment TVarChar
+RETURNS TABLE (Id Integer, NPP Integer, NPP_calc Integer, NPP_service Integer
+             , Comment TVarChar
              , Value NUMERIC (16, 8), Value_child NUMERIC (16, 8), Value_service NUMERIC (16, 8), ForCount TFloat
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ObjectId Integer, ObjectCode Integer, ObjectName TVarChar, DescName TVarChar
@@ -57,7 +58,8 @@ BEGIN
      SELECT 
            Object_ReceiptGoodsChild.Id              AS Id
          , ObjectFloat_NPP.ValueData     :: Integer AS NPP
-         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY ObjectFloat_NPP.ValueData, Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP_calc
+         , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY ObjectFloat_NPP.ValueData, Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP_calc 
+         , ObjectFloat_NPP_service.ValueData  ::Integer  AS NPP_service
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
          , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE Null END :: NUMERIC (16, 8) AS Value
@@ -133,6 +135,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_NPP
                                 ON ObjectFloat_NPP.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectFloat_NPP.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                                ON ObjectFloat_NPP_service.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_NPP_service.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP_service()
 
           -- значение в сборке
           LEFT JOIN ObjectFloat AS ObjectFloat_Value
@@ -235,6 +241,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.03.24         *
  31.05.23         * add inReceiptGoodsId
  01.12.20         *
 */

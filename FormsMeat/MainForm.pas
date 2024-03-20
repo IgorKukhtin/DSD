@@ -1476,6 +1476,8 @@ type
     miReport_PersonalGroupSummAdd: TMenuItem;
     actBankSecondNum: TdsdOpenForm;
     miBankSecondNum: TMenuItem;
+    actReport_Send_PartionCell_true: TdsdOpenForm;
+    miReport_Send_PartionCell_true: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

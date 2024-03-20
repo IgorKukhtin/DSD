@@ -64,7 +64,6 @@ BEGIN
                                       ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
                                      AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
                                      AND ObjectFloat_NPP.ValueData > 0
-
                LEFT JOIN ObjectLink AS ObjectLink_Object
                                     ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
                                    AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
@@ -126,6 +125,7 @@ BEGIN
         PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
                                                        , inComment            := '' :: TVarChar
                                                        , inNPP                := (tmpSendMI.Ord + (SELECT MAX (_tmpReceiptGoodsChild.NPP) FROM _tmpReceiptGoodsChild)) :: Integer
+                                                       , inNPP_service        := 0
                                                        , inReceiptGoodsId     := inReceiptGoodsId
                                                        , inObjectId           := tmpSendMI.ObjectId
                                                        , inProdColorPatternId := NULL
@@ -160,6 +160,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+19.03.24          *
 24.06.23          *
 */
 

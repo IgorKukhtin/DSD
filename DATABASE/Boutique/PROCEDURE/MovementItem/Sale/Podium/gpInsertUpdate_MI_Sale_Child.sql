@@ -124,7 +124,6 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentNext
                                                         ON MIFloat_ChangePercentNext.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercentNext.DescId         = zc_MIFloat_ChangePercentNext()
-
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Master()
                          AND MovementItem.isErased   = FALSE
@@ -133,7 +132,7 @@ BEGIN
         SELECT tmpMI.MovementItemId, tmpMI.SummPriceList, tmpMI.SummPriceList_EUR, tmpMI.AmountToPay, tmpMI.AmountToPay_EUR
         FROM tmpMI
         WHERE tmpMI.MovementItemId     = inParentId
-           OR COALESCE (inParentId, 0) = 0;
+           OR COALESCE (inParentId, 0) = 0;                      
 
      -- расчет Данных Child
      WITH tmpChild AS (SELECT *
@@ -274,7 +273,7 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
+     
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -291,4 +290,3 @@ $BODY$
 --select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23590 , inParentId := 116340 , inAmountGRN := 1777 , inAmountUSD := 100 , inAmountEUR := 100 , inAmountCARD := 0 , inAmountDiscount_GRN := -0.38 , inAmountDiscount_EUR := -0.01 , inAmountRounding_GRN := 16.36 , inAmountRounding_EUR := 0 , inAmountDiff := 0 , inisChangeEUR := False, inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');
 
 --select * from gpInsertUpdate_MI_Sale_Child(inMovementId := 23590 , inParentId := 116340 , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 300 , inAmountCARD := 0 , inAmountDiscount_GRN := -2635.1 , inAmountDiscount_EUR := -65 , inAmountRounding_GRN := 0 , inAmountRounding_EUR := 0 , inAmountDiff := 0 , inisChangeEUR := 'False' , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1 , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1 , inCurrencyValueCross := 1.09 , inParValueCross := 1 ,  inSession := '2');
-

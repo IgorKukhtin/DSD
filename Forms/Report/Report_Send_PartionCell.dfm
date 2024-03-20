@@ -24,6 +24,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 326
+        ExplicitLeft = -48
+        ExplicitTop = 16
         ExplicitWidth = 1071
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -645,6 +647,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       TabOrder = 6
       Width = 108
     end
+    object cbShowAll: TcxCheckBox
+      Left = 879
+      Top = 4
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Caption = #1054#1089#1090#1072#1090#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 68
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -881,8 +892,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1182,6 +1193,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Name = 'inIsMovement'
         Value = Null
         Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = cbShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1493,6 +1512,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Name = 'inPartionGoodsDate'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = cbShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 296

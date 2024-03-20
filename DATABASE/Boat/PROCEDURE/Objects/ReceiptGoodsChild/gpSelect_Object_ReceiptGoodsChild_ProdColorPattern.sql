@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, ReceiptGoodsId Integer
              , isEnabled Boolean
              , isErased Boolean
              , NPP Integer, NPP_calc Integer
+             , NPP_service Integer
 
                -- Boat Structure 
              , ProdColorPatternId Integer, ProdColorPatternCode Integer, ProdColorPatternName TVarChar, ProdColorPatternName_all TVarChar
@@ -144,7 +145,8 @@ BEGIN
           , tmpProdColorPattern.isErased      :: Boolean  AS isErased
  
           , ObjectFloat_NPP.ValueData         :: Integer  AS NPP
-          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP_calc
+          , ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) :: Integer AS NPP_calc 
+          , ObjectFloat_NPP_service.ValueData  ::Integer  AS NPP_service
 
           , Object_ProdColorPattern.Id                    AS ProdColorPatternId
           , Object_ProdColorPattern.ObjectCode            AS ProdColorPatternCode
@@ -220,6 +222,10 @@ BEGIN
                                 ON ObjectFloat_NPP.ObjectId = tmpProdColorPattern.ReceiptGoodsChildId
                                AND ObjectFloat_NPP.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                                ON ObjectFloat_NPP_service.ObjectId = tmpProdColorPattern.ReceiptGoodsChildId
+                               AND ObjectFloat_NPP_service.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP_service() 
+ 
           -- ÃÓ‰ÂÎ¸
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern_ColorPattern
                                ON ObjectLink_ProdColorPattern_ColorPattern.ObjectId = Object_ProdColorPattern.Id
@@ -289,6 +295,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.03.24         *
  23.06.22         * MaterialOptions
  14.12.20         *
  01.12.20         *

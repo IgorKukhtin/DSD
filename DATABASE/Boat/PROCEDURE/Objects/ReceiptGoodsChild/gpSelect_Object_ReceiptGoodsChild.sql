@@ -2,11 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild(
+CREATE OR REPLACE FUNCTION (
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
+RETURNS TABLE (Id Integer, NPP Integer, NPP_service Integer, Comment TVarChar
              , Value NUMERIC (16, 8), Value_servise NUMERIC (16, 8)
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , ProdColorGroupId Integer, ProdColorGroupName TVarChar
@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
-             , ProdColorName TVarChar
+             , ProdColorName TVarChar                                   gpSelect_Object_ReceiptGoodsChild
              , MeasureName TVarChar
                -- Цена вх. без НДС - Товар/Услуги
              , EKPrice TFloat
@@ -32,19 +32,21 @@ RETURNS TABLE (Id Integer, NPP Integer, Comment TVarChar
                -- Сумма вх. с НДС, до 2-х знаков - Товар/Услуги
              , EKPriceWVAT_summ TFloat
 
-             , EmpfPrice TFloat, EmpfPriceWVAT TFloat
+             /*, EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
 
              , EKPrice_summ TFloat
              , EKPriceWVAT_summ TFloat
              , Basis_summ TFloat
-             , BasisWVAT_summ TFloat
+             , BasisWVAT_summ TFloat 
+             */
               )
 AS
 $BODY$
    DECLARE vbUserId       Integer;
    DECLARE vbIsShowAll    Boolean;
-   DECLARE vbPriceWithVAT Boolean;
+   DECLARE vbPriceWithVAT Boolean; 
+   DECLARE vbtaxkindvalue_basis   TFloat;
 BEGIN
 
 vbIsShowAll:= TRUE;
@@ -69,6 +71,7 @@ vbIsShowAll:= TRUE;
      SELECT
            Object_ReceiptGoodsChild.Id              AS Id
          , ROW_NUMBER() OVER (PARTITION BY Object_ReceiptGoods.Id ORDER BY Object_ReceiptGoodsChild.Id ASC) :: Integer AS NPP
+         , ObjectFloat_NPP_service.ValueData  ::Integer AS NPP_service
          , Object_ReceiptGoodsChild.ValueData       AS Comment
 
          , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END ELSE 0 END :: NUMERIC (16, 8) AS Value
@@ -101,7 +104,7 @@ vbIsShowAll:= TRUE;
          , ObjectDate_Update.ValueData              AS UpdateDate
          , Object_ReceiptGoodsChild.isErased        AS isErased
 
-         , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
+         , ValueData.ValueData ::TVarChar  AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
          , ObjectString_Article.ValueData        ::TVarChar  AS Article
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
@@ -168,6 +171,10 @@ vbIsShowAll:= TRUE;
           LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
                                 ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
                                AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                                ON ObjectFloat_NPP_service.ObjectId = Object_ReceiptGoodsChild.Id
+                               AND ObjectFloat_NPP_service.DescId   = zc_ObjectFloat_ReceiptGoodsChild_NPP_service()
 
           LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
                                ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
@@ -285,6 +292,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.03.24         *
  01.12.20         *
 */
 

@@ -80,7 +80,6 @@ $BODY$
    DECLARE vbAmountCARD_EUR        TFloat;
    DECLARE vbAmountCARD_Over       TFloat;   
 
-   DECLARE vbAmountDiffLeft_GRN    TFloat;
    DECLARE vbAmountDiscRest        TFloat;
    DECLARE vbAmountDiscRest_EUR    TFloat;
 
@@ -409,10 +408,12 @@ BEGIN
                                         , inCurrencyId_Client      := inCurrencyId_Client 
                                         , inUserId                 := inUserId) AS Res;     
 
+       --raise notice 'Discount 2: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
+
      END IF;
           
      --Округляем долг в валюте до целого
-     IF /*COALESCE(inAmountDiscount_EUR, 0) = 0 AND */ COALESCE(vbAmountRemains_EUR, 0) <> Round(COALESCE(vbAmountRemains_EUR, 0))
+     IF COALESCE(vbAmountRemains_EUR, 0) <> Round(COALESCE(vbAmountRemains_EUR, 0))
      THEN
        SELECT Res.AmountDiff
 
@@ -507,7 +508,7 @@ BEGIN
                                         , inCurrencyId_Client      := inCurrencyId_Client 
                                         , inUserId                 := inUserId) AS Res;
 
-       raise notice 'Discount 3: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
+       --raise notice 'Discount 3: % % % %', vbAmountDiscount, vbAmountRounding, vbAmountDiscount_EUR, vbAmountRounding_EUR;
      
      END IF;
      
@@ -523,12 +524,12 @@ BEGIN
        --raise notice 'D: % ', vbAmountDiscount;
      END IF;
 
+     --raise notice 'D: % ', vbAmountDiscount;
                                       
      -- Дополнительная оплата из за невыданного округления    
-     vbAmountDiffLeft_GRN := (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over) - vbAmountDiff;
-     --vbAmountDiscount := vbAmountDiscount + vbAmountDiff;
+     --vbAmountDiscount := vbAmountDiscount + (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over) - vbAmountDiff;
 
-     --raise notice 'D: % %  % ', vbAmountDiffLeft_GRN, (vbAmountEUR_Over_GRN + vbAmountUSD_Over_GRN + vbAmountCARD_Over + vbAmountGRN_Over), vbAmountDiff;
+     --raise notice 'D: % ', vbAmountDiscount;
           
      -- распределили - Дополнительую скидку по всем строкам
      -- Распределили EUR
@@ -567,9 +568,6 @@ BEGIN
                                              ELSE ROUND(vbAmountRounding_EUR * _tmp_MI_Master.AmountToPay_EUR / vbAmountToPay_EUR) :: TFloat
                                         END AS AmountRounding_EUR
                                         
-                                        -- распределили не выданную сдачу - !!! ГРН !!!
-                                      , ROUND(vbAmountDiffLeft_GRN * _tmp_MI_Master.AmountToPay / vbAmountToPay, 2) :: TFloat AS AmountDiffLeft_GRN
-
                                       , ROW_NUMBER() OVER (ORDER BY _tmp_MI_Master.AmountToPay_EUR DESC) AS Ord
 
                                  FROM _tmp_MI_Master
@@ -603,12 +601,6 @@ BEGIN
                                           THEN vbAmountRounding_EUR - COALESCE((SELECT SUM (tmp_MI_Master_all.AmountRounding_EUR) AS AmountRounding_EUR FROM tmp_MI_Master_all WHERE tmp_MI_Master_all.Ord <> 1 /*(SELECT MAX(tmp_MI_Master_all.Ord) FROM tmp_MI_Master_all)*/), 0)
                                           ELSE tmp_MI_Master_all.AmountRounding_EUR
                                           END) AS AmountRounding_EUR
-
-                                    -- Распределили не выданную сдачу на коп. при округлении - !!! ГРН !!!
-                                  , (CASE WHEN tmp_MI_Master_all.Ord = 1 --(SELECT MAX(tmp_MI_Master_all.Ord) FROM tmp_MI_Master_all)
-                                          THEN vbAmountDiffLeft_GRN - COALESCE((SELECT SUM (tmp_MI_Master_all.AmountDiffLeft_GRN) AS AmountDiffLeft_GRN FROM tmp_MI_Master_all WHERE tmp_MI_Master_all.Ord <> 1 /*(SELECT MAX(tmp_MI_Master_all.Ord) FROM tmp_MI_Master_all)*/), 0)
-                                          ELSE tmp_MI_Master_all.AmountDiffLeft_GRN
-                                          END) AS AmountDiffLeft_GRN
 
                                     --
                                     --
@@ -675,7 +667,7 @@ BEGIN
 
           , res.Amount :: TFloat AS Amount
 
-          , (CASE WHEN vbAmountEUR_Pay = 0 THEN 0 ELSE Round(vbAmountEUR_Pay_GRN * res.Amount / vbAmountEUR_Pay, 2) END + COALESCE(tmp_MI_Master.AmountDiffLeft_GRN, 0)) :: TFloat AS Amount_GRN
+          , CASE WHEN vbAmountEUR_Pay = 0 THEN 0 ELSE Round(vbAmountEUR_Pay_GRN * res.Amount / vbAmountEUR_Pay, 2) END :: TFloat AS Amount_GRN
           , res.Amount :: TFloat      AS Amount_EUR
 
           , inCurrencyValueEUR     AS CurrencyValue
@@ -699,14 +691,17 @@ BEGIN
        vbMaxOrder := (SELECT Max(tmpMI.Ord) FROM _tmpResult AS tmpMI 
                       WHERE tmpMI.CurrencyId = zc_Currency_EUR() AND tmpMI.Amount > 0);
 
-       UPDATE _tmpResult SET Amount_GRN = vbAmountEUR_Pay_GRN + vbAmountDiffLeft_GRN - COALESCE(tmpData.Amount_GRN, 0) 
+       UPDATE _tmpResult SET Amount = vbAmountEUR_Pay - COALESCE(tmpData.Amount, 0)    
+                           , Amount_GRN = vbAmountEUR_Pay_GRN - COALESCE(tmpData.Amount_GRN, 0) 
+                           , Amount_EUR = vbAmountEUR_Pay - COALESCE(tmpData.Amount, 0)    
        FROM (SELECT SUM(CASE WHEN tmpMI.Ord <> vbMaxOrder THEN tmpMI.Amount_GRN END):: TFloat AS Amount_GRN
+                  , SUM(CASE WHEN tmpMI.Ord <> vbMaxOrder THEN tmpMI.Amount END):: TFloat AS Amount
              FROM _tmpResult AS tmpMI
              WHERE tmpMI.CurrencyId = zc_Currency_EUR() 
                AND tmpMI.Amount > 0) AS tmpData
        WHERE _tmpResult.CurrencyId = zc_Currency_EUR() AND _tmpResult.Ord = vbMaxOrder;
      END IF;   
-     
+          
      -- Распределили USD, целую часть
      WITH  tmp_MI_USD AS (SELECT tmpMI.MovementItemId
                                , tmpMI.Amount_all   AS Amount_all
@@ -1461,7 +1456,7 @@ BEGIN
        
      IF COALESCE(vbText, '') <> ''
      THEN
-        RAISE notice /*EXCEPTION*/ 'Ошибка. Не удалось распределить суммы:% %', Chr(13), vbText;
+        RAISE EXCEPTION 'Ошибка. Не удалось распределить суммы:% %', Chr(13), vbText;
      END IF;
           
      -- RAISE notice /*EXCEPTION*/ 'Ошибка. %', (SELECT SUM (_tmpResult.AmountDiscount) FROM _tmpResult     );
@@ -1502,13 +1497,13 @@ $BODY$
 
 SELECT Object_Cash.valuedata, Calc.* 
 FROM lpSelect_MI_Child_calc(
-      inMovementId            := 23589        
-    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23589 AND MLO.DescId = zc_MovementLinkObject_From())
-    , inAmountGRN := 0 , inAmountUSD := 300 , inAmountEUR := 200 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  1020, inAmountRemains_EUR := 0
+      inMovementId            := 23602         
+    , inUnitId                := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = 23602   AND MLO.DescId = zc_MovementLinkObject_From())
+    , inAmountGRN := 0 , inAmountUSD := 0 , inAmountEUR := 100 , inAmountCARD := 0, inAmountDiscount_EUR := 0, inAmountDiff :=  1860, inAmountRemains_EUR := 0
     , inisDiscount := 'False', inisChangeEUR := 'False'
     , inCurrencyValueUSD := 37.68 , inCurrencyValueInUSD := 37.31 , inParValueUSD := 1
     , inCurrencyValueEUR := 40.95 , inCurrencyValueInEUR := 40.54 , inParValueEUR := 1
-    , inCurrencyValueCross := 1.0868 , inParValueCross := 1
+    , inCurrencyValueCross := 1.09 , inParValueCross := 1
     , inCurrencyId_Client     := zc_Currency_EUR()
     , inUserId                := 2
 ) AS Calc left join Object AS Object_Cash ON Object_Cash.Id = Calc.CashId --WHERE Calc.CashId = 18666

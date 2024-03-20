@@ -76,6 +76,9 @@ type
     procedure LoadReceiptLevelFormTest;
     procedure LoadReceiptGoodsFormTest;
     procedure LoadReceiptServiceFormTest;
+    procedure LoadReceiptServiceGroupFormTest;
+    procedure LoadReceiptServiceModelFormTest;
+    procedure LoadReceiptServiceMaterialFormTest;
     procedure LoadReportFormTest;
     procedure LoadReportProfitLossFormTest;
     procedure LoadReportPersonalFormTest;
@@ -927,6 +930,28 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceEditForm');
+end;
+
+procedure TLoadFormTest.LoadReceiptServiceGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceGroupEditForm');
+end;
+procedure TLoadFormTest.LoadReceiptServiceModelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceModelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceModelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceModelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceModelEditForm');
+end;
+procedure TLoadFormTest.LoadReceiptServiceMaterialFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceMaterialForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceMaterialForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptServiceMaterialEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptServiceMaterialEditForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;
