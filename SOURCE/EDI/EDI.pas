@@ -3348,7 +3348,7 @@ var
   INVOICE: IXMLINVOICEType;
   DOCUMENTINVOICE_DRN: DOCUMENTINVOICE_DRN_XML.IXMLDocumentInvoiceType;
   Stream: TStream;
-  i: integer;
+  i, nInt: integer;
   FileName, lNumber: string;
   AmountSummNoVAT_fozz: Double;
   VATPercent_fozz: Integer;
@@ -3397,8 +3397,9 @@ begin
 
       DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.StreetAndNumber := HeaderDataSet.FieldByName('StreetName_To').asString;
       DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.CityName := HeaderDataSet.FieldByName('CityName_To').asString;
-      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PostalCode := HeaderDataSet.FieldByName('PostalCode_To').asString;
-      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PhoneNumber := HeaderDataSet.FieldByName('Phone_To').asString;
+      if TryStrToInt(HeaderDataSet.FieldByName('PostalCode_To').asString, nInt) and (nInt <> 0) then
+        DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PostalCode := IntToStr(nInt);
+      DOCUMENTINVOICE_DRN.InvoiceParties.Buyer.PhoneNumber := SplitString(HeaderDataSet.FieldByName('Phone_To').asString, ',')[0];
 
       // Глобальний номер розташування (GLN) контрагента - GLN продавця
       if HeaderDataSet.FieldByName('SupplierGLNCode').asString <> ''
@@ -3456,7 +3457,7 @@ begin
             // Ціна однієї одиниці без ПДВ
             LineItem.InvoiceUnitNetPrice := ItemsDataSet.FieldByName('PriceNoVAT').AsFloat;
             // Ціна однієї одиниці з ПДВ
-            LineItem.InvoiceUnitGrossPrice := ItemsDataSet.FieldByName('PriceWVAT').AsFloat;
+            LineItem.InvoiceUnitGrossPrice := RoundTo(ItemsDataSet.FieldByName('PriceWVAT').AsFloat, -2);
 
             // Ставка податку (ПДВ,%):
             LineItem.TaxRate := ItemsDataSet.FieldByName('VATPercent').AsInteger;
@@ -3465,7 +3466,7 @@ begin
             // Сума з ПДВ
             LineItem.GrossAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat;
             // Сума податку
-            LineItem.TaxAmount := ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
+            LineItem.TaxAmount := RoundTo(ItemsDataSet.FieldByName('AmountSummWVAT').AsFloat - ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat, -2);
             // Сума без ПДВ
             LineItem.NetAmount := ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat;
             //
