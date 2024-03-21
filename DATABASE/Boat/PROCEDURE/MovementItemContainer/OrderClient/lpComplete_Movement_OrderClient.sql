@@ -192,6 +192,7 @@ BEGIN
                                          , GoodsId_child_find Integer
                                            --
                                          , NPP Integer
+                                         , NPP_service Integer
                                            -- Цвет - только Примечание
                                          , ProdColorName TVarChar
                                            --
@@ -234,14 +235,20 @@ BEGIN
                  , lpSelect.EKPrice
                    -- Boat Structure
                  , lpSelect.ProdColorPatternId
-                   -- Boat Structure
+                   -- 
                  , ObjectFloat_NPP.ValueData AS NPP
+                   -- 
+                 , ObjectFloat_NPP_service.ValueData AS NPP_service
 
             FROM lpSelect_Object_ReceiptProdModelChild_detail (inIsGroup:=FALSE, inUserId:= inUserId) AS lpSelect
                  -- NPP
                  LEFT JOIN ObjectFloat AS ObjectFloat_NPP
                                        ON ObjectFloat_NPP.ObjectId  = lpSelect.ReceiptGoodsChildId
                                       AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+                 LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                                       ON ObjectFloat_NPP_service.ObjectId  = lpSelect.ReceiptGoodsChildId
+                                      AND ObjectFloat_NPP_service.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP_service()
+                                      
             WHERE lpSelect.ReceiptProdModelId = vbReceiptProdModelId
            ;
 
@@ -278,6 +285,7 @@ BEGIN
                                          , COALESCE (ObjectString_Comment_pcp.ValueData, '') AS ProdColorName_pcp
                                            -- NPP
                                          , ObjectFloat_NPP.ValueData                       AS NPP
+                                         , ObjectFloat_NPP_service.ValueData               AS NPP_service
 
                                     FROM -- цвет
                                          Object AS Object_ReceiptGoodsChild
@@ -292,6 +300,9 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS ObjectFloat_NPP
                                                                ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
                                                               AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_NPP_service
+                                                               ON ObjectFloat_NPP_service.ObjectId  = Object_ReceiptGoodsChild.Id
+                                                              AND ObjectFloat_NPP_service.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP_service()
                                          -- Категория Опций
                                          LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
                                                               ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
@@ -367,6 +378,7 @@ BEGIN
                 , tmpReceiptItems.ReceiptLevelId
                 , tmpReceiptItems.GoodsId_child
                 , tmpReceiptItems.NPP
+                , tmpReceiptItems.NPP_service
                   -- Цвет - только Примечание
                 , tmpReceiptItems.ProdColorName
                   -- Цвет - только Примечание
@@ -569,6 +581,7 @@ BEGIN
                               , lpSelect.GoodsId_child
                                 --
                               , lpSelect.NPP
+                              , lpSelect.NPP_service
                                 -- Цвет - только Примечание (когда нет GoodsId)
                               , _tmpProdColorItems.ProdColorName
 
@@ -597,7 +610,7 @@ BEGIN
                               )
                         )
          -- Результат - элементы документа, сборка узлов
-         INSERT INTO _tmpItem_Detail (ObjectId_parent, ObjectId, ObjectDescId, ProdOptionsId, ColorPatternId, ProdColorPatternId, MaterialOptionsId, ReceiptLevelId, GoodsId_child, NPP
+         INSERT INTO _tmpItem_Detail (ObjectId_parent, ObjectId, ObjectDescId, ProdOptionsId, ColorPatternId, ProdColorPatternId, MaterialOptionsId, ReceiptLevelId, GoodsId_child, NPP, NPP_service
                                     , ProdColorName, OperCount, ForCount, OperPrice)
 
             SELECT tmpRes.ObjectId_parent
@@ -615,6 +628,7 @@ BEGIN
                  , tmpRes.ReceiptLevelId
                  , tmpRes.GoodsId_child
                  , tmpRes.NPP
+                 , tmpRes.NPP_service
                    -- Цвет - только Примечание (когда нет GoodsId)
                  , tmpRes.ProdColorName
                    --
@@ -784,7 +798,7 @@ BEGIN
                                                , MaterialOptionsId Integer, ColorPatternId Integer, ReceiptLevelId Integer, GoodsId_child Integer, GoodsId_child_old Integer
                                                , ProdColorName TVarChar
                                                , OperCount TFloat, ForCount TFloat
-                                               , NPP Integer
+                                               , NPP Integer, NPP_service Integer
                                                , Key_Id TVarChar, Key_Id_text TVarChar
                                                 ) ON COMMIT DROP;
         -- Пробуем создать
@@ -793,7 +807,7 @@ BEGIN
                                         , MaterialOptionsId, ColorPatternId, ReceiptLevelId, GoodsId_child, GoodsId_child_old
                                         , ProdColorName
                                         , OperCount, ForCount
-                                        , NPP
+                                        , NPP, NPP_service
                                         , Key_Id, Key_Id_text
                                          )
            SELECT 0 AS ReceiptGoodsChildId
@@ -828,6 +842,7 @@ BEGIN
 
                   -- NPP
                 , _tmpItem_Detail.NPP
+                , _tmpItem_Detail.NPP_service
 
                   -- Цвет - из Boat Structure
                   -- , _tmpItem_Detail.ProdColorName_pcp
@@ -1252,7 +1267,8 @@ BEGIN
                                                                                                        END
                                                                                                    ELSE ''
                                                                                              END
-                                                                  , inNPP                 := _tmpReceiptItems_new.NPP :: Integer
+                                                                  , inNPP                 := _tmpReceiptItems_new.NPP         :: Integer
+                                                                  , inNPP_service         := _tmpReceiptItems_new.NPP_service :: Integer
                                                                   , inReceiptGoodsId      := _tmpReceiptItems_new.ReceiptGoodsId
                                                                   , inObjectId            := _tmpReceiptItems_new.ObjectId
                                                                   , inProdColorPatternId  := _tmpReceiptItems_new.ProdColorPatternId
@@ -1283,7 +1299,8 @@ BEGIN
                    , (SELECT gpInsertUpdate.ioId
                       FROM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                  := 0
                                                                   , inComment             := ''
-                                                                  , inNPP                 := _tmpReceiptProdModel.NPP :: Integer
+                                                                  , inNPP                 := _tmpReceiptProdModel.NPP         :: Integer
+                                                                  , inNPP_service         := _tmpReceiptProdModel.NPP_service :: Integer
                                                                   , inReceiptGoodsId      := _tmpReceiptItems_new.ReceiptGoodsId
                                                                   , inObjectId            := _tmpReceiptProdModel.ObjectId
                                                                   , inProdColorPatternId  := 0
@@ -1302,7 +1319,7 @@ BEGIN
              FROM _tmpReceiptProdModel
                   INNER JOIN Object AS Object_Object
                                     ON Object_Object.Id     = _tmpReceiptProdModel.ObjectId
-                                   AND Object_Object.DescId = zc_Object_Goods()
+                                   AND Object_Object.DescId IN (zc_Object_Goods(), zc_Object_ReceiptService())
                   INNER JOIN (-- новые элементы ReceiptGoodsId + есть GoodsId_child
                               SELECT DISTINCT
                                      _tmpReceiptItems_new.ReceiptGoodsId
@@ -1525,6 +1542,7 @@ BEGIN
                    , _tmpItem.ProdColorPatternId
                    , _tmpItem.ProdOptionsId
                    , _tmpItem.NPP
+                   , _tmpItem.NPP_service
                    , OL_Goods_Partner.ChildObjectId AS PartnerId
                    , COALESCE (_tmpReceiptItems_new.GoodsId_child, _tmpItem.GoodsId_child_find, _tmpItem.GoodsId_child) AS GoodsId_child
               FROM _tmpItem_Detail AS _tmpItem
@@ -1556,7 +1574,7 @@ BEGIN
           AND (_tmpItem_Detail.ObjectId           = _tmpItem.ObjectId
            AND _tmpItem_Detail.ProdColorPatternId = _tmpItem.ProdColorPatternId
            AND _tmpItem_Detail.ReceiptLevelId     = _tmpItem.ReceiptLevelId
-           AND _tmpItem_Detail.NPP                = _tmpItem.NPP
+           AND COALESCE (_tmpItem_Detail.NPP, 0)  = COALESCE (_tmpItem.NPP, 0)
 
           --OR (_tmpItem_Detail.ProdColorPatternId = _tmpItem.ProdColorPatternId
           --AND _tmpItem_Detail.ColorPatternId     = _tmpItem.ColorPatternId)

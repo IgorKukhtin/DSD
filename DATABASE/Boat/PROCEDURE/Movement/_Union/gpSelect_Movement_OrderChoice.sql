@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full TVarChar, InvNumber
              , ProductCode Integer
              , ProductName TVarChar
              , ProductCIN TVarChar
+             , Comment_Product TVarChar
 
              , Comment TVarChar
              , MovementId_Invoice Integer, InvNumberFull_Invoice TVarChar, InvNumber_Invoice Integer, ReceiptNumber_Invoice Integer, Comment_Invoice TVarChar
@@ -173,6 +174,7 @@ BEGIN
              , Object_Product.ObjectCode                    AS ProductCode
              , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName
              , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN
+             , ObjectString_Product_Comment.ValueData       AS Comment_Product
              , MovementString_Comment.ValueData :: TVarChar AS Comment
 
              , Movement_Invoice.Id                            AS MovementId_Invoice
@@ -212,6 +214,9 @@ BEGIN
                                           ON MovementLinkObject_Product.MovementId = Movement.Id
                                          AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
              LEFT JOIN Object AS Object_Product  ON Object_Product.Id  = MovementLinkObject_Product.ObjectId
+             LEFT JOIN ObjectString AS ObjectString_Product_Comment
+                                    ON ObjectString_Product_Comment.ObjectId = Object_Product.Id
+                                   AND ObjectString_Product_Comment.DescId   = zc_ObjectString_Product_Comment()
 
              LEFT JOIN Movement AS Movement_Invoice ON Movement_Invoice.Id = Movement.MovementId_Invoice
 

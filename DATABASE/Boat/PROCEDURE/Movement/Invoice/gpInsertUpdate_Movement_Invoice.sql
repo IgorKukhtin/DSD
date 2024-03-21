@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbMovementId_return Integer;
+   DECLARE vbBasisWVAT_summ_transport TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
@@ -38,6 +39,35 @@ BEGIN
      ELSE
         vbAmount := -1 * inAmountOut;
      END IF;
+
+
+     -- Если это Счет
+     IF inInvoiceKindId = zc_Enum_InvoiceKind_Pay() AND inAmountIn > 0 AND inParentId > 0
+     THEN
+         -- 5. Total LP + Vat - ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+         vbBasisWVAT_summ_transport:= (SELECT  gpSelect.BasisWVAT_summ_transport
+                                       FROM gpSelect_Object_Product (inParentId, FALSE, FALSE, '') AS gpSelect
+                                       WHERE gpSelect.MovementId_OrderClient = inParentId
+                                      );
+         -- Проверка - кривая схема
+         IF vbBasisWVAT_summ_transport > 0 AND inAmountIn <> vbBasisWVAT_summ_transport
+         THEN
+             RAISE EXCEPTION 'Ошибка.Сумма по счету = <%>%должна соответствовать сумме заказа = <%>.'
+                            , zfConvert_FloatToString (inAmountIn)
+                            , CHR (13)
+                            , zfConvert_FloatToString (vbBasisWVAT_summ_transport)
+                             ;
+         END IF;
+
+         -- Замена - кривая схема
+         vbAmount:= gpGet_Movement_Invoice_Prepay (inMovementId_order      := inParentId
+                                                 , inInvoiceKindId         := zc_Enum_InvoiceKind_PrePay() -- !!! не ошибка, надо посчитать остаток к оплате!!!
+                                                 , inTotalSumm_debet       := vbBasisWVAT_summ_transport
+                                                 , inSession               := inSession
+                                                  );
+
+     END IF;
+
 
 
      -- Если это Счет
