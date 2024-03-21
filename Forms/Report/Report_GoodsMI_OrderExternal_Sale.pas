@@ -129,6 +129,9 @@ type
     bbOpenDocumentOrder: TdxBarButton;
     bbOpenDocumentSale: TdxBarButton;
     actOpenFormOrder: TdsdOpenForm;
+    GoodsBoxName_short: TcxGridDBColumn;
+    AmountBox: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

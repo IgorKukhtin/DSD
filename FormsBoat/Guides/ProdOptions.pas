@@ -23,7 +23,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TProdOptionsForm = class(TParentForm)
@@ -101,6 +102,10 @@ type
     btnSetNull_GuidesClient: TcxButton;
     btnClientChoiceForm: TcxButton;
     actModelChoiceForm: TOpenChoiceForm;
+    Panel2: TPanel;
+    cxLabel3: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cbis—hangePrice: TcxCheckBox;
   private
     { Private declarations }
   public

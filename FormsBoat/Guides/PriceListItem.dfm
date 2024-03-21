@@ -126,6 +126,14 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 200
       end
+      object ModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'ModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
@@ -198,11 +206,10 @@ object PriceListItemForm: TPriceListItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
-        Width = 70
+        Width = 94
       end
       object EKPrice: TcxGridDBColumn
         Caption = 'Netto EK'
@@ -222,12 +229,11 @@ object PriceListItemForm: TPriceListItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1053#1044#1057
         Options.Editing = False
-        Width = 70
+        Width = 79
       end
       object EmpfPrice: TcxGridDBColumn
         Caption = 'Empf. VK'
@@ -247,12 +253,11 @@ object PriceListItemForm: TPriceListItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1089' '#1053#1044#1057
         Options.Editing = False
-        Width = 70
+        Width = 97
       end
       object UpdateDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'.)'
@@ -348,13 +353,13 @@ object PriceListItemForm: TPriceListItemForm
     end
   end
   object cxLabel3: TcxLabel
-    Left = 578
-    Top = 36
+    Left = 574
+    Top = 43
     Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085#1099' '#1089':'
   end
   object edOperDate: TcxDateEdit
     Left = 679
-    Top = 35
+    Top = 34
     EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False

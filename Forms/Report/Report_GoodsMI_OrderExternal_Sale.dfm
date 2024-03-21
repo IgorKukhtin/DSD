@@ -24,8 +24,6 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
       inherited cxGrid: TcxGrid
         Width = 1092
         Height = 286
-        ExplicitLeft = -8
-        ExplicitTop = -48
         ExplicitWidth = 1092
         ExplicitHeight = 286
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -234,6 +232,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = TotalAmountSh_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountBox
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -445,6 +448,11 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
               Format = ',0.####'
               Kind = skSum
               Column = TotalAmountSh_child
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountBox
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -1243,6 +1251,32 @@ inherited Report_GoodsMI_OrderExternal_SaleForm: TReport_GoodsMI_OrderExternal_S
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object GoodsBoxName_short: TcxGridDBColumn
+            Caption = #1071#1097'. '#1075#1086#1092#1088#1086
+            DataBinding.FieldName = 'GoodsBoxName_short'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object AmountBox: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
+            DataBinding.FieldName = 'AmountBox'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object BoxCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074' '#1103#1097'.'
+            DataBinding.FieldName = 'BoxCount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end
