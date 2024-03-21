@@ -31,7 +31,6 @@ type
   TUnion_OrderJournalChoiceForm = class(TAncestorJournal_boatForm)
     ProductName: TcxGridDBColumn;
     InfoMoneyName: TcxGridDBColumn;
-    PaidKindName: TcxGridDBColumn;
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
@@ -71,6 +70,7 @@ type
     edSearchObjectName: TcxTextEdit;
     TotalSumm_debet: TcxGridDBColumn;
     TotalSumm_credit: TcxGridDBColumn;
+    Comment_Product: TcxGridDBColumn;
   private
     { Private declarations }
   public

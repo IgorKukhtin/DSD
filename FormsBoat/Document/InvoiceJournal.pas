@@ -169,6 +169,7 @@ type
     spUpdate_PostedToDropBox: TdsdStoredProc;
     actUpdate_PostedToDropBox: TdsdExecStoredProc;
     cxButton9: TcxButton;
+    AmountIn_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -3,6 +3,7 @@
   ClientHeight = 569
   ClientWidth = 1139
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -245
   ExplicitWidth = 1155
   ExplicitHeight = 608
   PixelsPerInch = 96
@@ -84,6 +85,11 @@
               Format = ',0.00##'
               Kind = skSum
               Column = Amount_rem
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_real
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -154,6 +160,11 @@
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ObjectName
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = AmountIn_real
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -244,6 +255,19 @@
             Options.Editing = False
             Width = 70
           end
+          object AmountIn_real: TcxGridDBColumn
+            Caption = '***Debet'
+            DataBinding.FieldName = 'AmountIn_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Options.Editing = False
+            Width = 80
+          end
           object AmountIn: TcxGridDBColumn
             Caption = 'Debet'
             DataBinding.FieldName = 'AmountIn'
@@ -252,7 +276,7 @@
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -264,7 +288,7 @@
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -277,7 +301,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -290,7 +314,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1053#1044#1057
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -303,7 +327,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -316,7 +340,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1044#1057' '#1087#1086' '#1089#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -329,7 +353,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -342,7 +366,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1048#1090#1086#1075#1086' '#1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -355,7 +379,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1055#1088#1080#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1055#1088#1080#1093#1086#1076' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -368,7 +392,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091' - '#1056#1072#1089#1093#1086#1076' '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            HeaderHint = #1056#1072#1089#1093#1086#1076' '#1086#1087#1083#1072#1090#1099' '#1087#1086' '#1057#1095#1077#1090#1091', '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             Options.Editing = False
             Width = 70
           end
@@ -381,7 +405,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1055#1088#1080#1093#1086#1076
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1089#1095#1077#1090#1091', '#1055#1088#1080#1093#1086#1076
             Options.Editing = False
             Width = 70
           end
@@ -394,7 +418,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1089#1095#1077#1090#1091' '#1056#1072#1089#1093#1086#1076
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1089#1095#1077#1090#1091', '#1056#1072#1089#1093#1086#1076
             Options.Editing = False
             Width = 70
           end

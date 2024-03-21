@@ -298,6 +298,7 @@ function ReConvertConvert(S: string): TBytes;
 var
   i, l, k: integer;
   InB: TBytes;
+  inStream, outStream: TBytesStream;
 begin
   i := Low(S);
   l := High(S);
@@ -309,7 +310,16 @@ begin
     inc(k);
     i := i + 2;
   end;
-  ZDecompress(InB, Result);
+
+  inStream := TBytesStream.Create(InB);
+  outStream := TBytesStream.Create;
+  try
+    ZDecompressStream(inStream, outStream);
+    Result := outStream.Bytes;
+  finally
+    inStream.Free;
+    outStream.Free;
+  end;
 end;
 
 { Процедура по символьно переводит строку в набор цифр }

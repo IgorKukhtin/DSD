@@ -52,6 +52,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbReceiptNumber Integer;
+  DECLARE vbMovementId_OrderClient Integer;
+  DECLARE vbInvoiceKindId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
@@ -158,6 +160,10 @@ BEGIN
 
      ELSE
 
+         -- Нашли
+         vbMovementId_OrderClient:=  (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId);
+         vbInvoiceKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_InvoiceKind());
+
          -- Результат
          RETURN QUERY
             WITH -- Документы Income + OrderClient, в которых указан этот Счет
@@ -190,6 +196,12 @@ BEGIN
                                           AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()                              
                                         GROUP BY MIFloat_MovementId.ValueData
                                        )
+                -- Нашли
+              , tmpProduct AS (SELECT  gpSelect.BasisWVAT_summ_transport
+                               FROM gpSelect_Object_Product (vbMovementId_OrderClient, FALSE, FALSE, '') AS gpSelect
+                               WHERE gpSelect.MovementId_OrderClient = vbMovementId_OrderClient
+                                 AND vbInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                              )
            -- Результат
            SELECT
                Movement.Id
@@ -203,7 +215,14 @@ BEGIN
              , COALESCE (MovementBoolean_Auto.ValueData, FALSE) ::Boolean AS isAuto
 
              , COALESCE (MovementFloat_VATPercent.ValueData, 0)    ::TFloat      AS VATPercent
-             , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN MovementFloat_Amount.ValueData      ELSE 0 END::TFloat AS AmountIn
+             , CASE WHEN MovementFloat_Amount.ValueData > 0
+                         THEN CASE WHEN Object_InvoiceKind.Id = zc_Enum_InvoiceKind_Pay()
+                                   -- Замена - кривая схема
+                                   THEN (SELECT tmpProduct.BasisWVAT_summ_transport FROM tmpProduct)
+                                   ELSE MovementFloat_Amount.ValueData      
+                              END
+                    ELSE 0
+               END :: TFloat AS AmountIn
              , CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountOut  
              --
              , COALESCE (MovementFloat_Amount.ValueData,0)::TFloat AS Amount 

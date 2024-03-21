@@ -23,6 +23,7 @@ RETURNS TABLE (Id               Integer
              , isAuto           Boolean
                -- с НДС
              , AmountIn         TFloat
+             , AmountIn_real    TFloat
              , AmountOut        TFloat
                -- без НДС
              , AmountIn_NotVAT  TFloat
@@ -417,9 +418,12 @@ BEGIN
         -- с НДС
       , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
               AND tmpData.AmountIn > 0
-              THEN tmpSummProduct.BasisWVAT_summ_transport
+                  -- Замена - кривая схема
+                  THEN tmpSummProduct.BasisWVAT_summ_transport
               ELSE tmpData.AmountIn
         END :: TFloat AS AmountIn
+        
+      , tmpData.AmountIn AS AmountIn_real
       , tmpData.AmountOut
 
         -- без НДС
