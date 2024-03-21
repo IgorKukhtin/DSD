@@ -78,7 +78,7 @@ BEGIN
                             WHERE tmp.Id = tmpInvoice.ProductId
                             )*/
 
-     -- данные по оплате счета
+       -- данные по оплате счета
      , tmpBankAccount AS (SELECT SUM (MovementItem.Amount)   ::TFloat AS AmountIn
                           FROM MovementLinkMovement
                               INNER JOIN Movement AS Movement_BankAccount
@@ -93,15 +93,15 @@ BEGIN
                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
                           )
-      -- Все документы предоплаты, в которых указан этот док заказ (нужна итого сумма для счета показать сумму счетов предоплаты)
+       -- Все документы предоплаты, в которых указан этот док заказ (нужна итого сумма для счета показать сумму счетов предоплаты)
       , tmpMov_PrePay AS (SELECT Movement.Id
                                , (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
                                , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.InvNumber) AS Ord
                          FROM Movement
                             INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                           ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
-                                                         AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                         AND MovementLinkObject_InvoiceKind.ObjectId = zc_Enum_InvoiceKind_PrePay()
+                                                         AND MovementLinkObject_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                         AND MovementLinkObject_InvoiceKind.ObjectId   = zc_Enum_InvoiceKind_PrePay()
                             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                     ON MovementFloat_Amount.MovementId = Movement.Id
                                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -119,7 +119,7 @@ BEGIN
               -- % НДС - Заказ Клиента
             , tmpProduct.TaxKind_Value_Client
 
-            , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            , tmpProduct.CIN                            ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , ''                                        ::TVarChar AS ModelGroupName
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
@@ -375,18 +375,77 @@ BEGIN
      RETURN NEXT Cursor3;
 
      OPEN Cursor4 FOR    --для печати счета - опции
-        SELECT MovementItem.ObjectId                    AS ObjectId
+        SELECT Object_Object.Id                         AS ObjectId
              , Object_Object.ObjectCode                 AS ObjectCode
-             , Object_Object.ValueData                  AS ObjectName
-        FROM MovementItem
+             , (Object_Object.ValueData || CASE WHEN Object_ProdColor.Id > 0 OR ObjectString_Comment.ValueData <> '' 
+                                                  THEN ' : '  || CASE WHEN Object_ProdColor.Id > 0
+                                                                           -- у Товара
+                                                                           THEN Object_ProdColor.ValueData
+                                                   
+                                                                      WHEN TRIM (ObjectString_Comment.ValueData) <> ''
+                                                                           -- если было изменение для Лодки (когда нет GoodsId)
+                                                                           THEN TRIM (ObjectString_Comment.ValueData)
+                                                   
+                                                                      ELSE '' -- tmpProdOptions.ProdColorName
+                                                   
+                                                                 END
+                                                  ELSE ''
+                                           END) :: TVarChar AS ObjectName
+
+        FROM Object AS Object_ProdOptItems
+             -- Лодка
+             INNER JOIN ObjectLink AS ObjectLink_Product
+                                   ON ObjectLink_Product.ObjectId = Object_ProdOptItems.Id
+                                  AND ObjectLink_Product.DescId   = zc_ObjectLink_ProdOptItems_Product()
+             -- Заказ Клиента
+             INNER JOIN ObjectFloat AS ObjectFloat_MovementId_OrderClient
+                                    ON ObjectFloat_MovementId_OrderClient.ObjectId  = Object_ProdOptItems.Id
+                                   AND ObjectFloat_MovementId_OrderClient.DescId    = zc_ObjectFloat_ProdOptItems_OrderClient()
+                                   AND ObjectFloat_MovementId_OrderClient.ValueData = vbMovementId_order :: TFloat
+
+             -- Опции
+             LEFT JOIN ObjectLink AS ObjectLink_ProdOptions
+                                  ON ObjectLink_ProdOptions.ObjectId = Object_ProdOptItems.Id
+                                 AND ObjectLink_ProdOptions.DescId   = zc_ObjectLink_ProdOptItems_ProdOptions()
+
              INNER JOIN Object AS Object_Object
-                               ON Object_Object.Id = MovementItem.ObjectId
+                               ON Object_Object.Id     = ObjectLink_ProdOptions.ChildObjectId
                               AND Object_Object.DescId = zc_Object_ProdOptions()
 
-        WHERE MovementItem.MovementId = vbMovementId_order
-          AND MovementItem.DescId = zc_MI_Child()
-          AND MovementItem.isErased   = FALSE
-          AND COALESCE (MovementItem.ParentId, 0) = 0
+             -- Комплектующие
+             LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                  ON ObjectLink_Goods.ObjectId = Object_ProdOptItems.Id
+                                 AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdOptItems_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                  ON ObjectLink_Goods_ProdColor.ObjectId = ObjectLink_Goods.ChildObjectId
+                                 AND ObjectLink_Goods_ProdColor.DescId   = zc_ObjectLink_Goods_ProdColor()
+             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+
+             -- здесь цвет (когда нет GoodsId)
+             LEFT JOIN ObjectString AS ObjectString_Comment
+                                    ON ObjectString_Comment.ObjectId = Object_ProdOptItems.Id
+                                   AND ObjectString_Comment.DescId    = zc_ObjectString_ProdOptItems_Comment()
+
+        WHERE Object_ProdOptItems.DescId = zc_Object_ProdOptItems()
+          AND Object_ProdOptItems.isErased = FALSE
+
+       UNION
+        SELECT 0 :: Integer                    AS ObjectId
+             , 0 :: Integer                    AS ObjectCode
+             , '' :: TVarChar                  AS ObjectName
+        WHERE 1=1 /*NOT EXISTS (SELECT 1 
+                          FROM MovementItem
+                               LEFT JOIN MovementItemLinkObject AS MILO_ProdOptions
+                                                                 ON MILO_ProdOptions.MovementItemId = MovementItem.Id
+                                                                AND MILO_ProdOptions.DescId         = zc_MILinkObject_ProdOptions()
+                               INNER JOIN Object AS Object_Object
+                                                 ON Object_Object.Id = COALESCE (MILO_ProdOptions.ObjectId, MovementItem.ObjectId)
+                                                AND Object_Object.DescId = zc_Object_ProdOptions()
+                          WHERE MovementItem.MovementId = vbMovementId_order
+                            AND MovementItem.DescId = zc_MI_Child()
+                            AND MovementItem.isErased   = FALSE
+                            AND COALESCE (MovementItem.ParentId, 0) = 0
+                         )*/
         ;
 
     RETURN NEXT Cursor4;
