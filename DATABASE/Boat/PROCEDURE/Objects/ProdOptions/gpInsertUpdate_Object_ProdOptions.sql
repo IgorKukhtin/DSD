@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
     IN inCode                Integer   ,    -- Код объекта
     IN inCodeVergl           Integer   ,    -- Альтернативный код
     IN inName                TVarChar  ,    -- Название объекта
-    IN inSalePrice           TFloat    ,
+ IN inSalePrice           TFloat    ,
     IN inAmount              TFloat    , 
     IN inComment             TVarChar  ,
     IN inId_Site             TVarChar  ,    -- Id Сайт
@@ -35,6 +35,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbSalePrice TFloat;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -92,6 +93,38 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ProdOptions_Comment(), ioId, inComment);
 
+   --если признак изменить цену = Да  (inisСhangePrice )  тогда  формировать еще в истории  
+   IF COALESCE (inisСhangePrice,FALSE) = TRUE
+   THEN
+       SELECT tmp.outStartDate
+            , tmp.ioPriceNoVAT             -- цена без ндс  
+      INTO outStartDate_pr, outSalePrice_pr
+       FROM  gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                           , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
+                                                           , inGoodsId    := ioId        :: Integer
+                                                           , inOperDate   := inOperDate  :: TDateTime
+                                                           , ioPriceNoVAT := inSalePrice :: TFloat
+                                                           , ioPriceWVAT  := 0           :: TFloat
+                                                           , inIsLast     := TRUE        :: Boolean
+                                                           , inSession    := inSession   :: TVarChar
+                                                            ) AS tmp;
+       
+       -- сохранили свойство <>
+       PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
+        
+   ELSE  
+       --сохраненное значение
+       vbSalePrice := (SELECT OF.ValueData FROM ObjectFloat AS OF WHERE OF.DescId = zc_ObjectFloat_ProdOptions_SalePrice() AND OF.ObjectId = ioId) ::TFloat;
+       IF COALESCE (vbSalePrice,0) <> COALESCE (inSalePrice)
+       THEN
+           RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Для изменеия цены установите значение <Изменить цену> = ДА'
+                                                 , inProcedureName := 'gpInsertUpdate_Object_ProdOptions'
+                                                 , inUserId        := vbUserId
+                                                  );
+       END IF;
+   END IF; 
+
+/*
    -- у таких опций здесь цена = 0
    IF inGoodsId > 0 AND 1=0
    THEN
@@ -101,6 +134,7 @@ BEGIN
        -- сохранили свойство <>
        PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_SalePrice(), ioId, inSalePrice);
    END IF;
+*/      
  
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ProdOptions_Amount(), ioId, inAmount);
@@ -121,22 +155,6 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Id_Site(), ioId, inId_Site);
 
-   --если признак изменить цену = Да  (inisСhangePrice )  тогда  формировать еще в истории  
-   IF COALESCE (inisСhangePrice,FALSE) = TRUE
-   THEN
-       SELECT tmp.outStartDate
-            , tmp.ioPriceNoVAT             -- цена без ндс  
-      INTO outStartDate_pr, outSalePrice_pr
-       FROM  gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
-                                                           , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
-                                                           , inGoodsId    := ioId        :: Integer
-                                                           , inOperDate   := inOperDate  :: TDateTime
-                                                           , ioPriceNoVAT := inSalePrice :: TFloat
-                                                           , ioPriceWVAT  := 0           :: TFloat
-                                                           , inIsLast     := TRUE        :: Boolean
-                                                           , inSession    := inSession   :: TVarChar
-                                                            ) AS tmp;
-   END IF; 
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
