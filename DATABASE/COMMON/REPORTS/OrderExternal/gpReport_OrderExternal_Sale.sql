@@ -85,7 +85,11 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
              , AmountSh_child_sec   TFloat
              , TotalAmountSh_child  TFloat
              , AmountSh_diff        TFloat 
-             , AmountSh_diff_fact   TFloat
+             , AmountSh_diff_fact   TFloat  
+             
+             , AmountBox          TFloat  
+             , BoxCount           TFloat
+             , GoodsBoxName_short TVarChar
               )
 
 AS
@@ -144,10 +148,14 @@ BEGIN
                                     )
 
     , tmpGoodsArticle AS (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId  AS GoodsPropertyId
+                               , ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId          AS GoodsId
                                , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId      AS GoodsKindId
                                , ObjectString_Article.ValueData                             AS Article
                                , ObjectString_ArticleGLN.ValueData                          AS ArticleGLN
+                               
+                               , ObjectString_Goods_ShortName.ValueData AS GoodsBoxName_short
+                               , ObjectFloat_BoxCount.ValueData         AS BoxCount
        
                           FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
@@ -166,9 +174,41 @@ BEGIN
                             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
                                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-       
+
+                            LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                                  ON ObjectFloat_BoxCount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                 AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_GoodsPropertyValue_BoxCount()
+                            LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                 ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId   = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                            LEFT JOIN ObjectString AS ObjectString_Goods_ShortName
+                                                   ON ObjectString_Goods_ShortName.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                  AND ObjectString_Goods_ShortName.DescId   = zc_ObjectString_Goods_ShortName()       
                           WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
                           )
+
+, tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short AS
+                                    (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                                          , tmpObject_GoodsPropertyValue.GoodsBoxName_short
+                                     FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, tmpObject_GoodsPropertyValue.GoodsId
+                                           FROM tmpGoodsArticle AS tmpObject_GoodsPropertyValue
+                                           WHERE tmpObject_GoodsPropertyValue.GoodsBoxName_short <> ''
+                                             AND tmpObject_GoodsPropertyValue.GoodsKindId IN (0, zc_GoodsKind_Basis())
+                                           GROUP BY tmpObject_GoodsPropertyValue.GoodsId
+                                          ) AS tmpGoodsProperty_find
+                                          LEFT JOIN tmpGoodsArticle AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                                    )
+     , tmpObject_GoodsPropertyValueGroup_BoxCount AS
+                                   (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                                         , tmpObject_GoodsPropertyValue.BoxCount
+                                    FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, tmpObject_GoodsPropertyValue.GoodsId
+                                          FROM tmpGoodsArticle AS tmpObject_GoodsPropertyValue
+                                          WHERE tmpObject_GoodsPropertyValue.BoxCount <> 0
+                                            AND tmpObject_GoodsPropertyValue.GoodsKindId IN (0, zc_GoodsKind_Basis())
+                                          GROUP BY tmpObject_GoodsPropertyValue.GoodsId
+                                         ) AS tmpGoodsProperty_find
+                                         LEFT JOIN tmpGoodsArticle AS tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId = tmpGoodsProperty_find.ObjectId
+                                   )
 
     --     ПРОДАЖИ -------------------
     , tmpMovementSale AS (SELECT Movement.Id                                AS MovementId_Sale
@@ -1146,7 +1186,17 @@ BEGIN
            , tmpMovement.AmountSh_child       ::TFloat
            , ((COALESCE (tmpMovement.Amount_Sh_Itog,0) + COALESCE (tmpMovement.Amount_Sh_Dozakaz,0) ) - COALESCE (tmpMovement.TotalAmountSh_child,0)) ::TFloat AS  AmountSh_diff
            , (COALESCE (tmpMovement.AmountSale_Sh,0) - COALESCE (tmpMovement.TotalAmountSh_child,0)) ::TFloat AS  AmountSh_diff_fact --разница с факт отгрузкой
-            
+           
+           --кол.ящиков, 
+           , CAST (CASE WHEN COALESCE (tmpGroup_BoxCount.BoxCount, tmpGoodsArticle.BoxCount , 0) > 0
+                             THEN CAST (COALESCE (tmpMovement.Amount_Weight_Itog,0) / COALESCE (tmpGroup_BoxCount.BoxCount, tmpGoodsArticle.BoxCount, 0) AS NUMERIC (16, 4))
+                        ELSE 0
+                   END AS NUMERIC(16,1)) :: TFloat AS AmountBox
+           , COALESCE (tmpGroup_BoxCount.BoxCount, tmpGoodsArticle.BoxCount, 0)     :: TFloat    AS BoxCount   
+           -- название ящика
+           , COALESCE (tmpGoodsArticle.GoodsBoxName_short, tmpGroup_GoodsBoxName_short.GoodsBoxName_short) ::TVarChar AS GoodsBoxName_short
+          
+           
        FROM tmpData_All AS tmpMovement
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
@@ -1186,6 +1236,13 @@ BEGIN
           LEFT JOIN tmpGoodsArticle ON tmpGoodsArticle.GoodsPropertyId = tmpPartnerLinkGoodsProperty.GoodsPropertyId
                                    AND tmpGoodsArticle.GoodsId = tmpMovement.GoodsId
                                    AND tmpGoodsArticle.GoodsKindId = tmpMovement.GoodsKindId 
+
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short AS tmpGroup_GoodsBoxName_short
+                                                                         ON tmpGroup_GoodsBoxName_short.GoodsId = tmpMovement.GoodsId
+                                                                        AND COALESCE (tmpGoodsArticle.GoodsBoxName_short, '') = ''
+          LEFT JOIN tmpObject_GoodsPropertyValueGroup_BoxCount AS tmpGroup_BoxCount
+                                                               ON tmpGroup_BoxCount.GoodsId = tmpMovement.GoodsId
+                                                              AND COALESCE (tmpGoodsArticle.BoxCount, 0) = 0
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDate_Order) AS tmpWeekDay ON 1=1
           LEFT JOIN zfCalc_DayOfWeekName (tmpMovement.OperDatePartner_Order) AS tmpWeekDay_Partner ON 1=1
