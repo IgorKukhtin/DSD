@@ -378,6 +378,7 @@ type
     FDateDownloadDict: TDateTime;
     FisInventScanSN : Boolean;
     FisNextInventScan : Boolean;
+    FisInventScanOk : Boolean;
     FGoodsId: Integer;
 
     FDictUpdateDataSet: TDataSet;
@@ -470,6 +471,7 @@ begin
   FPasswordLabelClick := 0;
   FisInventScanSN := False;
   FisNextInventScan := False;
+  FisInventScanOk := False;
 
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
@@ -793,7 +795,7 @@ var
   pOnScanResult: TDataWedgeBarCodeResult;
   pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
 begin
-  if (FObr.BarcodeCount > 0) and FisCameraScanBarCode then
+  if (FObr.BarcodeCount > 0) and FisCameraScanBarCode and (tcMain.ActiveTab = tiScanBarCode) then
   begin
     FisCameraScanBarCode := False;
     Barcode := FObr.Barcode[0];
@@ -894,8 +896,9 @@ begin
       lCaption.Text := 'Сканирование/выбор комплектующих';
       DM.OpenInventoryGoods;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
-      if FisNextInventScan then
+      if FisNextInventScan and FisInventScanOk then
       begin
+        FisInventScanOk := False;
         FGoodsId := 0;
         sbScanClick(Sender);
       end;
@@ -1119,6 +1122,7 @@ procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
 begin
   FisInventScanSN := False;
   FisNextInventScan := False;
+  FisInventScanOk := False;
   ShowGoods;
   bGoodsChoice.Visible := True;
 end;
@@ -1129,8 +1133,6 @@ begin
   FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
   FisNextInventScan := True;
   sbScanClick(Sender);
-
-  // OnScanResultInventoryScan(Sender, '871949')
 end;
 
 // Выбор товара
@@ -1165,6 +1167,7 @@ end;
 procedure TfrmMain.bIIECancelClick(Sender: TObject);
 begin
   FisNextInventScan := False;
+  FisInventScanOk := False;
   DM.cdsInventoryItemEdit.Close;
   ReturnPriorForm;
 end;
@@ -1188,6 +1191,7 @@ begin
   end else if not DM.qryInventoryGoods.IsEmpty then DM.UploadInventoryGoods;
 
   DM.cdsInventoryItemEdit.Close;
+  FisInventScanOk := True;
   ReturnPriorForm;
 end;
 
@@ -1238,7 +1242,11 @@ end;
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
 begin
-  if (tcMain.ActiveTab = tiDictList)  then
+  if (tcMain.ActiveTab = tiScanBarCode) and (Sender = sbBack)  then
+  begin
+    FisNextInventScan := False;
+    FisInventScanOk := False;
+  end else if (tcMain.ActiveTab = tiDictList)  then
   begin
     FDictUpdateDataSet := Nil;
     FDictUpdateField := '';
@@ -1416,6 +1424,7 @@ begin
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(nil);
+  bLogIn.Enabled := True;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
