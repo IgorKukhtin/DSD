@@ -42,6 +42,15 @@ BEGIN
                                AND ObjectDate_Insert.DescId = zc_ObjectDate_Protocol_Insert()
        WHERE Object_ReceiptServiceModel.DescId = zc_Object_ReceiptServiceModel()
          AND (Object_ReceiptServiceModel.isErased = FALSE OR inIsShowAll = TRUE)
+
+     UNION
+      SELECT 0    :: Integer                  AS Id
+           , 0    :: Integer                  AS Code
+           , 'Очистить значение' :: TVarChar  AS Name
+           , ''                  :: TVarChar  AS Comment
+           , ''                  :: TVarChar  AS InsertName
+           , NULL                :: TDateTime AS InsertDate
+           , TRUE                :: Boolean   AS isErased
        ;
 
 END;

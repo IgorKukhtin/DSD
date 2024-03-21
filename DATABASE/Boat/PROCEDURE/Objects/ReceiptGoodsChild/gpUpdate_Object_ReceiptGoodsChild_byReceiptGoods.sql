@@ -238,6 +238,7 @@ BEGIN
         PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := COALESCE (_tmpReceiptGoodsChild.Id, 0)
                                                        , inComment            := COALESCE (_tmpReceiptGoodsChild_mask.Comment, '')
                                                        , inNPP                := _tmpReceiptGoodsChild_mask.NPP
+                                                       , inNPP_service        := 0
                                                        , inReceiptGoodsId     := inReceiptGoodsId
                                                        , inObjectId           := _tmpReceiptGoodsChild_mask.ObjectId
                                                        , inProdColorPatternId := NULL

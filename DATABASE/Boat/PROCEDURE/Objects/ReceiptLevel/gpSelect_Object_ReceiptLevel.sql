@@ -51,16 +51,16 @@ BEGIN
        WHERE Object_ReceiptLevel.DescId = zc_Object_ReceiptLevel()
          AND (Object_ReceiptLevel.isErased = FALSE OR inIsShowAll = TRUE) 
          AND (COALESCE (ObjectString_ObjectDesc.ValueData, '') = inObjectDesc OR inObjectDesc= '')
-     UNION
 
-      SELECT 0 :: Integer               AS Id
-           , 0 :: Integer               AS Code
-           , 'Очистить значение' :: TVarChar         AS Name
-           , '' :: TVarChar         ShortName
-           , '' :: TVarChar         ObjectDesc
-           , '' :: TVarChar         InsertName
-           , NULL :: TDateTime AS InsertDate
-           , TRUE         AS isErased
+     UNION
+      SELECT 0    :: Integer                  AS Id
+           , 0    :: Integer                  AS Code
+           , 'Очистить значение' :: TVarChar  AS Name
+           , ''                  :: TVarChar  AS ShortName
+           , ''                  :: TVarChar  AS ObjectDesc
+           , ''                  :: TVarChar  AS InsertName
+           , NULL                :: TDateTime AS InsertDate
+           , TRUE                :: Boolean   AS isErased
 
        ;
 
@@ -77,4 +77,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpSelect_Object_ReceiptLevel (inIsShowAll:= TRUE, inObjectDesc:=''::TVarChar, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ReceiptLevel (inIsShowAll:= TRUE, inObjectDesc:=''::TVarChar, inSession:= zfCalc_UserAdmin())

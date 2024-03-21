@@ -137,7 +137,7 @@ object PLZForm: TPLZForm
     Width = 702
     Height = 41
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object btnInsert: TcxButton
       Left = 341
       Top = 8
@@ -192,7 +192,7 @@ object PLZForm: TPLZForm
     object lbSearchName: TcxLabel
       Left = 10
       Top = 6
-      Caption = 'PLZ / City: '
+      Caption = #1055#1086#1080#1089#1082' PLZ / City :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -202,13 +202,13 @@ object PLZForm: TPLZForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 84
+      Left = 135
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_InvoiceByProduct(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id              Integer
+             , MovementId_parent Integer
              , InvNumber       Integer
              , InvNumber_Full  TVarChar
              , OperDate        TDateTime
@@ -146,6 +147,7 @@ BEGIN
       --
     , tmpData AS (SELECT
                          Movement.Id
+                       , Movement.Id AS MovementId_parent
                        , zfConvert_StringToNumber (Movement.InvNumber) ::Integer AS InvNumber
                        , zfCalc_InvNumber_isErased ('', Movement.InvNumber, Movement.OperDate, Movement.StatusId) AS InvNumber_Full
                        , Movement.OperDate
@@ -312,6 +314,7 @@ BEGIN
     -- Результат
     SELECT
         tmpData.Id
+      , tmpData.MovementId_parent
       , tmpData.InvNumber
       , tmpData.InvNumber_Full
       , tmpData.OperDate

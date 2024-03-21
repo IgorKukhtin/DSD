@@ -3,7 +3,7 @@ object ReceiptServiceForm: TReceiptServiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080'>'
   ClientHeight = 349
-  ClientWidth = 846
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object ReceiptServiceForm: TReceiptServiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 846
+    Width = 894
     Height = 290
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 846
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,16 +53,25 @@ object ReceiptServiceForm: TReceiptServiceForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object NumReplace: TcxGridDBColumn
-        Caption = #1047#1072#1084#1077#1085#1072' '#1089#1099#1088#1100#1103
-        DataBinding.FieldName = 'NumReplace'
+      object ReceiptServiceGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ReceiptServiceGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceGroup
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 110
       end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -70,6 +80,7 @@ object ReceiptServiceForm: TReceiptServiceForm
       object Article: TcxGridDBColumn
         Caption = 'Artikel Nr'
         DataBinding.FieldName = 'Article'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -78,11 +89,53 @@ object ReceiptServiceForm: TReceiptServiceForm
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
         Width = 209
+      end
+      object NumReplace: TcxGridDBColumn
+        Caption = #1047#1072#1084#1077#1085#1072' '#1089#1099#1088#1100#1103
+        DataBinding.FieldName = 'NumReplace'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ReceiptServiceModelName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' ('#1088#1072#1073#1086#1090#1099')'
+        DataBinding.FieldName = 'ReceiptServiceModelName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceModel
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1084#1086#1076#1077#1083#1100')'
+        Width = 112
+      end
+      object ReceiptServiceMaterialName: TcxGridDBColumn
+        Caption = #1057#1099#1088#1100#1077' ('#1088#1072#1073#1086#1090#1099')'
+        DataBinding.FieldName = 'ReceiptServiceMaterialName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceFormReceiptServiceMaterial
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
       end
       object PartnerName: TcxGridDBColumn
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1091#1089#1083#1091#1075
@@ -161,50 +214,6 @@ object ReceiptServiceForm: TReceiptServiceForm
         Options.Editing = False
         Width = 70
       end
-      object ReceiptServiceGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
-        DataBinding.FieldName = 'ReceiptServiceGroupName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormReceiptServiceGroup
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 110
-      end
-      object ReceiptServiceModelName: TcxGridDBColumn
-        Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1084#1086#1076#1077#1083#1100')'
-        DataBinding.FieldName = 'ReceiptServiceModelName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormReceiptServiceModel
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1084#1086#1076#1077#1083#1100')'
-        Width = 112
-      end
-      object ReceiptServiceMaterialName: TcxGridDBColumn
-        Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080' ('#1057#1099#1088#1100#1077')'
-        DataBinding.FieldName = 'ReceiptServiceMaterialName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceFormReceiptServiceMaterial
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 113
-      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -249,14 +258,15 @@ object ReceiptServiceForm: TReceiptServiceForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 846
+    Width = 894
     Height = 33
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 846
     object lbSearchName: TcxLabel
-      Left = 2
+      Left = 42
       Top = 6
-      Caption = #1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080':'
+      Caption = #1055#1086#1080#1089#1082' '#1053#1072#1079#1074#1072#1085#1080#1077' :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -266,13 +276,13 @@ object ReceiptServiceForm: TReceiptServiceForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 121
+      Left = 166
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource

@@ -377,8 +377,8 @@ BEGIN
 
                      WHERE Object_Object.Id = inClientId
                         OR inClientId = 0
-                                   ),
-    tmpDateUnloading AS (SELECT tmpData.Id
+                 )
+  , tmpDateUnloading AS (SELECT tmpData.Id
                               , MAX(ObjectDate_DateUnloading.ValueData)::TDateTime  AS DateUnloading
                          FROM tmpData
                          
@@ -392,7 +392,15 @@ BEGIN
                                                    
                          GROUP BY tmpData.Id                          
                          )
-    
+      , tmpSummProduct AS (SELECT  -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+                                   gpSelect.MovementId_OrderClient
+                                   -- 4. Total LP - ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.Basis_summ_transport
+                                   -- 5. Total LP + Vat - ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
+                                 , gpSelect.BasisWVAT_summ_transport
+
+                           FROM gpSelect_Object_Product (0, FALSE, FALSE, '') AS gpSelect
+                          )    
     
     -- Результат
     SELECT
@@ -407,13 +415,27 @@ BEGIN
       , tmpData.InvoiceKindName
       , tmpData.isAuto
         -- с НДС
-      , tmpData.AmountIn
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+              AND tmpData.AmountIn > 0
+              THEN tmpSummProduct.BasisWVAT_summ_transport
+              ELSE tmpData.AmountIn
+        END :: TFloat AS AmountIn
       , tmpData.AmountOut
+
         -- без НДС
-      , tmpData.AmountIn_NotVAT
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+              AND tmpData.AmountIn > 0
+              THEN tmpSummProduct.Basis_summ_transport
+              ELSE tmpData.AmountIn_NotVAT
+        END :: TFloat AS AmountIn_NotVAT
       , tmpData.AmountOut_NotVAT
+
         -- Сумма НДС
-      , tmpData.AmountIn_VAT
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+              AND tmpData.AmountIn > 0
+              THEN tmpSummProduct.BasisWVAT_summ_transport - tmpSummProduct.Basis_summ_transport
+              ELSE tmpData.AmountIn_VAT
+        END :: TFloat AS AmountIn_VAT
       , tmpData.AmountOut_VAT
 
         -- Сумма счета (для выбора в гриде)
@@ -503,6 +525,9 @@ BEGIN
         END ::Integer AS Color_Pay
 
     FROM tmpData
+        LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = tmpData.MovementId_parent
+                                AND tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Pay()
+
         LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                              ON ObjectLink_TaxKind.ObjectId = tmpData.ObjectId
                             AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())

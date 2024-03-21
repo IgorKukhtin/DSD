@@ -1015,6 +1015,7 @@ end if;
                                                                                                                       WHERE OC.Id = COALESCE (vbReceiptGoodsChildId, 0)
                                                                                                                         AND OC.DescId = zc_Object_ReceiptGoodsChild()), '') ::TVarChar
                                                                                  , inNPP                := inNPP                ::Integer
+                                                                                 , inNPP_service         := 0
                                                                                  , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
                                                                                  , inObjectId           := vbGoodsId_child      ::Integer
                                                                                  , inProdColorPatternId := vbProdColorPatternId ::Integer
@@ -1046,6 +1047,7 @@ end if;
                PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
                                                               , inComment            := ''
                                                               , inNPP                := 0
+                                                              , inNPP_service        := 0
                                                               , inReceiptGoodsId     := vbReceiptGoodsId     ::Integer
                                                               , inObjectId           := 0
                                                               , inProdColorPatternId := (SELECT gpSelect.Id
@@ -1071,6 +1073,7 @@ end if;
                PERFORM gpInsertUpdate_Object_ReceiptGoodsChild (ioId                 := 0
                                                               , inComment            := ''
                                                               , inNPP                := 0
+                                                              , inNPP_service        := 0
                                                               , inReceiptGoodsId     := vbReceiptGoodsId
                                                               , inObjectId           := 0
                                                               , inProdColorPatternId := (SELECT gpSelect.Id
