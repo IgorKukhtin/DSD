@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , EmpfPrice TFloat, EmpfPriceWVAT TFloat
                 , isErased Boolean, GoodsGroupNameFull TVarChar
                 , MeasureName TVarChar
+                , ModelId Integer, ModelName TVarChar
                 , StartDate TDateTime, EndDate TDateTime
                 , PriceNoVAT   TFloat
                 , PriceWVAT    TFloat
@@ -158,7 +159,7 @@ BEGIN
                       , COALESCE (tmpPrice.ValuePrice, 0)    :: TFloat    AS ValuePrice
                  FROM Object AS Object_Goods
                       LEFT JOIN tmpPrice ON tmpPrice.GoodsId = Object_Goods.Id
-                 WHERE Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel())
+                 WHERE Object_Goods.DescId IN (zc_Object_Goods(), zc_Object_ReceiptProdModel(), zc_Object_ProdOptions())
                )
 
        -- –ÂÁÛÎ¸Ú‡Ú
@@ -185,7 +186,9 @@ BEGIN
            , Object_Goods.isErased          AS isErased
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData       AS MeasureName
+           , Object_Measure.ValueData       AS MeasureName  
+           , Object_Model.Id        ::Integer  AS ModelId
+           , Object_Model.ValueData ::TVarChar AS ModelName 
 
            , tmpPrice.StartDate
            , tmpPrice.EndDate
@@ -287,6 +290,12 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                 ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
                                AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Model
+                               ON ObjectLink_Model.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Model.DescId IN (zc_ObjectLink_ReceiptProdModel_Model(), zc_ObjectLink_ProdOptions_Model())
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
        ;
 
    ELSE
@@ -357,6 +366,8 @@ BEGIN
 
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData     AS MeasureName
+           , Object_Model.Id        ::Integer  AS ModelId
+           , Object_Model.ValueData ::TVarChar AS ModelName 
 
            , ObjectHistory_PriceListItem.StartDate
            , ObjectHistory_PriceListItem.EndDate
@@ -423,6 +434,11 @@ BEGIN
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_Model
+                               ON ObjectLink_Model.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Model.DescId IN (zc_ObjectLink_ReceiptProdModel_Model(), zc_ObjectLink_ProdOptions_Model())
+          LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                                ON ObjectDate_Protocol_Insert.ObjectId = ObjectHistory_PriceListItem.ObjectId
                               AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
@@ -483,6 +499,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.03.24         *
  10.02.21         *
  13.11.20         *
  27.11.19         * GoodsKind
@@ -493,4 +510,4 @@ $BODY$
 
 -- ÚÂÒÚ
 -- select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
---select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'False' ,  inSession := '5');
+--select * from gpSelect_ObjectHistory_PriceListItem(inPriceListId := 2773 , inOperDate := ('20.11.2020')::TDateTime , inShowAll := 'true' ,  inSession := '5');

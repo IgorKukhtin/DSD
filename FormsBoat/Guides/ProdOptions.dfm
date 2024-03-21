@@ -19,9 +19,9 @@
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 854
-    Height = 346
+    Height = 313
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -364,15 +364,35 @@
         Width = 70
       end
       object SalePrice: TcxGridDBColumn
-        Caption = 'Ladenpreis (Opt.)'
+        Caption = 'Ladenpreis (Opt.) ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
         DataBinding.FieldName = 'SalePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options) ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+        Width = 124
+      end
+      object SalePrice_pr: TcxGridDBColumn
+        Caption = 'Ladenpreis (Opt.) ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'SalePrice_pr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options)'
+        Options.Editing = False
         Width = 70
+      end
+      object StartDate_pr: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'StartDate_pr'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 53
       end
       object SalePriceWVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089' (Opt.)'
@@ -473,7 +493,7 @@
     Width = 854
     Height = 39
     Align = alBottom
-    TabOrder = 7
+    TabOrder = 5
     object btnInsert: TcxButton
       Left = 546
       Top = 6
@@ -535,6 +555,35 @@
       ParentShowHint = False
       ShowHint = True
       TabOrder = 6
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 854
+    Height = 33
+    Align = alTop
+    TabOrder = 8
+    object cxLabel3: TcxLabel
+      Left = 6
+      Top = 8
+      Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' :'
+    end
+    object edOperDate: TcxDateEdit
+      Left = 134
+      Top = 7
+      EditValue = 43831d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 82
+    end
+    object cbisСhangePrice: TcxCheckBox
+      Left = 222
+      Top = 7
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 2
+      Width = 148
     end
   end
   object DataSource: TDataSource
@@ -1820,6 +1869,38 @@
         Component = MasterCDS
         ComponentItem = 'ProdColorPatternId'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis'#1057'hangePrice'
+        Value = Null
+        Component = cbisСhangePrice
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outStartDate_pr'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'StartDate_pr'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSalePrice_pr'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SalePrice_pr'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

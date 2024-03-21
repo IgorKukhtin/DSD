@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , SalePrice TFloat, SalePriceWVAT TFloat
+             , SalePrice_pr TFloat, StartDate_pr TDateTime
              , Amount TFloat
              , Comment TVarChar
              , InsertName TVarChar
@@ -50,6 +51,7 @@ BEGIN
      RETURN QUERY
      WITH tmpPriceBasis AS (SELECT tmp.GoodsId
                                  , tmp.ValuePrice
+                                 , tmp.StartDate
                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
@@ -90,8 +92,8 @@ BEGIN
                                       , CASE WHEN vbPriceWithVAT = FALSE
                                              THEN CAST ( COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 + COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
                                              ELSE COALESCE (tmpPriceBasis.ValuePrice, 0)
-                                        END ::TFloat  AS BasisPriceWVAT
-
+                                        END ::TFloat  AS BasisPriceWVAT 
+                                        
                                   FROM -- Элемент Boat Structure не удален
                                        Object AS Object_ProdColorPattern
                                        LEFT JOIN ObjectString AS ObjectString_Comment
@@ -433,6 +435,11 @@ BEGIN
            -- цена продажи с НДС - если товар указан то берем цену товара, иначе это Boat Structure тогда берем SalePrice
          , tmpRes.SalePriceWVAT :: TFloat 
          
+         --цена опции из прайса 
+         , COALESCE (tmpPriceBasis.ValuePrice, 0)   ::TFloat    AS SalePrice_pr
+         --дата с из прайса
+         , COALESCE (tmpPriceBasis.StartDate, Null) ::TDateTime AS StartDate_pr
+         
          , tmpRes.Amount ::TFloat
 
          , tmpRes.Comment
@@ -467,7 +474,9 @@ BEGIN
 
      FROM tmpRes
           -- Boat Structure
-          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProdColorPatternId = tmpRes.ProdColorPatternId
+          LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProdColorPatternId = tmpRes.ProdColorPatternId 
+         
+          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpRes.Id --цена из прайса для опции
     ;
 
 
