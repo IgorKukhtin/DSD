@@ -106,6 +106,8 @@ type
     cxLabel3: TcxLabel;
     edOperDate: TcxDateEdit;
     cbis—hangePrice: TcxCheckBox;
+    actPriceListGoods: TdsdOpenForm;
+    bbPriceListGoods: TdxBarButton;
   private
     { Private declarations }
   public
