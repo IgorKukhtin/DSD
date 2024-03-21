@@ -187,25 +187,38 @@ begin
 end;
 
 function TStorage.PrepareStr: String;
-var
-  ResBytes: TBytes;
+var inStream, outStream: TBytesStream;
 begin
   if isArchive then
   begin
-    ZDecompress(InBytes, ResBytes);
-
-    Result := StringReplace(TEncoding.UTF8.GetString(ResBytes), #0, '', [rfReplaceAll]);;
-
+    inStream := TBytesStream.Create(InBytes);
+    outStream := TBytesStream.Create;
+    try
+      ZDecompressStream(inStream, outStream);
+      Result := StringReplace(TEncoding.UTF8.GetString(outStream.Bytes), #0, '', [rfReplaceAll]);;
+    finally
+      inStream.Free;
+      outStream.Free;
+    end;
   end
   else
     Result := StringReplace(TEncoding.UTF8.GetString(InBytes), #0, '', [rfReplaceAll]);
 end;
 
 function TStorage.PrepareDataSet: TBytes;
+  var inStream, outStream: TBytesStream;
 begin
   if isArchive then
   begin
-    ZDecompress(InBytes, Result);
+    inStream := TBytesStream.Create(InBytes);
+    outStream := TBytesStream.Create;
+    try
+      ZDecompressStream(inStream, outStream);
+      Result := outStream.Bytes;
+    finally
+      inStream.Free;
+      outStream.Free;
+    end;
   end
   else
     Result := InBytes;
