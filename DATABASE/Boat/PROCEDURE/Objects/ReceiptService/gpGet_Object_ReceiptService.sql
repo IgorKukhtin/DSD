@@ -7,13 +7,15 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ReceiptService(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Article TVarChar
-             , Comment TVarChar
+             , Comment TVarChar , NumReplace TVarChar
              , TaxKindId Integer, TaxKindName TVarChar 
              , PartnerId Integer, PartnerName TVarChar  
              , ReceiptServiceGroupId Integer, ReceiptServiceGroupName TVarChar
              , ReceiptServiceModelId Integer, ReceiptServiceModelName TVarChar
              , ReceiptServiceMaterialId Integer, ReceiptServiceMaterialName TVarChar
-             , EKPrice TFloat, SalePrice TFloat) 
+             , EKPrice TFloat, SalePrice TFloat
+             , NPP TFloat
+             ) 
 AS
 $BODY$
 BEGIN
@@ -29,7 +31,8 @@ BEGIN
            , lfGet_ObjectCode (0, zc_Object_ReceiptService()) AS Code
            , '' :: TVarChar           AS Name
            , '' :: TVarChar           AS Article
-           , '' :: TVarChar           AS Comment
+           , '' :: TVarChar           AS Comment   
+           , '' :: TVarChar           AS NumReplace
            , Object_TaxKind.Id        AS TaxKindId
            , (Object_TaxKind.ValueData || ' ' || zfConvert_FloatToString (ObjectFloat_TaxKind_Value.ValueData) ||'%') :: TVarChar AS TaxKindName
 
@@ -45,6 +48,7 @@ BEGIN
 
            , 0  :: TFloat             AS EKPrice
            , 0  :: TFloat             AS SalePrice
+           , 0  :: TFloat             AS NPP
        FROM Object AS Object_TaxKind
            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                  ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
@@ -59,7 +63,8 @@ BEGIN
            , Object_ReceiptService.ObjectCode AS Code
            , Object_ReceiptService.ValueData  AS Name
            , ObjectString_Article.ValueData   AS Article
-           , COALESCE (ObjectString_Comment.ValueData, NULL) :: TVarChar AS Comment
+           , COALESCE (ObjectString_Comment.ValueData, NULL)    :: TVarChar AS Comment
+           , COALESCE (ObjectString_NumReplace.ValueData, NULL) :: TVarChar AS NumReplace
 
            , Object_TaxKind.Id                                     AS TaxKindId
            , (Object_TaxKind.ValueData || ' ' || zfConvert_FloatToString (ObjectFloat_TaxKind_Value.ValueData) ||'%') :: TVarChar AS TaxKindName
@@ -77,6 +82,8 @@ BEGIN
            , COALESCE (ObjectFloat_EKPrice.ValueData,0)   ::TFloat AS EKPrice
            , COALESCE (ObjectFloat_SalePrice.ValueData,0) ::TFloat AS SalePrice
            
+           , COALESCE (ObjectFloat_NPP.ValueData,0)       ::TFloat AS NPP
+           
        FROM Object AS Object_ReceiptService
            LEFT JOIN ObjectString AS ObjectString_Comment
                                   ON ObjectString_Comment.ObjectId = Object_ReceiptService.Id
@@ -85,6 +92,10 @@ BEGIN
                                   ON ObjectString_Article.ObjectId = Object_ReceiptService.Id
                                  AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
+           LEFT JOIN ObjectString AS ObjectString_NumReplace
+                                  ON ObjectString_NumReplace.ObjectId = Object_ReceiptService.Id
+                                 AND ObjectString_NumReplace.DescId = zc_ObjectString_ReceiptService_NumReplace()
+
            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
                                  ON ObjectFloat_EKPrice.ObjectId = Object_ReceiptService.Id
                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
@@ -92,6 +103,10 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_SalePrice
                                  ON ObjectFloat_SalePrice.ObjectId = Object_ReceiptService.Id
                                 AND ObjectFloat_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                  ON ObjectFloat_NPP.ObjectId = Object_ReceiptService.Id
+                                 AND ObjectFloat_NPP.DescId = zc_ObjectFloat_ReceiptService_NPP()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner
                                 ON ObjectLink_Partner.ObjectId = Object_ReceiptService.Id

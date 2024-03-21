@@ -26,8 +26,6 @@ object ReceiptServiceForm: TReceiptServiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 323
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,6 +43,22 @@ object ReceiptServiceForm: TReceiptServiceForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object NPP: TcxGridDBColumn
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'NPP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object NumReplace: TcxGridDBColumn
+        Caption = #1047#1072#1084#1077#1085#1072' '#1089#1099#1088#1100#1103
+        DataBinding.FieldName = 'NumReplace'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -227,15 +241,6 @@ object ReceiptServiceForm: TReceiptServiceForm
         Options.Editing = False
         Width = 78
       end
-      object Name_search: TcxGridDBColumn
-        Caption = #1055#1086#1089#1080#1082
-        DataBinding.FieldName = 'Name_search'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -248,8 +253,6 @@ object ReceiptServiceForm: TReceiptServiceForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = 24
-    ExplicitTop = 16
     object lbSearchName: TcxLabel
       Left = 2
       Top = 6
@@ -296,7 +299,7 @@ object ReceiptServiceForm: TReceiptServiceForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 96
-    Top = 64
+    Top = 128
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -316,7 +319,7 @@ object ReceiptServiceForm: TReceiptServiceForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 48
-    Top = 64
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -885,6 +888,15 @@ object ReceiptServiceForm: TReceiptServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNumReplace'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NumReplace'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -936,6 +948,15 @@ object ReceiptServiceForm: TReceiptServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNPP'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NPP'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inReceiptServiceModelName'
         Value = Null
         Component = MasterCDS
@@ -960,10 +981,22 @@ object ReceiptServiceForm: TReceiptServiceForm
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = MasterCDS
-    Column = Name_search
+    Column = Name
     ColumnList = <
       item
-        Column = Name_search
+        Column = Name
+      end
+      item
+        Column = ReceiptServiceGroupName
+      end
+      item
+        Column = ReceiptServiceMaterialName
+      end
+      item
+        Column = ReceiptServiceModelName
+      end
+      item
+        Column = Comment
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

@@ -3,18 +3,21 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TVarChar,TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptService (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar,TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptService(
  INOUT ioId                           Integer,       -- Ключ объекта < >
  INOUT ioCode                         Integer,       -- Код Объекта < >                                            
     IN inName                         TVarChar,      -- Название объекта <>
     IN inArticle                      TVarChar,      -- 
+    IN inNumReplace                   TVarChar,
     IN inComment                      TVarChar,      -- Краткое название
     IN inTaxKindId                    Integer ,      -- НДС
     IN inPartnerId                    Integer ,      -- Поставщик услуг
     IN inReceiptServiceGroupId        Integer , --
     IN inEKPrice                      TFloat  ,      -- Вх. цена без ндс
-    IN inSalePrice                    TFloat  ,      -- Цена продажи без ндс
+    IN inSalePrice                    TFloat  ,      -- Цена продажи без ндс 
+    IN inNPP                          TFloat  ,
     IN inReceiptServiceModelName      TVarChar, 
     IN inReceiptServiceMaterialName   TVarChar, 
     IN inSession                      TVarChar       -- сессия пользователя
@@ -50,11 +53,16 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptService_Comment(), ioId, inComment);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Article(), ioId, inArticle);
-
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptService_NumReplace(), ioId, inNumReplace);
+   
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptService_EKPrice(), ioId, inEKPrice);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptService_SalePrice(), ioId, inSalePrice);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptService_SalePrice(), ioId, inSalePrice);  
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptService_NPP(), ioId, inNPP);
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptService_TaxKind(), ioId, inTaxKindId);
    -- сохранили связь с <>

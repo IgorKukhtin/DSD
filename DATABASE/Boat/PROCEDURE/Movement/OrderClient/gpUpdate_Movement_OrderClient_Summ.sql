@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
    OUT outBasis_summ                 TFloat ,
  INOUT ioBasis_summ_transport        TFloat,
  INOUT ioBasisWVAT_summ_transport    TFloat,
+   OUT outTotalSummVAT               TFloat,
     IN inIsBefore                    Boolean   , -- временный расчет на форме 
     IN inIsEdit                      Boolean   , 
     IN inSession                     TVarChar    -- сессия пользователя
@@ -134,6 +135,8 @@ BEGIN
          outSummDiscount_total := (COALESCE (outSummDiscount1,0) + COALESCE (outSummDiscount2,0) + COALESCE (outSummDiscount3,0));
          outBasis_summ := (COALESCE (inBasis_summ1_orig, 0) + COALESCE (inBasis_summ2_orig, 0) - COALESCE (outSummDiscount_total,0)); 
 
+--RAISE EXCEPTION '2 Ошибка. Basis_summ_transport %    .', outSummDiscount_total;   
+
           -- если ничего не поменялось
          IF vbDiscountTax = inDiscountTax AND vbDiscountNextTax = inDiscountNextTax
             AND vbSummTax = ioSummTax AND vbSummReal = ioSummReal
@@ -144,6 +147,8 @@ BEGIN
              -- !!!выход!!!
              RETURN;
          END IF;
+
+         vbisVat:= COALESCE (vbisVat,FALSE);
 
          --процент НДС  
          IF COALESCE (vbVATPercent,0) <> COALESCE (inVATPercent,0)
@@ -190,6 +195,8 @@ BEGIN
          ioSummReal := COALESCE (outBasis_summ,0) - COALESCE (ioSummTax,0); 
          ioBasis_summ_transport := (COALESCE (outBasis_summ,0) - COALESCE (ioSummTax) + COALESCE (inTransportSumm_load,0)); 
          ioBasisWVAT_summ_transport := zfCalc_SummWVAT (ioBasis_summ_transport, inVATPercent);       
+
+         outTotalSummVAT := ioBasisWVAT_summ_transport - ioBasis_summ_transport;
          
          --
          PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
@@ -218,7 +225,7 @@ BEGIN
 
          END IF;        
           
-         
+
      END IF;
  
 END;

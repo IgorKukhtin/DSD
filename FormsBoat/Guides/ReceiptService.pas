@@ -71,11 +71,12 @@ type
     actChoiceFormReceiptServiceGroup: TOpenChoiceForm;
     actChoiceFormReceiptServiceModel: TOpenChoiceForm;
     actChoiceFormReceiptServiceMaterial: TOpenChoiceForm;
-    Name_search: TcxGridDBColumn;
     Panel2: TPanel;
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    NumReplace: TcxGridDBColumn;
+    NPP: TcxGridDBColumn;
   private
     { Private declarations }
   public
