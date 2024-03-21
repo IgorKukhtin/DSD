@@ -35,7 +35,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 412
       object Код: TcxLabel
         Left = 15
         Top = 5
@@ -348,7 +347,7 @@
       end
       object cxButton1: TcxButton
         Left = 55
-        Top = 509
+        Top = 505
         Width = 90
         Height = 25
         Action = actInsertUpdateGuides
@@ -370,8 +369,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
-      ExplicitLeft = -3
-      ExplicitTop = 21
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191
@@ -1599,7 +1596,7 @@
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edTaxKind_add
+    LookupControl = edTaxKind
     DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
@@ -1663,6 +1660,14 @@
         Name = 'inMovementId_order'
         Value = 44230d
         Component = GuidesParent
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceKindId'
+        Value = Null
+        Component = GuidesInvoiceKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
