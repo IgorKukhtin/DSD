@@ -25,7 +25,6 @@ object PLZ_CityForm: TPLZ_CityForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 563
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -71,8 +70,7 @@ object PLZ_CityForm: TPLZ_CityForm
     Width = 650
     Height = 41
     Align = alBottom
-    TabOrder = 4
-    ExplicitWidth = 563
+    TabOrder = 3
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -99,11 +97,10 @@ object PLZ_CityForm: TPLZ_CityForm
     Height = 33
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 563
     object lbSearchName: TcxLabel
       Left = 36
       Top = 6
-      Caption = 'City: '
+      Caption = #1055#1086#1080#1089#1082' City :'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -113,13 +110,13 @@ object PLZ_CityForm: TPLZ_CityForm
       Style.IsFontAssigned = True
     end
     object edSearchCity: TcxTextEdit
-      Left = 71
+      Left = 119
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        200
         21)
-      Width = 140
+      Width = 200
     end
   end
   object DataSource: TDataSource
