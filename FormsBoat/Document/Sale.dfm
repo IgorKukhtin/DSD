@@ -1996,15 +1996,8 @@ object SaleForm: TSaleForm
           Name = 'BasisPrice'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'BasisPrice'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'BasisPrice'
-          Value = Null
-          Component = MasterCDS
           ComponentItem = 'OperPrice'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True
