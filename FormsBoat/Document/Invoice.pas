@@ -93,6 +93,7 @@ type
     GuidesInfoMoney_moneyplace: TdsdGuides;
     GuidesPLZ: TdsdGuides;
     GuidesCountry: TdsdGuides;
+    GuidesTaxKind_add: TdsdGuides;
   private
     { Private declarations }
   public
