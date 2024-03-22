@@ -270,7 +270,7 @@ object SaleForm: TSaleForm
       ShowHint = True
     end
     object edBasis_summ_orig: TcxCurrencyEdit
-      Left = 113
+      Left = 115
       Top = 152
       Hint = 
         #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
@@ -286,7 +286,7 @@ object SaleForm: TSaleForm
       Width = 70
     end
     object edBasis_summ2_orig: TcxCurrencyEdit
-      Left = 113
+      Left = 115
       Top = 128
       Hint = #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1057#1091#1084#1084#1072' '#1086#1087#1094#1080#1081', '#1073#1077#1079' '#1053#1044#1057
       ParentShowHint = False
@@ -1990,6 +1990,21 @@ object SaleForm: TSaleForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisPrice'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPrice'
           MultiSelectSeparator = ','
         end>
       isShowModal = True

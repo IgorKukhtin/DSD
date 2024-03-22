@@ -157,11 +157,11 @@ BEGIN
           , tmpParent_Params.SummReal        :: TFloat
           , tmpParent_Params.SummReal_real   :: TFLoat
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
-          , tmpParent_Params.Basis_summ1_orig        ::TFloat
+          , CASE WHEN COALESCE (Movement_Sale.ParentId,0) <> 0 THEN tmpParent_Params.Basis_summ1_orig ELSE MovementFloat_TotalSummMVAT.ValueData END ::TFloat AS Basis_summ1_orig
             -- ИТОГО Без скидки, Сумма опций, без НДС
-          , tmpParent_Params.Basis_summ2_orig         ::TFloat
+          , CASE WHEN COALESCE (Movement_Sale.ParentId,0) <> 0 THEN tmpParent_Params.Basis_summ2_orig ELSE 0 END  ::TFloat AS Basis_summ2_orig
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
-          , tmpParent_Params.Basis_summ_orig          ::TFloat
+          , CASE WHEN COALESCE (Movement_Sale.ParentId,0) <> 0 THEN tmpParent_Params.Basis_summ_orig ELSE MovementFloat_TotalSummMVAT.ValueData END  ::TFloat AS Basis_summ_orig
             -- ИТОГО Сумма Скидки - без НДС
           , tmpParent_Params.SummDiscount1            ::TFloat
           , tmpParent_Params.SummDiscount2            ::TFloat
@@ -192,6 +192,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement_Sale.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId = Movement_Sale.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                                   AND COALESCE (Movement_Sale.ParentId,0) = 0
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement_Sale.Id
