@@ -53,17 +53,12 @@ object ProductEditForm: TProductEditForm
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitLeft = 8
-    ExplicitWidth = 1081
     ClientRectBottom = 537
     ClientRectRight = 686
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = 3
-      ExplicitWidth = 833
-      ExplicitHeight = 521
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -807,8 +802,6 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitWidth = 660
-      ExplicitHeight = 473
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -1061,8 +1054,6 @@ object ProductEditForm: TProductEditForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitWidth = 660
-        ExplicitHeight = 256
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
@@ -1070,7 +1061,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 658
         end
         object cxGrid1: TcxGrid
           Left = 1
@@ -1079,8 +1069,6 @@ object ProductEditForm: TProductEditForm
           Height = 268
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 658
-          ExplicitHeight = 228
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1329,7 +1317,6 @@ object ProductEditForm: TProductEditForm
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitWidth = 660
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
@@ -1337,7 +1324,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 658
         end
         object cxGrid: TcxGrid
           Left = 1
@@ -1346,7 +1332,6 @@ object ProductEditForm: TProductEditForm
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 658
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -2522,18 +2507,7 @@ object ProductEditForm: TProductEditForm
     end
     object actPrintInvoice: TdsdPrintAction
       Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -2637,18 +2611,7 @@ object ProductEditForm: TProductEditForm
     end
     object mactPrint_Invoice: TMultiAction
       Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.Component = FormParams
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
+      MoveParams = <>
       ActionList = <
         item
           Action = actInvoiceReportName
@@ -2671,6 +2634,7 @@ object ProductEditForm: TProductEditForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
