@@ -271,6 +271,8 @@ BEGIN
 
      RETURN NEXT Cursor1;
 
+
+     -- элементы счета - MovementItem
      OPEN Cursor2 FOR
          SELECT Movement.Id                     AS MovementId
               , MovementItem.Id                 AS Id
@@ -285,8 +287,8 @@ BEGIN
               , MovementItem.isErased           AS isErased
          FROM Movement
               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                     AND MovementItem.DescId = zc_MI_Master()
-                                     AND (MovementItem.isErased = FALSE)
+                                     AND MovementItem.DescId     = zc_MI_Master()
+                                     AND MovementItem.isErased   = FALSE
               LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                           ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                          AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
@@ -301,33 +303,35 @@ BEGIN
                                      ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                     AND ObjectString_Article.DescId   = zc_ObjectString_Article()
          WHERE Movement.Id = inMovementId;
+
      RETURN NEXT Cursor2;
 
-     OPEN Cursor3 FOR    --для печати возврата
-        WITH
-      -- Все Счета предоплата, в которых указан этот док заказ
-      tmpMov_Invoice AS (SELECT Movement.Id
-                              , Movement.InvNumber
-                              , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.Id) AS Ord
-                              , COALESCE (MovementString_Comment.ValueData,'') AS Comment
-                              , CASE WHEN MovementLinkObject_InvoiceKind.ObjectId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'receipt'  ELSE 'invoice' END AS InvoiceName
-                         FROM Movement
-                              INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
-                                                            ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
-                                                           AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                           AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN vbInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN zc_Enum_InvoiceKind_PrePay() ELSE vbInvoiceKindId END
-                              LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                                      ON MovementFloat_Amount.MovementId = Movement.Id
-                                                     AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-                              LEFT JOIN MovementString AS MovementString_Comment
-                                                       ON MovementString_Comment.MovementId = Movement.Id
-                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                         WHERE Movement.DescId = zc_Movement_Invoice()
-                           AND Movement.ParentId = vbMovementId_order
-                           AND Movement.Id <> inMovementId
-                           AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND MovementFloat_Amount.ValueData > 0
-                        )
+
+     -- печать возврата - формируется список счетов "предоплата" - для "возврата"
+     OPEN Cursor3 FOR
+        WITH -- Все Счета предоплата, в которых указан этот док заказ
+             tmpMov_Invoice AS (SELECT Movement.Id
+                                     , Movement.InvNumber
+                                     , ROW_NUMBER() OVER (ORDER BY Movement.OperDate, Movement.Id) AS Ord
+                                     , COALESCE (MovementString_Comment.ValueData,'') AS Comment
+                                     , CASE WHEN MovementLinkObject_InvoiceKind.ObjectId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'receipt'  ELSE 'invoice' END AS InvoiceName
+                                FROM Movement
+                                     INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
+                                                                   ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
+                                                                  AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN vbInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN zc_Enum_InvoiceKind_PrePay() ELSE vbInvoiceKindId END
+                                     LEFT JOIN MovementFloat AS MovementFloat_Amount
+                                                             ON MovementFloat_Amount.MovementId = Movement.Id
+                                                            AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                                     LEFT JOIN MovementString AS MovementString_Comment
+                                                              ON MovementString_Comment.MovementId = Movement.Id
+                                                             AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                WHERE Movement.DescId = zc_Movement_Invoice()
+                                  AND Movement.ParentId = vbMovementId_order
+                                  AND Movement.Id <> inMovementId
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  AND MovementFloat_Amount.ValueData > 0
+                               )
        SELECT tmpMov_Invoice.InvNumber
             , zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData)     AS ReceiptNumber
             , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
@@ -374,7 +378,9 @@ BEGIN
 
      RETURN NEXT Cursor3;
 
-     OPEN Cursor4 FOR    --для печати счета - опции
+
+     -- печать опций
+     OPEN Cursor4 FOR
         SELECT Object_Object.Id                         AS ObjectId
              , Object_Object.ObjectCode                 AS ObjectCode
              , (Object_Object.ValueData || CASE WHEN Object_ProdColor.Id > 0 OR ObjectString_Comment.ValueData <> '' 
