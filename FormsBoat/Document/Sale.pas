@@ -239,6 +239,10 @@ type
     bbsOpenForm: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
     mactCompleteMovement_andSave: TMultiAction;
+    spUpdate_before: TdsdStoredProc;
+    EnterMoveNext: TEnterMoveNext;
+    HeaderExit: THeaderExit;
+    actUpdate_summ_before: TdsdDataSetRefresh;
   private
   public
   end;
