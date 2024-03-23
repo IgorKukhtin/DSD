@@ -113,7 +113,9 @@ BEGIN
                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
                                                                                                                       THEN zc_Enum_InvoiceKind_Pay() 
                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Service()
-                                                                                                                      THEN zc_Enum_InvoiceKind_Service() 
+                                                                                                                      THEN zc_Enum_InvoiceKind_Service()
+                                                                                                            END
+                                                                                                    UNION
                                                                                                      SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
                                                                                                     UNION
                                                                                                      SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Service()
