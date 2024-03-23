@@ -1,9 +1,9 @@
 ﻿inherited InvoiceForm: TInvoiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
   ClientHeight = 576
-  ClientWidth = 465
+  ClientWidth = 474
   AddOnFormData.isSingle = False
-  ExplicitWidth = 471
+  ExplicitWidth = 480
   ExplicitHeight = 605
   PixelsPerInch = 96
   TextHeight = 13
@@ -407,7 +407,7 @@
       end
       object edTaxKind_add: TcxButtonEdit
         Left = 287
-        Top = 70
+        Top = 71
         Properties.Buttons = <
           item
             Default = True
@@ -606,6 +606,7 @@
     object actGuidesObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actGet_MoneyPlace
       PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
       Hint = #1042#1099#1073#1086#1088' Lieferanten / Kunden'
@@ -718,6 +719,35 @@
           Component = GuidesParent
           ComponentItem = 'TextValue'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = GuidesTaxKind_add
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = GuidesTaxKind_add
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = GuidesInfoMoney_moneyplace
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName_all'
+          Value = Null
+          Component = GuidesInfoMoney_moneyplace
+          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1381,8 +1411,8 @@
     FormName = 'del_TUnion_ClientPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <>
-    Left = 341
-    Top = 168
+    Left = 165
+    Top = 184
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -1621,8 +1651,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 341
-    Top = 114
+    Left = 309
+    Top = 130
   end
   object GuidesInvoiceKind: TdsdGuides
     KeyField = 'Id'
@@ -1648,8 +1678,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 338
-    Top = 65
+    Left = 386
+    Top = 33
   end
   object spGetPrepay: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Invoice_Prepay'
@@ -1969,6 +1999,21 @@
         Name = 'InfoMoneyName'
         Value = ''
         Component = GuidesInfoMoney_moneyplace
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindId'
+        Value = Null
+        Component = GuidesTaxKind_add
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxKindName'
+        Value = Null
+        Component = GuidesTaxKind_add
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2331,5 +2376,35 @@
       end>
     Left = 177
     Top = 123
+  end
+  object GuidesTaxKind_add: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTaxKind_add
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTaxKind_add
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTaxKind_add
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 381
+    Top = 146
   end
 end

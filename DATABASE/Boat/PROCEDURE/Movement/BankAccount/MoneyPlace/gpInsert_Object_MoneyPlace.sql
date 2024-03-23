@@ -90,7 +90,8 @@ BEGIN
 
    IF vbDescId = zc_Object_Partner()
    THEN
-        --
+        --        
+     --RAISE EXCEPTION 'Ошибка 1';
        SELECT tmp.ioId
      INTO ioId
        FROM gpInsertUpdate_Object_Partner(ioId           := 0                    :: Integer
@@ -118,7 +119,7 @@ BEGIN
                                         , inInfoMoneyId  := COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_10101())  ::Integer
                                         , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
-                                        , inSession      := (-1 * vbUserId)      :: TVarChar
+                                        , inSession      := (vbUserId)      :: TVarChar     ---1 * 
                                          ) AS tmp;
         --
         outInfoMoneyName := (SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_10101())::Integer);
@@ -127,7 +128,8 @@ BEGIN
    --
    IF vbDescId = zc_Object_Client()
    THEN
-        --
+        --  
+       --RAISE EXCEPTION 'Ошибка 2';
         SELECT tmp.ioId
       INTO ioId
         FROM gpInsertUpdate_Object_Client(ioId           := 0                    :: Integer
@@ -155,7 +157,7 @@ BEGIN
                                         , inInfoMoneyId  := COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_30101())  ::Integer
                                         , inTaxKindId    := COALESCE (ioTaxKindId, zc_Enum_TaxKind_Basis())::Integer -- 19.0%
                                         , inPaidKindId   := zc_Enum_PaidKind_FirstForm() ::Integer
-                                        , inSession      := (-1 * vbUserId)      :: TVarChar
+                                        , inSession      := (vbUserId)      :: TVarChar   ---1 * 
                                         ) AS tmp;
         --
         outInfoMoneyName := (SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (ioInfoMoneyId, zc_Enum_InfoMoney_30101())::Integer);

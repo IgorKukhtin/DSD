@@ -302,7 +302,7 @@
       end
       object btnGuidesObjectChoiceForm: TcxButton
         Left = 22
-        Top = 455
+        Top = 456
         Width = 180
         Height = 25
         Action = actGuidesObjectChoiceForm
@@ -386,7 +386,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
-      ExplicitLeft = 3
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191

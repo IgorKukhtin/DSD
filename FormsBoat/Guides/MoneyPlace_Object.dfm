@@ -266,6 +266,29 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           ComponentItem = 'TaxNumber'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKind_Value'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKind_Value'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TaxKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'TaxKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
   end
