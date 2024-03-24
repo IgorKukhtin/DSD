@@ -16,7 +16,7 @@ $BODY$
    DECLARE vbUserId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send_PartionDate_byReport());
 
      IF COALESCE (inMovementItemId,0) = 0
      THEN

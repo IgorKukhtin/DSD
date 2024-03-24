@@ -113,6 +113,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , isPartionCell Boolean
 
              , Amount TFloat, Amount_Weight TFloat
+
+            , NormInDays      Integer
+            , NormInDays_real Integer
+            , NormInDays_tax  TFloat
+            , NormInDays_date TDateTime
+
              , Color_PartionGoodsDate Integer
               )
 AS
@@ -138,6 +144,11 @@ BEGIN
                     SELECT lfSelect.GoodsId
                     FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
                    )
+    , tmpNormInDays AS (SELECT Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId, Object_GoodsByGoodsKind_View.NormInDays
+                        FROM Object_GoodsByGoodsKind_View
+                             JOIN tmpGoods ON tmpGoods.GoodsId = Object_GoodsByGoodsKind_View.GoodsId
+                        WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
+                       )
 
     , tmpMovement AS (SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
@@ -612,6 +623,22 @@ BEGIN
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
             , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
 
+            , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+            , CASE WHEN CURRENT_DATE < (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL)
+                        THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                   ELSE 0
+              END :: Integer AS NormInDays_real
+            , CASE WHEN tmpNormInDays.NormInDays > 0 
+                   THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                              THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                                         ELSE 0
+                                    END
+                            / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
+                   ELSE 0
+              END :: TFloat AS NormInDays_tax
+
+            , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
+
             , tmpData_MI.Color_PartionGoodsDate ::Integer
        
      FROM tmpData_MI -- расчет кол-во - мастер
@@ -629,6 +656,8 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = tmpData_MI.GoodsId
           LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = tmpData_MI.GoodsKindId
+          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
+                                 AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = tmpData_MI.GoodsId
@@ -663,6 +692,11 @@ BEGIN
                     SELECT lfSelect.GoodsId
                     FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
                    )
+    , tmpNormInDays AS (SELECT Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId, Object_GoodsByGoodsKind_View.NormInDays
+                        FROM Object_GoodsByGoodsKind_View
+                             JOIN tmpGoods ON tmpGoods.GoodsId = Object_GoodsByGoodsKind_View.GoodsId
+                        WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
+                       )
       --выбираем все не пустые дески
      , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
                       FROM MovementItemLinkObject
@@ -683,7 +717,7 @@ BEGIN
                      --ограничили товаром
                      --INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                 WHERE MovementItem.Id IN (SELECT DISTINCT tmpMILO_PC.MovementItemId FROM tmpMILO_PC)
-                  AND MovementItem.isErased = False
+                  AND MovementItem.isErased = FALSE
                   AND MovementItem.DescId = zc_MI_Master() 
                 )
 
@@ -1136,6 +1170,22 @@ BEGIN
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
             , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
 
+            , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+            , CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                        THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                   ELSE 0
+              END :: Integer AS NormInDays_real
+            , CASE WHEN tmpNormInDays.NormInDays > 0 
+                   THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                              THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                                         ELSE 0
+                                    END
+                            / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
+                   ELSE 0
+              END :: TFloat AS NormInDays_tax
+
+            , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
+
             , tmpData_MI.Color_PartionGoodsDate ::Integer
        
      FROM tmpData_MI -- расчет кол-во - мастер
@@ -1153,6 +1203,8 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = tmpData_MI.GoodsId
           LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = tmpData_MI.GoodsKindId
+          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
+                                 AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = tmpData_MI.GoodsId
@@ -1192,3 +1244,12 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Send_PartionCell (inStartDate:= '04.02.2024', inEndDate:= '04.02.2024', inUnitId:= 8451, inIsMovement:= false, inIsShowAll := true, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+
+zc_ObjectFloat_StickerProperty_Value5 -  кількість діб 
+zc_ObjectFloat_StickerProperty_Value10 - кількість діб - второй срок
+
+zc_ObjectFloat_GoodsByGoodsKind_NormInDays -  срок годности в днях 
+
+zc_ObjectFloat_OrderType_TermProduction
+
+
