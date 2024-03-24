@@ -1,0 +1,183 @@
+-- Function: gpInsert_Container_data()
+
+DROP FUNCTION IF EXISTS gpInsert_Container_data (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Container_data (TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Container_data (TDateTime, Boolean, Boolean, Boolean, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsert_Container_data(
+    IN inStartDate           TDateTime , -- Дата партии
+    IN inIsRecurse           Boolean   , --
+    IN inIsAll_container     Boolean   , --
+    IN inSRV_R               Boolean   , --
+    IN inSession             TVarChar    -- сессия пользователя
+)
+RETURNS TEXT
+AS
+$BODY$
+   DECLARE vbUserId   Integer;
+   DECLARE vbVerId    Integer;
+   DECLARE vbScript   TEXT;
+   DECLARE vb1        TEXT;
+   DECLARE vb2        TEXT;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
+
+
+     RAISE INFO 'Дата : <%> and IsRecurse: <%> and inIsAll_container: <%> and inSRV_R: <%>' , inStartDate, inIsRecurse, inIsAll_container, inSRV_R;
+
+
+
+     -- параметр
+     vbVerId:= 1 + COALESCE ((SELECT MAX (VerId) FROM Container_data WHERE StartDate = inStartDate), 0);
+
+
+
+     IF inSRV_R = TRUE
+     THEN
+         -- Результат
+         vbScript:= 'INSERT INTO Container_data (StartDate, VerId
+                                               , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                               , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                                )
+                        -- Остаток
+                        SELECT ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime, ' || vbVerId :: TVarChar || '
+                             , Container.Id
+                             , Container.DescId, Container.ObjectId
+                             , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
+                             , Container.Amount AS Amount_data_real
+                             , Container.ParentId
+                             , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+
+                        FROM Container
+                             LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                            AND MovementItemContainer.OperDate    >= ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                        GROUP BY Container.Id
+                               , Container.DescId, Container.ObjectId
+                               , Container.Amount
+                               , Container.ParentId
+                               , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+                        HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
+                    ';
+
+         -- информативно
+         RAISE INFO  '%',vbScript;
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                                   -- Результат
+                                , vbScript));
+
+
+         IF inIsAll_container = TRUE
+         THEN
+             -- Результат
+             vbScript:= 'INSERT INTO Container_data (StartDate, VerId
+                                                   , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                                   , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                                    )
+                            -- Остаток
+                            SELECT inStartDate, vbVerId
+                                 , Container.Id
+                                 , Container.DescId, Container.ObjectId
+                                 , 0 AS Amount
+                                 , Container.Amount AS Amount_data_real
+                                 , Container.ParentId
+                                 , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+
+                            FROM Container
+                                 LEFT JOIN Container_data ON Container_data.Id        = Container.Id
+                                                         AND Container_data.StartDate = ' || CHR (39) || zfConvert_DateToString (inStartDate) ||  CHR (39) || ' :: TDateTime
+                                                         AND Container_data.VerId     = ' || vbVerId :: TVarChar || '
+                            WHERE Container_data.Id IS NULL
+                        ';
+
+             -- информативно
+             RAISE INFO  '%',vbScript;
+
+             -- Результат
+             vb2:= (SELECT *
+                    FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                                       -- Результат
+                                    , vbScript));
+
+         END IF;
+
+     ELSE
+         -- Результат
+         INSERT INTO Container_data (StartDate, VerId
+                                   , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                   , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                    )
+            -- Остаток
+            SELECT inStartDate, vbVerId
+                 , Container.Id
+                 , Container.DescId, Container.ObjectId
+                 , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
+                 , Container.Amount AS Amount_data_real
+                 , Container.ParentId
+                 , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+
+            FROM Container
+                 LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                AND MovementItemContainer.OperDate    >= inStartDate
+            GROUP BY Container.Id
+                   , Container.DescId, Container.ObjectId
+                   , Container.Amount
+                   , Container.ParentId
+                   , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+            HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
+              --!!!!OR Container.Amount <> 0
+              -- OR inIsAll_container = TRUE
+           ;
+
+         IF inIsAll_container = TRUE
+         THEN
+             INSERT INTO Container_data (StartDate, VerId
+                                       , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                       , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                        )
+                -- Остаток
+                SELECT inStartDate, vbVerId
+                     , Container.Id
+                     , Container.DescId, Container.ObjectId
+                     , 0 AS Amount
+                     , Container.Amount AS Amount_data_real
+                     , Container.ParentId
+                     , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+
+                FROM Container
+                     LEFT JOIN Container_data ON Container_data.Id        = Container.Id
+                                             AND Container_data.StartDate = inStartDate
+                                             AND Container_data.VerId     = vbVerId
+                WHERE Container_data.Id IS NULL
+               ;
+
+         END IF;
+
+     END IF;
+
+     RETURN vb1 :: Text || ' * ' || COALESCE (vb2, '');
+
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.24         *
+*/
+
+/*
+WITH tmpAll+_
+SELECT
+FROM
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsert_Container_data (inStartDate:= '01.02.2024', inIsRecurse:= FALSE, inIsAll_container:= TRUE,  inSRV_R:= TRUE,  inSession:= '5')
+-- SELECT * FROM gpInsert_Container_data (inStartDate:= '01.02.2024', inIsRecurse:= FALSE, inIsAll_container:= FALSE, inSRV_R:= FALSE, inSession:= '5')
