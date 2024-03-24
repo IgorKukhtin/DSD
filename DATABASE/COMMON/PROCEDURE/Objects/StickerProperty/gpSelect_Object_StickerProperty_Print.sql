@@ -571,15 +571,17 @@ BEGIN
                               COALESCE (Object_StickerTag.ValueData, '')
                     || ' ' || COALESCE (Object_StickerType.ValueData, '')
                     || ' ' || COALESCE (Object_StickerSort.ValueData, '')
-               || CHR (13) || REPEAT (' ', vbAddLeft2)
-                           || COALESCE (Object_StickerNorm.ValueData, '')
+             --|| CHR (13) || REPEAT (' ', vbAddLeft2)
+             --            || COALESCE (Object_StickerNorm.ValueData, '')
+               || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
 
                     WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
                          THEN -- Способ изготовления продукта + Сортность продукта + ТУ или ДСТУ
                               COALESCE (Object_StickerType.ValueData, '')
                     || ' ' || COALESCE (Object_StickerSort.ValueData, '')
-               || CHR (13) || REPEAT (' ', vbAddLeft2)
-                           || COALESCE (Object_StickerNorm.ValueData, '')
+             --|| CHR (13) || REPEAT (' ', vbAddLeft2)
+             --            || COALESCE (Object_StickerNorm.ValueData, '')
+               || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
 
                     WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
                          THEN -- Сортность продукта + ТУ или ДСТУ
