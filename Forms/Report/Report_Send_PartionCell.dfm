@@ -24,8 +24,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 326
-        ExplicitLeft = -48
-        ExplicitTop = 16
         ExplicitWidth = 1071
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -76,6 +74,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -84,6 +83,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object OperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -134,36 +134,21 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 120
           end
-          object PartionGoodsDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
-            DataBinding.FieldName = 'PartionGoodsDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.SaveTime = False
-            Properties.ShowTime = False
-            Properties.UseNullString = True
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 84
-          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
           end
           object GoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -171,7 +156,55 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 80
+          end
+          object PartionGoodsDate: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object NormInDays: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1074' '#1076#1085#1103#1093
+            DataBinding.FieldName = 'NormInDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1076#1085#1103#1093
+            Options.Editing = False
+            Width = 50
+          end
+          object NormInDays_real: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093
+            DataBinding.FieldName = 'NormInDays_real'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1076#1085#1103#1093' '#1076#1083#1103' '#1057#1088#1086#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 50
+          end
+          object NormInDays_tax: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1074' %'
+            DataBinding.FieldName = 'NormInDays_tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1076#1085#1077#1081' '#1074' % '#1076#1083#1103' '#1057#1088#1086#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 50
+          end
+          object NormInDays_date: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'NormInDays_date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103', '#1076#1072#1090#1072
+            Options.Editing = False
+            Width = 70
           end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
@@ -587,6 +620,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 55
           end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          end
+          object cxGridDBTableViewColumn2: TcxGridDBColumn
+          end
         end
       end
     end
@@ -648,8 +685,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Width = 108
     end
     object cbShowAll: TcxCheckBox
-      Left = 879
-      Top = 4
+      Left = 881
+      Top = 3
       Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Caption = #1054#1089#1090#1072#1090#1082#1080
       Properties.ReadOnly = True
