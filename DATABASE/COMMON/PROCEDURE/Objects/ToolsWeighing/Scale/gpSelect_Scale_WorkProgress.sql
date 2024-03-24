@@ -307,7 +307,7 @@ BEGIN
                                              AND MILO_Update.DescId = zc_MILinkObject_Update()
              LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
 
-       WHERE tmpMI.GoodsKindId_Complete = zc_GoodsKind_Basis()
+       WHERE tmpMI.GoodsKindId_Complete IN (zc_GoodsKind_Basis(), 559324) -- штучний
           OR inDocumentKindId NOT IN (zc_Enum_DocumentKind_LakTo(), zc_Enum_DocumentKind_LakFrom())
        ORDER BY Object_Goods.ValueData
 
