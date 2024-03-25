@@ -1639,7 +1639,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_1'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1647,7 +1647,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_2'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1655,7 +1655,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_3'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1663,7 +1663,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_4'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1671,7 +1671,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_5'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1679,7 +1679,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_6'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1687,7 +1687,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_7'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1695,7 +1695,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_8'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1703,7 +1703,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_9'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -1711,7 +1711,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellId_10'
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
