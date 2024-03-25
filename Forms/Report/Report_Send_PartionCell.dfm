@@ -874,6 +874,43 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       Caption = 'actGetForm'
     end
+    object actOpenFormPartionCell: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1089#1084#1086#1090#1088#1077#1090#1100' '#1089#1074#1086#1073#1086#1076#1085#1099#1077' '#1103#1095#1077#1081#1082#1080
+      ImageIndex = 25
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercentAmount'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -942,15 +979,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm2: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -962,15 +999,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm3: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -982,15 +1019,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm4: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1002,15 +1039,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm5: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1022,15 +1059,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm6: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1042,15 +1079,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm7: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCell_listForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1062,15 +1099,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm8: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCell_listForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1082,15 +1119,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm9: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1102,15 +1139,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actOpenPartionCellForm10: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'PartionCellForm'
-      FormName = 'TPartionCell_listForm'
-      FormNameParam.Value = 'TPartionCell_listForm'
+      FormName = 'TPartionCellChoiceForm'
+      FormNameParam.Value = 'TPartionCellChoiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1122,7 +1159,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1301,6 +1338,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormPartionCell'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1328,6 +1373,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbUpdatePartionGoodsDate: TdxBarButton
       Action = macUpdatePartionGoodsDate
+      Category = 0
+    end
+    object bbOpenFormPartionCell: TdxBarButton
+      Action = actOpenFormPartionCell
       Category = 0
     end
   end
@@ -1527,7 +1576,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Params = <
       item
         Name = 'FormName'
-        Value = Null
+        Value = 'TPartionCellChoiceForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end
