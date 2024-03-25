@@ -505,7 +505,7 @@ object SaleForm: TSaleForm
       ShowHint = True
     end
     object edVATPercent_order: TcxCurrencyEdit
-      Left = 1085
+      Left = 1088
       Top = 100
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -996,7 +996,7 @@ object SaleForm: TSaleForm
       TabOrder = 1
     end
     object btnCompleteMovement: TcxButton
-      Left = 457
+      Left = 487
       Top = 6
       Width = 150
       Height = 25
@@ -3690,7 +3690,7 @@ object SaleForm: TSaleForm
       item
         Name = 'inVATPercent'
         Value = 0.000000000000000000
-        Component = edVATPercent
+        Component = edVATPercent_order
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3713,14 +3713,14 @@ object SaleForm: TSaleForm
       end
       item
         Name = 'inIsBefore'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsEdit'
-        Value = True
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3738,7 +3738,7 @@ object SaleForm: TSaleForm
         Control = edDiscountNextTax
       end
       item
-        Control = edVATPercent
+        Control = edVATPercent_order
       end
       item
         Control = edSummTax
@@ -3771,7 +3771,7 @@ object SaleForm: TSaleForm
         Control = edDiscountNextTax
       end
       item
-        Control = edVATPercent
+        Control = edVATPercent_order
       end
       item
         Control = edSummTax
