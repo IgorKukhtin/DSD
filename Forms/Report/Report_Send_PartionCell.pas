@@ -78,6 +78,8 @@ type
     NormInDays_real: TcxGridDBColumn;
     NormInDays_tax: TcxGridDBColumn;
     NormInDays_date: TcxGridDBColumn;
+    actOpenFormPartionCell: TdsdOpenForm;
+    bbOpenFormPartionCell: TdxBarButton;
   private
     { Private declarations }
   public
