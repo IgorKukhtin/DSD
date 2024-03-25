@@ -42,7 +42,7 @@ BEGIN
 
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)   AS GoodsKindId
                   , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
-                  , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
+                  , CASE WHEN MIFloat_PartionCell.ValueData > 0 THEN MIFloat_PartionCell.ValueData ELSE COALESCE (MILinkObject_Asset.ObjectId, 0) END :: Integer AS AssetId
                   , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
 
                   , COALESCE (MIBoolean_StartWeighing.ValueData, FALSE) AS isStartWeighing
@@ -104,6 +104,10 @@ BEGIN
                                                    ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
                   LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                              ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PartionCell.DescId = zc_MIFloat_PartionCell()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                               ON MIFloat_RealWeight.MovementItemId = MovementItem.Id

@@ -324,10 +324,10 @@ BEGIN
                                             AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
-                                             ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                        ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell.DescId = zc_MIFloat_PartionCell()
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MIFloat_PartionCell.ValueData :: Integer
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
@@ -548,10 +548,10 @@ BEGIN
                                             AND MILinkObject_PartionModel.DescId = zc_MILinkObject_Storage()
             LEFT JOIN Object AS Object_PartionModel ON Object_PartionModel.Id = MILinkObject_PartionModel.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
-                                             ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                        ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell.DescId = zc_MIFloat_PartionCell()
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MIFloat_PartionCell.ValueData
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

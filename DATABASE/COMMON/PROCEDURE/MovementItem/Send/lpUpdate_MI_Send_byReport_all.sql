@@ -55,13 +55,13 @@ BEGIN
      ELSE
          -- таблица - элементы
          CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat
-                                               , DescId_MILO Integer, DescId_MILO_real Integer, DescId_Boolean Integer
+                                               , DescId_MILO Integer, DescId_MIF_real Integer, DescId_Boolean Integer
                                                , PartionCellId Integer, PartionCellId_real Integer) ON COMMIT DROP;
 
      END IF;
 
 
-     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, DescId_MILO_real, DescId_Boolean, PartionCellId, PartionCellId_real)
+     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, DescId_MIF_real, DescId_Boolean, PartionCellId, PartionCellId_real)
        WITH tmpMovement AS (SELECT Movement.*
                             FROM Movement
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -79,8 +79,8 @@ BEGIN
                            , MILO_PartionCell.DescId         AS DescId_MILO
                          --, MILO_PartionCell.ObjectId       AS PartionCellId
                              -- –асчет нужной €чейки по которой группировать
-                           , COALESCE (MILO_PartionCell_real.ObjectId, MILO_PartionCell.ObjectId) AS PartionCellId
-                           , MILO_PartionCell_real.ObjectId  AS PartionCellId_real
+                           , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData :: Integer ELSE MILO_PartionCell.ObjectId END AS PartionCellId
+                           , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer  AS PartionCellId_real
                       FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                             ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
@@ -93,19 +93,19 @@ BEGIN
                                                                                                  , zc_MILinkObject_PartionCell_4()
                                                                                                  , zc_MILinkObject_PartionCell_5()
                                                                                                   )
-                           LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_real
-                                                            ON MILO_PartionCell_real.MovementItemId = MovementItem.Id
-                                                           AND MILO_PartionCell_real.DescId         = CASE WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
-                                                                                                               THEN zc_MILinkObject_PartionCell_real_1()
-                                                                                                          WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_2()
-                                                                                                               THEN zc_MILinkObject_PartionCell_real_2()
-                                                                                                          WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_3()
-                                                                                                               THEN zc_MILinkObject_PartionCell_real_3()
-                                                                                                          WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_4()
-                                                                                                               THEN zc_MILinkObject_PartionCell_real_4()
-                                                                                                          WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_5()
-                                                                                                               THEN zc_MILinkObject_PartionCell_real_5()
-                                                                                                     END
+                           LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
+                                                       ON MIF_PartionCell_real.MovementItemId = MovementItem.Id
+                                                      AND MIF_PartionCell_real.DescId         = CASE WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_1()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_2()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_2()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_3()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_3()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_4()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_4()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_5()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_5()
+                                                                                                END
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItem.DescId   = zc_MI_Master()
                         AND MovementItem.isErased = FALSE
@@ -117,12 +117,12 @@ BEGIN
        -- –езультат
        SELECT MovementId, MovementItemId, Amount
             , DescId_MILO
-            , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MILinkObject_PartionCell_real_1()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MILinkObject_PartionCell_real_2()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MILinkObject_PartionCell_real_3()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MILinkObject_PartionCell_real_4()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MILinkObject_PartionCell_real_5()
-              END AS DescId_MILO_real
+            , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MIFloat_PartionCell_real_1()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MIFloat_PartionCell_real_2()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIFloat_PartionCell_real_3()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MIFloat_PartionCell_real_4()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MIFloat_PartionCell_real_5()
+              END AS DescId_MIF_real
             , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MIBoolean_PartionCell_Close_1()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MIBoolean_PartionCell_Close_2()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIBoolean_PartionCell_Close_3()
@@ -187,8 +187,8 @@ BEGIN
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_1;
 
 
-             -- 1.3.обнулили €чейку - DescId_MILO_real
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, NULL)
+             -- 1.3.обнулили €чейку - DescId_MIF_real
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_1;
 
@@ -206,8 +206,8 @@ BEGIN
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_2;
 
 
-             -- 1.3.обнулили €чейку - DescId_MILO_real
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, NULL)
+             -- 1.3.обнулили €чейку - DescId_MIF_real
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_2;
 
@@ -225,8 +225,8 @@ BEGIN
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_3;
 
 
-             -- 1.3.обнулили €чейку - DescId_MILO_real
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, NULL)
+             -- 1.3.обнулили €чейку - DescId_MIF_real
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_3;
 
@@ -245,8 +245,8 @@ BEGIN
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_4;
 
 
-             -- 1.3.обнулили €чейку - DescId_MILO_real
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, NULL)
+             -- 1.3.обнулили €чейку - DescId_MIF_real
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_4;
 
@@ -264,8 +264,8 @@ BEGIN
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_5;
 
 
-             -- 1.3.обнулили €чейку - DescId_MILO_real
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, NULL)
+             -- 1.3.обнулили €чейку - DescId_MIF_real
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_5;
 
@@ -278,7 +278,7 @@ BEGIN
      IF inPartionCellId_1_new = zc_PartionCell_RK()
      THEN
              -- 2.2.если была реальна€ €чейка - сохранили оригинал
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId)
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_1
                AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
@@ -304,7 +304,7 @@ BEGIN
      IF inPartionCellId_2_new = zc_PartionCell_RK()
      THEN
              -- 2.2.если была реальна€ €чейка - сохранили оригинал
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId)
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_2
                AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
@@ -331,7 +331,7 @@ BEGIN
      IF inPartionCellId_3_new = zc_PartionCell_RK()
      THEN
              -- 2.2.если была реальна€ €чейка - сохранили оригинал
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId)
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_3
                AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
@@ -358,7 +358,7 @@ BEGIN
      IF inPartionCellId_4_new = zc_PartionCell_RK()
      THEN
              -- 2.2.если была реальна€ €чейка - сохранили оригинал
-             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId)
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
              FROM _tmpItem_PartionCell
              WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_4
                AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
@@ -407,13 +407,13 @@ BEGIN
                   ;
 
                    -- 3.2.обнулили оригинал
-                   PERFORM lpInsertUpdate_MovementItemLinkObject (CASE WHEN vbCount_start = 1 THEN zc_MILinkObject_PartionCell_real_1()
-                                                                       WHEN vbCount_start = 2 THEN zc_MILinkObject_PartionCell_real_2()
-                                                                       WHEN vbCount_start = 3 THEN zc_MILinkObject_PartionCell_real_3()
-                                                                       WHEN vbCount_start = 4 THEN zc_MILinkObject_PartionCell_real_4()
-                                                                       WHEN vbCount_start = 5 THEN zc_MILinkObject_PartionCell_real_5()
-                                                                  END
-                                                               , _tmpItem_PartionCell.MovementItemId, NULL)
+                   PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN vbCount_start = 1 THEN zc_MIFloat_PartionCell_real_1()
+                                                                  WHEN vbCount_start = 2 THEN zc_MIFloat_PartionCell_real_2()
+                                                                  WHEN vbCount_start = 3 THEN zc_MIFloat_PartionCell_real_3()
+                                                                  WHEN vbCount_start = 4 THEN zc_MIFloat_PartionCell_real_4()
+                                                                  WHEN vbCount_start = 5 THEN zc_MIFloat_PartionCell_real_5()
+                                                              END
+                                                           , _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
                    FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
                    --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_1, 0)
                   ;
@@ -452,13 +452,13 @@ BEGIN
                   ;
 
                    -- 3.2.обнулили оригинал
-                   PERFORM lpInsertUpdate_MovementItemLinkObject (CASE WHEN vbCount_start = 1 THEN zc_MILinkObject_PartionCell_real_1()
-                                                                       WHEN vbCount_start = 2 THEN zc_MILinkObject_PartionCell_real_2()
-                                                                       WHEN vbCount_start = 3 THEN zc_MILinkObject_PartionCell_real_3()
-                                                                       WHEN vbCount_start = 4 THEN zc_MILinkObject_PartionCell_real_4()
-                                                                       WHEN vbCount_start = 5 THEN zc_MILinkObject_PartionCell_real_5()
-                                                                  END
-                                                               , _tmpItem_PartionCell.MovementItemId, NULL)
+                   PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN vbCount_start = 1 THEN zc_MIFloat_PartionCell_real_1()
+                                                                  WHEN vbCount_start = 2 THEN zc_MIFloat_PartionCell_real_2()
+                                                                  WHEN vbCount_start = 3 THEN zc_MIFloat_PartionCell_real_3()
+                                                                  WHEN vbCount_start = 4 THEN zc_MIFloat_PartionCell_real_4()
+                                                                  WHEN vbCount_start = 5 THEN zc_MIFloat_PartionCell_real_5()
+                                                              END
+                                                           , _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
                    FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
                    --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_2, 0)
                   ;
@@ -497,13 +497,13 @@ BEGIN
                   ;
 
                    -- 3.2.обнулили оригинал
-                   PERFORM lpInsertUpdate_MovementItemLinkObject (CASE WHEN vbCount_start = 1 THEN zc_MILinkObject_PartionCell_real_1()
-                                                                       WHEN vbCount_start = 2 THEN zc_MILinkObject_PartionCell_real_2()
-                                                                       WHEN vbCount_start = 3 THEN zc_MILinkObject_PartionCell_real_3()
-                                                                       WHEN vbCount_start = 4 THEN zc_MILinkObject_PartionCell_real_4()
-                                                                       WHEN vbCount_start = 5 THEN zc_MILinkObject_PartionCell_real_5()
-                                                                  END
-                                                               , _tmpItem_PartionCell.MovementItemId, NULL)
+                   PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN vbCount_start = 1 THEN zc_MIFloat_PartionCell_real_1()
+                                                                  WHEN vbCount_start = 2 THEN zc_MIFloat_PartionCell_real_2()
+                                                                  WHEN vbCount_start = 3 THEN zc_MIFloat_PartionCell_real_3()
+                                                                  WHEN vbCount_start = 4 THEN zc_MIFloat_PartionCell_real_4()
+                                                                  WHEN vbCount_start = 5 THEN zc_MIFloat_PartionCell_real_5()
+                                                              END
+                                                           , _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
                    FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
                    --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_3, 0)
                   ;
@@ -542,13 +542,13 @@ BEGIN
                   ;
 
                    -- 3.2.обнулили оригинал
-                   PERFORM lpInsertUpdate_MovementItemLinkObject (CASE WHEN vbCount_start = 1 THEN zc_MILinkObject_PartionCell_real_1()
-                                                                       WHEN vbCount_start = 2 THEN zc_MILinkObject_PartionCell_real_2()
-                                                                       WHEN vbCount_start = 3 THEN zc_MILinkObject_PartionCell_real_3()
-                                                                       WHEN vbCount_start = 4 THEN zc_MILinkObject_PartionCell_real_4()
-                                                                       WHEN vbCount_start = 5 THEN zc_MILinkObject_PartionCell_real_5()
-                                                                  END
-                                                               , _tmpItem_PartionCell.MovementItemId, NULL)
+                   PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN vbCount_start = 1 THEN zc_MIFloat_PartionCell_real_1()
+                                                                  WHEN vbCount_start = 2 THEN zc_MIFloat_PartionCell_real_2()
+                                                                  WHEN vbCount_start = 3 THEN zc_MIFloat_PartionCell_real_3()
+                                                                  WHEN vbCount_start = 4 THEN zc_MIFloat_PartionCell_real_4()
+                                                                  WHEN vbCount_start = 5 THEN zc_MIFloat_PartionCell_real_5()
+                                                              END
+                                                           , _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
                    FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
                    --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_4, 0)
                   ;
@@ -563,6 +563,50 @@ BEGIN
                                                              , _tmpItem_PartionCell.MovementItemId, FALSE)
                    FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
                    --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_4, 0)
+                  ;
+
+           END IF;
+
+           -- 3.5.следующа€
+           IF inPartionCellId_5_new > 0 THEN vbCount_start:= vbCount_start + 1; END IF;
+
+           -- 3.5. если выполн€етс€ назначить €чейку
+           IF inPartionCellId_5_new > 0 AND inPartionCellId_5_new <> zc_PartionCell_RK()
+           THEN
+                   -- 3.1.прив€зали €чейку
+                   PERFORM lpInsertUpdate_MovementItemLinkObject (CASE WHEN vbCount_start = 1 THEN zc_MILinkObject_PartionCell_1()
+                                                                       WHEN vbCount_start = 2 THEN zc_MILinkObject_PartionCell_2()
+                                                                       WHEN vbCount_start = 3 THEN zc_MILinkObject_PartionCell_3()
+                                                                       WHEN vbCount_start = 4 THEN zc_MILinkObject_PartionCell_4()
+                                                                       WHEN vbCount_start = 5 THEN zc_MILinkObject_PartionCell_5()
+                                                                  END
+                                                               , _tmpItem_PartionCell.MovementItemId, inPartionCellId_5_new)
+                   FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
+                   --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_5, 0)
+                  ;
+
+                   -- 3.2.обнулили оригинал
+                   PERFORM lpInsertUpdate_MovementItemFloat (CASE WHEN vbCount_start = 1 THEN zc_MIFloat_PartionCell_real_1()
+                                                                  WHEN vbCount_start = 2 THEN zc_MIFloat_PartionCell_real_2()
+                                                                  WHEN vbCount_start = 3 THEN zc_MIFloat_PartionCell_real_3()
+                                                                  WHEN vbCount_start = 4 THEN zc_MIFloat_PartionCell_real_4()
+                                                                  WHEN vbCount_start = 5 THEN zc_MIFloat_PartionCell_real_5()
+                                                              END
+                                                           , _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+                   FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
+                   --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_5, 0)
+                  ;
+
+                   -- 3.3.открыли
+                   PERFORM lpInsertUpdate_MovementItemBoolean (CASE WHEN vbCount_start = 1 THEN zc_MIBoolean_PartionCell_Close_1()
+                                                                    WHEN vbCount_start = 2 THEN zc_MIBoolean_PartionCell_Close_2()
+                                                                    WHEN vbCount_start = 3 THEN zc_MIBoolean_PartionCell_Close_3()
+                                                                    WHEN vbCount_start = 4 THEN zc_MIBoolean_PartionCell_Close_4()
+                                                                    WHEN vbCount_start = 5 THEN zc_MIBoolean_PartionCell_Close_5()
+                                                               END
+                                                             , _tmpItem_PartionCell.MovementItemId, FALSE)
+                   FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell
+                   --WHERE COALESCE (_tmpItem_PartionCell.PartionCellId, 0) = COALESCE (inPartionCellId_5, 0)
                   ;
 
            END IF;

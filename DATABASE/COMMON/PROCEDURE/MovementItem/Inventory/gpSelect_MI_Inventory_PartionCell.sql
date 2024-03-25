@@ -79,14 +79,14 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
-                                             ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_1.DescId = zc_MILinkObject_PartionCell_1()
-            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MILinkObject_PartionCell_1.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                        ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
+            LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MIFloat_PartionCell.ValueData :: Integer
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Close_1
                                           ON MIBoolean_PartionCell_Close_1.MovementItemId = MovementItem.Id
-                                         AND MIBoolean_PartionCell_Close_1.DescId = zc_MIBoolean_PartionCell_Close_1()
+                                         AND MIBoolean_PartionCell_Close_1.DescId         = zc_MIBoolean_PartionCell_Close_1()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id

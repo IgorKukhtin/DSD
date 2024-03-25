@@ -380,6 +380,9 @@ BEGIN
 
      IF vbMovementDescId = zc_Movement_Inventory()
      THEN
+         --!!!tmp
+         IF vbUserId = 5 THEN inOperDate:= '29.02.2024'; END IF;
+
          -- Розподільчий комплекс
          vbIsCloseInventory:= 8459 <> COALESCE ((SELECT MLO.ObjectId AS MLO FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From()), 0);
      END IF;
@@ -727,21 +730,30 @@ BEGIN
                                   ELSE COALESCE (MILinkObject_StorageLine.ObjectId, 0)
                              END AS StorageLineId
 
-                           , COALESCE (MILinkObject_Asset.ObjectId, 0)           AS AssetId
-                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)       AS AssetId_two
+                           , COALESCE (MILinkObject_Asset.ObjectId, 0)                AS AssetId
+                           , COALESCE (MILinkObject_Asset_two.ObjectId, 0)            AS AssetId_two
+                           , COALESCE (MIFloat_PartionCell.ValueData, 0)   :: Integer AS PartionCellId
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
+                           , CASE 
+                                  WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
+                                       AND 1=1
+                                       --AND vbUserId = 5 -- !!!tmp
+                                       THEN MIDate_PartionGoods.ValueData
+
+                                  WHEN vbMovementDescId = zc_Movement_Inventory()
                                        -- Склад Реализации + Склад База ГП
                                    AND MLO_From.ObjectId IN (8459, 8458)
                                        THEN NULL
                                   ELSE MIDate_PartionGoods.ValueData
                              END AS PartionGoodsDate
+
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        -- Склад Реализации + Склад База ГП
                                    AND MLO_From.ObjectId IN (8459, 8458)
                                        THEN ''
                                   ELSE COALESCE (MIString_PartionGoods.ValueData, '')
                              END AS PartionGoods
+
                            , MIString_PartNumber.ValueData                       AS PartNumber
                            , MovementItem.Amount                                 AS Amount
                            , COALESCE (MIFloat_Count.ValueData, 0)               AS Count
@@ -809,6 +821,9 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                             ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                       ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
                                                           
                     )
            -- Результат
@@ -942,7 +957,10 @@ BEGIN
                                                         , inPartionGoodsId      := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inGoodsKindCompleteId := NULL
-                                                        , inAssetId             := NULL
+                                                        , inAssetId             := CASE WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
+                                                                                        THEN -1 * tmp.PartionCellId
+                                                                                        ELSE NULL
+                                                                                   END
                                                         , inUnitId              := NULL
                                                         , inStorageId           := NULL  
                                                         , inPartionModelId      := NULL 
@@ -957,6 +975,7 @@ BEGIN
                      , tmp.StorageLineId
                      , tmp.AssetId
                      , tmp.AssetId_two
+                     , tmp.PartionCellId
                      , tmp.PartionGoodsDate
                      , tmp.PartionGoods
                      , tmp.PartNumber
@@ -986,8 +1005,17 @@ BEGIN
                              END AS GoodsKindId
 
                            , COALESCE (MILinkObject_StorageLine.ObjectId, 0) AS StorageLineId
+
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                            , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
+
+                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
+                                       AND 1=1
+                                       AND vbUserId <> 5 -- !!!tmp
+                                       THEN 0
+                                  ELSE COALESCE (MIFloat_PartionCell.ValueData, 0)
+                             END :: Integer AS PartionCellId
+
                            , MIString_PartNumber.ValueData                   AS PartNumber
 
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
@@ -995,12 +1023,13 @@ BEGIN
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN NULL
                                   WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
-                                       AND 1=1
-                                       --AND vbUserId <> 5
+                                       AND 1=0
+                                       --AND vbUserId <> 5 -- !!!tmp
                                        THEN NULL
 
                                   ELSE MIDate_PartionGoods.ValueData
                              END AS PartionGoodsDate
+
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
                                        THEN NULL
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
@@ -1104,10 +1133,13 @@ BEGIN
                                                            AND vbMovementDescId                <> zc_Movement_Inventory()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                                           AND MILinkObject_Asset.DescId         = zc_MILinkObject_Asset()
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
                                                             ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+                                                           AND MILinkObject_Asset_two.DescId         = zc_MILinkObject_Asset_two()
+                           LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                       ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -1129,6 +1161,7 @@ BEGIN
                            , tmpMI.StorageLineId
                            , tmpMI.AssetId
                            , tmpMI.AssetId_two
+                           , tmpMI.PartionCellId
                            , tmpMI.PartNumber
                            , tmpMI.PartionGoodsDate
                            , tmpMI.PartionGoods
@@ -1153,6 +1186,7 @@ BEGIN
                        , tmp.StorageLineId
                        , tmp.AssetId
                        , tmp.AssetId_two
+                       , tmp.PartionCellId
                        , tmp.PartionGoodsDate
                        , tmp.PartionGoods 
                        , tmp.PartNumber
@@ -1320,7 +1354,7 @@ BEGIN
 
 
      -- финиш - сохранили <Документ> - <Взвешивание (производство)> - только дату + ParentId + AccessKeyId
-     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, inOperDate, COALESCE (Movement_begin.Id, Movement.ParentId), COALESCE (Movement_begin.AccessKeyId, Movement.AccessKeyId))
+     PERFORM lpInsertUpdate_Movement (Movement.Id, Movement.DescId, Movement.InvNumber, CASE WHEN vbUserId = 5 THEN CURRENT_DATE - INTERVAL '7 DAY' ELSE inOperDate END, COALESCE (Movement_begin.Id, Movement.ParentId), COALESCE (Movement_begin.AccessKeyId, Movement.AccessKeyId))
      FROM Movement
           LEFT JOIN Movement AS Movement_begin ON Movement_begin.Id = vbMovementId_begin
      WHERE Movement.Id = inMovementId;
@@ -1608,7 +1642,7 @@ BEGIN
 
 if (vbUserId = 5 AND 1=1)
 then
-    RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
+    RAISE EXCEPTION 'Admin - Errr _end <%>  <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin), vbMovementId_begin;
     -- 'Повторите действие через 3 мин.'
 end if;
 

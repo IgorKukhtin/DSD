@@ -102,10 +102,10 @@ BEGIN
      -- Проверка
      AND EXISTS (SELECT 1
                  FROM MovementItem
-                      JOIN MovementItemLinkObject AS MILO_PartionCell_1
-                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
-                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-                                                 AND MILO_PartionCell_1.ObjectId       = inAssetId
+                      INNER JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                   ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
+                                                  AND MIFloat_PartionCell.ValueData      = -1 * inAssetId :: TFloat
                       LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                        ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -132,10 +132,10 @@ BEGIN
                         , CHR (13)
                         , (SELECT DISTINCT lfGet_Object_ValueData (MovementItem.ObjectId) || '> <' || lfGet_Object_ValueData_sh (MILO_GoodsKind.ObjectId)
                            FROM MovementItem
-                                INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
-                                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
-                                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-                                                                 AND MILO_PartionCell_1.ObjectId       = -1 * inAssetId
+                                INNER JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                             ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
+                                                            AND MIFloat_PartionCell.ValueData      = -1 * inAssetId :: TFloat
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -156,10 +156,10 @@ BEGIN
                         , CHR (13)
                         , (SELECT DISTINCT zfConvert_DateToString (MID_PartionGoodsDate.ValueData)
                            FROM MovementItem
-                                INNER JOIN MovementItemLinkObject AS MILO_PartionCell_1
-                                                                  ON MILO_PartionCell_1.MovementItemId = MovementItem.Id
-                                                                 AND MILO_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
-                                                                 AND MILO_PartionCell_1.ObjectId       = -1 * inAssetId
+                                INNER JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                             ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
+                                                            AND MIFloat_PartionCell.ValueData      = -1 * inAssetId :: TFloat
                                 LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                  ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -209,7 +209,7 @@ BEGIN
         AND inAssetId < 0
      THEN
          -- сохранили связь с <Ячейка хранения>
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), ioId, -1 * inAssetId);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell(), ioId, -1 * inAssetId :: TFloat);
      ELSE
          -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
