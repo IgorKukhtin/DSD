@@ -12,8 +12,8 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
@@ -26,7 +26,6 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 902
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -92,7 +91,6 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 902
     object lbSearchName: TcxLabel
       Left = 5
       Top = 6

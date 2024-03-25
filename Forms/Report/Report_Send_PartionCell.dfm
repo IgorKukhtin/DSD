@@ -1526,52 +1526,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Left = 632
     Top = 200
   end
-  object TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FormName'
-        Value = Null
-        ComponentItem = 'FormName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 296
-    Top = 120
-  end
-  object TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        ComponentItem = 'MovementId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FormName'
-        Value = Null
-        ComponentItem = 'FormName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 728
-    Top = 184
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
