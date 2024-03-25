@@ -1498,7 +1498,9 @@ uses
   BankSecondNum in '..\..\Forms\Document\BankSecondNum.pas' {BankSecondNumForm: TParentForm},
   BankSecondNumJournal in '..\..\Forms\Document\BankSecondNumJournal.pas' {BankSecondNumJournalForm: TParentForm},
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
-  PartionCellChoice in '..\..\Forms\Guides\PartionCellChoice.pas' {PartionCellChoiceForm: TParentForm};
+  PartionCellChoice in '..\..\Forms\Guides\PartionCellChoice.pas' {PartionCellChoiceForm: TParentForm},
+  Report_Send_PartionCellRemains in '..\..\Forms\Report\Report_Send_PartionCellRemains.pas' {Report_Send_PartionCellRemainsForm: TParentForm},
+  Report_Send_PartionCellRemainsDialog in '..\..\Forms\Report\Report_Send_PartionCellRemainsDialog.pas' {Report_Send_PartionCellRemainsDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

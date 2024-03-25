@@ -80,7 +80,6 @@ inherited MainForm: TMainForm
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = True
-    ExplicitHeight = 111
     object cxGridGetMsgDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DSGetMsg
@@ -156,10 +155,10 @@ inherited MainForm: TMainForm
     object actReport_Send_PartionCell_true: TdsdOpenForm [0]
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Caption = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')'
       Hint = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
-      FormName = 'TReport_Send_PartionCellForm'
-      FormNameParam.Value = 'TReport_Send_PartionCellForm'
+      FormName = 'TReport_Send_PartionCellRemainsForm'
+      FormNameParam.Value = 'TReport_Send_PartionCellRemainsForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -9800,7 +9799,6 @@ inherited MainForm: TMainForm
       end
       object miReport_Send_PartionCell_true: TMenuItem
         Action = actReport_Send_PartionCell_true
-        Caption = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')'
         Hint = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')'
       end
       object N249: TMenuItem
