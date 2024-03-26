@@ -37,8 +37,8 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
      vbUserId:= lpGetUserBySession (inSession);
 
-   -- определяется уровень доступа
-   vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
+     -- определяется уровень доступа
+     vbBranchId_Constraint:= COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId), 0);
 
      -- определяется
      vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId AND Object.DescId = zc_Object_Unit() WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From());
@@ -360,6 +360,7 @@ BEGIN
                                 AND (tmpRemains.PartionDate = zc_DateEnd()
                                 AND tmpRemains.Amount <> 0
                                     )
+                                    AND 1=0
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpGoods.GoodsId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpGoods.GoodsKindId
@@ -712,6 +713,7 @@ BEGIN
                                     )
                                 AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData,'')
                                 AND COALESCE (tmpRemains.GoodsKindId_complete, 0) = COALESCE (MILO_GoodsKindComplete.ObjectId, 0)
+                                AND (tmpRemains.Amount > 0 OR vbUserId = 5)
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = MovementItem.ObjectId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id                                

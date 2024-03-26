@@ -228,7 +228,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
                          , isPartionCount, isPartionSumm
-                         , PartionGoodsId
+                         , PartionGoodsId, isAsset
                           )
         WITH tmpMI AS (SELECT MovementItem.Id AS MovementItemId
                             , MovementItem.ObjectId AS GoodsId
@@ -264,6 +264,8 @@ BEGIN
 
                             , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                             , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
+
+                            , COALESCE (ObjectBoolean_Asset.ValueData, FALSE) AS isAsset
 
                        FROM Movement
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
@@ -322,6 +324,10 @@ BEGIN
                                                                                                  ELSE ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                                             END
 
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Asset
+                                                     ON ObjectBoolean_Asset.ObjectId = MovementItem.ObjectId
+                                                    AND ObjectBoolean_Asset.DescId   = zc_ObjectBoolean_Goods_Asset()
+
                        WHERE Movement.Id = inMovementId
                          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                       )
@@ -361,10 +367,14 @@ BEGIN
                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                             LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                     AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                       WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
-                                                            , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
-                                                            , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
-                                                             )
+                       WHERE (tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                             , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                             , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                              )
+                           -- или новая схема - товары ОС
+                           OR tmpMI.isAsset = TRUE
+                             )
+
                          AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
                            OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
                              )
@@ -375,6 +385,7 @@ BEGIN
                          -- только не Шины
                          AND tmpMI.InfoMoneyId <> zc_Enum_InfoMoney_20103() -- Запчасти и Ремонты + Шины
                       )
+          -- остаток с учетом движения
         , tmpContainer_calc
                    AS (SELECT tmpContainer_find.ContainerId
                             , tmpContainer_find.Amount_container - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_container

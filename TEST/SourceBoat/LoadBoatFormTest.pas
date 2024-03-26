@@ -558,6 +558,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_limitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_limitForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsMainForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsMainForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));

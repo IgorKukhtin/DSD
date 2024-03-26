@@ -3,6 +3,7 @@ inherited MainForm: TMainForm
   ClientHeight = 406
   ClientWidth = 1050
   KeyPreview = True
+  ExplicitLeft = -156
   ExplicitWidth = 1066
   ExplicitHeight = 465
   PixelsPerInch = 96
@@ -1440,8 +1441,8 @@ inherited MainForm: TMainForm
       Category = '10_'#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' '#1089#1087#1080#1089#1086#1082
-      FormName = 'TGoodsForm'
-      FormNameParam.Value = 'TGoodsForm'
+      FormName = 'TGoodsMainForm'
+      FormNameParam.Value = 'TGoodsMainForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

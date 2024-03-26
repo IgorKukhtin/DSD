@@ -310,7 +310,7 @@ uses
   InventoryItemEdit_limit in '..\..\FormsBoat\Document\InventoryItemEdit_limit.pas' {InventoryItemEdit_limitForm: TParentForm},
   PriceListItemEdit in '..\..\FormsBoat\Document\PriceListItemEdit.pas' {PriceListItemEditForm: TParentForm},
   PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm},
-  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm},
+  Goods in '..\..\FormsBoat\Guides\GoodsMain.pas' {GoodsForm: TParentForm},
   IncomeItemEdit_limit in '..\..\FormsBoat\Document\IncomeItemEdit_limit.pas' {IncomeItemEdit_limitForm: TParentForm},
   PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm},
   ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
