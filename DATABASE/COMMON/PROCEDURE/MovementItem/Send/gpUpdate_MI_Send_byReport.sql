@@ -21,12 +21,12 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_8       Integer,
  INOUT ioPartionCellId_9       Integer,
  INOUT ioPartionCellId_10      Integer,
- INOUT ioPartionCellName_1     TVarChar, -- 
+ INOUT ioPartionCellName_1     TVarChar, --
  INOUT ioPartionCellName_2     TVarChar,
  INOUT ioPartionCellName_3     TVarChar,
  INOUT ioPartionCellName_4     TVarChar,
  INOUT ioPartionCellName_5     TVarChar,
- INOUT ioPartionCellName_6     TVarChar, -- 
+ INOUT ioPartionCellName_6     TVarChar, --
  INOUT ioPartionCellName_7     TVarChar,
  INOUT ioPartionCellName_8     TVarChar,
  INOUT ioPartionCellName_9     TVarChar,
@@ -74,6 +74,20 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+
+
+if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_2) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 1)) > 0   then ioPartionCellName_2     := right (ioPartionCellName_2,  LENGTH(ioPartionCellName_2) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_3) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 1)) > 0   then ioPartionCellName_3     := right (ioPartionCellName_3,  LENGTH(ioPartionCellName_3) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_4) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_4, 1)) > 0   then ioPartionCellName_4     := right (ioPartionCellName_4,  LENGTH(ioPartionCellName_4) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_4, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_5) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_5, 1)) > 0   then ioPartionCellName_5     := right (ioPartionCellName_5,  LENGTH(ioPartionCellName_5) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_5, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_6) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_6, 1)) > 0   then ioPartionCellName_6     := right (ioPartionCellName_6,  LENGTH(ioPartionCellName_6) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_6, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_7) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_7, 1)) > 0   then ioPartionCellName_7     := right (ioPartionCellName_7,  LENGTH(ioPartionCellName_7) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_7, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_8) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 1)) > 0   then ioPartionCellName_8     := right (ioPartionCellName_8,  LENGTH(ioPartionCellName_8) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_9) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 1)) > 0   then ioPartionCellName_9     := right (ioPartionCellName_9,  LENGTH(ioPartionCellName_9) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 2)) > 0  THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 1)) > 0  then ioPartionCellName_10    := right (ioPartionCellName_10, LENGTH(ioPartionCellName_10) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 2)) > 0 THEN 2 ELSE 1 END); end if;
+
+
 
      --  1
      IF ioPartionCellName_1 ILIKE '%отбор%' OR TRIM (ioPartionCellName_1) = '0'
@@ -135,7 +149,7 @@ BEGIN
              END IF;
 
              -- если не нашли ошибка
-             IF COALESCE (vbPartionCellId_2,0) = 0
+             IF COALESCE (vbPartionCellId_2, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_2;
              END IF;
@@ -170,7 +184,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_3,0) = 0
+             IF COALESCE (vbPartionCellId_3, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_3;
              END IF;
@@ -205,7 +219,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_4,0) = 0
+             IF COALESCE (vbPartionCellId_4, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_4;
              END IF;
@@ -238,7 +252,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_5,0) = 0
+             IF COALESCE (vbPartionCellId_5, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_5;
              END IF;
@@ -271,7 +285,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_6,0) = 0
+             IF COALESCE (vbPartionCellId_6, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_6;
              END IF;
@@ -304,7 +318,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              -- если не нашли ошибка
-             IF COALESCE (vbPartionCellId_7,0) = 0
+             IF COALESCE (vbPartionCellId_7, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_7;
              END IF;
@@ -337,7 +351,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_8,0) = 0
+             IF COALESCE (vbPartionCellId_8, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_8;
              END IF;
@@ -370,7 +384,7 @@ BEGIN
                                         AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_9,0) = 0
+             IF COALESCE (vbPartionCellId_9, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_9;
              END IF;
@@ -403,7 +417,7 @@ BEGIN
                                          AND Object.DescId     = zc_Object_PartionCell());
              END IF;
              --если не нашли ошибка
-             IF COALESCE (vbPartionCellId_1,0) = 0
+             IF COALESCE (vbPartionCellId_10, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_10;
              END IF;
@@ -576,6 +590,150 @@ BEGIN
          THEN
              RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
                            , lfGet_Object_ValueData (vbPartionCellId_5)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
+     -- 6. Проверка - в ячейке только одна партия
+     IF vbPartionCellId_6 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_6
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_6)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
+     -- 7. Проверка - в ячейке только одна партия
+     IF vbPartionCellId_7 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_7
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_7)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+     -- 8. Проверка - в ячейке только одна партия
+     IF vbPartionCellId_8 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_8
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_8)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
+     -- 9. Проверка - в ячейке только одна партия
+     IF vbPartionCellId_9 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_9
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_9)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
+     -- 10. Проверка - в ячейке только одна партия
+     IF vbPartionCellId_10 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_10
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для ячейки <%> %уже установлена партия <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_10)
                            , CHR (13)
                            , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
                                                       FROM MovementItem
@@ -845,54 +1003,60 @@ BEGIN
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), inMovementItemId, FALSE);
          END IF;
-         
-     ELSE
-     
-         PERFORM lpUpdate_MI_Send_byReport_all (inUnitId                := inUnitId
-                                              , inStartDate             := inStartDate
-                                              , inEndDate               := inEndDate
-                                              , inGoodsId               := inGoodsId
-                                              , inGoodsKindId           := inGoodsKindId
-                                              , inPartionGoodsDate      := inPartionGoodsDate
-                                              , inPartionCellId_1       := ioPartionCellId_1
-                                              , inPartionCellId_2       := ioPartionCellId_2
-                                              , inPartionCellId_3       := ioPartionCellId_3
-                                              , inPartionCellId_4       := ioPartionCellId_4
-                                              , inPartionCellId_5       := ioPartionCellId_5
-                                              , inPartionCellId_6       := ioPartionCellId_6
-                                              , inPartionCellId_7       := ioPartionCellId_7
-                                              , inPartionCellId_8       := ioPartionCellId_8
-                                              , inPartionCellId_9       := ioPartionCellId_9
-                                              , inPartionCellId_10      := ioPartionCellId_10
-                                         
-                                              , inPartionCellId_1_new   := vbPartionCellId_1
-                                              , inPartionCellId_2_new   := vbPartionCellId_2
-                                              , inPartionCellId_3_new   := vbPartionCellId_3
-                                              , inPartionCellId_4_new   := vbPartionCellId_4
-                                              , inPartionCellId_5_new   := vbPartionCellId_5
-                                              , inPartionCellId_6_new   := vbPartionCellId_6
-                                              , inPartionCellId_7_new   := vbPartionCellId_7
-                                              , inPartionCellId_8_new   := vbPartionCellId_8
-                                              , inPartionCellId_9_new   := vbPartionCellId_9
-                                              , inPartionCellId_10_new  := vbPartionCellId_10
-                                              , inUserId                := vbUserId
-                                               );
 
+     ELSE
+
+         SELECT outPartionCellId_1, outPartionCellId_2, outPartionCellId_3, outPartionCellId_4, outPartionCellId_5
+              , outPartionCellId_6, outPartionCellId_7, outPartionCellId_8, outPartionCellId_9, outPartionCellId_10
+              , outIsClose_1, outIsClose_2, outIsClose_3, outIsClose_4, outIsClose_5, outIsClose_6, outIsClose_7, outIsClose_8, outIsClose_9, outIsClose_10
+         INTO vbPartionCellId_old_1, vbPartionCellId_old_2, vbPartionCellId_old_3, vbPartionCellId_old_4, vbPartionCellId_old_5
+            , vbPartionCellId_old_6, vbPartionCellId_old_7, vbPartionCellId_old_8, vbPartionCellId_old_9, vbPartionCellId_old_10
+            , vbIsClose_1, vbIsClose_2, vbIsClose_3, vbIsClose_4, vbIsClose_5, vbIsClose_6, vbIsClose_7, vbIsClose_8, vbIsClose_9, vbIsClose_10
+
+         FROM lpUpdate_MI_Send_byReport_all (inUnitId                := inUnitId
+                                           , inStartDate             := inStartDate
+                                           , inEndDate               := inEndDate
+                                           , inGoodsId               := inGoodsId
+                                           , inGoodsKindId           := inGoodsKindId
+                                           , inPartionGoodsDate      := inPartionGoodsDate
+                                           , inPartionCellId_1       := ioPartionCellId_1
+                                           , inPartionCellId_2       := ioPartionCellId_2
+                                           , inPartionCellId_3       := ioPartionCellId_3
+                                           , inPartionCellId_4       := ioPartionCellId_4
+                                           , inPartionCellId_5       := ioPartionCellId_5
+                                           , inPartionCellId_6       := ioPartionCellId_6
+                                           , inPartionCellId_7       := ioPartionCellId_7
+                                           , inPartionCellId_8       := ioPartionCellId_8
+                                           , inPartionCellId_9       := ioPartionCellId_9
+                                           , inPartionCellId_10      := ioPartionCellId_10
+
+                                           , inPartionCellId_1_new   := vbPartionCellId_1
+                                           , inPartionCellId_2_new   := vbPartionCellId_2
+                                           , inPartionCellId_3_new   := vbPartionCellId_3
+                                           , inPartionCellId_4_new   := vbPartionCellId_4
+                                           , inPartionCellId_5_new   := vbPartionCellId_5
+                                           , inPartionCellId_6_new   := vbPartionCellId_6
+                                           , inPartionCellId_7_new   := vbPartionCellId_7
+                                           , inPartionCellId_8_new   := vbPartionCellId_8
+                                           , inPartionCellId_9_new   := vbPartionCellId_9
+                                           , inPartionCellId_10_new  := vbPartionCellId_10
+                                           , inUserId                := vbUserId
+                                            ) AS tmp;
 
      END IF;
 
 
      -- вернули Id
-     ioPartionCellId_1 := vbPartionCellId_1;
-     ioPartionCellId_2 := vbPartionCellId_2;
-     ioPartionCellId_3 := vbPartionCellId_3;
-     ioPartionCellId_4 := vbPartionCellId_4;
-     ioPartionCellId_5 := vbPartionCellId_5;
-     ioPartionCellId_6 := vbPartionCellId_6;
-     ioPartionCellId_7 := vbPartionCellId_7;
-     ioPartionCellId_8 := vbPartionCellId_8;
-     ioPartionCellId_9 := vbPartionCellId_9;
-     ioPartionCellId_10:= vbPartionCellId_10;
+     ioPartionCellId_1 := CASE WHEN vbPartionCellId_old_1 > 0 THEN vbPartionCellId_old_1 ELSE vbPartionCellId_1 END;
+     ioPartionCellId_2 := CASE WHEN vbPartionCellId_old_2 > 0 THEN vbPartionCellId_old_2 ELSE vbPartionCellId_2 END;
+     ioPartionCellId_3 := CASE WHEN vbPartionCellId_old_3 > 0 THEN vbPartionCellId_old_3 ELSE vbPartionCellId_3 END;
+     ioPartionCellId_4 := CASE WHEN vbPartionCellId_old_4 > 0 THEN vbPartionCellId_old_4 ELSE vbPartionCellId_4 END;
+     ioPartionCellId_5 := CASE WHEN vbPartionCellId_old_5 > 0 THEN vbPartionCellId_old_5 ELSE vbPartionCellId_5 END;
+     ioPartionCellId_6 := CASE WHEN vbPartionCellId_old_6 > 0 THEN vbPartionCellId_old_6 ELSE vbPartionCellId_6 END;
+     ioPartionCellId_7 := CASE WHEN vbPartionCellId_old_7 > 0 THEN vbPartionCellId_old_7 ELSE vbPartionCellId_7 END;
+     ioPartionCellId_8 := CASE WHEN vbPartionCellId_old_8 > 0 THEN vbPartionCellId_old_8 ELSE vbPartionCellId_8 END;
+     ioPartionCellId_9 := CASE WHEN vbPartionCellId_old_9 > 0 THEN vbPartionCellId_old_9 ELSE vbPartionCellId_9 END;
+     ioPartionCellId_10:= CASE WHEN vbPartionCellId_old_10 > 0 THEN vbPartionCellId_old_10 ELSE vbPartionCellId_10 END;
 
      -- вернули Name
      ioPartionCellName_1  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_1, vbPartionCellId_1)), vbIsClose_1);

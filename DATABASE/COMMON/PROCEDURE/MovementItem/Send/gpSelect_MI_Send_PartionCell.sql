@@ -87,23 +87,23 @@ BEGIN
             
            , Object_PartionCell_1.Id            AS PartionCellId_1
            , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
-           , Object_PartionCell_1.ValueData     AS PartionCellName_1
+           , (Object_PartionCell_1.ObjectCode :: TVarChar || '-' || Object_PartionCell_1.ValueData ):: TVarChar        AS PartionCellName_1
 
            , Object_PartionCell_2.Id            AS PartionCellId_2
            , Object_PartionCell_2.ObjectCode    AS PartionCellCode_2
-           , Object_PartionCell_2.ValueData     AS PartionCellName_2
+           , (Object_PartionCell_2.ObjectCode :: TVarChar || '-'  || Object_PartionCell_2.ValueData ):: TVarChar        AS PartionCellName_2
 
            , Object_PartionCell_3.Id            AS PartionCellId_3
            , Object_PartionCell_3.ObjectCode    AS PartionCellCode_3
-           , Object_PartionCell_3.ValueData     AS PartionCellName_3
+           , (Object_PartionCell_3.ObjectCode :: TVarChar || '-'  || Object_PartionCell_3.ValueData ):: TVarChar        AS PartionCellName_3
 
            , Object_PartionCell_4.Id            AS PartionCellId_4
            , Object_PartionCell_4.ObjectCode    AS PartionCellCode_4
-           , Object_PartionCell_4.ValueData     AS PartionCellName_4
+           , (Object_PartionCell_4.ObjectCode :: TVarChar || '-'  || Object_PartionCell_4.ValueData ):: TVarChar     AS PartionCellName_4
 
            , Object_PartionCell_5.Id            AS PartionCellId_5
            , Object_PartionCell_5.ObjectCode    AS PartionCellCode_5
-           , Object_PartionCell_5.ValueData     AS PartionCellName_5
+           , (Object_PartionCell_5.ObjectCode :: TVarChar || '-'  || Object_PartionCell_5.ValueData):: TVarChar        AS PartionCellName_5
 
 
            , MovementItem.isErased                 AS isErased
