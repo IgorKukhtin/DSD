@@ -45,7 +45,7 @@ BEGIN
                                   INNER JOIN ObjectBoolean AS ObjectBoolean_Order
                                                            ON ObjectBoolean_Order.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                                           AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
-                                                          AND ObjectBoolean_Order.ValueData = TRUE
+                                                        --AND ObjectBoolean_Order.ValueData = TRUE
                              WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                             )
        -- Результат
