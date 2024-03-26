@@ -119,7 +119,6 @@ type
     EAN: TcxGridDBColumn;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
     actInsertRecord_goods: TInsertRecord;
     bbInsertRecord_goods: TdxBarButton;
     edPartNumber: TcxTextEdit;
@@ -195,6 +194,30 @@ type
     GuidesPartionCell: TdsdGuides;
     spGetPartionCell_Name: TdsdStoredProc;
     actGetPartionCell_Name: TdsdExecStoredProc;
+    cxTabSheetDetail: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    Detail_Ord: TcxGridDBColumn;
+    Detail_GoodsGroupNameFull: TcxGridDBColumn;
+    Detail_EAN: TcxGridDBColumn;
+    Detail_Article: TcxGridDBColumn;
+    Detail_Article_all: TcxGridDBColumn;
+    Detail_GoodsCode: TcxGridDBColumn;
+    Detail_GoodsName: TcxGridDBColumn;
+    Detail_MeasureName: TcxGridDBColumn;
+    Detail_PartNumber: TcxGridDBColumn;
+    Detail_PartionCellCode: TcxGridDBColumn;
+    Detail_PartionCellName: TcxGridDBColumn;
+    Detail_Amount: TcxGridDBColumn;
+    Detail_OperDate_protocol: TcxGridDBColumn;
+    Detail_UserName_protocol: TcxGridDBColumn;
+    Detail_isErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    spSelectDetail: TdsdStoredProc;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    Color_Detail: TcxGridDBColumn;
   private
   public
   end;
