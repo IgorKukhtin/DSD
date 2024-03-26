@@ -64,6 +64,11 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
+    BoxCount: TcxGridDBColumn;
   private
     { Private declarations }
   public
