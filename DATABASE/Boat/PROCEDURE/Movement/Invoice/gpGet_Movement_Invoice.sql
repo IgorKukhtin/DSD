@@ -216,7 +216,7 @@ BEGIN
 
              , COALESCE (MovementFloat_VATPercent.ValueData, 0)    ::TFloat      AS VATPercent
              , CASE WHEN MovementFloat_Amount.ValueData > 0
-                         THEN CASE WHEN Object_InvoiceKind.Id = zc_Enum_InvoiceKind_Pay()
+                         THEN CASE WHEN Object_InvoiceKind.Id = zc_Enum_InvoiceKind_Pay() AND vbMovementId_OrderClient > 0
                                    -- Замена - кривая схема
                                    THEN (SELECT tmpProduct.BasisWVAT_summ_transport FROM tmpProduct)
                                    ELSE MovementFloat_Amount.ValueData      

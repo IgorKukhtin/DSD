@@ -43,7 +43,7 @@ BEGIN
 
      -- проверка - свойство должно быть установлено
      IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
-        AND inAmount > 0
+        AND inAmount >= 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
      END IF;
@@ -87,11 +87,11 @@ BEGIN
 
 
     -- inReceiptNumber формируется только для Amount > 0
-    IF (COALESCE (inAmount, 0) <= 0
+    IF (COALESCE (inAmount, 0) < 0
     AND inInvoiceKindId NOT IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return())
        )
     OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
-    OR (COALESCE (inParentId, 0) = 0 AND COALESCE (inAmount, 0) <= 0)
+    OR (COALESCE (inParentId, 0) = 0 AND COALESCE (inAmount, 0) < 0)
 
     THEN
         inReceiptNumber := NULL;
