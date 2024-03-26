@@ -26,7 +26,16 @@ BEGIN
     -- расчет, временно захардкодил - To = Цех Упаковки
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
     -- расчет, временно захардкодил - From = ЦЕХ колбаса+дел-сы + ЦЕХ Тушенка
-    vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND (ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp) OR ObjectId = 2790412) ); -- ЦЕХ колбаса+дел-сы + ЦЕХ Тушенка
+    vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject
+                        WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId
+                          AND (-- ЦЕХ колбаса+дел-сы
+                               ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)
+                               -- ЦЕХ Тушенка
+                            OR ObjectId = 2790412
+                               -- ЦЕХ колбасный (Ирна)
+                            OR ObjectId = 8020711
+                              )
+                       );
     -- расчет, временно захардкодил - To = ЦЕХ Тушенка
     vbIsTushenka:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 2790412); -- ЦЕХ Тушенка
 
@@ -52,6 +61,7 @@ BEGIN
                                                   SELECT UnitId, zc_MI_Child() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
                                                   WHERE (lfSelect.UnitId <> inToId
+                                                      OR inToId           = 8020711 -- ЦЕХ колбасный (Ирна)
                                                       OR (inToId          = 2790412 -- ЦЕХ Тушенка
                                                       AND lfSelect.UnitId = inToId
                                                       AND vbIsBasis       = FALSE

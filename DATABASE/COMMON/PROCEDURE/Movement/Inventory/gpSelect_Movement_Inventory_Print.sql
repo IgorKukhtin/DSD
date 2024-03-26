@@ -119,7 +119,7 @@ BEGIN
      OPEN Cursor2 FOR
      WITH tmpWeighing AS (SELECT MovementItem.ObjectId                                     AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
-                               , COALESCE (MILinkObject_Asset.ObjectId, 0)                 AS PartionCellId
+                               , COALESCE (MIFloat_PartionCell.ValueData :: Integer, MILinkObject_Asset.ObjectId, 0) AS PartionCellId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -144,9 +144,12 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                  ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                            ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                 , COALESCE (MILinkObject_Asset.ObjectId, 0)
+                                 , COALESCE (MIFloat_PartionCell.ValueData :: Integer, MILinkObject_Asset.ObjectId, 0)
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )  
@@ -172,7 +175,7 @@ BEGIN
 
               , tmpMI AS (SELECT MovementItem.ObjectId                                     AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)             AS GoodsKindId
-                               , COALESCE (MILinkObject_PartionCell_1.ObjectId, 0)         AS PartionCellId
+                               , COALESCE (MIFloat_PartionCell.ValueData, 0)    :: Integer AS PartionCellId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (MovementItem.Amount)                                 AS Amount
@@ -187,9 +190,12 @@ BEGIN
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
+                                /*LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_1
                                                                  ON MILinkObject_PartionCell_1.MovementItemId = MovementItem.Id
-                                                                AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()
+                                                                AND MILinkObject_PartionCell_1.DescId         = zc_MILinkObject_PartionCell_1()*/
+                                LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+                                                            ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
 
                                 -- привязываем цены по прайсу 2 раза по виду товара и без
                                 LEFT JOIN tmpPricePR AS tmpPricePR_Kind 
@@ -207,7 +213,7 @@ BEGIN
                             AND MovementItem.Amount <> 0
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                 , COALESCE (MILinkObject_PartionCell_1.ObjectId, 0)
+                                 , COALESCE (MIFloat_PartionCell.ValueData, 0)
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )

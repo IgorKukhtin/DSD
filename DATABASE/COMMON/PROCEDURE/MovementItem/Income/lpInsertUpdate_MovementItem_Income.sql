@@ -36,7 +36,7 @@ BEGIN
                 WHERE MLO.MovementId = inMovementId
                   AND MLO.DescId = zc_MovementLinkObject_To()
                   AND MLO.ObjectId IN (SELECT tt.UnitId FROM Object_Unit_check_isOrder_View AS tt)
-                )                               lpInsertUpdate_MovementItem_Income
+                )
      THEN   
          --если товара и вида товара  нет в zc_ObjectBoolean_GoodsByGoodsKind_Order  - тогда ошиибка
          IF NOT EXISTS (SELECT 1
