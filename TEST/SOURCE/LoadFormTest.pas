@@ -1137,6 +1137,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsForm');
+
   {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_DatePartionDialogForm'));

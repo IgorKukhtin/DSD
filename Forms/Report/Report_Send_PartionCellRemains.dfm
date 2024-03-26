@@ -1,5 +1,5 @@
-inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
-  Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsForm
+  Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 382
   ClientWidth = 1071
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -634,39 +634,45 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     ExplicitWidth = 1071
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
-      Left = 100
+      Left = 927
       Top = 3
       EditValue = 43101d
       Properties.SaveTime = False
-      ExplicitLeft = 100
+      Visible = False
+      ExplicitLeft = 927
       ExplicitTop = 3
     end
     inherited deEnd: TcxDateEdit
+      Left = 1038
       Top = 3
       EditValue = 43101d
       Properties.SaveTime = False
+      Visible = False
+      ExplicitLeft = 1038
       ExplicitTop = 3
     end
     inherited cxLabel1: TcxLabel
-      Left = 9
+      Left = 836
       Top = 4
-      ExplicitLeft = 9
+      Visible = False
+      ExplicitLeft = 836
       ExplicitTop = 4
     end
     inherited cxLabel2: TcxLabel
-      Left = 199
+      Left = 927
       Top = 4
-      ExplicitLeft = 199
+      Visible = False
+      ExplicitLeft = 927
       ExplicitTop = 4
     end
     object cxLabel8: TcxLabel
-      Left = 409
-      Top = 4
+      Left = 17
+      Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
     end
     object edUnit: TcxButtonEdit
-      Left = 538
-      Top = 3
+      Left = 146
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
@@ -677,16 +683,16 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Width = 210
     end
     object cbMovement: TcxCheckBox
-      Left = 765
-      Top = 3
+      Left = 373
+      Top = 4
       Action = actRefreshPartion
       Properties.ReadOnly = False
       TabOrder = 6
       Width = 108
     end
     object cbShowAll: TcxCheckBox
-      Left = 881
-      Top = 3
+      Left = 487
+      Top = 4
       Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Caption = #1054#1089#1090#1072#1090#1082#1080
       Properties.ReadOnly = True
@@ -813,8 +819,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_PartionCellDialogForm'
-      FormNameParam.Value = 'TReport_Send_PartionCellDialogForm'
+      FormName = 'TReport_Send_PartionCellRemainsDialogForm'
+      FormNameParam.Value = 'TReport_Send_PartionCellRemainsDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <

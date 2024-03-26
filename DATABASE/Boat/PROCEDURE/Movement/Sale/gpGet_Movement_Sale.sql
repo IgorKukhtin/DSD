@@ -135,11 +135,13 @@ BEGIN
                           , MovementFloat_SummTax.ValueData          AS SummTax
 
                           -- с учетом % скидки №1 - без НДС
-                          , MovementFloat_TotalSummMVAT.ValueData - (zfCalc_SummDiscountTax (MovementFloat_TotalSummMVAT.ValueData , MovementFloat_DiscountTax.ValueData)) AS SummDiscount1
+                          , (zfCalc_SummDiscount (MovementFloat_TotalSummMVAT.ValueData , MovementFloat_DiscountTax.ValueData)) AS SummDiscount1
                             -- с учетом % скидки №2 - без НДС
-                          , MovementFloat_TotalSummMVAT.ValueData - (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (MovementFloat_TotalSummMVAT.ValueData, MovementFloat_DiscountTax.ValueData), MovementFloat_DiscountNextTax.ValueData)) AS SummDiscount2
+                          , (zfCalc_SummDiscount ( (MovementFloat_TotalSummMVAT.ValueData -(zfCalc_SummDiscount (MovementFloat_TotalSummMVAT.ValueData , MovementFloat_DiscountTax.ValueData))), MovementFloat_DiscountNextTax.ValueData) ) AS SummDiscount2
                            
-                          
+                          , MovementFloat_TotalSumm.ValueData   
+                           - COALESCE ( zfCalc_SummDiscount (MovementFloat_TotalSummMVAT.ValueData , MovementFloat_DiscountTax.ValueData), 0)
+                           - COALESCE (zfCalc_SummDiscount ( (MovementFloat_TotalSummMVAT.ValueData -(zfCalc_SummDiscount (MovementFloat_TotalSummMVAT.ValueData , MovementFloat_DiscountTax.ValueData) )), MovementFloat_DiscountNextTax.ValueData),0 )  AS Basis_summ
                      FROM Movement AS Movement_Sale      
                           LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                                   ON MovementFloat_TotalSummMVAT.MovementId = Movement_Sale.Id
@@ -199,13 +201,13 @@ BEGIN
           , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
           
           -- данные из Заказа клиента - лодки
-          , tmpParent_Params.VATPercent      ::TFLoat AS VATPercent_order
-          , tmpParent_Params.DiscountTax     ::TFLoat
-          , tmpParent_Params.DiscountNextTax ::TFLoat
+          , COALESCE (MovementFloat_VATPercent.ValueData, tmpParent_Params.VATPercent)           ::TFLoat AS VATPercent_order
+          , COALESCE (Movement_Sale.DiscountTax, tmpParent_Params.DiscountTax)         ::TFLoat AS DiscountTax
+          , COALESCE (Movement_Sale.DiscountNextTax, tmpParent_Params.DiscountNextTax) ::TFLoat AS DiscountNextTax
             -- Cумма откорректированной скидки, без НДС
           , COALESCE (Movement_Sale.SummTax, tmpParent_Params.SummTax)         :: TFLoat AS SummTax
             -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
-          , COALESCE ( (COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0))
+          , COALESCE ( (COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0))
                      , tmpParent_Params.Basis_summ - COALESCE (tmpParent_Params.SummTax,0))  :: TFloat AS SummReal
           , tmpParent_Params.SummReal_real   :: TFLoat
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
@@ -222,25 +224,25 @@ BEGIN
                       ,tmpParent_Params.SummDiscount_total)                            ::TFloat AS SummDiscount_total 
           
             -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-          , COALESCE (Movement_Sale.TotalSumm, tmpParent_Params.Basis_summ)             ::TFLoat AS Basis_summ
+          , COALESCE (Movement_Sale.Basis_summ, tmpParent_Params.Basis_summ)             ::TFLoat AS Basis_summ
            -- Сумма транспорт с сайта
           , COALESCE (Movement_Sale.TransportSumm_load, tmpParent_Params.TransportSumm_load) ::TFLoat AS TransportSumm_load
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-          , COALESCE ((COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0))
+          , COALESCE ((COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0))
                        , tmpParent_Params.Basis_summ_transport)     ::TFLoat AS Basis_summ_transport
             -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-          , COALESCE ( zfCalc_SummWVAT ((COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0)), COALESCE (MovementFloat_VATPercent.ValueData, 0)) 
+          , COALESCE ( zfCalc_SummWVAT ((COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0)), COALESCE (MovementFloat_VATPercent.ValueData, 0)) 
                      , tmpParent_Params.BasisWVAT_summ_transport) ::TFLoat AS BasisWVAT_summ_transport
 
          --  при открытии сохраняем текущие значения в расчетные
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_Sale.Id, COALESCE (Movement_Sale.SummTax, tmpParent_Params.SummTax) ) ::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_Sale.Id, COALESCE ( (COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0))
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_Sale.Id, COALESCE ( (COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0))
                                                                                                             , tmpParent_Params.Basis_summ - COALESCE (tmpParent_Params.SummTax,0)))::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_Sale.Id, COALESCE (Movement_Sale.TransportSumm_load, tmpParent_Params.TransportSumm_load))::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_Sale.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0))::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_Sale.Id, COALESCE ((COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0))
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_Sale.Id, COALESCE ((COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0))
                                                                                                                          , tmpParent_Params.Basis_summ_transport))    ::integer
-         , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), Movement_Sale.Id, COALESCE ( zfCalc_SummWVAT ((COALESCE (Movement_Sale.TotalSumm,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0)), COALESCE (MovementFloat_VATPercent.ValueData, 0)) 
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), Movement_Sale.Id, COALESCE ( zfCalc_SummWVAT ((COALESCE (Movement_Sale.Basis_summ,0) - COALESCE (Movement_Sale.SummTax,0) + COALESCE (Movement_Sale.TransportSumm_load, 0)), COALESCE (MovementFloat_VATPercent.ValueData, 0)) 
                                                                                                                                 , tmpParent_Params.BasisWVAT_summ_transport))::integer
 
         FROM tmpMovement AS Movement_Sale 
