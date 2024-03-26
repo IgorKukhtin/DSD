@@ -19,6 +19,8 @@ $BODY$
    DECLARE vbScript   TEXT;
    DECLARE vb1        TEXT;
    DECLARE vb2        TEXT;
+
+   DECLARE vbVerId_olap Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
@@ -105,32 +107,72 @@ BEGIN
          END IF;
 
      ELSE
-         -- Результат
-         INSERT INTO Container_data (StartDate, VerId
-                                   , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
-                                   , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
-                                    )
-            -- Остаток
-            SELECT inStartDate, vbVerId
-                 , Container.Id
-                 , Container.DescId, Container.ObjectId
-                 , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
-                 , Container.Amount AS Amount_data_real
-                 , Container.ParentId
-                 , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+         IF inStartDate < '01.01.2023' AND EXISTS (SELECT 1 FROM Container_data WHERE StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR')
+         THEN
+             -- 
+             vbVerId_olap:= (SELECT MIN (Container_data.VerId) FROM Container_data WHERE Container_data.StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR' AND Container_data.VerId > 0);
 
-            FROM Container
-                 LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                AND MovementItemContainer.OperDate    >= inStartDate
-            GROUP BY Container.Id
-                   , Container.DescId, Container.ObjectId
-                   , Container.Amount
-                   , Container.ParentId
-                   , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
-            HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
-              --!!!!OR Container.Amount <> 0
-              -- OR inIsAll_container = TRUE
-           ;
+             -- Результат
+             INSERT INTO Container_data (StartDate, VerId
+                                       , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                       , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                        )
+                -- Остаток
+                SELECT inStartDate, vbVerId
+                     , Container.Id
+                     , Container.DescId, Container.ObjectId
+                     , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
+                     , Container.Amount AS Amount_data_real
+                     , Container.ParentId
+                     , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+    
+                FROM Container_data AS Container
+                     LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                    AND MovementItemContainer.OperDate    >= inStartDate
+                                                    AND MovementItemContainer.OperDate    < DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR'
+                WHERE -- подключили !!!OLAP!!!
+                      Container.StartDate = DATE_TRUNC ('YEAR', inStartDate) + INTERVAL '1 YEAR'
+                  AND Container.VerId     = vbVerId_olap
+
+                GROUP BY Container.Id
+                       , Container.DescId, Container.ObjectId
+                       , Container.Amount
+                       , Container.ParentId
+                       , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+
+                HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
+               ;
+
+         ELSE
+             -- Результат
+             INSERT INTO Container_data (StartDate, VerId
+                                       , Id, DescId, ObjectId, Amount, Amount_data_real, ParentId
+                                       , KeyValue, MasterKeyValue, ChildKeyValue, WhereObjectId
+                                        )
+                -- Остаток
+                SELECT inStartDate, vbVerId
+                     , Container.Id
+                     , Container.DescId, Container.ObjectId
+                     , Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) AS Amount
+                     , Container.Amount AS Amount_data_real
+                     , Container.ParentId
+                     , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+    
+                FROM Container
+                     LEFT JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
+                                                    AND MovementItemContainer.OperDate    >= inStartDate
+                GROUP BY Container.Id
+                       , Container.DescId, Container.ObjectId
+                       , Container.Amount
+                       , Container.ParentId
+                       , Container.KeyValue, Container.MasterKeyValue, Container.ChildKeyValue, Container.WhereObjectId
+                HAVING Container.Amount - COALESCE (SUM (COALESCE (MovementItemContainer.Amount, 0)), 0) <> 0
+                  --!!!!OR Container.Amount <> 0
+                  -- OR inIsAll_container = TRUE
+               ;
+
+         END IF;
+
 
          IF inIsAll_container = TRUE
          THEN
