@@ -42,6 +42,7 @@ type
     procedure LoadKindFormTest;
     procedure LoadLanguageFormTest;
     procedure LoadLossFormTest;
+    procedure LoadMailSendFormTest;
     procedure LoadMaterialOptionsFormTest;
     procedure LoadMemberFormTest;
     procedure LoadMeasureFormTest;
@@ -231,6 +232,15 @@ begin
 //  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalChoiceForm'));
 //  TdsdFormStorageFactory.GetStorage.Load('TSendJournalChoiceForm');
 end;
+
+procedure TLoadFormTest.LoadMailSendFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMailSendEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMailSendEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMailSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMailSendForm');
+end;
+
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
@@ -559,6 +569,9 @@ end;
 
   procedure TLoadFormTest.LoadKindFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMailKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMailKindForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxKindEditForm'));

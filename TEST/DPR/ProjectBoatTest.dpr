@@ -392,7 +392,10 @@ uses
   ReceiptServiceModelEdit in '..\..\FormsBoat\Guides\ReceiptServiceModelEdit.pas' {ReceiptServiceModelEditForm: TParentForm},
   ReceiptServiceMaterialEdit in '..\..\FormsBoat\Guides\ReceiptServiceMaterialEdit.pas' {ReceiptServiceMaterialEditForm: TParentForm},
   ReceiptServiceGroupEdit in '..\..\FormsBoat\Guides\ReceiptServiceGroupEdit.pas' {ReceiptServiceGroupEditForm: TParentForm},
-  ReceiptServiceMaterial in '..\..\FormsBoat\Guides\ReceiptServiceMaterial.pas' {ReceiptServiceMaterialForm: TParentForm};
+  ReceiptServiceMaterial in '..\..\FormsBoat\Guides\ReceiptServiceMaterial.pas' {ReceiptServiceMaterialForm: TParentForm},
+  MailKind in '..\..\FormsBoat\Kind\MailKind.pas' {MailKindForm: TParentForm},
+  MailSendEdit in '..\..\FormsBoat\Guides\MailSendEdit.pas' {MailSendEditForm: TParentForm},
+  MailSend in '..\..\FormsBoat\Guides\MailSend.pas' {MailSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

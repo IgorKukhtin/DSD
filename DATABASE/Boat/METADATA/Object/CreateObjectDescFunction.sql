@@ -396,9 +396,21 @@ CREATE OR REPLACE FUNCTION zc_Object_ReceiptServiceMaterial() RETURNS Integer AS
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ReceiptServiceMaterial', 'Работы/Услуги (Сырье)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptServiceMaterial');
 
+CREATE OR REPLACE FUNCTION zc_Object_MailKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MailKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MailKind', 'Тип Отправки по почте' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MailKind');
+
+CREATE OR REPLACE FUNCTION zc_Object_MailSend() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_MailSend'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_MailSend', 'Отправка по почте' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_MailSend');
+
+
+        
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.03.24         * zc_Object_MailKind 
+                    zc_Object_MailSend
  19.03.24         * zc_Object_ReceiptServiceModel
                     zc_Object_ReceiptServiceMaterial
                     zc_Object_ReceiptServiceGroup

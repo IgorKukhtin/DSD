@@ -331,6 +331,11 @@ type
     miReceiptServiceGroup: TMenuItem;
     miReceiptServiceMaterial: TMenuItem;
     miReceiptServiceModel: TMenuItem;
+    actMailKind: TdsdOpenForm;
+    actMailSend: TdsdOpenForm;
+    miMailSend: TMenuItem;
+    miMailKind: TMenuItem;
+    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private
