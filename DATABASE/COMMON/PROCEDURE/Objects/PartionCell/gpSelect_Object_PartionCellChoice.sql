@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , PartionGoodsDate TDateTime
+             , PartionGoodsDate TDateTime 
+             , BoxCount TFloat
               )
 AS
 $BODY$
@@ -42,23 +43,30 @@ BEGIN
      , tmpMILO_PartionCell_all_2 AS (SELECT MovementItemLinkObject.*
                                      FROM tmpPartionCell
                                           INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.ObjectId = tmpPartionCell.Id
+                                                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
+                                                                                                               , zc_MILinkObject_PartionCell_2()
+                                                                                                               , zc_MILinkObject_PartionCell_3()
+                                                                                                               , zc_MILinkObject_PartionCell_4()
+                                                                                                               , zc_MILinkObject_PartionCell_5()
+                                                                                                                )
                                      WHERE inIsShowFree = TRUE
                                     )
+
+     , tmpMI AS (SELECT MovementItem.*
+                 FROM MovementItem
+                 WHERE MovementItem.Id IN (SELECT DISTINCT tmpMILO_PartionCell_all_2.MovementItemId FROM tmpMILO_PartionCell_all_2)
+                   AND MovementItem.isErased = FALSE 
+                 )
+
       -- занятые ячейки
      , tmpMILO_PartionCell AS (SELECT tmpMILO_PartionCell_all.ObjectId             AS PartionCellId
                                     , MIN (tmpMILO_PartionCell_all.MovementItemId) AS MovementItemId
                                FROM tmpMILO_PartionCell_all_2 AS tmpMILO_PartionCell_all
-                                    JOIN MovementItem ON MovementItem.Id       = tmpMILO_PartionCell_all.MovementItemId
-                                                     AND MovementItem.isErased = FALSE
+                                    JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
+
                                     JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.DescId   = zc_Enum_Status_Complete()
-                               WHERE tmpMILO_PartionCell_all.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                                      , zc_MILinkObject_PartionCell_2()
-                                                                      , zc_MILinkObject_PartionCell_3()
-                                                                      , zc_MILinkObject_PartionCell_4()
-                                                                      , zc_MILinkObject_PartionCell_5()
-                                                                       )
+                                                 AND Movement.DescId   = zc_Movement_Send()
                                GROUP BY tmpMILO_PartionCell_all.ObjectId
                               )
 
@@ -80,7 +88,9 @@ BEGIN
             , Object_GoodsKind.Id                  AS GoodsKindId
             , Object_GoodsKind.ValueData           AS GoodsKindName
 
-            , MIDate_PartionGoods.ValueData AS PartionGoodsDate
+            , MIDate_PartionGoods.ValueData AS PartionGoodsDate  
+            
+            , ObjectFloat_BoxCount.ValueData     ::TFloat  AS BoxCount
 
        FROM tmpPartionCell AS Object
            LEFT JOIN tmpMILO_PartionCell_all_1 ON tmpMILO_PartionCell_all_1.PartionCellId = Object.Id
@@ -96,6 +106,10 @@ BEGIN
 
            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = MovementItem.ObjectId
            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
+                                 ON ObjectFloat_BoxCount.ObjectId = Object.Id
+                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()
       ;
 
 
