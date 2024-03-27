@@ -382,20 +382,25 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 
   CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptServiceGroup_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceGroup_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_ReceiptServiceGroup_Comment', zc_Object_ReceiptServiceGroup(), 'Категория фото' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceGroup_Comment');
+  SELECT 'zc_ObjectString_ReceiptServiceGroup_Comment', zc_Object_ReceiptServiceGroup(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceGroup_Comment');
 
   CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptServiceModel_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceModel_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_ReceiptServiceModel_Comment', zc_Object_ReceiptServiceModel(), 'Категория фото' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceModel_Comment');
+  SELECT 'zc_ObjectString_ReceiptServiceModel_Comment', zc_Object_ReceiptServiceModel(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceModel_Comment');
 
   CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptServiceMaterial_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceMaterial_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_ReceiptServiceMaterial_Comment', zc_Object_ReceiptServiceMaterial(), 'Категория фото' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceMaterial_Comment');
+  SELECT 'zc_ObjectString_ReceiptServiceMaterial_Comment', zc_Object_ReceiptServiceMaterial(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptServiceMaterial_Comment');
+
+  CREATE OR REPLACE FUNCTION zc_ObjectString_MailSend_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MailSend_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_MailSend_Comment', zc_Object_MailSend(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MailSend_Comment');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.03.24         * zc_ObjectString_MailSend_Comment
  20.03.24         * zc_ObjectString_ReceiptService_NumReplace
  19.03.24         * zc_ObjectString_ReceiptServiceGroup_Comment
  26.12.24         * zc_ObjectString_EmailKind_CheckImport

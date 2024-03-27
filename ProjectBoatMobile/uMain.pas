@@ -117,7 +117,6 @@ type
     lUser: TLabel;
     tiScanBarCode: TTabItem;
     imgCameraScanBarCode: TImage;
-    tiStopCamera: TTimer;
     sbIlluminationMode: TSpeedButton;
     Image9: TImage;
     ilPartners: TImageList;
@@ -283,6 +282,12 @@ type
     bIIEOpenDictPartionCell: TEditButton;
     Image25: TImage;
     lMain: TLayout;
+    lUseCamera: TLayout;
+    Label34: TLabel;
+    rbBarcodeScaner: TRadioButton;
+    rbCameraScaner: TRadioButton;
+    bIIEOpenDictGoods: TEditButton;
+    Image26: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -301,6 +306,7 @@ type
     procedure ShowInventoryJournal;
     procedure ShowInventory;
     procedure ShowInventoryItemEdit;
+    procedure ShowEditInventoryItemEdit;
     procedure ShowInventoryScan;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
@@ -358,6 +364,8 @@ type
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure FormVirtualKeyboardShown(Sender: TObject;
       KeyboardVisible: Boolean; const Bounds: TRect);
+    procedure bIIEOpenDictGoodsClick(Sender: TObject);
+    procedure rrInventScanSNClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -372,7 +380,11 @@ type
     FPasswordLabelClick: Integer;
     FINIFile: string;
     FPermissionState: boolean;
+    // Ксть сканер Zebra
     FisZebraScaner: boolean;
+    // Использовать в любом случае камеру устройства
+    FisCameraScaner: boolean;
+    // Обработка штрих кода камерой
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
     FDateDownloadDict: TDateTime;
@@ -422,6 +434,7 @@ uses System.IOUtils, System.Math, FMX.SearchBox, Authentication, Storage,
 const
   WebServer = 'http://217.92.58.239:11011/projectBoat_utf8/index.php';
   WebServerTest = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+  MainWidth = 336;
 
 function GetSearshBox(AListView: TListView): TSearchBox;
 var
@@ -453,7 +466,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
-  {$IFDEF ANDROID}
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
   var aFMXApplicationEventService: IFMXApplicationEventService;
@@ -476,6 +489,9 @@ begin
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
+  bInventScan.StyledSettings := [TStyledSetting.Family];
+  bInventScanSN.StyledSettings := [TStyledSetting.Family];
+  bInventScanSearch.StyledSettings := [TStyledSetting.Family];
 
   FFormsStack := TStack<TFormStackItem>.Create;
 
@@ -521,6 +537,7 @@ begin
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
     FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
+    FisCameraScaner := SettingsFile.ReadBool('DataWedge', 'isCameraScaner', False);
     FDateDownloadDict := SettingsFile.ReadDateTime('Params', 'DateDownloadDict', IncDay(Now, - 2));
   finally
     FreeAndNil(SettingsFile);
@@ -532,27 +549,21 @@ begin
 
   FPermissionState := True;
   // установка вертикального положения экрана телефона
-  {$IFDEF ANDROID}
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, IInterface(ScreenService)) then
   begin
     OrientSet := [TScreenOrientation.Portrait];
     ScreenService.SetSupportedScreenOrientations(OrientSet);
   end;
+  // Изменим маштаб для смартфонов
+  if MainWidth < Screen.Width then
+  begin
+    lMain.Scale.x := Screen.Width / MainWidth;
+    lMain.Scale.y := lMain.Scale.x;
+  end;
   {$ENDIF}
 
-  if not FisZebraScaner then
-  begin
-    //Распознавание штрих кода
-    FObr := TFObr.Create(Nil);
-    FObr.OnBarcodeDetected := OnObrBarcodeDetected;
-
-    //Настройка камерЫ
-    FCameraScanBarCode := TCameraComponent.Create(Nil);
-    FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
-    FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-    FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
-    FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-  end else
+  if FisZebraScaner and not FisCameraScaner then
   begin
     FDataWedgeBarCode.SetIllumination;
     if FDataWedgeBarCode.isIllumination then
@@ -564,8 +575,8 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  FCameraScanBarCode.Free;
-  FObr.Free;
+  if Assigned(FObr) then FreeAndNil(FObr);
+  if Assigned(FCameraScanBarCode) then FreeAndNil(FCameraScanBarCode);
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
 end;
@@ -592,6 +603,8 @@ begin
     FDictUpdateDataSet.Edit;
     if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Id')) then
       FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Id').AsVariant := DM.cdsDictListId.AsVariant;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Code')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Code').AsVariant := DM.cdsDictListCode.AsVariant;
     if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Name')) then
       FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Name').AsVariant := DM.cdsDictListName.AsVariant;
     FDictUpdateDataSet.Post;
@@ -701,7 +714,7 @@ function TfrmMain.HandleAppEvent(AAppEvent: TApplicationEvent;
   AContext: TObject): Boolean;
 begin
   case AAppEvent of
-    TApplicationEvent.WillBecomeForeground : if FisZebraScaner then FisBecomeForeground := True;
+    TApplicationEvent.WillBecomeForeground : if FisZebraScaner and not FisCameraScaner then FisBecomeForeground := True;
   end;
   Result := True;
 end;
@@ -772,11 +785,16 @@ begin
     raise Exception.Create('Forms stack underflow');
 end;
 
+procedure TfrmMain.rrInventScanSNClick(Sender: TObject);
+begin
+
+end;
+
 // обработка изменения закладки (формы)
 procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
   const ATime: TMediaTime);
 begin
-  if FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
+  if Assigned(FObr) and FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
   begin
     FCameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
     FCameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
@@ -794,8 +812,9 @@ var
   Barcode: TObrSymbol;
   pOnScanResult: TDataWedgeBarCodeResult;
   pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
+  var cDATA_STRING: String;
 begin
-  if (FObr.BarcodeCount > 0) and FisCameraScanBarCode and (tcMain.ActiveTab = tiScanBarCode) then
+  if Assigned(FObr) and FisCameraScanBarCode and (FObr.BarcodeCount > 0) and (tcMain.ActiveTab = tiScanBarCode) then
   begin
     FisCameraScanBarCode := False;
     Barcode := FObr.Barcode[0];
@@ -805,21 +824,26 @@ begin
 
     sbBackClick(Sender);
 
-    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, '',
-                          'Camera', Barcode.SymbologyName, Barcode.DataUtf8);
+    cDATA_STRING := Barcode.DataUtf8;
 
-    if Assigned(pOnScanResult) then pOnScanResult(Self, Barcode.DataUtf8);
+    if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then cDATA_STRING := Copy(cDATA_STRING, 1, Length(cDATA_STRING) - 1);
 
-    tiStopCamera.Enabled := True;
+    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, Barcode.SymbologyName,
+                          'Camera', Barcode.SymbologyName, cDATA_STRING);
+
+    if Assigned(pOnScanResult) then pOnScanResult(Self, cDATA_STRING);
   end;
 end;
 
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
+
   if tcMain.ActiveTab <> tiScanBarCode then
   begin
     FDataWedgeBarCode.OnScanResultDetails := Nil;
     FDataWedgeBarCode.OnScanResult := Nil;
+    if Assigned(FObr) then FObr.OnBarcodeDetected := Nil;
+    if Assigned(FCameraScanBarCode) then FCameraScanBarCode.OnSampleBufferReady := Nil;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
@@ -847,7 +871,7 @@ begin
     if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion)  then
       sbScan.Visible := true
     else sbScan.Visible := false;
-    sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner;
+    sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner and not FisCameraScaner;
 
     if tcMain.ActiveTab = tiMain then
       lCaption.Text := 'A g i l i s'
@@ -863,25 +887,36 @@ begin
       lCaption.Text := 'Комплектующие';
       bGoodsChoice.Visible := False;
       FDataWedgeBarCode.OnScanResult := OnScanResultGoods;
+      GetSearshBox(lwGoods).SetFocus;
+      GetSearshBox(lwGoods).SelectAll;
     end
     else
     if tcMain.ActiveTab = tiDictList then
     begin
       lCaption.Text := 'Выбор из справочника'#13#10 + DictTypeName[Ord(DM.DictType)];
       bDictChoice.Visible := Assigned(FDictUpdateDataSet);
+      GetSearshBox(lwDictList).SetFocus;
+      GetSearshBox(lwDictList).SelectAll;
     end
     else
     if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
-      tiStopCamera.Enabled := False;
       imgCameraScanBarCode.Bitmap.Assign(Nil);
-      if Assigned(FCameraScanBarCode) then
-      begin
-        FObr.Active := True;
-        FisCameraScanBarCode := True;
-        FCameraScanBarCode.Active := True;
-      end;
+
+      //Распознавание штрих кода
+      if not Assigned(FObr) then FObr := TFObr.Create(Self);
+      FObr.OnBarcodeDetected := OnObrBarcodeDetected;
+
+      //Настройка камерЫ
+      if not Assigned(FCameraScanBarCode) then FCameraScanBarCode := TCameraComponent.Create(Self);
+      FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+      FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
+      FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+      FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
+      FObr.Active := True;
+      FisCameraScanBarCode := True;
+      FCameraScanBarCode.Active := True;
     end else
     if tcMain.ActiveTab = tiInventoryJournal then
     begin
@@ -895,8 +930,25 @@ begin
     begin
       lCaption.Text := 'Сканирование/выбор комплектующих';
       DM.OpenInventoryGoods;
+      if FisInventScanSN then
+      begin
+        bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
+        bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
+        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+        bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+        bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+      end else
+      begin
+        bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
+        bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
+        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+        bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+        bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+      end;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
-      if FisNextInventScan and FisInventScanOk then
+      if FisNextInventScan and FisInventScanOk and not FisZebraScaner then
       begin
         FisInventScanOk := False;
         FGoodsId := 0;
@@ -908,6 +960,11 @@ begin
     begin
       lCaption.Text := 'Добавить в Инвентаризацию';
       sbBack.Visible := false;
+      if FisInventScanSN then
+      begin
+        edIIEPartNumber.SetFocus;
+        edIIEPartNumber.SelectAll;
+      end;
     end
     else
     if tcMain.ActiveTab = tiProductionUnion then
@@ -978,6 +1035,13 @@ begin
   else
     lServerVersion.Visible := False;
 
+  if FisZebraScaner then
+  begin
+    lUseCamera.Visible := True;
+    rbBarcodeScaner.IsChecked:= not FisCameraScaner;
+    rbCameraScaner.IsChecked:= FisCameraScaner;
+  end else lUseCamera.Visible := False;
+
   SwitchToForm(tiInformation, nil);
 end;
 
@@ -1006,10 +1070,19 @@ procedure TfrmMain.ShowDictList(ADictType : TDictType);
 begin
   DM.DictType := ADictType;
   DM.FilterDict := '';
-  if GetSearshBox(lwDictList).Text <> '' then
-    GetSearshBox(lwDictList).Text := ''
-  else DM.LoadDictList;
-  if tcMain.ActiveTab <> tiDictList then SwitchToForm(tiDictList, nil);
+  if ADictType = dtGoods then
+  begin
+    if GetSearshBox(lwGoods).Text <> '' then
+      GetSearshBox(lwGoods).Text := '';
+    DM.LoadGoodsList;
+    if tcMain.ActiveTab <> tiGoods then SwitchToForm(tiGoods, nil);
+  end else
+  begin
+    if GetSearshBox(lwDictList).Text <> '' then
+      GetSearshBox(lwDictList).Text := '';
+    DM.LoadDictList;
+    if tcMain.ActiveTab <> tiDictList then SwitchToForm(tiDictList, nil);
+  end;
 end;
 
 // начитка информации журнала инвентаризаций
@@ -1049,6 +1122,34 @@ begin
 
      DM.cdsInventoryItemEdit.Post;
   end;
+
+  if DM.cdsInventoryItemEdit.Active then
+    SwitchToForm(tiInventoryItemEdit, nil);
+end;
+
+// открытие на редактирование ранее введенной строки
+procedure TfrmMain.ShowEditInventoryItemEdit;
+begin
+  if not DM.qryInventoryGoods.Active and not DM.qryInventoryGoods.IsEmpty then Exit;
+
+   DM.cdsInventoryItemEdit.Close;
+   DM.cdsInventoryItemEdit.CreateDataSet;
+   DM.cdsInventoryItemEdit.Insert;
+
+   DM.cdsInventoryItemEditLocalId.AsInteger := DM.qryInventoryGoodsLocalId.AsInteger;
+   DM.cdsInventoryItemEditId.AsInteger := DM.qryInventoryGoodsId.AsInteger;
+   DM.cdsInventoryItemEditGoodsId.AsInteger := DM.qryInventoryGoodsGoodsId.AsInteger;
+   DM.cdsInventoryItemEditGoodsCode.AsInteger := DM.qryInventoryGoodsGoodsCode.AsInteger;
+   DM.cdsInventoryItemEditGoodsName.AsString := DM.qryInventoryGoodsGoodsName.AsString;
+   DM.cdsInventoryItemEditArticle.AsString := DM.qryInventoryGoodsArticle.AsString;
+   DM.cdsInventoryItemEditPartNumber.AsString := DM.qryInventoryGoodsPartNumber.AsString;
+   DM.cdsInventoryItemEditGoodsGroupName.AsString := DM.qryInventoryGoodsGoodsGroupName.AsString;
+   DM.cdsInventoryItemEditOperCount.AsFloat := DM.qryInventoryGoodsAmount.AsFloat;
+   DM.cdsInventoryItemEditPartionCellName.AsString := DM.qryInventoryGoodsPartionCellName.AsString;
+
+   DM.GetMIInventoryGoods(DM.cdsInventoryItemEdit);
+
+   DM.cdsInventoryItemEdit.Post;
 
   if DM.cdsInventoryItemEdit.Active then
     SwitchToForm(tiInventoryItemEdit, nil);
@@ -1098,12 +1199,6 @@ end;
 
 procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
 begin
-  tiStopCamera.Enabled := False;
-  if Assigned(FCameraScanBarCode) then
-  begin
-    FCameraScanBarCode.Active := false;
-    FObr.Active := False;
-  end;
 end;
 
 // переход на форму журнала инвентаризаций
@@ -1120,7 +1215,6 @@ end;
 // Поиск товара для вставки в инвентаризацию
 procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
 begin
-  FisInventScanSN := False;
   FisNextInventScan := False;
   FisInventScanOk := False;
   ShowGoods;
@@ -1132,6 +1226,23 @@ begin
   FGoodsId := 0;
   FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
   FisNextInventScan := True;
+  if FisInventScanSN then
+  begin
+    bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
+    bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
+    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+    bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+    bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  end else
+  begin
+    bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
+    bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
+    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+    bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+    bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  end;
   sbScanClick(Sender);
 end;
 
@@ -1146,7 +1257,24 @@ begin
   begin
     FGoodsId := DM.cdsGoodsListId.AsInteger;
     ShowInventoryItemEdit;
+  end else if Assigned(FDictUpdateDataSet) and (FDictUpdateField <> '') then
+  begin
+    FDictUpdateDataSet.Edit;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Id')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Id').AsVariant := DM.cdsGoodsListId.AsVariant;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Code')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Code').AsVariant := DM.cdsGoodsListCode.AsVariant;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Name')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Name').AsVariant := DM.cdsGoodsListName.AsVariant;
+    if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Name')) then
+      FDictUpdateDataSet.FieldByName(FDictUpdateField + 'GroupName').AsVariant := DM.cdsGoodsListGoodsGroupName.AsVariant;
+
+    if (tcMain.ActiveTab = tiInventoryItemEdit) then DM.GetMIInventoryGoods(FDictUpdateDataSet);
+
+    FDictUpdateDataSet.Post;
   end;
+
+
 end;
 
 // переход на форму справочника товаров
@@ -1184,15 +1312,20 @@ begin
 
   if DM.cdsInventoryItemEdit.State in dsEditModes then DM.cdsInventoryItemEdit.Post;
 
-  if not DM.UploadMIInventory then
-  begin
-    DM.AddInventoryGoods(DM.cdsInventoryItemEditGoodsId.AsInteger, DM.cdsInventoryItemEditOperCount.AsFloat,
-                         DM.cdsInventoryItemEditPartNumber.AsString, DM.cdsInventoryItemEditPartionCellName.AsString);
-  end else if not DM.qryInventoryGoods.IsEmpty then DM.UploadInventoryGoods;
+  if DM.UploadMIInventory then
+    if not DM.isInventoryGoodsSend then DM.UploadInventoryGoods;
 
   DM.cdsInventoryItemEdit.Close;
   FisInventScanOk := True;
   ReturnPriorForm;
+end;
+
+procedure TfrmMain.bIIEOpenDictGoodsClick(Sender: TObject);
+begin
+  FDictUpdateDataSet := DM.cdsInventoryItemEdit;
+  FDictUpdateField := 'Goods';
+  ShowDictList(dtGoods);
+  bGoodsChoice.Visible := True;
 end;
 
 procedure TfrmMain.bIIEOpenDictPartionCellClick(Sender: TObject);
@@ -1241,6 +1374,7 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
+  var SettingsFile : TIniFile;
 begin
   if (tcMain.ActiveTab = tiScanBarCode) and (Sender = sbBack)  then
   begin
@@ -1265,7 +1399,7 @@ begin
   end
   else if (tcMain.ActiveTab = tiInventoryScan)  then
   begin
-    if DM.qryInventoryGoods.RecordCount > 0 then
+    if not DM.isInventoryGoodsSend then
     begin
       TDialogService.MessageDialog('Отправить введенные в инвентаризацию дааные на сервер?', TMsgDlgType.mtWarning,
         [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, BackInventoryScan);
@@ -1276,6 +1410,20 @@ begin
   end else if tcMain.ActiveTab = tiProductionUnion then
   begin
     DM.cdsOrderInternal.Close;
+  end else if tcMain.ActiveTab = tiInformation then
+  begin
+    if lUseCamera.Visible and (FisCameraScaner <> rbCameraScaner.IsChecked) then
+    begin
+      FisCameraScaner := rbCameraScaner.IsChecked;
+
+      // сохранение использование сканера в ini файле
+      SettingsFile := TIniFile.Create(FINIFile);
+      try
+        SettingsFile.WriteBool('DataWedge', 'isCameraScaner', FisCameraScaner);
+      finally
+        FreeAndNil(SettingsFile);
+      end
+    end;
   end;
 
   ReturnPriorForm;
@@ -1285,7 +1433,7 @@ procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
   var SettingsFile : TIniFile;
 begin
   FDataWedgeBarCode.isIllumination := not FDataWedgeBarCode.isIllumination;
-  if FisZebraScaner then FDataWedgeBarCode.SetIllumination;
+  if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.SetIllumination;
   if FDataWedgeBarCode.isIllumination then
     Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
   else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
@@ -1312,9 +1460,8 @@ end;
 
 procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
-  if FisBecomeForeground and FisZebraScaner then
+  if FisBecomeForeground and FisZebraScaner and not FisCameraScaner then
   begin
-    Sleep(500);
     FDataWedgeBarCode.SetIllumination;
     if FDataWedgeBarCode.isIllumination then
       Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
@@ -1322,7 +1469,7 @@ begin
     FisBecomeForeground := False;
   end;
 
-  if FisZebraScaner then FDataWedgeBarCode.Scan
+  if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.Scan
   else SwitchToForm(tiScanBarCode, nil);
 end;
 
@@ -1424,7 +1571,6 @@ begin
 
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(nil);
-  bLogIn.Enabled := True;
 end;
 
 procedure TfrmMain.FormVirtualKeyboardHidden(Sender: TObject;
@@ -1511,6 +1657,9 @@ begin
 
   SwitchToForm(tiMain, nil);
   if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
+
+  Sleep(500);
+  bLogIn.Enabled := True;
 end;
 
 // Покажим инвентаризацию
@@ -1551,20 +1700,33 @@ procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
   ItemIndex: Integer; const LocalClickPos: TPointF;
   const ItemObject: TListItemDrawable);
 begin
+  // Удаление позиции товара
   if Assigned(ItemObject) and (ItemObject.Name = 'DeleteButton') then
     TDialogService.MessageDialog('Удалить товар "' + DM.qryInventoryGoodsGoodsName.AsString +
          '" подготовленный к вставке в инвентаризацию ?',
          TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
   else
-  // вызов формы для редактирования количества выбранного товара
-  if Assigned(ItemObject) and ((ItemObject.Name = 'Amount') or (ItemObject.Name = 'MeasureName')) and
-     not DM.qryInventoryGoods.IsEmpty then
+  // Изменить позицию товара
+  if Assigned(ItemObject) and (ItemObject.Name = 'EditButton') then
   begin
-    lAmount.Text := '0';
-    lMeasure.Text := DM.qryInventoryGoodsMeasureName.AsString;
-
-    ppEnterAmount.IsOpen := true;
+    ShowEditInventoryItemEdit;
+  end else
+  // Информация об ошибке
+  if Assigned(ItemObject) and (ItemObject.Name = 'Error') and not DM.qryInventoryGoods.IsEmpty and
+     (DM.qryInventoryGoodsError.AsString <> '') then
+  begin
+     ShowMessage(DM.qryInventoryGoodsError.AsString);
   end;
+
+//  // вызов формы для редактирования количества выбранного товара
+//  if Assigned(ItemObject) and ((ItemObject.Name = 'Amount') or (ItemObject.Name = 'MeasureName')) and
+//     not DM.qryInventoryGoods.IsEmpty then
+//  begin
+//    lAmount.Text := '0';
+//    lMeasure.Text := DM.qryInventoryGoodsMeasureName.AsString;
+//
+//    ppEnterAmount.IsOpen := true;
+//  end;
 
 end;
 
@@ -1632,6 +1794,8 @@ begin
     begin
       SwitchToForm(tiMain, nil);
       if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
+      Sleep(500);
+      bLogIn.Enabled := True;
     end;
   end;
 end;

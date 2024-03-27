@@ -310,7 +310,7 @@ uses
   InventoryItemEdit_limit in '..\..\FormsBoat\Document\InventoryItemEdit_limit.pas' {InventoryItemEdit_limitForm: TParentForm},
   PriceListItemEdit in '..\..\FormsBoat\Document\PriceListItemEdit.pas' {PriceListItemEditForm: TParentForm},
   PriceListItemEdit_limit in '..\..\FormsBoat\Document\PriceListItemEdit_limit.pas' {PriceListItemEdit_limitForm: TParentForm},
-  GoodsMain in '..\..\FormsBoat\Guides\GoodsMain.pas' {GoodsMainForm: TParentForm},
+  Goods in '..\..\FormsBoat\Guides\GoodsMain.pas' {GoodsForm: TParentForm},
   IncomeItemEdit_limit in '..\..\FormsBoat\Document\IncomeItemEdit_limit.pas' {IncomeItemEdit_limitForm: TParentForm},
   PLZ_City in '..\..\FormsBoat\Guides\PLZ_City.pas' {PLZ_CityForm: TParentForm},
   ReceiptGoodsEditEnter in '..\..\FormsBoat\Guides\ReceiptGoodsEditEnter.pas' {ReceiptGoodsEditEnterForm: TParentForm},
@@ -393,7 +393,9 @@ uses
   ReceiptServiceMaterialEdit in '..\..\FormsBoat\Guides\ReceiptServiceMaterialEdit.pas' {ReceiptServiceMaterialEditForm: TParentForm},
   ReceiptServiceGroupEdit in '..\..\FormsBoat\Guides\ReceiptServiceGroupEdit.pas' {ReceiptServiceGroupEditForm: TParentForm},
   ReceiptServiceMaterial in '..\..\FormsBoat\Guides\ReceiptServiceMaterial.pas' {ReceiptServiceMaterialForm: TParentForm},
-  Goods in '..\..\FormsBoat\Guides\Goods.pas' {GoodsForm: TParentForm};
+  MailKind in '..\..\FormsBoat\Kind\MailKind.pas' {MailKindForm: TParentForm},
+  MailSendEdit in '..\..\FormsBoat\Guides\MailSendEdit.pas' {MailSendEditForm: TParentForm},
+  MailSend in '..\..\FormsBoat\Guides\MailSend.pas' {MailSendForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

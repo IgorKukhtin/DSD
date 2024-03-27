@@ -1,17 +1,17 @@
 -- Function: gpGet_MI_MobileInventory()
 
-DROP FUNCTION IF EXISTS gpGet_MI_MobileInventory (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MI_MobileInventory (Integer, Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_MobileInventory(
     IN inMovementId        Integer    , -- Ключ объекта <Документ>
+    IN inDetailId          Integer    , -- Ключ объекта <Строка сканирования>
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartionCellId     Integer    , --
     IN inPartNumber        TVarChar   , --
     IN inAmount            TFloat     , --
     IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (Id                 Integer
-             , GoodsId            Integer
+RETURNS TABLE (GoodsId            Integer
              , GoodsCode          Integer
              , GoodsName          TVarChar
              , Article            TVarChar
@@ -28,8 +28,6 @@ RETURNS TABLE (Id                 Integer
              , TotalCount         TFloat
              , AmountRemains      TFloat
              , AmountDiff         TFloat
-             , MovementId_OrderClient Integer
-             , InvNumber_OrderClient  TVarChar
               )
 AS
 $BODY$
@@ -70,16 +68,12 @@ BEGIN
                      )
           , tmpMI AS (SELECT MI.ObjectId                                   AS GoodsId
                            , COALESCE (MIString_PartNumber.ValueData, '')  AS PartNumber
-                           , MILO_PartionCell.ObjectId                     AS PartionCellId      --сохраненый или переданный из шапки документа
-                           , MAX (MIFloat_MovementId.ValueData) :: Integer AS MovementId_OrderClient
+                           , MAX(MILO_PartionCell.ObjectId)::Integer       AS PartionCellId      --сохраненый или переданный из шапки документа
                            , SUM (MI.Amount)                               AS Amount
                       FROM MovementItem AS MI
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MI.Id
                                                        AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
-                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                       ON MIFloat_MovementId.MovementItemId = MI.Id
-                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
 
                            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                             ON MILO_PartionCell.MovementItemId = MI.Id
@@ -91,11 +85,27 @@ BEGIN
                         AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
                       GROUP BY MI.ObjectId
                              , COALESCE (MIString_PartNumber.ValueData, '')
-                             --, MIFloat_MovementId.ValueData :: Integer
-                             , MILO_PartionCell.ObjectId
                      )
-           SELECT -1                               :: Integer AS Id
-                , Object_Goods.Id                             AS GoodsId
+          , tmpMIDetail AS (SELECT MI.ObjectId                                      AS GoodsId
+                                 , COALESCE (MIString_PartNumber.ValueData, '')     AS PartNumber
+                                 , SUM (CASE WHEN MI.Id <> COALESCE(inDetailId, 0)
+                                             THEN MI.Amount END)                    AS Amount
+                                 , MAX(MI.Id)                                       AS MaxID  
+                            FROM MovementItem AS MI
+                                 LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                              ON MIString_PartNumber.MovementItemId = MI.Id
+                                                             AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+
+                            WHERE MI.MovementId = inMovementId
+                              AND MI.DescId     = zc_MI_Detail()
+                              AND MI.ObjectId   = inGoodsId
+                              AND MI.isErased   = FALSE
+                              AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
+                            GROUP BY MI.ObjectId
+                                   , COALESCE (MIString_PartNumber.ValueData, '')                                  
+                           )
+
+           SELECT Object_Goods.Id                             AS GoodsId
                 , Object_Goods.ObjectCode                     AS GoodsCode
                 , Object_Goods.ValueData                      AS GoodsName
                 , ObjectString_Article.ValueData              AS Article
@@ -110,12 +120,10 @@ BEGIN
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
                 , COALESCE (inAmount, 1)                                          :: TFloat AS OperCount
-                , (/*COALESCE (inAmount,1) +*/ COALESCE (tmpMI.Amount, 0))        :: TFloat AS TotalCount
+                , COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0)                  :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
-                , (COALESCE (tmpMI.Amount, 0) - COALESCE (tmpRemains.Remains, 0)) :: TFloat AS AmountDiff
-
-                , Movement_OrderClient.Id                                   AS MovementId_OrderClient
-                , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumber_OrderClient
+                , (COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0) - 
+                  COALESCE (tmpRemains.Remains, 0))                               :: TFloat AS AmountDiff
 
 
            FROM Object AS Object_Goods
@@ -123,6 +131,12 @@ BEGIN
                                     AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
                                AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
+                LEFT JOIN tmpMIDetail ON tmpMIDetail.GoodsId    = Object_Goods.Id
+                                     AND tmpMIDetail.PartNumber = COALESCE (inPartNumber,'')
+
+                LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                 ON MILO_PartionCell.MovementItemId = tmpMIDetail.MaxId
+                                                AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
                                      ON ObjectLink_Goods_Partner.ObjectId = Object_Goods.Id
@@ -143,38 +157,10 @@ BEGIN
                                        ON ObjectString_Article.ObjectId = Object_Goods.Id
                                       AND ObjectString_Article.DescId = zc_ObjectString_Article()
 
-                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
 
-                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = CASE WHEN COALESCE (tmpMI.PartionCellId,0) = 0 THEN inPartionCellId ELSE tmpMI.PartionCellId END
-
+                LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = COALESCE (tmpMI.PartionCellId, MILO_PartionCell.ObjectId, inPartionCellId)
+                
            WHERE Object_Goods.Id = inGoodsId
-             AND inGoodsId <> 0
-
-          UNION
-           SELECT -1         :: Integer AS Id
-                , 0                     AS GoodsId
-                , 0                     AS GoodsCode
-                , '' ::TVarChar         AS GoodsName
-                , '' ::TVarChar         AS Article
-                , '' ::TVarChar         AS PartNumber
-                , 0                     AS GoodsGroupId
-                , '' ::TVarChar         AS GoodsGroupNameFull
-                , '' ::TVarChar         AS GoodsGroupName
-                , 0                     AS PartnerId
-                , '' ::TVarChar         AS PartnerName
-                , inPartionCellId       AS PartionCellId
-                , (SELECT Object.ValueData FROM Object WHERE Object.Id = inPartionCellId) ::TVarChar AS PartionCellName
-
-                , 0  ::TFloat           AS Price
-
-                , 1  ::TFloat           AS OperCount
-                , 0  ::TFloat           AS TotalCount
-                , 0  ::TFloat           AS AmountRemains
-                , 0  ::TFloat           AS AmountDiff
-                , 0                     AS MovementId_OrderClient
-                , '' ::TVarChar         AS InvNumber_OrderClient
-
-           WHERE inGoodsId = 0
           ;
 
 
@@ -189,4 +175,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_MobileInventory(inMovementId := 3172 , inGoodsId := 19952 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');
+-- select * from gpGet_MI_MobileInventory(inMovementId := 3179 , inDetailId := 0, inGoodsId := 261920 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');

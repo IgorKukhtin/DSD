@@ -209,9 +209,16 @@ object DM: TDM
   end
   object tblInventoryGoods: TFDTable
     Connection = conMain
+    ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'InventoryGoods'
     Left = 516
     Top = 164
+    object tblInventoryGoodsLocalId: TAutoIncField
+      FieldName = 'LocalId'
+    end
+    object tblInventoryGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
     object tblInventoryGoodsMovementId: TIntegerField
       FieldName = 'MovementId'
     end
@@ -228,6 +235,13 @@ object DM: TDM
     object tblInventoryGoodsPartionCellName: TWideStringField
       FieldName = 'PartionCellName'
       Size = 255
+    end
+    object tblInventoryGoodsError: TWideStringField
+      FieldName = 'Error'
+      Size = 500
+    end
+    object tblInventoryGoodsisSend: TBooleanField
+      FieldName = 'isSend'
     end
   end
   object qryMeta: TFDMetaInfoQuery
@@ -246,7 +260,9 @@ object DM: TDM
     OnCalcFields = qryInventoryGoodsCalcFields
     Connection = conMain
     SQL.Strings = (
-      'SELECT IG.MovementId'
+      'SELECT IG.LocalId'
+      '     , IG.Id'
+      '     , IG.MovementId'
       '     , IG.GoodsId'
       '     , G.Code          AS GoodsCode'
       '     , G.Name          AS GoodsName'
@@ -255,13 +271,16 @@ object DM: TDM
       '     , G.GoodsGroupName'
       '     , G.MeasureName'
       '     , IG.PartNumber'
+      '     , IG.PartionCellName'
       '     , IG.Amount'
+      '     , IG.Error'
       ''
       'FROM InventoryGoods AS IG'
       ''
       '     LEFT JOIN Goods G ON G.Id = IG.GoodsId'
       ''
-      'WHERE IG.MovementId = :MovementId')
+      'WHERE IG.MovementId = :MovementId'
+      'ORDER BY IG.LocalId DESC')
     Left = 124
     Top = 533
     ParamData = <
@@ -269,6 +288,12 @@ object DM: TDM
         Name = 'MOVEMENTID'
         ParamType = ptInput
       end>
+    object qryInventoryGoodsLocalId: TAutoIncField
+      FieldName = 'LocalId'
+    end
+    object qryInventoryGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
     object qryInventoryGoodsMovementId: TIntegerField
       FieldName = 'MovementId'
     end
@@ -301,12 +326,25 @@ object DM: TDM
       FieldName = 'PartNumber'
       Size = 255
     end
+    object qryInventoryGoodsPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
     object qryInventoryGoodsAmount: TFloatField
       FieldName = 'Amount'
+    end
+    object qryInventoryGoodsError: TWideStringField
+      FieldName = 'Error'
+      Size = 500
     end
     object qryInventoryGoodsDeleteId: TIntegerField
       FieldKind = fkCalculated
       FieldName = 'DeleteId'
+      Calculated = True
+    end
+    object qryInventoryGoodsEditId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'EditId'
       Calculated = True
     end
   end
@@ -423,6 +461,9 @@ object DM: TDM
     Params = <>
     Left = 688
     Top = 304
+    object cdsInventoryItemEditLocalId: TIntegerField
+      FieldName = 'LocalId'
+    end
     object cdsInventoryItemEditId: TIntegerField
       FieldName = 'Id'
     end

@@ -61,6 +61,11 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Password(), inDescId:= zc_Object_EmailTools(), inCode:= 5, inName:= 'Password', inEnumName:= 'zc_Enum_EmailTools_Password');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_EmailTools_Directory(),inDescId:= zc_Object_EmailTools(), inCode:= 6, inName:= 'Директория формирования файлов (используется для входящей почты)' , inEnumName:= 'zc_Enum_EmailTools_Directory');
 
+      -- !!! Тип Отправки по почте
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MailKind_Internal(), inDescId:= zc_Object_MailKind(), inCode:= 1, inName:= 'Отправить себе'   , inEnumName:= 'zc_Enum_MailKind_Internal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_MailKind_External(), inDescId:= zc_Object_MailKind(), inCode:= 2, inName:= 'Отправить клиенту', inEnumName:= 'zc_Enum_MailKind_External');
+
+   
 
 END $$;
 
@@ -69,7 +74,7 @@ END $$;
 
 DO $$
 DECLARE vbId integer;
-DECLARE vbUserId integer;
+DECLARE vbUserId integer;                                                                                          zc_Enum_EmailKind_MailKind_
 BEGIN
    -- !!!Нельзя вставить штатными средствами потому что не сработает проверка прав!!!
    vbUserId:=      (SELECT Id FROM Object WHERE DescId = zc_Object_User() AND ValueData ILIKE 'Админ');

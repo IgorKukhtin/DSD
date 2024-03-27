@@ -359,9 +359,9 @@ begin
                     10060: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                     11001: raise EStorageException.Create('Нет доступа к серверу. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                     10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
-                    10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения.');
+                    10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения. context TStorage. ' + E.Message);
                   else
-                    raise Exception.Create(E.Message);
+                    raise Exception.Create(E.Message+ '.context TStorage');
                   end;
                 End;
               End
@@ -376,7 +376,7 @@ begin
             Begin
               if LastAttempt then
               Begin
-                raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.'+#10+#13+E.Message);
+                raise Exception.Create('Ошибка соединения с Web сервером.'+#10+#13+'Обратитесь к разработчику.context TStorage. '+#10+#13+E.Message);
               End
               else
               Begin

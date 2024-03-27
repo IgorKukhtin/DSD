@@ -1056,8 +1056,8 @@
 				<Form>PriceListItemEdit_limitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsMain.pas">
-				<Form>GoodsMainForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\IncomeItemEdit_limit.pas">
@@ -1358,8 +1358,16 @@
 				<Form>ReceiptServiceMaterialForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\FormsBoat\Kind\MailKind.pas">
+				<Form>MailKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\MailSendEdit.pas">
+				<Form>MailSendEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\MailSend.pas">
+				<Form>MailSendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

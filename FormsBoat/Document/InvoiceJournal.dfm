@@ -1,28 +1,29 @@
 ﻿inherited InvoiceJournalForm: TInvoiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 569
-  ClientWidth = 1139
+  ClientWidth = 1279
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -245
-  ExplicitWidth = 1155
+  ExplicitWidth = 1295
   ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1139
+    Width = 1279
     Height = 316
     TabOrder = 3
     ExplicitWidth = 1139
     ExplicitHeight = 316
     ClientRectBottom = 316
-    ClientRectRight = 1139
+    ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1139
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
-        Width = 1139
+        Width = 1279
         Height = 316
-        ExplicitWidth = 1139
+        ExplicitLeft = 3
+        ExplicitTop = 2
+        ExplicitWidth = 1279
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -678,7 +679,7 @@
     end
   end
   inherited Panel: TPanel
-    Width = 1139
+    Width = 1279
     ExplicitWidth = 1139
     inherited deEnd: TcxDateEdit
       Left = 315
@@ -757,10 +758,11 @@
   object Panel_btn: TPanel [2]
     Left = 0
     Top = 496
-    Width = 1139
+    Width = 1279
     Height = 73
     Align = alBottom
     TabOrder = 6
+    ExplicitWidth = 1139
     object btnUpdate: TcxButton
       Left = 218
       Top = 8
@@ -893,10 +895,11 @@
   object cxGrid_Item: TcxGrid [3]
     Left = 0
     Top = 381
-    Width = 1139
+    Width = 1279
     Height = 115
     Align = alBottom
     TabOrder = 7
+    ExplicitWidth = 1139
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1172,10 +1175,11 @@
   object cxSplitter_Bottom_Item: TcxSplitter [4]
     Left = 0
     Top = 373
-    Width = 1139
+    Width = 1279
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
+    ExplicitWidth = 1139
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -2447,6 +2451,89 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1074#1090#1086#1088#1085#1091#1102' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 81
     end
+    object actGet_Export_Email: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_ImportSettings_Email
+      StoredProcList = <
+        item
+          StoredProc = spGet_ImportSettings_Email
+        end>
+      Caption = 'actGet_Export_Email'
+    end
+    object actSMTPFileCSV: TdsdSMTPFileAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      Host.Value = Null
+      Host.Component = ExportEmailCDS
+      Host.ComponentItem = 'Host'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Port.Value = 25
+      Port.Component = ExportEmailCDS
+      Port.ComponentItem = 'Port'
+      Port.DataType = ftString
+      Port.MultiSelectSeparator = ','
+      UserName.Value = Null
+      UserName.Component = ExportEmailCDS
+      UserName.ComponentItem = 'UserName'
+      UserName.DataType = ftString
+      UserName.MultiSelectSeparator = ','
+      Password.Value = Null
+      Password.Component = ExportEmailCDS
+      Password.ComponentItem = 'Password'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Body.Value = Null
+      Body.Component = ExportEmailCDS
+      Body.ComponentItem = 'Body'
+      Body.DataType = ftString
+      Body.MultiSelectSeparator = ','
+      Subject.Value = Null
+      Subject.Component = ExportEmailCDS
+      Subject.ComponentItem = 'Subject'
+      Subject.DataType = ftString
+      Subject.MultiSelectSeparator = ','
+      FromAddress.Value = Null
+      FromAddress.Component = ExportEmailCDS
+      FromAddress.ComponentItem = 'AddressFrom'
+      FromAddress.DataType = ftString
+      FromAddress.MultiSelectSeparator = ','
+      ToAddress.Value = Null
+      ToAddress.Component = ExportEmailCDS
+      ToAddress.ComponentItem = 'AddressTo'
+      ToAddress.DataType = ftString
+      ToAddress.MultiSelectSeparator = ','
+    end
+    object mactExport_invoice: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice_save
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actSMTPFileCSV
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1057#1095#1077#1090' PDF '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
+      ImageIndex = 53
+    end
   end
   inherited MasterDS: TDataSource
     Top = 115
@@ -2544,6 +2631,14 @@
         item
           Visible = True
           ItemName = 'bbPrint_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport_invoice'
         end
         item
           Visible = True
@@ -2777,6 +2872,10 @@
     end
     object bbSave_Invoice: TdxBarButton
       Action = mactSave_Invoice
+      Category = 0
+    end
+    object bbExport_invoice: TdxBarButton
+      Action = mactExport_invoice
       Category = 0
     end
   end
@@ -3305,5 +3404,36 @@
     PackSize = 1
     Left = 951
     Top = 240
+  end
+  object ExportEmailDS: TDataSource
+    DataSet = ExportEmailCDS
+    Left = 1136
+    Top = 129
+  end
+  object ExportEmailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 1080
+    Top = 128
+  end
+  object spGet_ImportSettings_Email: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ImportSettings_Email'
+    DataSet = ExportEmailCDS
+    DataSets = <
+      item
+        DataSet = ExportEmailCDS
+      end>
+    Params = <
+      item
+        Name = 'inEmailKindDesc'
+        Value = 'zc_Enum_EmailKind_Mail_InvoiceKredit()'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1144
+    Top = 176
   end
 end
