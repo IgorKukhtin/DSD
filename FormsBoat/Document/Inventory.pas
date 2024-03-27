@@ -218,6 +218,7 @@ type
     DetailDS: TDataSource;
     DetailCDS: TClientDataSet;
     Color_Detail: TcxGridDBColumn;
+    AmountScan: TcxGridDBColumn;
   private
   public
   end;

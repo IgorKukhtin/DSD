@@ -68,6 +68,11 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountScan
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -99,6 +104,11 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains_curr
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountScan
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -267,6 +277,16 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
             Width = 70
+          end
+          object AmountScan: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1052#1086#1073'. '#1091#1089#1090#1088
+            DataBinding.FieldName = 'AmountScan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090'. '#1086#1089#1090#1072#1090#1086#1082
@@ -476,9 +496,6 @@ object InventoryForm: TInventoryForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -2732,15 +2749,7 @@ object InventoryForm: TInventoryForm
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <
-      item
-        Param.Value = Null
-        Param.Component = FormParams
-        Param.ComponentItem = 'TotalSumm'
-        Param.DataType = ftString
-        Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 6
-      end>
+    SummaryItemList = <>
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>

@@ -439,7 +439,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 1
+        TabIndex = 8
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -9350,7 +9350,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -11929,7 +11929,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -11947,12 +11947,14 @@
             object bInventScanSearch: TSpeedButton
               Anchors = [akLeft, akTop, akRight]
               Position.X = 5.000000000000000000
-              Position.Y = 108.000000000000000000
+              Position.Y = 109.000000000000000000
               Size.Width = 323.000000000000000000
               Size.Height = 44.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1055#1086#1076#1073#1086#1088' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
               OnClick = bInventScanSearchClick
               object Image22: TImage
@@ -12027,14 +12029,15 @@
             object bInventScanSN: TSpeedButton
               Tag = 1
               Anchors = [akLeft, akTop, akRight]
-              StyledSettings = [Family, Size]
               Position.X = 5.000000000000000000
-              Position.Y = 58.000000000000000000
+              Position.Y = 56.000000000000000000
               Size.Width = 323.000000000000000000
               Size.Height = 44.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100' + s/n'
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
               OnClick = bInventScanClick
               object Image16: TImage
@@ -12108,7 +12111,6 @@
             end
             object bInventScan: TSpeedButton
               Anchors = [akLeft, akTop, akRight]
-              StyledSettings = [Family, Size]
               Position.X = 5.000000000000000000
               Position.Y = 8.000000000000000000
               Size.Width = 323.000000000000000000
@@ -12116,6 +12118,8 @@
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
               OnClick = bInventScanClick
               object Image15: TImage
@@ -13148,12 +13152,6 @@
       TextSettings.Trimming = None
       Text = 'lProgressName'
     end
-  end
-  object tiStopCamera: TTimer
-    Enabled = False
-    OnTimer = tiStopCameraTimer
-    Left = 264
-    Top = 312
   end
   object ppEnterAmount: TPopup
     StyleName = 'EnterAmountStyle'
@@ -14525,7 +14523,7 @@
           end>
       end>
     Left = 264
-    Top = 371
+    Top = 331
   end
   object ilButton: TImageList
     Source = <
@@ -14868,7 +14866,7 @@
           end>
       end>
     Left = 264
-    Top = 428
+    Top = 396
   end
   object BindSourceDB1: TBindSourceDB
     DataSet = DM.cdsInventoryJournal
@@ -15222,7 +15220,7 @@
   object BindSourceDB5: TBindSourceDB
     DataSet = DM.qryInventoryGoods
     ScopeMappings = <>
-    Left = 192
+    Left = 160
     Top = 208
   end
   object BindSourceDB6: TBindSourceDB
@@ -15234,8 +15232,8 @@
   object BindSourceDB7: TBindSourceDB
     DataSet = DM.cdsInventoryItemEdit
     ScopeMappings = <>
-    Left = 152
-    Top = 256
+    Left = 32
+    Top = 472
   end
   object BindSourceDB8: TBindSourceDB
     DataSet = DM.cdsDictList

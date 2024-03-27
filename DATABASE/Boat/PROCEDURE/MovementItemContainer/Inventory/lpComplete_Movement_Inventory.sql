@@ -82,6 +82,70 @@ BEGIN
      -- доопределили - Аналитику для проводок
      vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId <> 0 THEN vbUnitId END;
 
+     -- Создали Элементы по zc_MI_Detail
+     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                     := 0
+                                                  , inMovementId             := inMovementId
+                                                  , inMovementId_OrderClient := 0
+                                                  , inGoodsId                := tmp.GoodsId 
+                                                  , inPartnerId              := 0
+                                                  , inPartionCellId          := tmp.PartionCellId
+                                                  , ioAmount                 := tmp.Amount
+                                                  , inTotalCount             := 0
+                                                  , inTotalCount_old         := 0
+                                                  , ioPrice                  := 0
+                                                  , inPartNumber             := tmp.PartNumber
+                                                  , inComment                := ''
+                                                  , inUserId                 := inUserId
+                                                   )
+
+     FROM (WITH tmpMIDetail AS (SELECT MovementItem.ObjectId AS GoodsId
+                                     , SUM(MovementItem.Amount)::TFloat             AS Amount
+                                     , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                                     , MAX(MovementItem.Id)                         AS MaxID  
+                                FROM MovementItem 
+
+                                     LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                  ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                     
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Detail()
+                                  AND MovementItem.isErased   = False
+                                GROUP BY MovementItem.ObjectId
+                                       , COALESCE (MIString_PartNumber.ValueData, '')
+                               )
+              , tmpMIMaster AS (SELECT MovementItem.Id
+                                     , MovementItem.ObjectId AS GoodsId
+                                     , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                                FROM MovementItem 
+                                
+                                     LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                  ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                    
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = False
+                               )
+                               
+            SELECT tmpMIDetail.GoodsId                            AS GoodsId
+                 , tmpMIDetail.Amount                             AS Amount
+                 , tmpMIDetail.PartNumber                         AS PartNumber
+                 , COALESCE(MILO_PartionCell.ObjectId, 0)         AS PartionCellId
+            FROM tmpMIDetail
+                          
+                 LEFT JOIN tmpMIMaster ON tmpMIDetail.GoodsId = tmpMIMaster.GoodsId
+                                      AND tmpMIDetail.PartNumber = tmpMIMaster.PartNumber
+
+                 LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                  ON MILO_PartionCell.MovementItemId = tmpMIDetail.MaxId
+                                                 AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
+                                                 
+            WHERE COALESCE(tmpMIMaster.Id, 0) = 0
+              AND COALESCE(tmpMIDetail.Amount, 0) <> 0
+
+          ) AS tmp;
+
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId

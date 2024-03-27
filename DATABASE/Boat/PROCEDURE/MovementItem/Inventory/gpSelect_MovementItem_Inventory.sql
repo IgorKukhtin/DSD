@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , Article TVarChar, Article_all TVarChar , EAN TVarChar 
              , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
-             , Amount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
+             , Amount TFloat, AmountScan TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
              , Price TFloat
              , Price_find TFloat
              , isPrice_diff Boolean, isPrice_goods Boolean
@@ -109,6 +109,7 @@ BEGIN
                            , COALESCE(tmpMIMaster.GoodsId, tmpMIDetail.GoodsId)             AS GoodsId
                            , tmpMIMaster.PartionId
                            , COALESCE(tmpMIMaster.Amount, tmpMIDetail.Amount)               AS Amount
+                           , tmpMIDetail.Amount                                             AS AmountScan
                            , tmpMIMaster.Price
                            , tmpMIMaster.Comment
                            , COALESCE(tmpMIMaster.PartNumber, tmpMIDetail.PartNumber)       AS PartNumber
@@ -231,6 +232,7 @@ BEGIN
            , Object_Measure.ValueData                    AS MeasureName
 
            , tmpMI.Amount                                               AS Amount
+           , tmpMI.AmountScan                                           AS AmountScan
            , tmpRemains.Remains                                ::TFloat AS AmountRemains
            , (tmpMI.Amount - COALESCE (tmpRemains.Remains, 0)) ::TFloat AS AmountDiff
            , tmpRemains.Amount                                 ::TFloat AS AmountRemains_curr
