@@ -439,7 +439,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 9
+        TabIndex = 1
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -9350,7 +9350,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -10466,13 +10466,13 @@
             object VertScrollBox6: TVertScrollBox
               Align = Top
               Size.Width = 336.000000000000000000
-              Size.Height = 153.000000000000000000
+              Size.Height = 176.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
               AutoHide = False
               ShowScrollBars = False
               Viewport.Width = 336.000000000000000000
-              Viewport.Height = 153.000000000000000000
+              Viewport.Height = 176.000000000000000000
               object lMobileVersion: TLayout
                 Align = Top
                 Margins.Top = 5.000000000000000000
@@ -10564,11 +10564,58 @@
                   OnClick = bUpdateProgramClick
                 end
               end
+              object lUseCamera: TLayout
+                Align = Top
+                Position.Y = 130.000000000000000000
+                Size.Width = 336.000000000000000000
+                Size.Height = 46.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 2
+                object Label34: TLabel
+                  Align = Top
+                  StyledSettings = [Family, FontColor]
+                  Margins.Left = 5.000000000000000000
+                  Margins.Right = 5.000000000000000000
+                  Position.X = 5.000000000000000000
+                  Size.Width = 326.000000000000000000
+                  Size.Height = 23.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.Font.Size = 11.000000000000000000
+                  TextSettings.Font.StyleExt = {00070000000000000004000000}
+                  TextSettings.Trimming = None
+                  Text = #1044#1083#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100
+                  TabOrder = 0
+                end
+                object rbBarcodeScaner: TRadioButton
+                  StyledSettings = [Family, Style, FontColor]
+                  GroupName = 'Camera'
+                  IsChecked = True
+                  Position.X = 5.000000000000000000
+                  Position.Y = 21.000000000000000000
+                  Size.Width = 169.000000000000000000
+                  Size.Height = 19.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 1
+                  Text = #1057#1082#1072#1085#1077#1088' '#1096#1090#1088#1080#1093#1082#1086#1076#1072
+                end
+                object rbCameraScaner: TRadioButton
+                  Tag = 1
+                  StyledSettings = [Family, Style, FontColor]
+                  GroupName = 'Camera'
+                  Position.X = 179.000000000000000000
+                  Position.Y = 23.000000000000000000
+                  Size.Width = 149.000000000000000000
+                  Size.Height = 19.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 2
+                  Text = #1050#1072#1084#1077#1088#1091' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
+                end
+              end
             end
             object pScanTest: TPanel
               Align = Client
               Size.Width = 336.000000000000000000
-              Size.Height = 331.000000000000000000
+              Size.Height = 308.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'PanelStyle'
               TabOrder = 0
@@ -10579,7 +10626,7 @@
                 FooterAppearanceClassName = 'TListHeaderObjects'
                 Align = Client
                 Size.Width = 336.000000000000000000
-                Size.Height = 308.000000000000000000
+                Size.Height = 285.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
                 ItemAppearance.ItemHeight = 80
@@ -11902,7 +11949,7 @@
               Position.X = 5.000000000000000000
               Position.Y = 108.000000000000000000
               Size.Width = 323.000000000000000000
-              Size.Height = 43.000000000000000000
+              Size.Height = 44.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1055#1086#1076#1073#1086#1088' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
@@ -11973,17 +12020,18 @@
                 Align = Left
                 HitTest = False
                 Size.Width = 55.000000000000000000
-                Size.Height = 43.000000000000000000
+                Size.Height = 44.000000000000000000
                 Size.PlatformDefault = False
               end
             end
             object bInventScanSN: TSpeedButton
               Tag = 1
               Anchors = [akLeft, akTop, akRight]
+              StyledSettings = [Family, Size]
               Position.X = 5.000000000000000000
               Position.Y = 58.000000000000000000
               Size.Width = 323.000000000000000000
-              Size.Height = 43.000000000000000000
+              Size.Height = 44.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100' + s/n'
@@ -12054,16 +12102,17 @@
                 Align = Left
                 HitTest = False
                 Size.Width = 55.000000000000000000
-                Size.Height = 43.000000000000000000
+                Size.Height = 44.000000000000000000
                 Size.PlatformDefault = False
               end
             end
             object bInventScan: TSpeedButton
               Anchors = [akLeft, akTop, akRight]
+              StyledSettings = [Family, Size]
               Position.X = 5.000000000000000000
               Position.Y = 8.000000000000000000
               Size.Width = 323.000000000000000000
-              Size.Height = 43.000000000000000000
+              Size.Height = 44.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100
@@ -12134,7 +12183,7 @@
                 Align = Left
                 HitTest = False
                 Size.Width = 55.000000000000000000
-                Size.Height = 43.000000000000000000
+                Size.Height = 44.000000000000000000
                 Size.PlatformDefault = False
               end
             end
@@ -12168,7 +12217,7 @@
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 233.000000000000000000
+                Appearance.Width = 234.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 54.000000000000000000
               end
@@ -12183,14 +12232,15 @@
                 Appearance.PlaceOffset.Y = 21.000000000000000000
               end
               item
-                AppearanceObjectName = 'GoodsGroupName'
+                AppearanceObjectName = 'Error'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 196.000000000000000000
+                Appearance.TextColor = claRed
+                Appearance.Width = 170.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 118.000000000000000000
-                Appearance.PlaceOffset.Y = 21.000000000000000000
+                Appearance.PlaceOffset.Y = 42.000000000000000000
               end
               item
                 AppearanceObjectName = 'Amount'
@@ -12217,10 +12267,10 @@
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 196.000000000000000000
+                Appearance.Width = 170.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 118.000000000000000000
-                Appearance.PlaceOffset.Y = 42.000000000000000000
+                Appearance.PlaceOffset.Y = 21.000000000000000000
               end
               item
                 AppearanceObjectName = 'DeleteButton'
@@ -12228,6 +12278,17 @@
                 Appearance.Width = 25.000000000000000000
                 Appearance.Height = 25.000000000000000000
                 Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = 4.000000000000000000
+                Appearance.PlaceOffset.Y = 31.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'EditButton'
+                AppearanceClassName = 'TImageObjectAppearance'
+                Appearance.Width = 25.000000000000000000
+                Appearance.Height = 25.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.PlaceOffset.X = 4.000000000000000000
+                Appearance.PlaceOffset.Y = 3.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -12247,7 +12308,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -12337,6 +12398,42 @@
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
+              object bIIEOpenDictGoods: TEditButton
+                Touch.InteractiveGestures = [LongTap]
+                CanFocus = False
+                Cursor = crArrow
+                TextSettings.Trimming = None
+                Size.Width = 28.000000000000000000
+                Size.Height = 28.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                OnClick = bIIEOpenDictGoodsClick
+                object Image26: TImage
+                  MultiResBitmap.Height = 30
+                  MultiResBitmap.Width = 30
+                  MultiResBitmap = <
+                    item
+                      Width = 30
+                      Height = 30
+                      PNG = {
+                        89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+                        A20000000473424954080808087C086488000000CF494441544889EDD23F4A03
+                        411886F15F621A215EC236EB05C45AF002629726754813247A09D1D223E404DE
+                        40B1B1B14C1752584B0216AE8503CE2ECBE27629BE07861978E6E3FDE60F4110
+                        04C1BE73D0E2AE304381377C65EE04B7B8C01A1F993BC21C631CE2BD4B433728
+                        B3F1824116BACBDC2E3527ED79ADD52EBA046F6AC5254E93BB6F7077C99D35B8
+                        4D5340BF4333656DFEAFFBEE9061A1DAF5B3BFAB2E54AF7A8B517203BFCF92D7
+                        5E3705F45AC22F718E151EF099B90293B47E54FD40434C718C272C5B8F180441
+                        10EC2D3FDA393C28C3EB49F80000000049454E44AE426082}
+                      FileName = 'C:\DSD\ProjectBoatMobile\img\Three_dots.png'
+                    end>
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 28.000000000000000000
+                  Size.Height = 28.000000000000000000
+                  Size.PlatformDefault = False
+                end
+              end
             end
             object edIIEOperCount: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -12367,6 +12464,9 @@
                 CanFocus = False
                 Cursor = crArrow
                 TextSettings.Trimming = None
+                Size.Width = 28.000000000000000000
+                Size.Height = 28.000000000000000000
+                Size.PlatformDefault = False
                 TabOrder = 0
                 OnClick = bIIEOpenDictPartionCellClick
                 object Image25: TImage
@@ -12620,7 +12720,7 @@
               end
             end
             object bIIEOk: TButton
-              Position.X = 16.000000000000000000
+              Position.X = 8.000000000000000000
               Position.Y = 364.000000000000000000
               Size.Width = 131.000000000000000000
               Size.Height = 42.000000000000000000
@@ -12724,6 +12824,9 @@
                 CanFocus = False
                 Cursor = crArrow
                 TextSettings.Trimming = None
+                Size.Width = 28.000000000000000000
+                Size.Height = 28.000000000000000000
+                Size.PlatformDefault = False
                 TabOrder = 0
                 OnClick = bOrderInternalOkClickClick
                 object Image17: TImage
@@ -14943,10 +15046,6 @@
           ControlMemberName = 'Article'
         end
         item
-          SourceMemberName = 'GoodsGroupName'
-          ControlMemberName = 'GoodsGroupName'
-        end
-        item
           SourceMemberName = 'Amount'
           ControlMemberName = 'Amount'
         end
@@ -14961,6 +15060,14 @@
         item
           SourceMemberName = 'DeleteId'
           ControlMemberName = 'DeleteButton'
+        end
+        item
+          SourceMemberName = 'Error'
+          ControlMemberName = 'Error'
+        end
+        item
+          SourceMemberName = 'EditId'
+          ControlMemberName = 'EditButton'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -15115,7 +15222,7 @@
   object BindSourceDB5: TBindSourceDB
     DataSet = DM.qryInventoryGoods
     ScopeMappings = <>
-    Left = 160
+    Left = 192
     Top = 208
   end
   object BindSourceDB6: TBindSourceDB

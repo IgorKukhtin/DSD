@@ -15,9 +15,10 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbPartionCellId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbInvNumber TVarChar;
    
    DECLARE vbMovementId_OrderClient Integer;
    DECLARE vbPartionId Integer;
@@ -29,66 +30,34 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- определ€ютс€ параметры из документа
-     IF COALESCE((SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId), zc_Enum_Status_Erased()) <> zc_Enum_Status_UnComplete()
+     -- определ€ютс€ параметры документа
+     SELECT Movement.StatusId
+          , Movement.InvNumber
+     INTO vbStatusId, vbInvNumber
+     FROM Movement
+     WHERE Movement.Id = inMovementId;
+
+     IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) <> zc_Enum_Status_UnComplete()
      THEN
-       RETURN;
+       RAISE EXCEPTION 'ќшибка.»зменение документа є <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF; 
-
-     -- »щем может уже есть твкой товар
-     IF COALESCE(ioId, 0) = 0
+     
+     -- »щем может уже есть такой товар ругаемс€
+     IF EXISTS(SELECT MI.Id 
+               FROM MovementItem AS MI
+                    LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                 ON MIString_PartNumber.MovementItemId = MI.Id
+                                                AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+               WHERE MI.MovementId = inMovementId
+                 AND MI.DescId     = zc_MI_Master()
+                 AND MI.ObjectId   = inGoodsId
+                 AND MI.isErased   = FALSE
+                 AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,''))
      THEN
-
-       -- нашли
-       ioId:= COALESCE((SELECT MI.Id FROM MovementItem AS MI
-                                     LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                                  ON MIString_PartNumber.MovementItemId = MI.Id
-                                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                        WHERE MI.MovementId = inMovementId
-                          AND MI.DescId     = zc_MI_Master()
-                          AND MI.ObjectId   = inGoodsId
-                          AND MI.isErased   = FALSE
-                          AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
-                       ), 0);
+       RAISE EXCEPTION 'ќшибка.  омплектующее <%> с S/N <%> уже сохранено в инвентаризации.', lfGet_Object_ValueData (inGoodsId), vbInvNumber;
      END IF;
 
-
-     IF COALESCE(ioId, 0) <> 0
-     THEN
      
-       SELECT MI.Amount + inAmount
-            , COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer AS MovementId_OrderClient
-            , COALESCE (MILinkObject_Partner.ObjectId, 0) 
-            , COALESCE (MILO_PartionCell.ObjectId, 0)
-            , COALESCE (MIFloat_Price.ValueData, 0)        AS Price
-            , COALESCE (MIString_Comment.ValueData,'')     AS Comment
-       INTO inAmount, vbMovementId_OrderClient, vbPartnerId, vbPartionCellId, vbPrice, vbComment
-       FROM MovementItem AS MI 
-            LEFT JOIN MovementItemString AS MIString_Comment
-                                         ON MIString_Comment.MovementItemId = MI.Id
-                                        AND MIString_Comment.DescId = zc_MIString_Comment()
-            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                        ON MIFloat_MovementId.MovementItemId = MI.Id
-                                       AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MI.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
-                                             ON MILinkObject_Partner.MovementItemId = MI.Id
-                                            AND MILinkObject_Partner.DescId         = zc_MILinkObject_Partner()
-            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                             ON MILO_PartionCell.MovementItemId = MI.Id
-                                            AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
-
-       WHERE MI.Id = ioId;
-     
-     ELSE
-       vbMovementId_OrderClient := 0;
-       vbPartnerId := 0;
-       vbPartionCellId := 0;
-       vbPrice := 0;
-       vbComment := '';  
-     END IF;
 
      --находим €чейку хранени€, если нет такой создаем
      IF COALESCE (inPartionCellName, '') <> '' THEN
@@ -129,23 +98,21 @@ BEGIN
          --
      END IF;
      
-     -- определ€ютс€ параметры из документа
-     SELECT tmp.ioId
-     INTO ioId
-     FROM lpInsertUpdate_MovementItem_Inventory (ioId             := ioId
-                                               , inMovementId      := inMovementId
-                                               , inMovementId_OrderClient := vbMovementId_OrderClient
-                                               , inGoodsId         := inGoodsId
-                                               , inPartnerId       := vbPartnerId
-                                               , inPartionCellId   := vbPartionCellId
-                                               , ioAmount          := inAmount
-                                               , inTotalCount      := inAmount
-                                               , inTotalCount_old  := inAmount
-                                               , ioPrice           := vbPrice
-                                               , inPartNumber      := inPartNumber
-                                               , inComment         := vbComment
-                                               , inUserId          := vbUserId
-                                                ) AS tmp;
+     -- определ€етс€ признак —оздание/ орректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+     -- сохранили <Ёлемент документа>
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inGoodsId, NULL, inMovementId, inAmount, NULL, vbUserId);
+
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
+
+     -- сохранили св€зь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell(), ioId, vbPartionCellId);      
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+
 
 END;
 $BODY$
@@ -158,4 +125,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_MobileInventory(ioId := 0, inMovementId := 3172, inGoodsId := 9718, inAmount := 1, inPartNumber := '', inPartionCellName := '', inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_MovementItem_MobileInventory(ioId := 0, inMovementId := 3179 , inGoodsId := 261920, inAmount := 1, inPartNumber := '', inPartionCellName := '', inSession := zfCalc_UserAdmin())
