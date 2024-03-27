@@ -4,7 +4,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -193
   ExplicitWidth = 1237
   ExplicitHeight = 720
   PixelsPerInch = 96
@@ -23,6 +22,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 544
+        ExplicitLeft = 3
+        ExplicitTop = -5
         ExplicitWidth = 1221
         ExplicitHeight = 544
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1393,7 +1394,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Left = 23
+    Left = 31
     Top = 194
     object macExportZP: TMultiAction [0]
       Category = 'Export'

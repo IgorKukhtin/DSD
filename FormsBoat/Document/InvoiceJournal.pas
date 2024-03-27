@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, cxSplitter, Document;
+  Vcl.StdCtrls, cxButtons, cxSplitter, Document, dsdInternetAction;
 
 type
   TInvoiceJournalForm = class(TAncestorJournal_boatForm)
@@ -170,6 +170,13 @@ type
     actUpdate_PostedToDropBox: TdsdExecStoredProc;
     cxButton9: TcxButton;
     AmountIn_real: TcxGridDBColumn;
+    ExportEmailDS: TDataSource;
+    ExportEmailCDS: TClientDataSet;
+    spGet_ImportSettings_Email: TdsdStoredProc;
+    actGet_Export_Email: TdsdExecStoredProc;
+    actSMTPFileCSV: TdsdSMTPFileAction;
+    mactExport_invoice: TMultiAction;
+    bbExport_invoice: TdxBarButton;
   private
     { Private declarations }
   public

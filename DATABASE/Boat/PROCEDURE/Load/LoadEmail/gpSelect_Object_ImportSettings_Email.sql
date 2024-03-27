@@ -71,4 +71,4 @@ $BODY$
 */
 
 -- тест
-SELECT * FROM gpSelect_Object_ImportSettings_Email ('zc_Enum_EmailKind_Mail_InvoiceKredit', zfCalc_UserAdmin())
+--SELECT * FROM gpSelect_Object_ImportSettings_Email ('zc_Enum_EmailKind_Mail_InvoiceKredit', zfCalc_UserAdmin())
