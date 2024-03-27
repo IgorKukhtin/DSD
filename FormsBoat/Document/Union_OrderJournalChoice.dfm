@@ -5,6 +5,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -134
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -1097,6 +1098,14 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           Component = MasterCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'VATPercent'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1054#1050
