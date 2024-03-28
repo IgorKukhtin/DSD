@@ -11,18 +11,16 @@
     Width = 1279
     Height = 316
     TabOrder = 3
-    ExplicitWidth = 1139
+    ExplicitWidth = 1279
     ExplicitHeight = 316
     ClientRectBottom = 316
     ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1139
+      ExplicitWidth = 1279
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1279
         Height = 316
-        ExplicitLeft = 3
-        ExplicitTop = 2
         ExplicitWidth = 1279
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -680,7 +678,7 @@
   end
   inherited Panel: TPanel
     Width = 1279
-    ExplicitWidth = 1139
+    ExplicitWidth = 1279
     inherited deEnd: TcxDateEdit
       Left = 315
       ExplicitLeft = 315
@@ -762,7 +760,6 @@
     Height = 73
     Align = alBottom
     TabOrder = 6
-    ExplicitWidth = 1139
     object btnUpdate: TcxButton
       Left = 218
       Top = 8
@@ -899,7 +896,6 @@
     Height = 115
     Align = alBottom
     TabOrder = 7
-    ExplicitWidth = 1139
     object cxGridDBTableView_Det: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ItemDS
@@ -1179,7 +1175,6 @@
     Height = 8
     AlignSplitter = salBottom
     Control = cxGrid_Item
-    ExplicitWidth = 1139
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1264,7 +1259,35 @@
         end>
       isShowModal = False
     end
-    inherited actInsert: TdsdInsertUpdateAction [1]
+    object mactExport_invoice: TMultiAction [1]
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_Export_Email
+        end
+        item
+          Action = actInvoiceReportName
+        end
+        item
+          Action = actPrintInvoice_save
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actSMTPFile_DBF
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF '#1087#1086' '#1087#1086#1095#1090#1077'?'
+      InfoAfterExecute = #1057#1095#1077#1090' PDF '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
+      ImageIndex = 53
+    end
+    inherited actInsert: TdsdInsertUpdateAction [2]
       Caption = #1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1055#1088#1077#1076#1086#1087#1083#1072#1090#1072
       ShortCut = 16433
@@ -1309,7 +1332,7 @@
           MultiSelectSeparator = ','
         end>
     end
-    object actInsert_Pay: TdsdInsertUpdateAction [2]
+    object actInsert_Pay: TdsdInsertUpdateAction [3]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1057#1095#1077#1090
@@ -1363,7 +1386,7 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actInsert_Proforma: TdsdInsertUpdateAction [3]
+    object actInsert_Proforma: TdsdInsertUpdateAction [4]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1092#1086#1088#1084#1072
@@ -1416,7 +1439,7 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actInsert_Service: TdsdInsertUpdateAction [4]
+    object actInsert_Service: TdsdInsertUpdateAction [5]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1059#1089#1083#1091#1075#1080
@@ -1469,7 +1492,7 @@
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actOpenIncomeCostByInvoice: TdsdOpenForm [5]
+    object actOpenIncomeCostByInvoice: TdsdOpenForm [6]
       Category = 'OpenForm'
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1089#1095#1077#1090#1091' - <'#1055#1088#1080#1093#1086#1076' ('#1079#1072#1090#1088#1072#1090#1099')>'
@@ -1525,11 +1548,11 @@
         end>
       isShowModal = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm [6]
+    inherited actMovementItemContainer: TdsdOpenForm [7]
     end
-    inherited actMovementProtocolOpenForm: TdsdOpenForm [7]
+    inherited actMovementProtocolOpenForm: TdsdOpenForm [8]
     end
-    object actRefreshMov: TdsdDataSetRefresh [8]
+    object actRefreshMov: TdsdDataSetRefresh [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -1543,7 +1566,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    inherited actShowErased: TBooleanStoredProcAction [9]
+    inherited actShowErased: TBooleanStoredProcAction [10]
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -1552,7 +1575,7 @@
           StoredProc = spSelectMI
         end>
     end
-    inherited actRefresh: TdsdDataSetRefresh [10]
+    inherited actRefresh: TdsdDataSetRefresh [11]
       StoredProcList = <
         item
           StoredProc = spSelect
@@ -1561,7 +1584,7 @@
           StoredProc = spSelectMI
         end>
     end
-    inherited actGridToExcel: TdsdGridToExcel [11]
+    inherited actGridToExcel: TdsdGridToExcel [12]
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       ShortCut = 0
@@ -1625,7 +1648,7 @@
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1042#1057#1045#1061' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1042#1057#1045' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
-    object mactPrint_Invoice: TMultiAction [27]
+    object mactPrint_Invoice: TMultiAction [28]
       Category = 'Print'
       MoveParams = <
         item
@@ -1651,7 +1674,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ShortCut = 16464
     end
-    object actInvoiceReportName: TdsdExecStoredProc [28]
+    object actInvoiceReportName: TdsdExecStoredProc [29]
       Category = 'Print'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1662,7 +1685,7 @@
         end>
       Caption = 'actInvoiceReportName'
     end
-    object actPrintInvoice: TdsdPrintAction [29]
+    object actPrintInvoice: TdsdPrintAction [30]
       Category = 'Print'
       MoveParams = <
         item
@@ -1726,7 +1749,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actUpdateDataSet_item: TdsdUpdateDataSet [32]
+    object actUpdateDataSet_item: TdsdUpdateDataSet [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2462,9 +2485,18 @@
         end>
       Caption = 'actGet_Export_Email'
     end
-    object actSMTPFileCSV: TdsdSMTPFileAction
+    object actSMTPFile_DBF: TdsdSMTPFileAction
       Category = 'Export_Email'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.Value = Null
+          FromParam.Component = DocumentInvoice
+          FromParam.ComponentItem = 'FileName'
+          FromParam.DataType = ftString
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
       Host.Value = Null
       Host.Component = ExportEmailCDS
       Host.ComponentItem = 'Host'
@@ -2505,34 +2537,6 @@
       ToAddress.ComponentItem = 'AddressTo'
       ToAddress.DataType = ftString
       ToAddress.MultiSelectSeparator = ','
-    end
-    object mactExport_invoice: TMultiAction
-      Category = 'Export_Email'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actGet_Export_Email
-        end
-        item
-          Action = actInvoiceReportName
-        end
-        item
-          Action = actPrintInvoice_save
-        end
-        item
-          Action = actInsertDocument
-        end
-        item
-          Action = actSMTPFileCSV
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF '#1087#1086' '#1087#1086#1095#1090#1077'?'
-      InfoAfterExecute = #1057#1095#1077#1090' PDF '#1091#1089#1087#1077#1096#1085#1086' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1087#1086' '#1087#1086#1095#1090#1077
-      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
-      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1057#1095#1077#1090' PDF'
-      ImageIndex = 53
     end
   end
   inherited MasterDS: TDataSource
@@ -3418,7 +3422,7 @@
     Top = 128
   end
   object spGet_ImportSettings_Email: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ImportSettings_Email'
+    StoredProcName = 'gpGet_Movement_Invoice_Email'
     DataSet = ExportEmailCDS
     DataSets = <
       item
@@ -3426,9 +3430,10 @@
       end>
     Params = <
       item
-        Name = 'inEmailKindDesc'
+        Name = 'inMovementId'
         Value = 'zc_Enum_EmailKind_Mail_InvoiceKredit()'
-        DataType = ftString
+        Component = MasterCDS
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

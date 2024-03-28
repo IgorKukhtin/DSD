@@ -174,7 +174,7 @@ type
     ExportEmailCDS: TClientDataSet;
     spGet_ImportSettings_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;
-    actSMTPFileCSV: TdsdSMTPFileAction;
+    actSMTPFile_DBF: TdsdSMTPFileAction;
     mactExport_invoice: TMultiAction;
     bbExport_invoice: TdxBarButton;
   private
