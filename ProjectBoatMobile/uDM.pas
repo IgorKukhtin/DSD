@@ -76,17 +76,6 @@ type
   End;
 
   TDM = class(TDataModule)
-    cdsInventoryJournal: TClientDataSet;
-    cdsInventoryJournalId: TIntegerField;
-    cdsInventoryJournalStatusId: TIntegerField;
-    cdsInventoryJournalisList: TBooleanField;
-    cdsInventoryJournalInvNumber: TWideStringField;
-    cdsInventoryJournalStatusName: TWideStringField;
-    cdsInventoryJournalUnitName: TWideStringField;
-    cdsInventoryJournalComment: TWideStringField;
-    cdsInventoryJournalOperDate: TWideStringField;
-    cdsInventoryJournalTotalCount: TWideStringField;
-    cdsInventoryJournalEditButton: TIntegerField;
     cdsInventory: TClientDataSet;
     cdsInventoryId: TIntegerField;
     cdsInventoryInvNumber: TWideStringField;
@@ -109,10 +98,7 @@ type
     cdsInventoryListMeasureName: TWideStringField;
     cdsInventoryListAmount: TFloatField;
     cdsInventoryListAmountRemains: TFloatField;
-    cdsInventoryListAmountDiff: TFloatField;
     cdsInventoryListAmountRemains_curr: TFloatField;
-    cdsInventoryListPrice: TFloatField;
-    cdsInventoryListSumma: TFloatField;
     cdsInventoryUnitId: TIntegerField;
     cdsGoodsEAN: TClientDataSet;
     cdsInventoryListPartNumber: TWideStringField;
@@ -147,7 +133,6 @@ type
     qryInventoryGoodsPartNumber: TWideStringField;
     qryInventoryGoodsAmount: TFloatField;
     fdcUTF16NoCase: TFDSQLiteCollation;
-    qryInventoryGoodsDeleteId: TIntegerField;
     cdsOrderInternal: TClientDataSet;
     cdsOrderInternalMovementItemId: TIntegerField;
     cdsOrderInternalInvNumber_Full: TWideStringField;
@@ -187,7 +172,7 @@ type
     cdsInventoryItemEditPartNumber: TWideStringField;
     cdsInventoryItemEditGoodsGroupName: TWideStringField;
     cdsInventoryItemEditPartnerName: TWideStringField;
-    cdsInventoryItemEditOperCount: TFloatField;
+    cdsInventoryItemEditAmount: TFloatField;
     cdsInventoryItemEditTotalCount: TFloatField;
     cdsInventoryItemEditAmountRemains: TFloatField;
     cdsInventoryItemEditAmountDiff: TFloatField;
@@ -205,9 +190,20 @@ type
     qryInventoryGoodsId: TIntegerField;
     tblInventoryGoodsError: TWideStringField;
     qryInventoryGoodsError: TWideStringField;
-    qryInventoryGoodsEditId: TIntegerField;
     cdsInventoryItemEditLocalId: TIntegerField;
     qryInventoryGoodsPartionCellName: TWideStringField;
+    tblInventoryGoodsTotalCount: TFloatField;
+    tblInventoryGoodsAmountRemains: TFloatField;
+    qryInventoryGoodsAmountRemains: TFloatField;
+    qryInventoryGoodsTotalCount: TFloatField;
+    qryInventoryGoodsAmountLabel: TWideStringField;
+    qryInventoryGoodsAmountRemainsLabel: TWideStringField;
+    qryInventoryGoodsTotalCountLabel: TWideStringField;
+    cdsInventoryListPartionCellId: TIntegerField;
+    cdsInventoryListPartionCellName: TWideStringField;
+    cdsInventoryListTotalCount: TFloatField;
+    cdsInventoryListOperDate_protocol: TDateTimeField;
+    cdsInventoryListUserName_protocol: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -246,9 +242,8 @@ type
     procedure UpdateProgram(const AResult: TModalResult);
 
     function DownloadDict : Boolean;
-    function DownloadInventoryJournal : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
-    function DownloadInventoryList : Boolean;
+    function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean) : Boolean;
 
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
@@ -266,7 +261,8 @@ type
     procedure LoadGoodsEAN;
 
     procedure OpenInventoryGoods;
-    procedure InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount: Currency; APartNumber, APartionCell, AError : String; AisSend: Boolean);
+    procedure InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
+                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
     procedure UpdateInventoryGoods(AAmount: Currency);
     procedure DeleteInventoryGoods;
     function isInventoryGoodsSend : Boolean;
@@ -1543,58 +1539,19 @@ begin
   end;
 end;
 
-{ начитка журнала инвентаризаций }
-function TDM.DownloadInventoryJournal : Boolean;
-var
-  StoredProc : TdsdStoredProc;
-  nId: Integer;
-begin
-
-  if cdsInventoryJournal.Active and not cdsInventoryJournal.IsEmpty then
-    nID := DM.cdsInventoryJournalId.AsInteger
-  else nID := 0;
-
-  StoredProc := TdsdStoredProc.Create(nil);
-  cdsInventoryJournal.DisableControls;
-  try
-    StoredProc.OutputType := otDataSet;
-
-    StoredProc.StoredProcName := 'gpSelect_Movement_MobileInventory';
-    StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, frmMain.deInventoryStartDate.Date);
-    StoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, frmMain.deInventoryEntDate.Date);
-    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
-    StoredProc.DataSet := cdsInventoryJournal;
-
-    try
-      StoredProc.Execute(false, false, false);
-      Result := cdsInventoryJournal.Active;
-      if Result and (nID <> 0) then cdsInventoryJournal.Locate('Id', nId, [])
-    except
-      on E : Exception do
-      begin
-        raise Exception.Create(GetTextMessage(E));
-        exit;
-      end;
-    end;
-  finally
-    FreeAndNil(StoredProc);
-    cdsInventoryJournal.EnableControls;
-  end;
-end;
-
 { начитка инвентаризации}
 function TDM.DownloadInventory(AId : Integer = 0) : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
 begin
+  Result := False;
 
   if AId <> 0 then
     nId := AId
-  else  if cdsInventory.Active and not cdsInventory.IsEmpty then
+  else if cdsInventory.Active and not cdsInventory.IsEmpty then
     nID := DM.cdsInventoryId.AsInteger
-  else nID := DM.cdsInventoryJournalId.AsInteger;
+  else Exit;
 
   StoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1621,7 +1578,7 @@ begin
 end;
 
 { начитка строк инвентаризации}
-function TDM.DownloadInventoryList : Boolean;
+function TDM.DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean) : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
@@ -1642,7 +1599,9 @@ begin
     StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileInventory';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DM.cdsInventoryId.AsInteger);
-    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, False);
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
     StoredProc.DataSet := cdsInventoryList;
 
     try
@@ -1846,7 +1805,7 @@ begin
       StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, cdsInventoryItemEditId.AsInteger);
       StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
       StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, cdsInventoryItemEditGoodsId.AsInteger);
-      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditOperCount.AsFloat);
+      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditAmountDiff.AsFloat);
       StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, cdsInventoryItemEditPartNumber.AsWideString);
       StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsInventoryItemEditPartionCellName.AsWideString);
 
@@ -1865,7 +1824,8 @@ begin
     end;
 
     DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
-                                 cdsInventoryItemEditOperCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
+                                 cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
+                                 cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
                                  cdsInventoryItemEditPartionCellName.AsString, '', Result);
 
   finally
@@ -2047,7 +2007,7 @@ begin
   // перед открытием почистим
   if cdsInventory.Active and (cdsInventoryId.AsInteger <> 0) then
     DM.conMain.ExecSQL('DELETE FROM InventoryGoods WHERE MovementId <> ' + cdsInventoryId.AsString +
-                       ' OR isSend = 1 and LocalId < (SELECT MAX(LocalId) - 3 FROM InventoryGoods)');
+                       ' OR isSend = 1 and LocalId < (SELECT MAX(LocalId) - 4 FROM InventoryGoods)');
 
   qryInventoryGoods.Close;
   qryInventoryGoods.ParamByName('MovementId').Value := cdsInventoryId.AsInteger;
@@ -2056,12 +2016,14 @@ end;
 
 procedure TDM.qryInventoryGoodsCalcFields(DataSet: TDataSet);
 begin
-  DataSet.FieldByName('DeleteId').AsInteger := 0;
-  DataSet.FieldByName('EditId').AsInteger := 4;
+  DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
+  DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'ИТОГО (введено):';
 end;
 
 // Добавить/изменить товар для вставки в инвентаризацию
-procedure TDM.InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount: Currency; APartNumber, APartionCell, AError : String; AisSend: Boolean);
+procedure TDM.InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
+                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
   var FDQuery: TFDQuery;
 begin
 
@@ -2081,6 +2043,8 @@ begin
     FDQuery.FieldByName('PartNumber').AsString := APartNumber;
     FDQuery.FieldByName('PartionCellName').AsString := APartionCell;
     FDQuery.FieldByName('Amount').AsFloat := AAmount;
+    FDQuery.FieldByName('AmountRemains').AsFloat := AAmountRemains;
+    FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount;
     FDQuery.FieldByName('Error').AsString := AError;
     FDQuery.FieldByName('isSend').AsBoolean := AisSend;
     FDQuery.Post;

@@ -13,7 +13,7 @@ uses
   FMX.ListView, uDM, FMX.Media,  Winsoft.FireMonkey.Obr, System.ImageList, FMX.ImgList,
   FMX.DateTimeCtrls, System.Rtti, System.Bindings.Outputs, Fmx.Bind.Editors,
   Data.Bind.EngExt, Fmx.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope,
-  FMX.ListBox
+  FMX.ListBox, FMX.ExtCtrls, FMX.Memo.Types, FMX.ScrollBox, FMX.Memo
   {$IFDEF ANDROID}
   ,System.Permissions,Androidapi.JNI.Os, FMX.Helpers.Android, Androidapi.Helpers,
   Androidapi.JNI.Location, Androidapi.JNIBridge, Androidapi.JNI.GraphicsContentViewText,
@@ -121,17 +121,8 @@ type
     Image9: TImage;
     ilPartners: TImageList;
     ilButton: TImageList;
-    tiInventoryJournal: TTabItem;
-    pInventoryJournal: TPanel;
-    Label41: TLabel;
-    deInventoryStartDate: TDateEdit;
-    Label10: TLabel;
-    deInventoryEntDate: TDateEdit;
-    lwInventoryJournal: TListView;
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
-    bInventoryJournalRefresh: TSpeedButton;
-    Image10: TImage;
     tiInventory: TTabItem;
     Panel2: TPanel;
     Label11: TLabel;
@@ -142,13 +133,9 @@ type
     Label12: TLabel;
     Label13: TLabel;
     edInventoryUnit: TEdit;
-    edInventoryComment: TEdit;
     edInventoryOperDate: TEdit;
-    sbInventoryScan: TSpeedButton;
-    Image12: TImage;
     imInventoryStatus: TImage;
     BindSourceDB2: TBindSourceDB;
-    LinkControlToField1: TLinkControlToField;
     LinkControlToField2: TLinkControlToField;
     LinkControlToField3: TLinkControlToField;
     LinkControlToField4: TLinkControlToField;
@@ -156,7 +143,6 @@ type
     lwInventoryList: TListView;
     BindSourceDB3: TBindSourceDB;
     LinkListControlToField1: TLinkListControlToField;
-    LinkListControlToField2: TLinkListControlToField;
     tiInventoryScan: TTabItem;
     tiGoods: TTabItem;
     pGoods: TPanel;
@@ -200,10 +186,6 @@ type
     lGoodsSelect: TLabel;
     pPassword: TPanel;
     ppWebServer: TPopup;
-    pWebServerTest: TPanel;
-    Label18: TLabel;
-    pWebServerMain: TPanel;
-    Label19: TLabel;
     Rectangle1: TRectangle;
     pOrderInternal: TPanel;
     Label20: TLabel;
@@ -225,11 +207,8 @@ type
     LinkControlToField10: TLinkControlToField;
     bpProductionUnion: TButton;
     tiInventoryItemEdit: TTabItem;
-    bInventScanSN: TSpeedButton;
+    bInventScanAmount: TSpeedButton;
     bInventScan: TSpeedButton;
-    Image15: TImage;
-    Image16: TImage;
-    Image22: TImage;
     edIIEGoodsGroup: TEdit;
     Label14: TLabel;
     edIIEPartnerName: TEdit;
@@ -238,7 +217,6 @@ type
     Label16: TLabel;
     edIIEGoodsCode: TEdit;
     Label25: TLabel;
-    edIIEGoodsName: TEdit;
     Label26: TLabel;
     edIIEAmountDiff: TEdit;
     Label27: TLabel;
@@ -246,7 +224,7 @@ type
     Label28: TLabel;
     edIIETotalCountEnter: TEdit;
     Label29: TLabel;
-    edIIEOperCount: TEdit;
+    edIIEAmount: TEdit;
     Label30: TLabel;
     edIIEPartionCell: TEdit;
     Label32: TLabel;
@@ -261,7 +239,6 @@ type
     LinkControlToField12: TLinkControlToField;
     LinkControlToField13: TLinkControlToField;
     LinkControlToField14: TLinkControlToField;
-    LinkControlToField15: TLinkControlToField;
     LinkControlToField16: TLinkControlToField;
     LinkControlToField17: TLinkControlToField;
     LinkControlToField18: TLinkControlToField;
@@ -288,6 +265,23 @@ type
     rbCameraScaner: TRadioButton;
     bIIEOpenDictGoods: TEditButton;
     Image26: TImage;
+    bViewInventory: TSpeedButton;
+    cbILOrderBy: TComboBox;
+    cbILAllUser: TComboBox;
+    cbILErased: TComboBox;
+    bInventScanSN: TSpeedButton;
+    ppActions: TPopup;
+    Rectangle2: TRectangle;
+    Panel6: TPanel;
+    rbEditRecord: TRadioButton;
+    rbEraseRecord: TRadioButton;
+    rbErrorInfo: TRadioButton;
+    rbCancel: TRadioButton;
+    rbWebServerTest: TRadioButton;
+    rbWebServerMain: TRadioButton;
+    Memo1: TMemo;
+    LinkControlToField1: TLinkControlToField;
+    Edit1: TEdit;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -307,7 +301,6 @@ type
     procedure ShowInventory;
     procedure ShowInventoryItemEdit;
     procedure ShowEditInventoryItemEdit;
-    procedure ShowInventoryScan;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -323,21 +316,16 @@ type
     procedure tiStopCameraTimer(Sender: TObject);
     procedure sbIlluminationModeClick(Sender: TObject);
     procedure bInventoryJournalClick(Sender: TObject);
-    procedure sbtiInventoryJournalRefreshClick(Sender: TObject);
     procedure lwInventoryJournalItemClickEx(const Sender: TObject;
       ItemIndex: Integer; const LocalClickPos: TPointF;
       const ItemObject: TListItemDrawable);
     procedure sbInventoryRefreshClick(Sender: TObject);
-    procedure sbInventoryScanClick(Sender: TObject);
     procedure bGoodsClick(Sender: TObject);
     procedure bGoodsRefreshClick(Sender: TObject);
     procedure bGoodsChoiceClick(Sender: TObject);
     procedure bInventoryJournalRefreshClick(Sender: TObject);
     procedure bInventScanSearchClick(Sender: TObject);
     procedure edАmountChangeTracking(Sender: TObject);
-    procedure lwInventoryScanItemClickEx(const Sender: TObject;
-      ItemIndex: Integer; const LocalClickPos: TPointF;
-      const ItemObject: TListItemDrawable);
     procedure SetDateDownloadDict(Values : TDateTime);
     procedure b0Click(Sender: TObject);
     procedure bDotClick(Sender: TObject);
@@ -351,7 +339,6 @@ type
     procedure lwGoodsChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure pPasswordClick(Sender: TObject);
-    procedure pWebServerClick(Sender: TObject);
     procedure bOrderInternalOkClickClick(Sender: TObject);
     procedure bpProductionUnionClick(Sender: TObject);
     procedure bInventScanClick(Sender: TObject);
@@ -366,6 +353,14 @@ type
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure bIIEOpenDictGoodsClick(Sender: TObject);
     procedure rrInventScanSNClick(Sender: TObject);
+    procedure bViewInventoryClick(Sender: TObject);
+    procedure lwInventoryScanMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure lwInventoryScanMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure rbCancelClick(Sender: TObject);
+    procedure rbWebServerClick(Sender: TObject);
+    procedure cbILOrderByChange(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -388,13 +383,17 @@ type
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
     FDateDownloadDict: TDateTime;
-    FisInventScanSN : Boolean;
+    FInventScanType : Integer;
     FisNextInventScan : Boolean;
     FisInventScanOk : Boolean;
     FGoodsId: Integer;
 
     FDictUpdateDataSet: TDataSet;
     FDictUpdateField: String;
+
+    FTouchDateTime: TDateTime;
+    FTouch: Boolean;
+
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
@@ -418,6 +417,7 @@ type
     procedure Wait(AWait: Boolean);
   public
     { Public declarations }
+    procedure SetInventScanButton;
     property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
   end;
 
@@ -482,7 +482,7 @@ begin
   FormatSettings.DecimalSeparator := '.';
   FisBecomeForeground := False;
   FPasswordLabelClick := 0;
-  FisInventScanSN := False;
+  FInventScanType := 0;
   FisNextInventScan := False;
   FisInventScanOk := False;
 
@@ -490,8 +490,10 @@ begin
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
   bInventScan.StyledSettings := [TStyledSetting.Family];
+  bInventScanAmount.StyledSettings := [TStyledSetting.Family];
   bInventScanSN.StyledSettings := [TStyledSetting.Family];
   bInventScanSearch.StyledSettings := [TStyledSetting.Family];
+  bViewInventory.StyledSettings := [TStyledSetting.Family];
 
   FFormsStack := TStack<TFormStackItem>.Create;
 
@@ -802,6 +804,11 @@ begin
   end;
 end;
 
+procedure TfrmMain.cbILOrderByChange(Sender: TObject);
+begin
+  sbInventoryRefreshClick(Sender);
+end;
+
 procedure TfrmMain.cbSearchTypeGoodsChange(Sender: TObject);
 begin
   ShowGoods;
@@ -835,6 +842,39 @@ begin
   end;
 end;
 
+procedure TfrmMain.SetInventScanButton;
+begin
+  bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+  bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+  bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  bInventScanAmount.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+  bInventScanAmount.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+  bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
+  bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+  bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+
+
+  case FInventScanType of
+    0 : begin
+          bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+        end;
+    1 : begin
+          bInventScanAmount.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bInventScanAmount.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+        end;
+    2 : begin
+          bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+        end;
+  end;
+end;
+
+
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
 
@@ -843,7 +883,11 @@ begin
     FDataWedgeBarCode.OnScanResultDetails := Nil;
     FDataWedgeBarCode.OnScanResult := Nil;
     if Assigned(FObr) then FObr.OnBarcodeDetected := Nil;
-    if Assigned(FCameraScanBarCode) then FCameraScanBarCode.OnSampleBufferReady := Nil;
+    if Assigned(FCameraScanBarCode) then
+    begin
+      FCameraScanBarCode.OnSampleBufferReady := Nil;
+      if FCameraScanBarCode.HasFlash then FCameraScanBarCode.TorchMode := TTorchMode.ModeOff;
+    end;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
@@ -867,11 +911,6 @@ begin
       imLogo.Visible := false;
       sbBack.Visible := true;
     end;
-
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion)  then
-      sbScan.Visible := true
-    else sbScan.Visible := false;
-    sbIlluminationMode.Visible := sbScan.Visible and FisZebraScaner and not FisCameraScaner;
 
     if tcMain.ActiveTab = tiMain then
       lCaption.Text := 'A g i l i s'
@@ -917,10 +956,8 @@ begin
       FObr.Active := True;
       FisCameraScanBarCode := True;
       FCameraScanBarCode.Active := True;
-    end else
-    if tcMain.ActiveTab = tiInventoryJournal then
-    begin
-      lCaption.Text := 'Журнал инвентаризаций';
+      if FCameraScanBarCode.HasFlash and FDataWedgeBarCode.isIllumination then
+        FCameraScanBarCode.TorchMode := TTorchMode.ModeOn;
     end else
     if tcMain.ActiveTab = tiInventory then
     begin
@@ -930,23 +967,7 @@ begin
     begin
       lCaption.Text := 'Сканирование/выбор комплектующих';
       DM.OpenInventoryGoods;
-      if FisInventScanSN then
-      begin
-        bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
-        bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
-        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
-        bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
-        bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
-        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-      end else
-      begin
-        bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
-        bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
-        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
-        bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
-        bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
-        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-      end;
+      SetInventScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
       if FisNextInventScan and FisInventScanOk and not FisZebraScaner then
       begin
@@ -960,10 +981,15 @@ begin
     begin
       lCaption.Text := 'Добавить в Инвентаризацию';
       sbBack.Visible := false;
-      if FisInventScanSN then
-      begin
-        edIIEPartNumber.SetFocus;
-        edIIEPartNumber.SelectAll;
+      case FInventScanType of
+        1 : begin
+              edIIEAmount.SetFocus;
+              edIIEAmount.SelectAll;
+            end;
+        2 : begin
+              edIIEPartNumber.SetFocus;
+              edIIEPartNumber.SelectAll;
+            end;
       end;
     end
     else
@@ -976,7 +1002,13 @@ begin
       DM.cdsOrderInternal.Close;
       pOrderInternal.Visible := False;
       pProductionUnion.Visible := pOrderInternal.Visible;
-    end
+    end;
+
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion)  then
+      sbScan.Visible := true
+    else sbScan.Visible := false;
+    sbIlluminationMode.Visible := (sbScan.Visible and FisZebraScaner and not FisCameraScaner) or
+                                  ((tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash);
   end;
 end;
 
@@ -1118,7 +1150,9 @@ begin
      DM.cdsInventoryItemEditArticle.AsString := DM.cdsGoodsListArticle.AsString;
      DM.cdsInventoryItemEditPartNumber.AsString := '';
      DM.cdsInventoryItemEditGoodsGroupName.AsString := DM.cdsGoodsListGoodsGroupName.AsString;
-     DM.cdsInventoryItemEditOperCount.AsFloat := 1;
+     DM.cdsInventoryItemEditAmount.AsFloat := 1;
+
+     DM.GetMIInventoryGoods(DM.cdsInventoryItemEdit);
 
      DM.cdsInventoryItemEdit.Post;
   end;
@@ -1144,7 +1178,7 @@ begin
    DM.cdsInventoryItemEditArticle.AsString := DM.qryInventoryGoodsArticle.AsString;
    DM.cdsInventoryItemEditPartNumber.AsString := DM.qryInventoryGoodsPartNumber.AsString;
    DM.cdsInventoryItemEditGoodsGroupName.AsString := DM.qryInventoryGoodsGoodsGroupName.AsString;
-   DM.cdsInventoryItemEditOperCount.AsFloat := DM.qryInventoryGoodsAmount.AsFloat;
+   DM.cdsInventoryItemEditAmount.AsFloat := DM.qryInventoryGoodsAmount.AsFloat;
    DM.cdsInventoryItemEditPartionCellName.AsString := DM.qryInventoryGoodsPartionCellName.AsString;
 
    DM.GetMIInventoryGoods(DM.cdsInventoryItemEdit);
@@ -1164,37 +1198,15 @@ end;
 // начитка информации журнала инвентаризаций
 procedure TfrmMain.ShowInventory;
 begin
-  if not DM.cdsInventoryJournal.Active then Exit;
-  if DM.cdsInventoryJournal.IsEmpty then Exit;
-  if DM.cdsInventoryJournalId.AsInteger = 0 then Exit;
-
-  if not DM.DownloadInventory then Exit;
-  imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
-
-  if not DM.DownloadInventoryList then Exit;
-
-  if tcMain.ActiveTab <> tiInventory then SwitchToForm(tiInventory, nil);
-end;
-
-
-// начитка информации для сканирования
-procedure TfrmMain.ShowInventoryScan;
-begin
   if not DM.cdsInventory.Active then Exit;
   if DM.cdsInventory.IsEmpty then Exit;
   if DM.cdsInventoryId.AsInteger = 0 then Exit;
 
-  if DM.cdsInventoryJournalStatusId.AsInteger <> 1 then
-  begin
-    ShowMessage('Добавлять товар в проведенную инвентаризацию запрещено.');
-    Exit;
-  end;
+  imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryStatusId.AsInteger].MultiResBitmap);
 
-  imInventoryStatus.MultiResBitmap.Assign(ilPartners.Source.Items[DM.cdsInventoryJournalStatusId.AsInteger].MultiResBitmap);
+  if not DM.DownloadInventoryList(cbILOrderBy.ItemIndex > 0, cbILAllUser.ItemIndex > 0, cbILErased.ItemIndex > 0) then Exit;
 
-  if not DM.cdsGoodsEan.Active then DM.LoadGoodsEAN;
-
-  SwitchToForm(tiInventoryScan, nil);
+  if tcMain.ActiveTab <> tiInventory then SwitchToForm(tiInventory, nil);
 end;
 
 procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
@@ -1209,7 +1221,6 @@ end;
 
 procedure TfrmMain.bInventoryJournalRefreshClick(Sender: TObject);
 begin
-  DM.DownloadInventoryJournal;
 end;
 
 // Поиск товара для вставки в инвентаризацию
@@ -1224,25 +1235,9 @@ end;
 procedure TfrmMain.bInventScanClick(Sender: TObject);
 begin
   FGoodsId := 0;
-  FisInventScanSN := TSpinEditButton(Sender).Tag <> 0;
+  FInventScanType := TSpinEditButton(Sender).Tag;
   FisNextInventScan := True;
-  if FisInventScanSN then
-  begin
-    bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
-    bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
-    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
-    bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
-    bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
-    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-  end else
-  begin
-    bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
-    bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
-    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
-    bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
-    bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
-    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-  end;
+  SetInventScanButton;
   sbScanClick(Sender);
 end;
 
@@ -1303,7 +1298,7 @@ end;
 // Добавление в инвентаризацию
 procedure TfrmMain.bIIEOkClick(Sender: TObject);
 begin
-  if FisInventScanSN and (Trim(DM.cdsInventoryItemEditPartNumber.AsString) = '') then
+  if (FInventScanType = 2) and (Trim(DM.cdsInventoryItemEditPartNumber.AsString) = '') then
   begin
     ShowMessage('Не заполнен серийный номер.');
     edIIEPartNumber.SetFocus;
@@ -1366,6 +1361,11 @@ begin
   else ShowMessage('Нет данных для отправки.');
 end;
 
+procedure TfrmMain.bViewInventoryClick(Sender: TObject);
+begin
+  ShowInventory;
+end;
+
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
@@ -1388,13 +1388,9 @@ begin
   end else if (tcMain.ActiveTab = tiGoods)  then
   begin
     DM.FilterGoodsEAN := False;
-  end else if (tcMain.ActiveTab = tiInventoryJournal)  then
-  begin
-    DM.cdsInventoryJournal.Close;
   end
   else if (tcMain.ActiveTab = tiInventory)  then
   begin
-    DM.cdsInventory.Close;
     DM.cdsInventoryList.Close;
   end
   else if (tcMain.ActiveTab = tiInventoryScan)  then
@@ -1438,6 +1434,13 @@ begin
     Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
   else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
 
+  if (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash then
+  begin
+    if FDataWedgeBarCode.isIllumination then
+      FCameraScanBarCode.TorchMode := TTorchMode.ModeOn
+    else FCameraScanBarCode.TorchMode := TTorchMode.Modeoff;
+  end;
+
   // сохранение подсветки в ini файле
   SettingsFile := TIniFile.Create(FINIFile);
   try
@@ -1453,11 +1456,6 @@ begin
 end;
 
 //
-procedure TfrmMain.sbInventoryScanClick(Sender: TObject);
-begin
-  ShowInventoryScan;
-end;
-
 procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
   if FisBecomeForeground and FisZebraScaner and not FisCameraScaner then
@@ -1471,12 +1469,6 @@ begin
 
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.Scan
   else SwitchToForm(tiScanBarCode, nil);
-end;
-
-// Перерисовка журнала инвентаризаций
-procedure TfrmMain.sbtiInventoryJournalRefreshClick(Sender: TObject);
-begin
-  DM.DownloadInventoryJournal;
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -1500,6 +1492,9 @@ begin
       else
       if ppWebServer.IsOpen then
         ppWebServer.IsOpen := false
+      else
+      if ppActions.IsOpen then
+        ppActions.IsOpen := false
       else
       if ppEnterAmount.IsOpen then
         ppEnterAmount.IsOpen := false
@@ -1566,9 +1561,6 @@ end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
 begin
-  deInventoryStartDate.DateTime := IncDay(Date, -7);
-  deInventoryEntDate.DateTime := Date();
-
   SwitchToForm(tiStart, nil);
   ChangeMainPageUpdate(nil);
 end;
@@ -1696,38 +1688,32 @@ begin
     SwitchToForm(tiInventoryScan, nil);
 end;
 
-procedure TfrmMain.lwInventoryScanItemClickEx(const Sender: TObject;
-  ItemIndex: Integer; const LocalClickPos: TPointF;
-  const ItemObject: TListItemDrawable);
+procedure TfrmMain.lwInventoryScanMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
-  // Удаление позиции товара
-  if Assigned(ItemObject) and (ItemObject.Name = 'DeleteButton') then
-    TDialogService.MessageDialog('Удалить товар "' + DM.qryInventoryGoodsGoodsName.AsString +
-         '" подготовленный к вставке в инвентаризацию ?',
-         TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
-  else
-  // Изменить позицию товара
-  if Assigned(ItemObject) and (ItemObject.Name = 'EditButton') then
+  FTouchDateTime := Now;
+  if (ssLeft in Shift) or (ssTouch in Shift) then FTouch := True
+  else FTouch := False;
+end;
+
+procedure TfrmMain.lwInventoryScanMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+var I: Integer;
+begin
+  if FTouch and DM.qryInventoryGoods.Active and not DM.qryInventoryGoods.IsEmpty and
+     ((ssLeft in Shift) or (ssTouch in Shift)) and (MilliSecondsBetween(FTouchDateTime, Now) > 300)  then
   begin
-    ShowEditInventoryItemEdit;
-  end else
-  // Информация об ошибке
-  if Assigned(ItemObject) and (ItemObject.Name = 'Error') and not DM.qryInventoryGoods.IsEmpty and
-     (DM.qryInventoryGoodsError.AsString <> '') then
-  begin
-     ShowMessage(DM.qryInventoryGoodsError.AsString);
+    rbErrorInfo.Visible := DM.qryInventoryGoodsError.AsString <> '';
+    ppActions.Height := 6;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
+      begin
+        TRadioButton(Components[I]).IsChecked := False;
+        ppActions.Height := ppActions.Height + TRadioButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
   end;
-
-//  // вызов формы для редактирования количества выбранного товара
-//  if Assigned(ItemObject) and ((ItemObject.Name = 'Amount') or (ItemObject.Name = 'MeasureName')) and
-//     not DM.qryInventoryGoods.IsEmpty then
-//  begin
-//    lAmount.Text := '0';
-//    lMeasure.Text := DM.qryInventoryGoodsMeasureName.AsString;
-//
-//    ppEnterAmount.IsOpen := true;
-//  end;
-
+  FTouch := False;
 end;
 
 procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -1807,17 +1793,44 @@ begin
   if FPasswordLabelClick = 3 then
   begin
     FPasswordLabelClick := 0;
+    rbWebServerMain.IsChecked := not FisTestWebServer;
+    rbWebServerTest.IsChecked := FisTestWebServer;
     if LoginEdit.Text = 'Админ' then ppWebServer.IsOpen := True;
   end;
 end;
 
-procedure TfrmMain.pWebServerClick(Sender: TObject);
+procedure TfrmMain.rbCancelClick(Sender: TObject);
+begin
+  ppActions.IsOpen := False;
+
+  if (tcMain.ActiveTab = tiInventoryScan) then
+  begin
+    // Изменить позицию товара
+    if TRadioButton(Sender).Tag = 0 then
+    begin
+      ShowEditInventoryItemEdit;
+    end else
+    // Удаление позиции товара
+    if TRadioButton(Sender).Tag = 4 then
+      TDialogService.MessageDialog('Удалить товар "' + DM.qryInventoryGoodsGoodsName.AsString +
+           '" подготовленный к вставке в инвентаризацию ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
+    else
+    // Информация об ошибке
+    if TRadioButton(Sender).Tag = 5  then
+    begin
+       ShowMessage(DM.qryInventoryGoodsError.AsString);
+    end;
+  end;
+end;
+
+procedure TfrmMain.rbWebServerClick(Sender: TObject);
   var SettingsFile : TIniFile;
 begin
   ppWebServer.IsOpen := False;
   FPasswordLabelClick := 0;
 
-  FisTestWebServer := TPanel(Sender).Tag = 1;
+  FisTestWebServer := TRadioButton(Sender).Tag = 1;
 
   // Сохраним в ini файла
   SettingsFile := TIniFile.Create(FINIFile);
