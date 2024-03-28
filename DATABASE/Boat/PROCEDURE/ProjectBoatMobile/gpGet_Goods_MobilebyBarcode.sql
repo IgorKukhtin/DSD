@@ -59,6 +59,8 @@ BEGIN
         
      ELSE 
 
+       RAISE EXCEPTION 'Ошибка.Значение Ш/К = <%> не надено.', inBarCode;
+
        RETURN QUERY
          SELECT 0::Integer                          AS GoodsId
               , NULL::Integer                       AS GoodsCode
