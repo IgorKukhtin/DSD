@@ -26,7 +26,6 @@ object OrderClientForm: TOrderClientForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 5
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -3724,7 +3723,7 @@ object OrderClientForm: TOrderClientForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 278
-    Top = 199
+    Top = 255
     DockControlHeights = (
       0
       0
@@ -4081,6 +4080,14 @@ object OrderClientForm: TOrderClientForm
         item
           Visible = True
           ItemName = 'bbChangeNPP'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedChildDetail'
         end>
     end
     object bbsGoods: TdxBarSubItem
@@ -4143,6 +4150,10 @@ object OrderClientForm: TOrderClientForm
           Visible = True
           ItemName = 'bbOpenBankAccountJournalByInvoice'
         end>
+    end
+    object bbErasedChildDetail: TdxBarButton
+      Action = actErasedChildDetail
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -4425,6 +4436,21 @@ object OrderClientForm: TOrderClientForm
           StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
+      DataSource = MasterDS
+    end
+    object actErasedChildDetail: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      MoveParams = <>
+      StoredProc = spErasedChildDetail
+      StoredProcList = <
+        item
+          StoredProc = spErasedChildDetail
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1076#1072#1083#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1076#1072#1083#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074'>'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
     object actRefreshInfo: TdsdDataSetRefresh
@@ -6188,8 +6214,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 478
-    Top = 208
+    Left = 470
+    Top = 256
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_OrderClient_SetUnErased'
@@ -7717,5 +7743,22 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 903
     Top = 192
+  end
+  object spErasedChildDetail: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_OrderClient_SetErased_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 46
+    Top = 456
   end
 end

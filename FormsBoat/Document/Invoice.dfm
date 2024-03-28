@@ -31,18 +31,12 @@
     TabOrder = 2
     Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = 8
-    ExplicitTop = 8
-    ExplicitWidth = 449
-    ExplicitHeight = 561
     ClientRectBottom = 566
     ClientRectRight = 459
     ClientRectTop = 24
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 449
-      ExplicitHeight = 537
       object Код: TcxLabel
         Left = 15
         Top = 5
@@ -377,8 +371,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
-      ExplicitWidth = 449
-      ExplicitHeight = 537
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191
@@ -927,6 +919,9 @@
         end
         item
           Action = actGetPrepay
+        end
+        item
+          Action = actGet_MoneyPlace
         end>
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079

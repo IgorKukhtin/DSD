@@ -481,6 +481,9 @@ type
     cxButton1: TcxButton;
     mactCompleteMovement_andSave: TMultiAction;
     cbReserve: TcxCheckBox;
+    spErasedChildDetail: TdsdStoredProc;
+    actErasedChildDetail: TdsdUpdateErased;
+    bbErasedChildDetail: TdxBarButton;
   private
   public
   end;

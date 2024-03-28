@@ -597,6 +597,7 @@
     object actGuidesInvoiceChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actGet_MoneyPlace
       PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1057#1095#1077#1090
@@ -720,6 +721,7 @@
     object actGuidesParentChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actGet_MoneyPlace
       PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
       Hint = #1042#1099#1073#1088#1072#1090#1100' '#8470' '#1076#1086#1082'. '#1047#1072#1082#1072#1079
