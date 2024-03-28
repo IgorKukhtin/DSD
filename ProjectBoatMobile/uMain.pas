@@ -117,7 +117,6 @@ type
     lUser: TLabel;
     tiScanBarCode: TTabItem;
     imgCameraScanBarCode: TImage;
-    tiStopCamera: TTimer;
     sbIlluminationMode: TSpeedButton;
     Image9: TImage;
     ilPartners: TImageList;
@@ -490,6 +489,9 @@ begin
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
 
+  bInventScan.StyledSettings := [TStyledSetting.Family];
+  bInventScanSN.StyledSettings := [TStyledSetting.Family];
+  bInventScanSearch.StyledSettings := [TStyledSetting.Family];
 
   FFormsStack := TStack<TFormStackItem>.Create;
 
@@ -561,17 +563,6 @@ begin
   end;
   {$ENDIF}
 
-  //Распознавание штрих кода
-  FObr := TFObr.Create(Nil);
-  FObr.OnBarcodeDetected := OnObrBarcodeDetected;
-
-  //Настройка камерЫ
-  FCameraScanBarCode := TCameraComponent.Create(Nil);
-  FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
-  FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-  FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
-  FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-
   if FisZebraScaner and not FisCameraScaner then
   begin
     FDataWedgeBarCode.SetIllumination;
@@ -584,9 +575,8 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  Sleep(1000);
-  FCameraScanBarCode.Free;
-  FObr.Free;
+  if Assigned(FObr) then FreeAndNil(FObr);
+  if Assigned(FCameraScanBarCode) then FreeAndNil(FCameraScanBarCode);
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
 end;
@@ -804,7 +794,7 @@ end;
 procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
   const ATime: TMediaTime);
 begin
-  if FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
+  if Assigned(FObr) and FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
   begin
     FCameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
     FCameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
@@ -822,8 +812,9 @@ var
   Barcode: TObrSymbol;
   pOnScanResult: TDataWedgeBarCodeResult;
   pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
+  var cDATA_STRING: String;
 begin
-  if (FObr.BarcodeCount > 0) and FisCameraScanBarCode and (tcMain.ActiveTab = tiScanBarCode) then
+  if Assigned(FObr) and FisCameraScanBarCode and (FObr.BarcodeCount > 0) and (tcMain.ActiveTab = tiScanBarCode) then
   begin
     FisCameraScanBarCode := False;
     Barcode := FObr.Barcode[0];
@@ -833,12 +824,14 @@ begin
 
     sbBackClick(Sender);
 
-    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, '',
-                          'Camera', Barcode.SymbologyName, Barcode.DataUtf8);
+    cDATA_STRING := Barcode.DataUtf8;
 
-    if Assigned(pOnScanResult) then pOnScanResult(Self, Barcode.DataUtf8);
+    if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then cDATA_STRING := Copy(cDATA_STRING, 1, Length(cDATA_STRING) - 1);
 
-    tiStopCamera.Enabled := True;
+    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, Barcode.SymbologyName,
+                          'Camera', Barcode.SymbologyName, cDATA_STRING);
+
+    if Assigned(pOnScanResult) then pOnScanResult(Self, cDATA_STRING);
   end;
 end;
 
@@ -849,6 +842,8 @@ begin
   begin
     FDataWedgeBarCode.OnScanResultDetails := Nil;
     FDataWedgeBarCode.OnScanResult := Nil;
+    if Assigned(FObr) then FObr.OnBarcodeDetected := Nil;
+    if Assigned(FCameraScanBarCode) then FCameraScanBarCode.OnSampleBufferReady := Nil;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
@@ -907,14 +902,21 @@ begin
     if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
-      tiStopCamera.Enabled := False;
       imgCameraScanBarCode.Bitmap.Assign(Nil);
-      if Assigned(FCameraScanBarCode) then
-      begin
-        FObr.Active := True;
-        FisCameraScanBarCode := True;
-        FCameraScanBarCode.Active := True;
-      end;
+
+      //Распознавание штрих кода
+      if not Assigned(FObr) then FObr := TFObr.Create(Self);
+      FObr.OnBarcodeDetected := OnObrBarcodeDetected;
+
+      //Настройка камерЫ
+      if not Assigned(FCameraScanBarCode) then FCameraScanBarCode := TCameraComponent.Create(Self);
+      FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+      FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
+      FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+      FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
+      FObr.Active := True;
+      FisCameraScanBarCode := True;
+      FCameraScanBarCode.Active := True;
     end else
     if tcMain.ActiveTab = tiInventoryJournal then
     begin
@@ -932,14 +934,18 @@ begin
       begin
         bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
         bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
+        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
         bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
       end else
       begin
         bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
         bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
+        bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
         bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+        bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
       end;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
       if FisNextInventScan and FisInventScanOk and not FisZebraScaner then
@@ -1193,12 +1199,6 @@ end;
 
 procedure TfrmMain.tiStopCameraTimer(Sender: TObject);
 begin
-  tiStopCamera.Enabled := False;
-  if Assigned(FCameraScanBarCode) then
-  begin
-    FCameraScanBarCode.Active := false;
-    FObr.Active := False;
-  end;
 end;
 
 // переход на форму журнала инвентаризаций
@@ -1230,14 +1230,18 @@ begin
   begin
     bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
     bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
+    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
     bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
     bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
   end else
   begin
     bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
     bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
+    bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
     bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
     bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
+    bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
   end;
   sbScanClick(Sender);
 end;
@@ -1458,7 +1462,6 @@ procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
   if FisBecomeForeground and FisZebraScaner and not FisCameraScaner then
   begin
-    Sleep(500);
     FDataWedgeBarCode.SetIllumination;
     if FDataWedgeBarCode.isIllumination then
       Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)

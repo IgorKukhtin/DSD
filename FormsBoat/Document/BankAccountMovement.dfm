@@ -1,7 +1,8 @@
 ﻿inherited BankAccountMovementForm: TBankAccountMovementForm
+  BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientHeight = 583
-  ClientWidth = 475
+  ClientHeight = 573
+  ClientWidth = 465
   ExplicitWidth = 481
   ExplicitHeight = 612
   PixelsPerInch = 96

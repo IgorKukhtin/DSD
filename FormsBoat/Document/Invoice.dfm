@@ -1,9 +1,10 @@
 ﻿inherited InvoiceForm: TInvoiceForm
+  BorderStyle = bsSizeable
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1057#1095#1077#1090'>'
-  ClientHeight = 576
-  ClientWidth = 474
+  ClientHeight = 566
+  ClientWidth = 459
   AddOnFormData.isSingle = False
-  ExplicitWidth = 480
+  ExplicitWidth = 475
   ExplicitHeight = 605
   PixelsPerInch = 96
   TextHeight = 13
@@ -22,19 +23,26 @@
     ExplicitTop = 552
   end
   object cxPageControl1: TcxPageControl [2]
-    Left = 8
-    Top = 8
-    Width = 449
-    Height = 561
+    Left = 0
+    Top = 0
+    Width = 459
+    Height = 566
+    Align = alClient
     TabOrder = 2
     Properties.ActivePage = Main
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 561
-    ClientRectRight = 449
+    ExplicitLeft = 8
+    ExplicitTop = 8
+    ExplicitWidth = 449
+    ExplicitHeight = 561
+    ClientRectBottom = 566
+    ClientRectRight = 459
     ClientRectTop = 24
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitWidth = 449
+      ExplicitHeight = 537
       object Код: TcxLabel
         Left = 15
         Top = 5
@@ -369,6 +377,8 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Lieferanten / Kunden'
       ImageIndex = 1
+      ExplicitWidth = 449
+      ExplicitHeight = 537
       object cxLabel11: TcxLabel
         Left = 2
         Top = 191
@@ -869,6 +879,7 @@
           Value = Null
           Component = GuidesPaidKind
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -877,6 +888,7 @@
           Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -884,6 +896,7 @@
           Value = Null
           Component = GuidesProduct
           ComponentItem = 'Key'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
@@ -892,6 +905,15 @@
           Component = GuidesProduct
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'VATPercent'
+          Value = Null
+          Component = edVATPercent
+          DataType = ftFloat
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True

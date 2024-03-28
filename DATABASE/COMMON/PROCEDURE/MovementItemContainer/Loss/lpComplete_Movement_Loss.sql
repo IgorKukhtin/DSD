@@ -462,6 +462,8 @@ BEGIN
 
               -- Партии товара, сформируем позже
             , CASE WHEN vbMovementDescId = zc_Movement_LossAsset() THEN tmpMI.PartionGoodsId_asset ELSE 0 END AS PartionGoodsId
+            
+            , tmpMI.isAsset
 
         FROM tmpMI
              LEFT JOIN Object ON Object.Id = tmpMI.GoodsId

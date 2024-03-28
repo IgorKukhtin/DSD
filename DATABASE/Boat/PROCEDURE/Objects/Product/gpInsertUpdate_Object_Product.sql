@@ -73,6 +73,10 @@ BEGIN
    -- !!! временно !!!
    -- IF CEIL (inCode / 2) * 2 = inCode THEN inDateSale:= NULL; END IF;
    inDateSale:= NULL;
+   
+
+   -- замена
+   IF inIsProdColorPattern = FALSE THEN inIsProdColorPattern:= TRUE; END IF;
 
 
    -- нельзя менять модель
