@@ -360,7 +360,6 @@ BEGIN
                                 AND (tmpRemains.PartionDate = zc_DateEnd()
                                 AND tmpRemains.Amount <> 0
                                     )
-                                    AND 1=0
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = tmpGoods.GoodsId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = tmpGoods.GoodsKindId
@@ -713,7 +712,7 @@ BEGIN
                                     )
                                 AND COALESCE (tmpRemains.PartionGoodsName,'') = COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData,'')
                                 AND COALESCE (tmpRemains.GoodsKindId_complete, 0) = COALESCE (MILO_GoodsKindComplete.ObjectId, 0)
-                                AND (tmpRemains.Amount > 0 OR vbUserId = 5)
+                                --AND (tmpRemains.Amount > 0 OR vbUserId = 5)
 
             LEFT JOIN tmpGoodsByGoodsKindSub ON tmpGoodsByGoodsKindSub.GoodsId = MovementItem.ObjectId
                                             AND tmpGoodsByGoodsKindSub.GoodsKindId = Object_GoodsKind.Id                                
