@@ -8,6 +8,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, TVar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime , Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions(Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime , Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
  INOUT ioId                  Integer   ,    -- ключ объекта <Названия опций>
@@ -22,7 +23,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
     IN inModelId             Integer   ,
     IN inTaxKindId           Integer   ,
     IN inMaterialOptionsId   Integer   ,    -- Категория Опций
-    IN inProdColorPatternId  Integer   ,       
+    IN inProdColorPatternId  Integer   , 
+    IN inPriceListId         Integer   ,      
     IN inOperDate            TDateTime ,   -- дата изменения цены 
    OUT outStartDate_pr       TDateTime ,  
    OUT outSalePrice_pr       TFloat    ,   -- из прайса        
@@ -100,7 +102,7 @@ BEGIN
             , tmp.ioPriceNoVAT             -- цена без ндс  
       INTO outStartDate_pr, outSalePrice_pr
        FROM  gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
-                                                           , inPriceListId:= zc_PriceList_Basis()  -- !!!Базовый Прайс!!!
+                                                           , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
                                                            , inGoodsId    := ioId        :: Integer
                                                            , inOperDate   := inOperDate  :: TDateTime
                                                            , ioPriceNoVAT := inSalePrice :: TFloat

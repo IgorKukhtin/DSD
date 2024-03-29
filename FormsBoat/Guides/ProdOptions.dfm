@@ -19,13 +19,15 @@
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 59
+    Top = 63
     Width = 854
-    Height = 313
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 59
+    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -493,7 +495,7 @@
     Width = 854
     Height = 39
     Align = alBottom
-    TabOrder = 5
+    TabOrder = 4
     object btnInsert: TcxButton
       Left = 546
       Top = 6
@@ -561,17 +563,17 @@
     Left = 0
     Top = 0
     Width = 854
-    Height = 33
+    Height = 37
     Align = alTop
     TabOrder = 8
     object cxLabel3: TcxLabel
-      Left = 6
-      Top = 8
+      Left = 376
+      Top = 10
       Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' :'
     end
     object edOperDate: TcxDateEdit
-      Left = 134
-      Top = 7
+      Left = 504
+      Top = 9
       EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -579,11 +581,28 @@
       Width = 82
     end
     object cbisСhangePrice: TcxCheckBox
-      Left = 222
-      Top = 7
+      Left = 592
+      Top = 9
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 2
       Width = 148
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 76
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+      Width = 238
     end
   end
   object DataSource: TDataSource
@@ -884,6 +903,30 @@
           Name = 'MaskId'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis'#1057'hangePrice'
+          Value = Null
+          Component = cbisСhangePrice
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -913,6 +956,30 @@
         item
           Name = 'MaskId'
           Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = '2773'
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis'#1057'hangePrice'
+          Value = Null
+          Component = cbisСhangePrice
+          DataType = ftBoolean
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -1666,6 +1733,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1806,6 +1881,21 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end>
     Left = 192
     Top = 112
@@ -1817,6 +1907,9 @@
     ComponentList = <
       item
         Component = GuidesProdModel
+      end
+      item
+        Component = GuidesPriceList
       end>
     Left = 568
     Top = 80
@@ -1936,6 +2029,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = Null
         Component = edOperDate
@@ -1970,5 +2070,35 @@
     PackSize = 1
     Left = 480
     Top = 168
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 336
   end
 end

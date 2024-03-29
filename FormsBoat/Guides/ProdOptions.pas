@@ -108,6 +108,9 @@ type
     cbis—hangePrice: TcxCheckBox;
     actPriceListGoods: TdsdOpenForm;
     bbPriceListGoods: TdxBarButton;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
   private
     { Private declarations }
   public

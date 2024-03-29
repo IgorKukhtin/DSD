@@ -145,8 +145,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit
-    Left = 288
-    Top = 120
+    Left = 280
+    Top = 123
     Properties.Buttons = <
       item
         Default = True
@@ -384,6 +384,31 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inPriceListId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis'#1057'hangePrice'
+        Component = FormParams
+        ComponentItem = 'inis'#1057'hangePrice'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -413,9 +438,28 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis'#1057'hangePrice'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 376
-    Top = 97
+    Left = 336
+    Top = 73
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProdOptions'
@@ -821,8 +865,8 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 87
-    Top = 161
+    Left = 327
+    Top = 105
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
