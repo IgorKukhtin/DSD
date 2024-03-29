@@ -1,8 +1,8 @@
-object ProdOptionsEditForm: TProdOptionsEditForm
+﻿object ProdOptionsEditForm: TProdOptionsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1087#1094#1080#1080'>'
-  ClientHeight = 401
+  ClientHeight = 440
   ClientWidth = 434
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 11
+    Left = 10
     Top = 73
     TabOrder = 0
     Width = 406
@@ -29,7 +29,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxButton1: TcxButton
     Left = 118
-    Top = 361
+    Top = 404
     Width = 75
     Height = 25
     Action = actInsertUpdateGuides
@@ -38,7 +38,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxButton2: TcxButton
     Left = 262
-    Top = 361
+    Top = 404
     Width = 75
     Height = 25
     Action = actFormClose
@@ -63,24 +63,24 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel3: TcxLabel
     Left = 10
-    Top = 297
+    Top = 341
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit
     Left = 10
-    Top = 315
+    Top = 361
     TabOrder = 7
     Width = 407
   end
   object cxLabel6: TcxLabel
     Left = 10
-    Top = 100
+    Top = 143
     Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
     Caption = 'Ladenpreis'
   end
   object edSalePrice: TcxCurrencyEdit
     Left = 10
-    Top = 120
+    Top = 163
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 9
@@ -88,12 +88,12 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel12: TcxLabel
     Left = 10
-    Top = 199
+    Top = 242
     Caption = 'Model'
   end
   object edModel: TcxButtonEdit
     Left = 10
-    Top = 219
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -105,12 +105,12 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel11: TcxLabel
     Left = 199
-    Top = 199
+    Top = 242
     Caption = 'Brand'
   end
   object edBrand: TcxButtonEdit
     Left = 199
-    Top = 219
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -123,12 +123,12 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel4: TcxLabel
     Left = 311
-    Top = 199
+    Top = 242
     Caption = 'Engine'
   end
   object edProdEngine: TcxButtonEdit
     Left = 311
-    Top = 219
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
@@ -140,13 +140,13 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     Width = 106
   end
   object cxLabel5: TcxLabel
-    Left = 288
-    Top = 100
+    Left = 290
+    Top = 143
     Caption = #1058#1080#1087' '#1053#1044#1057
   end
   object edTaxKind: TcxButtonEdit
-    Left = 280
-    Top = 123
+    Left = 288
+    Top = 163
     Properties.Buttons = <
       item
         Default = True
@@ -154,16 +154,16 @@ object ProdOptionsEditForm: TProdOptionsEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 17
-    Width = 125
+    Width = 129
   end
   object cxLabel7: TcxLabel
     Left = 10
-    Top = 148
+    Top = 191
     Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
   end
   object edGoods: TcxButtonEdit
     Left = 10
-    Top = 171
+    Top = 214
     Properties.Buttons = <
       item
         Default = True
@@ -175,12 +175,12 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel8: TcxLabel
     Left = 10
-    Top = 247
+    Top = 290
     Caption = 'MaterialOptions'
   end
   object edMaterialOptions: TcxButtonEdit
     Left = 10
-    Top = 267
+    Top = 310
     Properties.Buttons = <
       item
         Default = True
@@ -217,7 +217,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object edProdColorPattern: TcxButtonEdit
     Left = 217
-    Top = 267
+    Top = 310
     Properties.Buttons = <
       item
         Default = True
@@ -229,26 +229,64 @@ object ProdOptionsEditForm: TProdOptionsEditForm
   end
   object cxLabel13: TcxLabel
     Left = 217
-    Top = 247
+    Top = 290
     Caption = #1069#1083#1077#1084#1077#1085#1090' Boat Structure'
   end
   object cxLabel14: TcxLabel
     Left = 154
-    Top = 100
+    Top = 143
     Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
     Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1084#1087#1083'.)'
   end
   object edAmount: TcxCurrencyEdit
     Left = 154
-    Top = 120
+    Top = 163
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 29
     Width = 120
   end
+  object cxLabel15: TcxLabel
+    Left = 10
+    Top = 98
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
+  object edPriceList: TcxButtonEdit
+    Left = 10
+    Top = 116
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 31
+    Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    Width = 150
+  end
+  object cxLabel16: TcxLabel
+    Left = 176
+    Top = 98
+    Caption = #1044#1072#1090#1072' '#1080#1079#1084'.'#1094#1077#1085#1099
+  end
+  object edOperDate: TcxDateEdit
+    Left = 176
+    Top = 116
+    EditValue = 43831d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 33
+    Width = 80
+  end
+  object cbisСhangePrice: TcxCheckBox
+    Left = 269
+    Top = 116
+    Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 34
+    Width = 148
+  end
   object ActionList: TActionList
     Left = 160
-    Top = 121
+    Top = 164
     object actDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -388,31 +426,29 @@ object ProdOptionsEditForm: TProdOptionsEditForm
       item
         Name = 'inPriceListId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inPriceListId'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'inOperDate'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inis'#1057'hangePrice'
-        Component = FormParams
-        ComponentItem = 'inis'#1057'hangePrice'
+        Component = cbisСhangePrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
-    Top = 89
+    Top = 132
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -442,18 +478,31 @@ object ProdOptionsEditForm: TProdOptionsEditForm
       item
         Name = 'inPriceListId'
         Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
         Value = Null
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inis'#1057'hangePrice'
+        Component = cbisСhangePrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -660,11 +709,11 @@ object ProdOptionsEditForm: TProdOptionsEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 200
-    Top = 309
+    Top = 352
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 408
-    Top = 130
+    Top = 173
   end
   object GuidesModel: TdsdGuides
     KeyField = 'Id'
@@ -743,7 +792,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 103
-    Top = 209
+    Top = 252
   end
   object GuidesBrand: TdsdGuides
     KeyField = 'Id'
@@ -773,7 +822,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 183
-    Top = 161
+    Top = 204
   end
   object GuidesProdEngine: TdsdGuides
     KeyField = 'Id'
@@ -803,7 +852,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 383
-    Top = 216
+    Top = 259
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
@@ -866,7 +915,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 327
-    Top = 105
+    Top = 148
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -929,7 +978,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 270
-    Top = 145
+    Top = 188
   end
   object GuidesMaterialOptions: TdsdGuides
     KeyField = 'Id'
@@ -992,7 +1041,7 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 111
-    Top = 265
+    Top = 308
   end
   object GuidesProdColorPattern: TdsdGuides
     KeyField = 'Id'
@@ -1038,6 +1087,37 @@ object ProdOptionsEditForm: TProdOptionsEditForm
         MultiSelectSeparator = ','
       end>
     Left = 303
-    Top = 257
+    Top = 300
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 112
   end
 end

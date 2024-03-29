@@ -588,7 +588,7 @@
       Width = 148
     end
     object cxLabel1: TcxLabel
-      Left = 9
+      Left = 5
       Top = 10
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
     end
@@ -913,6 +913,15 @@
           MultiSelectSeparator = ','
         end
         item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'inOperDate'
           Value = Null
           Component = edOperDate
@@ -963,6 +972,15 @@
           Value = '2773'
           Component = GuidesPriceList
           ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end

@@ -19,7 +19,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdGuides, cxMaskEdit, cxButtonEdit;
+  dsdGuides, cxMaskEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxCheckBox, cxDropDownEdit, cxCalendar;
 
 type
   TProdOptionsEditForm = class(TParentForm)
@@ -69,6 +70,12 @@ type
     cxLabel13: TcxLabel;
     cxLabel14: TcxLabel;
     edAmount: TcxCurrencyEdit;
+    cxLabel15: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    cxLabel16: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cbis—hangePrice: TcxCheckBox;
+    GuidesPriceList: TdsdGuides;
   private
     { Private declarations }
   public
