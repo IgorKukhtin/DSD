@@ -27,7 +27,6 @@ RETURNS TABLE (GoodsId            Integer
              , Amount             TFloat
              , TotalCount         TFloat
              , AmountRemains      TFloat
-             , AmountDiff         TFloat
               )
 AS
 $BODY$
@@ -122,8 +121,6 @@ BEGIN
                 , COALESCE (inAmount, 1)                                          :: TFloat AS Amount
                 , COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0)                  :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
-                , (COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0) - 
-                  COALESCE (tmpRemains.Remains, 0))                               :: TFloat AS AmountDiff
 
 
            FROM Object AS Object_Goods
@@ -135,7 +132,7 @@ BEGIN
                                      AND tmpMIDetail.PartNumber = COALESCE (inPartNumber,'')
 
                 LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                 ON MILO_PartionCell.MovementItemId = tmpMIDetail.MaxId
+                                                 ON MILO_PartionCell.MovementItemId = COALESCE(NULLIF(inDetailId, 0), tmpMIDetail.MaxId)
                                                 AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner

@@ -21,6 +21,7 @@ uses
 type
 
   TDictType = (dtGoods, dtPartionCell);
+  TDataSetRefresh = (dsrNone, dsrGoods, dsrDict, dsrInventoryList);
 
   { отдельный поток для показа бегущего круга }
   TProgressThread = class(TThread)
@@ -175,7 +176,6 @@ type
     cdsInventoryItemEditAmount: TFloatField;
     cdsInventoryItemEditTotalCount: TFloatField;
     cdsInventoryItemEditAmountRemains: TFloatField;
-    cdsInventoryItemEditAmountDiff: TFloatField;
     cdsInventoryItemEditPartionCellId: TIntegerField;
     cdsInventoryItemEditPartionCellName: TWideStringField;
     cdsDictList: TClientDataSet;
@@ -204,10 +204,22 @@ type
     cdsInventoryListTotalCount: TFloatField;
     cdsInventoryListOperDate_protocol: TDateTimeField;
     cdsInventoryListUserName_protocol: TWideStringField;
+    cdsInventoryListAmountLabel: TWideStringField;
+    cdsInventoryListAmountRemainsLabel: TWideStringField;
+    cdsInventoryListTotalCountLabel: TWideStringField;
+    cdsInventoryListisErased: TBooleanField;
+    cdsInventoryListErasedId: TIntegerField;
+    cdsInventoryItemEditAmountDiff: TFloatField;
+    cdsInventoryItemEditTotalCountCalc: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
     procedure qryInventoryGoodsCalcFields(DataSet: TDataSet);
+    procedure cdsInventoryListCalcFields(DataSet: TDataSet);
+    procedure cdsInventoryItemEditGoodsIdChange(Sender: TField);
+    procedure cdsInventoryItemEditPartNumberChange(Sender: TField);
+    procedure cdsInventoryItemEditAfterEdit(DataSet: TDataSet);
+    procedure cdsInventoryItemEditCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -222,6 +234,9 @@ type
     // Выбор из справочника
     FDictType: TDictType;
     FFilterDict: String;
+
+    FGoodsId: Integer;
+    FPartNumber: String;
 
     procedure InitStructure;
   public
@@ -243,7 +258,7 @@ type
 
     function DownloadDict : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
-    function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean) : Boolean;
+    function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
 
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
@@ -265,6 +280,8 @@ type
                                         APartNumber, APartionCell, AError : String; AisSend: Boolean);
     procedure UpdateInventoryGoods(AAmount: Currency);
     procedure DeleteInventoryGoods;
+    procedure ErasedInventoryList;
+    procedure UnErasedInventoryList;
     function isInventoryGoodsSend : Boolean;
 
     procedure UploadAllData;
@@ -967,6 +984,51 @@ begin
   result := conMain.Connected;
 end;
 
+procedure TDM.cdsInventoryItemEditAfterEdit(DataSet: TDataSet);
+begin
+  FGoodsId := DataSet.FieldByName('GoodsId').AsInteger;
+  FPartNumber := DataSet.FieldByName('PartNumber').AsString;
+end;
+
+procedure TDM.cdsInventoryItemEditCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountDiff').AsFloat := cdsInventoryItemEdit.FieldByName('TotalCount').AsFloat +
+    cdsInventoryItemEdit.FieldByName('Amount').AsFloat -
+    cdsInventoryItemEdit.FieldByName('AmountRemains').AsFloat;
+  DataSet.FieldByName('TotalCountCalc').AsFloat := cdsInventoryItemEdit.FieldByName('TotalCount').AsFloat +
+    cdsInventoryItemEdit.FieldByName('Amount').AsFloat;
+end;
+
+procedure TDM.cdsInventoryItemEditGoodsIdChange(Sender: TField);
+begin
+  if not (cdsInventoryItemEdit.State in dsEditModes) then Exit;
+  if FGoodsId <> cdsInventoryItemEdit.FieldByName('GoodsId').AsInteger then
+  begin
+     GetMIInventoryGoods(cdsInventoryItemEdit);
+  end;
+  FGoodsId := cdsInventoryItemEdit.FieldByName('GoodsId').AsInteger;
+end;
+
+procedure TDM.cdsInventoryItemEditPartNumberChange(Sender: TField);
+begin
+  if not (cdsInventoryItemEdit.State in dsEditModes) then Exit;
+  if FPartNumber <> cdsInventoryItemEdit.FieldByName('PartNumber').AsString then
+  begin
+     GetMIInventoryGoods(cdsInventoryItemEdit);
+  end;
+  FPartNumber := cdsInventoryItemEdit.FieldByName('PartNumber').AsString;
+end;
+
+procedure TDM.cdsInventoryListCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
+  DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'ИТОГО (введено):';
+  if DataSet.FieldByName('isErased').AsBoolean then
+  DataSet.FieldByName('ErasedId').AsInteger := 3
+  else DataSet.FieldByName('ErasedId').AsInteger := -1;
+end;
+
 { проверка структуры БД }
 function TDM.CheckStructure: Boolean;
 var
@@ -1578,7 +1640,7 @@ begin
 end;
 
 { начитка строк инвентаризации}
-function TDM.DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean) : Boolean;
+function TDM.DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
 var
   StoredProc : TdsdStoredProc;
   nId: Integer;
@@ -1601,13 +1663,18 @@ begin
     StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DM.cdsInventoryId.AsInteger);
     StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
     StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
     StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
     StoredProc.DataSet := cdsInventoryList;
 
     try
       StoredProc.Execute(false, false, false);
       Result := cdsInventoryList.Active;
-      if Result and (nID <> 0) then cdsInventoryList.Locate('Id', nId, [])
+      if Result and (nID <> 0) then cdsInventoryList.Locate('Id', nId, []);
+      if cdsInventoryList.RecordCount >= FLimitList then
+        frmMain.llwInventoryList.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.llwInventoryList.Text := 'Найдено ' + IntToStr(cdsInventoryList.RecordCount) + ' записей';
     except
       on E : Exception do
       begin
@@ -1656,7 +1723,7 @@ begin
   end;
 end;
 
-{ поиск товара по штрихкоду в базе}
+{ поиск комплектующих по штрихкоду в базе}
 function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
 var
   StoredProc : TdsdStoredProc;
@@ -1718,6 +1785,7 @@ begin
       for I := 0 to DataSet.FieldCount - 1 do
         if Assigned(cdsInventoryItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
           cdsInventoryItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+      cdsInventoryItemEdit.FieldByName('TotalCount').AsCurrency := cdsInventoryItemEdit.FieldByName('TotalCount').AsCurrency;
       cdsInventoryItemEdit.Post;
 
       Result := True;
@@ -1729,7 +1797,7 @@ begin
   end;
 end;
 
-{ Начитка информации по строке инвентаризации, при изменении товара}
+{ Начитка информации по строке инвентаризации, при изменении комплектующего}
 function TDM.GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
 var
   StoredProc: TdsdStoredProc;
@@ -1761,7 +1829,6 @@ begin
       ADataSet.FieldByName('PartnerName').AsString := DataSet.FieldByName('PartnerName').AsString;
       ADataSet.FieldByName('TotalCount').AsCurrency := DataSet.FieldByName('TotalCount').AsCurrency;
       ADataSet.FieldByName('AmountRemains').AsCurrency := DataSet.FieldByName('AmountRemains').AsCurrency;
-      ADataSet.FieldByName('AmountDiff').AsCurrency := DataSet.FieldByName('AmountDiff').AsCurrency;
       if DataSet.FieldByName('PartionCellId').AsInteger <> 0 then
       begin
         ADataSet.FieldByName('PartionCellId').AsInteger := DataSet.FieldByName('PartionCellId').AsInteger;
@@ -1770,9 +1837,8 @@ begin
       Result := True;
     except
       ADataSet.FieldByName('PartnerName').AsVariant := Null;
-      ADataSet.FieldByName('TotalCount').AsVariant := Null;
-      ADataSet.FieldByName('AmountRemains').AsVariant := Null;
-      ADataSet.FieldByName('AmountDiff').AsVariant := Null;
+      ADataSet.FieldByName('TotalCount').AsVariant := 0;
+      ADataSet.FieldByName('AmountRemains').AsVariant := 0;
       if ADataSet.FieldByName('PartionCellName').AsVariant <> '' then
       begin
         ADataSet.FieldByName('PartionCellId').AsVariant := Null;
@@ -1805,7 +1871,7 @@ begin
       StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, cdsInventoryItemEditId.AsInteger);
       StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
       StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, cdsInventoryItemEditGoodsId.AsInteger);
-      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditAmountDiff.AsFloat);
+      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditAmount.AsFloat);
       StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, cdsInventoryItemEditPartNumber.AsWideString);
       StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsInventoryItemEditPartionCellName.AsWideString);
 
@@ -1816,17 +1882,20 @@ begin
       Result := True;
     except
         on E : Exception do
-         if Pos('context TStorage', E.Message) = 0 then
+         if (Pos('context TStorage', E.Message) = 0) or DM.cdsInventoryList.Active then
          begin
            raise Exception.Create(GetTextMessage(E));
            Exit;
          end;
     end;
 
-    DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
-                                 cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
-                                 cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
-                                 cdsInventoryItemEditPartionCellName.AsString, '', Result);
+    if not DM.cdsInventoryList.Active then
+    begin
+      DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
+                                   cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
+                                   cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
+                                   cdsInventoryItemEditPartionCellName.AsString, '', Result);
+    end;
 
   finally
     FreeAndNil(StoredProc);
@@ -2021,7 +2090,7 @@ begin
   DataSet.FieldByName('TotalCountLabel').AsString := 'ИТОГО (введено):';
 end;
 
-// Добавить/изменить товар для вставки в инвентаризацию
+// Добавить/изменить товаркомплектующее для вставки в инвентаризацию
 procedure TDM.InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
                                         APartNumber, APartionCell, AError : String; AisSend: Boolean);
   var FDQuery: TFDQuery;
@@ -2044,7 +2113,7 @@ begin
     FDQuery.FieldByName('PartionCellName').AsString := APartionCell;
     FDQuery.FieldByName('Amount').AsFloat := AAmount;
     FDQuery.FieldByName('AmountRemains').AsFloat := AAmountRemains;
-    FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount;
+    FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount + AAmount;
     FDQuery.FieldByName('Error').AsString := AError;
     FDQuery.FieldByName('isSend').AsBoolean := AisSend;
     FDQuery.Post;
@@ -2063,7 +2132,7 @@ begin
   end;
 end;
 
-// Добавить товар для вставки в инвентаризацию
+// Добавить комплектующее для вставки в инвентаризацию
 procedure TDM.UpdateInventoryGoods(AAmount: Currency);
   var FDQuery: TFDQuery;
       nMovementId, nGoodsId: Integer;
@@ -2162,6 +2231,75 @@ begin
       end;
     finally
       FDQuery.Free;
+    end;
+  end;
+end;
+
+procedure TDM.ErasedInventoryList;
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if cdsInventoryList.Active and not cdsInventoryList.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetErased';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        cdsInventoryList.Edit;
+        cdsInventoryListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryList.Post;
+      except
+        on E : Exception do
+        begin
+          raise Exception.Create(GetTextMessage(E));
+          exit;
+        end;
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
+  end;
+end;
+
+
+procedure TDM.UnErasedInventoryList;
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if cdsInventoryList.Active and not cdsInventoryList.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetUnErased';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        cdsInventoryList.Edit;
+        cdsInventoryListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryList.Post;
+      except
+        on E : Exception do
+        begin
+          raise Exception.Create(GetTextMessage(E));
+          exit;
+        end;
+      end;
+    finally
+      FreeAndNil(StoredProc);
     end;
   end;
 end;

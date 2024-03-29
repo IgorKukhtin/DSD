@@ -78,7 +78,7 @@ BEGIN
            , Object_Goods.Id                AS GoodsId
            , Object_Goods.ObjectCode        AS GoodsCode
            , Object_Goods.ValueData         AS GoodsName
-           , zfFormat_BarCode ('0000' /*zc_BarCodePref_Object()*/, Object_Goods.ObjectCode) AS IdBarCode
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.ObjectCode) AS IdBarCode
            , ObjectString_Article.ValueData AS Article
            , MIString_PartNumber.ValueData  AS PartNumber
            , vbFromCode AS FromCode
@@ -114,3 +114,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId:= 432692, inMovementItemId:= 0, inisPrice:=False inSession:= '5');
+
+
+select * from gpSelect_Movement_Income_PrintSticker(inMovementId := 716 , inMovementItemId := 0 , inIsPrice := 'False' ,  inSession := '5');
