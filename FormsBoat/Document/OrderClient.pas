@@ -484,6 +484,10 @@ type
     spErasedChildDetail: TdsdStoredProc;
     actErasedChildDetail: TdsdUpdateErased;
     bbErasedChildDetail: TdxBarButton;
+    spUpdate_before: TdsdStoredProc;
+    actUpdate_summ_before: TdsdDataSetRefresh;
+    HeaderExit: THeaderExit;
+    EnterMoveNext: TEnterMoveNext;
   private
   public
   end;

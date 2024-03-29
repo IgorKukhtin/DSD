@@ -127,7 +127,6 @@ object OrderClientForm: TOrderClientForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 5
       Width = 44
@@ -534,7 +533,6 @@ object OrderClientForm: TOrderClientForm
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####'
-      Properties.ReadOnly = False
       ShowHint = True
       TabOrder = 53
       Width = 70
@@ -885,7 +883,6 @@ object OrderClientForm: TOrderClientForm
               PropertiesClassName = 'TcxCurrencyEditProperties'
               Properties.DecimalPlaces = 4
               Properties.DisplayFormat = ',0.####;-,0.####; ;'
-              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               HeaderHint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
@@ -3443,20 +3440,18 @@ object OrderClientForm: TOrderClientForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = False
     ShowHint = True
     TabOrder = 4
     Width = 44
   end
   object edBasis_summ_transport: TcxCurrencyEdit
     Left = 939
-    Top = 121
+    Top = 120
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
     ShowHint = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 5
@@ -3464,7 +3459,7 @@ object OrderClientForm: TOrderClientForm
   end
   object edSummReal: TcxCurrencyEdit
     Left = 792
-    Top = 121
+    Top = 120
     Hint = 
       #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
       #1057
@@ -3486,7 +3481,6 @@ object OrderClientForm: TOrderClientForm
     Properties.Alignment.Horz = taRightJustify
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
     ShowHint = True
     Style.Color = clWindow
     TabOrder = 7
@@ -3500,7 +3494,6 @@ object OrderClientForm: TOrderClientForm
     Properties.Alignment.Horz = taRightJustify
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
     ShowHint = True
     Style.Color = clGradientInactiveCaption
     TabOrder = 9
@@ -4423,6 +4416,18 @@ object OrderClientForm: TOrderClientForm
       Caption = 'actUpdateInfoDS'
       DataSource = InfoDS
     end
+    object actUpdate_summ_before: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_before
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_before
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -4450,6 +4455,7 @@ object OrderClientForm: TOrderClientForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1076#1072#1083#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1059#1076#1072#1083#1080#1090#1100' '#1088#1072#1089#1095#1077#1090' '#1089#1073#1086#1088#1082#1080' '#1091#1079#1083#1086#1074'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
@@ -5437,8 +5443,8 @@ object OrderClientForm: TOrderClientForm
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 544
-    Top = 223
+    Left = 464
+    Top = 279
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -5562,8 +5568,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 358
-    Top = 223
+    Left = 350
+    Top = 263
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 974
@@ -5759,25 +5765,10 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edPaidKind
-      end
-      item
-        Control = edSummTax
-      end
-      item
-        Control = edSummReal
-      end
-      item
-        Control = edBasis_summ
-      end
-      item
-        Control = edBasis_summ_orig
-      end
-      item
-        Control = edBasis_summ_transport
       end>
     GetStoredProc = spGet
-    Left = 824
-    Top = 217
+    Left = 808
+    Top = 265
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_OrderClient'
@@ -6162,7 +6153,7 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
+    Left = 168
     Top = 256
   end
   object RefreshAddOn: TRefreshAddOn
@@ -6170,8 +6161,8 @@ object OrderClientForm: TOrderClientForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 422
-    Top = 210
+    Left = 406
+    Top = 274
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -7268,8 +7259,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 654
-    Top = 231
+    Left = 646
+    Top = 295
   end
   object DBViewAddOnChild: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7299,8 +7290,8 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 768
-    Top = 240
+    Left = 760
+    Top = 312
   end
   object DBViewAddOnInfo: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7760,5 +7751,215 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 46
     Top = 456
+  end
+  object spUpdate_before: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_OrderClient_Summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummTax'
+        Value = 0.000000000000000000
+        Component = edSummTax
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummReal'
+        Value = 0.000000000000000000
+        Component = edSummReal
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVATPercent'
+        Value = 0.000000000000000000
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountTax'
+        Value = 0.000000000000000000
+        Component = edDiscountTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiscountNextTax'
+        Value = 0.000000000000000000
+        Component = edDiscountNextTax
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm_load'
+        Value = 0.000000000000000000
+        Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasis_summ1_orig'
+        Value = 0.000000000000000000
+        Component = edBasis_summ1_orig
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasis_summ2_orig'
+        Value = 0.000000000000000000
+        Component = edBasis_summ2_orig
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDiscount1'
+        Value = 0.000000000000000000
+        Component = edSummDiscount1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDiscount2'
+        Value = 0.000000000000000000
+        Component = edSummDiscount2
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDiscount3'
+        Value = 0.000000000000000000
+        Component = edSummDiscount3
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummDiscount_total'
+        Value = 0.000000000000000000
+        Component = edSummDiscount_total
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outBasis_summ'
+        Value = 0.000000000000000000
+        Component = edBasis_summ
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBasis_summ_transport'
+        Value = 0.000000000000000000
+        Component = edBasis_summ_transport
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioBasisWVAT_summ_transport'
+        Value = 0.000000000000000000
+        Component = edBasisWVAT_summ_transport
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsBefore'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsEdit'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 530
+    Top = 120
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+        Control = edDiscountTax
+      end
+      item
+        Control = edDiscountNextTax
+      end
+      item
+        Control = edVATPercent
+      end
+      item
+        Control = edSummTax
+      end
+      item
+        Control = edSummReal
+      end
+      item
+        Control = edTransportSumm_load
+      end
+      item
+        Control = edBasis_summ_transport
+      end
+      item
+        Control = edBasisWVAT_summ_transport
+      end>
+    Action = actUpdate_summ_before
+    Left = 512
+    Top = 96
+  end
+  object EnterMoveNext: TEnterMoveNext
+    EnterMoveNextList = <
+      item
+        Control = edDiscountTax
+      end
+      item
+        Control = edDiscountNextTax
+      end
+      item
+        Control = edVATPercent
+      end
+      item
+        Control = edSummTax
+      end
+      item
+        Control = edSummReal
+      end
+      item
+        Control = edTransportSumm_load
+      end
+      item
+        Control = edBasis_summ_transport
+      end
+      item
+        Control = edBasisWVAT_summ_transport
+      end
+      item
+      end
+      item
+        Control = cxButton1
+      end>
+    Left = 584
+    Top = 104
   end
 end
