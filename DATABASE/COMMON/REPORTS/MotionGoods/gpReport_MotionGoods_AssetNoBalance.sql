@@ -293,8 +293,8 @@ BEGIN
                                                                  , inGoodsGroupId:= CASE WHEN inGoodsGroupId = 0 AND inGoodsId = 0 THEN 9354099 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
                              WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
+                             AND 1=0
                            --WHERE inGoodsGroupId = 0 AND inGoodsId = 0   
-                           WHERE vbUserId <> 5
                          UNION ALL
                            SELECT tmp.* FROM lpReport_MotionGoods (inStartDate:= inStartDate, inEndDate:= inEndDate
                                                                  , inAccountGroupId:= -1 * zc_Enum_AccountGroup_20000()
@@ -303,7 +303,7 @@ BEGIN
                                                                  , inGoodsGroupId:= CASE WHEN (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0 THEN 7597944 ELSE inGoodsGroupId END
                                                                  , inGoodsId:= inGoodsId, inIsInfoMoney:= inIsInfoMoney, inUserId:= vbUserId) AS tmp 
                            --WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
-                           WHERE vbUserId <> 5
+                           WHERE (inGoodsGroupId = 0 OR inGoodsGroupId = 9354099) AND inGoodsId = 0
                           )
         
         

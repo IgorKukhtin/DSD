@@ -1,4 +1,5 @@
 -- Function: lpReport_MotionGoods()
+-- !!!!ТЕСТОВАЯ версия - добавлен OLAP!!!
 
 DROP FUNCTION IF EXISTS lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
