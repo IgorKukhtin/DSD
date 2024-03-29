@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxCheckBox, cxSplitter, cxCurrencyEdit;
+  dsdAddOn, dxBarExtItems, cxCheckBox, cxSplitter, cxCurrencyEdit, cxContainer,
+  dsdGuides, cxTextEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TGoodsTreeForm = class(TParentForm)
@@ -72,6 +73,11 @@ type
     bbShowAll: TdxBarButton;
     ProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
+    Panel2: TPanel;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

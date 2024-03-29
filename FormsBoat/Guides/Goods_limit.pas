@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, cxImage, Vcl.ExtCtrls, cxTextEdit,
-  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdGuides, cxMaskEdit;
 
 type
   TGoods_limitForm = class(TParentForm)
@@ -142,6 +142,12 @@ type
     cxButton3: TcxButton;
     cxButton4: TcxButton;
     cxButton9: TcxButton;
+    Panel2: TPanel;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
+    StartDate_price: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

@@ -21,12 +21,14 @@ object GoodsMainForm: TGoodsMainForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 59
+    Top = 91
     Width = 1036
-    Height = 406
+    Height = 374
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 59
+    ExplicitHeight = 406
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -356,6 +358,15 @@ object GoodsMainForm: TGoodsMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+        Options.Editing = False
+        Width = 70
+      end
+      object StartDate_price: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate_price'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1087#1088#1072#1081#1089')'
         Options.Editing = False
         Width = 70
       end
@@ -773,12 +784,12 @@ object GoodsMainForm: TGoodsMainForm
     Left = 0
     Top = 0
     Width = 1036
-    Height = 33
+    Height = 65
     Align = alTop
     TabOrder = 1
     object edSearchArticle: TcxTextEdit
       Left = 131
-      Top = 6
+      Top = 38
       TabOrder = 0
       DesignSize = (
         125
@@ -787,7 +798,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object lbSearchArticle: TcxLabel
       Left = 3
-      Top = 5
+      Top = 37
       Caption = #1055#1086#1080#1089#1082' Artikel Nr : '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -799,7 +810,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object lbSearchCode: TcxLabel
       Left = 268
-      Top = 6
+      Top = 38
       Caption = 'Interne Nr : '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -811,7 +822,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object lbSearchName: TcxLabel
       Left = 478
-      Top = 6
+      Top = 38
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -823,7 +834,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object edSearchCode: TcxTextEdit
       Left = 353
-      Top = 6
+      Top = 38
       TabOrder = 5
       DesignSize = (
         115
@@ -832,7 +843,7 @@ object GoodsMainForm: TGoodsMainForm
     end
     object edSearchName: TcxTextEdit
       Left = 564
-      Top = 6
+      Top = 38
       TabOrder = 4
       DesignSize = (
         140
@@ -841,12 +852,12 @@ object GoodsMainForm: TGoodsMainForm
     end
     object cxLabel4: TcxLabel
       Left = 715
-      Top = 7
+      Top = 39
       Caption = #1057#1082#1083#1072#1076' ('#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'):'
     end
     object edUnit: TcxButtonEdit
       Left = 852
-      Top = 6
+      Top = 38
       Properties.Buttons = <
         item
           Default = True
@@ -855,6 +866,23 @@ object GoodsMainForm: TGoodsMainForm
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 188
+    end
+    object cxLabel1: TcxLabel
+      Left = 20
+      Top = 9
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 95
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+      Width = 161
     end
   end
   object Panel_btn: TPanel
@@ -1463,6 +1491,23 @@ object GoodsMainForm: TGoodsMainForm
           Name = 'MaskId'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1489,6 +1534,23 @@ object GoodsMainForm: TGoodsMainForm
         item
           Name = 'MaskId'
           Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1935,6 +1997,14 @@ object GoodsMainForm: TGoodsMainForm
       end>
     Params = <
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = True
         Component = actShowAll
@@ -2178,5 +2248,47 @@ object GoodsMainForm: TGoodsMainForm
     PackSize = 1
     Left = 892
     Top = 56
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 8
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesPriceList
+      end>
+    Left = 568
+    Top = 80
   end
 end

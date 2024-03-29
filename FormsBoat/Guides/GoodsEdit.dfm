@@ -274,15 +274,17 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
+      ExplicitLeft = -3
+      ExplicitTop = 3
       object edName: TcxTextEdit
         Left = 40
-        Top = 114
+        Top = 102
         TabOrder = 0
         Width = 279
       end
       object cxLabel1: TcxLabel
         Left = 40
-        Top = 96
+        Top = 84
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       end
       object Код: TcxLabel
@@ -300,22 +302,22 @@
       end
       object cxLabel3: TcxLabel
         Left = 40
-        Top = 140
+        Top = 124
         Caption = #1043#1088#1091#1087#1087#1072
       end
       object cxLabel4: TcxLabel
         Left = 40
-        Top = 281
+        Top = 249
         Caption = #1045#1076'. '#1080#1079#1084'.'
       end
       object edRefer: TcxLabel
         Left = 184
-        Top = 500
+        Top = 459
         Caption = #1056#1077#1082#1086#1084#1077#1085#1076'. '#1082#1086#1083'. '#1079#1072#1082#1091#1087#1082#1080
       end
       object ceRefer: TcxCurrencyEdit
         Left = 182
-        Top = 518
+        Top = 477
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 5
@@ -323,7 +325,7 @@
       end
       object ceParentGroup: TcxButtonEdit
         Left = 40
-        Top = 160
+        Top = 142
         Properties.Buttons = <
           item
             Default = True
@@ -335,7 +337,7 @@
       end
       object ceMeasure: TcxButtonEdit
         Left = 40
-        Top = 301
+        Top = 269
         Properties.Buttons = <
           item
             Default = True
@@ -347,7 +349,7 @@
       end
       object edProdColor: TcxButtonEdit
         Left = 40
-        Top = 254
+        Top = 227
         Properties.Buttons = <
           item
             Default = True
@@ -359,12 +361,12 @@
       end
       object cxLabel5: TcxLabel
         Left = 40
-        Top = 234
+        Top = 207
         Caption = 'Farbe'
       end
       object ceInfoMoney: TcxButtonEdit
         Left = 184
-        Top = 254
+        Top = 227
         Properties.Buttons = <
           item
             Default = True
@@ -377,17 +379,17 @@
       end
       object cxLabel6: TcxLabel
         Left = 184
-        Top = 234
+        Top = 207
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       end
       object cxLabel7: TcxLabel
         Left = 184
-        Top = 281
+        Top = 249
         Caption = 'Gr'#246#223'e'
       end
       object edGoodsSize: TcxButtonEdit
         Left = 184
-        Top = 301
+        Top = 269
         Properties.Buttons = <
           item
             Default = True
@@ -399,12 +401,12 @@
       end
       object cxLabel8: TcxLabel
         Left = 40
-        Top = 375
+        Top = 336
         Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
       end
       object edPartner: TcxButtonEdit
         Left = 40
-        Top = 393
+        Top = 354
         Properties.Buttons = <
           item
             Default = True
@@ -416,12 +418,12 @@
       end
       object cxLabel9: TcxLabel
         Left = 40
-        Top = 188
+        Top = 166
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103
       end
       object edGoodsTag: TcxButtonEdit
         Left = 40
-        Top = 207
+        Top = 185
         Properties.Buttons = <
           item
             Default = True
@@ -433,12 +435,12 @@
       end
       object cxLabel10: TcxLabel
         Left = 184
-        Top = 328
+        Top = 294
         Caption = #1043#1088#1091#1087#1087#1072' '#1089#1082#1080#1076#1082#1080' '#1091' '#1087#1072#1088#1090'.'
       end
       object ceDiscountParner: TcxButtonEdit
         Left = 184
-        Top = 347
+        Top = 313
         Properties.Buttons = <
           item
             Default = True
@@ -451,7 +453,7 @@
       end
       object edGoodsType: TcxButtonEdit
         Left = 184
-        Top = 207
+        Top = 185
         Properties.Buttons = <
           item
             Default = True
@@ -463,17 +465,17 @@
       end
       object cxLabel11: TcxLabel
         Left = 184
-        Top = 188
+        Top = 166
         Caption = #1058#1080#1087' '#1076#1077#1090#1072#1083#1080
       end
       object cxLabel12: TcxLabel
         Left = 225
-        Top = 419
+        Top = 376
         Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'.'
       end
       object edPartnerDate: TcxDateEdit
         Left = 225
-        Top = 437
+        Top = 394
         EditValue = 42005d
         Properties.ReadOnly = True
         Properties.SaveTime = False
@@ -483,12 +485,12 @@
       end
       object cxLabel13: TcxLabel
         Left = 40
-        Top = 419
+        Top = 376
         Caption = #1057#1082#1083#1072#1076
       end
       object edUnit: TcxButtonEdit
         Left = 40
-        Top = 437
+        Top = 394
         Properties.Buttons = <
           item
             Default = True
@@ -501,7 +503,7 @@
       end
       object ceMin: TcxCurrencyEdit
         Left = 40
-        Top = 518
+        Top = 477
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         Properties.UseDisplayFormatWhenEditing = True
@@ -510,12 +512,12 @@
       end
       object cxLabel14: TcxLabel
         Left = 40
-        Top = 501
+        Top = 460
         Caption = #1052#1080#1085'. '#1082#1086#1083'. '#1085#1072' '#1089#1082#1083#1072#1076#1077
       end
       object cxLabel17: TcxLabel
         Left = 40
-        Top = 328
+        Top = 294
         Caption = #1058#1080#1087' '#1053#1044#1057
       end
       object cxLabel18: TcxLabel
@@ -542,40 +544,40 @@
       end
       object cxLabel20: TcxLabel
         Left = 40
-        Top = 51
+        Top = 44
         Caption = 'EAN'
       end
       object edEAN: TcxTextEdit
         Left = 40
-        Top = 69
+        Top = 62
         TabOrder = 35
         Width = 90
       end
       object cxLabel21: TcxLabel
         Left = 137
-        Top = 51
+        Top = 44
         Caption = 'ASIN'
       end
       object edASIN: TcxTextEdit
         Left = 137
-        Top = 69
+        Top = 62
         TabOrder = 37
         Width = 90
       end
       object cxLabel22: TcxLabel
         Left = 233
-        Top = 51
+        Top = 44
         Caption = 'Matchcode'
       end
       object edMatchCode: TcxTextEdit
         Left = 233
-        Top = 69
+        Top = 62
         TabOrder = 39
         Width = 86
       end
       object cxLabel23: TcxLabel
         Left = 231
-        Top = 142
+        Top = 124
         Hint = #8470' '#1090#1072#1084#1086#1078'. '#1087#1086#1096#1083#1080#1085#1099
         Caption = 'Zolltarif Nr'
         ParentShowHint = False
@@ -583,19 +585,19 @@
       end
       object edFeeNumber: TcxTextEdit
         Left = 233
-        Top = 160
+        Top = 142
         TabOrder = 41
         Width = 86
       end
       object cxLabel2: TcxLabel
         Left = 40
-        Top = 544
+        Top = 500
         Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057' '#1079#1072#1082#1091#1087'.'
         Caption = 'Netto EK'
       end
       object edEKPrice: TcxCurrencyEdit
         Left = 40
-        Top = 558
+        Top = 516
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         Properties.UseDisplayFormatWhenEditing = True
@@ -604,7 +606,7 @@
       end
       object edEmpfPrice: TcxCurrencyEdit
         Left = 182
-        Top = 558
+        Top = 516
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 44
@@ -612,31 +614,31 @@
       end
       object cxLabel15: TcxLabel
         Left = 184
-        Top = 543
+        Top = 500
         Hint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
         Caption = 'Empf. VK'
       end
       object cxLabel16: TcxLabel
         Left = 182
-        Top = 582
+        Top = 539
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
       end
       object edComment: TcxTextEdit
         Left = 182
-        Top = 599
+        Top = 556
         TabOrder = 46
         Width = 137
       end
       object ceIsArc: TcxCheckBox
         Left = 244
-        Top = 393
+        Top = 354
         Caption = #1040#1088#1093#1080#1074
         TabOrder = 47
         Width = 67
       end
       object edTaxKind: TcxButtonEdit
         Left = 40
-        Top = 347
+        Top = 313
         Properties.Buttons = <
           item
             Default = True
@@ -648,12 +650,12 @@
       end
       object cxLabel288: TcxLabel
         Left = 40
-        Top = 460
+        Top = 417
         Caption = 'Feet'
       end
       object ceFeet: TcxCurrencyEdit
         Left = 40
-        Top = 477
+        Top = 434
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         Properties.UseDisplayFormatWhenEditing = True
@@ -662,7 +664,7 @@
       end
       object ceMetres: TcxCurrencyEdit
         Left = 182
-        Top = 477
+        Top = 434
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####'
         TabOrder = 4
@@ -670,17 +672,17 @@
       end
       object cxLabel26: TcxLabel
         Left = 184
-        Top = 459
+        Top = 416
         Caption = 'Metres'
       end
       object cxLabel24: TcxLabel
         Left = 40
-        Top = 582
+        Top = 539
         Caption = 'Engine'
       end
       object edEngine: TcxButtonEdit
         Left = 40
-        Top = 599
+        Top = 556
         Properties.Buttons = <
           item
             Default = True
@@ -689,6 +691,51 @@
         Properties.ReadOnly = True
         TabOrder = 1
         Width = 135
+      end
+      object cxLabel25: TcxLabel
+        Left = 40
+        Top = 582
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+      end
+      object edPriceList: TcxButtonEdit
+        Left = 40
+        Top = 600
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        TabOrder = 58
+        Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Width = 113
+      end
+      object edOperDate: TcxDateEdit
+        Left = 161
+        Top = 600
+        EditValue = 43831d
+        Properties.SaveTime = False
+        Properties.ShowTime = False
+        TabOrder = 59
+        Width = 80
+      end
+      object cxLabel27: TcxLabel
+        Left = 161
+        Top = 582
+        Caption = #1044#1072#1090#1072' '#1080#1079#1084'.'#1094#1077#1085#1099
+      end
+      object edOperPriceList: TcxCurrencyEdit
+        Left = 250
+        Top = 600
+        Properties.DecimalPlaces = 2
+        Properties.DisplayFormat = ',0.00'
+        TabOrder = 61
+        Width = 69
+      end
+      object cxLabel28: TcxLabel
+        Left = 250
+        Top = 582
+        Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+        Caption = 'Ladenpreis'
       end
     end
     object Child: TcxTabSheet
@@ -1125,10 +1172,33 @@
         Component = FormParams
         ComponentItem = 'GoodsId'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate_price'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceList'
+        Value = Null
+        Component = edOperPriceList
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 24
-    Top = 208
+    Top = 128
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1143,9 +1213,25 @@
         Value = 0
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListName'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 40
+    Left = 208
+    Top = 48
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -1157,6 +1243,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1464,10 +1558,24 @@
         Component = ceMetres
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDate_price'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BasisPrice'
+        Value = Null
+        Component = edOperPriceList
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 176
+    Left = 8
+    Top = 64
   end
   object GuidesMeasure: TdsdGuides
     KeyField = 'Id'
@@ -1493,8 +1601,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 8
-    Top = 320
+    Left = 64
+    Top = 312
   end
   object GuidesProdColor: TdsdGuides
     KeyField = 'Id'
@@ -1547,8 +1655,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 171
+    Left = 280
+    Top = 147
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1566,8 +1674,8 @@
     Top = 562
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
-    Top = 56
+    Left = 104
+    Top = 40
   end
   object GuidesGoodsSize: TdsdGuides
     KeyField = 'Id'
@@ -1593,8 +1701,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 216
+    Left = 256
+    Top = 224
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1748,8 +1856,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 128
+    Left = 232
+    Top = 176
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -1805,8 +1913,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 93
-    Top = 348
+    Left = 141
+    Top = 324
   end
   object spInsertDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_GoodsDocument'
@@ -2442,6 +2550,7 @@
         FieldName = 'Image3'
         Image = Image3
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 792
     Top = 592
@@ -2500,6 +2609,7 @@
         FieldName = 'Image3'
         Image = Image3
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 736
     Top = 96
@@ -2603,6 +2713,7 @@
         FieldName = 'Image3'
         Image = Image3
       end>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 264
     Top = 416
@@ -2639,5 +2750,36 @@
     PackSize = 1
     Left = 352
     Top = 272
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 72
+    Top = 112
   end
 end

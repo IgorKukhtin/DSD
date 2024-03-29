@@ -3,7 +3,7 @@ object Goods_limitForm: TGoods_limitForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <***'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'>'
   ClientHeight = 506
-  ClientWidth = 982
+  ClientWidth = 1180
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,15 @@ object Goods_limitForm: TGoods_limitForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 982
-    Height = 439
+    Top = 63
+    Width = 1180
+    Height = 402
     Align = alClient
     TabOrder = 1
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 26
+    ExplicitWidth = 982
+    ExplicitHeight = 439
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -308,7 +311,7 @@ object Goods_limitForm: TGoods_limitForm
       end
       object BasisPrice: TcxGridDBColumn
         Caption = 'Ladenpreis'
-        DataBinding.FieldName = 'BasisPrice'
+        DataBinding.FieldName = 'BasisPrBasisPriceice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -328,6 +331,15 @@ object Goods_limitForm: TGoods_limitForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+        Options.Editing = False
+        Width = 70
+      end
+      object StartDate_price: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate_price'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1087#1088#1072#1081#1089')'
         Options.Editing = False
         Width = 70
       end
@@ -690,7 +702,7 @@ object Goods_limitForm: TGoods_limitForm
   object edSearchName: TcxTextEdit
     Left = 345
     Top = 322
-    TabOrder = 7
+    TabOrder = 6
     DesignSize = (
       140
       21)
@@ -699,10 +711,11 @@ object Goods_limitForm: TGoods_limitForm
   object Panel_btn: TPanel
     Left = 0
     Top = 465
-    Width = 982
+    Width = 1180
     Height = 41
     Align = alBottom
     TabOrder = 11
+    ExplicitWidth = 982
     object btnInsert: TcxButton
       Left = 485
       Top = 7
@@ -744,6 +757,32 @@ object Goods_limitForm: TGoods_limitForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 1180
+    Height = 37
+    Align = alTop
+    TabOrder = 12
+    ExplicitTop = -14
+    object cxLabel1: TcxLabel
+      Left = 8
+      Top = 10
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 77
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 1
+      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+      Width = 161
     end
   end
   object DataSource: TDataSource
@@ -1311,6 +1350,23 @@ object Goods_limitForm: TGoods_limitForm
           Name = 'MaskId'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -1337,6 +1393,23 @@ object Goods_limitForm: TGoods_limitForm
         item
           Name = 'MaskId'
           Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1623,6 +1696,14 @@ object Goods_limitForm: TGoods_limitForm
       end>
     Params = <
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = True
         Component = actShowAll
@@ -1807,5 +1888,47 @@ object Goods_limitForm: TGoods_limitForm
     CheckBoxList = <>
     Left = 360
     Top = 240
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 8
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesPriceList
+      end>
+    Left = 568
+    Top = 80
   end
 end

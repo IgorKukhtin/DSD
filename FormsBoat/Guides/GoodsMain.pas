@@ -165,6 +165,11 @@ type
     btnFormClose: TcxButton;
     btnInsertMask: TcxButton;
     UnitName_parent_receipt: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
+    StartDate_price: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
