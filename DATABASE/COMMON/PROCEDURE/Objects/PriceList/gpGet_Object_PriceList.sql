@@ -6,7 +6,11 @@ CREATE OR REPLACE FUNCTION gpGet_Object_PriceList(
     IN inId          Integer,       -- ключ объекта <Прайс лист> 
     IN inSession     TVarChar       -- сессия пользователя
 )
-  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, VATPercent TFloat, CurrencyId Integer, CurrencyName TVarChar) AS
+  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+               , PriceWithVAT Boolean, isUser Boolean
+               , VATPercent TFloat
+               , CurrencyId Integer, CurrencyName TVarChar
+) AS
 $BODY$
 BEGIN
 
@@ -21,6 +25,7 @@ BEGIN
            , MAX (Object.ObjectCode) + 1 AS Code
            , CAST ('' as TVarChar)       AS Name
            , CAST (FALSE AS Boolean)     AS PriceWithVAT
+           , FALSE            :: Boolean AS isUser
            , CAST (20 AS TFloat)         AS VATPercent
            , Object_Currency.Id          AS CurrencyId
            , Object_Currency.ValueData   AS CurrencyName
@@ -37,6 +42,7 @@ BEGIN
            , Object_PriceList.ObjectCode          AS Code
            , Object_PriceList.ValueData           AS Name
            , ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+           , COALESCE (ObjectBoolean_User.ValueData, FALSE) :: Boolean AS isUser
            , ObjectFloat_VATPercent.ValueData     AS VATPercent
            , Object_Currency.Id                   AS CurrencyId
            , Object_Currency.ValueData            AS CurrencyName
@@ -44,6 +50,11 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
                                     ON ObjectBoolean_PriceWithVAT.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_User
+                                    ON ObjectBoolean_User.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_User.DescId = zc_ObjectBoolean_PriceList_User()
+
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
                                  AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
