@@ -1056,9 +1056,12 @@
 				<Form>PriceListItemEdit_limitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoat\Guides\GoodsMain.pas">
-				<ModuleName>Goods</ModuleName>
+			<DCCReference Include="..\..\FormsBoat\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoat\Guides\GoodsMain.pas">
+				<Form>GoodsMainForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoat\Document\IncomeItemEdit_limit.pas">
