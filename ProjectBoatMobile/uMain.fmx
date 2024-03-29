@@ -439,13 +439,11 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 8
+        TabIndex = 7
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
         Sizes = (
-          336s
-          484s
           336s
           484s
           336s
@@ -10974,59 +10972,63 @@
                 AppearanceObjectName = 'GoodsCode'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
-                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
-                Appearance.Width = 45.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
+                Appearance.PlaceOffset.Y = 21.000000000000000000
               end
               item
                 AppearanceObjectName = 'GoodsName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 260.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 54.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.WordWrap = True
+                Appearance.Width = 213.000000000000000000
+                Appearance.Height = 41.000000000000000000
+                Appearance.PlaceOffset.X = 101.000000000000000000
               end
               item
                 AppearanceObjectName = 'Article'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
                 Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
-                Appearance.PlaceOffset.Y = 21.000000000000000000
               end
               item
                 AppearanceObjectName = 'GoodsGroupName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 205.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 213.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 110.000000000000000000
-                Appearance.PlaceOffset.Y = 21.000000000000000000
+                Appearance.PlaceOffset.X = 101.000000000000000000
+                Appearance.PlaceOffset.Y = 42.000000000000000000
               end
               item
                 AppearanceObjectName = 'EAN'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
                 Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
                 Appearance.PlaceOffset.Y = 42.000000000000000000
               end
               item
                 AppearanceObjectName = 'MeasureName'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
-                Appearance.Width = 205.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 45.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 110.000000000000000000
-                Appearance.PlaceOffset.Y = 42.000000000000000000
+                Appearance.PlaceOffset.X = 55.000000000000000000
+                Appearance.PlaceOffset.Y = 21.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -11270,7 +11272,7 @@
             SearchVisible = True
           end
         end
-        object tiInventoryJournal: TTabItem
+        object tiInventoryScan: TTabItem
           CustomIcon = <
             item
             end>
@@ -11281,153 +11283,91 @@
           Size.PlatformDefault = False
           StyleLookup = ''
           TabOrder = 0
-          Text = 'tiInventoryJournal'
+          Text = 'tiInventoryScan'
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
-          object pInventoryJournal: TPanel
+          object Panel3: TPanel
             Align = Top
             Size.Width = 336.000000000000000000
-            Size.Height = 40.000000000000000000
+            Size.Height = 125.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            object Label41: TLabel
-              Align = Left
-              StyledSettings = [Family, Style, FontColor]
-              Size.Width = 69.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Trimming = None
-              Text = #1055#1077#1088#1080#1086#1076' '#1089
-            end
-            object deInventoryStartDate: TDateEdit
-              Date = 42795.000000000000000000
-              Align = Left
-              Margins.Top = 3.000000000000000000
-              Margins.Bottom = 3.000000000000000000
-              Position.X = 69.000000000000000000
+            object bInventScanSearch: TSpeedButton
+              Anchors = [akLeft, akTop, akRight]
+              Position.X = 163.000000000000000000
               Position.Y = 4.000000000000000000
-              Size.Width = 102.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Width = 167.000000000000000000
+              Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              TabOrder = 2
-            end
-            object Label10: TLabel
-              Align = Left
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 171.000000000000000000
-              Size.Width = 30.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.HorzAlign = Center
+              StyleLookup = 'EnterStyle'
+              Text = #1055#1086#1076#1073#1086#1088' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.WordWrap = True
               TextSettings.Trimming = None
-              Text = ' '#1087#1086' '
-              TabOrder = 3
+              OnClick = bInventScanSearchClick
             end
-            object deInventoryEntDate: TDateEdit
-              Date = 42795.000000000000000000
-              Align = Left
-              Margins.Top = 3.000000000000000000
-              Margins.Bottom = 3.000000000000000000
-              Position.X = 201.000000000000000000
+            object bInventScanAmount: TSpeedButton
+              Tag = 1
+              Anchors = [akLeft, akTop, akRight]
+              Position.X = 4.000000000000000000
+              Position.Y = 43.000000000000000000
+              Size.Width = 142.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              Text = '+ '#1082#1086#1083'-'#1074#1086
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.Trimming = None
+              OnClick = bInventScanClick
+            end
+            object bInventScan: TSpeedButton
+              Anchors = [akLeft, akTop, akRight]
+              Position.X = 4.000000000000000000
               Position.Y = 4.000000000000000000
-              Size.Width = 102.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Width = 142.000000000000000000
+              Size.Height = 35.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              TabOrder = 1
-            end
-            object bInventoryJournalRefresh: TSpeedButton
-              Align = Right
-              Position.X = 304.000000000000000000
-              Size.Width = 32.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'colorbuttonstyle'
+              StyleLookup = 'EnterStyle'
+              Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
               TextSettings.Trimming = None
-              OnClick = bInventoryJournalRefreshClick
-              object Image10: TImage
-                MultiResBitmap.Height = 32
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C086488000007A4494441545885CD57696C94
-                      C7197EE63BF7F2AE77592F6BAFD798C36043B9219153254D8348D546BD395292
-                      A64D9A120834A250296A9B56F9D136A9AA28A026342D494A4188609A034141B5
-                      4AA0B4A1040C9810D3804DB87DE0BDEFEFDB6F66FA63BFCFAC8D0FFE54EDBBFB
-                      6A46A399799E79E69D77E603FEC746EEB4E3F4A52D4A85AF38019C4F1465C967
-                      E834CEC1638C48B1937F78F8E27F8DC067D7EEAC09783C3FF338C5C5A1A0DB27
-                      BB1DAE1AA72AE70B3AE2113D9FA2D9D8959E4C2A5BD00FA4D2C5ED47372F6B1F
-                      79364E163EBD7B7C7D3FFA77EF5E46C724B0E4E7FB9EADAFAEDCD03CBBB6CAED
-                      B481310EC639380728E740E90F02209ACCA1F35A6FF26C67E4423C457FFD8F57
-                      96BC3D74BEFBD6ED7E8D196CF63F5F59DE3CA6028FFD6AFF6F9B6BEA564D9BE7
-                      9718072803383818E3A09C833380717ECB19200A020470B45FBD966D3B13391A
-                      CD65571EDBF8ADCB00B068C3DB3FA90D067EDCD31B39D6FAD2D7175B38D270E0
-                      4B9FFFCBFA7B6AEA574D9D3F4EE2E68A4138CC0A60B671949A2CD70D0ACE399A
-                      4221E7F450CDE243A72F1EB76F78E705509E9DD518FAD1E41AAF6B5F243108EB
-                      36020B9FDE3167C6A4CA758DF3FC12631CD9BC81537D492AC632F938CD0B6EE6
-                      24E3AAB2A2AF32AC386C320441003378898C4928AF5144D21AA64DACAD1289F8
-                      A2645712551EB7B750A410C0462710F2791E9D1A0E862963D8F3FE856447E775
-                      21F7319C68A04903A44F10A5638CB36B3E4FBF77BCD7B5A0BECA3BAD61B23FE4
-                      70A848E70DA4B206E2591D062B6D57A83AA050C603D1B4861AAF0D048C8F4A40
-                      14F883E33C766CDAF94136AB114F85B712E2825C7B24A5BF706ACB8A96A1FDEF
-                      7A6AFBEC231DD71F9D14747F695A83D2C810104A815ADAA664B608CA4A0A1102
-                      70818C4CA0F97BDBA704BC158E96D68E94243BDD356E5B2AAFE5F27A91EE190E
-                      1C008EFFFEDB67009C497CF78FBFEC8D7A7F31632AF95A28180C45525AE9C498
-                      3FCB384621A08BC49E4CA4FCD16C510FD704FF2E0848E673C495C91B63269AF6
-                      AD8F27DA81B589353B5AEAAAB537EE993D614A77B200CECCD805200880C40707
-                      C120022263999B918CE00BFA0F3BECCAC722904AC9924FE438371601CB9CB2FD
-                      AB8D133CE1584E07637C001C0008BFFDD40F22C0A96C1420E4DD15F6BD4E55BD
-                      428898F4FAF3ECD2551EBB13F045EBDF59DF3C67C2F715BB5D4DE58BE6F1BCC5
-                      8094F0475640AA14237AAED83D4B08EE7AE68906ED4E402DBB7FDDEE279BC2EE
-                      E7827E57856E70D865C5442D010B84008C235B2C0E8A81DB3459B06AC75D84F3
-                      8984728188A2084608919948882070460422401008116C05FAEEC1D757F401C0
-                      CCD53BBC7ED5FE9C20F106872A8B00508E426849FB825684C1853F1FDAF88D37
-                      875560EEE32D555E97D2B2E481C60903D9CFE2C83940080A458AFD47CFDF8830
-                      F237007D0070F6778FC4016C184BA5F92BB7DD2D08F283E56DC2D04E75810A5A
-                      E57342B62990151592A2405264488A02AFC78E4B3DF1DE4CA6B8E2D4E6655DA3
-                      A2714E8E9F8D86DBDAB83CA004C81C022C1A95004050A41C4583A148190CCA60
-                      500E551671AE2B963CFD49EF4F8FBEBAFCC858AB7D7EEB61B52B5A989373DD6C
-                      6ABB18F30080222BB5A22CFA4725C0AD3BB6CC245180A61B387CAAEBC0918D4B
-                      DE1C3A6638EB4CDB9548469B2930D254D078D39173FDD58AAA7E8E52E883E61E
-                      3AB068912833DDA070AA12BE725FD3975DB6775B6FF4E5D6B46F7DA47334027A
-                      AEA2921A6C16085109A18EAD7BFFBD5C7528532933CE94F7BB4D010518943CAC
-                      AB3693376077AACE2FDC3B63F18CE955ADF7FEE0ADCD739F78630100D19C4740
-                      D9A9A2C86D9A37C535898034EDFFF0C6D22BFDF187159B7D3C381F94D4062940
-                      D50229CFDC3659444E33000E188CA127AA2195D3110C04EA837EDFEAEB376E3E
-                      E4FBE1AEAE5834DA5AC826CEABAEB053F6545487FCFE2F3E34D7B7F0D0E92BCA
-                      E94B8970BA5010FD8140553C9AC86B5A71EF88046E2D1B703B645C3818A50D0F
-                      F8C45846C7E5FE1CB42203079029182000C6D704EBC65707EAF2D72F7F3E85F9
-                      91B86EB88C6C9164D251BEEDFD9B455975E86E9B1AF4FB2AC038A015F21D493D
-                      7F62240242B6E7BCCAEA83C4A608683B7B29DA7AF1CCCB815CF553CDF31AC292
-                      28A0A0533033BD320E640B063807D8B8FB894B20552E73CB2807286576EB4DC0
-                      389088C6D299C88D17CE6F7F869ADB466156AC58507DD533BDE1C98DDFD12541
-                      6D3DD8B6E9C4B6B56F757EF0DE2EDD37C72FCB466DB57F9C8D8343376E3D4E59
-                      49305006188C9BCEC038CCEB18B81ABBA869FDC9D7DAB6AEDE69E2117318B308
-                      4800A4CAD0CC4A78EA1EEBEABCB2EF5FAFAF7CB5149354BE7672EFF158927E94
-                      A28E6A18A4C2E3B6A9922C01202535CC07EAE0CB8743D38A88F645625A4FF76F
-                      DAFEB4668B056A961C00B508880044D7C4D92ED5E9777CB8E5C917AD36CB53DD
-                      1DF12B27F61C8AC7D31FA50B3212E95C05A19C8310957006C24B7317F245F4FD
-                      35C7D2CE7877A2AFE7E4B5137B9EFDE4C04B474CC90DB31C70EBD890D26A6F73
-                      D9F4F2BA547249ACBBFB9B9FB17BC3350E6FA05694ED1E2680734DEBCBC6BB3B
-                      32BD9F7EDADDFE5E274AA9452F2BCB9D0EBD0D959101210F51C5CA2103FB69BA
-                      B53AC304B5CA72D7CDBEC37E98903240A9CCCB81ADA4533E7E2412740891410F
-                      923BF938B580A561C0ADF156E40D1C8A213EE476F93FB2FF00F9E1DB4F87A9ED
-                      C70000000049454E44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\refresh.png'
-                  end>
-                Align = Top
-                HitTest = False
-                Size.Width = 32.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-              end
+              OnClick = bInventScanClick
+            end
+            object bViewInventory: TSpeedButton
+              Anchors = [akLeft, akTop, akRight]
+              Position.X = 163.000000000000000000
+              Position.Y = 69.000000000000000000
+              Size.Width = 167.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              Text = #1055#1088#1086#1089#1084#1086#1090#1088' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.WordWrap = True
+              TextSettings.Trimming = None
+              OnClick = bViewInventoryClick
+            end
+            object bInventScanSN: TSpeedButton
+              Tag = 2
+              Anchors = [akLeft, akTop, akRight]
+              Position.X = 4.000000000000000000
+              Position.Y = 82.000000000000000000
+              Size.Width = 142.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              Text = '+ s/n'
+              TextSettings.Font.Size = 15.000000000000000000
+              TextSettings.FontColor = xFF005078
+              TextSettings.Trimming = None
+              OnClick = bInventScanClick
             end
           end
-          object lwInventoryJournal: TListView
+          object lwInventoryScan: TListView
             ItemAppearanceClassName = 'TDynamicAppearance'
             ItemEditAppearanceClassName = 'TDynamicAppearance'
             HeaderAppearanceClassName = 'TListHeaderObjects'
@@ -11435,84 +11375,142 @@
             Images = ilPartners
             Align = Client
             Size.Width = 336.000000000000000000
-            Size.Height = 444.000000000000000000
+            Size.Height = 359.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            ItemAppearance.ItemHeight = 75
+            OnMouseDown = lwInventoryScanMouseDown
+            OnMouseUp = lwInventoryScanMouseUp
+            ItemAppearance.ItemHeight = 85
+            ItemAppearance.ItemEditHeight = 45
             ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
               item
-                AppearanceObjectName = 'InvNumber'
+                AppearanceObjectName = 'GoodsCode'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 45.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 55.000000000000000000
+                Appearance.PlaceOffset.Y = 42.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'GoodsName'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.WordWrap = True
+                Appearance.Width = 213.000000000000000000
+                Appearance.Height = 41.000000000000000000
+                Appearance.PlaceOffset.X = 101.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Article'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
-                Appearance.Width = 45.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 10.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Error'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.TextColor = claRed
+                Appearance.Width = 213.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 101.000000000000000000
+                Appearance.PlaceOffset.Y = 42.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Amount'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 37.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 52.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'MeasureName'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 50.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 42.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'PartNumber'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 100.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 21.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'AmountLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 50.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'AmountRemainsLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 50.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 90.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'TotalCountLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 90.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 185.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
               end
               item
                 AppearanceObjectName = 'TotalCount'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 117.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 37.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 162.000000000000000000
+                Appearance.PlaceOffset.X = 277.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
               end
               item
-                AppearanceObjectName = 'StatusName'
+                AppearanceObjectName = 'AmountRemains'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
-                Appearance.Width = 76.000000000000000000
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 37.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 35.000000000000000000
-                Appearance.PlaceOffset.Y = 50.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'StatusIcon'
-                AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.ScalingMode = Stretch
-                Appearance.Width = 20.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 10.000000000000000000
-                Appearance.PlaceOffset.Y = 50.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'EditButton'
-                AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.Width = 30.000000000000000000
-                Appearance.Height = 30.000000000000000000
-                Appearance.Align = Trailing
-                Appearance.PlaceOffset.Y = 5.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'OperDate'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 89.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 62.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'UnitName'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.Width = 270.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 9.000000000000000000
-                Appearance.PlaceOffset.Y = 24.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'Comment'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 191.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 120.000000000000000000
-                Appearance.PlaceOffset.Y = 51.000000000000000000
+                Appearance.PlaceOffset.X = 142.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -11522,8 +11520,506 @@
             ItemAppearanceObjects.HeaderObjects.Text.Visible = False
             ItemAppearanceObjects.FooterObjects.Text.Visible = False
             CanSwipeDelete = False
-            OnItemClickEx = lwInventoryJournalItemClickEx
             AutoTapScroll = True
+          end
+        end
+        object tiInventoryItemEdit: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = True
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiInventoryItemEdit'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+          object pInventoryItemEdit: TPanel
+            Align = Client
+            Size.Width = 336.000000000000000000
+            Size.Height = 484.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object edIIEAmountDiff: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 12
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 188.000000000000000000
+              Position.Y = 210.000000000000000000
+              Size.Width = 140.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEAmountRemains: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 11
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 17.000000000000000000
+              Position.Y = 210.000000000000000000
+              Size.Width = 151.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEArticle: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 6
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 16.000000000000000000
+              Position.Y = 96.000000000000000000
+              Size.Width = 151.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEGoodsCode: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 7
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 189.000000000000000000
+              Position.Y = 96.000000000000000000
+              Size.Width = 140.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEGoodsGroup: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 1
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 88.000000000000000000
+              Position.Y = 3.000000000000000000
+              Size.Width = 241.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEAmount: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 15
+              KeyboardType = DecimalNumberPad
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 16.000000000000000000
+              Position.Y = 268.000000000000000000
+              Size.Width = 151.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+              OnChangeTracking = edАmountChangeTracking
+            end
+            object edIIEPartionCell: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 20
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 187.000000000000000000
+              Position.Y = 326.000000000000000000
+              Size.Width = 140.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+              object bIIEOpenDictPartionCell: TEditButton
+                Touch.InteractiveGestures = [LongTap]
+                CanFocus = False
+                Cursor = crArrow
+                TextSettings.Trimming = None
+                Size.Width = 28.000000000000000000
+                Size.Height = 28.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                OnClick = bIIEOpenDictPartionCellClick
+                object Image25: TImage
+                  MultiResBitmap.Height = 30
+                  MultiResBitmap.Width = 30
+                  MultiResBitmap = <
+                    item
+                      Width = 30
+                      Height = 30
+                      PNG = {
+                        89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+                        A20000000473424954080808087C086488000000CF494441544889EDD23F4A03
+                        411886F15F621A215EC236EB05C45AF002629726754813247A09D1D223E404DE
+                        40B1B1B14C1752584B0216AE8503CE2ECBE27629BE07861978E6E3FDE60F4110
+                        04C1BE73D0E2AE304381377C65EE04B7B8C01A1F993BC21C631CE2BD4B433728
+                        B3F1824116BACBDC2E3527ED79ADD52EBA046F6AC5254E93BB6F7077C99D35B8
+                        4D5340BF4333656DFEAFFBEE9061A1DAF5B3BFAB2E54AF7A8B517203BFCF92D7
+                        5E3705F45AC22F718E151EF099B90293B47E54FD40434C718C272C5B8F180441
+                        10EC2D3FDA393C28C3EB49F80000000049454E44AE426082}
+                      FileName = 'C:\DSD\ProjectBoatMobile\img\Three_dots.png'
+                    end>
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 28.000000000000000000
+                  Size.Height = 28.000000000000000000
+                  Size.PlatformDefault = False
+                end
+              end
+            end
+            object edIIEPartnerName: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 3
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 88.000000000000000000
+              Position.Y = 40.000000000000000000
+              Size.Width = 241.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIEPartNumber: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 19
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 15.000000000000000000
+              Position.Y = 326.000000000000000000
+              Size.Width = 151.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edIIETotalCountEnter: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 16
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 187.000000000000000000
+              Position.Y = 268.000000000000000000
+              Size.Width = 140.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label14: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 8.000000000000000000
+              Size.Width = 45.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1043#1088#1091#1087#1087#1072
+              TabOrder = 0
+            end
+            object Label15: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 44.000000000000000000
+              Size.Width = 64.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+              TabOrder = 2
+            end
+            object Label16: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 75.000000000000000000
+              Size.Width = 94.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = 'Artikel Nr'
+              TabOrder = 4
+            end
+            object Label25: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 189.000000000000000000
+              Position.Y = 75.000000000000000000
+              Size.Width = 84.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = 'Interne Nr'
+              TabOrder = 5
+            end
+            object Label26: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 137.000000000000000000
+              Size.Width = 64.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1053#1072#1079#1074#1072#1085#1080#1077
+              TabOrder = 8
+            end
+            object Label27: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 189.000000000000000000
+              Position.Y = 189.000000000000000000
+              Size.Width = 132.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1079#1085#1080#1094#1072')'
+              TabOrder = 10
+            end
+            object Label28: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 17.000000000000000000
+              Position.Y = 189.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.)'
+              TabOrder = 9
+            end
+            object Label29: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 187.000000000000000000
+              Position.Y = 250.000000000000000000
+              Size.Width = 132.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1048#1058#1054#1043#1054' ('#1074#1074#1077#1076#1077#1085#1086')'
+              TabOrder = 14
+            end
+            object Label30: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 247.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1050#1086#1083'-'#1074#1086
+              TabOrder = 13
+            end
+            object Label32: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 189.000000000000000000
+              Position.Y = 308.000000000000000000
+              Size.Width = 132.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
+              TabOrder = 18
+            end
+            object Label33: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 16.000000000000000000
+              Position.Y = 305.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = 'S/N'
+              TabOrder = 17
+            end
+            object bIIECancel: TButton
+              Anchors = [akTop, akRight]
+              Position.X = 188.000000000000000000
+              Position.Y = 382.000000000000000000
+              Size.Width = 142.000000000000000000
+              Size.Height = 42.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              TabOrder = 22
+              Text = #1054#1090#1084#1077#1085#1072
+              TextSettings.Trimming = None
+              OnClick = bIIECancelClick
+              object Image21: TImage
+                MultiResBitmap.Height = 30
+                MultiResBitmap.Width = 30
+                MultiResBitmap = <
+                  item
+                    Width = 30
+                    Height = 30
+                    PNG = {
+                      89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+                      A20000000473424954080808087C086488000002C8494441544889ED96DF4FD3
+                      5014C7CFBDBD551260C464B6DDC090754B17121E78001CE2CBD8E81FA0E12F30
+                      46FF2413A37F8089BC33D893AB1BF04A62D8BAF1206EDD4662323599F6C7F561
+                      54BBB2766D1F78E2BCF5DCF67EEE39FD9E6F0B7017B7146852B292CF671942DE
+                      9B007B4F0F0FDB5136566499C386B16F11F27ABB543A73AF6377A25A2CAEB00C
+                      538D71DC268350B55628F061A1B5428127949E2CCCCE6E32947EAA168B2BBEE0
+                      4A3E9F45BA5E995F5E5E10D7D7494292122621A795DDDD6450A822CB1C22A4CA
+                      A5D389D4CE0E1B5B5B5B40087D566479D513CC20F42EB6B4144BADAE6200003E
+                      9D6693A22804ADBC5628F018E09413C525219BBD0700904A26518CE3E6B061BC
+                      F1045B843CFBD1EF7FED9C9FFFB1738224B1412AB72B154451102489B5F39AAA
+                      EADFAFAE3A2CCBEE39EFBF212E45963902507B288A8B89EB530300749B4DFD5B
+                      A3A151CBCAB905A7C8324710AA71A9D4A2E078465355BDADAADA7D80C7EB0707
+                      1D5F70587814A82738281C21644481FA82014662018C8FF94C262148D2FF8D1B
+                      0D5D53D50EA69472EEB57A5DD79ACD0E32CDCD5CB9DCF5DADB176CC329C39C08
+                      E974624C34F5BA0E30125F586820308077DB9D11A4BDA1C1D3E061A100132CD3
+                      FF9868E249111A65879615B890E0AD9EA05E67F8CDF9A4985AB122CB1C31CD63
+                      A70D028CDA6B0B0CE0DA5E331901615C0BE2ED53C709617CEC39329452AF518B
+                      3C4E411CE937A566587BF50587B1C128DE3E111CC57BA3C0D18D0D227A6F58F8
+                      98AAB161ECCFC7E38FC6A0F5BAAE351A1DC63036FCCC61BB54EA51D3DCEAB65A
+                      9A5BED0FE2F104639A1FC658CE0B93D21783CBCBC1C5D999F5AFD2564B6311CA
+                      4DF35E00805CB9DCB500367ACDE6A5FD3371D16ED341AFF793A1F495F3DE1BEF
+                      B85A2CAE6000658EE7E707FD7E3B88E1BBC3FEAAC566669283E1F017A5F4C9D6
+                      D1D1175FB00D07CB7A8B107A1E16EA84534A3F02C62FDDD0BBB8D5F80B6B4008
+                      1E1591BA980000000049454E44AE426082}
+                    FileName = 'C:\DSD\ProjectBoatMobile\img\Cancel.png'
+                  end>
+                Align = Left
+                HitTest = False
+                Size.Width = 45.000000000000000000
+                Size.Height = 42.000000000000000000
+                Size.PlatformDefault = False
+              end
+            end
+            object bIIEOk: TButton
+              Position.X = 8.000000000000000000
+              Position.Y = 382.000000000000000000
+              Size.Width = 131.000000000000000000
+              Size.Height = 42.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              TabOrder = 21
+              Text = 'Ok'
+              TextSettings.Trimming = None
+              OnClick = bIIEOkClick
+              object Image20: TImage
+                MultiResBitmap.Height = 32
+                MultiResBitmap.Width = 32
+                MultiResBitmap = <
+                  item
+                    Width = 32
+                    Height = 32
+                    PNG = {
+                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+                      F40000000473424954080808087C08648800000439494441545885ED955B6C14
+                      5518C77F67667666DBDDEE96BDD2A6D01624282817911022D6466C0503091214
+                      A3867821410C890F445F348A91F8A2211109A0A80F2A3E1048B8280912F18289
+                      3131114940416AB1A580D20BBDEC6E772EE7F8C03619370BB4867D827F727266
+                      BEF9BEEFFF3FFF3939076EE166C1820F78B169078DC571A3DCC4B76DC69A5E1B
+                      DE1F8B57B79E6D3B770668F77FD7CA493EE71D12B3EB92C796CC59D53AABB699
+                      80A1CD2ECE299B03F33711AB6B4CFCBC78D6E3F5E3ADC9F48AF34422F1FBE0D2
+                      7FF2CAE2C0A3BBD0C737541F5D34EBB1FA786022AEEB113442C48CF8BC691B30
+                      CB2E20E3541E6C9DB17C5ADC9888EB3AB8D246C3209E4C47AB93CC2CAB80E60F
+                      D9D834A3A535654DC2711D5C65E3E2A024C4C2292A42CC2F9B80B95B68BA67DA
+                      DC571AABEFC4716C1C358CAB6C3CE920A547A4B29A5038D4E2AFB9719B7003DA
+                      D4C6C49EDB6BE662DB2E52D92824028140C3D5B274DB9D3879B7B62C025A1AF5
+                      ADD3EBE725940B59D98F541210681AE4C5206D5D2739D176F2E35CCE7EE3860B
+                      98FF1E774D6E98BCC60A84B89CEF06255180302443C33DFCDEF65BC7D9AE7F56
+                      FFB48EC3C5B5D715B0602B93A2E3821B356443B6C75EFAF53A7A8A7392E9D0A7
+                      F15882BEEC25500A8502433198E9E1D4E953FBCF77B94F1C7F894CA9FE5715D0
+                      FA362152E6AB562CB2BEA1665C406A1E6D273ADF05E7297F5EF3FB2C4BD5C466
+                      E6EC213C7700A51422A0181AECA7BDAD6BDB9155BC70AD058A52C10776B0B62A
+                      197A2D9E0A8F0F042C3C47A21B82CBBD0374B4F7D7FDB896AE91DC87775774D4
+                      D5C726B8F92B2BD70390CFE7E9F8A377D377CFB1FE5AE4251D68FDCC389C6E0C
+                      3DA8191A797B989C930314C21504AA342261FD4DF09E0558B88395D184312193
+                      1FC273AF88C4515CF833B36D34E450E21C909EFCE1C2A0235DCF45090FA93C24
+                      124F7A284D128A9BCFDCFB1155009531FD2DDD12B8AE8BD0250AC9A5F6A10347
+                      9E96D7B4DD8F92BFA0693B532AA3E6E671B5E622DDD4706D79255980A66B5C3C
+                      35F0BC97E7507A6AA85DB734A4AB304C8DBEAECC992F577853464B0EA0970AFE
+                      F505BD67F6783BD34D762E10D45BAC9081920A29155A40802B671B419657C6AC
+                      94E7484C4B27DBE7D0DD69DFDD7990FEB10828E9801FF76FA7255A63ED8C262B
+                      925282F424421308014A2A7443C3C97B9C3F3DF8E4F76BF87C2CE4A31200B070
+                      1FE92A61EE8B2622F30402CF538842A51070F15CCFDE432BD52363251FB58011
+                      ACF8D63C108B4797780326522A745390CD5DCE76E733A9AF1E2A7DD05C0F63BA
+                      0D7737DB4BCFFEDAB72F9800D308A25739741CCFACFEBFE457832831347C1B76
+                      D95EEB97D7559D5AFC49E01B5F8DE61BA57A94745B2F2208F846051004424018
+                      880069A0FAEF639EE68533771C7DD9DDE2641828E40480CA428D0598859851E8
+                      AD1789D3FCAB1D79D67D31DD378F08B48024E002C385E61AD00DD8853E0A9045
+                      B3F2BD4B9F01AA942BB77073E15F987A9AB5D958B1CA0000000049454E44AE42
+                      6082}
+                    FileName = 'C:\DSD\ProjectBoatMobile\img\Check.png'
+                  end>
+                Align = Left
+                HitTest = False
+                Size.Width = 44.000000000000000000
+                Size.Height = 42.000000000000000000
+                Size.PlatformDefault = False
+              end
+            end
+            object Memo1: TMemo
+              Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+              DataDetectorTypes = []
+              ReadOnly = True
+              ShowScrollBars = False
+              StyledSettings = [Family, Style, FontColor]
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.WordWrap = True
+              EnabledScroll = False
+              Position.X = 68.000000000000000000
+              Position.Y = 136.000000000000000000
+              Size.Width = 223.000000000000000000
+              Size.Height = 53.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 23
+              Viewport.Width = 215.000000000000000000
+              Viewport.Height = 45.000000000000000000
+            end
+            object Edit1: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 24
+              TabStop = False
+              ReadOnly = True
+              Position.X = 299.000000000000000000
+              Position.Y = 134.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              object bIIEOpenDictGoods: TEditButton
+                Touch.InteractiveGestures = [LongTap]
+                CanFocus = False
+                Cursor = crArrow
+                TextSettings.Trimming = None
+                Size.Width = 28.000000000000000000
+                Size.Height = 28.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                OnClick = bIIEOpenDictGoodsClick
+                object Image26: TImage
+                  MultiResBitmap.Height = 30
+                  MultiResBitmap.Width = 30
+                  MultiResBitmap = <
+                    item
+                      Width = 30
+                      Height = 30
+                      PNG = {
+                        89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
+                        A20000000473424954080808087C086488000000CF494441544889EDD23F4A03
+                        411886F15F621A215EC236EB05C45AF002629726754813247A09D1D223E404DE
+                        40B1B1B14C1752584B0216AE8503CE2ECBE27629BE07861978E6E3FDE60F4110
+                        04C1BE73D0E2AE304381377C65EE04B7B8C01A1F993BC21C631CE2BD4B433728
+                        B3F1824116BACBDC2E3527ED79ADD52EBA046F6AC5254E93BB6F7077C99D35B8
+                        4D5340BF4333656DFEAFFBEE9061A1DAF5B3BFAB2E54AF7A8B517203BFCF92D7
+                        5E3705F45AC22F718E151EF099B90293B47E54FD40434C718C272C5B8F180441
+                        10EC2D3FDA393C28C3EB49F80000000049454E44AE426082}
+                      FileName = 'C:\DSD\ProjectBoatMobile\img\Three_dots.png'
+                    end>
+                  Align = Client
+                  HitTest = False
+                  Size.Width = 28.000000000000000000
+                  Size.Height = 28.000000000000000000
+                  Size.PlatformDefault = False
+                end
+              end
+            end
           end
         end
         object tiInventory: TTabItem
@@ -11543,7 +12039,7 @@
           object Panel2: TPanel
             Align = Top
             Size.Width = 336.000000000000000000
-            Size.Height = 121.000000000000000000
+            Size.Height = 124.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
             object Label11: TLabel
@@ -11559,9 +12055,9 @@
             object sbInventoryRefresh: TSpeedButton
               Anchors = [akTop, akRight]
               Position.X = 303.000000000000000000
-              Position.Y = 85.000000000000000000
+              Position.Y = 55.000000000000000000
               Size.Width = 32.000000000000000000
-              Size.Height = 32.000000000000000000
+              Size.Height = 33.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'cornerbuttonstyle'
               TextSettings.Trimming = None
@@ -11641,13 +12137,13 @@
                 Align = Client
                 HitTest = False
                 Size.Width = 32.000000000000000000
-                Size.Height = 32.000000000000000000
+                Size.Height = 33.000000000000000000
                 Size.PlatformDefault = False
               end
             end
             object edInventoryInvNumber: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 5
+              TabOrder = 4
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 119.000000000000000000
@@ -11659,7 +12155,7 @@
             end
             object edInventoryStatus: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 3
+              TabOrder = 2
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 24.000000000000000000
@@ -11676,7 +12172,7 @@
               Size.PlatformDefault = False
               TextSettings.Trimming = None
               Text = #1057#1090#1072#1090#1091#1089
-              TabOrder = 6
+              TabOrder = 5
             end
             object Label13: TLabel
               StyledSettings = [Family, Style, FontColor]
@@ -11687,12 +12183,12 @@
               Size.PlatformDefault = False
               TextSettings.Trimming = None
               Text = #1053#1086#1084#1077#1088
-              TabOrder = 7
+              TabOrder = 6
             end
             object edInventoryUnit: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
-              TabOrder = 2
+              TabOrder = 1
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.Y = 56.000000000000000000
@@ -11701,21 +12197,9 @@
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
             end
-            object edInventoryComment: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 1
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.Y = 88.000000000000000000
-              Size.Width = 298.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
             object edInventoryOperDate: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 4
+              TabOrder = 3
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 213.000000000000000000
@@ -11724,95 +12208,6 @@
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
-            end
-            object sbInventoryScan: TSpeedButton
-              Anchors = [akTop, akRight]
-              Position.X = 303.000000000000000000
-              Position.Y = 2.000000000000000000
-              Size.Width = 32.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'cornerbuttonstyle'
-              TextSettings.Trimming = None
-              OnClick = sbInventoryScanClick
-              object Image12: TImage
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C0864880000079C494441545885ED965B6C54
-                      D71586BFBDCF39337366C633B631D8DC4C8110922A1128E12208A0A0B4718AD2
-                      D0026D2242F29087348814AAAA51FB529E2ADAA852239A8754ADB8BC543C4449
-                      89282D2501DC52630B82099794BA01836D8C8D6DE6E2B99FCBDE7D38E30B44A4
-                      45ED5BBBA4AD333A7BCD5EFF5AFFBFD63EF0BF6EE27E9CCF9D3BF7A4103C572E
-                      FBCB94CB0CFC700C1F212C376B44D4B570D86A735DF7FD254B965CFCAF02B8F8
-                      E9C5577259E727AA989C2EFD389EBC4D854194CC21B4C0D0B5849989A16B50E6
-                      6DA2F5C5F35288EF2F5AF4F8F1FF08C099337F5D188DC6FE307AAB6E9E53568C
-                      868FE2D5B643B20B1D19C097790402E92711C566C83E4438BB961A7715A19A3C
-                      8986F291743ABF61E5CA95A5FB06D0D9796653D84ABC9BEAADA1609FA4D2FC4B
-                      0A89361C016109110324A005F81ACA1EB81A22BE492CB59E70DFEBC47890FA39
-                      99543E575CB974E9D2AE7F1B4067E799176C6BEA815BD7054EF33B0C4EFD19AE
-                      846936C4ED6A60FDF99394824C1146CA50A36A98DAFB16E1CC3AA6CDCF39A954
-                      6AF18A152B2EFF4B00EDEDEDCBEB928D1D23BD6172CD3FE67ACD5E1A22302D01
-                      5A011A1490AFFA2B20ACC116A001214169B891818A07736FEDA626B399E4AC91
-                      DE9E9EDE2FB7B4B41426C733EF06505B9BD85B1A9E42BEE9E75CB5F732230AF5
-                      51F0BC20809660099B05C6F3486C0C1123AB4E31E29FC254A0BD20ABD949E8CF
-                      C2D5861D2C70EB88A6D737CF9AEDFE0A78E99E15F8E442E78F22DEFC9F0E563E
-                      A4AB7113091B1A13E0FB81A790E00A88CB269E08F722B000B8A97E4D67F93BD8
-                      556AB402A1414AB8968650652E0B87DE271E6F205FBEF9D4F2E5CBC7BB438EFD
-                      3871E284694A7B9BD62E8335EFE00B981203BF9AF918DA606926DE02F877EC43
-                      4083F261461CD2E21A03F65EC2AA09DB0EED989CF43880582CB621A266CE1AD4
-                      47B96D1D635A04B40F9E9A109CD6D575376F68A86A60B28FAB8200B526DC8EBC
-                      CBA8BE88A9EB9E6B6B6B9B7F07808E8E8E4428147A3A64C6B82DFE14B49319A8
-                      DA5350F1C151E0008E060F9F407ED56C5138BAEA535D153FA04E29488421A707
-                      195227B08D9984C3E6DA3B0068AD1F957EE8B18A18212FCF631B4152BE0F0602
-                      4B084C249696580284B2D07ABC78A00C0C0596004B484C0426028140F9605479
-                      19159D1886400873C9D85FCD2A80A5A6157FA4ACFB2971055B0642CAF9B038F6
-                      060F47DFA4A2FBAA0C2BD0265258E3F1A7CB9778DAFE1A529A80466061893A4E
-                      659EA2AFD04654424842897FE0C92C12F3A13B01083DDD109655A180EB178855
-                      45E469B0C41400C262F644C6774D0F43C6B1897F4E198688E3E9E02CA9C15519
-                      1465840ED5DE41010AADD10861E0FB136D241428FFBE2ECC3BCCF72454CF521A
-                      94160821F070C6756C02F8BE7FA3EC0F9523E1644478711C2F87EF43390FB743
-                      7F236F5F21EF752311281C4C19A3C15A338EBFA4FAC8B81F631047A111DAC492
-                      4932F901DC32A828541C88A87A2C1947F937527703F8D82DAA4B0DC9E625B678
-                      90E1D459423E440474A5F67329B51FC308064B45435D780A9B9AFB90D800F415
-                      7EC7919B3B489841F554B50342022C209D82910C34271F252C6BA83895F13B41
-                      02388E7371B4943E67CB38D363AB49E5A15C0621021AC21A2C0DA602D3074319
-                      A08DF1524B6D62F9C19EA902DF10801FC8A558827209A6DBAB514A93C964CE53
-                      559204686969710706065A8B4E81F9351B911EE44BC114542AC84AFB13EB6E5D
-                      E8EAD41BF75304634243A502E91234849A98137F8691FC55AFBDBDBD9DA03842
-                      5691985BB66C39766DA0B3675E62150B6B9FA52F0B850218041791E705803C37
-                      784E36A5049E33B137E62F807C016EE560F1D4EF521B9A4A77CFA523BB76ED1A
-                      19A37F0C8000445757D7BE6CA144CBBC37912EDC1C854A2900E1BB1300943B79
-                      EA035AE2BBA0AA20950BA680421E7AB33023348F35CD3FA067A89BB367CFED9F
-                      149331220D2074E8D0A1CB6BBFBA72EDE30B5736C6CD26DA6E1C0605B6099635
-                      9195D20E43C5335C4BBFC7F5EC217A32BFA7E20E3176479926140BD09B09B87F
-                      6DE95122CCE62F1D477EBB7DFBF6030453BD0278134A0AAA61D6D7D79FBFD273
-                      F5C56F3DBB4D842A92F6FE56DCAAB02C0B4C031CCFE77AFA336E8E5EA62F7B91
-                      A23344D40ABAC4F3209787EBD900C4B6658758D0F8241F9D3C7C65F3E6CDAFFA
-                      BEEF0045A00CF86300AA92419C3E7D3AB77AF5AA4BF16872FDAAC7BECDF4D097
-                      E8ECF980FE4230D3B51774866D826D41D40443077D5E2AC3501EBA47A0C148F2
-                      BD351D3C30730D274E9E48EDD9B3E7F90B172EA4814215803399826AD3E002EA
-                      F8F1E3FD336735759EFFE4D36F6E58F7AA7862CEEB940A9F71E5D6DF1918859C
-                      0B65178A15C897215584C151184C4348C1330FFC90D7D67C448DD9C41F5B3FEC
-                      DBFDD62FBE71F0E0C17E6094E06BCE190B7AAF391B06E21B376E9CFBF22B2FFF
-                      66F592AF2CAE9B1A65243BC0A5C103740F1F67247785923B8C1026F170238D89
-                      8759306D1D8F346D226AC7E8EDB945DBE963EF6D7EE1C537805C3570F91EF1EE
-                      69269078FBEDDD9B5B5BFF7C79A8BFA875516B5DD4BA92D37A345BD0B96C593B
-                      79AD75496B95D3BAA77B441F3E7CB875E7CE9D6B8124607D5180FBB969C4BE7D
-                      FB16D5D7D77F3D99AC5F168F27664522D1A8F4842C39B96C2697BA9A4EA74F0D
-                      0F0F7FB075EBD65E267FB1FCDFBEC0FE0952DAAE588C5EE1980000000049454E
-                      44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\add.png'
-                  end>
-                Align = Client
-                HitTest = False
-                Size.Width = 32.000000000000000000
-                Size.Height = 32.000000000000000000
-                Size.PlatformDefault = False
-              end
             end
             object imInventoryStatus: TImage
               MultiResBitmap = <
@@ -11827,6 +12222,44 @@
               Size.Height = 20.000000000000000000
               Size.PlatformDefault = False
             end
+            object cbILOrderBy: TComboBox
+              Items.Strings = (
+                #1055#1086' '#1076#1072#1090#1077' '#1074#1074#1086#1076#1072
+                #1055#1086' '#1072#1083#1092#1086#1074#1080#1090#1091)
+              ItemIndex = 0
+              Position.Y = 89.000000000000000000
+              Size.Width = 113.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 9
+              OnChange = cbILOrderByChange
+            end
+            object cbILAllUser: TComboBox
+              Items.Strings = (
+                #1058#1086#1083#1100#1082#1086' '#1089#1074#1086#1080
+                #1042#1089#1077#1093' '#1089#1086#1090#1088#1091#1076#1085'.')
+              ItemIndex = 0
+              Position.X = 115.000000000000000000
+              Position.Y = 89.000000000000000000
+              Size.Width = 105.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 8
+              OnChange = cbILOrderByChange
+            end
+            object cbILErased: TComboBox
+              Items.Strings = (
+                #1053#1077' '#1091#1076#1072#1083'.'
+                #1042#1089#1077' '#1089#1090#1088#1086#1082#1080)
+              ItemIndex = 0
+              Position.X = 228.000000000000000000
+              Position.Y = 89.000000000000000000
+              Size.Width = 100.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 7
+              OnChange = cbILOrderByChange
+            end
           end
           object lwInventoryList: TListView
             ItemAppearanceClassName = 'TDynamicAppearance'
@@ -11836,7 +12269,7 @@
             Images = ilPartners
             Align = Client
             Size.Width = 336.000000000000000000
-            Size.Height = 363.000000000000000000
+            Size.Height = 360.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             ItemAppearance.ItemHeight = 65
@@ -11910,6 +12343,26 @@
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 110.000000000000000000
                 Appearance.PlaceOffset.Y = 42.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'PartionCellName'
+                AppearanceClassName = 'TTextObjectAppearance'
+              end
+              item
+                AppearanceObjectName = 'AmountRemains'
+                AppearanceClassName = 'TTextObjectAppearance'
+              end
+              item
+                AppearanceObjectName = 'TotalCount'
+                AppearanceClassName = 'TTextObjectAppearance'
+              end
+              item
+                AppearanceObjectName = 'OperDate_protocol'
+                AppearanceClassName = 'TTextObjectAppearance'
+              end
+              item
+                AppearanceObjectName = 'UserName_protocol'
+                AppearanceClassName = 'TTextObjectAppearance'
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -11922,872 +12375,6 @@
             OnItemClickEx = lwInventoryJournalItemClickEx
             AutoTapScroll = True
             SearchVisible = True
-          end
-        end
-        object tiInventoryScan: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = True
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiInventoryScan'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-          object Panel3: TPanel
-            Align = Top
-            Size.Width = 336.000000000000000000
-            Size.Height = 161.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 1
-            object bInventScanSearch: TSpeedButton
-              Anchors = [akLeft, akTop, akRight]
-              Position.X = 5.000000000000000000
-              Position.Y = 109.000000000000000000
-              Size.Width = 323.000000000000000000
-              Size.Height = 44.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              Text = #1055#1086#1076#1073#1086#1088' '#1087#1086' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1091
-              TextSettings.Font.Size = 15.000000000000000000
-              TextSettings.FontColor = xFF005078
-              TextSettings.Trimming = None
-              OnClick = bInventScanSearchClick
-              object Image22: TImage
-                MultiResBitmap.Height = 32
-                MultiResBitmap.Width = 32
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C08648800000622494441545885B5D76F6C1B
-                      671D07F0EF73F73C67DFD9679F633B4DE22C7FEC564DB2699DCA5002936805EB
-                      26A56A5706D2C4344DAB042AE25D07420C469BC15A21102D9326345EB04915AC
-                      EFD68942B331FE8C454C2BAB045BB76A699C6469DA248E1DD7B163FBEE9EE7B9
-                      E38593A19536CC23F9498FF4DC3DF7D3EFF33CF7E81E1DC13AF1C20B672C21D4
-                      5D94B27E4D5302AA4A0563645A55D5B1030776CDAE97FB4983DCECE689132FDE
-                      CE183BDAD3937CA0B3B343531405841050AA42511454AB35E472A53700796C78
-                      F89E3F6E28E0F8F1534F6632B1235D5D69363E5E1792E9AE9E0ECBA416025085
-                      5DA9AB042ADD9ED235D7E5F8F0C3DC694AF56FDC7FFF8EEAFF0D1819F9F5F377
-                      DFDD7F70F28A94A42B59D9B1B39BB49A82110016000D8007A0A2AAF2BD0921D9
-                      F59CD1DF6B6A972FCF9CE7DCBF6F7878A8DC2C4059EB3CF1C42F9FBCE38EF4C1
-                      0B336587EEB8AB78E7E7529A1F128CAF8E97002C02280070A4543369A2D1CC6D
-                      D5BF5EACADF4F5F50EAA2A39FD6956400180C3879FBD3D10481C796FBC2ED133
-                      54B0E208B9A2315DEE01FC862409C005404D1E080CA49C7F8C2F577B7B3B865F
-                      79E5AD839F0AE079FC683A1D61D381D67933A5C600207F1D9002A878C09207D4
-                      01D86BCD034AB221B174579FF2B65C971E100C068EFABEAFDCBADC4D008F3D76
-                      D24A24D803E7AFAEB8B1CC9D1225C05E9DF2C212C079A3D0B26C142DC906CA13
-                      40DD018ACB80D9A6855FBFE4E43B3A12DDA3A3E7EF6D0A40A9B32B1A6DD5AECC
-                      066639403880D212E088C6038B45A06E03DC010407840BD80E502D00C532203D
-                      A02AB976C5312BAAAA404AF9A56600D4F344BFEB0A2C78B1FCB9B3F6C53D3BB5
-                      AD43FDCA000A8E69C581006B14BA59B812283A00CAC0926B72299720A5E86F0A
-                      20841FB06D17B6A7D90CF02F4EF289F93C26B677075BBA2A6A4B34ECE98A0A6E
-                      3B4A69B1E42FD56C9F1B9A176A89D076CB14DB14E1C46D001549B910029AC6CC
-                      A600527221A50485C3E211201105125106E9CB62B14A8AC223303480501F6D31
-                      807382BAAB5673CB5EF6F29C970D31AD231A253B2084040856561CA749803FCD
-                      B94082145ADC108115610D4484C10A01D108606800638D04CE819A0B1835029D
-                      311496F9DCA5297F2E1D2CF503809462A22980EB3A6F94CBF37E4A955DF50825
-                      F1107C2B4291B01AAB1135809001E8AB803A076A3540D7004A00F80C82736442
-                      4B9D421810428E3503505E7AE9A757F3796F2C19F6425BF8F8D69041110D1158
-                      ABAF231907DA13407B7CB52580B64463CC8A00D110705B5444873A4BDD535373
-                      CBB51AFF7D530000B06DF1B46DBB082CFC79D062AE1ED51B33B78CD53DA10396
-                      0624B4D57EE43FC52361900C19FF8269B62AF9FCF5670F1DDA576B1A70E6CCF1
-                      D7E6E7F3A73B8DA0517FFBB7C31A71838606180660102042803880281AFD0801
-                      221A600640ACC577777FB63BD83E353587743A35DC4CF18F0000E03881AF4F4F
-                      5F3B1FA73C3E73F6D483D585B9146300A38D53D0001042A3CF28E0BB75ABF4D6
-                      9BFBFAE2D8F6C10733686B8B63763677B659C0C78EE3FDFBBF6B0683F4375D5D
-                      EDFB29A308C662B981BBB64DF60D7416BAE331BB5AA9B1A9AB8BB1C9EC5C0FF3
-                      645724AC2BD9EC2C5A5B5B90C9A490CB2D2DFFF3C23BC7BE6AFC6830CCBCD7BA
-                      BF5DF8555380B578E8A11F3E6A1881A752A9D61E5DD7C01805631481808660B0
-                      717DED5AB154ADAE9CACD7EDBAA2509A4C9A8723613DB993BE8C81C128E6DE1C
-                      F569ADFCADDEC70BCF350D581B7BF8E1A77633A6EC614CE9638CC51485D42855
-                      B394D231D30C9C1B1939F4D1867BF4911F1C7B70EBBFBEBFEBBEEDB03EF365A0
-                      F43764CF3CFF89101B12CF7C25F1BB999396EFFE65AFEF4DFFDCF79D31DFCF3D
-                      ED4F3C97F6A64F24BE79AB3C75A300BB7B2909FAB5036DFA82A24042A10C2479
-                      0F5A7A5B4861F2D2DEC7BFA8E69E79B57661D3007F9A702E0E24C359DFBE11F1
-                      F975111B06B835425B17B1A180FF46CCFF4FC486033E8EA8DFB0128D3DB138FE
-                      FEDEEFECA1177EF16A6D826E060000BE77AEFCE24F8623006AA706F177150028
-                      003BB8155C1F20B31D5F23C023D834C0CD102B151BEF4E68D0877E8CF177AE84
-                      D6509B1A6B0857D8A716D5828A9D4770F5F5F7B342944781F5BF841B1A3FDB1B
-                      BDF76D6F5F78856CD17DDFFCC3E8E848D3BF719B12FF06A7D1BF894E9068F400
-                      00000049454E44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\search.png'
-                  end>
-                Align = Left
-                HitTest = False
-                Size.Width = 55.000000000000000000
-                Size.Height = 44.000000000000000000
-                Size.PlatformDefault = False
-              end
-            end
-            object bInventScanSN: TSpeedButton
-              Tag = 1
-              Anchors = [akLeft, akTop, akRight]
-              Position.X = 5.000000000000000000
-              Position.Y = 56.000000000000000000
-              Size.Width = 323.000000000000000000
-              Size.Height = 44.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100' + s/n'
-              TextSettings.Font.Size = 15.000000000000000000
-              TextSettings.FontColor = xFF005078
-              TextSettings.Trimming = None
-              OnClick = bInventScanClick
-              object Image16: TImage
-                MultiResBitmap.Height = 32
-                MultiResBitmap.Width = 32
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C0864880000062B494441545885ED575D4C1C
-                      D715FECE9D99DD59C018C8C620D360E238212E9641457608C678011BBCEC2E60
-                      591B77C1EB6EA316C9721F5ADC48F583D546F263EDA87D68553F2496B6318E17
-                      2267F9FF15966DB95544D2B4895CD3BAAD8CB0F1660B8A21BBB33B33F7F601B6
-                      C28093B8A2ED4B3E693473EF39F77CDFB9E7DEAB3BC0D7F83F8300201008A8BA
-                      2CDB8510924664DA197B70FEFC797D3D89CACADA940D9BA2B98C207101D386F8
-                      A7FDFDFD091CF96EDBB78E04DA3A8948A49E578EBDBA7F3DC901C0E16ADABF9C
-                      634F7DC3A5CA7A77894C44BF78E7C2F9CA2381EFB773CE9302D004191FAFB700
-                      08FDE3BDF54DDF8310AA10DC727DA8E75C45AD7B138848F85E6DFBE1BA137E09
-                      2AEB5D278948C800002E9229434BCBF1EC8C0C7321B5065C2D2DD9F919190B00
-                      30BDB090D17BF1E29CB3B5355399B78A70F8CD7900703A5B3315655E84C3E1F9
-                      4A574B763C3F636162697CA5CB951D9FC95F00005BDE74C6F5DEDEB9454AC401
-                      800180096800E0F3B5D9937232188D194E00F0F87C7699E4E0CCC344DDCCC358
-                      1D3358B0DEEBCD215DB41B16AD3D259A5BF51F2724EB8FEABDDE1C2B4B063367
-                      A24E0070783C760639989917AD4BB3CFD4C1644187C7630700B1C4C9BCDF696B
-                      1450FA00C09091D6157CD34584670040C8725AF862D0C518F24D81FC9ED0DB2E
-                      5592D2FB431D3FEDEFEAF8594AC0D07BA1D343573A5F1749297DACA7CBC5889E
-                      01005D88B46B7D611707CF1724F26F0CF6B8F4B84803002329FA76D5D6B9E5CB
-                      177ED3BDB23E3CF5A12DBE4CD37CB2029B7C75DF8AAEF7C7FB6600F4B2AF1C94
-                      AF117415E28F11F4F8112B042C05E04F98F197F09930B16A0A9620AF41BFCA95
-                      2F0BFA981C01FCBB62ABC62FA7D756D868F2F0611F719E03221105727E47D49E
-                      C769B8DC488CDD237AFAA6A2B4E7EB7CC0344DDC9395837B92DAD98F98E40438
-                      D56AF1B7C13986ADD6568089124DEB1F95D9C9024EC355466C6C0AD2D357654B
-                      7BA16E0E7000779974709F1E3B97ABEBB35C081244514A288AF882A4FEABF84B
-                      49C9049B763AF3A63D9EC2684343C15BCDCD15AA61E02787BCA72D35359BDF72
-                      2FB65F6B6C3E75D2DD7C4A350C5C38D050AE1A0654C3C0547575C154F5CB05A9
-                      F6AFABABCB55C3C00F6A0F9C36CA776EFE555555856A1838BEAFFAD4F1BDD5A7
-                      54C3C02F2B2A2AA64A4B0BEEECD8512824C9256F0D871FA414B9FD7E0280BF31
-                      698E0607EFBBBD7E0500EE3065D65C5AAE5D8AED5ECA7FDBD0D01400101100E0
-                      5DDBA2ED3653E6D2AF4DDCDFB3DFAD00C02DA6CCF2A579BEA46C987EEDFDAB53
-                      A9185F7D1B3EE959B00CD26280356D8FEC82954B946423D670B8A5970B4C1103
-                      EA0F797B85647E7EA0C9FB3A071723573A1FF1D735CBE7554E4F0F04EE028062
-                      A3D8CBB5AE1E98FC2E03B6AC2560CD194869EDEEE8882A86723492933E12C9D9
-                      38A2F2E4D1C1506856E5DA5943A1B32BC7DD1C0CCD9285F91722B9030030DEDD
-                      1DB518B2FFFA68DF000793D7CAF20B4BE06C6DCD4C288913B9730BC53991B9E2
-                      18594F3436366E88C372504E88BA95FE0E8737C3488813B6A7223B01E025A733
-                      5393F5132FD51EDC29C4DA35604DBE80C71B08E4AD6594922C6BA0F3D2196E9A
-                      BB096CF7F095CB67344ACB1AE9EEBA3CDADDD5B5D29F5B92D93706C267404639
-                      00C8BA94F5FBD1BE330C52398947CFF25D0E475ED9DEFD2E69F2938F6EBF505C
-                      7AEBCF7FFAC3874525C5CA0BDB4B8A21686CF2933F4E1695142BCF166D2F26A2
-                      114E627EEBF3C559CCC22F173EB75D2B2C7A71FCEFB76F5D05807DAE26B6E5F9
-                      ED63BA506E6CD9B6750704C6EEDE999CDC5450A4146C7BEE9B1062D4247AF88D
-                      67B76E14A6DA79FF1F93B1DC826DAF7C787DF41D06009C731558AC3997B9FF7E
-                      966D20D5962CB23F92B37164F6A9AC618B21FB0743A15945B79E4BC03897CA46
-                      E3C9B38664BE717330340B89FBE3FFDC3C000013E3DD51D94AC7F4CF2223E2B3
-                      C88825291F9B18EF8E020023A10200884834FBFCFFF32B595955EDE295CCFDED
-                      A3E3EF5DFAED1B8D3EBFC40534619A9A80DEDB170ACDAC27E12E47439E80E1E2
-                      5CA804AE7E706DECE7A57B6A8671E8C8D112B7CFDFB1FCCAECF4FA6AD6931C00
-                      76D7D4D52CE728DD5B1BDC59E1D84100E00804549BAEDB292E24013223F6F407
-                      13EBFE6352A6C81B36E52659423239376336DBA77FEDEF4FAC27C7D7F88FF02F
-                      F315B1C1E79D7EF00000000049454E44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\barcode-scanner.png'
-                  end>
-                Align = Left
-                HitTest = False
-                Size.Width = 55.000000000000000000
-                Size.Height = 44.000000000000000000
-                Size.PlatformDefault = False
-              end
-            end
-            object bInventScan: TSpeedButton
-              Anchors = [akLeft, akTop, akRight]
-              Position.X = 5.000000000000000000
-              Position.Y = 8.000000000000000000
-              Size.Width = 323.000000000000000000
-              Size.Height = 44.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              Text = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100
-              TextSettings.Font.Size = 15.000000000000000000
-              TextSettings.FontColor = xFF005078
-              TextSettings.Trimming = None
-              OnClick = bInventScanClick
-              object Image15: TImage
-                MultiResBitmap.Height = 32
-                MultiResBitmap.Width = 32
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C0864880000062B494441545885ED575D4C1C
-                      D715FECE9D99DD59C018C8C620D360E238212E9641457608C678011BBCEC2E60
-                      591B77C1EB6EA316C9721F5ADC48F583D546F263EDA87D68553F2496B6318E17
-                      2267F9FF15966DB95544D2B4895CD3BAAD8CB0F1660B8A21BBB33B33F7F601B6
-                      C28093B8A2ED4B3E693473EF39F77CDFB9E7DEAB3BC0D7F83F8300201008A8BA
-                      2CDB8510924664DA197B70FEFC797D3D89CACADA940D9BA2B98C207101D386F8
-                      A7FDFDFD091CF96EDBB78E04DA3A8948A49E578EBDBA7F3DC901C0E16ADABF9C
-                      634F7DC3A5CA7A77894C44BF78E7C2F9CA2381EFB773CE9302D004191FAFB700
-                      08FDE3BDF54DDF8310AA10DC727DA8E75C45AD7B138848F85E6DFBE1BA137E09
-                      2AEB5D278948C800002E9229434BCBF1EC8C0C7321B5065C2D2DD9F919190B00
-                      30BDB090D17BF1E29CB3B5355399B78A70F8CD7900703A5B3315655E84C3E1F9
-                      4A574B763C3F636162697CA5CB951D9FC95F00005BDE74C6F5DEDEB9454AC401
-                      800180096800E0F3B5D9937232188D194E00F0F87C7699E4E0CCC344DDCCC358
-                      1D3358B0DEEBCD215DB41B16AD3D259A5BF51F2724EB8FEABDDE1C2B4B063367
-                      A24E0070783C760639989917AD4BB3CFD4C1644187C7630700B1C4C9BCDF696B
-                      1450FA00C09091D6157CD34584670040C8725AF862D0C518F24D81FC9ED0DB2E
-                      5592D2FB431D3FEDEFEAF8594AC0D07BA1D343573A5F1749297DACA7CBC5889E
-                      01005D88B46B7D611707CF1724F26F0CF6B8F4B84803002329FA76D5D6B9E5CB
-                      177ED3BDB23E3CF5A12DBE4CD37CB2029B7C75DF8AAEF7C7FB6600F4B2AF1C94
-                      AF117415E28F11F4F8112B042C05E04F98F197F09930B16A0A9620AF41BFCA95
-                      2F0BFA981C01FCBB62ABC62FA7D756D868F2F0611F719E03221105727E47D49E
-                      C769B8DC488CDD237AFAA6A2B4E7EB7CC0344DDC9395837B92DAD98F98E40438
-                      D56AF1B7C13986ADD6568089124DEB1F95D9C9024EC355466C6C0AD2D357654B
-                      7BA16E0E7000779974709F1E3B97ABEBB35C081244514A288AF882A4FEABF84B
-                      49C9049B763AF3A63D9EC2684343C15BCDCD15AA61E02787BCA72D35359BDF72
-                      2FB65F6B6C3E75D2DD7C4A350C5C38D050AE1A0654C3C0547575C154F5CB05A9
-                      F6AFABABCB55C3C00F6A0F9C36CA776EFE555555856A1838BEAFFAD4F1BDD5A7
-                      54C3C02F2B2A2AA64A4B0BEEECD8512824C9256F0D871FA414B9FD7E0280BF31
-                      698E0607EFBBBD7E0500EE3065D65C5AAE5D8AED5ECA7FDBD0D01400101100E0
-                      5DDBA2ED3653E6D2AF4DDCDFB3DFAD00C02DA6CCF2A579BEA46C987EEDFDAB53
-                      A9185F7D1B3EE959B00CD26280356D8FEC82954B946423D670B8A5970B4C1103
-                      EA0F797B85647E7EA0C9FB3A071723573A1FF1D735CBE7554E4F0F04EE028062
-                      A3D8CBB5AE1E98FC2E03B6AC2560CD194869EDEEE8882A86723492933E12C9D9
-                      38A2F2E4D1C1506856E5DA5943A1B32BC7DD1C0CCD9285F91722B9030030DEDD
-                      1DB518B2FFFA68DF000793D7CAF20B4BE06C6DCD4C288913B9730BC53991B9E2
-                      18594F3436366E88C372504E88BA95FE0E8737C3488813B6A7223B01E025A733
-                      5393F5132FD51EDC29C4DA35604DBE80C71B08E4AD6594922C6BA0F3D2196E9A
-                      BB096CF7F095CB67344ACB1AE9EEBA3CDADDD5B5D29F5B92D93706C267404639
-                      00C8BA94F5FBD1BE330C52398947CFF25D0E475ED9DEFD2E69F2938F6EBF505C
-                      7AEBCF7FFAC3874525C5CA0BDB4B8A21686CF2933F4E1695142BCF166D2F26A2
-                      114E627EEBF3C559CCC22F173EB75D2B2C7A71FCEFB76F5D05807DAE26B6E5F9
-                      ED63BA506E6CD9B6750704C6EEDE999CDC5450A4146C7BEE9B1062D4247AF88D
-                      67B76E14A6DA79FF1F93B1DC826DAF7C787DF41D06009C731558AC3997B9FF7E
-                      966D20D5962CB23F92B37164F6A9AC618B21FB0743A15945B79E4BC03897CA46
-                      E3C9B38664BE717330340B89FBE3FFDC3C000013E3DD51D94AC7F4CF2223E2B3
-                      C88825291F9B18EF8E020023A10200884834FBFCFFF32B595955EDE295CCFDED
-                      A3E3EF5DFAED1B8D3EBFC40534619A9A80DEDB170ACDAC27E12E47439E80E1E2
-                      5CA804AE7E706DECE7A57B6A8671E8C8D112B7CFDFB1FCCAECF4FA6AD6931C00
-                      76D7D4D52CE728DD5B1BDC59E1D84100E00804549BAEDB292E24013223F6F407
-                      13EBFE6352A6C81B36E52659423239376336DBA77FEDEF4FAC27C7D7F88FF02F
-                      F315B1C1E79D7EF00000000049454E44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\barcode-scanner.png'
-                  end>
-                Align = Left
-                HitTest = False
-                Size.Width = 55.000000000000000000
-                Size.Height = 44.000000000000000000
-                Size.PlatformDefault = False
-              end
-            end
-          end
-          object lwInventoryScan: TListView
-            ItemAppearanceClassName = 'TDynamicAppearance'
-            ItemEditAppearanceClassName = 'TDynamicAppearance'
-            HeaderAppearanceClassName = 'TListHeaderObjects'
-            FooterAppearanceClassName = 'TListHeaderObjects'
-            Images = ilPartners
-            Align = Client
-            Size.Width = 336.000000000000000000
-            Size.Height = 323.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 0
-            ItemAppearance.ItemHeight = 65
-            ItemAppearance.ItemEditHeight = 45
-            ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
-              item
-                AppearanceObjectName = 'GoodsCode'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.Font.StyleExt = {00070000000000000004000000}
-                Appearance.TextAlign = Leading
-                Appearance.Width = 45.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'GoodsName'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 234.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 54.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'Article'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 105.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
-                Appearance.PlaceOffset.Y = 21.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'Error'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.TextColor = claRed
-                Appearance.Width = 170.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 118.000000000000000000
-                Appearance.PlaceOffset.Y = 42.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'Amount'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Trailing
-                Appearance.Width = 49.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 6.000000000000000000
-                Appearance.PlaceOffset.Y = 42.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'MeasureName'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 50.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 62.000000000000000000
-                Appearance.PlaceOffset.Y = 42.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'PartNumber'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.Width = 170.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 118.000000000000000000
-                Appearance.PlaceOffset.Y = 21.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'DeleteButton'
-                AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.Width = 25.000000000000000000
-                Appearance.Height = 25.000000000000000000
-                Appearance.Align = Trailing
-                Appearance.PlaceOffset.X = 4.000000000000000000
-                Appearance.PlaceOffset.Y = 31.000000000000000000
-              end
-              item
-                AppearanceObjectName = 'EditButton'
-                AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.Width = 25.000000000000000000
-                Appearance.Height = 25.000000000000000000
-                Appearance.Align = Trailing
-                Appearance.PlaceOffset.X = 4.000000000000000000
-                Appearance.PlaceOffset.Y = 3.000000000000000000
-              end>
-            ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
-              item
-                AppearanceObjectName = 'Text1'
-                AppearanceClassName = 'TTextObjectAppearance'
-              end>
-            ItemAppearanceObjects.HeaderObjects.Text.Visible = False
-            ItemAppearanceObjects.FooterObjects.Text.Visible = False
-            CanSwipeDelete = False
-            OnItemClickEx = lwInventoryScanItemClickEx
-            AutoTapScroll = True
-            SearchVisible = True
-          end
-        end
-        object tiInventoryItemEdit: TTabItem
-          CustomIcon = <
-            item
-            end>
-          TextSettings.Trimming = None
-          IsSelected = False
-          Size.Width = 8.000000000000000000
-          Size.Height = 8.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = ''
-          TabOrder = 0
-          Text = 'tiInventoryItemEdit'
-          ExplicitSize.cx = 8.000000000000000000
-          ExplicitSize.cy = 8.000000000000000000
-          object pInventoryItemEdit: TPanel
-            Align = Client
-            Size.Width = 336.000000000000000000
-            Size.Height = 484.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 1
-            object edIIEAmountDiff: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 14
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 189.000000000000000000
-              Position.Y = 192.000000000000000000
-              Size.Width = 140.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEAmountRemains: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 13
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 17.000000000000000000
-              Position.Y = 192.000000000000000000
-              Size.Width = 151.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEArticle: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 7
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 16.000000000000000000
-              Position.Y = 96.000000000000000000
-              Size.Width = 151.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEGoodsCode: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 8
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 189.000000000000000000
-              Position.Y = 96.000000000000000000
-              Size.Width = 140.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEGoodsGroup: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 2
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 88.000000000000000000
-              Position.Y = 3.000000000000000000
-              Size.Width = 241.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEGoodsName: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 10
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 79.000000000000000000
-              Position.Y = 136.000000000000000000
-              Size.Width = 250.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              object bIIEOpenDictGoods: TEditButton
-                Touch.InteractiveGestures = [LongTap]
-                CanFocus = False
-                Cursor = crArrow
-                TextSettings.Trimming = None
-                Size.Width = 28.000000000000000000
-                Size.Height = 28.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 0
-                OnClick = bIIEOpenDictGoodsClick
-                object Image26: TImage
-                  MultiResBitmap.Height = 30
-                  MultiResBitmap.Width = 30
-                  MultiResBitmap = <
-                    item
-                      Width = 30
-                      Height = 30
-                      PNG = {
-                        89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
-                        A20000000473424954080808087C086488000000CF494441544889EDD23F4A03
-                        411886F15F621A215EC236EB05C45AF002629726754813247A09D1D223E404DE
-                        40B1B1B14C1752584B0216AE8503CE2ECBE27629BE07861978E6E3FDE60F4110
-                        04C1BE73D0E2AE304381377C65EE04B7B8C01A1F993BC21C631CE2BD4B433728
-                        B3F1824116BACBDC2E3527ED79ADD52EBA046F6AC5254E93BB6F7077C99D35B8
-                        4D5340BF4333656DFEAFFBEE9061A1DAF5B3BFAB2E54AF7A8B517203BFCF92D7
-                        5E3705F45AC22F718E151EF099B90293B47E54FD40434C718C272C5B8F180441
-                        10EC2D3FDA393C28C3EB49F80000000049454E44AE426082}
-                      FileName = 'C:\DSD\ProjectBoatMobile\img\Three_dots.png'
-                    end>
-                  Align = Client
-                  HitTest = False
-                  Size.Width = 28.000000000000000000
-                  Size.Height = 28.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
-            end
-            object edIIEOperCount: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 17
-              KeyboardType = DecimalNumberPad
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 16.000000000000000000
-              Position.Y = 250.000000000000000000
-              Size.Width = 151.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              OnChangeTracking = edАmountChangeTracking
-            end
-            object edIIEPartionCell: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 22
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 187.000000000000000000
-              Position.Y = 308.000000000000000000
-              Size.Width = 140.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              object bIIEOpenDictPartionCell: TEditButton
-                Touch.InteractiveGestures = [LongTap]
-                CanFocus = False
-                Cursor = crArrow
-                TextSettings.Trimming = None
-                Size.Width = 28.000000000000000000
-                Size.Height = 28.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 0
-                OnClick = bIIEOpenDictPartionCellClick
-                object Image25: TImage
-                  MultiResBitmap.Height = 30
-                  MultiResBitmap.Width = 30
-                  MultiResBitmap = <
-                    item
-                      Width = 30
-                      Height = 30
-                      PNG = {
-                        89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
-                        A20000000473424954080808087C086488000000CF494441544889EDD23F4A03
-                        411886F15F621A215EC236EB05C45AF002629726754813247A09D1D223E404DE
-                        40B1B1B14C1752584B0216AE8503CE2ECBE27629BE07861978E6E3FDE60F4110
-                        04C1BE73D0E2AE304381377C65EE04B7B8C01A1F993BC21C631CE2BD4B433728
-                        B3F1824116BACBDC2E3527ED79ADD52EBA046F6AC5254E93BB6F7077C99D35B8
-                        4D5340BF4333656DFEAFFBEE9061A1DAF5B3BFAB2E54AF7A8B517203BFCF92D7
-                        5E3705F45AC22F718E151EF099B90293B47E54FD40434C718C272C5B8F180441
-                        10EC2D3FDA393C28C3EB49F80000000049454E44AE426082}
-                      FileName = 'C:\DSD\ProjectBoatMobile\img\Three_dots.png'
-                    end>
-                  Align = Client
-                  HitTest = False
-                  Size.Width = 28.000000000000000000
-                  Size.Height = 28.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
-            end
-            object edIIEPartnerName: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 4
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 88.000000000000000000
-              Position.Y = 40.000000000000000000
-              Size.Width = 241.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIEPartNumber: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 21
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 15.000000000000000000
-              Position.Y = 308.000000000000000000
-              Size.Width = 151.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object edIIETotalCountEnter: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 18
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 187.000000000000000000
-              Position.Y = 250.000000000000000000
-              Size.Width = 140.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object Label14: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 8.000000000000000000
-              Size.Width = 45.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1043#1088#1091#1087#1087#1072
-              TabOrder = 1
-            end
-            object Label15: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 44.000000000000000000
-              Size.Width = 64.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-              TabOrder = 3
-            end
-            object Label16: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 75.000000000000000000
-              Size.Width = 94.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = 'Artikel Nr'
-              TabOrder = 5
-            end
-            object Label25: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 189.000000000000000000
-              Position.Y = 75.000000000000000000
-              Size.Width = 84.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = 'Interne Nr'
-              TabOrder = 6
-            end
-            object Label26: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 140.000000000000000000
-              Size.Width = 64.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1053#1072#1079#1074#1072#1085#1080#1077
-              TabOrder = 9
-            end
-            object Label27: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 189.000000000000000000
-              Position.Y = 171.000000000000000000
-              Size.Width = 132.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1079#1085#1080#1094#1072')'
-              TabOrder = 12
-            end
-            object Label28: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 17.000000000000000000
-              Position.Y = 171.000000000000000000
-              Size.Width = 150.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1089#1095'.)'
-              TabOrder = 11
-            end
-            object Label29: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 187.000000000000000000
-              Position.Y = 232.000000000000000000
-              Size.Width = 132.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1048#1058#1054#1043#1054' ('#1074#1074#1086#1076')'
-              TabOrder = 16
-            end
-            object Label30: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 229.000000000000000000
-              Size.Width = 150.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1050#1086#1083'-'#1074#1086
-              TabOrder = 15
-            end
-            object Label32: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 189.000000000000000000
-              Position.Y = 290.000000000000000000
-              Size.Width = 132.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
-              TabOrder = 20
-            end
-            object Label33: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 16.000000000000000000
-              Position.Y = 287.000000000000000000
-              Size.Width = 150.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = 'S/N'
-              TabOrder = 19
-            end
-            object bIIECancel: TButton
-              Anchors = [akTop, akRight]
-              Position.X = 188.000000000000000000
-              Position.Y = 364.000000000000000000
-              Size.Width = 142.000000000000000000
-              Size.Height = 42.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              TabOrder = 24
-              Text = #1054#1090#1084#1077#1085#1072
-              TextSettings.Trimming = None
-              OnClick = bIIECancelClick
-              object Image21: TImage
-                MultiResBitmap.Height = 30
-                MultiResBitmap.Width = 30
-                MultiResBitmap = <
-                  item
-                    Width = 30
-                    Height = 30
-                    PNG = {
-                      89504E470D0A1A0A0000000D494844520000001E0000001E08060000003B30AE
-                      A20000000473424954080808087C086488000002C8494441544889ED96DF4FD3
-                      5014C7CFBDBD551260C464B6DDC090754B17121E78001CE2CBD8E81FA0E12F30
-                      46FF2413A37F8089BC33D893AB1BF04A62D8BAF1206EDD4662323599F6C7F561
-                      54BBB2766D1F78E2BCF5DCF67EEE39FD9E6F0B7017B7146852B292CF671942DE
-                      9B007B4F0F0FDB5136566499C386B16F11F27ABB543A73AF6377A25A2CAEB00C
-                      538D71DC268350B55628F061A1B5428127949E2CCCCE6E32947EAA168B2BBEE0
-                      4A3E9F45BA5E995F5E5E10D7D7494292122621A795DDDD6450A822CB1C22A4CA
-                      A5D389D4CE0E1B5B5B5B40087D566479D513CC20F42EB6B4144BADAE6200003E
-                      9D6693A22804ADBC5628F018E09413C525219BBD0700904A26518CE3E6B061BC
-                      F1045B843CFBD1EF7FED9C9FFFB1738224B1412AB72B154451102489B5F39AAA
-                      EADFAFAE3A2CCBEE39EFBF212E45963902507B288A8B89EB530300749B4DFD5B
-                      A3A151CBCAB905A7C8324710AA71A9D4A2E078465355BDADAADA7D80C7EB0707
-                      1D5F70587814A82738281C21644481FA82014662018C8FF94C262148D2FF8D1B
-                      0D5D53D50EA69472EEB57A5DD79ACD0E32CDCD5CB9DCF5DADB176CC329C39C08
-                      E974624C34F5BA0E30125F586820308077DB9D11A4BDA1C1D3E061A100132CD3
-                      FF9868E249111A65879615B890E0AD9EA05E67F8CDF9A4985AB122CB1C31CD63
-                      A70D028CDA6B0B0CE0DA5E331901615C0BE2ED53C709617CEC39329452AF518B
-                      3C4E411CE937A566587BF50587B1C128DE3E111CC57BA3C0D18D0D227A6F58F8
-                      98AAB161ECCFC7E38FC6A0F5BAAE351A1DC63036FCCC61BB54EA51D3DCEAB65A
-                      9A5BED0FE2F104639A1FC658CE0B93D21783CBCBC1C5D999F5AFD2564B6311CA
-                      4DF35E00805CB9DCB500367ACDE6A5FD3371D16ED341AFF793A1F495F3DE1BEF
-                      B85A2CAE6000658EE7E707FD7E3B88E1BBC3FEAAC566669283E1F017A5F4C9D6
-                      D1D1175FB00D07CB7A8B107A1E16EA84534A3F02C62FDDD0BBB8D5F80B6B4008
-                      1E1591BA980000000049454E44AE426082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\Cancel.png'
-                  end>
-                Align = Left
-                HitTest = False
-                Size.Width = 45.000000000000000000
-                Size.Height = 42.000000000000000000
-                Size.PlatformDefault = False
-              end
-            end
-            object bIIEOk: TButton
-              Position.X = 8.000000000000000000
-              Position.Y = 364.000000000000000000
-              Size.Width = 131.000000000000000000
-              Size.Height = 42.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              TabOrder = 23
-              Text = 'Ok'
-              TextSettings.Trimming = None
-              OnClick = bIIEOkClick
-              object Image20: TImage
-                MultiResBitmap.Height = 32
-                MultiResBitmap.Width = 32
-                MultiResBitmap = <
-                  item
-                    Width = 32
-                    Height = 32
-                    PNG = {
-                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                      F40000000473424954080808087C08648800000439494441545885ED955B6C14
-                      5518C77F67667666DBDDEE96BDD2A6D01624282817911022D6466C0503091214
-                      A3867821410C890F445F348A91F8A2211109A0A80F2A3E1048B8280912F18289
-                      3131114940416AB1A580D20BBDEC6E772EE7F8C03619370BB4867D827F727266
-                      BEF9BEEFFF3FFF3939076EE166C1820F78B169078DC571A3DCC4B76DC69A5E1B
-                      DE1F8B57B79E6D3B770668F77FD7CA493EE71D12B3EB92C796CC59D53AABB699
-                      80A1CD2ECE299B03F33711AB6B4CFCBC78D6E3F5E3ADC9F48AF34422F1FBE0D2
-                      7FF2CAE2C0A3BBD0C737541F5D34EBB1FA786022AEEB113442C48CF8BC691B30
-                      CB2E20E3541E6C9DB17C5ADC9888EB3AB8D246C3209E4C47AB93CC2CAB80E60F
-                      D9D834A3A535654DC2711D5C65E3E2A024C4C2292A42CC2F9B80B95B68BA67DA
-                      DC571AABEFC4716C1C358CAB6C3CE920A547A4B29A5038D4E2AFB9719B7003DA
-                      D4C6C49EDB6BE662DB2E52D92824028140C3D5B274DB9D3879B7B62C025A1AF5
-                      ADD3EBE725940B59D98F541210681AE4C5206D5D2739D176F2E35CCE7EE3860B
-                      98FF1E774D6E98BCC60A84B89CEF06255180302443C33DFCDEF65BC7D9AE7F56
-                      FFB48EC3C5B5D715B0602B93A2E3821B356443B6C75EFAF53A7A8A7392E9D0A7
-                      F15882BEEC25500A8502433198E9E1D4E953FBCF77B94F1C7F894CA9FE5715D0
-                      FA362152E6AB562CB2BEA1665C406A1E6D273ADF05E7297F5EF3FB2C4BD5C466
-                      E6EC213C7700A51422A0181AECA7BDAD6BDB9155BC70AD058A52C10776B0B62A
-                      197A2D9E0A8F0F042C3C47A21B82CBBD0374B4F7D7FDB896AE91DC87775774D4
-                      D5C726B8F92B2BD70390CFE7E9F8A377D377CFB1FE5AE4251D68FDCC389C6E0C
-                      3DA8191A797B989C930314C21504AA342261FD4DF09E0558B88395D184312193
-                      1FC273AF88C4515CF833B36D34E450E21C909EFCE1C2A0235DCF45090FA93C24
-                      124F7A284D128A9BCFDCFB1155009531FD2DDD12B8AE8BD0250AC9A5F6A10347
-                      9E96D7B4DD8F92BFA0693B532AA3E6E671B5E622DDD4706D79255980A66B5C3C
-                      35F0BC97E7507A6AA85DB734A4AB304C8DBEAECC992F577853464B0EA0970AFE
-                      F505BD67F6783BD34D762E10D45BAC9081920A29155A40802B671B419657C6AC
-                      94E7484C4B27DBE7D0DD69DFDD7990FEB10828E9801FF76FA7255A63ED8C262B
-                      925282F424421308014A2A7443C3C97B9C3F3DF8E4F76BF87C2CE4A31200B070
-                      1FE92A61EE8B2622F30402CF538842A51070F15CCFDE432BD52363251FB58011
-                      ACF8D63C108B4797780326522A745390CD5DCE76E733A9AF1E2A7DD05C0F63BA
-                      0D7737DB4BCFFEDAB72F9800D308A25739741CCFACFEBFE457832831347C1B76
-                      D95EEB97D7559D5AFC49E01B5F8DE61BA57A94745B2F2208F846051004424018
-                      880069A0FAEF639EE68533771C7DD9DDE2641828E40480CA428D0598859851E8
-                      AD1789D3FCAB1D79D67D31DD378F08B48024E002C385E61AD00DD8853E0A9045
-                      B3F2BD4B9F01AA942BB77073E15F987A9AB5D958B1CA0000000049454E44AE42
-                      6082}
-                    FileName = 'C:\DSD\ProjectBoatMobile\img\Check.png'
-                  end>
-                Align = Left
-                HitTest = False
-                Size.Width = 44.000000000000000000
-                Size.Height = 42.000000000000000000
-                Size.PlatformDefault = False
-              end
-            end
           end
         end
         object tiProductionUnion: TTabItem
@@ -13361,60 +12948,115 @@
     Placement = Center
     PlacementTarget = vsbMain
     Size.Width = 198.000000000000000000
-    Size.Height = 86.000000000000000000
+    Size.Height = 87.000000000000000000
     Size.PlatformDefault = False
     StyleBook = sbMain
-    TabOrder = 151
+    TabOrder = 152
     object Rectangle1: TRectangle
       Align = Client
       Size.Width = 194.000000000000000000
-      Size.Height = 82.000000000000000000
+      Size.Height = 83.000000000000000000
       Size.PlatformDefault = False
-      object pWebServerTest: TPanel
+      object rbWebServerTest: TRadioButton
         Tag = 1
-        Align = Client
-        Margins.Left = 3.000000000000000000
-        Margins.Right = 3.000000000000000000
-        Margins.Bottom = 3.000000000000000000
-        Size.Width = 188.000000000000000000
-        Size.Height = 35.000000000000000000
+        Align = Top
+        StyledSettings = [Family, Style, FontColor]
+        Position.Y = 40.000000000000000000
+        Size.Width = 194.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = #1058#1077#1089#1090#1086#1074#1099#1081' '#1089#1077#1088#1074#1077#1088
+        TextSettings.Font.Size = 14.000000000000000000
+        OnClick = rbWebServerClick
+      end
+      object rbWebServerMain: TRadioButton
+        Align = Top
+        StyledSettings = [Family, Style, FontColor]
+        Size.Width = 194.000000000000000000
+        Size.Height = 40.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
-        OnClick = pWebServerClick
-        object Label18: TLabel
-          Align = Client
-          StyledSettings = [Family, Style, FontColor]
-          Size.Width = 188.000000000000000000
-          Size.Height = 35.000000000000000000
-          Size.PlatformDefault = False
-          TextSettings.HorzAlign = Center
-          TextSettings.Trimming = None
-          Text = #1058#1077#1089#1090#1086#1074#1099#1081' '#1089#1077#1088#1074#1077#1088
-          TabOrder = 1
-        end
+        Text = #1054#1089#1085#1086#1074#1085#1086#1081' '#1089#1077#1088#1074#1077#1088
+        TextSettings.Font.Size = 14.000000000000000000
+        OnClick = rbWebServerClick
       end
-      object pWebServerMain: TPanel
-        Align = Top
-        Margins.Left = 3.000000000000000000
-        Margins.Top = 3.000000000000000000
-        Margins.Right = 3.000000000000000000
-        Position.X = 3.000000000000000000
-        Position.Y = 3.000000000000000000
-        Size.Width = 188.000000000000000000
-        Size.Height = 41.000000000000000000
+    end
+  end
+  object ppActions: TPopup
+    Align = Center
+    Placement = Center
+    PlacementTarget = vsbMain
+    Size.Width = 198.000000000000000000
+    Size.Height = 175.000000000000000000
+    Size.PlatformDefault = False
+    StyleBook = sbMain
+    TabOrder = 151
+    object Panel6: TPanel
+      Tag = 1
+      Align = Client
+      Margins.Left = 3.000000000000000000
+      Margins.Right = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Size.Width = 192.000000000000000000
+      Size.Height = 172.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Rectangle2: TRectangle
+        Align = Client
+        Size.Width = 192.000000000000000000
+        Size.Height = 172.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 2
-        OnClick = pWebServerClick
-        object Label19: TLabel
-          Align = Client
+        object rbEditRecord: TRadioButton
+          Align = Top
           StyledSettings = [Family, Style, FontColor]
-          Size.Width = 188.000000000000000000
-          Size.Height = 41.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
-          TextSettings.HorzAlign = Center
-          TextSettings.Trimming = None
-          Text = #1054#1089#1085#1086#1074#1085#1086#1081' '#1089#1077#1088#1074#1077#1088
+          TabOrder = 4
+          Text = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077
+          TextSettings.Font.Size = 14.000000000000000000
+          OnClick = rbCancelClick
+        end
+        object rbEraseRecord: TRadioButton
+          Tag = 4
+          Align = Top
+          StyledSettings = [Family, Style, FontColor]
+          Position.Y = 40.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = #1059#1076#1072#1083#1080#1090#1100' '#1089#1090#1088#1086#1082#1091
+          TextSettings.Font.Size = 14.000000000000000000
+          OnClick = rbCancelClick
+        end
+        object rbErrorInfo: TRadioButton
+          Tag = 5
+          Align = Top
+          StyledSettings = [Family, Style, FontColor]
+          IsChecked = True
+          Position.Y = 80.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
           TabOrder = 2
+          Text = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1086#1073' '#1086#1096#1080#1073#1082#1077
+          TextSettings.Font.Size = 14.000000000000000000
+          OnClick = rbCancelClick
+        end
+        object rbCancel: TRadioButton
+          Tag = 6
+          Align = Top
+          StyledSettings = [Family, Style, FontColor]
+          Position.Y = 120.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = #1054#1090#1084#1077#1085#1072
+          TextSettings.Font.Size = 14.000000000000000000
+          OnClick = rbCancelClick
         end
       end
     end
@@ -14869,7 +14511,6 @@
     Top = 396
   end
   object BindSourceDB1: TBindSourceDB
-    DataSet = DM.cdsInventoryJournal
     ScopeMappings = <>
     Left = 48
     Top = 264
@@ -14879,13 +14520,6 @@
     OutputConverters = <>
     Left = 44
     Top = 325
-    object LinkControlToField1: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB2
-      FieldName = 'Comment'
-      Control = edInventoryComment
-      Track = False
-    end
     object LinkControlToField2: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = BindSourceDB2
@@ -14946,50 +14580,6 @@
         item
           SourceMemberName = 'PartNumber'
           ControlMemberName = 'PartNumber'
-        end>
-      FillHeaderExpressions = <>
-      FillBreakGroups = <>
-    end
-    object LinkListControlToField2: TLinkListControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB1
-      Control = lwInventoryJournal
-      FillExpressions = <
-        item
-          SourceMemberName = 'InvNumber'
-          ControlMemberName = 'InvNumber'
-        end
-        item
-          SourceMemberName = 'StatusId'
-          ControlMemberName = 'StatusIcon'
-        end
-        item
-          SourceMemberName = 'TotalCount'
-          ControlMemberName = 'TotalCount'
-        end
-        item
-          SourceMemberName = 'StatusId'
-          ControlMemberName = 'StatusId'
-        end
-        item
-          SourceMemberName = 'OperDate'
-          ControlMemberName = 'OperDate'
-        end
-        item
-          SourceMemberName = 'UnitName'
-          ControlMemberName = 'UnitName'
-        end
-        item
-          SourceMemberName = 'Comment'
-          ControlMemberName = 'Comment'
-        end
-        item
-          SourceMemberName = 'EditButton'
-          ControlMemberName = 'EditButton'
-        end
-        item
-          SourceMemberName = 'StatusName'
-          ControlMemberName = 'StatusName'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -15056,16 +14646,28 @@
           ControlMemberName = 'PartNumber'
         end
         item
-          SourceMemberName = 'DeleteId'
-          ControlMemberName = 'DeleteButton'
-        end
-        item
           SourceMemberName = 'Error'
           ControlMemberName = 'Error'
         end
         item
-          SourceMemberName = 'EditId'
-          ControlMemberName = 'EditButton'
+          SourceMemberName = 'AmountLabel'
+          ControlMemberName = 'AmountLabel'
+        end
+        item
+          SourceMemberName = 'AmountRemainsLabel'
+          ControlMemberName = 'AmountRemainsLabel'
+        end
+        item
+          SourceMemberName = 'TotalCountLabel'
+          ControlMemberName = 'TotalCountLabel'
+        end
+        item
+          SourceMemberName = 'TotalCount'
+          ControlMemberName = 'TotalCount'
+        end
+        item
+          SourceMemberName = 'AmountRemains'
+          ControlMemberName = 'AmountRemains'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -15133,13 +14735,6 @@
       Control = edIIEGoodsCode
       Track = False
     end
-    object LinkControlToField15: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB7
-      FieldName = 'GoodsName'
-      Control = edIIEGoodsName
-      Track = False
-    end
     object LinkControlToField16: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = BindSourceDB7
@@ -15157,8 +14752,8 @@
     object LinkControlToField18: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = BindSourceDB7
-      FieldName = 'OperCount'
-      Control = edIIEOperCount
+      FieldName = 'Amount'
+      Control = edIIEAmount
       Track = False
     end
     object LinkControlToField19: TLinkControlToField
@@ -15197,6 +14792,13 @@
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
+    end
+    object LinkControlToField1: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB7
+      FieldName = 'GoodsName'
+      Control = Memo1
+      Track = False
     end
   end
   object BindSourceDB2: TBindSourceDB

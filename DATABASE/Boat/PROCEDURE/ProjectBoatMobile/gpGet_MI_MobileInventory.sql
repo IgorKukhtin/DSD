@@ -24,7 +24,7 @@ RETURNS TABLE (GoodsId            Integer
              , PartionCellId      Integer
              , PartionCellName    TVarChar
              , Price              TFloat
-             , OperCount          TFloat
+             , Amount             TFloat
              , TotalCount         TFloat
              , AmountRemains      TFloat
              , AmountDiff         TFloat
@@ -119,7 +119,7 @@ BEGIN
                 , Object_PartionCell.ValueData                AS PartionCellName
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
-                , COALESCE (inAmount, 1)                                          :: TFloat AS OperCount
+                , COALESCE (inAmount, 1)                                          :: TFloat AS Amount
                 , COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0)                  :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
                 , (COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0) - 

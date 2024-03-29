@@ -3,26 +3,28 @@
   ClientHeight = 569
   ClientWidth = 1279
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1295
-  ExplicitHeight = 608
+  ExplicitWidth = 1301
+  ExplicitHeight = 625
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 66
     Width = 1279
-    Height = 316
+    Height = 307
     TabOrder = 3
+    ExplicitTop = 66
     ExplicitWidth = 1279
-    ExplicitHeight = 316
-    ClientRectBottom = 316
+    ExplicitHeight = 307
+    ClientRectBottom = 307
     ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1279
-      ExplicitHeight = 316
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 1279
-        Height = 316
+        Height = 307
         ExplicitWidth = 1279
-        ExplicitHeight = 316
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -2495,6 +2497,8 @@
           FromParam.DataType = ftString
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
+          ToParam.Component = actSMTPFile_DBF
+          ToParam.DataType = ftString
           ToParam.MultiSelectSeparator = ','
         end>
       Host.Value = Null
@@ -2583,7 +2587,7 @@
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     inherited Bar: TdxBar
       ItemLinks = <

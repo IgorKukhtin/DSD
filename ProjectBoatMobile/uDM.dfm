@@ -3,49 +3,10 @@ object DM: TDM
   Height = 643
   Width = 1202
   PixelsPerInch = 144
-  object cdsInventoryJournal: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 112
-    Top = 304
-    object cdsInventoryJournalId: TIntegerField
-      FieldName = 'Id'
-    end
-    object cdsInventoryJournalOperDate: TWideStringField
-      FieldName = 'OperDate'
-    end
-    object cdsInventoryJournalInvNumber: TWideStringField
-      FieldName = 'InvNumber'
-    end
-    object cdsInventoryJournalStatusName: TWideStringField
-      FieldName = 'StatusName'
-    end
-    object cdsInventoryJournalStatusId: TIntegerField
-      FieldName = 'StatusId'
-    end
-    object cdsInventoryJournalTotalCount: TWideStringField
-      FieldName = 'TotalCount'
-      Size = 25
-    end
-    object cdsInventoryJournalUnitName: TWideStringField
-      FieldName = 'UnitName'
-      Size = 255
-    end
-    object cdsInventoryJournalComment: TWideStringField
-      FieldName = 'Comment'
-      Size = 255
-    end
-    object cdsInventoryJournalisList: TBooleanField
-      FieldName = 'isList'
-    end
-    object cdsInventoryJournalEditButton: TIntegerField
-      FieldName = 'EditButton'
-    end
-  end
   object cdsInventory: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 312
+    Left = 112
     Top = 304
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
@@ -83,8 +44,8 @@ object DM: TDM
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 496
-    Top = 304
+    Left = 288
+    Top = 312
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
     end
@@ -119,23 +80,31 @@ object DM: TDM
       FieldName = 'PartNumber'
       Size = 255
     end
+    object cdsInventoryListPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsInventoryListPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
     object cdsInventoryListAmount: TFloatField
       FieldName = 'Amount'
+    end
+    object cdsInventoryListTotalCount: TFloatField
+      FieldName = 'TotalCount'
     end
     object cdsInventoryListAmountRemains: TFloatField
       FieldName = 'AmountRemains'
     end
-    object cdsInventoryListAmountDiff: TFloatField
-      FieldName = 'AmountDiff'
-    end
     object cdsInventoryListAmountRemains_curr: TFloatField
       FieldName = 'AmountRemains_curr'
     end
-    object cdsInventoryListPrice: TFloatField
-      FieldName = 'Price'
+    object cdsInventoryListOperDate_protocol: TDateTimeField
+      FieldName = 'OperDate_protocol'
     end
-    object cdsInventoryListSumma: TFloatField
-      FieldName = 'Summa'
+    object cdsInventoryListUserName_protocol: TWideStringField
+      FieldName = 'UserName_protocol'
+      Size = 255
     end
   end
   object cdsGoodsEAN: TClientDataSet
@@ -232,6 +201,12 @@ object DM: TDM
     object tblInventoryGoodsAmount: TFloatField
       FieldName = 'Amount'
     end
+    object tblInventoryGoodsAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object tblInventoryGoodsTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
     object tblInventoryGoodsPartionCellName: TWideStringField
       FieldName = 'PartionCellName'
       Size = 255
@@ -273,6 +248,8 @@ object DM: TDM
       '     , IG.PartNumber'
       '     , IG.PartionCellName'
       '     , IG.Amount'
+      '     , IG.AmountRemains'
+      '     , IG.TotalCount'
       '     , IG.Error'
       ''
       'FROM InventoryGoods AS IG'
@@ -333,18 +310,29 @@ object DM: TDM
     object qryInventoryGoodsAmount: TFloatField
       FieldName = 'Amount'
     end
+    object qryInventoryGoodsAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object qryInventoryGoodsTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
     object qryInventoryGoodsError: TWideStringField
       FieldName = 'Error'
       Size = 500
     end
-    object qryInventoryGoodsDeleteId: TIntegerField
+    object qryInventoryGoodsAmountLabel: TWideStringField
       FieldKind = fkCalculated
-      FieldName = 'DeleteId'
+      FieldName = 'AmountLabel'
       Calculated = True
     end
-    object qryInventoryGoodsEditId: TIntegerField
+    object qryInventoryGoodsAmountRemainsLabel: TWideStringField
       FieldKind = fkCalculated
-      FieldName = 'EditId'
+      FieldName = 'AmountRemainsLabel'
+      Calculated = True
+    end
+    object qryInventoryGoodsTotalCountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountLabel'
       Calculated = True
     end
   end
@@ -459,8 +447,8 @@ object DM: TDM
   object cdsInventoryItemEdit: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 688
-    Top = 304
+    Left = 464
+    Top = 312
     object cdsInventoryItemEditLocalId: TIntegerField
       FieldName = 'LocalId'
     end
@@ -500,8 +488,8 @@ object DM: TDM
       FieldName = 'PartionCellName'
       Size = 255
     end
-    object cdsInventoryItemEditOperCount: TFloatField
-      FieldName = 'OperCount'
+    object cdsInventoryItemEditAmount: TFloatField
+      FieldName = 'Amount'
     end
     object cdsInventoryItemEditTotalCount: TFloatField
       FieldName = 'TotalCount'
@@ -516,7 +504,7 @@ object DM: TDM
   object cdsDictList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 496
+    Left = 464
     Top = 416
     object cdsDictListId: TIntegerField
       FieldName = 'Id'

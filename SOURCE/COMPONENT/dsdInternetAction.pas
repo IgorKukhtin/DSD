@@ -141,7 +141,9 @@ var EMsg: TIdMessage;
   FIdSMTP.Password:= Password;
   FIdSMTP.Username:= Username;
   FIdSMTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
-  FIdSMTP.UseTLS := utUseImplicitTLS;
+  if AnsiLowerCase(FIdSMTP.Host) = 'smtp.gmail.com' then
+    FIdSMTP.UseTLS := utUseExplicitTLS
+  else FIdSMTP.UseTLS := utUseImplicitTLS;
 
   EMsg := TIdMessage.Create(FIdSMTP);
   EMsg.OnInitializeISO := Self.LInitializeISO;
