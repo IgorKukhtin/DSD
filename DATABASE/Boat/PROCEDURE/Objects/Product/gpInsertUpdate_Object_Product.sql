@@ -217,8 +217,8 @@ BEGIN
                                               , ioSummTax            := ioSummTax
                                               , ioSummReal           := ioSummReal
                                               , inTransportSumm_load := inTransportSumm_load
-                                              , inFromId             := CASE WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
-                                              , inToId               := 33349 -- Склад Лодки
+                                              , inFromId             := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
+                                              , inToId               := zc_Unit_Production() -- Участок сборки Основной
                                               , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
                                               , inProductId          := ioId
                                               , inMovementId_Invoice := 0
@@ -256,7 +256,7 @@ BEGIN
                                                  , ioSummTax          := ioSummTax                 ::TFloat
                                                  , ioSummReal         := ioSummReal                ::TFloat
                                                  , inTransportSumm_load := inTransportSumm_load
-                                                 , inFromId           := CASE WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
+                                                 , inFromId           := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
                                                  , inProductId        := ioId                      ::Integer

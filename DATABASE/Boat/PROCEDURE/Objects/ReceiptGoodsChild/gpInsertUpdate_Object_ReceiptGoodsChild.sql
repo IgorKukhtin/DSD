@@ -100,6 +100,12 @@ BEGIN
    outReceiptLevelName :=  (SELECT Object.ValueData FROM Object WHERE Object.Id = inReceiptLevelId);
 
    -- замена
+   IF COALESCE (ioId, 0) = 0
+   THEN
+       inIsEnabled:= TRUE;
+   END IF;
+
+   -- замена
    IF COALESCE (inGoodsChildId, 0) = 0 AND inGoodsChildId_top > 0
    THEN
        inGoodsChildId:= inGoodsChildId_top;

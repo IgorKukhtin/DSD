@@ -57,7 +57,7 @@ RETURNS TABLE (Id               Integer
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , ProductId Integer, ProductCode Integer, ProductName TVarChar, ProductCIN TVarChar
+             , ProductId Integer, ProductCode Integer, ProductName TVarChar, ProductCIN TVarChar, Comment_Product TVarChar
              , PaidKindId      Integer
              , PaidKindName    TVarChar
              , UnitId          Integer
@@ -238,6 +238,8 @@ BEGIN
                        , Object_Product.ObjectCode                  AS ProductCode
                        , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)   AS ProductName
                        , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData, Object_Product.isErased) AS ProductCIN
+                       , ObjectString_Product_Comment.ValueData     AS Comment_Product
+
                        , Object_PaidKind.Id                         AS PaidKindId
                        , Object_PaidKind.ValueData                  AS PaidKindName
                        , Object_Unit.Id                             AS UnitId
@@ -258,7 +260,7 @@ BEGIN
                        , MovementDesc_Parent.ItemName               AS DescName_parent
 
                        , COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) ::Boolean AS isFilesNotUploaded
-                       , COALESCE (MovementBoolean_PostedToDropBox.ValueData, True)   ::Boolean AS isPostedToDropBox
+                       , COALESCE (MovementBoolean_PostedToDropBox.ValueData, FALSE)  ::Boolean AS isPostedToDropBox
 
                        -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
                        /*, CASE WHEN (COALESCE (CASE WHEN MovementFloat_Amount.ValueData < 0 THEN -1 * MovementFloat_Amount.ValueData ELSE 0 END,0) > COALESCE (tmpMLM_BankAccount.AmountOut,0)) AND COALESCE (tmpMLM_BankAccount.AmountOut,0)<>0
@@ -371,7 +373,10 @@ BEGIN
                          LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
                          LEFT JOIN ObjectString AS ObjectString_CIN
                                                 ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                               AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
+                                               AND ObjectString_CIN.DescId   = zc_ObjectString_Product_CIN()
+                         LEFT JOIN ObjectString AS ObjectString_Product_Comment
+                                                ON ObjectString_Product_Comment.ObjectId = Object_Product.Id
+                                               AND ObjectString_Product_Comment.DescId   = zc_ObjectString_Product_Comment()
 
                          -- оплаты из документа BankAccount
                          LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementId_Invoice = Movement.Id
@@ -489,6 +494,8 @@ BEGIN
       , tmpData.ProductCode
       , tmpData.ProductName
       , tmpData.ProductCIN
+      , tmpData.Comment_Product
+
       , tmpData.PaidKindId
       , tmpData.PaidKindName
       , tmpData.UnitId

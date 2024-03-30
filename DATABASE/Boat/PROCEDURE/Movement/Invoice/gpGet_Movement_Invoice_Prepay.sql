@@ -2,13 +2,16 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_Prepay (Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_Prepay (Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_Prepay (Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_Prepay (Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Invoice_Prepay (Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Invoice_Prepay(
+    IN inMovementId_invoice    Integer ,
     IN inMovementId_order      Integer ,
     IN inInvoiceKindId         Integer ,  --
-    IN inTotalSumm_debet       TFloat  ,
-   OUT outAmountIn             TFloat  ,
+    IN inBasisWVAT_summ_transport       TFloat  ,
+ INOUT ioAmountIn              TFloat  ,
     IN inSession               TVarChar       -- сессия пользователя
 )
 RETURNS TFloat
@@ -21,12 +24,23 @@ BEGIN
    IF inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
    THEN
        -- Сумма Заказа
-       outAmountIn := COALESCE (inTotalSumm_debet,0);
+       ioAmountIn := COALESCE (inBasisWVAT_summ_transport,0);
+
+   ELSEIF ioAmountIn > 0
+   THEN
+       -- Сумма была в Дебете счета
+       ioAmountIn := COALESCE (ioAmountIn, 0);
+
    ELSE
        --
-       outAmountIn := (-- Сумма Заказа
-                       COALESCE (inTotalSumm_debet,0) 
-                     - (SELECT SUM (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS Total_PrePay
+       ioAmountIn := (-- Сумма Заказа
+                       COALESCE (inBasisWVAT_summ_transport,0) 
+                     - (SELECT SUM (CASE -- не учитывается текущий счет
+                                         WHEN Movement.Id = inMovementId_invoice THEN 0 
+                                         -- учитываются суммы по остальным счетам
+                                         WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData
+                                         ELSE 0
+                                    END) ::TFloat AS Total_PrePay
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                            ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
@@ -55,4 +69,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Invoice_Prepay(890 , zc_Enum_InvoiceKind_PrePay(), 46060, '5'::TVarChar)
+-- SELECT * FROM gpGet_Movement_Invoice_Prepay(0, 890, zc_Enum_InvoiceKind_PrePay(), 46060, 12345, '5'::TVarChar)

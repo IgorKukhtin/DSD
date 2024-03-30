@@ -29,6 +29,7 @@ RETURNS TABLE (Id Integer, MovementItemId Integer, InvNumber Integer, InvNumberP
              , InfoMoneyName_all_child TVarChar
              , InvNumberFull_parent_child TVarChar
              , InvNumber_parent_child TVarChar
+             , Comment_Product_child TVarChar
 
               -- Заказ Клиента / Заказ Поставщику
              , MovementId_parent Integer, InvNumberFull_parent TVarChar, InvNumber_parent TVarChar, MovementDescName_parent TVarChar
@@ -125,6 +126,7 @@ BEGIN
 
                              , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumberFull_parent
                              , Movement_Parent.InvNumber AS InvNumber_parent
+                             , ObjectString_Product_Comment.ValueData AS Comment_Product
 
                                -- Сумма Оплаты
                              , COALESCE (MovementItem.Amount, 0) AS Amount
@@ -158,10 +160,17 @@ BEGIN
                                                      ON MovementFloat_Amount.MovementId = Movement_Invoice.Id
                                                     AND MovementFloat_Amount.DescId     = zc_MovementFloat_Amount()
 
-                             -- Parent для Movement_Invoice - Документ Заказ или ПРиход
+                             -- Parent для Movement_Invoice - Документ Заказ или ?Заказ поставщику?
                              LEFT JOIN Movement AS Movement_Parent
                                                 ON Movement_Parent.Id = Movement_Invoice.ParentId
                                                AND Movement_Parent.StatusId <> zc_Enum_Status_Erased()
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
+                                                          ON MovementLinkObject_Product.MovementId = Movement_Parent.Id
+                                                         AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
+                             LEFT JOIN ObjectString AS ObjectString_Product_Comment
+                                                    ON ObjectString_Product_Comment.ObjectId = MovementLinkObject_Product.ObjectId
+                                                   AND ObjectString_Product_Comment.DescId   = zc_ObjectString_Product_Comment()
 
                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                           AND MovementItem.DescId   = zc_MI_Child()
@@ -272,6 +281,7 @@ BEGIN
 
                              , STRING_AGG (DISTINCT tmpMI_Child_all.InvNumberFull_parent, '; ')  AS InvNumberFull_parent
                              , STRING_AGG (DISTINCT tmpMI_Child_all.InvNumber_parent, '; ')      AS InvNumber_parent
+                             , STRING_AGG (DISTINCT tmpMI_Child_all.Comment_Product, '; ')       AS Comment_Product_parent
 
                                -- Сумма Оплаты
                              , SUM (tmpMI_Child_all.Amount) AS Amount
@@ -355,6 +365,8 @@ BEGIN
            , tmpMI_Child.InfoMoneyName_all     ::TVarChar AS InfoMoneyName_all_child
            , tmpMI_Child.InvNumberFull_parent  ::TVarChar AS InvNumberFull_parent_child
            , tmpMI_Child.InvNumber_parent      ::TVarChar AS InvNumber_parent_child
+           , tmpMI_Child.Comment_Product_parent::TVarChar AS Comment_Product_child
+           
 
              -- Заказ Клиента / Заказ Поставщику
            , Movement_Parent.Id             ::Integer  AS MovementId_parent

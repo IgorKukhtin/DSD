@@ -13,7 +13,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Product());
    vbUserId:= lpGetUserBySession (inSession);
-   
+
     -- проверка
    IF COALESCE (inId, 0) = 0
    THEN
@@ -23,12 +23,19 @@ BEGIN
                                               , inUserId        := vbUserId
                                               );
    END IF;
-   
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_InvoicePdf_DateUnloading(), inId, CURRENT_TIMESTAMP);
-   
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
+
+
+   -- сохранили свойство <Отправлено в DropBox (Да/Нет)>
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PostedToDropBox(), (SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inId AND OFl.DescId = zc_ObjectFloat_InvoicePdf_MovementId()) :: Integer, TRUE);
+
+   -- сохранили протокол
+   PERFORM lpInsert_MovementProtocol ((SELECT OFl.ValueData FROM ObjectFloat AS OFl WHERE OFl.ObjectId = inId AND OFl.DescId = zc_ObjectFloat_InvoicePdf_MovementId()) :: Integer, vbUserId, FALSE);
 
 END;
 $BODY$

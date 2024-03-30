@@ -36,10 +36,12 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH
-          tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                         AS  MovementId
-                                 , Movement_Invoice.InvNumber                                  AS  InvNumber
-                                 , COALESCE(MovementBoolean_FilesNotUploaded.ValueData, False) AS isFilesUploaded
-                                 , COALESCE(MovementBoolean_PostedToDropBox.ValueData, True)   AS isPostedToDropBox
+          tmpInvoicePdf AS (SELECT Movement_Invoice.Id                                          AS MovementId
+                                 , Movement_Invoice.InvNumber                                   AS InvNumber
+                                   -- Отложить отправку в DropBox
+                                 , COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) AS isFilesUploaded
+                                   -- Отправлено в DropBox 
+                                 , COALESCE (MovementBoolean_PostedToDropBox.ValueData, FALSE)  AS isPostedToDropBox
                                  , Object_InvoicePdf.*
                             FROM Object AS Object_InvoicePdf
                                  INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
@@ -49,20 +51,23 @@ BEGIN
                                                      ON Movement_Invoice.Id = ObjectFloat_InvoicePdf_MovmentId.ValueData
                                                     AND Movement_Invoice.DescId   = zc_Movement_Invoice()
                                                     AND Movement_Invoice.StatusId <> zc_Enum_Status_Erased()
+                                 -- Отложить отправку в DropBox
                                  LEFT JOIN MovementBoolean AS MovementBoolean_FilesNotUploaded
                                                            ON MovementBoolean_FilesNotUploaded.MovementId = Movement_Invoice.Id
                                                           AND MovementBoolean_FilesNotUploaded.DescId = zc_MovementBoolean_FilesNotUploaded()
+                                 -- Отправлено в DropBox 
                                  LEFT JOIN MovementBoolean AS MovementBoolean_PostedToDropBox
                                                            ON MovementBoolean_PostedToDropBox.MovementId = Movement_Invoice.Id
                                                           AND MovementBoolean_PostedToDropBox.DescId = zc_MovementBoolean_PostedToDropBox()
                             WHERE Object_InvoicePdf.DescId = zc_Object_InvoicePdf()
+                              -- НЕ Отложена отправку в DropBox
                               AND COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) = FALSE)
 
     SELECT
             Object_InvoicePdf.Id                 AS Id
           , Object_InvoicePdf.ValueData          AS FileName
           , Object_InvoicePdf.MovementId         AS MovementId
-          , Object_InvoicePdf.isPostedToDropBox  AS isPostedToDropBox
+          , (NOT Object_InvoicePdf.isPostedToDropBox) :: Boolean  AS isPostedToDropBox
           , CASE WHEN COALESCE(MovementFloat_Amount.ValueData, 0) < 0 
                  THEN vbKredit
                  ELSE vbDebet END::TVarChar   AS FilePath
@@ -82,8 +87,11 @@ BEGIN
                                   AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
                                      
      WHERE COALESCE(MovementFloat_Amount.ValueData, 0) <> 0 
-       AND (Object_InvoicePdf.isPostedToDropBox = TRUE
-         OR ObjectDate_DateUnloading.ValueData IS NULL)
+       AND (-- если НЕ Отправлено в DropBox 
+            Object_InvoicePdf.isPostedToDropBox = FALSE
+         -- или Нет даты, отправки, чтоб ушло в любом случае
+         OR ObjectDate_DateUnloading.ValueData IS NULL
+           )
      ORDER BY Object_InvoicePdf.MovementId, Object_InvoicePdf.Id
     ;
 

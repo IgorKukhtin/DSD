@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
     IN inShowAll        Boolean,   
     IN inSession        TVarChar         -- сесси€ пользовател€
 )
-  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, CurrencyId Integer, CurrencyName TVarChar, isErased Boolean) AS
+  RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, isErased Boolean)
+AS
 $BODY$
 BEGIN
 
@@ -30,11 +31,11 @@ BEGIN
        WHERE Object_PriceList.DescId = zc_Object_PriceList()
       UNION ALL
        SELECT 
-             0                     AS Id
-           , NULL      :: Integer  AS Code
-           , '”ƒјЋ»“№' :: TVarChar AS Name
-           , FALSE                 AS PriceWithVAT
-           , FALSE                 AS isErased
+             0                                AS Id
+           , NULL                 :: Integer  AS Code
+           , 'ќчистить значение'  :: TVarChar AS Name
+           , FALSE                :: Boolean  AS PriceWithVAT
+           , TRUE                 :: Boolean  AS isErased
       ;
   
 END;

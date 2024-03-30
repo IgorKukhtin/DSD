@@ -155,10 +155,10 @@ BEGIN
              , MovementFloat_TotalSumm.ValueData          AS TotalSumm
              , (COALESCE (MovementFloat_TotalSummPVAT.ValueData,0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData,0)) :: TFloat AS TotalSummVAT
 
-             , tmpSummProduct.BasisWVAT_summ_transport AS TotalSumm_debet     --MovementFloat_TotalSumm.ValueData
-             , 0                       :: TFloat AS TotalSumm_credit
+             , tmpSummProduct.BasisWVAT_summ_transport :: TFloat AS TotalSumm_debet     --MovementFloat_TotalSumm.ValueData
+             , 0                                       :: TFloat AS TotalSumm_credit
               -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , tmpSummProduct.BasisWVAT_summ_transport ::TFloat
+             , tmpSummProduct.BasisWVAT_summ_transport :: TFloat AS BasisWVAT_summ_transport
 
 
              , Object_Object.Id                             AS ObjectId
