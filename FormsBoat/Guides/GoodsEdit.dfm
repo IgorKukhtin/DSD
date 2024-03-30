@@ -274,8 +274,6 @@
     object Main: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = -3
-      ExplicitTop = 3
       object edName: TcxTextEdit
         Left = 40
         Top = 102
@@ -733,7 +731,7 @@
       end
       object cxLabel28: TcxLabel
         Left = 250
-        Top = 582
+        Top = 583
         Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
         Caption = 'Ladenpreis'
       end

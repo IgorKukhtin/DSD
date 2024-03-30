@@ -247,8 +247,8 @@
     Width = 120
   end
   object cxLabel15: TcxLabel
-    Left = 10
-    Top = 98
+    Left = 8
+    Top = 100
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
   end
   object edPriceList: TcxButtonEdit
@@ -441,6 +441,7 @@
       end
       item
         Name = 'inis'#1057'hangePrice'
+        Value = Null
         Component = cbisСhangePrice
         DataType = ftBoolean
         ParamType = ptInput
@@ -502,6 +503,7 @@
       end
       item
         Name = 'inis'#1057'hangePrice'
+        Value = Null
         Component = cbisСhangePrice
         DataType = ftBoolean
         ParamType = ptInput

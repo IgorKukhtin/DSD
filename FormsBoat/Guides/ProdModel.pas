@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCurrencyEdit;
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, Vcl.ExtCtrls;
 
 type
   TProdModelForm = class(TParentForm)
@@ -74,6 +75,11 @@ type
     BrandName: TcxGridDBColumn;
     PatternCIN: TcxGridDBColumn;
     ColorPatternName: TcxGridDBColumn;
+    Panel2: TPanel;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    GuidesPriceList: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public
