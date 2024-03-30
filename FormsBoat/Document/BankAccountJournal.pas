@@ -180,6 +180,7 @@ type
     spGetDocument: TdsdStoredProc;
     actInsertDocument: TdsdExecStoredProc;
     actDocumentOpenInvoice: TDocumentOpenAction;
+    Comment_Product_child: TcxGridDBColumn;
   private
     { Private declarations }
   public

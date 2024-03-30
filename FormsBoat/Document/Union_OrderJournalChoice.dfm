@@ -5,7 +5,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -134
+  ExplicitLeft = 6
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -451,6 +451,7 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 107
           end
@@ -1052,6 +1053,14 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'TotalSumm_credit'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BasisWVAT_summ_transport'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BasisWVAT_summ_transport'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end

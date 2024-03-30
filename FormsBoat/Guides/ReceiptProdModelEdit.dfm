@@ -111,7 +111,7 @@ object ReceiptProdModelEditForm: TReceiptProdModelEditForm
   object cxLabel4: TcxLabel
     Left = 8
     Top = 192
-    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+    Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
   end
   object edUnit: TcxButtonEdit
     Left = 8

@@ -4,6 +4,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -321,7 +322,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             DataBinding.FieldName = 'ReceiptNumber_Invoice_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1042#1089#1077' '#1057#1095#1077#1090#1072', '#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 80
           end
@@ -331,7 +332,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1089#1077' '#8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            HeaderHint = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090' ('#1042#1089#1077' '#1057#1095#1077#1090#1072', '#1076#1077#1090#1072#1083#1100#1085#1086')'
             Options.Editing = False
             Width = 150
           end
@@ -357,6 +358,15 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumber_parent_child'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            Options.Editing = False
+            Width = 80
+          end
+          object Comment_Product_child: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Boat)'
+            DataBinding.FieldName = 'Comment_Product_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1089#1077' '#1057#1095#1077#1090#1072' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
@@ -453,17 +463,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             VisibleForCustomization = False
             Width = 70
-          end
-          object PaidKindName_Invoice: TcxGridDBColumn
-            Caption = '***'#1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName_Invoice'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090
-            Options.Editing = False
-            VisibleForCustomization = False
-            Width = 56
           end
           object Amount_Invoice: TcxGridDBColumn
             Caption = '*'#1057#1091#1084#1084#1072' '#1057#1095#1077#1090
@@ -665,6 +664,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Caption = '2. IBAN Auftragskonto'
             DataBinding.FieldName = 'String_2'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = '2. '#1057#1095#1077#1090' '#1079#1072#1082#1072#1079#1072' IBAN'
             Options.Editing = False
             Width = 150
@@ -744,6 +745,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1062#1077#1083#1100' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103')'
             Width = 100
           end

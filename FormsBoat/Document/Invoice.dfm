@@ -587,7 +587,6 @@
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
       Hint = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actGetPlanDate: TdsdDataSetRefresh
@@ -817,9 +816,10 @@
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TotalSumm_debet'
+          Name = 'BasisWVAT_summ_transport'
           Value = Null
-          Component = ceAmountIn
+          Component = FormParams
+          ComponentItem = 'BasisWVAT_summ_transport'
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1033,6 +1033,13 @@
         Name = 'InvoiceKindDesc'
         Value = Null
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BasisWVAT_summ_transport'
+        Value = Null
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1704,6 +1711,14 @@
     OutputType = otResult
     Params = <
       item
+        Name = 'inMovementId_invoice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inMovementId_order'
         Value = 44230d
         Component = GuidesParent
@@ -1720,18 +1735,20 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inTotalSumm_debet'
+        Name = 'inBasisWVAT_summ_transport'
         Value = Null
-        Component = ceAmountIn
+        Component = FormParams
+        ComponentItem = 'BasisWVAT_summ_transport'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outAmountIn'
+        Name = 'ioAmountIn'
         Value = 42005d
         Component = ceAmountIn
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

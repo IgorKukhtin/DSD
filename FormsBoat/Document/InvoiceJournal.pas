@@ -148,7 +148,6 @@ type
     bbInsert_Pay: TdxBarButton;
     bbInsert_Proforma: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    PaidKindName: TcxGridDBColumn;
     Ord_ch4: TcxGridDBColumn;
     btnOpenFormPdfEdit: TcxButton;
     actOpenFormPdfEdit: TdsdOpenForm;
@@ -168,7 +167,7 @@ type
     isPostedToDropBox: TcxGridDBColumn;
     spUpdate_PostedToDropBox: TdsdStoredProc;
     actUpdate_PostedToDropBox: TdsdExecStoredProc;
-    cxButton9: TcxButton;
+    btnUpdate_PostedToDropBox: TcxButton;
     AmountIn_real: TcxGridDBColumn;
     ExportEmailDS: TDataSource;
     ExportEmailCDS: TClientDataSet;
@@ -177,6 +176,7 @@ type
     actSMTPFile_DBF: TdsdSMTPFileAction;
     mactExport_invoice: TMultiAction;
     bbExport_invoice: TdxBarButton;
+    Comment_Product: TcxGridDBColumn;
   private
     { Private declarations }
   public

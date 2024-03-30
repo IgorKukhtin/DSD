@@ -123,12 +123,12 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   object cxLabel6: TcxLabel
     Left = 10
     Top = 145
-    Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+    Caption = #1064#1072#1073#1083#1086#1085' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
   end
   object cxLabel4: TcxLabel
     Left = 10
     Top = 240
-    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080
+    Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080
   end
   object edUnit: TcxButtonEdit
     Left = 10
@@ -145,7 +145,7 @@ object ReceiptGoodsEditForm: TReceiptGoodsEditForm
   object cxLabel5: TcxLabel
     Left = 10
     Top = 287
-    Caption = #1052#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1059#1079#1077#1083'-'#1055#1060
+    Caption = #1059#1095#1072#1089#1090#1086#1082' '#1089#1073#1086#1088#1082#1080' ('#1059#1079#1077#1083' '#1055#1060')'
   end
   object edUnitChild: TcxButtonEdit
     Left = 10

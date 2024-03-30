@@ -3,28 +3,26 @@
   ClientHeight = 569
   ClientWidth = 1279
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1301
-  ExplicitHeight = 625
+  ExplicitWidth = 1295
+  ExplicitHeight = 608
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 66
     Width = 1279
-    Height = 307
+    Height = 316
     TabOrder = 3
-    ExplicitTop = 66
     ExplicitWidth = 1279
-    ExplicitHeight = 307
-    ClientRectBottom = 307
+    ExplicitHeight = 316
+    ClientRectBottom = 316
     ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1279
-      ExplicitHeight = 307
+      ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1279
-        Height = 307
+        Height = 316
         ExplicitWidth = 1279
-        ExplicitHeight = 307
+        ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -190,24 +188,34 @@
             Width = 50
           end
           object isFilesNotUploaded: TcxGridDBColumn [2]
-            Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
+            Caption = #1054#1090#1084#1077#1085#1072' '#1074' DropBox'
             DataBinding.FieldName = 'isFilesNotUploaded'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+            HeaderHint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 77
           end
           object isPostedToDropBox: TcxGridDBColumn [3]
-            Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
+            Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086' '#1074' DropBox'
             DataBinding.FieldName = 'isPostedToDropBox'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+            HeaderHint = #1042#1099#1087#1086#1083#1085#1077#1085#1072' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 80
           end
-          object InvoiceKindName: TcxGridDBColumn [4]
+          object DateUnloading: TcxGridDBColumn [4]
+            Caption = #1042#1088#1077#1084#1103' '#1074' DropBox'
+            DataBinding.FieldName = 'DateUnloading'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1074#1099#1087#1086#1083#1085#1077#1085#1085#1086#1081' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1074' DropBox'
+            Options.Editing = False
+            Width = 116
+          end
+          object InvoiceKindName: TcxGridDBColumn [5]
             Caption = #1058#1080#1087' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'InvoiceKindName'
             HeaderAlignmentHorz = taCenter
@@ -215,7 +223,7 @@
             Options.Editing = False
             Width = 79
           end
-          object ReceiptNumber: TcxGridDBColumn [5]
+          object ReceiptNumber: TcxGridDBColumn [6]
             Caption = 'Inv No'
             DataBinding.FieldName = 'ReceiptNumber'
             HeaderAlignmentHorz = taCenter
@@ -230,7 +238,7 @@
             Options.Editing = False
             Width = 63
           end
-          object InvNumberPartner: TcxGridDBColumn [7]
+          object InvNumberPartner: TcxGridDBColumn [8]
             Caption = 'Externe Nr'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
@@ -553,17 +561,27 @@
             Options.Editing = False
             Width = 101
           end
-          object PaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
+          object Comment_Product: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' (Boat)'
+            DataBinding.FieldName = 'Comment_Product'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 80
+          end
+          object InvNumberFull_parent: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_parent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
+            Options.Editing = False
+            Width = 109
           end
           object ProductCIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'ProductCIN'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
@@ -589,15 +607,6 @@
             HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
             Options.Editing = False
             Width = 78
-          end
-          object InvNumberFull_parent: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
-            DataBinding.FieldName = 'InvNumberFull_parent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072
-            Options.Editing = False
-            Width = 109
           end
           object InvNumber_parent: TcxGridDBColumn
             Caption = '***'#8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
@@ -658,14 +667,6 @@
             HeaderHint = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072')'
             Options.Editing = False
             Width = 85
-          end
-          object DateUnloading: TcxGridDBColumn
-            Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
-            DataBinding.FieldName = 'DateUnloading'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 116
           end
           object Color_Pay: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Pay'
@@ -880,7 +881,7 @@
       ShowHint = True
       TabOrder = 13
     end
-    object cxButton9: TcxButton
+    object btnUpdate_PostedToDropBox: TcxButton
       Left = 334
       Top = 8
       Width = 137
@@ -2458,10 +2459,10 @@
         item
           StoredProc = spUpdate_FilesNotUploaded
         end>
-      Caption = #1044#1072'/'#1053#1077#1090' '#1074' DropBox'
-      Hint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1054#1090#1084#1077#1085#1072' '#1074' DropBox'
+      Hint = #1054#1090#1083#1086#1078#1080#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 82
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1090#1083#1086#1078#1080#1090#1100'/'#1042#1082#1083#1102#1095#1080#1090#1100' '#1074#1099#1075#1088#1091#1079#1082#1091' '#1074' DropBox?'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1090#1083#1086#1078#1080#1090#1100'/'#1042#1082#1083#1102#1095#1080#1090#1100' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox?'
     end
     object actUpdate_PostedToDropBox: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2472,9 +2473,11 @@
         item
           StoredProc = spUpdate_PostedToDropBox
         end>
-      Caption = #1054#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1074#1090#1086#1088#1085#1091#1102' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox ('#1044#1072'/'#1053#1077#1090')'
+      Caption = #1055#1086#1074#1090#1086#1088#1080#1090#1100' '#1074' DropBox'
+      Hint = #1042#1082#1083#1102#1095#1080#1090#1100' '#1057#1095#1077#1090' '#1074' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1091#1102' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox?'
       ImageIndex = 81
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1074#1082#1083#1102#1095#1080#1090#1100' '#1057#1095#1077#1090' '#1074' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1091#1102' '#1086#1090#1087#1088#1072#1074#1082#1091' '#1074' DropBox?'
+      InfoAfterExecute = #1044#1083#1103' '#1057#1095#1077#1090#1072' '#1074#1082#1083#1102#1095#1077#1085#1072' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1072#1103' '#1086#1090#1087#1088#1072#1074#1082#1072' '#1074' DropBox'
     end
     object actGet_Export_Email: TdsdExecStoredProc
       Category = 'Export_Email'
@@ -2587,7 +2590,7 @@
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -3367,7 +3370,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisFilesNotUploaded'
+        Name = 'ioIsFilesNotUploaded'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isFilesNotUploaded'
@@ -3376,7 +3379,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outisPostedToDropBox'
+        Name = 'outIsPostedToDropBox'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPostedToDropBox'
@@ -3401,12 +3404,20 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisPostedToDropBox'
+        Name = 'ioIsPostedToDropBox'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isPostedToDropBox'
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsFilesNotUploaded'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isFilesNotUploaded'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

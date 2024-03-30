@@ -109,11 +109,12 @@
           Width = 70
         end
         object ColorPatternName: TcxGridDBColumn
-          Caption = #1064#1072#1073#1083#1086#1085' Boat Structure '
+          Caption = #1064#1072#1073#1083#1086#1085' '#1050#1086#1085#1092#1080#1075#1091#1088#1072#1090#1086#1088#1072
           DataBinding.FieldName = 'ColorPatternName'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
+          HeaderHint = #1064#1072#1073#1083#1086#1085' Boat Structure'
           Options.Editing = False
           Width = 125
         end
