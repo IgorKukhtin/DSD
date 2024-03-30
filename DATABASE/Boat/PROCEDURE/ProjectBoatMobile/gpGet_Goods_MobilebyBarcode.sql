@@ -21,13 +21,13 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
      
-     IF SUBSTRING(inBarCode, 1, 2) = '00'
+     IF SUBSTRING(inBarCode, 1, 4) = zc_BarCodePref_Object()
      THEN
        SELECT COUNT(*), MAX(Object.Id)
        INTO vbCountGoods, vbGoodsId
        FROM Object
        WHERE Object.DescId   = zc_Object_Goods()
-         AND Object.ObjectCode = inBarCode::Integer;     
+         AND Object.ObjectCode = SUBSTRING(inBarCode, 5, 8)::Integer;     
      ELSE
        SELECT COUNT(*), MAX(Object.Id)
        INTO vbCountGoods, vbGoodsId
@@ -81,4 +81,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Goods_MobilebyBarcode(inBarCode := '000000197941', inSession := '5');
+-- select * from gpGet_Goods_MobilebyBarcode(inBarCode := '2210001977548', inSession := '5');

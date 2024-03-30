@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ProdModel()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdModel (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdModel (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdModel(
+    IN inPriceListId Integer,
     IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -12,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
              , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , BasisPrice TFloat, StartDate_price TDateTime
              , ColorPatternId Integer, ColorPatternName TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
@@ -26,9 +29,19 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-     WITH tmpReceiptProdModel AS (SELECT ObjectLink_Model.ChildObjectId    AS ModelId
+     WITH 
+          tmpPriceBasis AS (SELECT tmp.GoodsId
+                                 , tmp.ValuePrice
+                                 , tmp.StartDate
+                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId --zc_PriceList_Basis()
+                                                                     , inOperDate   := CURRENT_DATE) AS tmp
+                           )
+
+        , tmpReceiptProdModel AS (SELECT ObjectLink_Model.ChildObjectId    AS ModelId
                                        , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
                                        , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
+                                       , COALESCE (tmpPriceBasis.ValuePrice, 0) AS BasisPrice 
+                                       , tmpPriceBasis.StartDate                AS StartDate_price
                                   FROM Object AS Object_ReceiptProdModel
                                      INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                               ON ObjectBoolean_Main.ObjectId = Object_ReceiptProdModel.Id
@@ -38,7 +51,10 @@ BEGIN
                                      LEFT JOIN ObjectLink AS ObjectLink_Model
                                                           ON ObjectLink_Model.ObjectId = Object_ReceiptProdModel.Id
                                                          AND ObjectLink_Model.DescId = zc_ObjectLink_ReceiptProdModel_Model()
-                                     LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
+                                     --LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId    
+
+                                     LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_ReceiptProdModel.Id
+
                                   WHERE Object_ReceiptProdModel.DescId = zc_Object_ReceiptProdModel()
                                     AND Object_ReceiptProdModel.isErased = FALSE
                                  )
@@ -67,6 +83,8 @@ BEGIN
 
          , tmpReceiptProdModel.ReceiptProdModelId
          , tmpReceiptProdModel.ReceiptProdModelName
+         , tmpReceiptProdModel.BasisPrice      ::TFloat
+         , tmpReceiptProdModel.StartDate_price ::TDateTime
 
          , Object_ColorPattern.Id        :: Integer   AS ColorPatternId
          , Object_ColorPattern.ValueData :: TVarChar  AS ColorPatternName
@@ -155,4 +173,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdModel (false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdModel (zc_PriceList_Basis(), false, zfCalc_UserAdmin())

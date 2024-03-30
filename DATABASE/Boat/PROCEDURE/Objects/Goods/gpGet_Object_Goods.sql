@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Goods (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
-    IN inId          Integer,       -- Товар
+    IN inId          Integer,       -- Товар 
+    IN inPriceListId Integer,
     IN inMaskId      Integer   ,    -- id для копирования
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -17,6 +19,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Feet TFloat, Metres TFloat
              , AmountMin TFloat, AmountRefer TFloat
              , EKPrice TFloat, EmpfPrice TFloat
+             , BasisPrice TFloat 
+             , StartDate_price TDateTime
+
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , GoodsTagId Integer, GoodsTagName TVarChar
@@ -29,22 +34,19 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , EngineId Integer, EngineName TVarChar
+             
               )
 AS
 $BODY$
-   DECLARE vbPriceListId Integer;
-   DECLARE vbPriceListName TVarChar;
+   DECLARE vbPriceWithVAT Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Goods());
 
-   --ПРАЙС по умолчанию - код 47  прайс-план калькуляции(сырье)
-   SELECT Object.Id, Object.ValueData
-          INTO vbPriceListId, vbPriceListName
-   FROM Object
-   WHERE Object.DescId     = zc_Object_PriceList()
-     AND Object.ObjectCode = 47;  --код 47 прайс-план калькуляции(сырье)
+     -- Определили
+     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+
 
 
    IF ((COALESCE (inId, 0) = 0) AND (COALESCE (inMaskId, 0) = 0))
@@ -71,7 +73,9 @@ BEGIN
            , CAST (0 as TFloat)    AS AmountMin
            , CAST (0 as TFloat)    AS AmountRefer
            , CAST (0 as TFloat)    AS EKPrice
-           , CAST (0 as TFloat)    AS EmpfPrice
+           , CAST (0 as TFloat)    AS EmpfPrice  
+           , CAST (0 as TFloat)    AS BasisPrice
+           , CAST (Null AS TDateTime) AS StartDate_price
 
            , CAST (0 as Integer)      AS GoodsGroupId
            , CAST ('' as TVarChar)    AS GoodsGroupName
@@ -99,7 +103,16 @@ BEGIN
            , CAST ('' as TVarChar)    AS EngineName
            ;
    ELSE
-       RETURN QUERY
+       RETURN QUERY 
+       WITH
+           tmpPriceBasis AS (SELECT tmp.GoodsId
+                                  , tmp.StartDate
+                                  , tmp.ValuePrice
+                             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
+                                                                      , inOperDate   := CURRENT_DATE) AS tmp
+                            )
+
+       ---
        SELECT CASE WHEN inMaskId <> 0 THEN 0 ELSE Object_Goods.Id END ::Integer AS Id
             , CASE WHEN inMaskId <> 0 THEN lfGet_ObjectCode(0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END ::Integer AS Code
             , Object_Goods.ValueData              AS Name
@@ -123,6 +136,14 @@ BEGIN
             , ObjectFloat_Refer.ValueData        AS AmountRefer
             , ObjectFloat_EKPrice.ValueData      AS EKPrice
             , ObjectFloat_EmpfPrice.ValueData    AS EmpfPrice
+
+              -- Цена продажи без НДС
+            , CASE WHEN vbPriceWithVAT = FALSE
+                   THEN COALESCE (tmpPriceBasis.ValuePrice, 0)
+                   ELSE CAST (COALESCE (tmpPriceBasis.ValuePrice, 0) * ( 1 - COALESCE (ObjectFloat_TaxKind_Value.ValueData,0) / 100)  AS NUMERIC (16, 2))
+              END ::TFloat AS BasisPrice
+
+            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
@@ -208,6 +229,10 @@ BEGIN
                                  AND ObjectLink_Goods_TaxKind.DescId = zc_ObjectLink_Goods_TaxKind()
              LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_Goods_TaxKind.ChildObjectId
 
+            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                  ON ObjectFloat_TaxKind_Value.ObjectId = Object_TaxKind.Id
+                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Engine
                                   ON ObjectLink_Goods_Engine.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_Engine.DescId = zc_ObjectLink_Goods_Engine()
@@ -263,6 +288,9 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_MatchCode
                                     ON ObjectString_MatchCode.ObjectId = Object_Goods.Id
                                    AND ObjectString_MatchCode.DescId = zc_ObjectString_MatchCode()
+             
+             LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = Object_Goods.Id
+
        WHERE Object_Goods.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN COALESCE (inMaskId,0) ELSE inId END;
 
    END IF;
@@ -274,9 +302,10 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.03.24         * inPriceListId
  14.08.23         * inMaskId
  11.11.20         *
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods (1, 1, '2')
+-- SELECT * FROM gpGet_Object_Goods (1, zc_PriceList_Basis(), 1, '2')

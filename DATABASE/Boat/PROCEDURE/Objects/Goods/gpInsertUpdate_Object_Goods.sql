@@ -18,6 +18,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,T
                                                   , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                   , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar,TVarChar
+                                                  , Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                  , Integer, TDateTime, TFloat, TVarChar);
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                     Integer   , -- ключ объекта <Товар>
     IN inCode                   Integer   , -- Код объекта <Товар>
@@ -46,7 +50,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inUnitId                 Integer,
     IN inDiscountPartnerId      Integer,
     IN inTaxKindId              Integer,
-    IN inEngineId               Integer,
+    IN inEngineId               Integer, 
+    IN inPriceListId            Integer   ,      
+    IN inStartDate_price        TDateTime ,
+    IN inOperPriceList          TFloat,  
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -237,7 +244,6 @@ BEGIN
    -- сохранили свойство <>
    --PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PartnerDate(), ioId, inPartnerDate);
 
-
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), ioId, CURRENT_TIMESTAMP);
@@ -250,6 +256,17 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), ioId, vbUserId);
    END IF;
 
+
+   --сохраняем цену
+   PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                         , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
+                                                         , inGoodsId    := ioId               :: Integer
+                                                         , inOperDate   := inStartDate_price  :: TDateTime
+                                                         , ioPriceNoVAT := inOperPriceList    :: TFloat
+                                                         , ioPriceWVAT  := 0                  :: TFloat
+                                                         , inIsLast     := TRUE               :: Boolean
+                                                         , inSession    := inSession          :: TVarChar
+                                                          ) AS tmp;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

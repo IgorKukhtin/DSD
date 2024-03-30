@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
   RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
                , PriceWithVAT Boolean, VATPercent TFloat
                , CurrencyId Integer, CurrencyName TVarChar
-               , isIrna Boolean
+               , isIrna Boolean 
+               , isUser Boolean
                , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -30,6 +31,7 @@ BEGIN
            , Object_Currency.Id                   AS CurrencyId
            , Object_Currency.ValueData            AS CurrencyName
            , COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE)   :: Boolean AS isIrna
+           , COALESCE (ObjectBoolean_User.ValueData, FALSE)         :: Boolean AS isUser
            , Object_PriceList.isErased            AS isErased
        FROM Object AS Object_PriceList
             JOIN tmpIsErased on tmpIsErased.isErased= Object_PriceList.isErased
@@ -40,6 +42,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Guide_Irna
                                     ON ObjectBoolean_Guide_Irna.ObjectId = Object_PriceList.Id
                                    AND ObjectBoolean_Guide_Irna.DescId = zc_ObjectBoolean_Guide_Irna()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_User
+                                    ON ObjectBoolean_User.ObjectId = Object_PriceList.Id
+                                   AND ObjectBoolean_User.DescId = zc_ObjectBoolean_PriceList_User()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
@@ -58,7 +64,8 @@ BEGIN
            , NULL :: TFloat AS VATPercent
            , 0 AS CurrencyId
            , '' :: TVarChar AS CurrencyName
-           , FALSE :: Boolean AS isIrna
+           , FALSE :: Boolean AS isIrna  
+           , FALSE :: Boolean AS isUser
            , FALSE  AS isErased
       ;
   

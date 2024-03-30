@@ -19,12 +19,13 @@ object GoodsTreeForm: TGoodsTreeForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 188
-    Top = 26
+    Top = 60
     Width = 686
-    Height = 447
+    Height = 413
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 191
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -227,6 +228,39 @@ object GoodsTreeForm: TGoodsTreeForm
         HeaderHint = #1062#1077#1085#1072' '#1088#1077#1082#1086#1084#1077#1085#1076#1091#1077#1084#1072#1103' '#1073#1077#1079' '#1053#1044#1057
         Width = 70
       end
+      object BasisPrice: TcxGridDBColumn
+        Caption = 'Ladenpreis'
+        DataBinding.FieldName = 'BasisPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
+        Options.Editing = False
+        Width = 70
+      end
+      object BasisPriceWVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+        DataBinding.FieldName = 'BasisPriceWVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1085#1076#1089
+        Options.Editing = False
+        Width = 70
+      end
+      object StartDate_price: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1089
+        DataBinding.FieldName = 'StartDate_price'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1089' ('#1087#1088#1072#1081#1089')'
+        Options.Editing = False
+        Width = 70
+      end
       object ArticleVergl: TcxGridDBColumn
         Caption = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090'.)'
         DataBinding.FieldName = 'ArticleVergl'
@@ -324,9 +358,9 @@ object GoodsTreeForm: TGoodsTreeForm
   end
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 60
     Width = 185
-    Height = 447
+    Height = 413
     Align = alLeft
     Bands = <
       item
@@ -347,7 +381,7 @@ object GoodsTreeForm: TGoodsTreeForm
     OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
-    TabOrder = 5
+    TabOrder = 4
     object ceParentName: TcxDBTreeListColumn
       Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
@@ -363,10 +397,35 @@ object GoodsTreeForm: TGoodsTreeForm
   end
   object cxSplitter: TcxSplitter
     Left = 185
-    Top = 26
+    Top = 60
     Width = 3
-    Height = 447
+    Height = 413
     Control = cxDBTreeList
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 874
+    Height = 34
+    Align = alTop
+    TabOrder = 7
+    object cxLabel1: TcxLabel
+      Left = 8
+      Top = 10
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+    end
+    object edPriceList: TcxButtonEdit
+      Left = 77
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 1
+      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+      Width = 161
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -587,6 +646,23 @@ object GoodsTreeForm: TGoodsTreeForm
           Name = 'Id'
           Value = Null
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -609,6 +685,23 @@ object GoodsTreeForm: TGoodsTreeForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListId'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPriceListName'
+          Value = Null
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -741,9 +834,24 @@ object GoodsTreeForm: TGoodsTreeForm
       end>
     Params = <
       item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = Null
         Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsLimit_100'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -785,6 +893,7 @@ object GoodsTreeForm: TGoodsTreeForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 336
     Top = 184
@@ -840,5 +949,47 @@ object GoodsTreeForm: TGoodsTreeForm
     DBTreeList = cxDBTreeList
     Left = 48
     Top = 192
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '2773'
+    TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '2773'
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 160
+    Top = 8
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesPriceList
+      end>
+    Left = 568
+    Top = 80
   end
 end

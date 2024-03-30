@@ -200,6 +200,13 @@ type
     apSelectChild: TdsdStoredProc;
     Colors_ch1: TcxGridDBColumn;
     Color_Value_ch1: TcxGridDBColumn;
+    cxLabel25: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    edOperDate: TcxDateEdit;
+    cxLabel27: TcxLabel;
+    GuidesPriceList: TdsdGuides;
+    edOperPriceList: TcxCurrencyEdit;
+    cxLabel28: TcxLabel;
   private
     { Private declarations }
   public

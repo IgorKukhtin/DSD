@@ -57,6 +57,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , BasisWVAT_summ_transport TFloat
              
              , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
+             --
+             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer
               )
 AS
 $BODY$
@@ -148,6 +150,14 @@ BEGIN
                  , 0                         AS TaxKindId
                  , CAST ('' as TVarChar)     AS TaxKindName
                  , CAST ('' as TVarChar)     AS TaxKindName_info    
+
+                 --
+                 , CAST (0 as TFloat) AS t1
+                 , CAST (0 as TFloat) AS t2
+                 , CAST (0 as TFloat) AS t3
+                 , CAST (0 as TFloat) AS t4
+                 , CAST (0 as TFloat) AS t5
+                 , CAST (0 as TFloat) AS t6
               FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                    LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
                                          ON ObjectFloat_TaxKind_Value.ObjectId = zc_Enum_TaxKind_Basis()
@@ -235,7 +245,7 @@ BEGIN
           , MovementDate_Insert.ValueData        AS InsertDate
 
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
-          , 19:58 17.03.2024tmpSummProduct.Basis_summ1_orig        ::TFloat
+          , tmpSummProduct.Basis_summ1_orig        ::TFloat
             -- ИТОГО Без скидки, Сумма опций, без НДС
           , tmpSummProduct.Basis_summ2_orig         ::TFloat
             -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
@@ -261,6 +271,15 @@ BEGIN
           , Object_TaxKind.Id                            AS TaxKindId
           , Object_TaxKind.ValueData                     AS TaxKindName
           , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
+
+          --  при открытии сохраняем текущие значения в расчетные
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0)) ::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData)::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm_load)::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0) )::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.Basis_summ_transport)    ::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.BasisWVAT_summ_transport)::integer
+
         FROM Movement AS Movement_OrderClient
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderClient.StatusId
 

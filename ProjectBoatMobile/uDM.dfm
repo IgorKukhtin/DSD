@@ -44,6 +44,7 @@ object DM: TDM
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
+    OnCalcFields = cdsInventoryListCalcFields
     Left = 288
     Top = 312
     object cdsInventoryListId: TIntegerField
@@ -105,6 +106,29 @@ object DM: TDM
     object cdsInventoryListUserName_protocol: TWideStringField
       FieldName = 'UserName_protocol'
       Size = 255
+    end
+    object cdsInventoryListisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object cdsInventoryListAmountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountLabel'
+      Calculated = True
+    end
+    object cdsInventoryListAmountRemainsLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountRemainsLabel'
+      Calculated = True
+    end
+    object cdsInventoryListTotalCountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountLabel'
+      Calculated = True
+    end
+    object cdsInventoryListErasedId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'ErasedId'
+      Calculated = True
     end
   end
   object cdsGoodsEAN: TClientDataSet
@@ -447,6 +471,8 @@ object DM: TDM
   object cdsInventoryItemEdit: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterEdit = cdsInventoryItemEditAfterEdit
+    OnCalcFields = cdsInventoryItemEditCalcFields
     Left = 464
     Top = 312
     object cdsInventoryItemEditLocalId: TIntegerField
@@ -457,6 +483,7 @@ object DM: TDM
     end
     object cdsInventoryItemEditGoodsId: TIntegerField
       FieldName = 'GoodsId'
+      OnChange = cdsInventoryItemEditGoodsIdChange
     end
     object cdsInventoryItemEditGoodsCode: TIntegerField
       FieldName = 'GoodsCode'
@@ -471,6 +498,7 @@ object DM: TDM
     end
     object cdsInventoryItemEditPartNumber: TWideStringField
       FieldName = 'PartNumber'
+      OnChange = cdsInventoryItemEditPartNumberChange
       Size = 255
     end
     object cdsInventoryItemEditGoodsGroupName: TWideStringField
@@ -498,7 +526,14 @@ object DM: TDM
       FieldName = 'AmountRemains'
     end
     object cdsInventoryItemEditAmountDiff: TFloatField
+      FieldKind = fkCalculated
       FieldName = 'AmountDiff'
+      Calculated = True
+    end
+    object cdsInventoryItemEditTotalCountCalc: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountCalc'
+      Calculated = True
     end
   end
   object cdsDictList: TClientDataSet

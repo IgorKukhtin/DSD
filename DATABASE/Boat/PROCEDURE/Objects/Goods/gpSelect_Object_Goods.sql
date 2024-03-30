@@ -2,8 +2,10 @@
 
 -- DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
+    IN inPriceListId Integer,
     IN inShowAll     Boolean,
     IN inIsLimit_100 Boolean,
     IN inSession     TVarChar       -- сессия пользователя
@@ -29,7 +31,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , EKPrice TFloat, EKPriceWVAT TFloat
              , EmpfPrice TFloat, EmpfPriceWVAT TFloat
              , BasisPrice TFloat, BasisPriceWVAT TFloat
-             , BasisPrice_choice TFloat
+             , BasisPrice_choice TFloat 
+             , StartDate_price TDateTime
 
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
@@ -78,7 +81,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH tmpMovementPL_all AS (SELECT Movement.Id
+       WITH 
+            tmpMovementPL_all AS (SELECT Movement.Id
                                        , Movement.InvNumber       AS InvNumber
                                        , MovementString.ValueData AS Comment
                                        , MovementItem.ObjectId    AS GoodsId
@@ -122,8 +126,9 @@ BEGIN
                             AND Object_GoodsDocument.isErased = FALSE
                        )
            , tmpPriceBasis AS (SELECT tmp.GoodsId
+                                    , tmp.StartDate
                                     , tmp.ValuePrice
-                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                               FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
                               )
 
@@ -358,8 +363,9 @@ BEGIN
 
                    ELSE 0
 
-              END ::TFloat AS BasisPrice_choice
+              END ::TFloat AS BasisPrice_choice  
               
+            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price 
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName

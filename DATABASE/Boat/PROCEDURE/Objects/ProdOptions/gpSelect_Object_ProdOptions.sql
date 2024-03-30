@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptions(
     IN inModelId     Integer,
+    IN inPriceListId Integer,
     IN inIsErased    Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -46,13 +48,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Определили
-     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = zc_PriceList_Basis() AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
+     vbPriceWithVAT:= (SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = inPriceListId AND ObjectBoolean.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT());
 
      RETURN QUERY
      WITH tmpPriceBasis AS (SELECT tmp.GoodsId
                                  , tmp.ValuePrice
                                  , tmp.StartDate
-                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()
+                            FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId --zc_PriceList_Basis()
                                                                      , inOperDate   := CURRENT_DATE) AS tmp
                            )
           -- Опции, которые определены как Boat Structure
@@ -487,10 +489,11 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.03.24         * inPriceListId
  29.05.23         *
  25.12.20         *
  08.10.20         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdOptions (0, False, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ProdOptions (0, zc_PriceList_Basis(), False, zfCalc_UserAdmin())
