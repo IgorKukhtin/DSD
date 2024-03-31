@@ -21,6 +21,7 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Asset());
 
      RETURN QUERY
+     WITH tmpGoods_os AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (9354099) AS lfSelect) -- лмлю + ня
      SELECT
            Object_Asset.Id            AS Id
          , Object_Asset.ObjectCode    AS Code
@@ -146,6 +147,8 @@ BEGIN
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id     = Container.ObjectId
                                               AND Object_Goods.DescId = zc_Object_Goods()
              LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Goods.DescId
+             
+             LEFT JOIN tmpGoods_os ON tmpGoods_os.GoodsId = Container.ObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -158,7 +161,7 @@ BEGIN
              LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
         WHERE Container.DescId = zc_Container_Count()
-          AND (CLO_AssetTo.ObjectId <> 0  OR Object_PartionGoods.ObjectCode > 0)
+          AND (CLO_AssetTo.ObjectId <> 0  OR Object_PartionGoods.ObjectCode > 0 OR tmpGoods_os.GoodsId > 0)
        ;
 
 END;

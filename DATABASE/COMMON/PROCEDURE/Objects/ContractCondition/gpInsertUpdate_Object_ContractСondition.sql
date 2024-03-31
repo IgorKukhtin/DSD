@@ -42,6 +42,25 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Договор не установлен.';
    END IF;
 
+    -- проверка
+   IF EXISTS (SELECT 1
+              FROM ObjectLink AS ObjectLink_Contract_PaidKind
+              WHERE ObjectLink_Contract_PaidKind.ObjectId      = inContractId
+                AND ObjectLink_Contract_PaidKind.DescId        = zc_ObjectLink_Contract_PaidKind()
+                AND ObjectLink_Contract_PaidKind.ChildObjectId = zc_Enum_PaidKind_SecondForm()
+            )
+      AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+      AND inValue > 14
+   THEN
+       RAISE EXCEPTION 'Ошибка.%Значение <%> для <%> %не может быть больше 14 дней.'
+                     , CHR (13)
+                     , lfGet_Object_ValueData_sh (inContractConditionKindId)
+                     , lfGet_Object_ValueData_sh (zc_Enum_PaidKind_SecondForm())
+                     , CHR (13)
+                      ;
+   END IF;
+
+
    -- проверка на уникальность, нельзя добавить с существующим StartDate
    IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart()
    THEN
