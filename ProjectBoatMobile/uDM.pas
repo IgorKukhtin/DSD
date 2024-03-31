@@ -238,6 +238,8 @@ type
     FGoodsId: Integer;
     FPartNumber: String;
 
+    FIsUpdate: Boolean;
+
     procedure InitStructure;
   public
     { Public declarations }
@@ -293,6 +295,7 @@ type
     property FilterDict : String read FFilterDict write FFilterDict;
     property FilterGoods : String read FFilterGoods write FFilterGoods;
     property FilterGoodsEAN : Boolean read FFilterGoodsEAN write FFilterGoodsEAN default False;
+    property IsUpdate: Boolean read FIsUpdate write FIsUpdate default False;
 
   end;
 
@@ -1015,6 +1018,7 @@ begin
   if FPartNumber <> cdsInventoryItemEdit.FieldByName('PartNumber').AsString then
   begin
      GetMIInventoryGoods(cdsInventoryItemEdit);
+     FIsUpdate := True;
   end;
   FPartNumber := cdsInventoryItemEdit.FieldByName('PartNumber').AsString;
 end;

@@ -12,6 +12,7 @@
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
+  OnFocusChanged = FormFocusChanged
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
   DesignerMasterStyle = 3
@@ -439,7 +440,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 6
+        TabIndex = 8
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -12208,7 +12209,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -12960,7 +12961,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -13982,7 +13983,7 @@
     Size.Height = 87.000000000000000000
     Size.PlatformDefault = False
     StyleBook = sbMain
-    TabOrder = 152
+    TabOrder = 153
     object Rectangle1: TRectangle
       Align = Client
       Size.Width = 194.000000000000000000
@@ -14019,10 +14020,10 @@
     Placement = Center
     PlacementTarget = vsbMain
     Size.Width = 198.000000000000000000
-    Size.Height = 296.000000000000000000
+    Size.Height = 325.000000000000000000
     Size.PlatformDefault = False
     StyleBook = sbMain
-    TabOrder = 151
+    TabOrder = 152
     object Panel6: TPanel
       Tag = 1
       Align = Client
@@ -14030,13 +14031,13 @@
       Margins.Right = 3.000000000000000000
       Margins.Bottom = 3.000000000000000000
       Size.Width = 192.000000000000000000
-      Size.Height = 293.000000000000000000
+      Size.Height = 322.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       object Rectangle2: TRectangle
         Align = Client
         Size.Width = 192.000000000000000000
-        Size.Height = 293.000000000000000000
+        Size.Height = 322.000000000000000000
         Size.PlatformDefault = False
         object rbInsertRecord: TRadioButton
           Align = Top
@@ -14127,6 +14128,19 @@
           TextSettings.Font.Size = 14.000000000000000000
           OnClick = rbCancelClick
         end
+        object rbClose: TRadioButton
+          Tag = 7
+          Align = Top
+          StyledSettings = [Family, Style, FontColor]
+          Position.Y = 280.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 7
+          Text = #1047#1072#1082#1088#1099#1090#1100
+          TextSettings.Font.Size = 14.000000000000000000
+          OnClick = rbCancelClick
+        end
       end
     end
   end
@@ -14136,6 +14150,45 @@
     OnTimer = TimerRefreshTimer
     Left = 264
     Top = 471
+  end
+  object ppInfoView: TPopup
+    Align = Center
+    Placement = Center
+    PlacementTarget = vsbMain
+    Size.Width = 198.000000000000000000
+    Size.Height = 102.000000000000000000
+    Size.PlatformDefault = False
+    StyleBook = sbMain
+    TabOrder = 151
+    object Panel7: TPanel
+      Tag = 1
+      Align = Client
+      Margins.Left = 3.000000000000000000
+      Margins.Right = 3.000000000000000000
+      Margins.Bottom = 3.000000000000000000
+      Size.Width = 192.000000000000000000
+      Size.Height = 99.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Rectangle3: TRectangle
+        Align = Client
+        Size.Width = 192.000000000000000000
+        Size.Height = 99.000000000000000000
+        Size.PlatformDefault = False
+        object lInfoView: TLabel
+          Align = Client
+          StyledSettings = [Family, Style, FontColor]
+          Size.Width = 192.000000000000000000
+          Size.Height = 99.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.HorzAlign = Center
+          TextSettings.Trimming = None
+          Text = 'Artikel Nr'
+          TabOrder = 4
+        end
+      end
+    end
   end
   object acMain: TActionList
     Left = 264
@@ -15954,5 +16007,12 @@
     ScopeMappings = <>
     Left = 160
     Top = 264
+  end
+  object TimerInfoView: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = TimerInfoViewTimer
+    Left = 156
+    Top = 466
   end
 end

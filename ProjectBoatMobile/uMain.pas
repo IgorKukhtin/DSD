@@ -287,6 +287,12 @@ type
     rbUnEraseRecord: TRadioButton;
     rbInsertRecord: TRadioButton;
     LinkControlToField15: TLinkControlToField;
+    ppInfoView: TPopup;
+    Panel7: TPanel;
+    Rectangle3: TRectangle;
+    lInfoView: TLabel;
+    TimerInfoView: TTimer;
+    rbClose: TRadioButton;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -366,6 +372,8 @@ type
     procedure rbWebServerClick(Sender: TObject);
     procedure pbILErasedChange(Sender: TObject);
     procedure TimerRefreshTimer(Sender: TObject);
+    procedure FormFocusChanged(Sender: TObject);
+    procedure TimerInfoViewTimer(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -400,6 +408,10 @@ type
     FTouch: Boolean;
 
     FDataSetRefresh: TDataSetRefresh;
+
+    FIsUpdate: Boolean;
+    FOldControl: TControl;
+    FCuurControl: TControl;
 
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -478,7 +490,9 @@ var
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
   ScreenService: IFMXScreenService;
   OrientSet: TScreenOrientations;
-  var aFMXApplicationEventService: IFMXApplicationEventService;
+  {$ENDIF}
+  {$IFDEF ANDROID}
+  aFMXApplicationEventService: IFMXApplicationEventService;
   {$ENDIF}
   SettingsFile : TIniFile;
 begin
@@ -592,6 +606,14 @@ begin
   if Assigned(FCameraScanBarCode) then FreeAndNil(FCameraScanBarCode);
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
+end;
+
+procedure TfrmMain.FormFocusChanged(Sender: TObject);
+begin
+    FIsUpdate := DM.IsUpdate;
+    DM.IsUpdate := False;
+    FOldControl := FCuurControl;
+    FCuurControl := ActiveControl;
 end;
 
 procedure TfrmMain.SetDateDownloadDict(Values : TDateTime);
@@ -773,6 +795,12 @@ begin
   Item.Data := Data;
   FFormsStack.Push(Item);
   tcMain.ActiveTab := TabItem;
+end;
+
+procedure TfrmMain.TimerInfoViewTimer(Sender: TObject);
+begin
+  TimerInfoView.Enabled := False;
+  ppInfoView.IsOpen := False;
 end;
 
 procedure TfrmMain.TimerRefreshTimer(Sender: TObject);
@@ -1377,6 +1405,15 @@ begin
 
   if DM.cdsInventoryItemEdit.State in dsEditModes then DM.cdsInventoryItemEdit.Post;
 
+  if FIsUpdate and (FOldControl = edIIEPartNumber) then
+  begin
+    lInfoView.Text := 'Остаток обновлен';
+    FIsUpdate := False;
+    ppInfoView.IsOpen := True;
+    TimerInfoView.Enabled := True;
+    Exit;
+  end;
+
   if DM.UploadMIInventory then
     if not DM.cdsInventoryList.Active and not DM.isInventoryGoodsSend then DM.UploadInventoryGoods;
 
@@ -1559,6 +1596,9 @@ begin
 
       if pProgress.Visible then
         exit
+      else
+      if ppInfoView.IsOpen then
+        ppInfoView.IsOpen := false
       else
       if ppWebServer.IsOpen then
         ppWebServer.IsOpen := false
@@ -1781,9 +1821,10 @@ begin
         TRadioButton(Components[I]).Visible := TRadioButton(Components[I]).Name = rbCancel.Name;
 
     // Справочник комплектующих
-    if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty and bGoodsChoice.Visible then
+    if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty then
     begin
-      rbOk.Visible := True;
+      rbOk.Visible := bGoodsChoice.Visible;
+      rbClose.Visible := True;
       ppActions.Height := 6;
       for I := 0 to ComponentCount - 1 do
         if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
@@ -1794,9 +1835,10 @@ begin
       ppActions.IsOpen := True;
     end;
     // Справочники
-    if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty and bDictChoice.Visible then
+    if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty then
     begin
-      rbOk.Visible := True;
+      rbOk.Visible := bDictChoice.Visible;
+      rbClose.Visible := True;
       ppActions.Height := 6;
       for I := 0 to ComponentCount - 1 do
         if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
@@ -1977,6 +2019,8 @@ begin
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryList)
     end;
   end;
+
+  if (TRadioButton(Sender).Tag = 7) and sbBack.Visible  then sbBackClick(Sender);
 end;
 
 procedure TfrmMain.rbWebServerClick(Sender: TObject);
