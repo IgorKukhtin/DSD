@@ -17,7 +17,7 @@ BEGIN
     -- проверка
    IF COALESCE (inId, 0) = 0
    THEN
-       --RAISE EXCEPTION 'Ошибка! Договор не установлен!';
+      --RAISE EXCEPTION 'Ошибка! Договор не установлен!';
         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка! Элемент документа не сохранен!'
                                               , inProcedureName := 'gpUpdate_Object_InvoicePdf_DateUnloading'
                                               , inUserId        := vbUserId
