@@ -164,7 +164,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '10575420 '
+          Value = '10575420'
           MultiSelectSeparator = ','
         end
         item
@@ -197,7 +197,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'CashId_top'
-          Value = '10575421 '
+          Value = '10575421'
           MultiSelectSeparator = ','
         end
         item
