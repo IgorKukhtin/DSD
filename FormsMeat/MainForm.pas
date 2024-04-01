@@ -1478,6 +1478,10 @@ type
     miBankSecondNum: TMenuItem;
     actReport_Send_PartionCell_true: TdsdOpenForm;
     miReport_Send_PartionCell_true: TMenuItem;
+    actCashOperationFIO_1: TdsdOpenForm;
+    actCashOperationFIO_2: TdsdOpenForm;
+    miCashOperationFIO_2: TMenuItem;
+    miCashOperationFIO_1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
