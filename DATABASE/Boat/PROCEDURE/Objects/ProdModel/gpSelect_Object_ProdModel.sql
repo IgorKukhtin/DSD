@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_full TVarChar
              , PatternCIN TVarChar, Comment TVarChar
              , BrandId Integer, BrandName TVarChar
              , ProdEngineId Integer, ProdEngineName TVarChar
-             , ReceiptProdModelId Integer, ReceiptProdModelName TVarChar
+             , ReceiptProdModelId Integer, ReceiptProdModelCode Integer, ReceiptProdModelName TVarChar
              , BasisPrice TFloat, StartDate_price TDateTime
              , ColorPatternId Integer, ColorPatternName TVarChar
              , InsertName TVarChar
@@ -38,7 +38,8 @@ BEGIN
                            )
 
         , tmpReceiptProdModel AS (SELECT ObjectLink_Model.ChildObjectId    AS ModelId
-                                       , Object_ReceiptProdModel.Id        AS ReceiptProdModelId
+                                       , Object_ReceiptProdModel.Id        AS ReceiptProdModelId 
+                                       , Object_ReceiptProdModel.ObjectCode AS ReceiptProdModelCode
                                        , Object_ReceiptProdModel.ValueData AS ReceiptProdModelName
                                        , COALESCE (tmpPriceBasis.ValuePrice, 0) AS BasisPrice 
                                        , tmpPriceBasis.StartDate                AS StartDate_price
@@ -81,7 +82,8 @@ BEGIN
          , Object_ProdEngine.Id            AS ProdEngineId
          , Object_ProdEngine.ValueData     AS ProdEngineName
 
-         , tmpReceiptProdModel.ReceiptProdModelId
+         , tmpReceiptProdModel.ReceiptProdModelId 
+         , tmpReceiptProdModel.ReceiptProdModelCode
          , tmpReceiptProdModel.ReceiptProdModelName
          , tmpReceiptProdModel.BasisPrice      ::TFloat
          , tmpReceiptProdModel.StartDate_price ::TDateTime

@@ -4,24 +4,29 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdModel(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdModel(
- INOUT ioId       Integer   ,    -- ключ объекта <Модели>
-    IN inCode     Integer   ,    -- Код объекта 
-    IN inName     TVarChar  ,    -- Название объекта 
-    IN inLength   TFloat    ,
-    IN inBeam     TFloat    ,
-    IN inHeight   TFloat    ,
-    IN inWeight   TFloat    ,
-    IN inFuel     TFloat    ,
-    IN inSpeed    TFloat    ,
-    IN inSeating  TFloat    ,
-    IN inPatternCIN  TVarChar  ,
-    IN inComment  TVarChar  ,
-    IN inBrandId  Integer   ,
-    IN inProdEngineId  Integer   ,
-    IN inSession  TVarChar       -- сессия пользователя
+ INOUT ioId                  Integer   ,    -- ключ объекта <Модели>
+    IN inCode                Integer   ,    -- Код объекта 
+    IN inName                TVarChar  ,    -- Название объекта 
+    IN inLength              TFloat    ,
+    IN inBeam                TFloat    ,
+    IN inHeight              TFloat    ,
+    IN inWeight              TFloat    ,
+    IN inFuel                TFloat    ,
+    IN inSpeed               TFloat    ,
+    IN inSeating             TFloat    ,
+    IN inPatternCIN          TVarChar  ,
+    IN inComment             TVarChar  ,
+    IN inBrandId             Integer   ,
+    IN inProdEngineId        Integer   ,
+    IN inReceiptProdModelId  Integer   , -- для Шаблон сборки модели сохраняем цену  
+    IN inPriceListId         Integer   , 
+    IN inOperDate            TDateTime ,   -- дата изменения цены 
+    IN inBasisPrice          TFloat,
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
 AS
@@ -79,6 +84,17 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), ioId, vbUserId);
    END IF;
 
+   -- для Шаблон сборки модели сохраняем цену 
+   PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                         , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
+                                                         , inGoodsId    := inReceiptProdModelId  :: Integer
+                                                         , inOperDate   := inOperDate   :: TDateTime
+                                                         , ioPriceNoVAT := inBasisPrice :: TFloat
+                                                         , ioPriceWVAT  := 0            :: TFloat
+                                                         , inIsLast     := TRUE         :: Boolean
+                                                         , inSession    := inSession    :: TVarChar
+                                                          ) AS tmp;
+       
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -89,6 +105,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.04.24         *
  11.01.21         * PatternCIN
  30.11.20         * add inProdEngineId
  24.11.20         * add inBrandId

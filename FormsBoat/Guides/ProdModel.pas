@@ -80,6 +80,8 @@ type
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
+    actPriceListGoods: TdsdOpenForm;
+    bbPriceListGoods: TdxBarButton;
   private
     { Private declarations }
   public

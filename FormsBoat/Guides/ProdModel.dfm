@@ -25,8 +25,6 @@ object ProdModelForm: TProdModelForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -245,8 +243,6 @@ object ProdModelForm: TProdModelForm
     Height = 37
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -8
-    ExplicitTop = -6
     object cxLabel1: TcxLabel
       Left = 8
       Top = 10
@@ -374,6 +370,18 @@ object ProdModelForm: TProdModelForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceListGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -435,6 +443,10 @@ object ProdModelForm: TProdModelForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbPriceListGoods: TdxBarButton
+      Action = actPriceListGoods
       Category = 0
     end
   end
@@ -728,6 +740,62 @@ object ProdModelForm: TProdModelForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actPriceListGoods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      ImageIndex = 28
+      FormName = 'TPriceListGoodsItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PriceListId'
+          Value = '2773'
+          Component = GuidesPriceList
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PriceListName'
+          Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+          Component = GuidesPriceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ReceiptProdModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Article'
+          Value = ' '
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object spSelect: TdsdStoredProc

@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions(
     IN inCode                Integer   ,    -- Код объекта
     IN inCodeVergl           Integer   ,    -- Альтернативный код
     IN inName                TVarChar  ,    -- Название объекта
- IN inSalePrice           TFloat    ,
+    IN inSalePrice           TFloat    ,
     IN inAmount              TFloat    , 
     IN inComment             TVarChar  ,
     IN inId_Site             TVarChar  ,    -- Id Сайт

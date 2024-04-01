@@ -74,7 +74,6 @@ type
     edPriceList: TcxButtonEdit;
     cxLabel16: TcxLabel;
     edOperDate: TcxDateEdit;
-    cbis—hangePrice: TcxCheckBox;
     GuidesPriceList: TdsdGuides;
   private
     { Private declarations }

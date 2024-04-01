@@ -1,4 +1,4 @@
-﻿object ProdOptionsEditForm: TProdOptionsEditForm
+object ProdOptionsEditForm: TProdOptionsEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1087#1094#1080#1080'>'
@@ -277,13 +277,6 @@
     TabOrder = 33
     Width = 80
   end
-  object cbisСhangePrice: TcxCheckBox
-    Left = 269
-    Top = 116
-    Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 34
-    Width = 148
-  end
   object ActionList: TActionList
     Left = 160
     Top = 164
@@ -441,15 +434,14 @@
       end
       item
         Name = 'inis'#1057'hangePrice'
-        Value = Null
-        Component = cbisСhangePrice
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 132
+    Left = 192
+    Top = 44
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -504,7 +496,6 @@
       item
         Name = 'inis'#1057'hangePrice'
         Value = Null
-        Component = cbisСhangePrice
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -714,7 +705,7 @@
     Top = 352
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 408
+    Left = 400
     Top = 173
   end
   object GuidesModel: TdsdGuides
@@ -1119,7 +1110,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 112
+    Left = 40
+    Top = 144
   end
 end

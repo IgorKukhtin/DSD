@@ -108,12 +108,12 @@ BEGIN
              , CAST (0 as TFloat)        AS Basis_summ_transport
              , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
              --
-             , CAST (0 as TFloat) AS t1
-             , CAST (0 as TFloat) AS t2
-             , CAST (0 as TFloat) AS t3
-             , CAST (0 as TFloat) AS t4
-             , CAST (0 as TFloat) AS t5
-             , CAST (0 as TFloat) AS t6
+             , CAST (0 as integer) AS t1
+             , CAST (0 as integer) AS t2
+             , CAST (0 as integer) AS t3
+             , CAST (0 as integer) AS t4
+             , CAST (0 as integer) AS t5
+             , CAST (0 as integer) AS t6
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value

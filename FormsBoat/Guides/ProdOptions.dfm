@@ -26,8 +26,6 @@
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 59
-    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -495,7 +493,7 @@
     Width = 854
     Height = 39
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object btnInsert: TcxButton
       Left = 546
       Top = 6
@@ -2051,6 +2049,7 @@
         Value = '0'
         Component = GuidesPriceList
         ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2058,14 +2057,6 @@
         Value = Null
         Component = edOperDate
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inis'#1057'hangePrice'
-        Value = Null
-        Component = cbisСhangePrice
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2083,6 +2074,14 @@
         Component = MasterCDS
         ComponentItem = 'SalePrice_pr'
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis'#1057'hangePrice'
+        Value = Null
+        Component = cbisСhangePrice
+        DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

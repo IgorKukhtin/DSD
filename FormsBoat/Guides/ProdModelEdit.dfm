@@ -229,11 +229,10 @@ object ProdModelEditForm: TProdModelEditForm
     Left = 417
     Top = 249
     EditValue = 43831d
-    Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 30
-    Width = 77
+    Width = 80
   end
   object cxLabel16: TcxLabel
     Left = 417
@@ -261,19 +260,18 @@ object ProdModelEditForm: TProdModelEditForm
     ShowHint = True
   end
   object cxLabel28: TcxLabel
-    Left = 502
+    Left = 505
     Top = 232
     Hint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089
     Caption = 'Ladenpreis'
   end
   object edOperPriceList: TcxCurrencyEdit
-    Left = 502
+    Left = 505
     Top = 249
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    Properties.ReadOnly = True
     TabOrder = 35
-    Width = 72
+    Width = 69
   end
   object ActionList: TActionList
     Left = 152
@@ -422,10 +420,42 @@ object ProdModelEditForm: TProdModelEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inReceiptProdModelId'
+        Value = Null
+        Component = GuidesReceiptProdModel
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBasisPrice'
+        Value = Null
+        Component = edOperPriceList
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 48
+    Left = 272
+    Top = 16
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -696,7 +726,6 @@ object ProdModelEditForm: TProdModelEditForm
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    DisableGuidesOpen = True
     Key = '2773'
     TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
     FormNameParam.Value = 'TPriceListForm'

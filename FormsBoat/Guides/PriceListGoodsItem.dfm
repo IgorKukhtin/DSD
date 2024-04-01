@@ -634,8 +634,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 88
+    Left = 328
+    Top = 112
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpDelete_ObjectHistory'
