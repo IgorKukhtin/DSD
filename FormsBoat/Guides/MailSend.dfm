@@ -26,7 +26,6 @@ object MailSendForm: TMailSendForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 894
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,7 +53,7 @@ object MailSendForm: TMailSendForm
         Width = 90
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1040#1076#1088#1077#1089' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -131,7 +130,6 @@ object MailSendForm: TMailSendForm
     Height = 41
     Align = alBottom
     TabOrder = 5
-    ExplicitWidth = 894
     object btnInsert: TcxButton
       Left = 80
       Top = 6

@@ -24,8 +24,8 @@ object MailSendEditForm: TMailSendEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 54
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Top = 55
+    Caption = #1040#1076#1088#1077#1089' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
   end
   object cxButton1: TcxButton
     Left = 36
