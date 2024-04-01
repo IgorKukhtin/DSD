@@ -30,7 +30,7 @@ type
     cbTimer: TCheckBox;
     PanelError: TPanel;
     PanelInfo: TPanel;
-    BtnLoadUnscheduled: TBitBtn;
+    BitSendUnscheduled: TBitBtn;
     Document: TDocument;
     spGetDocument: TdsdStoredProc;
     spInvoicePdf_DateUnloading: TdsdStoredProc;
@@ -41,7 +41,7 @@ type
     procedure cbTimerClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SetDateSend(Value : TDateTime);
-    procedure BtnLoadUnscheduledClick(Sender: TObject);
+    procedure BitSendUnscheduledClick(Sender: TObject);
   private
 
     FUserName: String;
@@ -231,12 +231,12 @@ begin
       begin
 
         // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-        if (MovementId <> 0) and (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and isPostedToDropBox then
-        begin
-          spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
-          spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := True;
-          spUpdate_PostedToDropBox.Execute;
-        end;
+//        if (MovementId <> 0) and (MovementId <> ClientDataSet.FieldByName('MovementId').AsInteger) and not isPostedToDropBox then
+//        begin
+//          spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
+//          spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+//          spUpdate_PostedToDropBox.Execute;
+//        end;
 
         // Проверим создание папки выгрузки
         if not ForceDirectories(FDropBoxDir + ClientDataSet.FieldByName('FilePath').AsString) then
@@ -284,12 +284,12 @@ begin
       GaugeCopyFile.Progress := 0;
 
       // Если после снятия галки "Временно не выгружать файлы в DropBox" то удалим zc_MovementBoolean_FilesNotUploaded()
-      if (MovementId <> 0) and isPostedToDropBox then
-      begin
-        spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
-        spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := True;
-        spUpdate_PostedToDropBox.Execute;
-      end;
+//      if (MovementId <> 0) and not isPostedToDropBox then
+//      begin
+//        spUpdate_PostedToDropBox.ParamByName('inId').Value := MovementId;
+//        spUpdate_PostedToDropBox.ParamByName('ioisPostedToDropBox').Value := False;
+//        spUpdate_PostedToDropBox.Execute;
+//      end;
 
       DateSend := DateStart;
       if FDateSendList.Items[0] < FDateSend then
@@ -370,7 +370,7 @@ begin
     end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.BtnLoadUnscheduledClick(Sender: TObject);
+procedure TMainForm.BitSendUnscheduledClick(Sender: TObject);
 begin
   Timer.Enabled := False;
   try

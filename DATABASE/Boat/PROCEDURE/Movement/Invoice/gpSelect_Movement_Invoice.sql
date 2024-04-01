@@ -384,20 +384,21 @@ BEGIN
                      WHERE Object_Object.Id = inClientId
                         OR inClientId = 0
                  )
-  , tmpDateUnloading AS (SELECT tmpData.Id
-                              , MAX(ObjectDate_DateUnloading.ValueData)::TDateTime  AS DateUnloading
-                         FROM tmpData
-                         
-                              INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
-                                                     ON ObjectFloat_InvoicePdf_MovmentId.ValueData = tmpData.Id
-                                                    AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
+    , tmpDateUnloading AS (SELECT tmpData.Id
+                                , MAX(ObjectDate_DateUnloading.ValueData)::TDateTime  AS DateUnloading
+                                , MAX(CASE WHEN ObjectDate_DateUnloading.ValueData IS NULL THEN 1 ELSE 0 END) = 1 AS isNotSend
+                           FROM tmpData
+                           
+                                INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
+                                                       ON ObjectFloat_InvoicePdf_MovmentId.ValueData = tmpData.Id
+                                                      AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
 
-                              LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
-                                                   ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
-                                                  AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
-                                                   
-                         GROUP BY tmpData.Id                          
-                         )
+                                LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
+                                                     ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
+                                                    AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
+                                                     
+                           GROUP BY tmpData.Id                          
+                           )
       , tmpSummProduct AS (SELECT  -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
                                    gpSelect.MovementId_OrderClient
                                    -- 4. Total LP - ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
@@ -516,7 +517,8 @@ BEGIN
       , tmpData.DescName_parent
       , tmpData.isFilesNotUploaded
       , (tmpData.isPostedToDropBox AND NOT tmpData.isFilesNotUploaded AND COALESCE(tmpDateUnloading.Id, 0) <> 0) AND
-        (COALESCE(tmpData.AmountIn, 0) <> 0 OR COALESCE(tmpData.AmountOut, 0) <> 0) AS isPostedToDropBox
+        (COALESCE(tmpData.AmountIn, 0) <> 0 OR COALESCE(tmpData.AmountOut, 0) <> 0) AND
+        COALESCE(tmpDateUnloading.isNotSend, FALSE) = FALSE AS isPostedToDropBox
       , tmpDateUnloading.DateUnloading
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета

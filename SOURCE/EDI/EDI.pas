@@ -3481,9 +3481,9 @@ begin
       // Кількість рядків в документі
       DOCUMENTINVOICE_DRN.InvoiceSummary.TotalLines := i;
       // Загальна сума без ПДВ
-      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalNetAmount := AmountSummNoVAT_fozz;
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalNetAmount := RoundTo(AmountSummNoVAT_fozz, -2);
       // Сума ПДВ
-      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalTaxAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100 - AmountSummNoVAT_fozz;
+      DOCUMENTINVOICE_DRN.InvoiceSummary.TotalTaxAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100 - RoundTo(AmountSummNoVAT_fozz, -2);
       // Загальна сума з ПДВ
       DOCUMENTINVOICE_DRN.InvoiceSummary.TotalGrossAmount := Round(100 * AmountSummNoVAT_fozz * (1 + VATPercent_fozz/100)) / 100;
 

@@ -374,6 +374,8 @@ type
     procedure TimerRefreshTimer(Sender: TObject);
     procedure FormFocusChanged(Sender: TObject);
     procedure TimerInfoViewTimer(Sender: TObject);
+    procedure lwInventoryListGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -406,6 +408,7 @@ type
 
     FTouchDateTime: TDateTime;
     FTouch: Boolean;
+    FTouchX, FTouchY: Single;
 
     FDataSetRefresh: TDataSetRefresh;
 
@@ -750,6 +753,7 @@ function TfrmMain.HandleAppEvent(AAppEvent: TApplicationEvent;
 begin
   case AAppEvent of
     TApplicationEvent.WillBecomeForeground : if FisZebraScaner and not FisCameraScaner then FisBecomeForeground := True;
+    TApplicationEvent.WillBecomeInactive, TApplicationEvent.WillTerminate : if tcMain.ActiveTab = tiScanBarCode then sbBackClick(Nil);
   end;
   Result := True;
 end;
@@ -857,7 +861,7 @@ begin
   if Assigned(FObr) and FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
   begin
     FCameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
-    FCameraScanBarCode.SampleBufferToBitmap(FObr.Picture, True);
+    FObr.Picture.Assign(imgCameraScanBarCode.Bitmap);
     FObr.Scan;
   end;
 end;
@@ -940,6 +944,9 @@ begin
     begin
       FCameraScanBarCode.OnSampleBufferReady := Nil;
       if FCameraScanBarCode.HasFlash then FCameraScanBarCode.TorchMode := TTorchMode.ModeOff;
+      {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+      FCameraScanBarCode.Active := False;
+      {$ENDIF}
     end;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
@@ -1154,6 +1161,11 @@ begin
   TimerRefresh.Enabled := True;
 end;
 
+procedure TfrmMain.lwInventoryListGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+begin
+end;
+
 // начитка информации справочника комплектующих
 procedure TfrmMain.ShowGoods;
 begin
@@ -1274,7 +1286,7 @@ begin
    DM.cdsInventoryItemEditGoodsGroupName.AsString := DM.cdsInventoryListGoodsGroupName.AsString;
    DM.cdsInventoryItemEditAmount.AsFloat := DM.cdsInventoryListAmount.AsFloat;
    DM.cdsInventoryItemEditPartionCellName.AsString := DM.cdsInventoryListPartionCellName.AsString;
-   DM.cdsInventoryItemEditTotalCount.AsFloat := DM.cdsInventoryListTotalCount.AsFloat;
+   DM.cdsInventoryItemEditTotalCount.AsFloat := DM.cdsInventoryListTotalCount.AsFloat - DM.cdsInventoryItemEditAmount.AsFloat;
    DM.cdsInventoryItemEditAmountRemains.AsFloat := DM.cdsInventoryListAmountRemains.AsFloat;
 
    DM.cdsInventoryItemEdit.Post;
@@ -1804,16 +1816,21 @@ end;
 procedure TfrmMain.lwMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Single);
 begin
-  FTouchDateTime := Now;
-  if (ssLeft in Shift) or (ssTouch in Shift) then FTouch := True
-  else FTouch := False;
+  if not ppActions.IsOpen then
+  begin
+    FTouchDateTime := Now;
+    if (ssLeft in Shift) or (ssTouch in Shift) then FTouch := True
+    else FTouch := False;
+    FTouchX := X; FTouchY:= Y;
+  end else ppActions.IsOpen := False;
 end;
 
 procedure TfrmMain.lwMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Single);
 var I: Integer;
 begin
-  if FTouch and ((ssLeft in Shift) or (ssTouch in Shift)) and (MilliSecondsBetween(FTouchDateTime, Now) > 400) then
+
+  if (FTouchX = X) and (FTouchY = Y) and FTouch and ((ssLeft in Shift) or (ssTouch in Shift)) and (MilliSecondsBetween(FTouchDateTime, Now) > 400) then
   begin
     // —скроем все
     for I := 0 to ComponentCount - 1 do

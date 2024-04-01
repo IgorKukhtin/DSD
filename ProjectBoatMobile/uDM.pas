@@ -1004,7 +1004,7 @@ end;
 
 procedure TDM.cdsInventoryItemEditGoodsIdChange(Sender: TField);
 begin
-  if not (cdsInventoryItemEdit.State in dsEditModes) then Exit;
+  if not (cdsInventoryItemEdit.State in [dsEdit]) then Exit;
   if FGoodsId <> cdsInventoryItemEdit.FieldByName('GoodsId').AsInteger then
   begin
      GetMIInventoryGoods(cdsInventoryItemEdit);
@@ -1014,7 +1014,7 @@ end;
 
 procedure TDM.cdsInventoryItemEditPartNumberChange(Sender: TField);
 begin
-  if not (cdsInventoryItemEdit.State in dsEditModes) then Exit;
+  if not (cdsInventoryItemEdit.State in [dsEdit]) then Exit;
   if FPartNumber <> cdsInventoryItemEdit.FieldByName('PartNumber').AsString then
   begin
      GetMIInventoryGoods(cdsInventoryItemEdit);
@@ -1789,7 +1789,6 @@ begin
       for I := 0 to DataSet.FieldCount - 1 do
         if Assigned(cdsInventoryItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
           cdsInventoryItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
-      cdsInventoryItemEdit.FieldByName('TotalCount').AsCurrency := cdsInventoryItemEdit.FieldByName('TotalCount').AsCurrency;
       cdsInventoryItemEdit.Post;
 
       Result := True;
@@ -1859,7 +1858,7 @@ end;
 function TDM.UploadMIInventory: Boolean;
 var
   StoredProc : TdsdStoredProc;
-  nId: Integer;
+  nId, I: Integer;
 begin
 
   Result := False;
@@ -1893,12 +1892,20 @@ begin
          end;
     end;
 
-    if not DM.cdsInventoryList.Active then
+    if not cdsInventoryList.Active then
     begin
       DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
                                    cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
                                    cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
                                    cdsInventoryItemEditPartionCellName.AsString, '', Result);
+    end else
+    begin
+      cdsInventoryList.Edit;
+      for I := 0 to cdsInventoryItemEdit.FieldCount - 1 do
+        if Assigned(cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName)) then
+          cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName).AsVariant := cdsInventoryItemEdit.Fields.Fields[I].AsVariant;
+      cdsInventoryList.FieldByName('TotalCount').AsFloat := cdsInventoryList.FieldByName('TotalCount').AsFloat + cdsInventoryList.FieldByName('Amount').AsFloat;
+      cdsInventoryList.Post;
     end;
 
   finally
@@ -2258,7 +2265,7 @@ begin
       try
         StoredProc.Execute(false, false, false);
         cdsInventoryList.Edit;
-        cdsInventoryListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryListisErased.AsBoolean := True; //StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
         on E : Exception do
@@ -2293,7 +2300,7 @@ begin
       try
         StoredProc.Execute(false, false, false);
         cdsInventoryList.Edit;
-        cdsInventoryListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryListisErased.AsBoolean := False; //StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
         on E : Exception do
