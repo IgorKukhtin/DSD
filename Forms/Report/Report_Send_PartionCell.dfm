@@ -620,10 +620,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 55
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-          end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
-          end
         end
       end
     end

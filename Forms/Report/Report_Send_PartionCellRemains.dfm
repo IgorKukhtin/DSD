@@ -41,6 +41,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -61,6 +66,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -235,6 +245,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
+          end
+          object AmountRemains: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1110#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Options.Editing = False
+            Width = 70
           end
           object isClose_value_min: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1079#1072#1082#1088#1099#1090#1080#1103
@@ -619,10 +640,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
-          end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-          end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
           end
         end
       end

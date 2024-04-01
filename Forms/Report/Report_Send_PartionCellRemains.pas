@@ -71,14 +71,13 @@ type
     isPartionCell: TcxGridDBColumn;
     OperDate_min: TcxGridDBColumn;
     OperDate_max: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
     NormInDays: TcxGridDBColumn;
     NormInDays_real: TcxGridDBColumn;
     NormInDays_tax: TcxGridDBColumn;
     NormInDays_date: TcxGridDBColumn;
     actOpenFormPartionCell: TdsdOpenForm;
     bbOpenFormPartionCell: TdxBarButton;
+    AmountRemains: TcxGridDBColumn;
   private
     { Private declarations }
   public
