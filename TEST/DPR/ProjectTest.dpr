@@ -1500,7 +1500,8 @@ uses
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   PartionCellChoice in '..\..\Forms\Guides\PartionCellChoice.pas' {PartionCellChoiceForm: TParentForm},
   Report_Send_PartionCellRemains in '..\..\Forms\Report\Report_Send_PartionCellRemains.pas' {Report_Send_PartionCellRemainsForm: TParentForm},
-  Report_Send_PartionCellRemainsDialog in '..\..\Forms\Report\Report_Send_PartionCellRemainsDialog.pas' {Report_Send_PartionCellRemainsDialogForm: TParentForm};
+  Report_Send_PartionCellRemainsDialog in '..\..\Forms\Report\Report_Send_PartionCellRemainsDialog.pas' {Report_Send_PartionCellRemainsDialogForm: TParentForm},
+  PartionCellChoiceAll in '..\..\Forms\Guides\PartionCellChoiceAll.pas' {PartionCellChoiceAllForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
