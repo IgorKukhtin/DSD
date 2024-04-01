@@ -119,7 +119,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
             , NormInDays_tax  TFloat
             , NormInDays_date TDateTime
 
-             , Color_PartionGoodsDate Integer
+             , Color_PartionGoodsDate Integer 
+             
+             , AmountRemains TFloat
               )
 AS
 $BODY$
@@ -640,6 +642,8 @@ BEGIN
             , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
 
             , tmpData_MI.Color_PartionGoodsDate ::Integer
+            
+            , 0 ::TFloat AS AmountRemains
        
      FROM tmpData_MI -- расчет кол-во - мастер
 
@@ -692,6 +696,40 @@ BEGIN
                     SELECT lfSelect.GoodsId
                     FROM lfSelect_Object_Goods_byGoodsGroup (1979) AS lfSelect
                    )
+
+     , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
+                           , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                           , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate    
+                           , SUM (COALESCE (Container.Amount,0))         AS Amount
+                      FROM ContainerLinkObject AS CLO_Unit
+                           INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND COALESCE (Container.Amount,0) <> 0
+                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
+                           LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                         ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
+                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                           LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                         ON CLO_Account.ContainerId = CLO_Unit.ContainerId
+                                                        AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                          -- LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = CLO_PartionGoods.ObjectId  
+                           
+                           
+                            LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                 ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                      WHERE CLO_Unit.ObjectId = inUnitId
+                        AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                        AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета “ранзит!!!
+                      GROUP BY Container.ObjectId
+                           , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                           , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart())
+                      HAVING SUM (COALESCE (Container.Amount,0)) > 0
+                     )
+
+
     , tmpNormInDays AS (SELECT Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId, Object_GoodsByGoodsKind_View.NormInDays
                         FROM Object_GoodsByGoodsKind_View
                              JOIN tmpGoods ON tmpGoods.GoodsId = Object_GoodsByGoodsKind_View.GoodsId
@@ -1075,7 +1113,7 @@ BEGIN
             , Object_Measure.ValueData                   AS MeasureName
             , Object_GoodsKind.Id                        AS GoodsKindId
             , Object_GoodsKind.ValueData                 AS GoodsKindName
-            , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
+            , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate)   :: TDateTime AS PartionGoodsDate
               --
             , tmpData.PartionCellId_1  :: Integer
             , tmpData.PartionCellId_2  :: Integer
@@ -1186,9 +1224,14 @@ BEGIN
 
             , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
 
-            , tmpData_MI.Color_PartionGoodsDate ::Integer
+            , COALESCE (tmpData_MI.Color_PartionGoodsDate, zc_Color_White()) ::Integer AS Color_PartionGoodsDate
+            
+            , COALESCE (tmpRemains.Amount,0) ::TFloat AS AmountRemains
        
      FROM tmpData_MI -- расчет кол-во - мастер
+          FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
+                              AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
+                              AND tmpRemains.PartionGoodsDate = tmpData_MI.PartionGoodsDate
 
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
           LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData_MI.ToId
@@ -1201,8 +1244,8 @@ BEGIN
                                  AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
           LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
-          LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = tmpData_MI.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = tmpData_MI.GoodsKindId
+          LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
+          LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
           LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
                                  AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
 
@@ -1226,7 +1269,8 @@ BEGIN
                            AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
                            AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
                            -- !!!—формированы данные по €чейкам!!!
-                           AND tmpData_MI.isPartionCell = TRUE
+                           AND tmpData_MI.isPartionCell = TRUE   
+
         ; 
     
     END IF;

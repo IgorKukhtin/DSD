@@ -1,4 +1,4 @@
-unit PartionCellChoice;
+unit PartionCellChoiceAll;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue, cxContainer, cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
-  TPartionCellChoiceForm = class(TParentForm)
+  TPartionCellChoiceAllForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -64,6 +64,10 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    GoodsKindName: TcxGridDBColumn;
+    PartionGoodsDate: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
   private
     { Private declarations }
@@ -76,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPartionCellChoiceForm);
+  RegisterClass(TPartionCellChoiceAllForm);
 
 end.

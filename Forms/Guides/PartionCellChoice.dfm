@@ -3,7 +3,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
   ClientHeight = 376
-  ClientWidth = 739
+  ClientWidth = 450
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 739
+    Width = 450
     Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = 8
-    ExplicitWidth = 829
+    ExplicitWidth = 739
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -64,7 +63,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 90
+        Width = 132
       end
       object Name_search: TcxGridDBColumn
         Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
@@ -79,39 +78,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 92
-      end
-      object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 73
-      end
-      object GoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 194
-      end
-      object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 79
-      end
-      object PartionGoodsDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
-        DataBinding.FieldName = 'PartionGoodsDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 88
+        Width = 107
       end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1045'2'
@@ -120,7 +87,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2'
         Options.Editing = False
-        Width = 70
+        Width = 145
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -130,11 +97,11 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 739
+    Width = 450
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 512
+    ExplicitWidth = 739
     object lbSearchName: TcxLabel
       Left = 5
       Top = 6
@@ -222,10 +189,6 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -469,8 +432,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     Params = <
       item
         Name = 'inIsShowFree'
-        Value = Null
-        Component = actShowAll
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

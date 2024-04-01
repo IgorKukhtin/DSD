@@ -175,4 +175,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ProdModel (zc_PriceList_Basis(), false, zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_nfr

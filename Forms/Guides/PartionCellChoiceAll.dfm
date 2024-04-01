@@ -1,9 +1,9 @@
-object MailSendForm: TMailSendForm
+object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1090#1087#1088#1072#1074#1082#1072' '#1087#1086' '#1087#1086#1095#1090#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')> '#1076#1077#1090#1072#1083#1100#1085#1086
   ClientHeight = 376
-  ClientWidth = 699
+  ClientWidth = 739
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,16 +12,16 @@ object MailSendForm: TMailSendForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = actChoiceGuides
+  AddOnFormData.isSingle = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 699
-    Height = 309
+    Top = 59
+    Width = 739
+    Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -29,9 +29,13 @@ object MailSendForm: TMailSendForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -40,149 +44,126 @@ object MailSendForm: TMailSendForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Code: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 90
+        Width = 55
       end
-      object Name: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+      object clName: TcxGridDBColumn
+        Caption = '1. '#1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 197
+        Width = 90
       end
-      object MailKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087
-        DataBinding.FieldName = 'MailKindName'
+      object Name_search: TcxGridDBColumn
+        Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Name_search'
         Visible = False
+        HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        Width = 80
+      end
+      object Status: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1091#1089
+        DataBinding.FieldName = 'Status'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        HeaderHint = #1058#1080#1087' '#1054#1090#1087#1088#1072#1074#1082#1080' '#1087#1086' '#1087#1086#1095#1090#1077
-        Options.Editing = False
-        Width = 165
+        Width = 92
       end
-      object UserName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'UserName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 165
-      end
-      object InsertDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertDate'
-        Visible = False
+      object GoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 73
       end
-      object InsertName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-        DataBinding.FieldName = 'InsertName'
-        Visible = False
+      object GoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 194
+      end
+      object GoodsKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 79
+      end
+      object PartionGoodsDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+        DataBinding.FieldName = 'PartionGoodsDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 88
+      end
+      object BoxCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1045'2'
+        DataBinding.FieldName = 'BoxCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2'
         Options.Editing = False
         Width = 70
-      end
-      object Comment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 207
-      end
-      object isErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object Panel_btn: TPanel
+  object Panel2: TPanel
     Left = 0
-    Top = 335
-    Width = 699
-    Height = 41
-    Align = alBottom
+    Top = 0
+    Width = 739
+    Height = 33
+    Align = alTop
     TabOrder = 5
-    object btnInsert: TcxButton
-      Left = 80
+    object lbSearchName: TcxLabel
+      Left = 5
       Top = 6
-      Width = 100
-      Height = 25
-      Action = actInsert
-      TabOrder = 0
+      Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
-    object btnUpdate: TcxButton
-      Left = 206
-      Top = 6
-      Width = 100
-      Height = 25
-      Action = actUpdate
+    object edSearchName: TcxTextEdit
+      Left = 112
+      Top = 7
       TabOrder = 1
-    end
-    object btnChoiceGuides: TcxButton
-      Left = 475
-      Top = 6
-      Width = 90
-      Height = 25
-      Action = actChoiceGuides
-      TabOrder = 2
-    end
-    object btnSetErased: TcxButton
-      Left = 329
-      Top = 6
-      Width = 100
-      Height = 25
-      Action = actSetErased
-      TabOrder = 3
-    end
-    object btnFormClose: TcxButton
-      Left = 593
-      Top = 6
-      Width = 90
-      Height = 25
-      Action = actFormClose
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
+      DesignSize = (
+        200
+        21)
+      Width = 200
     end
   end
   object DataSource: TDataSource
-    DataSet = MasterCDS
-    Left = 56
-    Top = 224
+    DataSet = ClientDataSet
+    Left = 40
+    Top = 96
   end
-  object MasterCDS: TClientDataSet
+  object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 24
-    Top = 184
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -196,8 +177,8 @@ object MailSendForm: TMailSendForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 64
+    Left = 344
+    Top = 128
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -216,8 +197,8 @@ object MailSendForm: TMailSendForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 48
-    Top = 64
+    Left = 264
+    Top = 80
     DockControlHeights = (
       0
       0
@@ -237,28 +218,7 @@ object MailSendForm: TMailSendForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
         end
         item
           Visible = True
@@ -274,18 +234,6 @@ object MailSendForm: TMailSendForm
         end
         item
           Visible = True
-          ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocolOpenForm'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -295,6 +243,11 @@ object MailSendForm: TMailSendForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -315,28 +268,25 @@ object MailSendForm: TMailSendForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = actSetErased
+      Action = dsdSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = actSetUnErased
+      Action = dsdSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = actGridToExcel
+      Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
+      Caption = '       '
       Category = 0
+      Hint = '       '
       Visible = ivAlways
-      ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = actChoiceGuides
-      Category = 0
-    end
-    object bbProtocolOpenForm: TdxBarButton
-      Action = actProtocol
+      Action = dsdChoiceGuides
       Category = 0
     end
     object bbShowAll: TdxBarButton
@@ -346,19 +296,19 @@ object MailSendForm: TMailSendForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 8
-    Top = 64
+    Left = 304
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = dsdStoredProc
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = dsdStoredProc
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 90
+      ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -369,14 +319,14 @@ object MailSendForm: TMailSendForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMailSendEditForm'
-      FormNameParam.Value = 'TMailSendEditForm'
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
-          Value = '0'
+          Value = Null
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -391,15 +341,15 @@ object MailSendForm: TMailSendForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMailSendEditForm'
-      FormNameParam.Value = 'TMailSendEditForm'
+      FormName = 'TPartionCellEditForm'
+      FormNameParam.Value = 'TPartionCellEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
-          Component = MasterCDS
+          Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -410,45 +360,45 @@ object MailSendForm: TMailSendForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actSetErased: TdsdUpdateErased
+    object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spErased
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
-          StoredProc = spErased
+          StoredProc = spErasedUnErased
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 49220
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object actSetUnErased: TdsdUpdateErased
+    object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spUnErased
+      StoredProc = spErasedUnErased
       StoredProcList = <
         item
-          StoredProc = spUnErased
+          StoredProc = spErasedUnErased
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 49220
+      ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
-    object actChoiceGuides: TdsdChoiceGuides
+    object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
           Name = 'Key'
           Value = Null
-          Component = MasterCDS
+          Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -456,17 +406,24 @@ object MailSendForm: TMailSendForm
         item
           Name = 'TextValue'
           Value = Null
-          Component = MasterCDS
+          Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          MultiSelectSeparator = ','
         end>
-      Caption = #1054#1050
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 80
+      ImageIndex = 7
       DataSource = DataSource
     end
-    object actGridToExcel: TdsdGridToExcel
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -475,105 +432,61 @@ object MailSendForm: TMailSendForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actProtocol: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
-      ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect
+      StoredProc = dsdStoredProc
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = dsdStoredProc
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
-    end
-    object actFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = #1054#1090#1084#1077#1085#1072
-      ImageIndex = 52
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
+      ImageIndex = 62
+      Value = True
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
   end
-  object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MailSend'
-    DataSet = MasterCDS
+  object dsdStoredProc: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_PartionCellChoice'
+    DataSet = ClientDataSet
     DataSets = <
       item
-        DataSet = MasterCDS
+        DataSet = ClientDataSet
       end>
     Params = <
       item
-        Name = 'inIsShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 88
-    Top = 128
-  end
-  object spErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MailSend'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
+        Name = 'inIsShowFree'
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 464
-    Top = 96
+    Left = 144
+    Top = 104
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 96
+    Top = 176
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
@@ -584,14 +497,11 @@ object MailSendForm: TMailSendForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = actChoiceGuides
-      end
-      item
-        Action = actUpdate
+        Action = dsdChoiceGuides
       end>
     ActionItemList = <
       item
-        Action = actChoiceGuides
+        Action = dsdChoiceGuides
         ShortCut = 13
       end
       item
@@ -608,31 +518,20 @@ object MailSendForm: TMailSendForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 104
-    Top = 248
+    Left = 136
+    Top = 224
   end
-  object spUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_isErased_MailSend'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name_search
+    ColumnList = <
       item
-        Name = 'inObjectId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
+        Column = Name_search
       end>
-    PackSize = 1
-    Left = 464
-    Top = 144
+    ActionNumber1 = dsdChoiceGuides
+    CheckBoxList = <>
+    Left = 368
+    Top = 192
   end
 end

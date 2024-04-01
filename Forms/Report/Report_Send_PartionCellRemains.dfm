@@ -41,6 +41,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -61,6 +66,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = Amount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -235,6 +245,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 58
+          end
+          object AmountRemains: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1110#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Options.Editing = False
+            Width = 70
           end
           object isClose_value_min: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1079#1072#1082#1088#1099#1090#1080#1103
@@ -620,10 +641,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Options.Editing = False
             Width = 55
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-          end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
-          end
         end
       end
     end
@@ -689,15 +706,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       Properties.ReadOnly = False
       TabOrder = 6
       Width = 108
-    end
-    object cbShowAll: TcxCheckBox
-      Left = 487
-      Top = 4
-      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
-      Caption = #1054#1089#1090#1072#1090#1082#1080
-      Properties.ReadOnly = True
-      TabOrder = 7
-      Width = 68
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -885,8 +893,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       MoveParams = <>
       Caption = #1055#1086#1089#1084#1086#1090#1088#1077#1090#1100' '#1089#1074#1086#1073#1086#1076#1085#1099#1077' '#1103#1095#1077#1081#1082#1080
       ImageIndex = 25
-      FormName = 'TPartionCellChoiceForm'
-      FormNameParam.Value = 'TPartionCellChoiceForm'
+      FormName = 'TPartionCellChoiceAllForm'
+      FormNameParam.Value = 'TPartionCellChoiceAllForm'
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
@@ -1280,7 +1288,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       item
         Name = 'inIsShowAll'
         Value = Null
-        Component = cbShowAll
+        Component = FormParams
+        ComponentItem = 'inIsShowAll'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1536,7 +1545,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     Params = <
       item
         Name = 'FormName'
-        Value = 'TPartionCellChoiceForm'
+        Value = 'TPartionCellChoiceAllForm'
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1563,7 +1572,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       item
         Name = 'inIsShowAll'
         Value = False
-        Component = cbShowAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

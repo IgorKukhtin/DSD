@@ -71,9 +71,6 @@ type
     isPartionCell: TcxGridDBColumn;
     OperDate_min: TcxGridDBColumn;
     OperDate_max: TcxGridDBColumn;
-    cbShowAll: TcxCheckBox;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
     NormInDays: TcxGridDBColumn;
     NormInDays_real: TcxGridDBColumn;
     NormInDays_tax: TcxGridDBColumn;
