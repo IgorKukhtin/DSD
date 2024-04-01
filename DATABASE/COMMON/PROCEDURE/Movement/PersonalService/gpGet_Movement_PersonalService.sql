@@ -99,7 +99,15 @@ BEGIN
            , View_InfoMoney.InfoMoneyName_all
 
            , Movement_BankSecondNum.Id            AS MovementId_BankSecondNum
-           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId, MovementDesc_BankSecondNum.ItemName, Movement_BankSecondNum.InvNumber, Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
+           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId
+                                       , MovementDesc_BankSecondNum.ItemName
+                                       , '(' 
+                                      || (MovementFloat_BankSecond_num.ValueData     :: Integer) :: TVarChar
+                             || ' + ' || (MovementFloat_BankSecondTwo_num.ValueData  :: Integer) :: TVarChar
+                             || ' + ' || (MovementFloat_BankSecondDiff_num.ValueData :: Integer) :: TVarChar
+                                      || ')'
+                                      || ' ¹ ' || Movement_BankSecondNum.InvNumber
+                                       , Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -154,6 +162,18 @@ BEGIN
                                           AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
             LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id = MLM_BankSecond_num.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_BankSecondNum ON MovementDesc_BankSecondNum.Id = Movement_BankSecondNum.DescId
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecond_num
+                                    ON MovementFloat_BankSecond_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecond_num.DescId = zc_MovementFloat_BankSecond_num()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecondTwo_num
+                                    ON MovementFloat_BankSecondTwo_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecondTwo_num.DescId = zc_MovementFloat_BankSecondTwo_num()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecondDiff_num
+                                    ON MovementFloat_BankSecondDiff_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecondDiff_num.DescId = zc_MovementFloat_BankSecondDiff_num()
 
        WHERE Movement.Id =  inMovementId;
 

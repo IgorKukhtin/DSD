@@ -11,6 +11,9 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbServiceDateId Integer;
+   DECLARE vbServiceDate   TDateTime;
+   DECLARE vbStartDate     TDateTime;
+   DECLARE vbEndDate       TDateTime;
    DECLARE vbPersonalServiceListId Integer;
    DECLARE vbMemberId_check Integer;
 
@@ -177,7 +180,31 @@ END IF;
 
 
      -- определяем <Месяц начислений>
-     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate()));
+     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
+
+     -- определяем Период - 1 месяц
+     vbStartDate:= (SELECT DATE_TRUNC ('MONTH', Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId);
+     vbEndDate  := vbStartDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+
+     -- данные
+     /*CREATE TEMP TABLE _tmpServiceDate (ServiceDateId Integer, ServiceDate TDateTime) ON COMMIT DROP;
+     INSERT INTO _tmpServiceDate (ServiceDateId Integer, ServiceDate TDateTime)
+        WITH tmpPersonalService AS (SELECT DISTINCT
+                                           DATE_TRUNC ('MONTH', MovementDate.ValueData) AS ServiceDate
+                                    FROM Movement
+                                         INNER JOIN MovementDate ON MovementDate.MovementId = Movement.Id
+                                                                AND MovementDate.DescId     = zc_MIDate_ServiceDate()
+                                    WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND Movement.DescId   = zc_Movement_PersonalService()
+                                   )
+      --SELECT vbServiceDateId, vbServiceDate
+        SELECT lpInsertFind_Object_ServiceDate (inOperDate:= tmpPersonalService.ServiceDate)
+             , tmpPersonalService.ServiceDate
+        FROM tmpPersonalService
+       ;*/
+
 
      -- определяем <Ведомость> - что б выбрать только этих Сотрудников
      vbPersonalServiceListId := (SELECT MLO_PersonalServiceList.ObjectId
@@ -324,17 +351,17 @@ END IF;
                                          , ObjectBoolean_isMain.ValueData                             AS isMain
                                            -- 1 - справочно - Восток
                                          , CASE WHEN zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0
-                                                -- >0 - тогда формируется
+                                                -- если >0 - тогда формируется
                                                 THEN COALESCE (ObjectLink_Member_BankSecond.ChildObjectId, 1)
                                            END AS BankId_1
                                            -- 2 - справочно - ОТП
                                          , CASE WHEN zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecondTwo.ValueData, 8)) > 0
-                                                -- >0 - тогда формируется
+                                                -- если >0 - тогда формируется
                                                 THEN COALESCE (ObjectLink_Member_BankSecondTwo.ChildObjectId, 1)
                                            END AS BankId_2
                                            -- 3 - справочно - Личный
                                          , CASE WHEN zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecondDiff.ValueData, 8)) > 0
-                                                -- >0 - тогда формируется
+                                                -- если >0 - тогда формируется
                                                 THEN COALESCE (ObjectLink_Member_BankSecondDiff.ChildObjectId, 1)
                                            END AS BankId_3
 
@@ -428,7 +455,7 @@ END IF;
                                             , tmpPersonal_all.BankId_3
                               FROM tmpPersonal_all
                               WHERE tmpPersonal_all.PersonalServiceListId_CardSecond = vbPersonalServiceListId
-                                AND tmpPersonal_all.isMain                = TRUE
+                                AND tmpPersonal_all.isMain                           = TRUE
                              )
                 -- Сотрудники - такие варианты Personal - убрать из Container, т.к. они будут в другой PersonalServiceListId
               , tmpPersonal_not AS (SELECT tmpPersonal_all.*
@@ -443,6 +470,7 @@ END IF;
                                      WHERE tmpPersonal_all.PersonalServiceListId_CardSecond = vbPersonalServiceListId
                                        AND tmpMember.MemberId                    IS NULL
                                     )
+           -- за ОДИН Месяц начислений - vbServiceDateId
          , tmpContainer_all AS (SELECT CLO_ServiceDate.ContainerId              AS ContainerId
                                      , CLO_Personal.ObjectId                    AS PersonalId
                                      , CLO_Unit.ObjectId                        AS UnitId
@@ -559,7 +587,7 @@ END IF;
                             -- AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                          )
          -- нашли Сотрудникам - существующие MovementItemId, причем ТОЛЬКО ОДИН
-       , tmpListPersonal AS (SELECT tmpMI.MovementItemId                                  AS MovementItemId
+       , tmpListPersonal AS (SELECT COALESCE (tmpMI.MovementItemId, 0)                    AS MovementItemId
                                   , COALESCE (tmpPersonal.PersonalId,  tmpMI.PersonalId)  AS PersonalId
                                   , COALESCE (tmpPersonal.UnitId,      tmpMI.UnitId)      AS UnitId
                                   , COALESCE (tmpPersonal.PositionId,  tmpMI.PositionId)  AS PositionId
@@ -586,19 +614,19 @@ END IF;
                             )
          -- список Container - для поиска в проводках - сколько уже выплатили
        , tmpContainer AS (SELECT tmpContainer_all.ContainerId
-                               , tmpMI.PersonalId
-                               , tmpMI.UnitId
-                               , tmpMI.PositionId
-                               , tmpMI.InfoMoneyId
-                               , tmpMI.PersonalServiceListId
-                               , tmpMI.FineSubjectId
-                               , tmpMI.UnitId_FineSubject
-                          FROM tmpListPersonal AS tmpMI
-                               INNER JOIN tmpContainer_all ON tmpContainer_all.PersonalId            = tmpMI.PersonalId
-                                                          AND tmpContainer_all.UnitId                = tmpMI.UnitId
-                                                          AND tmpContainer_all.PositionId            = tmpMI.PositionId
-                                                          AND tmpContainer_all.InfoMoneyId           = tmpMI.InfoMoneyId
-                                                          AND tmpContainer_all.PersonalServiceListId = tmpMI.PersonalServiceListId
+                               , tmpListPersonal.PersonalId
+                               , tmpListPersonal.UnitId
+                               , tmpListPersonal.PositionId
+                               , tmpListPersonal.InfoMoneyId
+                               , tmpListPersonal.PersonalServiceListId
+                               , tmpListPersonal.FineSubjectId
+                               , tmpListPersonal.UnitId_FineSubject
+                          FROM tmpListPersonal
+                               INNER JOIN tmpContainer_all ON tmpContainer_all.PersonalId            = tmpListPersonal.PersonalId
+                                                          AND tmpContainer_all.UnitId                = tmpListPersonal.UnitId
+                                                          AND tmpContainer_all.PositionId            = tmpListPersonal.PositionId
+                                                          AND tmpContainer_all.InfoMoneyId           = tmpListPersonal.InfoMoneyId
+                                                          AND tmpContainer_all.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
                          )
    -- только проводки - сколько уже выплатили (Авансом)
  , tmpMIContainer_all AS (SELECT MIContainer.*
@@ -614,7 +642,7 @@ END IF;
                                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                AND MIContainer.DescId      = zc_MIContainer_Summ()
                          )
-       -- только
+       -- только Карта БН - вычитаем начисления, а не выплаты
      , tmpSummCard AS (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0))  AS Amount
                                , tmp.PersonalId
                                , tmp.UnitId
@@ -673,139 +701,307 @@ END IF;
                                  , tmpMIContainer_all.FineSubjectId
                                  , tmpMIContainer_all.UnitId_FineSubject
                          )
-            -- результат
-            SELECT tmpData.MovementItemId
-                 , tmpData.MemberId
-                 , tmpData.PersonalId
-                 , tmpData.UnitId
-                 , tmpData.PositionId
-                 , tmpData.InfoMoneyId
-                 , tmpData.PersonalServiceListId
-                 , tmpData.FineSubjectId
-                 , tmpData.UnitId_FineSubject
-                 , tmpData.SummCardSecondRecalc
+            -- Все ведомости БН - Ф1 - ?ОТП?
+          , tmpSummCard_otp AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                                     , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS SummCard
+                                FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummCardRecalc
+                                                                 ON MIFloat_SummCardRecalc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummCardRecalc.DescId         = zc_MIFloat_SummCardRecalc()
+                                     LEFT JOIN MovementItemFloat AS MIFloat_SummAvCardSecondRecalc
+                                                                 ON MIFloat_SummAvCardSecondRecalc.MovementItemId = MovementItem.Id
+                                                                AND MIFloat_SummAvCardSecondRecalc.DescId         = zc_MIFloat_SummAvCardSecondRecalc()
+                                                                AND 1=0
+                                     LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                          ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
 
-                   -- банк на первом месте + вернули пусто
-                 , CASE WHEN tmpData.BankId_1 > 1 THEN tmpData.BankId_1 ELSE NULL END AS BankId_1
-                   -- банк на втором месте + вернули пусто
-                 , CASE WHEN tmpData.BankId_2 > 1 THEN tmpData.BankId_2 ELSE NULL END AS BankId_1
-                   -- банк на третьем месте + вернули пусто
-                 , CASE WHEN tmpData.BankId_3 > 1 THEN tmpData.BankId_3 ELSE NULL END AS BankId_1
+                                     LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                  ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                                 AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                     LEFT JOIN ObjectLink AS OL_PersonalServiceList_Bank
+                                                          ON OL_PersonalServiceList_Bank.ObjectId = MLO_PersonalServiceList.ObjectId
+                                                         AND OL_PersonalServiceList_Bank.DescId     = zc_ObjectLink_PersonalServiceList_Bank()
+                                     INNER JOIN Object AS Object_Bank ON Object_Bank.Id        = OL_PersonalServiceList_Bank.ChildObjectId
+                                                                     AND Object_Bank.ValueData ILIKE '%ОТП Б%'
 
-                   -- кто из 1,2,3 на первом месте
-                 , tmpData.Num_1
-                   -- кто из 1,2,3 на втором месте
-                 , tmpData.Num_2
-                   -- кто из 1,2,3 на третьем месте
-                 , tmpData.Num_3
+                                WHERE Movement.Operdate BETWEEN vbStartDate AND vbEndDate
+                                  AND Movement.DescId   = zc_Movement_PersonalService()
+                                  AND Movement.StatusId = zc_Enum_Status_Complete()
+                                  -- AND 1=0
+                                GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                               )
+       -- результат
+     , tmpMI_res AS (SELECT tmpData.MovementItemId
+                          , tmpData.MemberId
+                          , tmpData.PersonalId
+                          , tmpData.UnitId
+                          , tmpData.PositionId
+                          , tmpData.InfoMoneyId
+                          , tmpData.PersonalServiceListId
+                          , tmpData.FineSubjectId
+                          , tmpData.UnitId_FineSubject
+                          , tmpData.SummCardSecondRecalc
 
-                 , tmpData.SummMax_1
-                 , tmpData.SummMax_2
-                 , tmpData.SummMax_3
+                            -- банк на первом месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_1 > 1 THEN tmpData.BankId_1 ELSE NULL END AS BankId_1
+                            -- банк на втором месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_2 > 1 THEN tmpData.BankId_2 ELSE NULL END AS BankId_2
+                            -- банк на третьем месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_3 > 1 THEN tmpData.BankId_3 ELSE NULL END AS BankId_3
 
-                   -- сумма для первого места
-                 , tmpData.SummCard_1
-                   -- сумма для второго места
-                 , tmpData.SummCard_2
-                   -- сумма для третьего места
-                 , CASE WHEN tmpData.BankId_3 > 0 AND tmpData.SummMax_3 > 0
-                        THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.SummMax_3 THEN tmpData.SummMax_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
-                        WHEN tmpData.BankId_3 > 0
-                        THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                        ELSE 0
-                   END AS SummCard_3
+                            -- кто из 1,2,3 на первом месте
+                          , tmpData.Num_1
+                            -- кто из 1,2,3 на втором месте
+                          , tmpData.Num_2
+                            -- кто из 1,2,3 на третьем месте
+                          , tmpData.Num_3
+
+                            -- лимит - для 1
+                          , tmpData.Sum_max_1
+                            -- лимит - для 2
+                          , tmpData.Sum_max_2
+                            -- лимит - для 3
+                          , tmpData.Sum_max_3
+
+                            -- сумма для первого места
+                          , tmpData.SummCard_1
+                            -- сумма для второго места
+                          , tmpData.SummCard_2
+                            -- сумма для третьего места
+                          , CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
+                                 WHEN tmpData.BankId_3 > 0
+                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                 ELSE 0
+                            END AS SummCard_3
+
+                            -- накопительно - 1
+                          , SUM (tmpData.SummCard_1) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_1_sum
+                            -- накопительно - 2
+                          , SUM (tmpData.SummCard_2) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_2_sum
+                            -- накопительно - 3
+                          , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0
+                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
+                                      WHEN tmpData.BankId_3 > 0
+                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      ELSE 0
+                                 END) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_3_sum
 
 
-            FROM
-           (SELECT tmpData.*
+                     FROM
+                    (SELECT tmpData.*
 
-                   -- сумма для второго места
-                 , CASE WHEN tmpData.BankId_2 > 0 AND tmpData.SummMax_2 > 0
-                        THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.SummMax_2 THEN tmpData.SummMax_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
-                        WHEN tmpData.BankId_2 > 0
-                        THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
-                        ELSE 0
-                   END AS SummCard_2
-
-
-            FROM
-           (SELECT tmpData.*
-
-                   -- сумма для первого места
-                 , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.SummMax_1 > 0
-                        THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.SummMax_1 THEN tmpData.SummMax_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
-                        WHEN tmpData.BankId_1 > 0
-                        THEN ROUND (tmpData.SummCardSecondRecalc, 1)
-                        ELSE 0
-                   END AS SummCard_1
+                            -- сумма для второго места
+                          , CASE WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
+                                 WHEN tmpData.BankId_2 > 0
+                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
+                                 ELSE 0
+                            END AS SummCard_2
 
 
-            FROM
-           (SELECT tmpListPersonal.MovementItemId
-                 , tmpListPersonal.MemberId
-                 , tmpListPersonal.PersonalId
-                 , tmpListPersonal.UnitId
-                 , tmpListPersonal.PositionId
-                 , tmpListPersonal.InfoMoneyId
-                 , tmpListPersonal.PersonalServiceListId
-                 , tmpListPersonal.FineSubjectId
-                 , tmpListPersonal.UnitId_FineSubject
-                 , CASE WHEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0
-                                  -- т.к. в проводках долг с минусом
-                             THEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0)
-                        ELSE 0
-                   END AS SummCardSecondRecalc
+                     FROM
+                    (SELECT tmpData.*
 
-                   -- подставили на первое место
-                 , CASE WHEN vbBankId_num_1 = 1 THEN tmpListPersonal.BankId_1
-                        WHEN vbBankId_num_2 = 1 THEN tmpListPersonal.BankId_2
-                        WHEN vbBankId_num_3 = 1 THEN tmpListPersonal.BankId_3
-                   END AS BankId_1
+                            -- сумма для первого места
+                          , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1 THEN tmpData.Sum_max_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
+                                 WHEN tmpData.BankId_1 > 0
+                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1)
+                                 ELSE 0
+                            END AS SummCard_1
 
-                   -- подставили на второе место
-                 , CASE WHEN vbBankId_num_1 = 2 THEN tmpListPersonal.BankId_1
-                        WHEN vbBankId_num_2 = 2 THEN tmpListPersonal.BankId_2
-                        WHEN vbBankId_num_3 = 2 THEN tmpListPersonal.BankId_3
-                   END AS BankId_2
 
-                   -- подставили на третье место
-                 , CASE WHEN vbBankId_num_1 = 3 THEN tmpListPersonal.BankId_1
-                        WHEN vbBankId_num_2 = 3 THEN tmpListPersonal.BankId_2
-                        WHEN vbBankId_num_3 = 3 THEN tmpListPersonal.BankId_3
-                   END AS BankId_3
+                     FROM
+                    (SELECT tmpListPersonal.MovementItemId
+                          , tmpListPersonal.MemberId
+                          , tmpListPersonal.PersonalId
+                          , tmpListPersonal.UnitId
+                          , tmpListPersonal.PositionId
+                          , tmpListPersonal.InfoMoneyId
+                          , tmpListPersonal.PersonalServiceListId
+                          , tmpListPersonal.FineSubjectId
+                          , tmpListPersonal.UnitId_FineSubject
+                            -- вычитаем начисления, а не выплаты
+                          , CASE WHEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0
+                                           -- т.к. в проводках долг с минусом
+                                      THEN -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0)
+                                 ELSE 0
+                            END AS SummCardSecondRecalc
 
-                   -- кто из 1,2,3 на первом месте
-                 , vbBankId_num_1 AS Num_1
-                   -- кто из 1,2,3 на втором месте
-                 , vbBankId_num_2 AS Num_2
-                   -- кто из 1,2,3 на третьем месте
-                 , vbBankId_num_3 AS Num_3
+                            -- подставили на первое место
+                          , CASE WHEN vbBankId_num_1 = 1 THEN tmpListPersonal.BankId_1
+                                 WHEN vbBankId_num_2 = 1 THEN tmpListPersonal.BankId_2
+                                 WHEN vbBankId_num_3 = 1 THEN tmpListPersonal.BankId_3
+                            END AS BankId_1
 
-                   -- ограничение - для 1
-                 , vbSummMax_1 AS SummMax_1
-                   -- ограничение - для 2
-                 , vbSummMax_2 AS SummMax_2
-                   -- ограничение - для 3
-                 , vbSummMax_3 AS SummMax_3
+                            -- подставили на второе место
+                          , CASE WHEN vbBankId_num_1 = 2 THEN tmpListPersonal.BankId_1
+                                 WHEN vbBankId_num_2 = 2 THEN tmpListPersonal.BankId_2
+                                 WHEN vbBankId_num_3 = 2 THEN tmpListPersonal.BankId_3
+                            END AS BankId_2
 
-            FROM tmpListPersonal
-                 LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId            = tmpListPersonal.PersonalId
-                                         AND tmpMIContainer.UnitId                = tmpListPersonal.UnitId
-                                         AND tmpMIContainer.PositionId            = tmpListPersonal.PositionId
-                                         AND tmpMIContainer.InfoMoneyId           = tmpListPersonal.InfoMoneyId
-                                         AND tmpMIContainer.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
-                 LEFT JOIN tmpSummCard ON tmpSummCard.PersonalId            = tmpListPersonal.PersonalId
-                                      AND tmpSummCard.UnitId                = tmpListPersonal.UnitId
-                                      AND tmpSummCard.PositionId            = tmpListPersonal.PositionId
-                                      AND tmpSummCard.InfoMoneyId           = tmpListPersonal.InfoMoneyId
-                                      AND tmpSummCard.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
-                                      AND tmpSummCard.FineSubjectId         = tmpListPersonal.FineSubjectId
-                                      AND tmpSummCard.UnitId_FineSubject     = tmpListPersonal.UnitId_FineSubject
-            WHERE tmpListPersonal.MovementItemId > 0
-               OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
-           ) AS tmpData
-           ) AS tmpData
-           ) AS tmpData
+                            -- подставили на третье место
+                          , CASE WHEN vbBankId_num_1 = 3 THEN tmpListPersonal.BankId_1
+                                 WHEN vbBankId_num_2 = 3 THEN tmpListPersonal.BankId_2
+                                 WHEN vbBankId_num_3 = 3 THEN tmpListPersonal.BankId_3
+                            END AS BankId_3
+
+                            -- кто из 1,2,3 на первом месте
+                          , vbBankId_num_1 AS Num_1
+                            -- кто из 1,2,3 на втором месте
+                          , vbBankId_num_2 AS Num_2
+                            -- кто из 1,2,3 на третьем месте
+                          , vbBankId_num_3 AS Num_3
+
+                            -- ограничение - для 1
+                          , vbSummMax_1 - CASE WHEN vbBankId_num_2 = 1 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
+                                               ELSE 0
+                                          END AS Sum_max_1
+                            -- ограничение - для 2
+                          , vbSummMax_2 - CASE WHEN vbBankId_num_2 = 2 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
+                                               ELSE 0
+                                          END  AS Sum_max_2
+                            -- ограничение - для 3
+                          , vbSummMax_3 - CASE WHEN vbBankId_num_2 = 3 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
+                                               ELSE 0
+                                          END  AS Sum_max_3
+
+                     FROM tmpListPersonal
+                          LEFT JOIN tmpSummCard_otp ON tmpSummCard_otp.MemberId = tmpListPersonal.MemberId
+
+                          LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId            = tmpListPersonal.PersonalId
+                                                  AND tmpMIContainer.UnitId                = tmpListPersonal.UnitId
+                                                  AND tmpMIContainer.PositionId            = tmpListPersonal.PositionId
+                                                  AND tmpMIContainer.InfoMoneyId           = tmpListPersonal.InfoMoneyId
+                                                  AND tmpMIContainer.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
+
+                          LEFT JOIN tmpSummCard ON tmpSummCard.PersonalId            = tmpListPersonal.PersonalId
+                                               AND tmpSummCard.UnitId                = tmpListPersonal.UnitId
+                                               AND tmpSummCard.PositionId            = tmpListPersonal.PositionId
+                                               AND tmpSummCard.InfoMoneyId           = tmpListPersonal.InfoMoneyId
+                                               AND tmpSummCard.PersonalServiceListId = tmpListPersonal.PersonalServiceListId
+                                               AND tmpSummCard.FineSubjectId         = tmpListPersonal.FineSubjectId
+                                               AND tmpSummCard.UnitId_FineSubject     = tmpListPersonal.UnitId_FineSubject
+                     WHERE tmpListPersonal.MovementItemId > 0
+                        OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
+                    ) AS tmpData
+                    ) AS tmpData
+                    ) AS tmpData
+                    )
+
+        -- список с лимитами
+      , tmpList_limit AS (SELECT tmpMI_res.MemberId
+                               , tmpMI_res.Sum_max_1 AS SummMax
+                               , 1 AS num
+                          FROM tmpMI_res
+                          WHERE tmpMI_res.Sum_max_1 > 0
+                          GROUP BY tmpMI_res.MemberId, tmpMI_res.Sum_max_1
+                          HAVING tmpMI_res.Sum_max_1 < SUM (tmpMI_res.SummCard_1)
+       
+                         UNION ALL
+                          SELECT
+                                 tmpMI_res.MemberId
+                               , tmpMI_res.Sum_max_2 AS SummMax
+                               , 2 AS num
+                          FROM tmpMI_res
+                          WHERE tmpMI_res.Sum_max_2 > 0
+                          GROUP BY tmpMI_res.MemberId, tmpMI_res.Sum_max_2
+                          HAVING tmpMI_res.Sum_max_2 < SUM (tmpMI_res.SummCard_2)
+       
+                         UNION ALL
+                          SELECT
+                                 tmpMI_res.MemberId
+                               , tmpMI_res.Sum_max_3 AS SummMax
+                               , 3 AS num
+                          FROM tmpMI_res
+                          WHERE tmpMI_res.Sum_max_3 > 0
+                          GROUP BY tmpMI_res.MemberId, tmpMI_res.Sum_max_3
+                          HAVING tmpMI_res.Sum_max_3 < SUM (tmpMI_res.SummCard_3)
+                         )
+     -- распределили согласно лимитов
+   , tmpList_limit_res AS (SELECT tmpMI_res.*
+                                , tmpList.num
+                                  -- сколько распределяется
+                                , CASE WHEN tmpList.num = 1
+                                            THEN CASE WHEN tmpMI_res.SummCard_1_sum <= tmpList.SummMax
+                                                           -- вся сумма остается
+                                                           THEN tmpMI_res.SummCard_1
+                                                      WHEN tmpMI_res.SummCard_1_sum - tmpMI_res.SummCard_1 <= tmpList.SummMax
+                                                           -- сколько осталось от лимита
+                                                           THEN tmpList.SummMax - (tmpMI_res.SummCard_1_sum - tmpMI_res.SummCard_1)
+                                                      -- ничего не остается
+                                                      ELSE 0
+                                                 END
+                                       ELSE 0
+                                  END AS SummCard_new
+                           FROM tmpMI_res
+                                INNER JOIN tmpList_limit AS tmpList ON tmpList.MemberId = tmpMI_res.MemberId
+                          )
+           -- Результат
+           SELECT tmpMI_res.MovementItemId, tmpMI_res.MemberId, tmpMI_res.PersonalId, tmpMI_res.UnitId, tmpMI_res.PositionId, tmpMI_res.InfoMoneyId
+                , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject, tmpMI_res.SummCardSecondRecalc
+                  --
+                , tmpMI_res.BankId_1, tmpMI_res.BankId_2, tmpMI_res.BankId_3
+                  --
+                , tmpMI_res.Num_1, tmpMI_res.Num_2, tmpMI_res.Num_3
+                  --
+                , tmpMI_res.Sum_max_1, tmpMI_res.Sum_max_2, tmpMI_res.Sum_max_3
+                  --
+                , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_1
+                  END AS SummCard_1
+                  --
+                , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 2
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_2
+                            -- плюс разница из 1 - если для 2 есть банк
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1 AND tmpMI_res.BankId_2 > 0
+                                      THEN tmpMI_res.SummCard_1 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                  END AS SummCard_2
+                  --
+                , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 3
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_3
+                            -- плюс разница из 1 - если для 3 есть банк + если для 2 банк не нашли
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1 AND tmpMI_res.BankId_3 > 0
+                                  -- здесь для 2 банк не нашли
+                                  AND COALESCE (tmpMI_res.BankId_2, 0) = 0
+                                      THEN tmpMI_res.SummCard_1 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                            -- плюс разница из 2 - если для 3 есть банк
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 2 AND tmpMI_res.BankId_3 > 0
+                                      THEN tmpMI_res.SummCard_2 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                  END AS SummCard_3
+
+           FROM tmpMI_res
+                LEFT JOIN tmpList_limit_res ON tmpList_limit_res.PersonalId            = tmpMI_res.PersonalId
+                                   AND tmpList_limit_res.UnitId                = tmpMI_res.UnitId
+                                   AND tmpList_limit_res.PositionId            = tmpMI_res.PositionId
+                                   AND tmpList_limit_res.InfoMoneyId           = tmpMI_res.InfoMoneyId
+                                   AND tmpList_limit_res.PersonalServiceListId = tmpMI_res.PersonalServiceListId
+                                   AND tmpList_limit_res.FineSubjectId         = tmpMI_res.FineSubjectId
+                                   AND tmpList_limit_res.UnitId_FineSubject    = tmpMI_res.UnitId_FineSubject
+
+
           ;
 
 --  RAISE EXCEPTION '<%>', (select count(*) from _tmpMI where _tmpMI.PersonalId = 7412781);
@@ -813,12 +1009,18 @@ END IF;
 
      IF vbUserId = 5 AND 1=0
      THEN
-         RAISE EXCEPTION 'Ошибка.Admin <%>  <%>  <%>  <%>.'
+         RAISE EXCEPTION '<%>   <%>   <%>   <%>'
+       , (select sum (_tmpMI.SummCard_1) from _tmpMI)
+       , (select sum (_tmpMI.SummCard_2) from _tmpMI)
+       , (select sum (_tmpMI.SummCard_3) from _tmpMI)
+       , (select sum (_tmpMI.SummCard_1 + _tmpMI.SummCard_2) from _tmpMI)
+       ;
+         /*RAISE EXCEPTION 'Ошибка.Admin <%>  <%>  <%>  <%>.'
                        , (SELECT SUM (_tmpMI.SummCardSecondRecalc) FROM _tmpMI)
-                       , (SELECT SUM (_tmpMI.SummCard_1) FROM _tmpMI)
-                       , (SELECT SUM (_tmpMI.SummCard_2) FROM _tmpMI)
-                       , (SELECT SUM (_tmpMI.SummCard_3) FROM _tmpMI)
-                        ;
+                       , (SELECT SUM (_tmpMI.SummCard_1) FROM _tmpMI where _tmpMI.MemberId = 919222)
+                       , (SELECT SUM (_tmpMI.SummCard_2) FROM _tmpMI where _tmpMI.MemberId = 919222)
+                       , (SELECT SUM (_tmpMI.SummCardSecondRecalc) FROM _tmpMI where _tmpMI.MemberId = 919222)
+                        ;*/
      END IF;
 
      -- сохраняем элементы
@@ -948,7 +1150,7 @@ END IF;
                                  AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Personal_Main()
     ) AS _tmpMI
      ;
-     
+
 
      -- Проверка
      IF EXISTS (SELECT 1
@@ -1006,8 +1208,8 @@ from _tmpMI where _tmpMI.MemberId = 239655)
 
 -- !!!тест
 -- PERFORM gpComplete_Movement_PersonalService (inMovementId:= inMovementId, inSession:= inSession);
--- RAISE EXCEPTION 'ок' ;
-IF /*vbUserId = 5 and*/ 1=0
+
+IF vbUserId = 5 and 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.test=ok   %'
   , (            SELECT sum (coalesce (MIF_SummCardSecondRecalc.ValueData, 0))
@@ -1023,6 +1225,7 @@ THEN
 ;
 END IF;
 
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1035,3 +1238,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond_num (inMovementId:= 12977959, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUpdate_MI_PersonalService_CardSecond_num (inMovementId:= 27700622 , inSession:= zfCalc_UserAdmin())

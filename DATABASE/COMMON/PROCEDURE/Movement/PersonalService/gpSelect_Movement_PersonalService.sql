@@ -293,7 +293,15 @@ BEGIN
            , Object_Member.ValueData                    AS MemberName 
            
            , Movement_BankSecondNum.Id                  AS MovementId_BankSecondNum
-           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId, MovementDesc_BankSecondNum.ItemName, Movement_BankSecondNum.InvNumber, Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
+           , zfCalc_PartionMovementName (Movement_BankSecondNum.DescId
+                                       , MovementDesc_BankSecondNum.ItemName
+                                       , '(' 
+                                      || (MovementFloat_BankSecond_num.ValueData     :: Integer) :: TVarChar
+                             || ' + ' || (MovementFloat_BankSecondTwo_num.ValueData  :: Integer) :: TVarChar
+                             || ' + ' || (MovementFloat_BankSecondDiff_num.ValueData :: Integer) :: TVarChar
+                                      || ')'
+                                      || ' № ' || Movement_BankSecondNum.InvNumber
+                                       , Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
        FROM tmpMovement
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -519,6 +527,19 @@ BEGIN
                                           AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
             LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id = MLM_BankSecond_num.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_BankSecondNum ON MovementDesc_BankSecondNum.Id = Movement_BankSecondNum.DescId
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecond_num
+                                    ON MovementFloat_BankSecond_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecond_num.DescId = zc_MovementFloat_BankSecond_num()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecondTwo_num
+                                    ON MovementFloat_BankSecondTwo_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecondTwo_num.DescId = zc_MovementFloat_BankSecondTwo_num()
+
+            LEFT JOIN MovementFloat AS MovementFloat_BankSecondDiff_num
+                                    ON MovementFloat_BankSecondDiff_num.MovementId =  Movement_BankSecondNum.Id
+                                   AND MovementFloat_BankSecondDiff_num.DescId = zc_MovementFloat_BankSecondDiff_num()
+
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
       where vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828
@@ -575,4 +596,4 @@ $BODY$
              order by operDate desc
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2024', inEndDate:= '01.02.2024', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')

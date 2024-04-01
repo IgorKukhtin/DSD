@@ -12,7 +12,8 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
      -- возвращаем результат
-     RETURN TRIM ('№ ' || inInvNumber -- CASE WHEN inInvNumber <> '' AND inInvNumber <> '0' THEN '№ ' || inInvNumber ELSE '' END
+     RETURN TRIM (CASE WHEN inDescId = zc_Movement_BankSecondNum() THEN '' ELSE '№ ' END
+               || inInvNumber -- CASE WHEN inInvNumber <> '' AND inInvNumber <> '0' THEN '№ ' || inInvNumber ELSE '' END
                || ' oт '|| zfConvert_DateToString (inOperDate)
                || COALESCE ((SELECT ' <' || CASE WHEN inDescId = -1 * zc_Movement_ProductionUnion()
                                                       THEN 'Пересортица'

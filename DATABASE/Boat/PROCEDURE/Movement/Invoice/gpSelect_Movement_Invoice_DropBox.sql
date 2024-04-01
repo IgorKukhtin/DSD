@@ -60,7 +60,7 @@ BEGIN
                                                            ON MovementBoolean_PostedToDropBox.MovementId = Movement_Invoice.Id
                                                           AND MovementBoolean_PostedToDropBox.DescId = zc_MovementBoolean_PostedToDropBox()
                             WHERE Object_InvoicePdf.DescId = zc_Object_InvoicePdf()
-                              -- НЕ Отложена отправку в DropBox
+                              -- НЕ Отложена отправка в DropBox
                               AND COALESCE (MovementBoolean_FilesNotUploaded.ValueData, FALSE) = FALSE)
 
     SELECT
