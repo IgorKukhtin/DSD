@@ -122,6 +122,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , Color_PartionGoodsDate Integer 
              
              , AmountRemains TFloat
+             , AmountRemains_Weight TFloat
               )
 AS
 $BODY$
@@ -644,6 +645,7 @@ BEGIN
             , tmpData_MI.Color_PartionGoodsDate ::Integer
             
             , 0 ::TFloat AS AmountRemains
+            , 0 ::TFloat AS AmountRemains_Weight
        
      FROM tmpData_MI -- расчет кол-во - мастер
 
@@ -1229,7 +1231,11 @@ BEGIN
 
             , COALESCE (tmpData_MI.Color_PartionGoodsDate, zc_Color_White()) ::Integer AS Color_PartionGoodsDate
             
-            , COALESCE (tmpRemains.Amount,0) ::TFloat AS AmountRemains
+            --, COALESCE (tmpRemains.Amount,0) ::TFloat AS AmountRemains
+
+            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (tmpRemains.Amount,0) ELSE 0 END ::TFloat AS AmountRemains
+            , (COALESCE (tmpRemains.Amount,0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRemains_Weight
+ 
        
      FROM tmpData_MI -- расчет кол-во - мастер
           FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
@@ -1253,7 +1259,7 @@ BEGIN
                                  AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = tmpData_MI.GoodsId
+                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 

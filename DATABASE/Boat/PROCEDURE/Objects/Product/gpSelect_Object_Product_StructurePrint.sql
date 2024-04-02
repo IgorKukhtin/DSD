@@ -121,7 +121,8 @@ BEGIN
 
        -- Результат
        SELECT tmpProduct.*
-            , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            --, LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            , tmpProduct.CIN ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower

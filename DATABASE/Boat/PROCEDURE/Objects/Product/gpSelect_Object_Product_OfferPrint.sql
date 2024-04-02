@@ -60,8 +60,8 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_User_Member
                               ON ObjectLink_User_Member.ObjectId = MLO_Insert.ObjectId
                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
-     WHERE Movement_OrderClient.Id = inMovementId_OrderClient
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId 
+         
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
      -- данные из документа заказа
@@ -138,7 +138,8 @@ BEGIN
             , tmpProduct.BasisWVAT_summ_transport AS BasisWVAT_summ
             , (COALESCE (tmpProduct.BasisWVAT_summ_transport, 0)) AS Summ_total
             ,  COALESCE (tmpOrder.SaleWVAT_summ,0) :: TFloat AS SaleWVAT_summ_order
-            , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            --, LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            , tmpProduct.CIN        ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
@@ -156,7 +157,13 @@ BEGIN
             , tmpInfo.Text_tax      ::TVarChar AS Text1   --**
             , tmpInfo.Text_discount ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '||vbInsertName::TVarChar)     ::TVarChar AS Text3
-
+            --
+            , tmpProduct.ClientName                       ::TVarChar AS Name_Client
+            , COALESCE (ObjectString_Street.ValueData,'') ::TVarChar AS Street_Client
+            , ObjectString_City.ValueData                 ::TVarChar AS City_Client
+            , Object_Country.ValueData                    ::TVarChar AS Country_Client
+            --
+            
             , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   
@@ -186,7 +193,22 @@ BEGIN
           LEFT JOIN (SELECT SUM (tmp.Amount * tmp.OperPriceWithVAT) AS SaleWVAT_summ FROM tmpOrderClient AS tmp WHERE tmp.GoodsDesc <> zc_Object_Product()) AS tmpOrder ON 1 = 1
           
           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
-          LEFT JOIN tmp_OrderInfo ON 1=1
+          LEFT JOIN tmp_OrderInfo ON 1=1 
+          ----
+          LEFT JOIN ObjectString AS ObjectString_Street
+                                 ON ObjectString_Street.ObjectId = tmpProduct.ClientId
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()          
+          LEFT JOIN ObjectLink AS ObjectLink_PLZ
+                               ON ObjectLink_PLZ.ObjectId = tmpProduct.ClientId
+                              AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
+          --LEFT JOIN Object AS Object_PLZ ON Object_PLZ.Id = ObjectLink_PLZ.ChildObjectId
+          LEFT JOIN ObjectString AS ObjectString_City
+                                 ON ObjectString_City.ObjectId = ObjectLink_PLZ.ChildObjectId
+                                AND ObjectString_City.DescId = zc_ObjectString_PLZ_City()
+          LEFT JOIN ObjectLink AS ObjectLink_Country
+                               ON ObjectLink_Country.ObjectId = ObjectLink_PLZ.ChildObjectId
+                              AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
+          LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
        ;
 
      RETURN NEXT Cursor1;
