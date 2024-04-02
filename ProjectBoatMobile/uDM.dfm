@@ -44,6 +44,7 @@ object DM: TDM
   object cdsInventoryList: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = cdsInventoryListAfterScroll
     OnCalcFields = cdsInventoryListCalcFields
     Left = 288
     Top = 312
@@ -94,6 +95,9 @@ object DM: TDM
     object cdsInventoryListTotalCount: TFloatField
       FieldName = 'TotalCount'
     end
+    object cdsInventoryListAmountDiff: TFloatField
+      FieldName = 'AmountDiff'
+    end
     object cdsInventoryListAmountRemains: TFloatField
       FieldName = 'AmountRemains'
     end
@@ -125,6 +129,11 @@ object DM: TDM
       FieldName = 'TotalCountLabel'
       Calculated = True
     end
+    object cdsInventoryListAmountDiffLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountDiffLabel'
+      Calculated = True
+    end
     object cdsInventoryListErasedId: TIntegerField
       FieldKind = fkCalculated
       FieldName = 'ErasedId'
@@ -149,6 +158,7 @@ object DM: TDM
   object cdsGoodsList: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = cdsGoodsListAfterScroll
     Left = 304
     Top = 416
     object cdsGoodsListId: TIntegerField
@@ -256,6 +266,7 @@ object DM: TDM
     Top = 35
   end
   object qryInventoryGoods: TFDQuery
+    AfterScroll = qryInventoryGoodsAfterScroll
     OnCalcFields = qryInventoryGoodsCalcFields
     Connection = conMain
     SQL.Strings = (
@@ -340,6 +351,11 @@ object DM: TDM
     object qryInventoryGoodsTotalCount: TFloatField
       FieldName = 'TotalCount'
     end
+    object qryInventoryGoodsAmountDiff: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'AmountDiff'
+      Calculated = True
+    end
     object qryInventoryGoodsError: TWideStringField
       FieldName = 'Error'
       Size = 500
@@ -357,6 +373,11 @@ object DM: TDM
     object qryInventoryGoodsTotalCountLabel: TWideStringField
       FieldKind = fkCalculated
       FieldName = 'TotalCountLabel'
+      Calculated = True
+    end
+    object qryInventoryGoodsAmountDiffLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountDiffLabel'
       Calculated = True
     end
   end
@@ -539,6 +560,7 @@ object DM: TDM
   object cdsDictList: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = cdsDictListAfterScroll
     Left = 464
     Top = 416
     object cdsDictListId: TIntegerField

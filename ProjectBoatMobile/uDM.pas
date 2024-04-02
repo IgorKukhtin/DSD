@@ -211,6 +211,10 @@ type
     cdsInventoryListErasedId: TIntegerField;
     cdsInventoryItemEditAmountDiff: TFloatField;
     cdsInventoryItemEditTotalCountCalc: TFloatField;
+    qryInventoryGoodsAmountDiffLabel: TWideStringField;
+    cdsInventoryListAmountDiff: TFloatField;
+    cdsInventoryListAmountDiffLabel: TWideStringField;
+    qryInventoryGoodsAmountDiff: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -220,6 +224,10 @@ type
     procedure cdsInventoryItemEditPartNumberChange(Sender: TField);
     procedure cdsInventoryItemEditAfterEdit(DataSet: TDataSet);
     procedure cdsInventoryItemEditCalcFields(DataSet: TDataSet);
+    procedure qryInventoryGoodsAfterScroll(DataSet: TDataSet);
+    procedure cdsInventoryListAfterScroll(DataSet: TDataSet);
+    procedure cdsGoodsListAfterScroll(DataSet: TDataSet);
+    procedure cdsDictListAfterScroll(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -265,7 +273,7 @@ type
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
 
-    function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+    function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer; var ABarCodePref: String) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
@@ -987,6 +995,16 @@ begin
   result := conMain.Connected;
 end;
 
+procedure TDM.cdsDictListAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
+end;
+
+procedure TDM.cdsGoodsListAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
+end;
+
 procedure TDM.cdsInventoryItemEditAfterEdit(DataSet: TDataSet);
 begin
   FGoodsId := DataSet.FieldByName('GoodsId').AsInteger;
@@ -1023,11 +1041,17 @@ begin
   FPartNumber := cdsInventoryItemEdit.FieldByName('PartNumber').AsString;
 end;
 
+procedure TDM.cdsInventoryListAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
+end;
+
 procedure TDM.cdsInventoryListCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
-  DataSet.FieldByName('TotalCountLabel').AsString := 'ИТОГО (введено):';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
+  DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
@@ -1728,7 +1752,7 @@ begin
 end;
 
 { поиск комплектующих по штрихкоду в базе}
-function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer; var ABarCodePref: String) : Boolean;
 var
   StoredProc : TdsdStoredProc;
 begin
@@ -1739,15 +1763,17 @@ begin
 
     StoredProc.StoredProcName := 'gpGet_Goods_MobilebyBarcode';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarcode);
+    StoredProc.Params.AddParam('inBarCode', ftWideString, ptInput, ABarcode);
     StoredProc.Params.AddParam('GoodsId', ftInteger, ptOutput, 0);
     StoredProc.Params.AddParam('CountGoods', ftInteger, ptOutput, 0);
+    StoredProc.Params.AddParam('BarCodePref', ftWideString, ptOutput, '');
 
     try
       StoredProc.Execute(false, false, false, 2);
       AId := StoredProc.ParamByName('GoodsId').Value;
       ACount := StoredProc.ParamByName('CountGoods').Value;
-      Result := True;
+      ABarCodePref := StoredProc.ParamByName('BarCodePref').Value;
+      Result := ACount = 1;
     except
     end;
   finally
@@ -2094,11 +2120,18 @@ begin
   qryInventoryGoods.Open;
 end;
 
+procedure TDM.qryInventoryGoodsAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
+end;
+
 procedure TDM.qryInventoryGoodsCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
-  DataSet.FieldByName('TotalCountLabel').AsString := 'ИТОГО (введено):';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
+  DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
+  DataSet.FieldByName('AmountDiff').AsFloat := DataSet.FieldByName('TotalCount').AsFloat - DataSet.FieldByName('AmountRemains').AsFloat;
 end;
 
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию
@@ -2260,7 +2293,7 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
-      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);
@@ -2295,7 +2328,7 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetUnErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
-      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);

@@ -87,7 +87,6 @@ type
     Label75: TLabel;
     tiInformation: TTabItem;
     Panel17: TPanel;
-    VertScrollBox6: TVertScrollBox;
     lMobileVersion: TLayout;
     Label31: TLabel;
     eMobileVersion: TEdit;
@@ -118,7 +117,7 @@ type
     tiScanBarCode: TTabItem;
     imgCameraScanBarCode: TImage;
     sbIlluminationMode: TSpeedButton;
-    Image9: TImage;
+    imgIlluminationMode: TImage;
     ilPartners: TImageList;
     ilButton: TImageList;
     BindSourceDB1: TBindSourceDB;
@@ -256,10 +255,8 @@ type
     bIIEOpenDictPartionCell: TEditButton;
     Image25: TImage;
     lMain: TLayout;
-    lUseCamera: TLayout;
+    lAddConfig: TLayout;
     Label34: TLabel;
-    rbBarcodeScaner: TRadioButton;
-    rbCameraScaner: TRadioButton;
     bIIEOpenDictGoods: TEditButton;
     Image26: TImage;
     bViewInventory: TSpeedButton;
@@ -291,6 +288,14 @@ type
     btaUnEraseRecord: TButton;
     btaCancel: TButton;
     lwInventoryList: TListView;
+    lUseCamera: TLayout;
+    Label10: TLabel;
+    rbBarcodeScaner: TRadioButton;
+    rbCameraScaner: TRadioButton;
+    cbOpenScanChangingMode: TCheckBox;
+    cbHideScanButton: TCheckBox;
+    cblluminationMode: TCheckBox;
+    cbHideIlluminationButton: TCheckBox;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -342,9 +347,9 @@ type
     procedure bMinusAmountClick(Sender: TObject);
     procedure bUploadClick(Sender: TObject);
     procedure bProductionUnionClick(Sender: TObject);
-    procedure lwDictListChange(Sender: TObject);
-    procedure lwGoodsChange(Sender: TObject);
-    procedure lwInventoryListChange(Sender: TObject);
+    procedure lwDictListSearchChange(Sender: TObject);
+    procedure lwGoodsSearchChange(Sender: TObject);
+    procedure lwInventorySearchListChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure pPasswordClick(Sender: TObject);
     procedure bOrderInternalOkClickClick(Sender: TObject);
@@ -393,11 +398,18 @@ type
     FisTestWebServer: boolean;
     FPasswordLabelClick: Integer;
     FINIFile: string;
-    FPermissionState: boolean;        1
+    FPermissionState: boolean;
     // Ксть сканер Zebra
     FisZebraScaner: boolean;
     // Использовать в любом случае камеру устройства
     FisCameraScaner: boolean;
+    // Открывать сканер при изменении режима
+    FisOpenScanChangingMode: boolean;
+    // Скрывать кнопку подсветки
+    FisHideIlluminationButton: boolean;
+    // Скрывать кнопку сканирования когда есть боковые
+    FisHideScanButton: boolean;
+
     // Обработка штрих кода камерой
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
@@ -415,6 +427,7 @@ type
     FIsUpdate: Boolean;
     FOldControl: TControl;
     FCuurControl: TControl;
+    FBarCodePref: String;
 
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -434,7 +447,7 @@ type
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
 
-    {$IFDEF ANDROID}
+    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
     {$ENDIF}
 
@@ -512,10 +525,11 @@ begin
   FisNextInventScan := False;
   FisInventScanOk := False;
   FDataSetRefresh := dsrNone;
+  FBarCodePref := '0000';
 
-  GetSearshBox(lwDictList).OnChangeTracking := lwDictListChange;
-  GetSearshBox(lwGoods).OnChangeTracking := lwGoodsChange;
-  GetSearshBox(lwInventoryList).OnChangeTracking := lwInventoryListChange;
+  GetSearshBox(lwDictList).OnChangeTracking := lwDictListSearchChange;
+  GetSearshBox(lwGoods).OnChangeTracking := lwGoodsSearchChange;
+  GetSearshBox(lwInventoryList).OnChangeTracking := lwInventorySearchListChange;
 
   bInventScan.StyledSettings := [TStyledSetting.Family];
   bInventScanAmount.StyledSettings := [TStyledSetting.Family];
@@ -569,6 +583,10 @@ begin
     FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
     FisCameraScaner := SettingsFile.ReadBool('DataWedge', 'isCameraScaner', False);
     FDateDownloadDict := SettingsFile.ReadDateTime('Params', 'DateDownloadDict', IncDay(Now, - 2));
+
+    FisOpenScanChangingMode := SettingsFile.ReadBool('Params', 'isOpenScanChangingMode', True);
+    FisHideIlluminationButton := SettingsFile.ReadBool('Params', 'isHideIlluminationButton', False);
+    FisHideScanButton := SettingsFile.ReadBool('Params', 'isHideScanButton', False);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -592,15 +610,6 @@ begin
     lMain.Scale.y := lMain.Scale.x;
   end;
   {$ENDIF}
-
-  if FisZebraScaner and not FisCameraScaner then
-  begin
-    FDataWedgeBarCode.SetIllumination;
-    if FDataWedgeBarCode.isIllumination then
-      Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
-    else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
-  end;
-
 end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
@@ -747,7 +756,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
 function TfrmMain.HandleAppEvent(AAppEvent: TApplicationEvent;
   AContext: TObject): Boolean;
 begin
@@ -901,12 +910,15 @@ end;
 
 procedure TfrmMain.SetInventScanButton;
 begin
+  bInventScan.ImageIndex := -1;
   bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  bInventScanAmount.ImageIndex := -1;
   bInventScanAmount.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScanAmount.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
+  bInventScanSN.ImageIndex := -1;
   bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
@@ -914,16 +926,19 @@ begin
 
   case FInventScanType of
     0 : begin
+          bInventScan.ImageIndex := 2;
           bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         end;
     1 : begin
+          bInventScanAmount.ImageIndex := 2;
           bInventScanAmount.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanAmount.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         end;
     2 : begin
+          bInventScanSN.ImageIndex := 2;
           bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
@@ -1066,11 +1081,23 @@ begin
       pProductionUnion.Visible := pOrderInternal.Visible;
     end;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion)  then
-      sbScan.Visible := true
-    else sbScan.Visible := false;
-    sbIlluminationMode.Visible := (sbScan.Visible and FisZebraScaner and not FisCameraScaner) or
-                                  ((tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash);
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion) then
+    begin
+      sbScan.Visible := FisZebraScaner and not FisCameraScaner and not FisHideScanButton or not FisZebraScaner or FisCameraScaner;
+    end else sbScan.Visible := false;
+
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion) or (tcMain.ActiveTab = tiScanBarCode) then
+    begin
+      sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash or
+                                    (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash);
+    end else sbIlluminationMode.Visible := False;
+
+    if sbIlluminationMode.Visible then
+    begin
+      if FDataWedgeBarCode.isIllumination then
+        imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+      else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+    end;
   end;
 end;
 
@@ -1135,11 +1162,25 @@ begin
     rbBarcodeScaner.IsChecked:= not FisCameraScaner;
     rbCameraScaner.IsChecked:= FisCameraScaner;
   end else lUseCamera.Visible := False;
+  cbHideScanButton.Visible := lUseCamera.Visible;
+
+  if cbHideScanButton.Visible then
+    lAddConfig.Height := cbHideScanButton.Position.Y + cbHideScanButton.Height+ 2
+  else lAddConfig.Height := cbHideIlluminationButton.Position.Y + cbHideIlluminationButton.Height + 2;
+
+  // Открывать сканер при изменении режима
+  cbOpenScanChangingMode.IsChecked := FisOpenScanChangingMode;
+  // Скрывать кнопку подсветки
+  cbHideIlluminationButton.IsChecked := FisHideIlluminationButton;
+  // Скрывать кнопку сканирования когда есть боковые
+  cbHideScanButton.IsChecked := FisHideScanButton;
+  // Поссветка включена
+  cblluminationMode.IsChecked := FDataWedgeBarCode.isIllumination;
 
   SwitchToForm(tiInformation, nil);
 end;
 
-procedure TfrmMain.lwDictListChange(Sender: TObject);
+procedure TfrmMain.lwDictListSearchChange(Sender: TObject);
 begin
   TimerRefresh.Enabled := False;
   FDataSetRefresh := dsrDict;
@@ -1170,7 +1211,7 @@ begin
   // Справочники
   if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty then
   begin
-    btaCancel.Visible := True;
+    //btaCancel.Visible := True;
     btaClose.Visible := True;
     btaOk.Visible := bDictChoice.Visible;
     ppActions.Height := 2;
@@ -1183,7 +1224,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.lwGoodsChange(Sender: TObject);
+procedure TfrmMain.lwGoodsSearchChange(Sender: TObject);
 begin
   TimerRefresh.Enabled := False;
   DM.FilterGoods := TSearchBox(Sender).Text;
@@ -1215,7 +1256,7 @@ begin
   // Справочник комплектующих
   if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty then
   begin
-    btaCancel.Visible := True;
+    //btaCancel.Visible := True;
     btaClose.Visible := True;
     btaOk.Visible := bGoodsChoice.Visible;
     ppActions.Height := 2;
@@ -1228,7 +1269,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.lwInventoryListChange(Sender: TObject);
+procedure TfrmMain.lwInventorySearchListChange(Sender: TObject);
 begin
   TimerRefresh.Enabled := False;
   FDataSetRefresh := dsrInventoryList;
@@ -1488,9 +1529,9 @@ procedure TfrmMain.bInventScanClick(Sender: TObject);
 begin
   FGoodsId := 0;
   FInventScanType := TSpinEditButton(Sender).Tag;
-  FisNextInventScan := True;
+  FisNextInventScan := not FisZebraScaner or FisCameraScaner;
   SetInventScanButton;
-  sbScanClick(Sender);
+  if FisOpenScanChangingMode then sbScanClick(Sender);
 end;
 
 // Выбор комплектующего
@@ -1672,14 +1713,32 @@ begin
     DM.cdsOrderInternal.Close;
   end else if tcMain.ActiveTab = tiInformation then
   begin
-    if lUseCamera.Visible and (FisCameraScaner <> rbCameraScaner.IsChecked) then
+    if (FisCameraScaner <> rbCameraScaner.IsChecked) or
+       (FisOpenScanChangingMode <> cbOpenScanChangingMode.IsChecked) or
+       (FisHideIlluminationButton <> cbHideIlluminationButton.IsChecked) or
+       (FisHideScanButton <> cbHideScanButton.IsChecked) or
+       (FDataWedgeBarCode.isIllumination <> cblluminationMode.IsChecked) then
     begin
+
+      // Использовать в любом случае камеру устройства
       FisCameraScaner := rbCameraScaner.IsChecked;
+      // Открывать сканер при изменении режима
+      FisOpenScanChangingMode := cbOpenScanChangingMode.IsChecked;
+      // Скрывать кнопку подсветки
+      FisHideIlluminationButton := cbHideIlluminationButton.IsChecked;
+      // Скрывать кнопку сканирования когда есть боковые
+      FisHideScanButton := cbHideScanButton.IsChecked;
+      // Поссветка включена
+      FDataWedgeBarCode.isIllumination := cblluminationMode.IsChecked;
 
       // сохранение использование сканера в ini файле
       SettingsFile := TIniFile.Create(FINIFile);
       try
         SettingsFile.WriteBool('DataWedge', 'isCameraScaner', FisCameraScaner);
+        SettingsFile.WriteBool('DataWedge', 'isIllumination', FDataWedgeBarCode.isIllumination);
+        SettingsFile.WriteBool('Params', 'isOpenScanChangingMode', FisOpenScanChangingMode);
+        SettingsFile.WriteBool('Params', 'isHideIlluminationButtonr', FisHideIlluminationButton);
+        SettingsFile.WriteBool('Params', 'isHideScanButton', FisHideScanButton);
       finally
         FreeAndNil(SettingsFile);
       end
@@ -1695,8 +1754,8 @@ begin
   FDataWedgeBarCode.isIllumination := not FDataWedgeBarCode.isIllumination;
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.SetIllumination;
   if FDataWedgeBarCode.isIllumination then
-    Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
-  else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+    imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+  else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
 
   if (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash then
   begin
@@ -1726,8 +1785,8 @@ begin
   begin
     FDataWedgeBarCode.SetIllumination;
     if FDataWedgeBarCode.isIllumination then
-      Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
-    else Image9.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
+      imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
+    else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
     FisBecomeForeground := False;
   end;
 
@@ -2136,6 +2195,7 @@ procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: Stri
 begin
 
   Data_String := AData_String;
+  FisNextInventScan := not FisZebraScaner or FisCameraScaner;
 
   if Length(Data_String) > 12 then
     Data_String := Copy(Data_String, 1, Length(Data_String) - 1);
@@ -2143,7 +2203,7 @@ begin
   if Data_String = '' then Exit;
 
   // С начало ищем на сервере независимо от режима работы
-  if DM.GetGoodsBarcode(Data_String, nId, nCount) then
+  if DM.GetGoodsBarcode(Data_String, nId, nCount, FBarCodePref) then
   begin
     if nCount = 1 then
     begin
@@ -2163,9 +2223,9 @@ begin
   if not DM.cdsGoodsEAN.Active then DM.LoadGoodsEAN;
 
   try
-    if COPY(Data_String, 1, 4) = '2210' then
+    if COPY(Data_String, 1, Length(FBarCodePref)) = FBarCodePref then
     begin
-      if not TryStrToInt(COPY(Data_String, 5, 8), Code) then
+      if not TryStrToInt(COPY(Data_String, Length(FBarCodePref), 12 - Length(FBarCodePref)), Code) then
       begin
         ShowMessage('Не правельный штрихкод ' + AData_String);
         Exit;

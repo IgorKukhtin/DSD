@@ -11,6 +11,7 @@ RETURNS TABLE (GoodsId            Integer
              , GoodsName          TVarChar
              , Article            TVarChar
              , CountGoods         Integer
+             , BarCodePref        TVarChar
               )
 AS
 $BODY$
@@ -50,6 +51,7 @@ BEGIN
               , Object_Goods.ValueData                      AS GoodsName
               , ObjectString_Article.ValueData              AS Article
               , vbCountGoods                                AS CountGoods
+              , zc_BarCodePref_Object()::TVarChar           AS BarCodePref
          FROM Object AS Object_Goods
               LEFT JOIN ObjectString AS ObjectString_Article
                                      ON ObjectString_Article.ObjectId = Object_Goods.Id
@@ -59,14 +61,15 @@ BEGIN
         
      ELSE 
 
-       RAISE EXCEPTION 'Ошибка.Значение Ш/К = <%> не надено.', inBarCode;
+       -- RAISE EXCEPTION 'Ошибка.Значение Ш/К = <%> не надено.', inBarCode;
 
        RETURN QUERY
          SELECT 0::Integer                          AS GoodsId
               , NULL::Integer                       AS GoodsCode
               , NULL::TVarChar                      AS GoodsName
               , NULL::TVarChar                      AS Article
-              , COALESCE(vbCountGoods, 0)           AS CountGoods;
+              , COALESCE(vbCountGoods, 0)           AS CountGoods
+              , zc_BarCodePref_Object()::TVarChar   AS BarCodePref;
 
      END IF;
 
@@ -81,4 +84,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_Goods_MobilebyBarcode(inBarCode := '2210001977548', inSession := '5');
+-- select * from gpGet_Goods_MobilebyBarcode(inBarCode := '0000001977548', inSession := '5');
