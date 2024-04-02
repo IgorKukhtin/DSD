@@ -140,7 +140,6 @@ type
     LinkControlToField3: TLinkControlToField;
     LinkControlToField4: TLinkControlToField;
     LinkControlToField5: TLinkControlToField;
-    lwInventoryList: TListView;
     BindSourceDB3: TBindSourceDB;
     LinkListControlToField1: TLinkListControlToField;
     tiInventoryScan: TTabItem;
@@ -185,7 +184,6 @@ type
     Label17: TLabel;
     lGoodsSelect: TLabel;
     pPassword: TPanel;
-    ppWebServer: TPopup;
     Rectangle1: TRectangle;
     pOrderInternal: TPanel;
     Label20: TLabel;
@@ -267,12 +265,7 @@ type
     bViewInventory: TSpeedButton;
     bInventScanSN: TSpeedButton;
     ppActions: TPopup;
-    Rectangle2: TRectangle;
-    Panel6: TPanel;
-    rbEditRecord: TRadioButton;
-    rbEraseRecord: TRadioButton;
-    rbErrorInfo: TRadioButton;
-    rbOk: TRadioButton;
+    RectangleActions: TRectangle;
     rbWebServerTest: TRadioButton;
     rbWebServerMain: TRadioButton;
     Memo1: TMemo;
@@ -283,16 +276,21 @@ type
     pbILOrderBy: TPopupBox;
     llwInventoryList: TLabel;
     TimerRefresh: TTimer;
-    rbCancel: TRadioButton;
-    rbUnEraseRecord: TRadioButton;
-    rbInsertRecord: TRadioButton;
     LinkControlToField15: TLinkControlToField;
     ppInfoView: TPopup;
-    Panel7: TPanel;
     Rectangle3: TRectangle;
     lInfoView: TLabel;
     TimerInfoView: TTimer;
-    rbClose: TRadioButton;
+    ppWebServer: TPopup;
+    btaEditRecord: TButton;
+    btaErrorInfo: TButton;
+    btaEraseRecord: TButton;
+    btaInsertRecord: TButton;
+    btaOk: TButton;
+    btaClose: TButton;
+    btaUnEraseRecord: TButton;
+    btaCancel: TButton;
+    lwInventoryList: TListView;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -364,11 +362,7 @@ type
     procedure bIIEOpenDictGoodsClick(Sender: TObject);
     procedure rrInventScanSNClick(Sender: TObject);
     procedure bViewInventoryClick(Sender: TObject);
-    procedure lwMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Single);
-    procedure lwMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Single);
-    procedure rbCancelClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
     procedure rbWebServerClick(Sender: TObject);
     procedure pbILErasedChange(Sender: TObject);
     procedure TimerRefreshTimer(Sender: TObject);
@@ -376,6 +370,16 @@ type
     procedure TimerInfoViewTimer(Sender: TObject);
     procedure lwInventoryListGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwInventoryListDblClick(Sender: TObject);
+    procedure lwInventoryScanDblClick(Sender: TObject);
+    procedure lwInventoryScanGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwDictListGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwGoodsGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwDictListDblClick(Sender: TObject);
+    procedure lwGoodsDblClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -389,7 +393,7 @@ type
     FisTestWebServer: boolean;
     FPasswordLabelClick: Integer;
     FINIFile: string;
-    FPermissionState: boolean;
+    FPermissionState: boolean;        1
     // Ксть сканер Zebra
     FisZebraScaner: boolean;
     // Использовать в любом случае камеру устройства
@@ -405,10 +409,6 @@ type
 
     FDictUpdateDataSet: TDataSet;
     FDictUpdateField: String;
-
-    FTouchDateTime: TDateTime;
-    FTouch: Boolean;
-    FTouchX, FTouchY: Single;
 
     FDataSetRefresh: TDataSetRefresh;
 
@@ -1146,12 +1146,86 @@ begin
   TimerRefresh.Enabled := True;
 end;
 
+procedure TfrmMain.lwDictListDblClick(Sender: TObject);
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwDictListGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwDictListGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Справочники
+  if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaClose.Visible := True;
+    btaOk.Visible := bDictChoice.Visible;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
 procedure TfrmMain.lwGoodsChange(Sender: TObject);
 begin
   TimerRefresh.Enabled := False;
   DM.FilterGoods := TSearchBox(Sender).Text;
   FDataSetRefresh := dsrGoods;
   TimerRefresh.Enabled := True;
+end;
+
+procedure TfrmMain.lwGoodsDblClick(Sender: TObject);
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwGoodsGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwGoodsGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Справочник комплектующих
+  if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaClose.Visible := True;
+    btaOk.Visible := bGoodsChoice.Visible;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
 end;
 
 procedure TfrmMain.lwInventoryListChange(Sender: TObject);
@@ -1161,9 +1235,80 @@ begin
   TimerRefresh.Enabled := True;
 end;
 
+procedure TfrmMain.lwInventoryListDblClick(Sender: TObject);
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwInventoryListGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
 procedure TfrmMain.lwInventoryListGesture(Sender: TObject;
   const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
 begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование инвентаризации
+  if (tcMain.ActiveTab = tiInventory) and DM.cdsInventoryList.Active and not DM.cdsInventoryList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := not DM.cdsInventoryListisErased.AsBoolean;
+    btaUnEraseRecord.Visible := DM.cdsInventoryListisErased.AsBoolean;
+    btaEditRecord.Visible :=  not DM.cdsInventoryListisErased.AsBoolean;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
+procedure TfrmMain.lwInventoryScanDblClick(Sender: TObject);
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwInventoryScanGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwInventoryScanGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование в сканированиях инвентаризации
+  if (tcMain.ActiveTab = tiInventoryScan) and DM.qryInventoryGoods.Active and not DM.qryInventoryGoods.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaErrorInfo.Visible := DM.qryInventoryGoodsError.AsString <> '';
+    btaEraseRecord.Visible := True;
+    btaEditRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
 end;
 
 // начитка информации справочника комплектующих
@@ -1813,92 +1958,6 @@ begin
     SwitchToForm(tiInventoryScan, nil);
 end;
 
-procedure TfrmMain.lwMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Single);
-begin
-  if not ppActions.IsOpen then
-  begin
-    FTouchDateTime := Now;
-    if (ssLeft in Shift) or (ssTouch in Shift) then FTouch := True
-    else FTouch := False;
-    FTouchX := X; FTouchY:= Y;
-  end else ppActions.IsOpen := False;
-end;
-
-procedure TfrmMain.lwMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Single);
-var I: Integer;
-begin
-
-  if (FTouchX = X) and (FTouchY = Y) and FTouch and ((ssLeft in Shift) or (ssTouch in Shift)) and (MilliSecondsBetween(FTouchDateTime, Now) > 400) then
-  begin
-    // Сскроем все
-    for I := 0 to ComponentCount - 1 do
-      if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
-        TRadioButton(Components[I]).Visible := TRadioButton(Components[I]).Name = rbCancel.Name;
-
-    // Справочник комплектующих
-    if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty then
-    begin
-      rbOk.Visible := bGoodsChoice.Visible;
-      rbClose.Visible := True;
-      ppActions.Height := 6;
-      for I := 0 to ComponentCount - 1 do
-        if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
-        begin
-          TRadioButton(Components[I]).IsChecked := False;
-          ppActions.Height := ppActions.Height + TRadioButton(Components[I]).Height;
-        end;
-      ppActions.IsOpen := True;
-    end;
-    // Справочники
-    if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty then
-    begin
-      rbOk.Visible := bDictChoice.Visible;
-      rbClose.Visible := True;
-      ppActions.Height := 6;
-      for I := 0 to ComponentCount - 1 do
-        if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
-        begin
-          TRadioButton(Components[I]).IsChecked := False;
-          ppActions.Height := ppActions.Height + TRadioButton(Components[I]).Height;
-        end;
-      ppActions.IsOpen := True;
-    end;
-    // Редактирование в сканированиях инвентаризации
-    if (tcMain.ActiveTab = tiInventoryScan) and DM.qryInventoryGoods.Active and not DM.qryInventoryGoods.IsEmpty then
-    begin
-      rbEditRecord.Visible := True;
-      rbEraseRecord.Visible := True;
-      rbErrorInfo.Visible := DM.qryInventoryGoodsError.AsString <> '';
-      ppActions.Height := 6;
-      for I := 0 to ComponentCount - 1 do
-        if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
-        begin
-          TRadioButton(Components[I]).IsChecked := False;
-          ppActions.Height := ppActions.Height + TRadioButton(Components[I]).Height;
-        end;
-      ppActions.IsOpen := True;
-    end;
-    // Редактирование инвентаризации
-    if (tcMain.ActiveTab = tiInventory) and DM.cdsInventoryList.Active and not DM.cdsInventoryList.IsEmpty then
-    begin
-      rbEditRecord.Visible :=  not DM.cdsInventoryListisErased.AsBoolean;
-      rbEraseRecord.Visible := not DM.cdsInventoryListisErased.AsBoolean;
-      rbUnEraseRecord.Visible := DM.cdsInventoryListisErased.AsBoolean;
-      ppActions.Height := 6;
-      for I := 0 to ComponentCount - 1 do
-        if (Components[I] is TRadioButton) and TRadioButton(Components[I]).Visible and (TRadioButton(Components[I]).Parent = Rectangle2) then
-        begin
-          TRadioButton(Components[I]).IsChecked := False;
-          ppActions.Height := ppActions.Height + TRadioButton(Components[I]).Height;
-        end;
-      ppActions.IsOpen := True;
-    end;
-  end;
-  FTouch := False;
-end;
-
 procedure TfrmMain.OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
 begin
   with TListViewItem(TAppearanceListViewItems(lwBarCodeResult.Items.AddItem(0))) do
@@ -1987,49 +2046,49 @@ begin
   end;
 end;
 
-procedure TfrmMain.rbCancelClick(Sender: TObject);
+procedure TfrmMain.btnCancelClick(Sender: TObject);
 begin
   ppActions.IsOpen := False;
 
   if (tcMain.ActiveTab = tiGoods) then
   begin
-    if TRadioButton(Sender).Tag = 5 then bGoodsChoiceClick(Sender);
+    if TButton(Sender).Tag = 5 then bGoodsChoiceClick(Sender);
   end else if (tcMain.ActiveTab = tiDictList) then
   begin
-    if TRadioButton(Sender).Tag = 5 then bDictChoiceClick(Sender);
+    if TButton(Sender).Tag = 5 then bDictChoiceClick(Sender);
   end else if (tcMain.ActiveTab = tiInventoryScan) then
   begin
     // Изменить позицию комплектующих
-    if TRadioButton(Sender).Tag = 1 then
+    if TButton(Sender).Tag = 1 then
     begin
       ShowEditInventoryItemEdit;
     end else
     // Удаление позиции комплектующих
-    if TRadioButton(Sender).Tag = 2 then
+    if TButton(Sender).Tag = 2 then
       TDialogService.MessageDialog('Удалить комплектующую "' + DM.qryInventoryGoodsGoodsName.AsString +
            '" подготовленную к вставке в инвентаризацию ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
     else
     // Информация об ошибке
-    if TRadioButton(Sender).Tag = 4  then
+    if TButton(Sender).Tag = 4  then
     begin
        ShowMessage(DM.qryInventoryGoodsError.AsString);
     end;
   end else if (tcMain.ActiveTab = tiInventory) then
   begin
     // Изменить позицию комплектующих
-    if TRadioButton(Sender).Tag = 1 then
+    if TButton(Sender).Tag = 1 then
     begin
       ShowEditInventoryListEdit;
     end else
     // Удаление позиции комплектующего
-    if TRadioButton(Sender).Tag = 2 then
+    if TButton(Sender).Tag = 2 then
       TDialogService.MessageDialog('Удалить комплектующее "' + DM.qryInventoryGoodsGoodsName.AsString +
            '" из инвентаризации ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryList)
     else
     // Востановление позиции комплектующего
-    if TRadioButton(Sender).Tag = 3  then
+    if TButton(Sender).Tag = 3  then
     begin
       TDialogService.MessageDialog('Отменить удаление комплектующего "' + DM.qryInventoryGoodsGoodsName.AsString +
            '" из инвентаризации ?',
@@ -2037,7 +2096,7 @@ begin
     end;
   end;
 
-  if (TRadioButton(Sender).Tag = 7) and sbBack.Visible  then sbBackClick(Sender);
+  if (TButton(Sender).Tag = 7) and sbBack.Visible  then sbBackClick(Sender);
 end;
 
 procedure TfrmMain.rbWebServerClick(Sender: TObject);
