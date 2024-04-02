@@ -85,7 +85,10 @@ BEGIN
      
      vbUser_all:= EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId      = zc_Enum_Role_Admin()
                     UNION SELECT 1 AS Id FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND AccessKeyId = zc_Enum_Process_AccessKey_CashAll()
-                         );
+                         )
+                  -- Касса карта Любарского Г.О. + Касса карта Сохбатовой Е.
+              AND inCashId NOT IN (10575420, 10575421)
+               ;
 
 
 if vbUserId <> 14599 or 1=1
