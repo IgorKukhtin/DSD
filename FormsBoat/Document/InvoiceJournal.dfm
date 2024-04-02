@@ -2964,8 +2964,8 @@
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Invoice'
-    Left = 464
-    Top = 128
+    Left = 456
+    Top = 120
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
