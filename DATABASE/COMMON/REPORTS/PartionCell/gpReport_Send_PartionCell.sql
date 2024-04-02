@@ -1113,7 +1113,10 @@ BEGIN
             , Object_Measure.ValueData                   AS MeasureName
             , Object_GoodsKind.Id                        AS GoodsKindId
             , Object_GoodsKind.ValueData                 AS GoodsKindName
-            , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate)   :: TDateTime AS PartionGoodsDate
+            , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) = zc_DateStart()
+                        THEN NULL
+                   ELSE COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate)
+              END :: TDateTime AS PartionGoodsDate
               --
             , tmpData.PartionCellId_1  :: Integer
             , tmpData.PartionCellId_2  :: Integer
