@@ -59,7 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+    {
     LoadReportFromFile('PrintMovement_IncomePrice', ReportPath + '\PrintMovement_IncomePrice.fr3');
     exit;
 
@@ -77,7 +77,7 @@ begin
     LoadReportFromFile('PrintMovement_Invoice_Master', ReportPath + '\PrintMovement_Invoice_Master.fr3');
     exit;
 
-    {
+
     LoadReportFromFile('PrintMovement_Invoice', ReportPath + '\PrintMovement_Invoice.fr3');
     exit;
 
@@ -94,10 +94,10 @@ begin
     exit;
 
     LoadReportFromFile('Отчет Движение по комплектующим (партия заказ)', ReportPath + '\Отчет Движение по комплектующим (партия заказ).fr3');
-    }
+
     LoadReportFromFile('Отчет Движение по комплектующим (кол-во)', ReportPath + '\Отчет Движение по комплектующим (кол-во).fr3');
     exit;
-    {
+
     LoadReportFromFile('Отчет Движение по комплектующим (вх цена)', ReportPath + '\Отчет Движение по комплектующим (вх цена).fr3');
 
 
@@ -114,7 +114,7 @@ begin
     LoadReportFromFile('PrintMovement_OrderClientBarcode', ReportPath + '\PrintMovement_OrderClientBarcode.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionPersonal', ReportPath + '\PrintMovement_ProductionPersonal.fr3');
-    }
+
     LoadReportFromFile('PrintReceiptGoods_Structure', ReportPath + '\PrintReceiptGoods_Structure.fr3');
     //LoadReportFromFile('PrintReceiptProdModel_StructureGoods', ReportPath + '\PrintReceiptProdModel_StructureGoods.fr3');
     LoadReportFromFile('PrintReceiptProdModelGoods_Structure', ReportPath + '\PrintReceiptProdModelGoods_Structure.fr3');
@@ -124,7 +124,9 @@ begin
 
     LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
     LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
+     }
     LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');
+    exit;
     LoadReportFromFile('PrintUser_Badge', ReportPath + '\PrintUser_Badge.fr3');
 //  LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');
 //  LoadReportFromFile('Анализ продаж (группа)', ReportPath + '\Анализ продаж (группа).fr3');

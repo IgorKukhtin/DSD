@@ -46,6 +46,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -71,6 +76,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountRemains_Weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -247,15 +257,27 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Width = 58
           end
           object AmountRemains: TcxGridDBColumn
-            Caption = #1056#1072#1089#1095'. '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1056#1072#1089#1095'. '#1086#1089#1090#1072#1090#1086#1082' ('#1096#1090'.)'
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1110#1081' '#1086#1089#1090#1072#1090#1086#1082
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1110#1081' '#1086#1089#1090#1072#1090#1086#1082', '#1096#1090
             Options.Editing = False
             Width = 70
+          end
+          object AmountRemains_Weight: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1086#1089#1090#1072#1090#1086#1082' ('#1074#1077#1089')'
+            DataBinding.FieldName = 'AmountRemains_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090#1085#1110#1081' '#1086#1089#1090#1072#1090#1086#1082', '#1074#1077#1089
+            Options.Editing = False
+            Width = 58
           end
           object isClose_value_min: TcxGridDBColumn
             Caption = #1045#1089#1090#1100' '#1079#1072#1082#1088#1099#1090#1080#1103
