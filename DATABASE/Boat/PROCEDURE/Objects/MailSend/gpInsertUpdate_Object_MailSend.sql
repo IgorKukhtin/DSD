@@ -3,12 +3,12 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MailSend (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MailSend(
- INOUT ioId                       Integer   ,    -- Ключ объекта <> 
- INOUT ioCode                     Integer   ,    -- Код объекта <> 
+ INOUT ioId                       Integer   ,    -- Ключ объекта <>
+ INOUT ioCode                     Integer   ,    -- Код объекта <>
     IN inName                     TVarChar  ,    -- Название объекта <>
     IN inComment                  TVarChar  ,    -- Примечание
-    IN inMailKindId               Integer   ,    -- 
-    IN inUserId                   Integer   ,    -- 
+    IN inMailKindId               Integer   ,    --
+    IN inUserId                   Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -25,7 +25,7 @@ BEGIN
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 
    -- Если код не установлен, определяем его как последний+1
-   ioCode:=lfGet_ObjectCode (ioCode, zc_Object_User()); 
+   ioCode:=lfGet_ObjectCode (ioCode, zc_Object_User());
 
    -- проверка прав уникальности для свойства <Наименование >
    --PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_MailSend(), inName, vbUserId);
@@ -35,7 +35,7 @@ BEGIN
 
    -- сохранили Примечание
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MailSend_Comment(), ioId, inComment);
-   
+
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_MailSend_MailKind(), ioId, inMailKindId);
 
@@ -51,7 +51,7 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

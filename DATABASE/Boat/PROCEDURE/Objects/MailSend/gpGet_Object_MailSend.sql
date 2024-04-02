@@ -5,12 +5,12 @@ DROP FUNCTION IF EXISTS gpGet_Object_MailSend (Integer, TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_Object_MailSend(
     IN inId          Integer,       -- Подразделения
     IN inSession     TVarChar       -- сессия пользователя
-) 
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Comment TVarChar
              , MailKindId Integer, MailKindName TVarChar
              , UserId Integer, UserName TVarChar
- ) 
+ )
 AS
 $BODY$
 BEGIN
@@ -27,13 +27,13 @@ BEGIN
            , CAST ('' as TVarChar)  AS Name
            , CAST ('' as TVarChar)  AS Comment
            , CAST (0 as Integer)    AS MailKindId
-           , CAST ('' as TVarChar)  AS MailKindName      
+           , CAST ('' as TVarChar)  AS MailKindName
            , CAST (0 as Integer)    AS UserId
-           , CAST ('' as TVarChar)  AS UserName 
+           , CAST ('' as TVarChar)  AS UserName
        ;
    ELSE
        RETURN QUERY
-       SELECT 
+       SELECT
              Object_MailSend.Id              AS Id
            , Object_MailSend.ObjectCode      AS Code
            , Object_MailSend.ValueData       AS Name

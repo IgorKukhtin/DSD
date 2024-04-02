@@ -1,4 +1,4 @@
--- Function: gpUpdate_Object_isErased_MailSend (Integer, TVarChar) 
+-- Function: gpUpdate_Object_isErased_MailSend (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUpdate_Object_isErased_MailSend (Integer, Boolean, TVarChar);
 
