@@ -215,6 +215,7 @@ type
     cdsInventoryListAmountDiff: TFloatField;
     cdsInventoryListAmountDiffLabel: TWideStringField;
     qryInventoryGoodsAmountDiff: TFloatField;
+    cdsInventoryListOrdUser: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);

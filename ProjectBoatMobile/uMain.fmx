@@ -440,7 +440,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 6
+        TabIndex = 8
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -17673,7 +17673,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -18495,7 +18495,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -18844,7 +18844,7 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 109.000000000000000000
+                Appearance.Width = 94.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
@@ -18879,9 +18879,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 102.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 112.000000000000000000
+                Appearance.PlaceOffset.X = 95.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
               item
@@ -18890,9 +18890,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
+                Appearance.Width = 91.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 216.000000000000000000
+                Appearance.PlaceOffset.X = 223.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
               item
@@ -18958,6 +18958,17 @@
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 264.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'OrdUser'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 25.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 197.000000000000000000
+                Appearance.PlaceOffset.Y = 106.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -21449,6 +21460,10 @@
         item
           SourceMemberName = 'AmountDiff'
           ControlMemberName = 'AmountDiff'
+        end
+        item
+          SourceMemberName = 'OrdUser'
+          ControlMemberName = 'OrdUser'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

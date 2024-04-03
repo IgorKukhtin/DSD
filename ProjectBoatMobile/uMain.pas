@@ -1041,8 +1041,6 @@ begin
     if tcMain.ActiveTab = tiInventory then
     begin
       lCaption.Text := 'Инвентаризация';
-      GetSearshBox(lwInventoryList).SetFocus;
-      GetSearshBox(lwInventoryList).SelectAll;
     end else
     if tcMain.ActiveTab = tiInventoryScan then
     begin
@@ -1482,6 +1480,8 @@ begin
    DM.cdsInventoryItemEditTotalCount.AsFloat := DM.cdsInventoryListTotalCount.AsFloat - DM.cdsInventoryItemEditAmount.AsFloat;
    DM.cdsInventoryItemEditAmountRemains.AsFloat := DM.cdsInventoryListAmountRemains.AsFloat;
 
+   DM.GetMIInventoryGoods(DM.cdsInventoryItemEdit);
+
    DM.cdsInventoryItemEdit.Post;
 
   if DM.cdsInventoryItemEdit.Active then
@@ -1625,6 +1625,8 @@ begin
   DM.cdsInventoryItemEdit.Close;
   FisInventScanOk := not DM.cdsInventoryList.Active;
   ReturnPriorForm;
+
+  if tcMain.ActiveTab = tiInventory then DM.DownloadInventoryList(pbILOrderBy.ItemIndex > 0, pbILAllUser.ItemIndex > 0, pbILErased.ItemIndex > 0, GetSearshBox(lwInventoryList).Text);
 end;
 
 procedure TfrmMain.bIIEOpenDictGoodsClick(Sender: TObject);
