@@ -296,6 +296,10 @@ type
     cbHideScanButton: TCheckBox;
     cblluminationMode: TCheckBox;
     cbHideIlluminationButton: TCheckBox;
+    bGoodsClose: TSpeedButton;
+    Image9: TImage;
+    bDictClose: TSpeedButton;
+    Image10: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -926,19 +930,19 @@ begin
 
   case FInventScanType of
     0 : begin
-          bInventScan.ImageIndex := 2;
+          bInventScan.ImageIndex := 9;
           bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         end;
     1 : begin
-          bInventScanAmount.ImageIndex := 2;
+          bInventScanAmount.ImageIndex := 9;
           bInventScanAmount.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanAmount.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
         end;
     2 : begin
-          bInventScanSN.ImageIndex := 2;
+          bInventScanSN.ImageIndex := 9;
           bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
           bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
@@ -1202,6 +1206,8 @@ procedure TfrmMain.lwDictListGesture(Sender: TObject;
 var I: Integer;
 begin
   if ppActions.IsOpen or Handled then Exit;
+  if not bDictChoice.Visible then Exit;
+
 
   // Сскроем все
   for I := 0 to ComponentCount - 1 do
@@ -1211,8 +1217,8 @@ begin
   // Справочники
   if (tcMain.ActiveTab = tiDictList) and DM.cdsDictList.Active and not DM.cdsDictList.IsEmpty then
   begin
-    //btaCancel.Visible := True;
-    btaClose.Visible := True;
+    btaCancel.Visible := True;
+    //btaClose.Visible := True;
     btaOk.Visible := bDictChoice.Visible;
     ppActions.Height := 2;
     for I := 0 to ComponentCount - 1 do
@@ -1247,6 +1253,7 @@ procedure TfrmMain.lwGoodsGesture(Sender: TObject;
 var I: Integer;
 begin
   if ppActions.IsOpen or Handled then Exit;
+  if not bGoodsChoice.Visible then Exit;
 
   // Сскроем все
   for I := 0 to ComponentCount - 1 do
@@ -1256,8 +1263,8 @@ begin
   // Справочник комплектующих
   if (tcMain.ActiveTab = tiGoods) and DM.cdsGoodsList.Active and not DM.cdsGoodsList.IsEmpty then
   begin
-    //btaCancel.Visible := True;
-    btaClose.Visible := True;
+    btaCancel.Visible := True;
+    //btaClose.Visible := True;
     btaOk.Visible := bGoodsChoice.Visible;
     ppActions.Height := 2;
     for I := 0 to ComponentCount - 1 do

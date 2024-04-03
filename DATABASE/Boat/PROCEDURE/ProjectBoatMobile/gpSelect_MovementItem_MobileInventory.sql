@@ -125,7 +125,7 @@ BEGIN
            , tmpMI.Amount                        AS Amount
            , tmpMI_Total.Amount                  AS TotalCount
            , tmpRemains.Remains                  AS AmountRemains
-           , (tmpMI_Total.Amount - COALESCE (tmpRemains.Remains, 0)) ::TFloat AS AmountDiff
+           , NULLIF(tmpMI_Total.Amount - COALESCE (tmpRemains.Remains, 0), 0) ::TFloat AS AmountDiff
 
            , tmpRemains.Amount                   AS AmountRemains_curr
 
