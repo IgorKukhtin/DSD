@@ -1069,15 +1069,31 @@ object OrderClientJournalForm: TOrderClientJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbPrintOffer_TD'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOrderConfirmation_TD'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintSticker'
         end
         item
           Visible = True
-          ItemName = 'bbPrintStickerTermo'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
         end
         item
           Visible = True
@@ -1090,18 +1106,6 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Visible = True
           ItemName = 'bbtPrintMovement_Invoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSeparator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintOffer_TD'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintOrderConfirmation_TD'
         end>
     end
     object bbPrintOffer_TD: TdxBarButton
@@ -1605,9 +1609,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spSelectPrintOffer
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
-      Hint = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
+      Caption = 'Offer'
       ImageIndex = 3
+      ShortCut = 16433
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1783,9 +1787,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spSelectPrintOrderConfirmation
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
-      Hint = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
+      Caption = 'Confirmation'
       ImageIndex = 18
+      ShortCut = 16434
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1834,10 +1838,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spSelectPrintOffer
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Offer'
-      Hint = #1055#1077#1095#1072#1090#1100' Offer'
+      Caption = 'Offer (Discount)'
       ImageIndex = 3
-      ShortCut = 16464
+      ShortCut = 16435
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1985,9 +1988,9 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           StoredProc = spSelectPrintOrderConfirmation
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' Confirmation'
-      Hint = #1055#1077#1095#1072#1090#1100' Confirmation'
+      Caption = 'Confirmation (Discount)'
       ImageIndex = 18
+      ShortCut = 16436
       DataSets = <
         item
           DataSet = PrintHeaderCDS
