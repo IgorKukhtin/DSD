@@ -215,6 +215,7 @@ type
     cdsInventoryListAmountDiff: TFloatField;
     cdsInventoryListAmountDiffLabel: TWideStringField;
     qryInventoryGoodsAmountDiff: TFloatField;
+    cdsInventoryListOrdUser: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -2131,7 +2132,9 @@ begin
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
   DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
   DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
-  DataSet.FieldByName('AmountDiff').AsFloat := DataSet.FieldByName('TotalCount').AsFloat - DataSet.FieldByName('AmountRemains').AsFloat;
+  if DataSet.FieldByName('TotalCount').AsFloat <> DataSet.FieldByName('AmountRemains').AsFloat then
+    DataSet.FieldByName('AmountDiff').AsFloat := DataSet.FieldByName('TotalCount').AsFloat - DataSet.FieldByName('AmountRemains').AsFloat
+  else DataSet.FieldByName('AmountDiff').AsVariant := Null;
 end;
 
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию

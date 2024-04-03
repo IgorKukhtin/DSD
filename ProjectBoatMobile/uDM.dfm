@@ -104,6 +104,9 @@ object DM: TDM
     object cdsInventoryListAmountRemains_curr: TFloatField
       FieldName = 'AmountRemains_curr'
     end
+    object cdsInventoryListOrdUser: TIntegerField
+      FieldName = 'OrdUser'
+    end
     object cdsInventoryListOperDate_protocol: TDateTimeField
       FieldName = 'OperDate_protocol'
     end
