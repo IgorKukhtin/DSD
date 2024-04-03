@@ -353,6 +353,15 @@ BEGIN
                                 AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
        WHERE tmp.GoodsDesc <> zc_Object_Product()
+     UNION
+       SELECT '' :: TVarChar AS GoodsName
+            , '' :: TVarChar AS Article
+            , '' :: TVarChar AS ProdColorName
+            , 0  :: TFloat   AS Amount
+            , 0  :: TFloat   AS SalePrice
+            , 0  :: TFloat   AS DiscountTax
+            , 0  :: TFloat   AS Sale_summ
+            , '' :: TVarChar AS CommentOpt
        ;
      RETURN NEXT Cursor2;
 
