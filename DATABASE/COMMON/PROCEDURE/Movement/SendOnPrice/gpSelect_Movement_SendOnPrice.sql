@@ -71,7 +71,7 @@ BEGIN
                                                                       ON MovementLinkMovement_Production.MovementId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
                                                                      AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
                                  WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                   AND Movement.DescId = zc_Movement_Production()
+                                   AND Movement.DescId = zc_Movement_ProductionUnion()
                                )
        SELECT
              Movement.Id                                AS Id
@@ -385,8 +385,6 @@ BEGIN
            OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
            OR tmpBranch.UserId = 280162 -- Панасенко А.Н.
              )
-          AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
-          
       ;
                                                
 END;
