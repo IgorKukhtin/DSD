@@ -488,6 +488,10 @@ type
     actUpdate_summ_before: TdsdDataSetRefresh;
     HeaderExit: THeaderExit;
     EnterMoveNext: TEnterMoveNext;
+    actPrintOrderConfirmation_TD: TdsdPrintAction;
+    actPrintOffer_TD: TdsdPrintAction;
+    bbPrintOffer_TD: TdxBarButton;
+    bbPrintOrderConfirmation_TD: TdxBarButton;
   private
   public
   end;
