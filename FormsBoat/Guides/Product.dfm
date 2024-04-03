@@ -2369,6 +2369,18 @@
         item
           Visible = True
           ItemName = 'bbPrintTender'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOffer_TD'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOrderConfirmation_TD'
         end>
     end
     object bbsProtocol: TdxBarSubItem
@@ -2389,6 +2401,21 @@
           Visible = True
           ItemName = 'bbtProtocol3'
         end>
+    end
+    object bbPrintOffer_TD: TdxBarButton
+      Action = actPrintOffer_TD
+      Category = 0
+    end
+    object bbPrintOrderConfirmation_TD: TdxBarButton
+      Action = actPrintOrderConfirmation_TD
+      Category = 0
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -3421,6 +3448,57 @@
         end>
       isShowModal = False
     end
+    object actPrintOrderConfirmation_TD: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOrderConfirmation
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOrderConfirmation
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
+      Hint = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderConfirmation_TotalDiscount'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation_TotalDiscount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -3524,6 +3602,53 @@
         end>
       ReportName = 'PrintProduct_OrderConfirmation'
       ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintOffer_TD: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOffer
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOffer
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
+      Hint = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Offer_TotalDiscount'
+      ReportNameParam.Value = 'PrintProduct_Offer_TotalDiscount'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

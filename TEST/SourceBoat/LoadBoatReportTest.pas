@@ -123,8 +123,10 @@ begin
     LoadReportFromFile('PrintProduct_StructureGoods', ReportPath + '\PrintProduct_StructureGoods.fr3');
    }
     LoadReportFromFile('PrintProduct_OrderConfirmation', ReportPath + '\PrintProduct_OrderConfirmation.fr3');
+    LoadReportFromFile('PrintProduct_OrderConfirmation_TotalDiscount', ReportPath + '\PrintProduct_OrderConfirmation_TotalDiscount.fr3');
     //LoadReportFromFile('PrintProduct_Structure', ReportPath + '\PrintProduct_Structure.fr3');
 
+    LoadReportFromFile('PrintProduct_Offer_TotalDiscount', ReportPath + '\PrintProduct_Offer_TotalDiscount.fr3');
     LoadReportFromFile('PrintProduct_Offer', ReportPath + '\PrintProduct_Offer.fr3');
     exit;
     LoadReportFromFile('PrintUser_Badge', ReportPath + '\PrintUser_Badge.fr3');

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer
              , MeasureName TVarChar, PartNumber TVarChar
              , PartionCellId Integer, PartionCellName TVarChar
              , Amount TFloat, TotalCount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
-             , OperDate_protocol TDateTime, UserName_protocol TVarChar
+             , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
              , isErased Boolean
               )
 AS
@@ -105,6 +105,43 @@ BEGIN
                            FROM MovementItemProtocol
                            WHERE MovementItemProtocol.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
                           )
+         , tmpDataAll AS (SELECT
+                                 tmpMI.Id
+                               , tmpMI.GoodsId
+                               , tmpMI.PartNumber
+                               , tmpMI.Amount
+                               , tmpMI.isErased
+                               , tmpProtocol.OperDate                AS OperDate_protocol
+                               , tmpProtocol.UserId                  AS UserId_protocol
+                               , ROW_NUMBER() OVER (PARTITION BY tmpProtocol.UserId  ORDER BY tmpProtocol.OperDate)                AS OrdUserDate
+                               , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.PartNumber ORDER BY tmpProtocol.OperDate)    AS OrdGoodsDate
+                          FROM tmpMI 
+                               INNER JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
+                                                     AND tmpProtocol.Ord            = 1 
+                          )
+         , tmpData AS (SELECT
+                              tmpDataAll.Id
+                            , tmpDataAll.GoodsId
+                            , tmpDataAll.PartNumber
+                            , tmpDataAll.OperDate_protocol
+                            , tmpDataAll.UserId_protocol
+                            , tmpDataAll.OrdUserDate
+                            , SUM(tmpDataPrew.Amount) AS TotalCount
+                       FROM tmpDataAll 
+                       
+                            LEFT JOIN tmpDataAll AS tmpDataPrew 
+                                                 ON tmpDataPrew.GoodsId        = tmpDataAll.GoodsId
+                                                AND tmpDataPrew.PartNumber     = tmpDataAll.PartNumber
+                                                AND tmpDataPrew.OrdGoodsDate  <= tmpDataAll.OrdGoodsDate
+                                                AND tmpDataPrew.isErased = False
+                                                  
+                       GROUP BY tmpDataAll.Id
+                              , tmpDataAll.GoodsId
+                              , tmpDataAll.PartNumber
+                              , tmpDataAll.OperDate_protocol
+                              , tmpDataAll.UserId_protocol
+                              , tmpDataAll.OrdUserDate
+                       )
 
        -- Результат
        SELECT
@@ -123,13 +160,14 @@ BEGIN
            , Object_PartionCell.ValueData        AS PartionCellName
 
            , tmpMI.Amount                        AS Amount
-           , tmpMI_Total.Amount                  AS TotalCount
+           , tmpData.TotalCount ::TFloat         AS TotalCount
            , tmpRemains.Remains                  AS AmountRemains
-           , (tmpMI_Total.Amount - COALESCE (tmpRemains.Remains, 0)) ::TFloat AS AmountDiff
+           , NULLIF(COALESCE (tmpData.TotalCount, 0) - COALESCE (tmpRemains.Remains, 0), 0) ::TFloat AS AmountDiff
 
            , tmpRemains.Amount                   AS AmountRemains_curr
 
-           , tmpProtocol.OperDate  AS OperDate_protocol
+           , tmpData.OrdUserDate::Integer
+           , tmpData.OperDate_protocol
            , Object_User.ValueData AS UserName_protocol
            , tmpMI.isErased
 
@@ -138,9 +176,9 @@ BEGIN
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
 
-            LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
-                                 AND tmpProtocol.Ord            = 1
-            LEFT JOIN Object AS Object_User ON Object_User.Id = tmpProtocol.UserId
+            LEFT JOIN tmpData ON tmpData.Id = tmpMI.Id
+                              
+            LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId_protocol
 
             LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
                                  ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
@@ -165,16 +203,10 @@ BEGIN
                       ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
                                      AND tmpRemains.PartNumber = tmpMI.PartNumber
 
-            LEFT JOIN (SELECT tmpMI.GoodsId, tmpMI.PartNumber, SUM (tmpMI.Amount)::TFloat AS Amount
-                       FROM tmpMI
-                       GROUP BY tmpMI.GoodsId, tmpMI.PartNumber
-                      ) AS tmpMI_Total ON tmpMI_Total.GoodsId    = tmpMI.GoodsId
-                                     AND tmpMI_Total.PartNumber = tmpMI.PartNumber
-            
-       WHERE (tmpProtocol.UserId = vbUserId OR inIsAllUser = TRUE)
+       WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%')
        ORDER BY CASE WHEN inIsOrderBy = TRUE THEN Object_Goods.ValueData ELSE Null END
-              , CASE WHEN inIsOrderBy = FALSE THEN tmpProtocol.OperDate ELSE Null END DESC
+              , CASE WHEN inIsOrderBy = FALSE THEN tmpData.OperDate_protocol ELSE Null END DESC
        LIMIT inLimit
        ;
 
@@ -190,4 +222,4 @@ $BODY$
 
 -- тест
 -- 
-SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3179, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'False', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());
+SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3183, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());

@@ -260,6 +260,11 @@ type
     Amount_BankAccount: TcxGridDBColumn;
     Amount_Invoice: TcxGridDBColumn;
     isReserve: TcxGridDBColumn;
+    actPrintOffer_TD: TdsdPrintAction;
+    actPrintOrderConfirmation_TD: TdsdPrintAction;
+    bbPrintOffer_TD: TdxBarButton;
+    bbPrintOrderConfirmation_TD: TdxBarButton;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

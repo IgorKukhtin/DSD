@@ -1773,9 +1773,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2789,9 +2786,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2849,9 +2843,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -4024,6 +4015,22 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOffer_TD'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOrderConfirmation_TD'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Invoice'
         end>
     end
@@ -4155,6 +4162,14 @@ object OrderClientForm: TOrderClientForm
     end
     object bbErasedChildDetail: TdxBarButton
       Action = actErasedChildDetail
+      Category = 0
+    end
+    object bbPrintOffer_TD: TdxBarButton
+      Action = actPrintOffer_TD
+      Category = 0
+    end
+    object bbPrintOrderConfirmation_TD: TdxBarButton
+      Action = actPrintOrderConfirmation_TD
       Category = 0
     end
   end
@@ -4811,6 +4826,57 @@ object OrderClientForm: TOrderClientForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actPrintOrderConfirmation_TD: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOrderConfirmation
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOrderConfirmation
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
+      Hint = #1055#1077#1095#1072#1090#1100' Confirmation (Total discount)'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderConfirmation_TotalDiscount'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation_TotalDiscount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -4860,6 +4926,53 @@ object OrderClientForm: TOrderClientForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actPrintOffer_TD: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOffer
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOffer
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
+      Hint = #1055#1077#1095#1072#1090#1100' Offer (Total discount)'
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_Offer_TotalDiscount'
+      ReportNameParam.Value = 'PrintProduct_Offer_TotalDiscount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsertRecordGoods: TInsertRecord
       Category = 'DSDLib'

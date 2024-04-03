@@ -138,7 +138,7 @@ type
     TotalSumm_transport: TcxGridDBColumn;
     spSelectPrint_Invoice: TdsdStoredProc;
     actPrintMovement_Invoice: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbtPrintMovement_Invoice: TdxBarButton;
     actFormClose: TdsdFormClose;
     Panel_btn: TPanel;
     btnInsert: TcxButton;
@@ -159,6 +159,11 @@ type
     Ord: TcxGridDBColumn;
     Comment_Product: TcxGridDBColumn;
     isReserve_Product: TcxGridDBColumn;
+    actPrintOffer_TD: TdsdPrintAction;
+    actPrintOrderConfirmation_TD: TdsdPrintAction;
+    bbPrintOffer_TD: TdxBarButton;
+    bbPrintOrderConfirmation_TD: TdxBarButton;
+    bbSeparator: TdxBarSeparator;
   private
   public
   end;

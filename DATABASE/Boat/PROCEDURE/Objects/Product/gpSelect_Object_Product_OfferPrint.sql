@@ -164,7 +164,7 @@ BEGIN
             , Object_Country.ValueData                    ::TVarChar AS Country_Client
             --
             
-            , COALESCE (ObjectString_TaxNumber.ValueData,'') ::TVarChar AS TaxNumber
+           , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite   
 
@@ -209,6 +209,10 @@ BEGIN
                                ON ObjectLink_Country.ObjectId = ObjectLink_PLZ.ChildObjectId
                               AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
           LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                               ON ObjectLink_TaxKind.ObjectId = tmpProduct.ClientId
+                              AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
        ;
 
      RETURN NEXT Cursor1;
