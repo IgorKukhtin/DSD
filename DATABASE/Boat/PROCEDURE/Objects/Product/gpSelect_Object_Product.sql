@@ -45,6 +45,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
                -- »того оплата
              , OperDate_BankAccount   TDateTime
              , Amount_BankAccount     TFloat
+             , MovementId_BankAccount Integer
 
                --
              , NPP_OrderClient Integer
@@ -765,6 +766,7 @@ BEGIN
        -- данные по оплате ¬—≈’ счетов
      , tmpBankAccount AS (SELECT tmpInvoice.MovementId_OrderClient   AS MovementId_OrderClient
                                , MAX (Movement_BankAccount.OperDate) AS OperDate
+                               , MAX (Movement_BankAccount.Id)       AS MovementId_BankAccount
                                , SUM (MovementItem.Amount)           AS AmountIn
                           FROM tmpInvoice
                                INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = tmpInvoice.MovementId_Invoice
@@ -842,6 +844,8 @@ BEGIN
            -- »того оплата
          , tmpBankAccount.OperDate               ::TDateTime AS OperDate_BankAccount
          , tmpBankAccount.AmountIn               ::TFloat    AS AmountIn_BankAccount
+         --последн€€ оплата
+         , tmpBankAccount.MovementId_BankAccount ::Integer
 
            --
          , tmpOrderClient.NPP    :: Integer AS NPP_OrderClient

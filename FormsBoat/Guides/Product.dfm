@@ -3985,8 +3985,6 @@
         item
           Name = 'inOperDate'
           Value = 44197d
-          Component = MasterCDS
-          ComponentItem = 'OperDate_Invoice'
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','

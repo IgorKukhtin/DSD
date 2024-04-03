@@ -149,22 +149,33 @@ BEGIN
    -- данные всех док счет
      tmpInvoice AS (SELECT Movement.Id                             AS MovementId_Invoice
                          , SUM (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS AmountIn
-                    FROM MovementLinkMovement AS MovementLinkMovement_Invoice
-                         INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Invoice.MovementChildId
-                                            AND Movement.DescId = zc_Movement_Invoice()
-                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
-
+                    FROM Movement   
                          INNER JOIN MovementFloat AS MovementFloat_Amount
                                                   ON MovementFloat_Amount.MovementId = Movement.Id
                                                  AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
                                                  AND MovementFloat_Amount.ValueData > 0
 
-                    WHERE MovementLinkMovement_Invoice.MovementId =inMovementId_OrderClient
-                      AND MovementLinkMovement_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                    WHERE Movement.ParentId = inMovementId_OrderClient
+                      AND Movement.DescId = zc_Movement_Invoice()
+                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                     GROUP BY Movement.Id
                     )
+      -- у ВСЕХ Invoice нашли ВСЕ BankAccount
+  , tmpBankAccount AS (SELECT -- итого ВСЕ оплаты
+                              SUM (MovementItem.Amount) AS AmountIn
+                        FROM (SELECT DISTINCT tmpInvoice.MovementId_invoice :: TFloat AS MovementId_Invoice FROM tmpInvoice) AS tmp
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                          ON MIFloat_MovementId.ValueData = tmp.MovementId_Invoice
+                                                         AND MIFloat_MovementId.DescId    = zc_MIFloat_MovementId()
+                             INNER JOIN MovementItem ON MovementItem.Id       = MIFloat_MovementId.MovementItemId
+                                                    AND MovementItem.DescId   = zc_MI_Child()
+                                                    AND MovementItem.isErased = FALSE
+                             INNER JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.Id       = MovementItem.MovementId
+                                                                        AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete() --<> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                                                                        AND Movement_BankAccount.DescId   = zc_Movement_BankAccount()
+                       )
 
-     -- данные по оплате счетов
+  /*   -- данные по оплате счетов
      , tmpBankAccount AS (SELECT SUM (MovementItem.Amount)   ::TFloat AS AmountIn
                           FROM MovementLinkMovement
                               INNER JOIN Movement AS Movement_BankAccount
@@ -179,6 +190,10 @@ BEGIN
                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Invoice()
                           GROUP BY MovementLinkMovement.MovementChildId
                           )
+
+
+    */
+
 
 
        -- Результат
@@ -361,7 +376,9 @@ BEGIN
             , 0  :: TFloat   AS SalePrice
             , 0  :: TFloat   AS DiscountTax
             , 0  :: TFloat   AS Sale_summ
-            , '' :: TVarChar AS CommentOpt
+            , '' :: TVarChar AS CommentOpt 
+       WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
+            
        ;
      RETURN NEXT Cursor2;
 
