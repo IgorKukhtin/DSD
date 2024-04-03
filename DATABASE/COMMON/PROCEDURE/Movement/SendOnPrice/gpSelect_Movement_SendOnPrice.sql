@@ -58,6 +58,21 @@ BEGIN
                        )
         , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId GROUP BY UserId)
         , tmpBranch AS (SELECT Object_RoleAccessKeyGuide_View.BranchId, Object_RoleAccessKeyGuide_View.UserId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId, Object_RoleAccessKeyGuide_View.UserId)
+        , tmpMLM_Production AS (SELECT Movement.* 
+                                     , MovementLinkMovement_Production.MovementChildId
+                                     , ROW_NUMBER() OVER (PARTITION BY MovementLinkMovement_Production.MovementChildId
+                                                          ORDER BY CASE WHEN Movement.StatusId = zc_Enum_Status_Complete() THEN 1
+                                                                        WHEN Movement.StatusId = zc_Enum_Status_UnComplete() THEN 2
+                                                                        ELSE 3
+                                                                   END
+                                                         ) AS Ord
+                                FROM Movement
+                                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Production
+                                                                      ON MovementLinkMovement_Production.MovementId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
+                                                                     AND MovementLinkMovement_Production.DescId          = zc_MovementLinkMovement_Production()
+                                 WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                   AND Movement.DescId = zc_Movement_Production()
+                               )
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -326,10 +341,9 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Production
-                                           ON MovementLinkMovement_Production.MovementChildId = Movement.Id                                   --MovementLinkMovement_Production.MovementId = Movement.Id
-                                          AND MovementLinkMovement_Production.DescId = zc_MovementLinkMovement_Production()
-            LEFT JOIN Movement AS Movement_Production ON Movement_Production.Id = MovementLinkMovement_Production.MovementId  --MovementLinkMovement_Production.MovementChildId
+            LEFT JOIN tmpMLM_Production AS Movement_Production
+                                        ON Movement_Production.MovementChildId = Movement.Id
+                                       AND Movement_Production.Ord             = 1
             LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
                                       ON MovementBoolean_Peresort.MovementId =  Movement_Production.Id
@@ -366,10 +380,13 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
-       WHERE tmpBranch.UserId IS NULL
-          OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
-          OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
-          OR tmpBranch.UserId = 280162 -- Панасенко А.Н.
+       WHERE (tmpBranch.UserId IS NULL
+           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
+           OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
+           OR tmpBranch.UserId = 280162 -- Панасенко А.Н.
+             )
+          AND COALESCE (Movement_Production.StatusId, 0) <> zc_Enum_Status_Erased()
+          
       ;
                                                
 END;
