@@ -56,7 +56,7 @@ type
     edObject: TcxButtonEdit;
     edSearchInvNumber: TcxTextEdit;
     lbSearchCode: TcxLabel;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber: TdsdFieldFilter;
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;

@@ -2554,11 +2554,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 72
     Top = 320
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -2939,13 +2939,16 @@ object OrderClientJournalForm: TOrderClientJournalForm
     Left = 935
     Top = 160
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edInvNumber_OrderClient
     DataSet = ClientDataSet
     Column = InvNumber
     ColumnList = <
       item
         Column = InvNumber
+      end
+      item
+        Column = Comment_Product
       end
       item
         Column = ReceiptNumber_Invoice

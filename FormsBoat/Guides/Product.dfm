@@ -5184,6 +5184,9 @@
         Column = InvNumber_OrderClient
       end
       item
+        Column = Comment
+      end
+      item
         Column = ClientName
         TextEdit = edSearchClientName
       end

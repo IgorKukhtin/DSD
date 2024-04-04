@@ -340,6 +340,13 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
             Options.Editing = False
             Width = 101
           end
+          object Comment_Product: TcxGridDBColumn
+            DataBinding.FieldName = 'Comment_Product'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object ProductCIN: TcxGridDBColumn
             Caption = 'CIN Nr.'
             DataBinding.FieldName = 'ProductCIN'
@@ -1288,6 +1295,10 @@ inherited InvoiceJournalChoiceForm: TInvoiceJournalChoiceForm
       end
       item
         Column = InvNumber_parent
+        TextEdit = edInvNumber_OrderClient
+      end
+      item
+        Column = Comment_Product
         TextEdit = edInvNumber_OrderClient
       end>
     ActionNumber1 = actChoiceGuides

@@ -2026,6 +2026,9 @@ object OrderClientJournalChoiceForm: TOrderClientJournalChoiceForm
         Column = InvNumber
       end
       item
+        Column = Comment_Product
+      end
+      item
         Column = ReceiptNumber_Invoice
         TextEdit = edSearch_ReceiptNumber_Invoice
       end>

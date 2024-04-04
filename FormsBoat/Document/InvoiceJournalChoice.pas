@@ -70,6 +70,7 @@ type
     Amount_Invoice: TcxGridDBColumn;
     Amount_BankAccount: TcxGridDBColumn;
     Amount_rem: TcxGridDBColumn;
+    Comment_Product: TcxGridDBColumn;
   private
     { Private declarations }
   public

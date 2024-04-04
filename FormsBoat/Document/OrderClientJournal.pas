@@ -74,8 +74,8 @@ type
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
@@ -150,7 +150,7 @@ type
     bbsPrint: TdxBarSubItem;
     cxLabel3: TcxLabel;
     edInvNumber_OrderClient: TcxTextEdit;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
     cxLabel4: TcxLabel;
     edSearch_ReceiptNumber_Invoice: TcxTextEdit;

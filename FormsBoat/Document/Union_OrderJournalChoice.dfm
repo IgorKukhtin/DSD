@@ -5,7 +5,6 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = 6
   ExplicitWidth = 1044
   ExplicitHeight = 394
   PixelsPerInch = 96
@@ -1492,13 +1491,16 @@ inherited Union_OrderJournalChoiceForm: TUnion_OrderJournalChoiceForm
     Left = 688
     Top = 65531
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edSearchInvNumber
     DataSet = MasterCDS
     Column = colInvNumber
     ColumnList = <
       item
         Column = colInvNumber
+      end
+      item
+        Column = Comment_Product
       end
       item
         Column = ObjectName

@@ -2727,13 +2727,16 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Left = 631
     Top = 232
   end
-  object FieldFilter_Article: TdsdFieldFilter
+  object FieldFilter_InvNumber_parent_child: TdsdFieldFilter
     TextEdit = edSearchInvNumber_OrderClient
     DataSet = MasterCDS
     Column = InvNumber_parent_child
     ColumnList = <
       item
         Column = InvNumber_parent_child
+      end
+      item
+        Column = Comment_Product_child
       end
       item
         Column = ReceiptNumber_Invoice_child

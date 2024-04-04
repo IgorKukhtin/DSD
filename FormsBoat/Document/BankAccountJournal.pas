@@ -67,7 +67,7 @@ type
     edSearchMoneyPlaceName: TcxTextEdit;
     cxLabel4: TcxLabel;
     edSearchInvNumber_OrderClient: TcxTextEdit;
-    FieldFilter_Article: TdsdFieldFilter;
+    FieldFilter_InvNumber_parent_child: TdsdFieldFilter;
     InvoiceKindName: TcxGridDBColumn;
     spGetImportSettingId: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;

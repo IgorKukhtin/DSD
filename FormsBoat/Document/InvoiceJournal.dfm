@@ -3012,6 +3012,9 @@
         Column = InvNumber_parent
       end
       item
+        Column = Comment_Product
+      end
+      item
         Column = ReceiptNumber
         TextEdit = edSearch_ReceiptNumber_Invoice
       end
