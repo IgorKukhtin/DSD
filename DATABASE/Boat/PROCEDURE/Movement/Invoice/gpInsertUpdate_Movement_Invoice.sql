@@ -60,9 +60,11 @@ BEGIN
          END IF;
 
          -- Замена - кривая схема
-         vbAmount:= gpGet_Movement_Invoice_Prepay (inMovementId_order      := inParentId
+         vbAmount:= gpGet_Movement_Invoice_Prepay (inMovementId_invoice    := ioId
+                                                 , inMovementId_order      := inParentId
                                                  , inInvoiceKindId         := zc_Enum_InvoiceKind_PrePay() -- !!! не ошибка, надо посчитать остаток к оплате!!!
-                                                 , inTotalSumm_debet       := vbBasisWVAT_summ_transport
+                                                 , inBasisWVAT_summ_transport   := vbBasisWVAT_summ_transport
+                                                 , ioAmountIn              := 0 :: TFloat
                                                  , inSession               := inSession
                                                   );
 

@@ -218,7 +218,9 @@ BEGIN
           , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
 
           , Object_From.Id                            AS FromId
-          , Object_From.ValueData                     AS FromName
+          --, Object_From.ValueData                     AS FromName
+          , CASE WHEN ObjectString_Product_Comment.ValueData <> '' THEN ObjectString_Product_Comment.ValueData || ' / ' || Object_From.ValueData ELSE Object_From.ValueData END :: TVarChar AS FromName
+
           , Object_To.Id                              AS ToId
           , Object_To.ValueData                       AS ToName
           , Object_PaidKind.Id                        AS PaidKindId
@@ -368,6 +370,10 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_DateBegin
                                  ON ObjectDate_DateBegin.ObjectId = Object_Product.Id
                                 AND ObjectDate_DateBegin.DescId = zc_ObjectDate_Product_DateBegin()
+
+             LEFT JOIN ObjectString AS ObjectString_Product_Comment
+                                    ON ObjectString_Product_Comment.ObjectId = Object_Product.Id
+                                   AND ObjectString_Product_Comment.DescId   = zc_ObjectString_Product_Comment()
 
             LEFT JOIN tmpSummProduct ON 1 = 1
             --

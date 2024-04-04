@@ -87,10 +87,10 @@ BEGIN
                                                                              AND MovementString_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
                                                 WHERE Movement.Id = inMovementId), 'XXXX_XXXX');
 
-     IF vbInvoiceFileName NOT ILIKE '%.pdf'
+     /*IF vbInvoiceFileName NOT ILIKE '%.pdf'
      THEN
           vbInvoiceFileName:= vbInvoiceFileName || '.pdf';
-     END IF;
+     END IF;*/
 
 
      -- Результат
