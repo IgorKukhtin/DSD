@@ -47,6 +47,7 @@ BEGIN
      WITH -- Опции, которые определены как Boat Structure
           tmpSelect AS (SELECT *
                         FROM gpSelect_Object_ProdOptions (inModelId     := inModelId
+                                                        , inPriceListId := zc_PriceList_Basis()
                                                         , inIsErased    := inIsErased
                                                         , inSession     := inSession
                                                          )
