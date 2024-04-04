@@ -61,7 +61,7 @@ BEGIN
                               ON ObjectLink_User_Member.ObjectId = MLO_Insert.ObjectId
                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId 
-         
+     WHERE Movement_OrderClient.Id = inMovementId_OrderClient    
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
      -- данные из документа заказа
