@@ -257,16 +257,19 @@ BEGIN
    END IF;
 
 
-   --сохраняем цену
-   PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
-                                                         , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
-                                                         , inGoodsId    := ioId               :: Integer
-                                                         , inOperDate   := inStartDate_price  :: TDateTime
-                                                         , ioPriceNoVAT := inOperPriceList    :: TFloat
-                                                         , ioPriceWVAT  := 0                  :: TFloat
-                                                         , inIsLast     := TRUE               :: Boolean
-                                                         , inSession    := inSession          :: TVarChar
-                                                          ) AS tmp;
+   -- сохраняем цену
+   IF inPriceListId > 0
+   THEN
+       PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := NULL                  -- сам найдет нужный Id
+                                                             , inPriceListId:= COALESCE (inPriceListId, zc_PriceList_Basis()) ::Integer  -- !!!Базовый Прайс!!!
+                                                             , inGoodsId    := ioId               :: Integer
+                                                             , inOperDate   := inStartDate_price  :: TDateTime
+                                                             , ioPriceNoVAT := inOperPriceList    :: TFloat
+                                                             , ioPriceWVAT  := 0                  :: TFloat
+                                                             , inIsLast     := TRUE               :: Boolean
+                                                             , inSession    := inSession          :: TVarChar
+                                                              ) AS tmp;
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

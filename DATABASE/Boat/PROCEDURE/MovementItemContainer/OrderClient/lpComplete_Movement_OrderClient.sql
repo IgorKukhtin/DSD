@@ -1007,6 +1007,9 @@ BEGIN
                                                 , inDiscountPartnerId      := ObjectLink_Goods_DiscountPartner.ChildObjectId
                                                 , inTaxKindId              := ObjectLink_Goods_TaxKind.ChildObjectId
                                                 , inEngineId               := NULL
+                                                , inPriceListId            := NULL
+                                                , inStartDate_price        := NULL
+                                                , inOperPriceList          := NULL  
                                                 , inSession                := inUserId :: TVarChar
                                                  ) AS GoodsId
               FROM tmpGoods
@@ -1137,6 +1140,9 @@ BEGIN
                                                 , inDiscountPartnerId      := ObjectLink_Goods_DiscountPartner.ChildObjectId
                                                 , inTaxKindId              := ObjectLink_Goods_TaxKind.ChildObjectId
                                                 , inEngineId               := NULL
+                                                , inPriceListId            := NULL
+                                                , inStartDate_price        := NULL
+                                                , inOperPriceList          := NULL  
                                                 , inSession                := inUserId :: TVarChar
                                                  ) AS GoodsId_child
               FROM (SELECT DISTINCT
