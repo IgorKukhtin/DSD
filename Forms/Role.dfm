@@ -281,8 +281,6 @@ object RoleForm: TRoleForm
       Height = 6
       AlignSplitter = salTop
       Control = UserGrid
-      ExplicitLeft = 24
-      ExplicitTop = 367
     end
     object AccessGrid: TcxGrid
       Left = 0
@@ -293,8 +291,6 @@ object RoleForm: TRoleForm
       TabOrder = 5
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 373
-      ExplicitHeight = 128
       object AccessGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessAccessDS
@@ -496,7 +492,39 @@ object RoleForm: TRoleForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbGridToExcel_1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_5'
         end
         item
           Visible = True
@@ -528,14 +556,8 @@ object RoleForm: TRoleForm
       Action = dsdSetUnErased
       Category = 0
     end
-    object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -565,6 +587,26 @@ object RoleForm: TRoleForm
     end
     object bbProtocolUser: TdxBarButton
       Action = actProtocolUserForm
+      Category = 0
+    end
+    object bbGridToExcel_1: TdxBarButton
+      Action = actGridToExcel_1
+      Category = 0
+    end
+    object bbGridToExcel_2: TdxBarButton
+      Action = actGridToExcel_2
+      Category = 0
+    end
+    object bbGridToExcel_3: TdxBarButton
+      Action = actGridToExcel_3
+      Category = 0
+    end
+    object bbGridToExcel_4: TdxBarButton
+      Action = actGridToExcel_4
+      Category = 0
+    end
+    object bbGridToExcel_5: TdxBarButton
+      Action = actGridToExcel_5
       Category = 0
     end
   end
@@ -702,14 +744,50 @@ object RoleForm: TRoleForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel_1: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel - 1'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
-      ShortCut = 16472
+      ShortCut = 16433
+    end
+    object actGridToExcel_2: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = ActionGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel - 2'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16434
+    end
+    object actGridToExcel_3: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = ProcessGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel - 3'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16435
+    end
+    object actGridToExcel_4: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = UserGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel - 4'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16436
+    end
+    object actGridToExcel_5: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = AccessGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel - 5'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16437
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1111,6 +1189,7 @@ object RoleForm: TRoleForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 272
@@ -1164,6 +1243,7 @@ object RoleForm: TRoleForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 432
     Top = 208
@@ -1208,6 +1288,7 @@ object RoleForm: TRoleForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 456
     Top = 48
@@ -1264,6 +1345,7 @@ object RoleForm: TRoleForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 416
     Top = 320
@@ -1380,6 +1462,7 @@ object RoleForm: TRoleForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 600
     Top = 464
