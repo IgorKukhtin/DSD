@@ -371,7 +371,7 @@ BEGIN
                                 AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
             LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
        WHERE tmp.GoodsDesc <> zc_Object_Product()
-     UNION
+ /*    UNION
        SELECT '' :: TVarChar AS GoodsName
             , '' :: TVarChar AS Article
             , '' :: TVarChar AS ProdColorName
@@ -380,7 +380,8 @@ BEGIN
             , 0  :: TFloat   AS DiscountTax
             , 0  :: TFloat   AS Sale_summ
             , '' :: TVarChar AS CommentOpt 
-       WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
+       WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0 
+       */
             
        ;
      RETURN NEXT Cursor2;
