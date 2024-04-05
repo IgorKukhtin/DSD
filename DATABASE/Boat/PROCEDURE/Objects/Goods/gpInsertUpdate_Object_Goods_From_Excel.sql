@@ -155,8 +155,9 @@ else RETURN;
                                                                     , inSession         := inSession :: TVarChar
                                                                      ) AS tmp);
        END IF;
+   END IF;
   
-   IF COALESCE (inPartnerName, '') <> ''
+   /*IF COALESCE (inPartnerName, '') <> ''
    THEN
        -- пробуем найти 
        vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Partner() AND UPPER ( TRIM (Object.ValueData)) = UPPER ( TRIM (inPartnerName)) );
@@ -170,7 +171,7 @@ else RETURN;
                                                   , inParam1        := inPartnerCode    :: TVarChar
                                                   );
        END IF;
-   END IF;*/
+   END IF;  */
 
    IF COALESCE (inGoodsSize, '') <> ''
    THEN
