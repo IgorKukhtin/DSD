@@ -2003,7 +2003,7 @@ var
 begin
 
   Result := False;
-  nId := 0;
+  nId := cdsInventoryItemEditId.AsInteger;
 
   StoredProc := TdsdStoredProc.Create(nil);
   try
@@ -2458,7 +2458,7 @@ begin
       end;
     end;
 
-    DownloadInventoryListTop;
+    OpenInventoryGoods;
   end;
 end;
 

@@ -56,7 +56,7 @@ type
     aiWait: TAniIndicator;
     imLogo: TImage;
     lCaption: TLabel;
-    sbBack: TSpeedButton;
+    sbClose: TSpeedButton;
     Image7: TImage;
     sbMain: TStyleBook;
     VertScrollBox8: TVertScrollBox;
@@ -224,9 +224,7 @@ type
     edIIEPartNumber: TEdit;
     Label33: TLabel;
     bIIEOk: TButton;
-    Image20: TImage;
     bIIECancel: TButton;
-    Image21: TImage;
     BindSourceDB7: TBindSourceDB;
     LinkControlToField11: TLinkControlToField;
     LinkControlToField12: TLinkControlToField;
@@ -293,6 +291,10 @@ type
     Layout11: TLayout;
     sbRefresh: TSpeedButton;
     Image12: TImage;
+    sbBack: TSpeedButton;
+    Image9: TImage;
+    Layout12: TLayout;
+    Layout13: TLayout;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -835,6 +837,7 @@ var
 begin
 
   sbBack.Visible := tcMain.ActiveTab <> tiStart;
+  sbClose.Visible := sbBack.Visible;
   if FFormsStack.Count > 0 then
     begin
       Item:= FFormsStack.Pop;
@@ -903,15 +906,15 @@ end;
 
 procedure TfrmMain.SetInventScanButton;
 begin
-  bInventScan.ImageIndex := -1;
+  bInventScan.ImageIndex := 13;
   bInventScan.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScan.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-  bInventScanAmount.ImageIndex := -1;
+  bInventScanAmount.ImageIndex := 13;
   bInventScanAmount.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScanAmount.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
-  bInventScanSN.ImageIndex := -1;
+  bInventScanSN.ImageIndex := 13;
   bInventScanSN.TextSettings.FontColor := bInventScanSearch.TextSettings.FontColor;
   bInventScanSN.TextSettings.Font.Style := bInventScanSearch.TextSettings.Font.Style;
   bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size;
@@ -919,22 +922,22 @@ begin
 
   case FInventScanType of
     0 : begin
-          bInventScan.ImageIndex := 9;
+          bInventScan.ImageIndex := 12;
           bInventScan.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScan.TextSettings.Font.Style := [TFontStyle.fsBold];
-          bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+          bInventScan.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 1;
         end;
     1 : begin
-          bInventScanAmount.ImageIndex := 9;
+          bInventScanAmount.ImageIndex := 12;
           bInventScanAmount.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanAmount.TextSettings.Font.Style := [TFontStyle.fsBold];
-          bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+          bInventScanAmount.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 1;
         end;
     2 : begin
-          bInventScanSN.ImageIndex := 9;
+          bInventScanSN.ImageIndex := 12;
           bInventScanSN.TextSettings.FontColor := TAlphaColorRec.Peru;
           bInventScanSN.TextSettings.Font.Style := [TFontStyle.fsBold];
-          bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 3;
+          bInventScanSN.TextSettings.Font.Size := bInventScanSearch.TextSettings.Font.Size + 1;
         end;
   end;
 end;
@@ -973,13 +976,13 @@ begin
     if tcMain.ActiveTab = tiMain then
     begin
       imLogo.Visible := true;
-      //sbBack.Visible := false;
+      sbBack.Visible := false;
       DM.qurGoodsEAN.Close;
     end
     else
     begin
       imLogo.Visible := false;
-      //sbBack.Visible := true;
+      sbBack.Visible := true;
     end;
 
     if tcMain.ActiveTab = tiMain then
@@ -1056,6 +1059,7 @@ begin
     begin
       lCaption.Text := 'Добавить в Инвентаризацию';
       sbBack.Visible := false;
+      sbClose.Visible := sbBack.Visible;
       case FInventScanType of
         1 : begin
               edIIEAmount.SetFocus;
@@ -1435,8 +1439,8 @@ begin
    DM.cdsInventoryItemEdit.CreateDataSet;
    DM.cdsInventoryItemEdit.Insert;
 
-   DM.cdsInventoryItemEditLocalId.AsInteger := DM.cdsInventoryListTopId.AsInteger;
-   DM.cdsInventoryItemEditId.AsInteger := DM.cdsInventoryListTopGoodsId.AsInteger;
+   DM.cdsInventoryItemEditLocalId.AsInteger := DM.cdsInventoryListTopLocalId.AsInteger;
+   DM.cdsInventoryItemEditId.AsInteger := DM.cdsInventoryListTopId.AsInteger;
    DM.cdsInventoryItemEditGoodsId.AsInteger := DM.cdsInventoryListTopGoodsId.AsInteger;
    DM.cdsInventoryItemEditGoodsCode.AsInteger := DM.cdsInventoryListTopGoodsCode.AsInteger;
    DM.cdsInventoryItemEditGoodsName.AsString := DM.cdsInventoryListTopGoodsName.AsString;
@@ -2012,11 +2016,10 @@ begin
   end;
 
   SwitchToForm(tiMain, nil);
-  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
+  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict else DM.DownloadRemains;
 
   Sleep(500);
   bLogIn.Enabled := True;
-  DM.DownloadRemains;
 end;
 
 // Покажим инвентаризацию
@@ -2119,10 +2122,9 @@ begin
     else if (ErrorMessage = '') and (tcMain.ActiveTab = tiStart) then
     begin
       SwitchToForm(tiMain, nil);
-      if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict;
+      if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict else DM.DownloadRemains;
       Sleep(500);
       bLogIn.Enabled := True;
-      DM.DownloadRemains;
     end;
   end;
 end;
@@ -2164,8 +2166,8 @@ begin
     end else
     // Удаление позиции комплектующих
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить № п/п = <' + IfThen(DM.cdsInventoryListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsInventoryListTopOrdUser.AsString) +
-                                   '> кол-во = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + IfThen(DM.cdsInventoryListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsInventoryListTopOrdUser.AsString) + '>'#13#10 +
+                                   'кол-во = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListTopGoodsCode.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
                                    'из документа?',
@@ -2185,8 +2187,8 @@ begin
     end else
     // Удаление позиции комплектующего
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить № п/п = <' + DM.cdsInventoryListOrdUser.AsString +
-                                   '> кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + DM.cdsInventoryListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListGoodsCode.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
                                    'из документа?',
@@ -2195,8 +2197,8 @@ begin
     // Востановление позиции комплектующего
     if TButton(Sender).Tag = 3  then
     begin
-      TDialogService.MessageDialog('Отменить удаление № п/п = <' + DM.cdsInventoryListOrdUser.AsString +
-                                   '> кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
+      TDialogService.MessageDialog('Отменить удаление'#13#10'№ п/п = <' + DM.cdsInventoryListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListGoodsCode.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
                                    'в документе?',
