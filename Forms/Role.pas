@@ -11,7 +11,17 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxSplitter, Vcl.ExtCtrls,
   cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TRoleForm = class(TParentForm)
@@ -31,7 +41,6 @@ type
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     ActionList: TActionList;
@@ -40,7 +49,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel_1: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -111,6 +120,15 @@ type
     actProtocolUserForm: TdsdOpenForm;
     bbProtocolUser: TdxBarButton;
     cxSplitter1: TcxSplitter;
+    actGridToExcel_2: TdsdGridToExcel;
+    actGridToExcel_3: TdsdGridToExcel;
+    actGridToExcel_5: TdsdGridToExcel;
+    actGridToExcel_4: TdsdGridToExcel;
+    bbGridToExcel_1: TdxBarButton;
+    bbGridToExcel_2: TdxBarButton;
+    bbGridToExcel_3: TdxBarButton;
+    bbGridToExcel_4: TdxBarButton;
+    bbGridToExcel_5: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,13 +1,13 @@
 object DM: TDM
   OnCreate = DataModuleCreate
-  Height = 643
-  Width = 1202
+  Height = 664
+  Width = 1002
   PixelsPerInch = 144
   object cdsInventory: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 112
-    Top = 304
+    Top = 312
     object cdsInventoryId: TIntegerField
       FieldName = 'Id'
     end
@@ -46,7 +46,7 @@ object DM: TDM
     Params = <>
     AfterScroll = cdsInventoryListAfterScroll
     OnCalcFields = cdsInventoryListCalcFields
-    Left = 288
+    Left = 312
     Top = 312
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
@@ -143,51 +143,6 @@ object DM: TDM
       Calculated = True
     end
   end
-  object cdsGoodsEAN: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 112
-    Top = 416
-    object cdsGoodsEANId: TIntegerField
-      FieldName = 'Id'
-    end
-    object cdsGoodsEANCode: TIntegerField
-      FieldName = 'Code'
-    end
-    object cdsGoodsEANEAN: TWideStringField
-      FieldName = 'EAN'
-    end
-  end
-  object cdsGoodsList: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    AfterScroll = cdsGoodsListAfterScroll
-    Left = 304
-    Top = 416
-    object cdsGoodsListId: TIntegerField
-      FieldName = 'Id'
-    end
-    object cdsGoodsListCode: TIntegerField
-      FieldName = 'Code'
-    end
-    object cdsGoodsListName: TWideStringField
-      FieldName = 'Name'
-      Size = 255
-    end
-    object cdsGoodsListArticle: TWideStringField
-      FieldName = 'Article'
-    end
-    object cdsGoodsListEAN: TWideStringField
-      FieldName = 'EAN'
-    end
-    object cdsGoodsListGoodsGroupName: TWideStringField
-      FieldName = 'GoodsGroupName'
-      Size = 255
-    end
-    object cdsGoodsListMeasureName: TWideStringField
-      FieldName = 'MeasureName'
-    end
-  end
   object conMain: TFDConnection
     Params.Strings = (
       'DriverID=SQLite'
@@ -217,7 +172,7 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'InventoryGoods'
-    Left = 516
+    Left = 596
     Top = 164
     object tblInventoryGoodsLocalId: TAutoIncField
       FieldName = 'LocalId'
@@ -267,122 +222,6 @@ object DM: TDM
     MetaInfoKind = mkCatalogs
     Left = 522
     Top = 35
-  end
-  object qryInventoryGoods: TFDQuery
-    AfterScroll = qryInventoryGoodsAfterScroll
-    OnCalcFields = qryInventoryGoodsCalcFields
-    Connection = conMain
-    SQL.Strings = (
-      'SELECT IG.LocalId'
-      '     , IG.Id'
-      '     , IG.MovementId'
-      '     , IG.GoodsId'
-      '     , G.Code          AS GoodsCode'
-      '     , G.Name          AS GoodsName'
-      '     , G.Article'
-      '     , G.EAN'
-      '     , G.GoodsGroupName'
-      '     , G.MeasureName'
-      '     , IG.PartNumber'
-      '     , IG.PartionCellName'
-      '     , IG.Amount'
-      '     , IG.AmountRemains'
-      '     , IG.TotalCount'
-      '     , IG.Error'
-      ''
-      'FROM InventoryGoods AS IG'
-      ''
-      '     LEFT JOIN Goods G ON G.Id = IG.GoodsId'
-      ''
-      'WHERE IG.MovementId = :MovementId'
-      'ORDER BY IG.LocalId DESC')
-    Left = 124
-    Top = 533
-    ParamData = <
-      item
-        Name = 'MOVEMENTID'
-        ParamType = ptInput
-      end>
-    object qryInventoryGoodsLocalId: TAutoIncField
-      FieldName = 'LocalId'
-    end
-    object qryInventoryGoodsId: TIntegerField
-      FieldName = 'Id'
-    end
-    object qryInventoryGoodsMovementId: TIntegerField
-      FieldName = 'MovementId'
-    end
-    object qryInventoryGoodsGoodsId: TIntegerField
-      FieldName = 'GoodsId'
-    end
-    object qryInventoryGoodsGoodsCode: TIntegerField
-      FieldName = 'GoodsCode'
-    end
-    object qryInventoryGoodsGoodsName: TWideStringField
-      FieldName = 'GoodsName'
-      Size = 255
-    end
-    object qryInventoryGoodsArticle: TWideStringField
-      FieldName = 'Article'
-      Size = 40
-    end
-    object qryInventoryGoodsEAN: TWideStringField
-      FieldName = 'EAN'
-      Size = 40
-    end
-    object qryInventoryGoodsGoodsGroupName: TWideStringField
-      FieldName = 'GoodsGroupName'
-      Size = 255
-    end
-    object qryInventoryGoodsMeasureName: TWideStringField
-      FieldName = 'MeasureName'
-    end
-    object qryInventoryGoodsPartNumber: TWideStringField
-      FieldName = 'PartNumber'
-      Size = 255
-    end
-    object qryInventoryGoodsPartionCellName: TWideStringField
-      FieldName = 'PartionCellName'
-      Size = 255
-    end
-    object qryInventoryGoodsAmount: TFloatField
-      FieldName = 'Amount'
-    end
-    object qryInventoryGoodsAmountRemains: TFloatField
-      FieldName = 'AmountRemains'
-    end
-    object qryInventoryGoodsTotalCount: TFloatField
-      FieldName = 'TotalCount'
-    end
-    object qryInventoryGoodsAmountDiff: TFloatField
-      FieldKind = fkCalculated
-      FieldName = 'AmountDiff'
-      Calculated = True
-    end
-    object qryInventoryGoodsError: TWideStringField
-      FieldName = 'Error'
-      Size = 500
-    end
-    object qryInventoryGoodsAmountLabel: TWideStringField
-      FieldKind = fkCalculated
-      FieldName = 'AmountLabel'
-      Calculated = True
-    end
-    object qryInventoryGoodsAmountRemainsLabel: TWideStringField
-      FieldKind = fkCalculated
-      FieldName = 'AmountRemainsLabel'
-      Calculated = True
-    end
-    object qryInventoryGoodsTotalCountLabel: TWideStringField
-      FieldKind = fkCalculated
-      FieldName = 'TotalCountLabel'
-      Calculated = True
-    end
-    object qryInventoryGoodsAmountDiffLabel: TWideStringField
-      FieldKind = fkCalculated
-      FieldName = 'AmountDiffLabel'
-      Calculated = True
-    end
   end
   object fdcUTF16NoCase: TFDSQLiteCollation
     DriverLink = fdDriverLink
@@ -497,7 +336,7 @@ object DM: TDM
     Params = <>
     AfterEdit = cdsInventoryItemEditAfterEdit
     OnCalcFields = cdsInventoryItemEditCalcFields
-    Left = 464
+    Left = 504
     Top = 312
     object cdsInventoryItemEditLocalId: TIntegerField
       FieldName = 'LocalId'
@@ -560,21 +399,220 @@ object DM: TDM
       Calculated = True
     end
   end
-  object cdsDictList: TClientDataSet
-    Aggregates = <>
-    Params = <>
+  object tbRemains: TFDTable
+    Connection = conMain
+    ResourceOptions.AssignedValues = [rvEscapeExpand]
+    TableName = 'Remains'
+    Left = 428
+    Top = 166
+    object tbRemainsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tbRemainsPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object tbRemainsRemains: TFloatField
+      FieldName = 'Remains'
+    end
+    object tbRemainsRemains_curr: TFloatField
+      FieldName = 'Remains_curr'
+    end
+    object tbRemainsisLoad: TBooleanField
+      FieldName = 'isLoad'
+    end
+  end
+  object qurGoodsList: TFDQuery
     AfterScroll = cdsDictListAfterScroll
-    Left = 464
-    Top = 416
-    object cdsDictListId: TIntegerField
+    OnCalcFields = qurGoodsListCalcFields
+    Connection = conMain
+    SQL.Strings = (
+      '')
+    Left = 116
+    Top = 484
+    object qurGoodsListId: TIntegerField
       FieldName = 'Id'
     end
-    object cdsDictListCode: TIntegerField
+    object qurGoodsListCode: TIntegerField
       FieldName = 'Code'
     end
-    object cdsDictListName: TWideStringField
+    object qurGoodsListName: TWideStringField
       FieldName = 'Name'
       Size = 255
+    end
+    object qurGoodsListArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 255
+    end
+    object qurGoodsListEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object qurGoodsListGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object qurGoodsListMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object qurGoodsListRemains: TFloatField
+      FieldName = 'Remains'
+    end
+    object qurGoodsListRemains_curr: TFloatField
+      FieldName = 'Remains_curr'
+    end
+    object qurGoodsListRemainsLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'RemainsLabel'
+      Size = 40
+      Calculated = True
+    end
+    object qurGoodsListRemains_currLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'Remains_currLabel'
+      Size = 40
+      Calculated = True
+    end
+  end
+  object qurDictList: TFDQuery
+    AfterScroll = cdsDictListAfterScroll
+    Connection = conMain
+    SQL.Strings = (
+      '')
+    Left = 348
+    Top = 476
+    object qurDictListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qurDictListCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object qurDictListName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+  end
+  object qurGoodsEAN: TFDQuery
+    AfterScroll = cdsDictListAfterScroll
+    Connection = conMain
+    SQL.Strings = (
+      '')
+    Left = 548
+    Top = 468
+    object qurGoodsEANId: TIntegerField
+      FieldName = 'Id'
+    end
+    object qurGoodsEANCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object qurGoodsEANEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+  end
+  object cdsInventoryListTop: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnCalcFields = cdsInventoryListTopCalcFields
+    Left = 736
+    Top = 320
+    object cdsInventoryListTopId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsInventoryListTopLocalId: TIntegerField
+      FieldName = 'LocalId'
+    end
+    object cdsInventoryListTopGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsInventoryListTopGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsInventoryListTopGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsInventoryListTopArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsInventoryListTopEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object cdsInventoryListTopGoodsGroupId: TIntegerField
+      FieldName = 'GoodsGroupId'
+    end
+    object cdsInventoryListTopGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsInventoryListTopMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsInventoryListTopPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object cdsInventoryListTopPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsInventoryListTopPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object cdsInventoryListTopAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsInventoryListTopTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object cdsInventoryListTopAmountDiff: TFloatField
+      FieldName = 'AmountDiff'
+    end
+    object cdsInventoryListTopAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsInventoryListTopAmountRemains_curr: TFloatField
+      FieldName = 'AmountRemains_curr'
+    end
+    object cdsInventoryListTopOrdUser: TIntegerField
+      FieldName = 'OrdUser'
+    end
+    object cdsInventoryListTopOperDate_protocol: TDateTimeField
+      FieldName = 'OperDate_protocol'
+    end
+    object cdsInventoryListTopUserName_protocol: TWideStringField
+      FieldName = 'UserName_protocol'
+      Size = 255
+    end
+    object cdsInventoryListTopisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object cdsInventoryListTopAmountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountLabel'
+      Calculated = True
+    end
+    object cdsInventoryListTopAmountRemainsLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountRemainsLabel'
+      Calculated = True
+    end
+    object cdsInventoryListTopTotalCountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountLabel'
+      Calculated = True
+    end
+    object cdsInventoryListTopAmountDiffLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountDiffLabel'
+      Calculated = True
+    end
+    object cdsInventoryListTopErasedId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'ErasedId'
+      Calculated = True
+    end
+    object cdsInventoryListTopError: TWideStringField
+      FieldName = 'Error'
     end
   end
 end

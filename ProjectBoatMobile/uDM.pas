@@ -37,19 +37,22 @@ type
   { отдельный поток для выполнения процедур получения данных с сервера }
   TWaitThread = class(TThread)
   private
-    TaskName : string;
+    TaskName: string;
+    FidSecretly: Boolean;
 
     procedure SetTaskName(AName : string);
     function DoLoadDict(ATableName, AProcName : string; tbDict: TFDTable): string;
 
     function UpdateProgram: string;
     function LoadDict: string;
+    function LoadRemains: string;
     function OpenDictList: string;
     function OpenGoodsList: string;
     function UploadInventoryGoods: string;
     function OpenInventoryGoods: string;
   protected
     procedure Execute; override;
+    property idSecretly: Boolean read FidSecretly write FidSecretly default False;
   end;
 
   { классы для создания БД на основе TFDTable модуля TDM }
@@ -101,16 +104,7 @@ type
     cdsInventoryListAmountRemains: TFloatField;
     cdsInventoryListAmountRemains_curr: TFloatField;
     cdsInventoryUnitId: TIntegerField;
-    cdsGoodsEAN: TClientDataSet;
     cdsInventoryListPartNumber: TWideStringField;
-    cdsGoodsList: TClientDataSet;
-    cdsGoodsListId: TIntegerField;
-    cdsGoodsListCode: TIntegerField;
-    cdsGoodsListName: TWideStringField;
-    cdsGoodsListArticle: TWideStringField;
-    cdsGoodsListEAN: TWideStringField;
-    cdsGoodsListGoodsGroupName: TWideStringField;
-    cdsGoodsListMeasureName: TWideStringField;
     conMain: TFDConnection;
     fdGUIxWaitCursor: TFDGUIxWaitCursor;
     fdDriverLink: TFDPhysSQLiteDriverLink;
@@ -122,17 +116,6 @@ type
     tblInventoryGoodsMovementId: TIntegerField;
     qryMeta: TFDMetaInfoQuery;
     qryMeta2: TFDMetaInfoQuery;
-    qryInventoryGoods: TFDQuery;
-    qryInventoryGoodsMovementId: TIntegerField;
-    qryInventoryGoodsGoodsId: TIntegerField;
-    qryInventoryGoodsGoodsCode: TIntegerField;
-    qryInventoryGoodsGoodsName: TWideStringField;
-    qryInventoryGoodsArticle: TWideStringField;
-    qryInventoryGoodsEAN: TWideStringField;
-    qryInventoryGoodsGoodsGroupName: TWideStringField;
-    qryInventoryGoodsMeasureName: TWideStringField;
-    qryInventoryGoodsPartNumber: TWideStringField;
-    qryInventoryGoodsAmount: TFloatField;
     fdcUTF16NoCase: TFDSQLiteCollation;
     cdsOrderInternal: TClientDataSet;
     cdsOrderInternalMovementItemId: TIntegerField;
@@ -161,9 +144,6 @@ type
     tbPartionCellLevel: TFloatField;
     tbPartionCellComment: TWideStringField;
     tbPartionCellisLoad: TBooleanField;
-    cdsGoodsEANId: TIntegerField;
-    cdsGoodsEANEAN: TWideStringField;
-    cdsGoodsEANCode: TIntegerField;
     cdsInventoryItemEdit: TClientDataSet;
     cdsInventoryItemEditId: TIntegerField;
     cdsInventoryItemEditGoodsId: TIntegerField;
@@ -178,27 +158,14 @@ type
     cdsInventoryItemEditAmountRemains: TFloatField;
     cdsInventoryItemEditPartionCellId: TIntegerField;
     cdsInventoryItemEditPartionCellName: TWideStringField;
-    cdsDictList: TClientDataSet;
-    cdsDictListId: TIntegerField;
-    cdsDictListCode: TIntegerField;
-    cdsDictListName: TWideStringField;
     tblInventoryGoodsPartionCellName: TWideStringField;
     tblInventoryGoodsId: TIntegerField;
     tblInventoryGoodsisSend: TBooleanField;
     tblInventoryGoodsLocalId: TAutoIncField;
-    qryInventoryGoodsLocalId: TAutoIncField;
-    qryInventoryGoodsId: TIntegerField;
     tblInventoryGoodsError: TWideStringField;
-    qryInventoryGoodsError: TWideStringField;
     cdsInventoryItemEditLocalId: TIntegerField;
-    qryInventoryGoodsPartionCellName: TWideStringField;
     tblInventoryGoodsTotalCount: TFloatField;
     tblInventoryGoodsAmountRemains: TFloatField;
-    qryInventoryGoodsAmountRemains: TFloatField;
-    qryInventoryGoodsTotalCount: TFloatField;
-    qryInventoryGoodsAmountLabel: TWideStringField;
-    qryInventoryGoodsAmountRemainsLabel: TWideStringField;
-    qryInventoryGoodsTotalCountLabel: TWideStringField;
     cdsInventoryListPartionCellId: TIntegerField;
     cdsInventoryListPartionCellName: TWideStringField;
     cdsInventoryListTotalCount: TFloatField;
@@ -211,11 +178,64 @@ type
     cdsInventoryListErasedId: TIntegerField;
     cdsInventoryItemEditAmountDiff: TFloatField;
     cdsInventoryItemEditTotalCountCalc: TFloatField;
-    qryInventoryGoodsAmountDiffLabel: TWideStringField;
     cdsInventoryListAmountDiff: TFloatField;
     cdsInventoryListAmountDiffLabel: TWideStringField;
-    qryInventoryGoodsAmountDiff: TFloatField;
     cdsInventoryListOrdUser: TIntegerField;
+    tbRemains: TFDTable;
+    tbRemainsGoodsId: TIntegerField;
+    tbRemainsPartNumber: TWideStringField;
+    tbRemainsRemains: TFloatField;
+    tbRemainsRemains_curr: TFloatField;
+    tbRemainsisLoad: TBooleanField;
+    qurGoodsList: TFDQuery;
+    qurGoodsListId: TIntegerField;
+    qurGoodsListCode: TIntegerField;
+    qurGoodsListName: TWideStringField;
+    qurGoodsListArticle: TWideStringField;
+    qurGoodsListEAN: TWideStringField;
+    qurGoodsListGoodsGroupName: TWideStringField;
+    qurGoodsListMeasureName: TWideStringField;
+    qurGoodsListRemains: TFloatField;
+    qurGoodsListRemains_curr: TFloatField;
+    qurGoodsListRemainsLabel: TWideStringField;
+    qurGoodsListRemains_currLabel: TWideStringField;
+    qurDictList: TFDQuery;
+    qurDictListId: TIntegerField;
+    qurDictListCode: TIntegerField;
+    qurDictListName: TWideStringField;
+    qurGoodsEAN: TFDQuery;
+    qurGoodsEANId: TIntegerField;
+    qurGoodsEANCode: TIntegerField;
+    qurGoodsEANEAN: TWideStringField;
+    cdsInventoryListTop: TClientDataSet;
+    cdsInventoryListTopId: TIntegerField;
+    cdsInventoryListTopGoodsId: TIntegerField;
+    cdsInventoryListTopGoodsCode: TIntegerField;
+    cdsInventoryListTopGoodsName: TWideStringField;
+    cdsInventoryListTopArticle: TWideStringField;
+    cdsInventoryListTopEAN: TWideStringField;
+    cdsInventoryListTopGoodsGroupId: TIntegerField;
+    cdsInventoryListTopGoodsGroupName: TWideStringField;
+    cdsInventoryListTopMeasureName: TWideStringField;
+    cdsInventoryListTopPartNumber: TWideStringField;
+    cdsInventoryListTopPartionCellId: TIntegerField;
+    cdsInventoryListTopPartionCellName: TWideStringField;
+    cdsInventoryListTopAmount: TFloatField;
+    cdsInventoryListTopTotalCount: TFloatField;
+    cdsInventoryListTopAmountDiff: TFloatField;
+    cdsInventoryListTopAmountRemains: TFloatField;
+    cdsInventoryListTopAmountRemains_curr: TFloatField;
+    cdsInventoryListTopOrdUser: TIntegerField;
+    cdsInventoryListTopOperDate_protocol: TDateTimeField;
+    cdsInventoryListTopUserName_protocol: TWideStringField;
+    cdsInventoryListTopisErased: TBooleanField;
+    cdsInventoryListTopAmountLabel: TWideStringField;
+    cdsInventoryListTopAmountRemainsLabel: TWideStringField;
+    cdsInventoryListTopTotalCountLabel: TWideStringField;
+    cdsInventoryListTopAmountDiffLabel: TWideStringField;
+    cdsInventoryListTopErasedId: TIntegerField;
+    cdsInventoryListTopLocalId: TIntegerField;
+    cdsInventoryListTopError: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -229,6 +249,8 @@ type
     procedure cdsInventoryListAfterScroll(DataSet: TDataSet);
     procedure cdsGoodsListAfterScroll(DataSet: TDataSet);
     procedure cdsDictListAfterScroll(DataSet: TDataSet);
+    procedure qurGoodsListCalcFields(DataSet: TDataSet);
+    procedure cdsInventoryListTopCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -268,8 +290,10 @@ type
     procedure UpdateProgram(const AResult: TModalResult);
 
     function DownloadDict : Boolean;
+    function DownloadRemains : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
     function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+    function DownloadInventoryListTop : Boolean;
 
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
@@ -284,12 +308,11 @@ type
     function LoadGoodsList : Boolean;
     function LoadGoodsListId(AId : Integer) : Boolean;
 
-    procedure LoadGoodsEAN;
+    procedure LoadGoodsEAN(ABarCode : String);
 
     procedure OpenInventoryGoods;
     procedure InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
                                         APartNumber, APartionCell, AError : String; AisSend: Boolean);
-    procedure UpdateInventoryGoods(AAmount: Currency);
     procedure DeleteInventoryGoods;
     procedure ErasedInventoryList;
     procedure UnErasedInventoryList;
@@ -418,10 +441,11 @@ end;
 
 procedure TWaitThread.SetTaskName(AName : string);
 begin
-  Synchronize(procedure
-              begin
-                frmMain.lProgressName.Text := AName;
-              end);
+  if not FidSecretly then
+    Synchronize(procedure
+                begin
+                  frmMain.lProgressName.Text := AName;
+                end);
 end;
 
 { получение новой версии программы }
@@ -532,7 +556,7 @@ begin
     StoredProc.DataSet := cdsDict;
 
     try
-      StoredProc.Execute(false, false, false);
+      StoredProc.Execute(false, false, false, 2);
 
       // Заливаем данные построчно т.к. через JSON UTF-8 не проходит
 
@@ -648,6 +672,25 @@ begin
 
 end;
 
+// Получение остатков
+function TWaitThread.LoadRemains: string;
+begin
+
+  try
+    // Получение справочника Комплектующих
+    SetTaskName('Получение остатков');
+    DoLoadDict(DM.tbRemains.TableName, 'gpSelect_Movement_MobileRemains', DM.tbRemains);
+
+    if (TaskName = 'LoadRemains') and (frmMain.tcMain.ActiveTab = frmMain.tiGoods) then TaskName := 'OpenGoodsList';
+  except
+    on E : Exception do
+    begin
+      Result := GetTextMessage(E);
+    end;
+  end;
+
+end;
+
 // Открытие справочника
 function TWaitThread.OpenDictList: string;
 begin
@@ -670,12 +713,12 @@ function TWaitThread.OpenGoodsList: string;
 begin
   frmMain.lwGoods.Visible := False;
   frmMain.lGoodsSelect.Visible := False;
-  if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
+  if DM.qurGoodsList.Active then nID := DM.qurGoodsListId.AsInteger
   else nID := 0;
   try
     DM.LoadGoodsList;
   finally
-    if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
+    if DM.qurGoodsList.Active and (nID <> 0) then DM.qurGoodsList.Locate('Id', nId, []);
     Synchronize(procedure
               begin
                 frmMain.lwGoods.Visible := True;
@@ -779,23 +822,36 @@ var
 begin
   Res := '';
 
-  Synchronize(procedure
-              begin
-                frmMain.lProgress.Visible := false;
-                frmMain.pieAllProgress.Visible := false;
-                frmMain.pProgress.Visible := true;
-                frmMain.vsbMain.Enabled := false;
-              end);
+  if not FidSecretly then
+  begin
+    Synchronize(procedure
+                begin
+                  frmMain.lProgress.Visible := false;
+                  frmMain.pieAllProgress.Visible := false;
+                  frmMain.pProgress.Visible := true;
+                  frmMain.vsbMain.Enabled := false;
+                end);
 
-  ProgressThread := TProgressThread.Create(true);
+    ProgressThread := TProgressThread.Create(true);
+  end;
+
   try
-    ProgressThread.FreeOnTerminate := true;
-    ProgressThread.Start;
+
+    if not FidSecretly then
+    begin
+      ProgressThread.FreeOnTerminate := true;
+      ProgressThread.Start;
+    end;
 
     if TaskName = 'UpdateProgram' then
     begin
       SetTaskName('Получение файла обновления');
       Res := UpdateProgram;
+    end;
+
+    if (Res = '') and ((TaskName = 'LoadRemains') or (TaskName = 'LoadDict')) then
+    begin
+      Res := LoadRemains;
     end;
 
     if (Res = '') and (TaskName = 'LoadDict') then
@@ -828,22 +884,25 @@ begin
     end;
 
   finally
-    ProgressThread.Terminate;
-
-    Synchronize(procedure
-                begin
-                  frmMain.pProgress.Visible := false;
-                  frmMain.pieAllProgress.Visible := true;
-                  frmMain.lProgress.Visible := true;
-                  frmMain.vsbMain.Enabled := true;
-                end);
-
-    if Res <> '' then
+    if not FidSecretly then
     begin
+      ProgressThread.Terminate;
+
       Synchronize(procedure
                   begin
-                    ShowMessage(Res);
+                    frmMain.pProgress.Visible := false;
+                    frmMain.pieAllProgress.Visible := true;
+                    frmMain.lProgress.Visible := true;
+                    frmMain.vsbMain.Enabled := true;
                   end);
+
+      if Res <> '' then
+      begin
+        Synchronize(procedure
+                    begin
+                      ShowMessage(Res);
+                    end);
+      end;
     end;
   end;
 end;
@@ -1048,6 +1107,17 @@ begin
 end;
 
 procedure TDM.cdsInventoryListCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
+  DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
+  DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
+  if DataSet.FieldByName('isErased').AsBoolean then
+  DataSet.FieldByName('ErasedId').AsInteger := 3
+  else DataSet.FieldByName('ErasedId').AsInteger := -1;
+end;
+
+procedure TDM.cdsInventoryListTopCalcFields(DataSet: TDataSet);
 begin
   DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
@@ -1407,6 +1477,7 @@ begin
     DataSetProvider.Name := 'DataSetProvider';
     DataSetProvider.DataSet := FDQuery;
     ClientDataSet := TClientDataSet.Create(Application);
+
     ClientDataSet.ProviderName := DataSetProvider.Name;
     try
 
@@ -1598,6 +1669,16 @@ begin
   Result := True;
 end;
 
+{ начитка остатков }
+function TDM.DownloadRemains : Boolean;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.idSecretly := true;
+  WaitThread.TaskName := 'LoadRemains';
+  WaitThread.Start;
+  Result := True;
+end;
 
 function TDM.GetInventoryActive(AisCreate : Boolean) : Boolean;
 var
@@ -1716,6 +1797,39 @@ begin
     cdsInventoryList.EnableControls;
   end;
 end;
+
+{ начитка топ инвентаризации}
+function TDM.DownloadInventoryListTop : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  Result := False;
+  if not cdsInventory.Active or cdsInventory.IsEmpty then Exit;
+
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsInventoryListTop.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileInventoryTop';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, DM.cdsInventoryId.AsInteger);
+    StoredProc.DataSet := cdsInventoryListTop;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      Result := cdsInventoryListTop.Active;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsInventoryListTop.EnableControls;
+  end;
+end;
+
 
 { начитка внутреннего заказа + производство}
 function TDM.DownloadOrderInternal(AId : Integer) : Boolean;
@@ -1985,14 +2099,13 @@ function TDM.LoadDictList : Boolean;
       tbDict: TFDTable;
       nId: Integer;
 begin
-  cdsDictList.DisableControls;
-  if DM.cdsDictList.Active then nID := DM.cdsDictListId.AsInteger
+  qurDictList.DisableControls;
+  if DM.qurDictList.Active then nID := DM.qurDictListId.AsInteger
   else nID := 0;
 
   try
 
-    cdsDictList.Close;
-    cdsDictList.CreateDataSet;
+    qurDictList.Close;
 
     tbDict := Structure.DataSet[DictTypeTableName[Ord(FDictType)]];
 
@@ -2019,15 +2132,28 @@ begin
 
     sql := sql + #13#10'LIMIT ' + IntToStr(FLimitList);
 
-    LoadSQLite(cdsDictList, sql);
+    qurDictList.SQL.Text := sql;
 
-    Result := cdsDictList.Active;
-    if cdsDictList.RecordCount >= FLimitList then
-      frmMain.lDictListSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
-    else frmMain.lDictListSelect.Text := 'Найдено ' + IntToStr(cdsDictList.RecordCount) + ' записей';
+    try
+      qurDictList.Open;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+
+    Result := qurDictList.Active;
+    if DM.qurDictList.Active then
+    begin
+      if qurDictList.RecordCount >= FLimitList then
+        frmMain.lDictListSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.lDictListSelect.Text := 'Найдено ' + IntToStr(qurDictList.RecordCount) + ' записей';
+    end;
   finally
-    if DM.cdsDictList.Active and (nID <> 0) then DM.cdsDictList.Locate('Id', nId, []);
-    cdsDictList.EnableControls;
+    if DM.qurDictList.Active and (nID <> 0) then DM.qurDictList.Locate('Id', nId, []);
+    qurDictList.EnableControls;
   end;
 end;
 
@@ -2038,14 +2164,15 @@ begin
   Result := False;
   if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
   begin
-    cdsGoodsList.DisableControls;
-    if DM.cdsGoodsList.Active then nID := DM.cdsGoodsListId.AsInteger
+    qurGoodsList.DisableControls;
+    if DM.qurGoodsList.Active then nID := DM.qurGoodsListId.AsInteger
     else nID := 0;
     try
-      cdsGoodsList.Close;
-      cdsGoodsList.CreateDataSet;
+      qurGoodsList.Close;
 
-      sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName FROM Goods';
+      sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName, COALESCE (Remains, 0.0) AS Remains, COALESCE (Remains_curr, 0.0) AS Remains_curr ' +
+             'FROM Goods ' +
+             'LEFT JOIN (SELECT Remains.GoodsId, SUM(Remains.Remains) AS Remains, SUM(Remains.Remains_curr) AS Remains_curr FROM Remains GROUP BY Remains.GoodsId) AS tmpRemains ON tmpRemains.GoodsId = Goods.Id';
       sql := sql + #13#10'WHERE isErased = 0';
 
       if FFilterGoods <> '' then
@@ -2064,16 +2191,29 @@ begin
       sql := sql + #13#10'ORDER BY NameUpper';
       sql := sql + #13#10'LIMIT ' + IntToStr(FLimitList);
 
-      LoadSQLite(cdsGoodsList, sql);
+      qurGoodsList.SQL.Text := sql;
 
-      Result := cdsGoodsList.Active;
-      if cdsGoodsList.RecordCount >= FLimitList then
-        frmMain.lGoodsSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' комплектующих'
-      else frmMain.lGoodsSelect.Text := 'Найдено ' + IntToStr(cdsGoodsList.RecordCount) + ' комплектующих';
-      if FFilterGoodsEAN then frmMain.lGoodsSelect.Text := frmMain.lGoodsSelect.Text + ' по штрихкоду'
+      try
+        qurGoodsList.Open;
+      except
+        on E : Exception do
+        begin
+          raise Exception.Create(GetTextMessage(E));
+          exit;
+        end;
+      end;
+
+      Result := qurGoodsList.Active;
+      if DM.qurGoodsList.Active then
+      begin
+        if qurGoodsList.RecordCount >= FLimitList then
+          frmMain.lGoodsSelect.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' комплектующих'
+        else frmMain.lGoodsSelect.Text := 'Найдено ' + IntToStr(qurGoodsList.RecordCount) + ' комплектующих';
+        if FFilterGoodsEAN then frmMain.lGoodsSelect.Text := frmMain.lGoodsSelect.Text + ' по штрихкоду'
+      end;
     finally
-      if DM.cdsGoodsList.Active and (nID <> 0) then DM.cdsGoodsList.Locate('Id', nId, []);
-      cdsGoodsList.EnableControls;
+      if DM.qurGoodsList.Active and (nID <> 0) then DM.qurGoodsList.Locate('Id', nId, []);
+      qurGoodsList.EnableControls;
     end;
   end else DM.DownloadDict;
 end;
@@ -2083,42 +2223,122 @@ function TDM.LoadGoodsListId(AId : Integer) : Boolean;
 begin
   try
 
-    cdsGoodsList.Close;
-    cdsGoodsList.CreateDataSet;
+    qurGoodsList.Close;
 
-    sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName FROM Goods';
+    sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName, 0.0 AS Remains, 0.0 AS Remains_curr ' +
+           'FROM Goods ';
     sql := sql + #13#10'WHERE Id = ' + IntToStr(AId);
 
-    LoadSQLite(cdsGoodsList, sql);
+    qurGoodsList.SQL.Text := sql;
 
-    Result := cdsGoodsList.Active and (cdsGoodsList.RecordCount = 1);
+    try
+      qurGoodsList.Open;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+
+    Result := qurGoodsList.Active and (qurGoodsList.RecordCount = 1);
   finally
   end;
 end;
 
-procedure TDM.LoadGoodsEAN;
+procedure TDM.LoadGoodsEAN(ABarCode : String);
+  var sql: string; Code: Integer;
 begin
+  try
 
-  if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
-  begin
+    qurGoodsEAN.Close;
 
-    LoadSQLite(cdsGoodsEan, 'SELECT Id, Code, EAN FROM Goods');
-    if not cdsGoodsEAN.Active then DownloadDict;
+    sql := 'SELECT Id, Code, Article, EAN FROM Goods WHERE ';
 
-  end else DownloadDict;
+    if COPY(ABarCode, 1, Length(frmMain.BarCodePref)) = frmMain.BarCodePref then
+    begin
+      if not TryStrToInt(COPY(ABarCode, Length(frmMain.BarCodePref), 12 - Length(frmMain.BarCodePref)), Code) then
+      begin
+        ShowMessage('Не правельный штрихкод <' + ABarCode + '>');
+        Exit;
+      end else sql := sql + 'Code = ' + IntToStr(Code);
+    end else sql := sql + 'EAN LIKE ''' + ABarCode + '%''';
+
+    qurGoodsEAN.SQL.Text := sql;
+
+    try
+      qurGoodsEAN.Open;
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+  finally
+  end;
 end;
 
 // Иницилизация хранилища результатов сканирования
 procedure TDM.OpenInventoryGoods;
+  var sql: string; FDQuery: TFDQuery; I: Integer;
 begin
   // перед открытием почистим
   if cdsInventory.Active and (cdsInventoryId.AsInteger <> 0) then
     DM.conMain.ExecSQL('DELETE FROM InventoryGoods WHERE MovementId <> ' + cdsInventoryId.AsString +
                        ' OR isSend = 1 and LocalId < (SELECT MAX(LocalId) - 4 FROM InventoryGoods)');
 
-  qryInventoryGoods.Close;
-  qryInventoryGoods.ParamByName('MovementId').Value := cdsInventoryId.AsInteger;
-  qryInventoryGoods.Open;
+  cdsInventoryListTop.Close;
+  DownloadInventoryListTop;
+
+  //if not DM.isInventoryGoodsSend then
+  begin
+
+    FDQuery := TFDQuery.Create(nil);
+    try
+
+      if not cdsInventoryListTop.Active then cdsInventoryListTop.CreateDataSet;
+
+      FDQuery.Connection := conMain;
+      FDQuery.SQL.Text := 'SELECT IG.LocalId ' +
+                          '     , IG.Id ' +
+                          '     , IG.MovementId ' +
+                          '     , IG.GoodsId ' +
+                          '     , G.Code          AS GoodsCode ' +
+                          '     , G.Name          AS GoodsName ' +
+                          '     , G.Article ' +
+                          '     , G.EAN ' +
+                          '     , G.GoodsGroupName ' +
+                          '     , G.MeasureName ' +
+                          '     , IG.PartNumber ' +
+                          '     , IG.PartionCellName ' +
+                          '     , IG.Amount ' +
+                          '     , IG.AmountRemains ' +
+                          '     , IG.TotalCount ' +
+                          '     , IG.Error ' +
+                          'FROM InventoryGoods AS IG ' +
+                          '     LEFT JOIN Goods G ON G.Id = IG.GoodsId ' +
+                          'WHERE IG.isSend = 0 and IG.MovementId = ' + cdsInventoryId.AsString +
+                          ' ORDER BY IG.LocalId DESC';
+      FDQuery.Open;
+
+      FDQuery.First;
+      while not FDQuery.Eof do
+      begin
+        cdsInventoryListTop.Insert;
+        for I := 0 to FDQuery.FieldCount - 1 do
+          if Assigned(cdsInventoryListTop.FindField(FDQuery.Fields.Fields[I].FieldName)) then
+            cdsInventoryListTop.FindField(FDQuery.Fields.Fields[I].FieldName).AsVariant := FDQuery.Fields.Fields[I].AsVariant;
+        cdsInventoryListTop.Post;
+        FDQuery.Next
+      end;
+
+    finally
+      FDQuery.Free;
+    end;
+  end;
+
+  if cdsInventoryListTop.Active then cdsInventoryListTop.First;
 end;
 
 procedure TDM.qryInventoryGoodsAfterScroll(DataSet: TDataSet);
@@ -2135,6 +2355,12 @@ begin
   if DataSet.FieldByName('TotalCount').AsFloat <> DataSet.FieldByName('AmountRemains').AsFloat then
     DataSet.FieldByName('AmountDiff').AsFloat := DataSet.FieldByName('TotalCount').AsFloat - DataSet.FieldByName('AmountRemains').AsFloat
   else DataSet.FieldByName('AmountDiff').AsVariant := Null;
+end;
+
+procedure TDM.qurGoodsListCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('RemainsLabel').AsString := 'Расчетный остаток:';
+  DataSet.FieldByName('Remains_currLabel').AsString := 'Текущий остаток:';
 end;
 
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию
@@ -2170,56 +2396,13 @@ begin
     FDQuery.Free;
   end;
 
-  qryInventoryGoods.DisableControls;
+  cdsInventoryListTop.DisableControls;
   try
     OpenInventoryGoods;
-    qryInventoryGoods.Locate('LocalId', ALocalId, [loCaseInsensitive])
+    if AId <> 0 then cdsInventoryListTop.Locate('Id', AId, [loCaseInsensitive])
+    else  cdsInventoryListTop.Locate('LocalId', ALocalId, [loCaseInsensitive])
   finally
-    qryInventoryGoods.EnableControls;
-  end;
-end;
-
-// Добавить комплектующее для вставки в инвентаризацию
-procedure TDM.UpdateInventoryGoods(AAmount: Currency);
-  var FDQuery: TFDQuery;
-      nMovementId, nGoodsId: Integer;
-      cPartNumber: String;
-begin
-
-  if qryInventoryGoods.Active and not qryInventoryGoods.IsEmpty then
-  begin
-    FDQuery := TFDQuery.Create(nil);
-    try
-      FDQuery.Connection := conMain;
-      FDQuery.SQL.Text := 'Select * FROM InventoryGoods ' +
-                          'WHERE MovementId = :MovementId AND GoodsId = :GoodsId AND AnsiUpperCase(PartNumber) = AnsiUpperCase(:PartNumber)';
-      FDQuery.ParamByName('MovementId').AsInteger := qryInventoryGoods.FieldByName('MovementId').AsInteger;
-      FDQuery.ParamByName('GoodsId').AsInteger := qryInventoryGoods.FieldByName('GoodsId').AsInteger;
-      FDQuery.ParamByName('PartNumber').AsString := qryInventoryGoods.FieldByName('PartNumber').AsString;
-      FDQuery.Open;
-
-      if not FDQuery.IsEmpty then
-      begin
-        FDQuery.Edit;
-        FDQuery.FieldByName('Amount').AsFloat := AAmount;
-        FDQuery.Post;
-      end;
-
-    finally
-      FDQuery.Free;
-    end;
-
-    qryInventoryGoods.DisableControls;
-    try
-      nMovementId := qryInventoryGoods.FieldByName('MovementId').AsInteger;
-      nGoodsId := qryInventoryGoods.FieldByName('GoodsId').AsInteger;
-      cPartNumber := qryInventoryGoods.FieldByName('PartNumber').AsString;
-
-      OpenInventoryGoods;
-      qryInventoryGoods.Locate('MovementId;GoodsId;PartNumber', VarArrayOf([nMovementId, nGoodsId, cPartNumber]), [loCaseInsensitive])
-    finally
-      qryInventoryGoods.EnableControls;
-    end;
+    cdsInventoryListTop.EnableControls;
   end;
 end;
 
@@ -2229,56 +2412,53 @@ procedure TDM.DeleteInventoryGoods;
       StoredProc : TdsdStoredProc;
 begin
 
-  if qryInventoryGoods.Active and not qryInventoryGoods.IsEmpty then
+  if cdsInventoryListTop.Active and not cdsInventoryListTop.IsEmpty then
   begin
-    FDQuery := TFDQuery.Create(nil);
-    try
-      FDQuery.Connection := conMain;
-      FDQuery.SQL.Text := 'Select * FROM InventoryGoods WHERE LocalId = :LocalId';
-      FDQuery.ParamByName('LocalId').AsInteger := qryInventoryGoods.FieldByName('LocalId').AsInteger;
-      FDQuery.Open;
 
-      if not FDQuery.IsEmpty then
-      begin
-        if FDQuery.FieldByName('Id').AsInteger <> 0 then
-        begin
+    // Удалим в локальной базе
+    if cdsInventoryListTopLocalId.AsInteger <> 0 then
+    begin
+      FDQuery := TFDQuery.Create(nil);
+      try
+        FDQuery.Connection := conMain;
+        FDQuery.SQL.Text := 'Select * FROM InventoryGoods WHERE LocalId = :LocalId';
+        FDQuery.ParamByName('LocalId').AsInteger := cdsInventoryListTopLocalId.AsInteger;
+        FDQuery.Open;
 
-          StoredProc := TdsdStoredProc.Create(nil);
-          try
-            StoredProc.OutputType := otResult;
+        if not FDQuery.IsEmpty then FDQuery.Delete;
+      finally
+        FDQuery.Free;
+      end;
+    end;
 
-            StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetErased';
-            StoredProc.Params.Clear;
-            StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, FDQuery.FieldByName('Id').AsInteger);
+    // Удалим на сервере
+    if cdsInventoryListTopId.AsInteger <> 0 then
+    begin
 
-            try
-              StoredProc.Execute(false, false, false);
-            except
-              on E : Exception do
-              begin
-                raise Exception.Create(GetTextMessage(E));
-                exit;
-              end;
-            end;
-          finally
-            FreeAndNil(StoredProc);
+
+      StoredProc := TdsdStoredProc.Create(nil);
+      try
+        StoredProc.OutputType := otResult;
+
+        StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetErased';
+        StoredProc.Params.Clear;
+        StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListTopId.AsInteger);
+
+        try
+          StoredProc.Execute(false, false, false);
+        except
+          on E : Exception do
+          begin
+            raise Exception.Create(GetTextMessage(E));
+            exit;
           end;
         end;
-
-        FDQuery.Delete;
-
-        nPos := qryInventoryGoods.RecNo - 1;
-        qryInventoryGoods.DisableControls;
-        try
-          OpenInventoryGoods;
-          if (nPos > 0) and (nPos < qryInventoryGoods.RecordCount) then qryInventoryGoods.RecNo := nPos;
-        finally
-          qryInventoryGoods.EnableControls;
-        end;
+      finally
+        FreeAndNil(StoredProc);
       end;
-    finally
-      FDQuery.Free;
     end;
+
+    DownloadInventoryListTop;
   end;
 end;
 
