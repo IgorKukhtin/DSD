@@ -330,6 +330,9 @@ else RETURN;
                                               , inDiscountPartnerId := vbDiscountPartnerId    :: Integer
                                               , inTaxKindId        := vbTaxKindId      :: Integer
                                               , inEngineId         := NULL
+                                              , inPriceListId      := Null     ::Integer
+                                              , inStartDate_price  := Null     ::TDateTime 
+                                              , inOperPriceList    := 0        :: TFloat
                                               , inSession          := inSession        :: TVarChar
                                               );
    ELSE
@@ -359,8 +362,11 @@ else RETURN;
                                          , inUnitId           := tmp.UnitId                :: Integer
                                          , inDiscountPartnerId := CASE WHEN COALESCE (vbDiscountPartnerId, 0) <> 0 THEN vbDiscountPartnerId ELSE tmp.DiscountPartnerId END :: Integer
                                          , inTaxKindId        := CASE WHEN COALESCE (vbTaxKindId, 0) <> 0 THEN vbTaxKindId ELSE tmp.TaxKindId END :: Integer
-                                         , inEngineId         := tmp.EngineId
-                                         , inSession          := inSession        :: TVarChar
+                                         , inEngineId         := tmp.EngineId   
+                                         , inPriceListId      := tmp.PriceListId         :: Integer
+                                         , inStartDate_price  := tmp.StartDate_price     :: TDateTime 
+                                         , inOperPriceList    := tmp.BasisPrice          :: TFloat
+                                         , inSession          := inSession               :: TVarChar
                                          )
        FROM gpSelect_Object_Goods(FALSE, inSession) AS tmp
        WHERE tmp.Id = vbGoodsId;

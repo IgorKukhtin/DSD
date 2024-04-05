@@ -57,7 +57,10 @@ BEGIN
                                               , inUnitId           := 0                :: Integer
                                               , inDiscountPartnerId := 0               :: Integer
                                               , inTaxKindId        := 2726             :: Integer                  --базовый
-                                              , inEngineId         := NULL
+                                              , inEngineId         := NULL   
+                                              , inPriceListId      := Null     ::Integer
+                                              , inStartDate_price  := Null     ::TDateTime 
+                                              , inOperPriceList    := 0        :: TFloat
                                               , inSession          := inSession        :: TVarChar
                                               );
        END IF;

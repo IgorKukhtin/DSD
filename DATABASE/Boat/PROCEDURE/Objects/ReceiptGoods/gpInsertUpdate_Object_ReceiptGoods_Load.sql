@@ -588,7 +588,10 @@ end if;
                                                                , inUnitId            := 0        :: Integer
                                                                , inDiscountPartnerId := 0        :: Integer
                                                                , inTaxKindId         := 0        :: Integer
-                                                               , inEngineId          := NULL
+                                                               , inEngineId          := NULL      
+                                                               , inPriceListId       := Null     ::Integer
+                                                               , inStartDate_price   := Null     ::TDateTime 
+                                                               , inOperPriceList     := 0        :: TFloat
                                                                , inSession           := inSession:: TVarChar
                                                                 );
 
@@ -716,6 +719,9 @@ end if;
                                                     , inDiscountPartnerId := 0       :: Integer
                                                     , inTaxKindId         := 0        :: Integer
                                                     , inEngineId          := NULL
+                                                    , inPriceListId       := 0     ::Integer
+                                                    , inStartDate_price   := Null     ::TDateTime 
+                                                    , inOperPriceList     := 0        :: TFloat
                                                     , inSession           := inSession:: TVarChar
                                                      );
 
@@ -870,7 +876,10 @@ end if;
                                                           , inUnitId           := 0        :: Integer
                                                           , inDiscountPartnerId:= 0       :: Integer
                                                           , inTaxKindId        := 0        :: Integer
-                                                          , inEngineId         := NULL
+                                                          , inEngineId         := NULL        
+                                                          , inPriceListId      := Null     ::Integer
+                                                          , inStartDate_price  := Null     ::TDateTime 
+                                                          , inOperPriceList    := 0        :: TFloat
                                                           , inSession          := inSession:: TVarChar
                                                            );
 

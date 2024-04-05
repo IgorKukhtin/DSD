@@ -228,7 +228,10 @@ BEGIN
                                                     , inUnitId           := 0           :: Integer
                                                     , inDiscountPartnerId := vbDiscountPartnerId :: Integer
                                                     , inTaxKindId        := 0           :: Integer
-                                                    , inEngineId         := NULL
+                                                    , inEngineId         := NULL     
+                                                    , inPriceListId      := Null     ::Integer
+                                                    , inStartDate_price  := Null     ::TDateTime 
+                                                    , inOperPriceList    := 0        :: TFloat
                                                     , inSession          := inSession   :: TVarChar
                                                     );
                

@@ -132,6 +132,9 @@ BEGIN
                                                      , inDiscountPartnerId := 0            :: Integer
                                                      , inTaxKindId        := 0             :: Integer
                                                      , inEngineId         := NULL
+                                                     , inPriceListId      := Null     ::Integer
+                                                     , inStartDate_price  := Null     ::TDateTime 
+                                                     , inOperPriceList    := 0        :: TFloat
                                                      , inSession          := inSession     :: TVarChar
                                                       ); 
           ELSE

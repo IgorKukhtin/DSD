@@ -1223,6 +1223,9 @@ END IF;
                                                 , inDiscountPartnerId      := NULL
                                                 , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                 , inEngineId               := NULL
+                                                , inPriceListId      := Null     ::Integer
+                                                , inStartDate_price  := Null     ::TDateTime 
+                                                , inOperPriceList    := 0        :: TFloat
                                                 , inSession                := inSession
                                                  );
                       END IF;
@@ -1379,6 +1382,9 @@ END IF;
                                                     , inDiscountPartnerId      := NULL
                                                     , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                     , inEngineId               := NULL
+                                                    , inPriceListId      := Null     ::Integer
+                                                    , inStartDate_price  := Null     ::TDateTime 
+                                                    , inOperPriceList    := 0        :: TFloat
                                                     , inSession                := inSession
                                                      );
                           END IF;
@@ -1629,6 +1635,9 @@ END IF;
                                                 , inDiscountPartnerId      := NULL
                                                 , inTaxKindId              := zc_Enum_TaxKind_Basis()
                                                 , inEngineId               := NULL
+                                                , inPriceListId      := Null     ::Integer
+                                                , inStartDate_price  := Null     ::TDateTime 
+                                                , inOperPriceList    := 0        :: TFloat
                                                 , inSession                := inSession
                                                  );
 

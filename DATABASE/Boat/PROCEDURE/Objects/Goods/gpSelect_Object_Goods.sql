@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_all TVarChar
              , BasisPrice TFloat, BasisPriceWVAT TFloat
              , BasisPrice_choice TFloat 
              , StartDate_price TDateTime
+             , PriceListId Integer
 
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
@@ -128,6 +129,7 @@ BEGIN
            , tmpPriceBasis AS (SELECT tmp.GoodsId
                                     , tmp.StartDate
                                     , tmp.ValuePrice
+                                    , inPriceListId AS PriceListId
                                FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId   --zc_PriceList_Basis()
                                                                         , inOperDate   := CURRENT_DATE) AS tmp
                               )
@@ -365,7 +367,8 @@ BEGIN
 
               END ::TFloat AS BasisPrice_choice  
               
-            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price 
+            , tmpPriceBasis.StartDate ::TDateTime AS StartDate_price
+            , tmpPriceBasis.PriceListId ::Integer 
 
             , Object_GoodsGroup.Id               AS GoodsGroupId
             , Object_GoodsGroup.ValueData        AS GoodsGroupName
