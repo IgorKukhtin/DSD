@@ -130,7 +130,7 @@ BEGIN
 	i           := 0; -- обнуляем автонумерацию
         vbTotalSumm := 0; -- обнуляем
 
-	FOR r IN (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond, UPPER (COALESCE (gpSelect.PersonalName, '')) AS PersonalName, COALESCE (gpSelect.INN, '') AS INN
+	FOR r IN (SELECT COALESCE (gpSelect.CardSecond, '') AS CardSecond, UPPER (COALESCE (gpSelect.PersonalName, '')) AS PersonalName, COALESCE (TRIM (gpSelect.INN), '') AS INN
 	                 -- добавили % и округлили до 2-х знаков + ПЕРЕВОДИМ в копейки
 	             --, SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 2)))) AS SummCardSecondRecalc
 	             --, SUM (FLOOR (100 * CAST (COALESCE (gpSelect.SummCardSecondRecalc, 0) * 1.00705 AS NUMERIC (16, 1)))) AS SummCardSecondRecalc
@@ -139,7 +139,7 @@ BEGIN
                                                  ) AS NUMERIC (16, 0)))) AS SummCardSecondRecalc
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId:= inMovementId, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= inSession) AS gpSelect
 	          WHERE gpSelect.SummCardSecondRecalc <> 0 OR gpSelect.SummAvCardSecondRecalc <> 0
-	          GROUP BY COALESCE (gpSelect.CardSecond, ''), UPPER (COALESCE (gpSelect.PersonalName, '')), COALESCE (gpSelect.INN, '')
+	          GROUP BY COALESCE (gpSelect.CardSecond, ''), UPPER (COALESCE (gpSelect.PersonalName, '')), COALESCE (TRIM (gpSelect.INN), '')
 	         )
 	LOOP
             -- Итого сумма -
@@ -233,7 +233,7 @@ BEGIN
 	FOR r IN (-- SELECT gpSelect.card
 	          SELECT CASE WHEN vbBankId IN (76968, 6314382) THEN SUBSTRING (gpSelect.card FROM char_length(gpSelect.card) - 13 for 14 ) ELSE gpSelect.card END AS card
 	               , gpSelect.personalname
-	               , gpSelect.inn
+	               , TRIM (gpSelect.INN) AS INN
 	               , COALESCE (gpSelect.SummCardRecalc, 0) + COALESCE (gpSelect.SummHosp, 0) AS SummCardRecalc
 	          FROM gpSelect_MovementItem_PersonalService (inMovementId := inMovementId, inShowAll := 'False', inIsErased := 'False',  inSession := inSession) AS gpSelect
 	         )
@@ -324,14 +324,14 @@ BEGIN
                    SELECT ROW_NUMBER() OVER (ORDER BY gpSelect.card) AS NPP
                         , '<EMPLOYEE'
                                -- Табельный номер сотрудника
-                               ||  ' IDENTIFYCODE="' || gpSelect.INN || '"'
+                               ||  ' IDENTIFYCODE="' || TRIM (gpSelect.INN) || '"'
 
                                -- Табельный номер сотрудника
                                -- ||         ' TABNO="' || gpSelect.MemberId || '"'
 
                                -- Номер карточного (или другого) счёта
-                               || ' CARDACCOUNTNO="' || gpSelect.card || '"'
-                                    || ' CARDIBAN="' || gpSelect.CardIBAN || '"'
+                               || ' CARDACCOUNTNO="' || TRIM (gpSelect.card) || '"'
+                                    || ' CARDIBAN="' || TRIM (gpSelect.CardIBAN) || '"'
                                
                                -- Фамилия сотрудника - Прізвище співробітника
                                ||      ' LASTNAME="' || zfCalc_Word_Split (inValue:= gpSelect.PersonalName, inSep:= ' ', inIndex:= 1) || '"'
