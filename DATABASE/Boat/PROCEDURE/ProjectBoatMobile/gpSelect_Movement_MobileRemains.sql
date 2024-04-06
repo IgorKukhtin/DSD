@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_MobileRemains(
     IN inShowAll          Boolean,
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, PartNumber TVarChar
+RETURNS TABLE (GoodsId Integer
              , Remains TFloat, Remains_curr TFloat
               )
 AS
@@ -70,11 +70,10 @@ BEGIN
 
        -- Результат
        SELECT tmpRemains.GoodsId
-            , tmpRemains.PartNumber
             , SUM (tmpRemains.Amount)::TFloat    AS AmountRemains
             , SUM (tmpRemains.Remains)::TFloat   AS AmountRemains_curr
        FROM tmpRemains
-       GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber;
+       GROUP BY tmpRemains.GoodsId;
 
 END;
 $BODY$
@@ -87,5 +86,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_MobileRemains (inShowAll := False, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_MobileRemains (inShowAll := False, inSession := zfCalc_UserAdmin());

@@ -183,7 +183,6 @@ type
     cdsInventoryListOrdUser: TIntegerField;
     tbRemains: TFDTable;
     tbRemainsGoodsId: TIntegerField;
-    tbRemainsPartNumber: TWideStringField;
     tbRemainsRemains: TFloatField;
     tbRemainsRemains_curr: TFloatField;
     tbRemainsisLoad: TBooleanField;
@@ -195,8 +194,6 @@ type
     qurGoodsListEAN: TWideStringField;
     qurGoodsListGoodsGroupName: TWideStringField;
     qurGoodsListMeasureName: TWideStringField;
-    qurGoodsListRemains: TFloatField;
-    qurGoodsListRemains_curr: TFloatField;
     qurGoodsListRemainsLabel: TWideStringField;
     qurGoodsListRemains_currLabel: TWideStringField;
     qurDictList: TFDQuery;
@@ -236,6 +233,11 @@ type
     cdsInventoryListTopErasedId: TIntegerField;
     cdsInventoryListTopLocalId: TIntegerField;
     cdsInventoryListTopError: TWideStringField;
+    cdsInventoryListOrdUserLabel: TWideStringField;
+    cdsInventoryListTopOrdUserLabel: TWideStringField;
+    tbGoodsArticleFilter: TWideStringField;
+    qurGoodsListRemains: TFloatField;
+    qurGoodsListRemains_curr: TFloatField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -251,6 +253,10 @@ type
     procedure cdsDictListAfterScroll(DataSet: TDataSet);
     procedure qurGoodsListCalcFields(DataSet: TDataSet);
     procedure cdsInventoryListTopCalcFields(DataSet: TDataSet);
+    procedure qurGoodsListRemains_currGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure qurGoodsListRemainsGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -289,6 +295,7 @@ type
     function CompareVersion(ACurVersion, AServerVersion: string): integer;
     procedure UpdateProgram(const AResult: TModalResult);
 
+    function DownloadConfig : Boolean;
     function DownloadDict : Boolean;
     function DownloadRemains : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
@@ -298,7 +305,7 @@ type
     function DownloadOrderInternal(AId : Integer) : Boolean;
     function InsertProductionUnion(AId : Integer) : Boolean;
 
-    function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer; var ABarCodePref: String) : Boolean;
+    function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
@@ -1112,6 +1119,7 @@ begin
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
   DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
   DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
+  DataSet.FieldByName('OrdUserLabel').AsString := '№ п/п';
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
@@ -1123,6 +1131,7 @@ begin
   DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
   DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
   DataSet.FieldByName('AmountDiffLabel').AsString := 'Разница:';
+  DataSet.FieldByName('OrdUserLabel').AsString := '№ п/п';
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
@@ -1680,6 +1689,38 @@ begin
   Result := True;
 end;
 
+{ загрузка конфигурации }
+function TDM.DownloadConfig : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpGet_MobilebConfig';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('BarCodePref', ftString, ptOutput, frmMain.BarCodePref);
+    StoredProc.Params.AddParam('ArticleSeparators', ftString, ptOutput, frmMain.ArticleSeparators);
+
+    try
+      StoredProc.Execute(false, false, false);
+      if StoredProc.ParamByName('BarCodePref').Value <> frmMain.BarCodePref then
+        frmMain.BarCodePref := StoredProc.ParamByName('BarCodePref').Value;
+      if StoredProc.ParamByName('ArticleSeparators').Value <> frmMain.ArticleSeparators then
+        frmMain.ArticleSeparators := StoredProc.ParamByName('ArticleSeparators').Value;
+
+      Result := True;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+
 function TDM.GetInventoryActive(AisCreate : Boolean) : Boolean;
 var
   StoredProc : TdsdStoredProc;
@@ -1802,7 +1843,6 @@ end;
 function TDM.DownloadInventoryListTop : Boolean;
 var
   StoredProc : TdsdStoredProc;
-  nId: Integer;
 begin
 
   Result := False;
@@ -1867,7 +1907,7 @@ begin
 end;
 
 { поиск комплектующих по штрихкоду в базе}
-function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer; var ABarCodePref: String) : Boolean;
+function TDM.GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
 var
   StoredProc : TdsdStoredProc;
 begin
@@ -1887,7 +1927,6 @@ begin
       StoredProc.Execute(false, false, false, 2);
       AId := StoredProc.ParamByName('GoodsId').Value;
       ACount := StoredProc.ParamByName('CountGoods').Value;
-      ABarCodePref := StoredProc.ParamByName('BarCodePref').Value;
       Result := ACount = 1;
     except
     end;
@@ -2098,6 +2137,8 @@ function TDM.LoadDictList : Boolean;
   var sql: string;
       tbDict: TFDTable;
       nId: Integer;
+      cFilter : String;
+      Code: Int64;
 begin
   qurDictList.DisableControls;
   if DM.qurDictList.Active then nID := DM.qurDictListId.AsInteger
@@ -2114,18 +2155,29 @@ begin
       sql := sql + #13#10'WHERE isErased = 0'
     else sql := sql + #13#10'WHERE 1 = 1';
 
+    cFilter := StringReplace(FFilterDict, '''', '''''', [rfReplaceAll]);
+    if not TryStrToInt64(cFilter, Code) then Code := 0;
+
     if Assigned(tbDict.Fields.FindField('NameUpper')) then
     begin
-      if FFilterDict <> '' then
+      if cFilter <> '' then
       begin
-        sql := sql + #13#10'AND NameUpper LIKE ''%' + AnsiUpperCase(FFilterDict) + '%''';
+        sql := sql + #13#10'AND (';
+        sql := sql + #13#10'NameUpper LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
+        if Code <> 0 then
+          sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
+        sql := sql + #13#10')';
       end;
       sql := sql + #13#10'ORDER BY NameUpper COLLATE UTF16NoCase';
     end else
     begin
-      if FFilterDict <> '' then
+      if cFilter <> '' then
       begin
-        sql := sql + #13#10'AND AnsiUpperCase(Name) LIKE ''%' + AnsiUpperCase(FFilterDict) + '%''';
+        sql := sql + #13#10'AND (';
+        sql := sql + #13#10' AnsiUpperCase(Name) LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
+        if Code <> 0 then
+          sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
+        sql := sql + #13#10')';
       end;
       sql := sql + #13#10'ORDER BY Name COLLATE UTF16NoCase';
     end;
@@ -2160,6 +2212,10 @@ end;
 function TDM.LoadGoodsList : Boolean;
   var sql: string;
       nId: Integer;
+      cFilter : String;
+      cFilterArticlr : String;
+      Code: Int64;
+      I: Integer;
 begin
   Result := False;
   if (frmMain.DateDownloadDict >= IncDay(Now, - 1)) then
@@ -2170,22 +2226,34 @@ begin
     try
       qurGoodsList.Close;
 
-      sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName, COALESCE (Remains, 0.0) AS Remains, COALESCE (Remains_curr, 0.0) AS Remains_curr ' +
+      sql := 'SELECT Id, Code, Name, Article, EAN, GoodsGroupName, MeasureName, Remains, Remains_curr ' +
              'FROM Goods ' +
-             'LEFT JOIN (SELECT Remains.GoodsId, SUM(Remains.Remains) AS Remains, SUM(Remains.Remains_curr) AS Remains_curr FROM Remains GROUP BY Remains.GoodsId) AS tmpRemains ON tmpRemains.GoodsId = Goods.Id';
+             'LEFT JOIN Remains ON Remains.GoodsId = Goods.Id';
       sql := sql + #13#10'WHERE isErased = 0';
 
       if FFilterGoods <> '' then
       begin
+        cFilter := StringReplace(FFilterGoods, '''', '''''', [rfReplaceAll]);
+
         if not FFilterGoodsEAN then
         begin
+
+          cFilterArticlr := cFilter;
+          for I := 1 to Length(frmMain.ArticleSeparators) do
+            cFilterArticlr := StringReplace(cFilterArticlr, Copy(frmMain.ArticleSeparators, I, 1), '', [rfReplaceAll, rfIgnoreCase]);
+
+          if not TryStrToInt64(cFilter, Code) then Code := 0;
+
           sql := sql + #13#10'and (';
-          sql := sql + #13#10' NameUpper LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
-          sql := sql + #13#10'OR Article LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
-          sql := sql + #13#10'OR EAN LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
-          sql := sql + #13#10'OR Code LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+          sql := sql + #13#10' NameUpper LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
+          sql := sql + #13#10'OR Article LIKE ''%' + cFilter + '%''';
+          sql := sql + #13#10'OR ArticleFilter LIKE ''%' + cFilterArticlr + '%''';
+          if Code > 0 then
+            sql := sql + #13#10'OR EAN LIKE ''%' + IntToStr(Code) + '%''';
+          if Code <> 0 then
+            sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
           sql := sql + #13#10')';
-        end else sql := sql + #13#10'AND EAN LIKE ''%' + AnsiUpperCase(FFilterGoods) + '%''';
+        end else sql := sql + #13#10'AND EAN LIKE ''%' + cFilter + '%''';
       end;
 
       sql := sql + #13#10'ORDER BY NameUpper';
@@ -2281,7 +2349,7 @@ end;
 
 // Иницилизация хранилища результатов сканирования
 procedure TDM.OpenInventoryGoods;
-  var sql: string; FDQuery: TFDQuery; I: Integer;
+  var FDQuery: TFDQuery; I: Integer;
 begin
   // перед открытием почистим
   if cdsInventory.Active and (cdsInventoryId.AsInteger <> 0) then
@@ -2363,6 +2431,18 @@ begin
   DataSet.FieldByName('Remains_currLabel').AsString := 'Текущий остаток:';
 end;
 
+procedure TDM.qurGoodsListRemainsGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if Sender.IsNull then Text := '0' else Text := Sender.AsString;
+end;
+
+procedure TDM.qurGoodsListRemains_currGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if Sender.IsNull then Text := '0' else Text := Sender.AsString;
+end;
+
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию
 procedure TDM.InsUpdLocalInventoryGoods(ALocalId, AId, AGoodsId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
                                         APartNumber, APartionCell, AError : String; AisSend: Boolean);
@@ -2408,7 +2488,6 @@ end;
 
 procedure TDM.DeleteInventoryGoods;
   var FDQuery: TFDQuery;
-      nPos: Integer;
       StoredProc : TdsdStoredProc;
 begin
 
