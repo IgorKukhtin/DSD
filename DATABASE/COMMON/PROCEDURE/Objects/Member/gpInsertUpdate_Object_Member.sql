@@ -90,7 +90,7 @@ BEGIN
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
    -- проверка уникальность <INN>      если выбран в контроле тогда берем из него
-   IF TRIM (inINN) <> ''
+   IF TRIM (inINN) <> '' AND LEFT (inINN, 8) <> '00000000'
    THEN
        IF EXISTS (SELECT ObjectString.ObjectId
                   FROM ObjectString
