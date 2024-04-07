@@ -760,6 +760,10 @@ end if;
 
                                             WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  -- _tmpItem.ObjectDescId = zc_Object_Founder() -- Учредители
+                                                 AND (_tmpItem.ObjectDescId NOT IN (zc_Object_Juridical(), zc_Object_Partner())
+                                                     -- Собственный капитал + Представительские, пакеты, подарки
+                                                   OR _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+                                                     )
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
