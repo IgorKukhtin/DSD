@@ -10,8 +10,8 @@ $BODY$
   DECLARE vbProtocolXML TBlob;
 BEGIN
 
-  -- Просмотр - без прав корректировки
-  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 7797111)
+  -- Просмотр - без прав корректировки + Только просмотр Аудитор
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (7797111, 10597056))
   THEN
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для изменения данных.', lfGet_Object_ValueData_sh (inUserId);
   END IF;
