@@ -694,7 +694,8 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80300, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_80300');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80500, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_80500');
-
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80600, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_80600');
+    
      -- !!!
      -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
      -- !!!
