@@ -47,6 +47,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_MemberHoliday());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- проверка прав
      vbIsAccessKey_MemberHoliday:= EXISTS (SELECT *        FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_MemberHoliday() AND UserId = vbUserId)
                                 OR EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())

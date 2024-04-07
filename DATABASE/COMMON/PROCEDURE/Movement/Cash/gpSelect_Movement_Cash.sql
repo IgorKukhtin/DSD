@@ -64,6 +64,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -1254,4 +1258,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '01.06.2014', inEndDate:= '30.06.2014', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2016', inEndDate:= '30.01.2016', inCashId:= 14462, inCurrencyId:= zc_Enum_Currency_Basis(), inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
--- select * from gpSelect_Movement_Cash (inStartDate := ('09.09.2021')::TDateTime , inEndDate := ('10.09.2021')::TDateTime , inCashId := 14462 , inCurrencyId :=  zc_Enum_Currency_Basis() , inJuridicalBasisId := 0 , inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= ('09.09.2024')::TDateTime , inEndDate := ('10.09.2024')::TDateTime , inCashId := 14462 , inCurrencyId :=  zc_Enum_Currency_Basis() , inJuridicalBasisId := 0 , inIsErased := 'False' ,  inSession := '5');

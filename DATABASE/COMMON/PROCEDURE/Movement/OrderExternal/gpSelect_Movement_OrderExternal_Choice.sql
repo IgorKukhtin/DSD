@@ -36,6 +36,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- !!!т.к. нельзя когда много данных в гриде!!!
      IF inStartDate + (INTERVAL '200 DAY') <= inEndDate

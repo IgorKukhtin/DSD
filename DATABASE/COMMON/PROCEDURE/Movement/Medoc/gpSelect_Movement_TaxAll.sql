@@ -15,6 +15,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Tax());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inPeriodDate, inPeriodDate, NULL, NULL, NULL, vbUserId);
+
+
      --
      RETURN QUERY
      SELECT
@@ -56,4 +60,4 @@ ALTER FUNCTION gpSelect_Movement_TaxAll (TDateTime, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxAll (inPeriodDate:= '01.07.2019', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TaxAll (inPeriodDate:= '01.07.2024', inSession:= zfCalc_UserAdmin())

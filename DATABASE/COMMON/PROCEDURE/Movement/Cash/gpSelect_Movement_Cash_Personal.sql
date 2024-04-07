@@ -35,6 +35,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      IF NOT EXISTS (SELECT 1 FROM Object_PersonalServiceList_User_View WHERE Object_PersonalServiceList_User_View.UserId = vbUserId AND Object_PersonalServiceList_User_View.PersonalServiceListId > 0)

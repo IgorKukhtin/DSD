@@ -30,6 +30,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Invoice());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      IF COALESCE (inJuridicalId,0) <>0 THEN
          inJuridicalId:= (SELECT CASE WHEN Object.DescId <> zc_Object_Juridical() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE inJuridicalId END
                           FROM Object

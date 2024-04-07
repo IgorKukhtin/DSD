@@ -67,6 +67,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -725,6 +729,6 @@ $BODY$
 */
 
 -- тест
--- select * from  Object where ValueData like '%Розница Одесса%'
--- select * from gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , inCashId := 0 , inCurrencyId := 0, inJuridicalBasisId := 9399 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=524072, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5');
--- select * from gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , inCashId := 14462 , inCurrencyId := 0, inJuridicalBasisId := 0 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=0, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5567897');
+-- SELECT * FROM  Object where ValueData like '%Розница Одесса%'
+-- SELECT * FROM gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2020')::TDateTime , inEndDate := ('05.08.2020')::TDateTime , inCashId := 0 , inCurrencyId := 0, inJuridicalBasisId := 9399 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=524072, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_Cash_Bonus(inStartDate := ('01.08.2024')::TDateTime , inEndDate := ('05.08.2024')::TDateTime , inCashId := 14462 , inCurrencyId := 0, inJuridicalBasisId := 0 , inInfoMoneyId:= 0, inBranchId:=0, inRetailId:=0, inJuridicalId := 0, inIsErased := 'False' ,  inSession := '5567897');

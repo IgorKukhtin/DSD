@@ -36,6 +36,10 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_IncomeAsset());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- Результат
      RETURN QUERY 
      WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)

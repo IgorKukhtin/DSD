@@ -24,6 +24,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankStatement());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      RETURN QUERY 
        WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                          UNION
@@ -58,7 +62,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpSelect_Movement_BankStatement (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -71,5 +74,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
-
+-- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '30.01.2024', inEndDate:= '01.02.2024', inJuridicalBasisId:=0, inIsErased:= FALSE, inSession:= '2')

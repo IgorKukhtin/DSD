@@ -45,6 +45,10 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- проверка
      IF inStartDate < inEndDate - INTERVAL '1 YEAR' AND COALESCE (inJuridicalId, 0) = 0
      THEN

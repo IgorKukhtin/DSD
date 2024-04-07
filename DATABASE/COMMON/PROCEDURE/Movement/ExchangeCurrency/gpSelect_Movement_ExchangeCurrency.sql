@@ -16,13 +16,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ExchangeCurrency());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      RETURN QUERY 
        SELECT
@@ -49,11 +51,11 @@ BEGIN
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountFrom
                                     ON MovementFloat_AmountFrom.MovementId =  Movement.Id
-                                   AND MovementFloat_AmountFrom.DescId = zc_MovementFloat_AmountFrom()
+                                   AND MovementFloat_AmountFrom.DescId = zc_MovementFloat_Amount()
 
             LEFT JOIN MovementFloat AS MovementFloat_AmountTo
                                     ON MovementFloat_AmountTo.MovementId =  Movement.Id
-                                   AND MovementFloat_AmountTo.DescId = zc_MovementFloat_AmountTo()
+                                   AND MovementFloat_AmountTo.DescId = zc_MovementFloat_Amount()
                                    
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -89,3 +91,4 @@ ALTER FUNCTION gpSelect_Movement_ExchangeCurrency (TDateTime, TDateTime, TVarCha
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_ExchangeCurrency (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+21:26 07.04.2024

@@ -51,6 +51,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- !!!Ирна!!!
      vbIsIrna:= zfCalc_User_isIrna (vbUserId);
 
@@ -358,4 +361,4 @@ $BODY$
  */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2015', inEndDate:= '01.01.2015', inJuridicalBasisId:=0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount (inStartDate:= '30.01.2024', inEndDate:= '01.01.2024', inJuridicalBasisId:=0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

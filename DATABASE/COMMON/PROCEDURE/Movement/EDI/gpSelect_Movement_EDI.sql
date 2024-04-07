@@ -60,6 +60,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_EDI());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
    if vbUserId = 5 and inStartDate   = inEndDate     
    then inStartDate := DATE_TRUNC ('MONTH', inStartDate);

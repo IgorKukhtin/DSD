@@ -28,6 +28,10 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_EntryAsset());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- Результат
      RETURN QUERY 
      WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
@@ -133,4 +137,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_EntryAsset (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_EntryAsset (inStartDate:= '01.08.2016', inEndDate:= '01.08.2016', inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

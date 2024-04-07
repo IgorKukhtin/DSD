@@ -32,6 +32,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -174,4 +177,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankAccount_Personal (inStartDate:= '01.01.2015', inEndDate:= '01.01.2015', inBankAccountId:= 14462, inJuridicalBasisId:=0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_BankAccount_Personal (inStartDate:= '01.01.2024', inEndDate:= '01.01.2024', inBankAccountId:= 14462, inJuridicalBasisId:=0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

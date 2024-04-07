@@ -25,6 +25,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- Определяется <Физическое лицо> - кто сформировал визу inReestrKindId
      vbMemberId_user:= CASE WHEN vbUserId = 5 THEN 9457 ELSE
                        (SELECT ObjectLink_User_Member.ChildObjectId
