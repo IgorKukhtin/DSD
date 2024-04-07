@@ -11,6 +11,9 @@ $BODY$
    DECLARE vbIsErased Boolean;
    DECLARE vbDescId Integer;
 BEGIN
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, NULL, inObjectId, inUserId);
+
 
    -- изменили
    UPDATE Object SET isErased = NOT isErased WHERE Id = inObjectId  RETURNING DescId, isErased INTO vbDescId, vbIsErased;

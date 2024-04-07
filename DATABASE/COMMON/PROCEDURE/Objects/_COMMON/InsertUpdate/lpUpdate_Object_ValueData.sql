@@ -11,6 +11,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_Object_ValueData(
 AS
 $BODY$
 BEGIN
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, NULL, inId, inUserId);
 
    -- изменили элемент справочника по значению <Ключ объекта>
    UPDATE Object SET ValueData = inValueData WHERE Id = inId;
@@ -21,7 +23,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpUpdate_Object_ValueData (Integer, TVarChar, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

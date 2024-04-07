@@ -22,6 +22,11 @@ BEGIN
           INTO lEndDate, lStartDate, lDescId, lObjectId
    FROM ObjectHistory WHERE Id = inId;
 
+
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, NULL, lObjectId, inUserId);
+
+
    -- нашли ПЕРВЫЙ ранний элемент, потом поставим ему EndDate = EndDate удаляемого элемента
    vbId_find:= (SELECT Id FROM ObjectHistory 
                 WHERE ObjectHistory.DescId = lDescId 

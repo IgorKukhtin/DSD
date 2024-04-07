@@ -19,6 +19,10 @@ DECLARE
   findId     Integer;
   tmpId      Integer;
 BEGIN
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, NULL, inObjectId, inUserId);
+
+
    -- !!!обнулили!!!
    ioId:= COALESCE (ioId, 0);
    -- !!!Округляем дату!!!

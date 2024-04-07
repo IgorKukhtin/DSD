@@ -23,6 +23,10 @@ BEGIN
          vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
      END IF;
 
+     -- замена
+     inPartionCellId:= 0;
+
+
      IF inPartionCellId > 0
      THEN
          -- Находим по св-вам: Полное значение партии + PartionCell
