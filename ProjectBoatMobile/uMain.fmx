@@ -15,7 +15,7 @@
   OnFocusChanged = FormFocusChanged
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
-  DesignerMasterStyle = 0
+  DesignerMasterStyle = 3
   object vsbMain: TVertScrollBox
     Align = Client
     Size.Width = 336.000000000000000000
@@ -253,8 +253,9 @@
         object sbIlluminationMode: TSpeedButton
           Align = Right
           Position.X = 223.000000000000000000
+          Position.Y = 6.000000000000000000
           Size.Width = 30.000000000000000000
-          Size.Height = 60.000000000000000000
+          Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Trimming = None
           OnClick = sbIlluminationModeClick
@@ -304,15 +305,16 @@
             Align = Client
             HitTest = False
             Size.Width = 30.000000000000000000
-            Size.Height = 60.000000000000000000
+            Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
           end
         end
         object sbScan: TSpeedButton
           Align = Right
           Position.X = 253.000000000000000000
+          Position.Y = 6.000000000000000000
           Size.Width = 50.000000000000000000
-          Size.Height = 60.000000000000000000
+          Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Trimming = None
           OnClick = sbScanClick
@@ -381,7 +383,7 @@
             Align = Client
             HitTest = False
             Size.Width = 50.000000000000000000
-            Size.Height = 60.000000000000000000
+            Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
           end
         end
@@ -609,8 +611,9 @@
         object sbBack: TSpeedButton
           Align = Left
           Position.X = 60.000000000000000000
+          Position.Y = 6.000000000000000000
           Size.Width = 50.000000000000000000
-          Size.Height = 60.000000000000000000
+          Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
           TextSettings.Trimming = None
           OnClick = sbBackClick
@@ -654,7 +657,7 @@
             Margins.Right = 2.000000000000000000
             Margins.Bottom = 2.000000000000000000
             Size.Width = 46.000000000000000000
-            Size.Height = 56.000000000000000000
+            Size.Height = 44.000000000000000000
             Size.PlatformDefault = False
           end
         end
@@ -665,7 +668,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 5
+        TabIndex = 2
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -18663,7 +18666,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -19279,7 +19282,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -20089,8 +20092,8 @@
               Size.PlatformDefault = False
               StyleLookup = 'Memo1Style1'
               TabOrder = 23
-              Viewport.Width = 225.000000000000000000
-              Viewport.Height = 49.000000000000000000
+              Viewport.Width = 221.000000000000000000
+              Viewport.Height = 45.000000000000000000
             end
             object Edit1: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
