@@ -385,6 +385,9 @@ BEGIN
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = _tmpItem.UnitId
                                                                                                           AND NOT (vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE) -- !!!нужен только дл€ затрат!!!
                                                                                                           AND vbIsChild = FALSE
+                                                                                                          -- игнорируем ѕодразделение дл€ —обственный капитал + ѕредставительские, пакеты, подарки
+                                                                                                          AND _tmpItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_80600()
+                                                                                                          
              LEFT JOIN (SELECT tmpMI_Child.ParentId, SUM (tmpMI_Child.Amount) AS Amount FROM tmpMI_Child GROUP BY tmpMI_Child.ParentId) AS MI_Child ON MI_Child.ParentId = _tmpItem.MovementItemId
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                               ON MILinkObject_Branch.MovementItemId = NULL -- MI_Child.MovementItemId
