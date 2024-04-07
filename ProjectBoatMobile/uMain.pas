@@ -337,6 +337,8 @@ type
     procedure bInventScanSearchClick(Sender: TObject);
     procedure edАmountChangeTracking(Sender: TObject);
     procedure SetDateDownloadDict(Values : TDateTime);
+    procedure SetBarCodePref(Values : String);
+    procedure SetArticleSeparators(Values : String);
     procedure b0Click(Sender: TObject);
     procedure bDotClick(Sender: TObject);
     procedure bClearAmountClick(Sender: TObject);
@@ -383,6 +385,12 @@ type
     procedure lwDictListDblClick(Sender: TObject);
     procedure lwGoodsDblClick(Sender: TObject);
     procedure sbRefreshClick(Sender: TObject);
+    procedure lwInventoryListFilter(Sender: TObject; const AFilter,
+      AValue: string; var Accept: Boolean);
+    procedure lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure lwDictListFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -425,7 +433,11 @@ type
     FIsUpdate: Boolean;
     FOldControl: TControl;
     FCuurControl: TControl;
+
+    // Настройки
     FBarCodePref: String;
+    FArticleSeparators: String;
+
     FActiveTabPrew: TTabItem;
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -454,7 +466,8 @@ type
     { Public declarations }
     procedure SetInventScanButton;
     property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
-    property BarCodePref: String read FBarCodePref write FBarCodePref;
+    property BarCodePref: String read FBarCodePref write SetBarCodePref;
+    property ArticleSeparators: String read FArticleSeparators write SetArticleSeparators;
   end;
 
 var
@@ -586,6 +599,8 @@ begin
     FisOpenScanChangingMode := SettingsFile.ReadBool('Params', 'isOpenScanChangingMode', True);
     FisHideIlluminationButton := SettingsFile.ReadBool('Params', 'isHideIlluminationButton', False);
     FisHideScanButton := SettingsFile.ReadBool('Params', 'isHideScanButton', False);
+    FBarCodePref := SettingsFile.ReadString('Params', 'BarCodePref', '0000');
+    FArticleSeparators := SettingsFile.ReadString('Params', 'ArticleSeparators', ' ,-');
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -635,6 +650,32 @@ begin
   try
     FDateDownloadDict := Values;
     SettingsFile.WriteDateTime('Params', 'DateDownloadDict', FDateDownloadDict);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetBarCodePref(Values : String);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FBarCodePref := Values;
+    SettingsFile.WriteString('Params', 'BarCodePref', FBarCodePref);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetArticleSeparators(Values : String);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FArticleSeparators := Values;
+    SettingsFile.WriteString('Params', 'ArticleSeparators', FArticleSeparators);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -816,12 +857,12 @@ begin
   case FDataSetRefresh of
     dsrDict :
       begin
-        DM.FilterDict := TSearchBox(lwDictList).Text;
+        DM.FilterDict := GetSearshBox(lwDictList).Text;
         DM.LoadDictList;
       end;
     dsrGoods :
       begin
-        DM.FilterGoods := TSearchBox(lwGoods).Text;
+        DM.FilterGoods := GetSearshBox(lwGoods).Text;
         DM.LoadGoodsList;
       end;
     dsrInventoryList : ShowInventory;
@@ -967,8 +1008,9 @@ begin
 
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart)  then
-    pBack.Visible := false
-  else
+  begin
+    pBack.Visible := false;
+  end else
   begin
     pBack.Visible := true;
     sbRefresh.Visible := False;
@@ -1200,6 +1242,12 @@ begin
   {$ENDIF}
 end;
 
+procedure TfrmMain.lwDictListFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  Accept := True;
+end;
+
 procedure TfrmMain.lwDictListGesture(Sender: TObject;
   const EventInfo: TGestureEventInfo; var Handled: Boolean);
 var I: Integer;
@@ -1247,6 +1295,12 @@ begin
   {$ENDIF}
 end;
 
+procedure TfrmMain.lwGoodsFilter(Sender: TObject; const AFilter, AValue: string;
+  var Accept: Boolean);
+begin
+  Accept := True;
+end;
+
 procedure TfrmMain.lwGoodsGesture(Sender: TObject;
   const EventInfo: TGestureEventInfo; var Handled: Boolean);
 var I: Integer;
@@ -1290,6 +1344,12 @@ begin
   Handled := False;
   lwInventoryListGesture(Sender, GestureEventInfo, Handled)
   {$ENDIF}
+end;
+
+procedure TfrmMain.lwInventoryListFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  Accept := True;
 end;
 
 procedure TfrmMain.lwInventoryListGesture(Sender: TObject;
@@ -1526,11 +1586,16 @@ end;
 
 // Поиск комплектующих для вставки в инвентаризацию
 procedure TfrmMain.bInventScanSearchClick(Sender: TObject);
+  var I: Integer;
 begin
   FisNextInventScan := False;
   FisInventScanOk := False;
   ShowGoods;
   bGoodsChoice.Visible := True;
+  for I := 0 to High(lwGoods.ItemAppearanceObjects.ItemObjects.Objects) do
+    if (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'RemainsLabel') or
+       (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'Remains') then
+       TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Visible := True;
 end;
 
 procedure TfrmMain.bInventScanClick(Sender: TObject);
@@ -1962,64 +2027,70 @@ var
   SettingsFile : TIniFile;
 begin
 
-  if not FPermissionState then
-  begin
-    ShowMessage('Необходимые разрешения не предоставлены');
-    exit;
-  end;
-
-  if FisTestWebServer then
-    gc_WebService := WebServerTest
-  else gc_WebService := WebServer;
-
-  Wait(True);
   try
+    vsbMain.Enabled := false;
 
-    if TButton(Sender).Tag = 1 then
+    if not FPermissionState then
     begin
-      FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
-      sbScanClick(Sender);
-      Wait(False);
-      Exit;
-    end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
-
-    if Assigned(gc_User) then lUser.Text := gc_User.Login;
-    if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
-
-    Wait(False);
-
-    if ErrorMessage <> '' then
-    begin
-      ShowMessage(ErrorMessage);
+      ShowMessage('Необходимые разрешения не предоставлены');
       exit;
     end;
-  except on E: Exception do
-    begin
+
+    if FisTestWebServer then
+      gc_WebService := WebServerTest
+    else gc_WebService := WebServer;
+
+    Wait(True);
+    try
+
+      if TButton(Sender).Tag = 1 then
+      begin
+        FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
+        sbScanClick(Sender);
+        Wait(False);
+        Exit;
+      end else ErrorMessage := TAuthentication.CheckLogin(TStorageFactory.GetStorage, LoginEdit.Text, PasswordEdit.Text, gc_User);
+
+      if Assigned(gc_User) then lUser.Text := gc_User.Login;
+      if FisTestWebServer then lUser.Text := lUser.Text + ' (тестовый сервер)';
+
       Wait(False);
 
-      ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + GetTextMessage(E));
-      Exit;
+      if ErrorMessage <> '' then
+      begin
+        ShowMessage(ErrorMessage);
+        exit;
+      end;
+    except on E: Exception do
+      begin
+        Wait(False);
+
+        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + GetTextMessage(E));
+        Exit;
+      end;
+      //
     end;
-    //
-  end;
 
-  {$IFDEF ANDROID}
-  DM.CheckUpdate; // проверка небходимости обновления
-  {$ENDIF}
+    {$IFDEF ANDROID}
+    DM.CheckUpdate; // проверка небходимости обновления
+    {$ENDIF}
 
-  // сохранение логина и веб сервера в ini файле
-  SettingsFile := TIniFile.Create(FINIFile);
-  try
-    SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+    // сохранение логина и веб сервера в ini файле
+    SettingsFile := TIniFile.Create(FINIFile);
+    try
+      SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+    finally
+      FreeAndNil(SettingsFile);
+    end;
+
+    // загрузили конфиг
+    DM.DownloadConfig;
+
+    SwitchToForm(tiMain, nil);
+    if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict else DM.DownloadRemains;
   finally
-    FreeAndNil(SettingsFile);
+    vsbMain.Enabled := True;
   end;
-
-  SwitchToForm(tiMain, nil);
-  if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict else DM.DownloadRemains;
-
-  Sleep(500);
-  bLogIn.Enabled := True;
 end;
 
 // Покажим инвентаризацию
@@ -2084,6 +2155,7 @@ begin
 
   try
 
+    vsbMain.Enabled := false;
     Password := '';
     for I := 1 to Length(AData_String) do
       if TryStrToInt(COPY(AData_String, I, 1), J) then Password := Password + COPY(AData_String, I, 1);
@@ -2123,9 +2195,8 @@ begin
     begin
       SwitchToForm(tiMain, nil);
       if (frmMain.DateDownloadDict < IncDay(Now, - 1)) then DM.DownloadDict else DM.DownloadRemains;
-      Sleep(500);
-      bLogIn.Enabled := True;
     end;
+    vsbMain.Enabled := True;
   end;
 end;
 
@@ -2169,6 +2240,7 @@ begin
       TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + IfThen(DM.cdsInventoryListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsInventoryListTopOrdUser.AsString) + '>'#13#10 +
                                    'кол-во = <' + DM.cdsInventoryListTopAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListTopGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsInventoryListTopArticle.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListTopGoodsName.AsString + '>'#13#10 +
                                    'из документа?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteInventoryGoods)
@@ -2190,6 +2262,7 @@ begin
       TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + DM.cdsInventoryListOrdUser.AsString +'>'#13#10 +
                                    'кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsInventoryListArticle.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
                                    'из документа?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedInventoryList)
@@ -2200,6 +2273,7 @@ begin
       TDialogService.MessageDialog('Отменить удаление'#13#10'№ п/п = <' + DM.cdsInventoryListOrdUser.AsString +'>'#13#10 +
                                    'кол-во = <' + DM.cdsInventoryListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsInventoryListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsInventoryListArticle.AsString + '>'#13#10 +
                                    '<' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
                                    'в документе?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryList)
@@ -2242,7 +2316,7 @@ end;
 
 // Обрабатываем отсканированное комплектующее для инвентаризации
 procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
-  var Code, nId, nCount: Integer; Data_String: String;
+  var nId, nCount: Integer; Data_String: String;
 begin
 
   Data_String := AData_String;
@@ -2254,7 +2328,7 @@ begin
   if Data_String = '' then Exit;
 
   // С начало ищем на сервере независимо от режима работы
-  if DM.GetGoodsBarcode(Data_String, nId, nCount, FBarCodePref) then
+  if DM.GetGoodsBarcode(Data_String, nId, nCount) then
   begin
     if nCount = 1 then
     begin

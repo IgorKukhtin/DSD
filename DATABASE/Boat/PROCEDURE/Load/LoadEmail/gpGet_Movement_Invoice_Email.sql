@@ -67,9 +67,13 @@ BEGIN
                  ELSE tmpObjectMail.Email 
             END :: TVarChar AS AddressTo
 
-          , gpGet_Host.Value :: TVarChar   AS Host
+          , CASE WHEN vbUserId = 5 AND 1=1 THEN 'smtp.gmail.com'
+                 ELSE gpGet_Host.Value 
+            END   :: TVarChar   AS Host           --хост и порт  smtp.gmail.com  587
 
-          , gpGet_Port.Value :: TVarChar   AS Port
+          , CASE WHEN vbUserId = 5 AND 1=1 THEN '587'
+                 ELSE gpGet_Port.Value
+            END :: TVarChar   AS Port
 
           , gpGet_User.Value :: TVarChar   AS UserName
 

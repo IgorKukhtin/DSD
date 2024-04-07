@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 6
+        TabIndex = 5
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -18229,7 +18229,6 @@
               object bLogIn: TButton
                 Align = Client
                 Anchors = []
-                Enabled = False
                 Size.Width = 168.000000000000000000
                 Size.Height = 121.000000000000000000
                 Size.PlatformDefault = False
@@ -19270,6 +19269,7 @@
             ItemAppearanceObjects.FooterObjects.Text.Visible = False
             OnDblClick = lwGoodsDblClick
             CanSwipeDelete = False
+            OnFilter = lwGoodsFilter
             AutoTapScroll = True
             SearchVisible = True
           end
@@ -19279,7 +19279,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -19412,6 +19412,7 @@
             ItemAppearanceObjects.FooterObjects.Text.Visible = False
             OnDblClick = lwDictListDblClick
             CanSwipeDelete = False
+            OnFilter = lwDictListFilter
             AutoTapScroll = True
             SearchVisible = True
           end
@@ -19421,7 +19422,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -19586,7 +19587,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 10.000000000000000000
+                Appearance.PlaceOffset.X = 69.000000000000000000
                 Appearance.PlaceOffset.Y = 84.000000000000000000
               end
               item
@@ -19617,6 +19618,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 59.000000000000000000
                 Appearance.PlaceOffset.Y = 63.000000000000000000
               end
               item
@@ -19627,7 +19629,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 82.000000000000000000
+                Appearance.PlaceOffset.X = 112.000000000000000000
                 Appearance.PlaceOffset.Y = 63.000000000000000000
               end
               item
@@ -19638,7 +19640,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 95.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 149.000000000000000000
+                Appearance.PlaceOffset.X = 165.000000000000000000
                 Appearance.PlaceOffset.Y = 63.000000000000000000
               end
               item
@@ -19650,7 +19652,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 204.000000000000000000
+                Appearance.PlaceOffset.X = 220.000000000000000000
                 Appearance.PlaceOffset.Y = 84.000000000000000000
               end
               item
@@ -19663,7 +19665,7 @@
                 Appearance.TextColor = claBlue
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 92.000000000000000000
+                Appearance.PlaceOffset.X = 122.000000000000000000
                 Appearance.PlaceOffset.Y = 84.000000000000000000
               end
               item
@@ -19689,6 +19691,26 @@
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.X = 264.000000000000000000
                 Appearance.PlaceOffset.Y = 63.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'OrdUserLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 50.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 63.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'OrdUser'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 60.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 84.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -19953,7 +19975,7 @@
             object Label27: TLabel
               StyledSettings = [Family, Style, FontColor]
               Position.X = 196.000000000000000000
-              Position.Y = 197.000000000000000000
+              Position.Y = 189.000000000000000000
               Size.Width = 132.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
@@ -20001,7 +20023,7 @@
             object Label32: TLabel
               StyledSettings = [Family, Style, FontColor]
               Position.X = 189.000000000000000000
-              Position.Y = 308.000000000000000000
+              Position.Y = 306.000000000000000000
               Size.Width = 132.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
@@ -20013,7 +20035,7 @@
             object Label33: TLabel
               StyledSettings = [Family, Style, FontColor]
               Position.X = 16.000000000000000000
-              Position.Y = 305.000000000000000000
+              Position.Y = 306.000000000000000000
               Size.Width = 150.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
@@ -20353,7 +20375,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 10.000000000000000000
+                Appearance.PlaceOffset.X = 65.000000000000000000
                 Appearance.PlaceOffset.Y = 85.000000000000000000
               end
               item
@@ -20383,7 +20405,7 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 94.000000000000000000
+                Appearance.Width = 99.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
@@ -20397,7 +20419,7 @@
                 Appearance.TextColor = claBlue
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 83.000000000000000000
+                Appearance.PlaceOffset.X = 118.000000000000000000
                 Appearance.PlaceOffset.Y = 85.000000000000000000
               end
               item
@@ -20409,7 +20431,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 40.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 203.000000000000000000
+                Appearance.PlaceOffset.X = 221.000000000000000000
                 Appearance.PlaceOffset.Y = 85.000000000000000000
               end
               item
@@ -20418,9 +20440,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
+                Appearance.Width = 107.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 95.000000000000000000
+                Appearance.PlaceOffset.X = 103.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
               item
@@ -20429,9 +20451,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 91.000000000000000000
+                Appearance.Width = 99.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 223.000000000000000000
+                Appearance.PlaceOffset.X = 215.000000000000000000
                 Appearance.PlaceOffset.Y = 106.000000000000000000
               end
               item
@@ -20442,6 +20464,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 55.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
               end
               item
@@ -20452,7 +20475,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 73.000000000000000000
+                Appearance.PlaceOffset.X = 108.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
               end
               item
@@ -20463,7 +20486,7 @@
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 143.000000000000000000
+                Appearance.PlaceOffset.X = 161.000000000000000000
                 Appearance.PlaceOffset.Y = 64.000000000000000000
               end
               item
@@ -20502,12 +20525,21 @@
                 AppearanceObjectName = 'OrdUser'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
-                Appearance.Font.StyleExt = {00070000000000000004000000}
+                Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 25.000000000000000000
+                Appearance.Width = 60.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 197.000000000000000000
-                Appearance.PlaceOffset.Y = 106.000000000000000000
+                Appearance.PlaceOffset.Y = 85.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'OrdUserLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 45.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 64.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -20518,6 +20550,7 @@
             ItemAppearanceObjects.FooterObjects.Text.Visible = False
             OnDblClick = lwInventoryListDblClick
             CanSwipeDelete = False
+            OnFilter = lwInventoryListFilter
             AutoTapScroll = True
             SearchVisible = True
           end
@@ -23142,6 +23175,10 @@
         item
           SourceMemberName = 'OrdUser'
           ControlMemberName = 'OrdUser'
+        end
+        item
+          SourceMemberName = 'OrdUserLabel'
+          ControlMemberName = 'OrdUserLabel'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -23254,6 +23291,14 @@
         item
           SourceMemberName = 'AmountDiffLabel'
           ControlMemberName = 'AmountDiffLabel'
+        end
+        item
+          SourceMemberName = 'OrdUserLabel'
+          ControlMemberName = 'OrdUserLabel'
+        end
+        item
+          SourceMemberName = 'OrdUser'
+          ControlMemberName = 'OrdUser'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

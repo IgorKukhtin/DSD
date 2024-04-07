@@ -137,6 +137,11 @@ object DM: TDM
       FieldName = 'AmountDiffLabel'
       Calculated = True
     end
+    object cdsInventoryListOrdUserLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrdUserLabel'
+      Calculated = True
+    end
     object cdsInventoryListErasedId: TIntegerField
       FieldKind = fkCalculated
       FieldName = 'ErasedId'
@@ -172,8 +177,8 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'InventoryGoods'
-    Left = 596
-    Top = 164
+    Left = 772
+    Top = 172
     object tblInventoryGoodsLocalId: TAutoIncField
       FieldName = 'LocalId'
     end
@@ -278,6 +283,10 @@ object DM: TDM
     end
     object tbGoodsArticle: TWideStringField
       FieldName = 'Article'
+      Size = 100
+    end
+    object tbGoodsArticleFilter: TWideStringField
+      FieldName = 'ArticleFilter'
       Size = 100
     end
     object tbGoodsEAN: TWideStringField
@@ -408,10 +417,6 @@ object DM: TDM
     object tbRemainsGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
-    object tbRemainsPartNumber: TWideStringField
-      FieldName = 'PartNumber'
-      Size = 255
-    end
     object tbRemainsRemains: TFloatField
       FieldName = 'Remains'
     end
@@ -456,9 +461,11 @@ object DM: TDM
     end
     object qurGoodsListRemains: TFloatField
       FieldName = 'Remains'
+      OnGetText = qurGoodsListRemainsGetText
     end
     object qurGoodsListRemains_curr: TFloatField
       FieldName = 'Remains_curr'
+      OnGetText = qurGoodsListRemains_currGetText
     end
     object qurGoodsListRemainsLabel: TWideStringField
       FieldKind = fkCalculated
@@ -613,6 +620,11 @@ object DM: TDM
     end
     object cdsInventoryListTopError: TWideStringField
       FieldName = 'Error'
+    end
+    object cdsInventoryListTopOrdUserLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrdUserLabel'
+      Calculated = True
     end
   end
 end
