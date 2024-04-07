@@ -42,8 +42,15 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
               )
 AS
 $BODY$
-   DECLARE inisMovement  Boolean ; -- по документам
+   DECLARE vbUserId Integer;
+   DECLARE inIsMovement  Boolean ; -- по документам
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
    inisMovement:= FALSE;
 

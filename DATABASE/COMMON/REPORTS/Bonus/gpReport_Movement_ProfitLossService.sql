@@ -48,11 +48,18 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
             )  
 AS
 $BODY$
+   DECLARE vbUserId Integer;
    DECLARE vbIsGoods_where Boolean;
    DECLARE vbIsPartner_where Boolean;
    DECLARE vbIsJuridical_where Boolean;
    DECLARE inisMovement Boolean;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     vbIsGoods_where:= FALSE;
     vbIsPartner_where:= FALSE;

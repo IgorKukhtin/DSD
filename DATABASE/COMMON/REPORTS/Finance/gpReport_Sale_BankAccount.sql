@@ -58,7 +58,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+     
      -- !!!Группируем Договора!!!
      vbContractId_key:= (SELECT View_Contract_ContractKey.ContractId_Key FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey WHERE View_Contract_ContractKey.ContractId = inContractId);
 

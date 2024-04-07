@@ -53,9 +53,16 @@ RETURNS TABLE (MovementId_pl Integer
               )  
 AS
 $BODY$
+   DECLARE vbUserId Integer;
    --DECLARE inisMovement  Boolean ; -- по документам
    DECLARE vbEndDate     TDateTime;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpGetUserBySession (inSession);
+
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
    --inisMovement:= FALSE;
    vbEndDate := inEndDate + INTERVAL '1 Day';

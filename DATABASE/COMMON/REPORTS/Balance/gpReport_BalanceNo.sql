@@ -43,6 +43,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
 -- if vbUserId = 973007
 /*if vbUserId <> 5
 then

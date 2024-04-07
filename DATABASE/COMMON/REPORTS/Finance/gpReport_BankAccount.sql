@@ -47,6 +47,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
      -- проверка доступа
      vbMemberId := (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
                     FROM ObjectLink AS ObjectLink_User_Member

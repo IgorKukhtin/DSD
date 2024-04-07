@@ -57,6 +57,9 @@ $BODY$
    DECLARE vbIsUserRole_8813637 Boolean;
    DECLARE vbIsInfoMoney Boolean;
 BEGIN
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+
 
      -- Блокируем ему просмотр
      IF inUserId = 9457 -- Климентьев К.И.

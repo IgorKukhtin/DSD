@@ -18,10 +18,16 @@ RETURNS TABLE (NomStr integer, InfoText TVarChar
               )
 AS
 $BODY$
-   
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
 
-    -- Результат
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
+     -- Результат
      RETURN QUERY
      WITH tmp AS (SELECT * FROM gpReport_Branch_App7 (inStartDate:= inStartDate, inEndDate:= inEndDate, inBranchId:= inBranchId, inSession:= inSession) )             
 

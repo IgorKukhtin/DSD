@@ -17,10 +17,12 @@ RETURNS TABLE ( GroupName TVarChar, Color_calc integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
     -- CREATE TEMP TABLE _tmpBranch (BranchId Integer) ON COMMIT DROP; 
