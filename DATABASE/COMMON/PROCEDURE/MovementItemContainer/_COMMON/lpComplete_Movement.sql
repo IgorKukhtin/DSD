@@ -26,7 +26,9 @@ BEGIN
   -- заменили
   inUserId:= ABS (inUserId);
   
-  
+  -- !!!Только просмотр Аудитор!!!
+  PERFORM lpCheckPeriodClose_auditor (NULL, NULL, inMovementId, NULL, NULL, inUserId);
+
   -- проверка
   /*IF EXISTS (SELECT MovementId FROM MovementItemContainer WHERE MovementId = inMovementId)
   THEN

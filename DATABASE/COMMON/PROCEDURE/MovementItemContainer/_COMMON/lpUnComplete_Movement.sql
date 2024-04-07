@@ -23,6 +23,10 @@ BEGIN
   inUserId:= ABS (inUserId);
 
 
+  -- !!!Только просмотр Аудитор!!!
+  PERFORM lpCheckPeriodClose_auditor (NULL, NULL, inMovementId, NULL, NULL, inUserId);
+
+
   -- 0. Проверка
   IF COALESCE (inMovementId, 0) = 0
   THEN

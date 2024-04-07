@@ -33,6 +33,10 @@ BEGIN
      END IF;
 
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (NULL, NULL, ioId, NULL, NULL, inUserId);
+
+
      -- Проверка - Гриневич К.А.
      IF inUserId IN (9031170) OR inDescId = zc_Movement_Cash()
      THEN

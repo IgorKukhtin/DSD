@@ -15,6 +15,10 @@
     DECLARE vbDescId     Integer;
     DECLARE vbMovementDescId Integer;
  BEGIN
+   -- !!!Только просмотр Аудитор!!!
+   PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, inMovementItemId, NULL, inUserId);
+
+
    -- устанавливаем новое значение
    outIsErased := TRUE;
  

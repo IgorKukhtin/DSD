@@ -16,6 +16,10 @@ $BODY$
   DECLARE vbStatusId_old    Integer;
 BEGIN
 
+  -- !!!Только просмотр Аудитор!!!
+  PERFORM lpCheckPeriodClose_auditor (NULL, NULL, inMovementId, NULL, NULL, inUserId);
+
+
   -- 0. Проверка
   IF COALESCE (inMovementId, 0) = 0
   THEN

@@ -21,6 +21,10 @@ $BODY$
   DECLARE vbInvNumber         TVarChar;
   DECLARE vbIsErased          Boolean;
 BEGIN
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (NULL, NULL, NULL, ioId, NULL, inUserId);
+
+
      -- меняем параметр
      IF inParentId = 0
      THEN
