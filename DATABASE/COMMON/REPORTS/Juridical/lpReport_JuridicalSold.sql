@@ -57,7 +57,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   --DECLARE vbUserId Integer;
 
    DECLARE vbIsBranch Boolean;
    DECLARE vbIsJuridicalGroup Boolean;
@@ -68,7 +68,11 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
-     --vbUserId:= lpGetUserBySession (inSession);
+     -- vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+
 
      -- Разрешен просмотр долги Маркетинг - НАЛ
      vbIsInfoMoneyDestination_21500:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = inUserId AND tmp.RoleId = 8852398);

@@ -118,9 +118,14 @@ $BODY$
    DECLARE vbStartDate_olap    TDateTime;
    DECLARE vbVerId_olap        Integer;
 BEGIN
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
-    -- ускорение - ОЛАП
-    vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND inUserId = 5;
+
+    -- ускорение - ОЛАП + Только просмотр Аудитор + Просмотр СБ
+    vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND (inUserId IN (5, 6604558)
+                                                     OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
+                                                       );
 
     -- 01.01.2021
     IF vb_IsContainer_OLAP = TRUE AND inEndDate < '01.01.2021'

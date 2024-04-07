@@ -44,9 +44,9 @@ $BODY$
    DECLARE vbObjectId_Constraint_Branch Integer;
    DECLARE vbObjectId_Constraint_JuridicalGroup Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
-     --vbUserId:= lpGetUserBySession (inSession);
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+
 /*
 1-30 день
 31-60 день

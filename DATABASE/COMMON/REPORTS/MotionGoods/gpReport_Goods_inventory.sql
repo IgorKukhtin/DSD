@@ -57,6 +57,10 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     
 
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
     -- !!!определяется!!!
     vbIsSummIn:= -- Ограничение просмотра с/с
                  NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE AccessKeyId = zc_Enum_Process_AccessKey_NotCost() AND UserId = vbUserId)

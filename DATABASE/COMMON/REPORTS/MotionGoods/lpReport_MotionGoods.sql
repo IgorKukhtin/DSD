@@ -1,7 +1,7 @@
 -- Function: lpReport_MotionGoods()
--- стара версия - БЕЗ OLAP
+-- старая версия - БЕЗ OLAP
 
-DROP FUNCTION IF EXISTS lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS старая_версия - БЕЗ OLAP_lpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpReport_MotionGoods(
     IN inStartDate          TDateTime , --
@@ -153,7 +153,7 @@ BEGIN
     -- Дмитриева О.В.
     IF inStartDate < inEndDate - INTERVAL '2 MONTH' AND inUserId NOT IN (zfCalc_UserAdmin() :: Integer, zfCalc_UserMain(), 106594) AND COALESCE (inGoodsId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. Заданный период не может быть больше чем 2 мес.';
+        RAISE EXCEPTION 'Ошибка.Выбранный период не может быть больше чем 2 мес.';
     END IF;
 
 

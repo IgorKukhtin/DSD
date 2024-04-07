@@ -161,6 +161,9 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
    
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     -- замена
     IF vbUserId <> 5
