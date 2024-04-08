@@ -22,8 +22,6 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 544
-        ExplicitLeft = 3
-        ExplicitTop = -5
         ExplicitWidth = 1221
         ExplicitHeight = 544
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1313,36 +1311,61 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             OptionsView.Header = False
-            object llCardBankSecond: TcxGridDBColumn
-              DataBinding.FieldName = 'CardBankSecond'
-              MinWidth = 120
+            object expFIO: TcxGridDBColumn
+              DataBinding.FieldName = 'FIO'
+              MinWidth = 180
+              Width = 180
             end
-            object llBankSecondName: TcxGridDBColumn
-              DataBinding.FieldName = 'BankSecondName'
-              MinWidth = 120
+            object expName: TcxGridDBColumn
+              DataBinding.FieldName = 'Name'
+              MinWidth = 180
+              Width = 180
             end
-            object llINN: TcxGridDBColumn
+            object expName_two: TcxGridDBColumn
+              DataBinding.FieldName = 'Name_two'
+              MinWidth = 180
+              Width = 180
+            end
+            object expINN: TcxGridDBColumn
               DataBinding.FieldName = 'INN'
-              MinWidth = 100
+              MinWidth = 120
             end
-            object llPersonalName: TcxGridDBColumn
-              DataBinding.FieldName = 'PersonalName'
+            object expPhone: TcxGridDBColumn
+              DataBinding.FieldName = 'Phone'
               MinWidth = 150
+              Width = 150
             end
-            object llBankSecond_num: TcxGridDBColumn
+            object expCardIBANSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardIBANSecond'
+              MinWidth = 320
+              Width = 320
+            end
+            object expCardBankSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardBankSecond'
+              MinWidth = 180
+            end
+            object expBankSecond_num: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072
               DataBinding.FieldName = 'BankSecond_num'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              MinWidth = 156
-              Width = 156
+              Properties.DisplayFormat = ',0.00'
+              MinWidth = 100
+              Width = 100
             end
-            object cxGridDBColumn1: TcxGridDBColumn
-              DataBinding.FieldName = 'RowData'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              MinWidth = 120
-              VisibleForCustomization = False
-              Width = 120
+            object expPersonalName: TcxGridDBColumn
+              DataBinding.FieldName = 'PersonalName'
+              MinWidth = 350
+              Width = 350
+            end
+            object expBankSecondName: TcxGridDBColumn
+              DataBinding.FieldName = 'BankSecondName'
+              MinWidth = 250
+              Width = 250
+            end
+            object expCardSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardSecond'
+              MinWidth = 320
+              Width = 320
             end
           end
           object cxGridLevel1: TcxGridLevel

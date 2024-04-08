@@ -364,22 +364,27 @@ type
     bbExportF2_Prior_xls: TdxBarButton;
     ExportXmlGrid_num: TcxGrid;
     cxGridDBTableView_num: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
     cxGridLevel4: TcxGridLevel;
     ExportCDS_num: TClientDataSet;
     ExportDS_num: TDataSource;
-    llBankSecond_num: TcxGridDBColumn;
+    expBankSecond_num: TcxGridDBColumn;
     actExport_GridF2_prior_xls: TExportGrid;
-    llINN: TcxGridDBColumn;
-    llCardBankSecond: TcxGridDBColumn;
-    llBankSecondName: TcxGridDBColumn;
-    llPersonalName: TcxGridDBColumn;
+    expINN: TcxGridDBColumn;
+    expCardBankSecond: TcxGridDBColumn;
+    expBankSecondName: TcxGridDBColumn;
+    expPersonalName: TcxGridDBColumn;
     Panel1: TPanel;
     actReport_Open: TdsdOpenForm;
     bbReport_Open: TdxBarButton;
     spSelectPrint_Num: TdsdStoredProc;
     actPrint_Num: TdsdPrintAction;
     bbPrint_Num: TdxBarButton;
+    expFIO: TcxGridDBColumn;
+    expName: TcxGridDBColumn;
+    expName_two: TcxGridDBColumn;
+    expPhone: TcxGridDBColumn;
+    expCardIBANSecond: TcxGridDBColumn;
+    expCardSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

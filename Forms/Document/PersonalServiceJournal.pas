@@ -165,13 +165,24 @@ type
     Panel1: TPanel;
     ExportXmlGrid_num: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    cxGridLevel1: TcxGridLevel;
     ExportCDS_num: TClientDataSet;
     ExportDS_num: TDataSource;
     actExport_GridF2_proir_xls: TExportGrid;
     spSelectPrint_Num: TdsdStoredProc;
     actPrint_Num: TdsdPrintAction;
     bbPrint_Num: TdxBarButton;
+
+    expFIO: TcxGridDBColumn;
+    expName: TcxGridDBColumn;
+    expName_two: TcxGridDBColumn;
+    expINN: TcxGridDBColumn;
+    expPhone: TcxGridDBColumn;
+    expCardIBANSecond: TcxGridDBColumn;
+    expCardSecond: TcxGridDBColumn;
+    expBankSecond_num: TcxGridDBColumn;
+    expPersonalName: TcxGridDBColumn;
+    expBankSecondName: TcxGridDBColumn;
+    expCardBankSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public
