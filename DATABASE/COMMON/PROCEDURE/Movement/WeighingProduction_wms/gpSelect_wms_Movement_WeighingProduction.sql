@@ -58,6 +58,9 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_wms_Movement_WeighingProduction());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- Результат
      RETURN QUERY
 

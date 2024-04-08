@@ -31,6 +31,9 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
+
      -- Результат
     RETURN QUERY
 

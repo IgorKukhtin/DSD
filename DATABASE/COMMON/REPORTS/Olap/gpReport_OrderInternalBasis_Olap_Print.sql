@@ -17,7 +17,14 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
     DECLARE vbisFreezing Boolean;
+    DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     --если НЕ склад мясн сырья и просто подписать в печати "кол-во"
     CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;

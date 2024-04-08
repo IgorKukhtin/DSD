@@ -52,7 +52,11 @@ AS
 $BODY$
  DECLARE vbUserId Integer;
 BEGIN
+     --
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- Замена
      IF inIsMovement = TRUE THEN inIsDays:= TRUE; END IF;

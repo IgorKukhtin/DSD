@@ -40,6 +40,12 @@ $BODY$
    DECLARE vbStartDate Integer;
    DECLARE vbEndDate TDateTime;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inStartDate, NULL, NULL, NULL, vbUserId);
+
      
    /* IF (EXTRACT (DOW FROM inStartDate)) <> 1 
       THEN

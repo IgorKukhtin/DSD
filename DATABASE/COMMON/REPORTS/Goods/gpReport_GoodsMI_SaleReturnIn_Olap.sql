@@ -75,6 +75,8 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
     vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- определяется уровень доступа
     vbObjectId_Constraint_Branch:= (SELECT DISTINCT Object_RoleAccessKeyGuide_View.BranchId

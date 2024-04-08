@@ -35,6 +35,8 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!“олько просмотр јудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- определ€етс€ - может ли пользовать видеть все документы
      IF zfCalc_AccessKey_TransportAll (vbUserId) = TRUE

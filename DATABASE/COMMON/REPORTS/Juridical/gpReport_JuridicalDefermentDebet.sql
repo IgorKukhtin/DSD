@@ -45,6 +45,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
+
      -- определяется ...
      vbIsBranch:= COALESCE (inBranchId, 0) > 0;
      vbIsJuridicalGroup:= COALESCE (inJuridicalGroupId, 0) > 0;

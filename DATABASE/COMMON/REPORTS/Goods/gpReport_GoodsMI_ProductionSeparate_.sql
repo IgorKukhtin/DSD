@@ -1,5 +1,5 @@
    -- Function: gpReport_GoodsMI_ProductionSeparate ()
-
+   old
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
@@ -20,8 +20,15 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar
              )   
 AS
 $BODY$
-    DECLARE vbDescId Integer;
+    DECLARE vbDescId Integer; 
+    DECLARE vbUserId Integer;
 BEGIN
+
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;

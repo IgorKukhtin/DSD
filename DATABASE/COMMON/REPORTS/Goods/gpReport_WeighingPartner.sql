@@ -23,10 +23,15 @@ RETURNS TABLE (InvNumber_parent TVarChar, OperDate_parent TDateTime, MovementDes
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingPartner());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- inShowAll:= TRUE;
      RETURN QUERY 
@@ -289,4 +294,4 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_WeighingPartner (inStartDate:= '01.08.2015', inEndDate:= '01.08.2015', inSession:= zfCalc_UserAdmin())
---select * from gpReport_WeighingPartner(inStartDate := ('01.08.2015')::TDateTime , inEndDate := ('01.08.2015')::TDateTime , MovementDescId := 8 ,  inSession := '5');
+--select * from gpReport_WeighingPartner(inStartDate := ('01.08.2015')::TDateTime , inEndDate := ('01.08.2015')::TDateTime , inMovementDescId := 8 ,  inSession := '5');

@@ -30,6 +30,9 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
  /*   IF inJuridicalId = 0 AND inPartnerId = 0
     THEN inShowAll:= TRUE;
     END IF;
