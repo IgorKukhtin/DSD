@@ -54,7 +54,13 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              )   
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- Ограничения по товару
 --    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;

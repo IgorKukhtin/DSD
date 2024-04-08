@@ -30,10 +30,13 @@ $BODY$
    DECLARE vbNextOperDate TDateTime;
    DECLARE vbOperSumm TFloat;
    DECLARE vbIsSale Boolean;
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
 
      -- 
      vbIsSale:= EXISTS (SELECT AccountId FROM Object_Account_View WHERE AccountId = inAccountId AND AccountGroupId = zc_Enum_AccountGroup_30000()); -- Дебиторы

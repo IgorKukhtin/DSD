@@ -24,6 +24,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inStartDate, NULL, NULL, NULL, vbUserId);
+
     -- таблица -
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
 
@@ -229,8 +232,10 @@ $BODY$
  17.09.20         *
 */
 
+/*
 SELECT * FROM gpReport_Remains_Asset(inStartDate := '01.09.2020':: TDateTime, inSession := zfCalc_UserAdmin():: TVarChar ) as tmp
 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
 LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmp.LocationId
 --LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = tmp.AssetToId
 order by 4,5
+*/

@@ -24,14 +24,16 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- очень важная проверка
     IF COALESCE (inGoodsId, 0) = 0
     THEN
         RAISE EXCEPTION 'Ошибка.Не выбран товар  <%>', (SELECT ValueData FROM Object WHERE ID = 5225);
     END IF;
 
-
-
+  
     -- Результат
     RETURN QUERY
       WITH

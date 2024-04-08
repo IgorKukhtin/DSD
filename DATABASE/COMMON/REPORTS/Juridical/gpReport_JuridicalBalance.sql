@@ -38,10 +38,16 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalBalance(
 AS
 $BODY$
   DECLARE vbJuridicalId1_Basis Integer;
-  DECLARE vbJuridicalId2_Basis Integer;
+  DECLARE vbJuridicalId2_Basis Integer; 
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+     vbUserId:= lpGetUserBySession (inSession);
+     
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      -- Один запрос, который считает остаток
      CREATE TEMP TABLE _tmpSummContract_all (ContainerId Integer, Amount TFloat, Amount_move TFloat, ContractId Integer) ON COMMIT DROP; 
