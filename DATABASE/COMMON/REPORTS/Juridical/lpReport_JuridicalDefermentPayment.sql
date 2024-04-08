@@ -52,14 +52,11 @@ $BODY$
 
    DECLARE vbIsInfoMoneyDestination_21500 Boolean;
 BEGIN
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
-
      vbIsContainer:= inUserId < 0;
      inUserId:= ABS (inUserId);
 
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, inUserId);
 
 
      -- Разрешен просмотр долги Маркетинг - НАЛ
