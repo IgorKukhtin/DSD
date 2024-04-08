@@ -1705,12 +1705,53 @@ begin
     StoredProc.Params.AddParam('BarCodePref', ftString, ptOutput, frmMain.BarCodePref);
     StoredProc.Params.AddParam('ArticleSeparators', ftString, ptOutput, frmMain.ArticleSeparators);
 
+    StoredProc.Params.AddParam('isCameraScanerSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isCameraScaner', ftBoolean, ptOutput, frmMain.isCameraScaner);
+    StoredProc.Params.AddParam('isOpenScanChangingModeSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isOpenScanChangingMode', ftBoolean, ptOutput, frmMain.isOpenScanChangingMode);
+    StoredProc.Params.AddParam('isHideScanButtonSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isHideScanButton', ftBoolean, ptOutput, frmMain.isHideScanButton);
+    StoredProc.Params.AddParam('isHideIlluminationButtonSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isHideIlluminationButton', ftBoolean, ptOutput, frmMain.isHideIlluminationButton);
+    StoredProc.Params.AddParam('isIlluminationModeSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isIlluminationMode', ftBoolean, ptOutput, frmMain.isIlluminationMode);
+
+    StoredProc.Params.AddParam('isDictGoodsArticleSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isDictGoodsArticle', ftBoolean, ptOutput, frmMain.isDictGoodsArticle);
+    StoredProc.Params.AddParam('isDictGoodsCodeSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isDictGoodsCode', ftBoolean, ptOutput, frmMain.isDictGoodsCode);
+    StoredProc.Params.AddParam('isDictGoodsEANSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isDictGoodsEAN', ftBoolean, ptOutput, frmMain.isDictGoodsEAN);
+    StoredProc.Params.AddParam('isDictCodeSet', ftBoolean, ptOutput, False);
+    StoredProc.Params.AddParam('isDictCode', ftBoolean, ptOutput, frmMain.isDictCode);
+
+
     try
       StoredProc.Execute(false, false, false);
       if StoredProc.ParamByName('BarCodePref').Value <> frmMain.BarCodePref then
         frmMain.BarCodePref := StoredProc.ParamByName('BarCodePref').Value;
       if StoredProc.ParamByName('ArticleSeparators').Value <> frmMain.ArticleSeparators then
         frmMain.ArticleSeparators := StoredProc.ParamByName('ArticleSeparators').Value;
+
+      if StoredProc.ParamByName('isCameraScanerSet').Value and
+        (StoredProc.ParamByName('isCameraScaner').Value <> frmMain.isCameraScaner) then frmMain.isCameraScaner := StoredProc.ParamByName('isCameraScaner').Value;
+      if StoredProc.ParamByName('isOpenScanChangingModeSet').Value and
+        (StoredProc.ParamByName('isOpenScanChangingMode').Value <> frmMain.isOpenScanChangingMode) then frmMain.isOpenScanChangingMode := StoredProc.ParamByName('isOpenScanChangingMode').Value;
+      if StoredProc.ParamByName('isHideScanButtonSet').Value and
+        (StoredProc.ParamByName('isHideScanButton').Value <> frmMain.isHideScanButton) then frmMain.isHideScanButton := StoredProc.ParamByName('isHideScanButton').Value;
+      if StoredProc.ParamByName('isHideIlluminationButtonSet').Value and
+        (StoredProc.ParamByName('isHideIlluminationButton').Value <> frmMain.isHideIlluminationButton) then frmMain.isHideIlluminationButton := StoredProc.ParamByName('isHideIlluminationButton').Value;
+      if StoredProc.ParamByName('isIlluminationModeSet').Value and
+        (StoredProc.ParamByName('isIlluminationMode').Value <> frmMain.isIlluminationMode) then frmMain.isIlluminationMode := StoredProc.ParamByName('isIlluminationMode').Value;
+
+      if StoredProc.ParamByName('isDictGoodsArticleSet').Value and
+        (StoredProc.ParamByName('isDictGoodsArticle').Value <> frmMain.isDictGoodsArticle) then frmMain.isDictGoodsArticle := StoredProc.ParamByName('isDictGoodsArticle').Value;
+      if StoredProc.ParamByName('isDictGoodsCodeSet').Value and
+        (StoredProc.ParamByName('isDictGoodsCode').Value <> frmMain.isDictGoodsCode) then frmMain.isDictGoodsCode := StoredProc.ParamByName('isDictGoodsCode').Value;
+      if StoredProc.ParamByName('isDictGoodsEANSet').Value and
+        (StoredProc.ParamByName('isDictGoodsEAN').Value <> frmMain.isDictGoodsEAN) then frmMain.isDictGoodsEAN := StoredProc.ParamByName('isDictGoodsEAN').Value;
+      if StoredProc.ParamByName('isDictCodeSet').Value and
+        (StoredProc.ParamByName('isDictCode').Value <> frmMain.isDictCode) then frmMain.isDictCode := StoredProc.ParamByName('isDictCode').Value;
 
       Result := True;
     except
@@ -2164,7 +2205,7 @@ begin
       begin
         sql := sql + #13#10'AND (';
         sql := sql + #13#10'NameUpper LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
-        if Code <> 0 then
+        if frmMain.isDictCode and (Code <> 0) then
           sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
         sql := sql + #13#10')';
       end;
@@ -2175,7 +2216,7 @@ begin
       begin
         sql := sql + #13#10'AND (';
         sql := sql + #13#10' AnsiUpperCase(Name) LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
-        if Code <> 0 then
+        if frmMain.isDictCode and (Code <> 0) then
           sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
         sql := sql + #13#10')';
       end;
@@ -2246,11 +2287,13 @@ begin
 
           sql := sql + #13#10'and (';
           sql := sql + #13#10' NameUpper LIKE ''%' + AnsiUpperCase(cFilter) + '%''';
-          sql := sql + #13#10'OR Article LIKE ''%' + cFilter + '%''';
-          sql := sql + #13#10'OR ArticleFilter LIKE ''%' + cFilterArticlr + '%''';
-          if Code > 0 then
+          if frmMain.isDictGoodsArticle then
+            sql := sql + #13#10'OR Article LIKE ''%' + cFilter + '%''';
+          if frmMain.isDictGoodsArticle then
+            sql := sql + #13#10'OR ArticleFilter LIKE ''%' + cFilterArticlr + '%''';
+          if frmMain.isDictGoodsEAN and (Code > 0) then
             sql := sql + #13#10'OR EAN LIKE ''%' + IntToStr(Code) + '%''';
-          if Code <> 0 then
+          if frmMain.isDictGoodsCode and (Code <> 0) then
             sql := sql + #13#10'OR Code LIKE ''%' + IntToStr(Code) + '%''';
           sql := sql + #13#10')';
         end else sql := sql + #13#10'AND EAN LIKE ''%' + cFilter + '%''';

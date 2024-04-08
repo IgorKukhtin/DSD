@@ -339,6 +339,19 @@ type
     procedure SetDateDownloadDict(Values : TDateTime);
     procedure SetBarCodePref(Values : String);
     procedure SetArticleSeparators(Values : String);
+
+    procedure SetisCameraScaner(Values : boolean);
+    procedure SetisOpenScanChangingMode(Values : boolean);
+    procedure SetisHideIlluminationButton(Values : boolean);
+    procedure SetisHideScanButton(Values : boolean);
+    function GetisIlluminationMode : Boolean;
+    procedure SetisIlluminationMode(Values : boolean);
+
+    procedure SetisDictGoodsArticle(Values : boolean);
+    procedure SetisDictGoodsCode(Values : boolean);
+    procedure SetisDictGoodsEAN(Values : boolean);
+    procedure SetisDictCode(Values : boolean);
+
     procedure b0Click(Sender: TObject);
     procedure bDotClick(Sender: TObject);
     procedure bClearAmountClick(Sender: TObject);
@@ -416,6 +429,19 @@ type
     // Скрывать кнопку сканирования когда есть боковые
     FisHideScanButton: boolean;
 
+    // Фильтр в справочкике комплектующих
+    // Артикул
+    FisDictGoodsArticle: Boolean;
+    // Interne Nr (Code)
+    FisDictGoodsCode: Boolean;
+    // Interne Nr
+    FisDictGoodsEAN: Boolean;
+
+    // ***** Фильтр в остальных справочкиках
+    // Interne Nr (Code)
+    FisDictCode: Boolean;
+
+
     // Обработка штрих кода камерой
     FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
@@ -468,6 +494,30 @@ type
     property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
     property BarCodePref: String read FBarCodePref write SetBarCodePref;
     property ArticleSeparators: String read FArticleSeparators write SetArticleSeparators;
+
+    // Использовать в любом случае камеру устройства
+    property isCameraScaner: boolean read FisCameraScaner write SetisCameraScaner;
+    // Открывать сканер при изменении режима
+    property isOpenScanChangingMode: boolean read FisOpenScanChangingMode write SetisOpenScanChangingMode;
+    // Скрывать кнопку подсветки
+    property isHideIlluminationButton: boolean read FisHideIlluminationButton write SetisHideIlluminationButton;
+    // Скрывать кнопку сканирования когда есть боковые
+    property isHideScanButton: boolean read FisHideScanButton write SetisHideScanButton;
+    // Поссветка включена при старте сканирования
+    property isIlluminationMode: boolean read GetisIlluminationMode write SetisIlluminationMode;
+
+    // Фильтр в справочкике комплектующих
+    // Артикул
+    property isDictGoodsArticle: Boolean read FisDictGoodsArticle write SetisDictGoodsArticle;
+    // Interne Nr (Code)
+    property isDictGoodsCode: Boolean read FisDictGoodsCode write SetisDictGoodsCode;
+    // Interne Nr
+    property isDictGoodsEAN: Boolean read FisDictGoodsEAN write SetisDictGoodsEAN;
+
+    // ***** Фильтр в остальных справочкиках
+    // Interne Nr (Code)
+    property isDictCode: Boolean read FisDictCode write SetisDictCode;
+
   end;
 
 var
@@ -592,15 +642,23 @@ begin
   try
     LoginEdit.Text := SettingsFile.ReadString('LOGIN', 'USERNAME', '');
     FisTestWebServer := SettingsFile.ReadBool('Params', 'isTestWebServer', False);
-    FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
-    FisCameraScaner := SettingsFile.ReadBool('DataWedge', 'isCameraScaner', False);
+
     FDateDownloadDict := SettingsFile.ReadDateTime('Params', 'DateDownloadDict', IncDay(Now, - 2));
 
-    FisOpenScanChangingMode := SettingsFile.ReadBool('Params', 'isOpenScanChangingMode', True);
-    FisHideIlluminationButton := SettingsFile.ReadBool('Params', 'isHideIlluminationButton', False);
-    FisHideScanButton := SettingsFile.ReadBool('Params', 'isHideScanButton', False);
     FBarCodePref := SettingsFile.ReadString('Params', 'BarCodePref', '0000');
     FArticleSeparators := SettingsFile.ReadString('Params', 'ArticleSeparators', ' ,-');
+
+    FisCameraScaner := SettingsFile.ReadBool('DataWedge', 'isCameraScaner', False);
+    FDataWedgeBarCode.isIllumination := SettingsFile.ReadBool('DataWedge', 'isIllumination', True);
+    FisOpenScanChangingMode := SettingsFile.ReadBool('Params', 'isOpenScanChangingMode', False);
+    FisHideScanButton := SettingsFile.ReadBool('Params', 'isHideScanButton', False);
+    FisHideIlluminationButton := SettingsFile.ReadBool('Params', 'isHideIlluminationButton', False);
+
+    FisDictGoodsArticle := SettingsFile.ReadBool('Params', 'isDictGoodsArticle', True);
+    FisDictGoodsCode := SettingsFile.ReadBool('Params', 'isDictGoodsCode', False);
+    FisDictGoodsEAN := SettingsFile.ReadBool('Params', 'isDictGoodsEAN', False);
+    FisDictCode := SettingsFile.ReadBool('Params', 'isDictCode', False);
+
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -676,6 +734,128 @@ begin
   try
     FArticleSeparators := Values;
     SettingsFile.WriteString('Params', 'ArticleSeparators', FArticleSeparators);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisCameraScaner(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisCameraScaner := Values;
+    SettingsFile.WriteBool('DataWedge', 'isCameraScaner', FisCameraScaner);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisOpenScanChangingMode(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisOpenScanChangingMode := Values;
+    SettingsFile.WriteBool('Params', 'isisOpenScanChangingMode', FisOpenScanChangingMode);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisHideIlluminationButton(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisHideIlluminationButton := Values;
+    SettingsFile.WriteBool('Params', 'isHideIlluminationButton', FisHideIlluminationButton);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisHideScanButton(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisHideScanButton := Values;
+    SettingsFile.WriteBool('Params', 'isHideScanButton', FisHideScanButton);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+function TfrmMain.GetisIlluminationMode : Boolean;
+begin
+  Result := FDataWedgeBarCode.isIllumination
+end;
+
+procedure TfrmMain.SetisilluminationMode(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FDataWedgeBarCode.isIllumination := Values;
+    SettingsFile.WriteBool('DataWedge', 'isIlluminationMode', FDataWedgeBarCode.isIllumination);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisDictGoodsArticle(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisDictGoodsArticle := Values;
+    SettingsFile.WriteBool('Params', 'isDictGoodsArticle', FisDictGoodsArticle);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisDictGoodsCode(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisDictGoodsCode := Values;
+    SettingsFile.WriteBool('Params', 'isDictGoodsCode', FisDictGoodsCode);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisDictGoodsEAN(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisDictGoodsEAN := Values;
+    SettingsFile.WriteBool('Params', 'isDictGoodsEAN', FisDictGoodsEAN);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetisDictCode(Values : boolean);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FisDictCode := Values;
+    SettingsFile.WriteBool('Params', 'isDictCode', FisDictCode);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -1073,7 +1253,7 @@ begin
       FObr.Active := True;
       FisCameraScanBarCode := True;
       FCameraScanBarCode.Active := True;
-      if FCameraScanBarCode.HasFlash and FDataWedgeBarCode.isIllumination then
+      if FCameraScanBarCode.HasFlash and isIlluminationMode then
         FCameraScanBarCode.TorchMode := TTorchMode.ModeOn;
     end else
     if tcMain.ActiveTab = tiInventory then
@@ -1100,8 +1280,6 @@ begin
     if tcMain.ActiveTab = tiInventoryItemEdit then
     begin
       lCaption.Text := 'Добавить в Инвентаризацию';
-      sbBack.Visible := false;
-      sbClose.Visible := sbBack.Visible;
       case FInventScanType of
         1 : begin
               edIIEAmount.SetFocus;
@@ -1139,7 +1317,7 @@ begin
 
     if sbIlluminationMode.Visible then
     begin
-      if FDataWedgeBarCode.isIllumination then
+      if isIlluminationMode then
         imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
       else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
     end;
@@ -1220,7 +1398,7 @@ begin
   // Скрывать кнопку сканирования когда есть боковые
   cbHideScanButton.IsChecked := FisHideScanButton;
   // Поссветка включена
-  cblluminationMode.IsChecked := FDataWedgeBarCode.isIllumination;
+  cblluminationMode.IsChecked := isIlluminationMode;
 
   SwitchToForm(tiInformation, nil);
 end;
@@ -1793,41 +1971,32 @@ begin
 
     DM.cdsInventoryListTop.Close;
     DM.qurGoodsEAN.Close;
+  end else if tcMain.ActiveTab = tiInventoryItemEdit then
+  begin
+    DM.cdsInventoryItemEdit.Close;
+    FisNextInventScan := False;
+    FisInventScanOk := False;
   end else if tcMain.ActiveTab = tiProductionUnion then
   begin
     DM.cdsOrderInternal.Close;
   end else if tcMain.ActiveTab = tiInformation then
   begin
-    if (FisCameraScaner <> rbCameraScaner.IsChecked) or
-       (FisOpenScanChangingMode <> cbOpenScanChangingMode.IsChecked) or
-       (FisHideIlluminationButton <> cbHideIlluminationButton.IsChecked) or
-       (FisHideScanButton <> cbHideScanButton.IsChecked) or
-       (FDataWedgeBarCode.isIllumination <> cblluminationMode.IsChecked) then
-    begin
 
-      // Использовать в любом случае камеру устройства
-      FisCameraScaner := rbCameraScaner.IsChecked;
-      // Открывать сканер при изменении режима
-      FisOpenScanChangingMode := cbOpenScanChangingMode.IsChecked;
-      // Скрывать кнопку подсветки
-      FisHideIlluminationButton := cbHideIlluminationButton.IsChecked;
-      // Скрывать кнопку сканирования когда есть боковые
-      FisHideScanButton := cbHideScanButton.IsChecked;
-      // Поссветка включена
-      FDataWedgeBarCode.isIllumination := cblluminationMode.IsChecked;
-
-      // сохранение использование сканера в ini файле
-      SettingsFile := TIniFile.Create(FINIFile);
-      try
-        SettingsFile.WriteBool('DataWedge', 'isCameraScaner', FisCameraScaner);
-        SettingsFile.WriteBool('DataWedge', 'isIllumination', FDataWedgeBarCode.isIllumination);
-        SettingsFile.WriteBool('Params', 'isOpenScanChangingMode', FisOpenScanChangingMode);
-        SettingsFile.WriteBool('Params', 'isHideIlluminationButtonr', FisHideIlluminationButton);
-        SettingsFile.WriteBool('Params', 'isHideScanButton', FisHideScanButton);
-      finally
-        FreeAndNil(SettingsFile);
-      end
-    end;
+    // Использовать в любом случае камеру устройства
+    if isCameraScaner <> rbCameraScaner.IsChecked then
+      isCameraScaner := rbCameraScaner.IsChecked;
+    // Открывать сканер при изменении режима
+    if isOpenScanChangingMode <> cbOpenScanChangingMode.IsChecked then
+      isOpenScanChangingMode := cbOpenScanChangingMode.IsChecked;
+    // Скрывать кнопку подсветки
+    if isHideIlluminationButton <> cbHideIlluminationButton.IsChecked then
+      isHideIlluminationButton := cbHideIlluminationButton.IsChecked;
+    // Скрывать кнопку сканирования когда есть боковые
+    if isHideScanButton <> cbHideScanButton.IsChecked then
+      isHideScanButton := cbHideScanButton.IsChecked;
+    // Поссветка включена
+    if isIlluminationMode <> cblluminationMode.IsChecked then
+      isIlluminationMode := cblluminationMode.IsChecked;
   end;
 
   ReturnPriorForm;
@@ -1836,25 +2005,17 @@ end;
 procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
   var SettingsFile : TIniFile;
 begin
-  FDataWedgeBarCode.isIllumination := not FDataWedgeBarCode.isIllumination;
+  isIlluminationMode := not isIlluminationMode;
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.SetIllumination;
-  if FDataWedgeBarCode.isIllumination then
+  if isIlluminationMode then
     imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
   else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
 
   if (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash then
   begin
-    if FDataWedgeBarCode.isIllumination then
+    if isIlluminationMode then
       FCameraScanBarCode.TorchMode := TTorchMode.ModeOn
     else FCameraScanBarCode.TorchMode := TTorchMode.Modeoff;
-  end;
-
-  // сохранение подсветки в ini файле
-  SettingsFile := TIniFile.Create(FINIFile);
-  try
-    SettingsFile.WriteBool('DataWedge', 'isIllumination', FDataWedgeBarCode.isIllumination);
-  finally
-    FreeAndNil(SettingsFile);
   end;
 end;
 
@@ -1891,7 +2052,7 @@ begin
   if FisBecomeForeground and FisZebraScaner and not FisCameraScaner then
   begin
     FDataWedgeBarCode.SetIllumination;
-    if FDataWedgeBarCode.isIllumination then
+    if isIlluminationMode then
       imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
     else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
     FisBecomeForeground := False;

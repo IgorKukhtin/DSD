@@ -7,18 +7,95 @@ CREATE OR REPLACE FUNCTION gpGet_MobilebConfig(
 )
 RETURNS TABLE (BarCodePref        TVarChar
              , ArticleSeparators  TVarChar  
+             
+             -- ***** Настройки сканера
+             -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
+             -- Работает только когда зебра со сканером
+             , isCameraScanerSet Boolean 
+             , isCameraScaner    Boolean 
+
+             -- Открывать сканер при изменении режима сканирования
+             , isOpenScanChangingModeSet Boolean 
+             , isOpenScanChangingMode    Boolean 
+
+             -- Скрывать кнопку сканирования когда есть боковые
+             , isHideScanButtonSet Boolean 
+             , isHideScanButton    Boolean 
+
+             -- Скрывать кнопку подсветки
+             , isHideIlluminationButtonSet Boolean 
+             , isHideIlluminationButton    Boolean 
+
+             -- Поссветка включена при старте сканирования
+             , isilluminationModeSet Boolean 
+             , isilluminationMode    Boolean 
+
+             -- ***** Фильтр в справочкике комплектующих
+             -- Артикул
+             , isDictGoodsArticleSet Boolean 
+             , isDictGoodsArticle    Boolean 
+             -- Interne Nr
+             , isDictGoodsCodeSet    Boolean 
+             , isDictGoodsCode       Boolean 
+             -- Interne Nr
+             , isDictGoodsEANSet     Boolean 
+             , isDictGoodsEAN        Boolean 
+             
+             -- ***** Фильтр в остальных справочкиках
+             -- Interne Nr
+             , isDictCodeSet    Boolean 
+             , isDictCode       Boolean 
+
               )
 AS
 $BODY$
    DECLARE vbUserId     Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpGetUserBySession (inSession);
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
      
-     -- Результат такой
-     RETURN QUERY
-     SELECT zc_BarCodePref_Object()::TVarChar   AS BarCodePref
-          , ' ,-'::TVarChar                     AS ArticleSeparators; 
+    -- Результат такой
+    RETURN QUERY
+    SELECT zc_BarCodePref_Object()::TVarChar   AS BarCodePref
+         , ' ,-'::TVarChar                     AS ArticleSeparators
+         -- ***** Настройки сканера
+         -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
+         -- Работает только когда зебра со сканером
+         , FALSE   AS isCameraScanerSet 
+         , FALSE   AS isCameraScaner 
+
+         -- Открывать сканер при изменении режима сканирования
+         , FALSE   AS isOpenScanChangingModeSet 
+         , FALSE   AS isOpenScanChangingMode 
+
+         -- Скрывать кнопку сканирования когда есть боковые
+         , FALSE   AS isHideScanButtonSet 
+         , FALSE   AS isHideScanButton 
+
+         -- Скрывать кнопку подсветки
+         , FALSE   AS isHideIlluminationButtonSet 
+         , FALSE   AS isHideIlluminationButton 
+
+         -- Поссветка включена при старте сканирования
+         , FALSE   AS isIlluminationModeSet 
+         , TRUE    AS isIlluminationMode 
+
+         -- ***** Фильтр в справочкике комплектующих
+         -- Артикул
+         , FALSE   AS isDictGoodsArticleSet 
+         , TRUE    AS isDictGoodsArticle 
+         -- Interne Nr
+         , FALSE   AS isDictGoodsCodeSet 
+         , FALSE   AS isDictGoodsCode 
+         -- EAN
+         , FALSE   AS isDictGoodsEANSet 
+         , FALSE    AS isDictGoodsEAN 
+             
+         -- ***** Фильтр в остальных справочкиках
+         -- Interne Nr
+         , FALSE   AS isDictCodeSet 
+         , FALSE   AS isDictCode 
+     ; 
 
 END;
 $BODY$
