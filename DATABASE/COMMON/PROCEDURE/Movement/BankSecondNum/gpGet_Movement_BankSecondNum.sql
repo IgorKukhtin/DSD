@@ -30,6 +30,12 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- замена
+     IF EXISTS (SELECT FROM Movement WHERE Movement.Id = inMovementId AND Movement.StatusId = zc_Enum_Status_Erased())
+     THEN
+         inMovementId:= 0;
+     END IF;
+                                                        
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY
@@ -41,7 +47,8 @@ BEGIN
              , Object_Status.Name                         AS StatusName
 
              , Movement_PersonalService.Id                AS MovementId_PersonalService
-             , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
+           --, (COALESCE (Object_PersonalServiceList.ValueData, '') || ' № ' || Movement_PersonalService.InvNumber || ' от ' || zfConvert_DateToString (Movement_PersonalService.OperDate)) :: TVarChar  AS InvNumber_PersonalService
+             , (COALESCE (Object_PersonalServiceList.ValueData, '') || ' за ' || zfCalc_MonthName (MovementDate_ServiceDate.ValueData) || ' № ' || Movement_PersonalService.InvNumber) :: TVarChar  AS InvNumber_PersonalService
              , COALESCE (MovementDate_ServiceDate.ValueData, NULL) :: TDateTime AS ServiceDate
              , CAST (0 as TFloat)                         AS BankSecond_num
              , CAST (0 as TFloat)                         AS BankSecondTwo_num
@@ -69,6 +76,10 @@ BEGIN
                LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                       ON MovementDate_ServiceDate.MovementId = Movement_PersonalService.Id
                                      AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+               LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                            ON MLO_PersonalServiceList.MovementId = Movement_PersonalService.Id
+                                           AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+               LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
           ;
 
      ELSE
@@ -84,7 +95,8 @@ BEGIN
            , Object_Status.ValueData                    AS StatusName
 
            , Movement_PersonalService.Id                AS MovementId_PersonalService
-           , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
+         --, (COALESCE (Object_PersonalServiceList.ValueData, '') || ' № ' || Movement_PersonalService.InvNumber || ' от ' || zfConvert_DateToString (Movement_PersonalService.OperDate)) :: TVarChar  AS InvNumber_PersonalService
+           , (COALESCE (Object_PersonalServiceList.ValueData, '') || ' за ' || zfCalc_MonthName (MovementDate_ServiceDate.ValueData) || ' № ' || Movement_PersonalService.InvNumber) :: TVarChar  AS InvNumber_PersonalService
            , COALESCE (MovementDate_ServiceDate.ValueData, NULL) :: TDateTime AS ServiceDate
            
            , MovementFloat_BankSecond_num.ValueData      ::TFloat AS BankSecond_num
@@ -165,8 +177,14 @@ BEGIN
                                    ON MovementDate_ServiceDate.MovementId = Movement_PersonalService.Id
                                   AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
 
+            LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                         ON MLO_PersonalServiceList.MovementId = Movement_PersonalService.Id
+                                        AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+            LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
+
        WHERE Movement.Id = inMovementId
-         AND Movement.DescId = zc_Movement_BankSecondNum();
+         AND Movement.DescId = zc_Movement_BankSecondNum()
+      ;
 
        END IF;
 
@@ -182,4 +200,4 @@ $BODY$
 */
 
 -- тест
---SELECT * FROM gpGet_Movement_BankSecondNum (inMovementId:= 40874, inMovementId_PersonalService:=0, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_BankSecondNum (inMovementId:= 40874, inMovementId_PersonalService:=0, inOperDate:= CURRENT_DATE, inSession := zfCalc_UserAdmin());

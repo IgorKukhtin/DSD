@@ -525,7 +525,8 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MLM_BankSecond_num
                                            ON MLM_BankSecond_num.MovementId = Movement.Id
                                           AND MLM_BankSecond_num.DescId = zc_MovementLinkMovement_BankSecondNum() 
-            LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id = MLM_BankSecond_num.MovementChildId
+            LEFT JOIN Movement AS Movement_BankSecondNum ON Movement_BankSecondNum.Id       = MLM_BankSecond_num.MovementChildId
+                                                        AND Movement_BankSecondNum.StatusId <> zc_Enum_Status_Erased()
             LEFT JOIN MovementDesc AS MovementDesc_BankSecondNum ON MovementDesc_BankSecondNum.Id = Movement_BankSecondNum.DescId
 
             LEFT JOIN MovementFloat AS MovementFloat_BankSecond_num

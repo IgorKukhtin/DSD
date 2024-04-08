@@ -41,12 +41,17 @@ BEGIN
                        )
       
          , tmpPersonalService AS (SELECT Movement_PersonalService.Id AS MovementId_PersonalService
-                                       , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService 
+                                     --, (COALESCE (Object_PersonalServiceList.ValueData, '') || ' № ' || Movement_PersonalService.InvNumber || ' от ' || zfConvert_DateToString (Movement_PersonalService.OperDate)) :: TVarChar  AS InvNumber_PersonalService 
+                                       , (COALESCE (Object_PersonalServiceList.ValueData, '') || ' за ' || zfCalc_MonthName (MovementDate_ServiceDate.ValueData) || ' № ' || Movement_PersonalService.InvNumber) :: TVarChar  AS InvNumber_PersonalService
                                        , MovementDate_ServiceDate.ValueData  AS ServiceDate
                                   FROM MovementDate AS MovementDate_ServiceDate 
                                        INNER JOIN Movement AS Movement_PersonalService
                                                            ON Movement_PersonalService.Id = MovementDate_ServiceDate.MovementId
                                                           AND Movement_PersonalService.DescId = zc_Movement_PersonalService()
+                                       LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                                    ON MLO_PersonalServiceList.MovementId = MovementDate_ServiceDate.MovementId
+                                                                   AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                       LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MLO_PersonalServiceList.ObjectId
                                   WHERE MovementDate_ServiceDate.ValueData BETWEEN inStartDate AND inEndDate
                                     AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                                   )
