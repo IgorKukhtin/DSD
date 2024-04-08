@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 759
   ClientWidth = 1474
+  ExplicitTop = -271
   ExplicitWidth = 1490
   ExplicitHeight = 798
   PixelsPerInch = 96
@@ -2502,8 +2503,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
           Font.Style = []
           ParentFont = False
           TabOrder = 0
-          ExplicitLeft = 0
-          ExplicitTop = 6
           object cxGridDBTableView_num: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ExportDS_num
@@ -2523,36 +2522,61 @@ inherited PersonalServiceForm: TPersonalServiceForm
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             OptionsView.Header = False
-            object llCardBankSecond: TcxGridDBColumn
-              DataBinding.FieldName = 'CardBankSecond'
-              MinWidth = 120
+            object expFIO: TcxGridDBColumn
+              DataBinding.FieldName = 'FIO'
+              MinWidth = 180
+              Width = 180
             end
-            object llBankSecondName: TcxGridDBColumn
-              DataBinding.FieldName = 'BankSecondName'
-              MinWidth = 120
+            object expName: TcxGridDBColumn
+              DataBinding.FieldName = 'Name'
+              MinWidth = 180
+              Width = 180
             end
-            object llINN: TcxGridDBColumn
+            object expName_two: TcxGridDBColumn
+              DataBinding.FieldName = 'Name_two'
+              MinWidth = 180
+              Width = 180
+            end
+            object expINN: TcxGridDBColumn
               DataBinding.FieldName = 'INN'
-              MinWidth = 100
+              MinWidth = 120
             end
-            object llPersonalName: TcxGridDBColumn
-              DataBinding.FieldName = 'PersonalName'
+            object expPhone: TcxGridDBColumn
+              DataBinding.FieldName = 'Phone'
               MinWidth = 150
+              Width = 150
             end
-            object llBankSecond_num: TcxGridDBColumn
+            object expCardIBANSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardIBANSecond'
+              MinWidth = 320
+              Width = 320
+            end
+            object expCardBankSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardBankSecond'
+              MinWidth = 180
+            end
+            object expBankSecond_num: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072
               DataBinding.FieldName = 'BankSecond_num'
               PropertiesClassName = 'TcxCurrencyEditProperties'
-              MinWidth = 156
-              Width = 156
+              Properties.DisplayFormat = ',0.00'
+              MinWidth = 100
+              Width = 100
             end
-            object cxGridDBColumn1: TcxGridDBColumn
-              DataBinding.FieldName = 'RowData'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              MinWidth = 120
-              VisibleForCustomization = False
-              Width = 120
+            object expPersonalName: TcxGridDBColumn
+              DataBinding.FieldName = 'PersonalName'
+              MinWidth = 350
+              Width = 350
+            end
+            object expBankSecondName: TcxGridDBColumn
+              DataBinding.FieldName = 'BankSecondName'
+              MinWidth = 250
+              Width = 250
+            end
+            object expCardSecond: TcxGridDBColumn
+              DataBinding.FieldName = 'CardSecond'
+              MinWidth = 320
+              Width = 320
             end
           end
           object cxGridLevel4: TcxGridLevel
@@ -2564,6 +2588,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2657,6 +2684,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
