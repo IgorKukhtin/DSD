@@ -32,10 +32,14 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
+      vbUserId:= lpGetUserBySession (inSession);
+      
+      -- !!!Только просмотр Аудитор!!!
+      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
       RETURN QUERY
       WITH
