@@ -63,19 +63,23 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProfitLossService());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- переопределяем,  важно, в случае с БН - ограничени по Филиалу не делать, что бы не выбрали
      IF COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()
      THEN
          inBranchId := 0;
      END IF;
 
+ /*
      -- Разрешен просмотр долги Маркетинг - НАЛ
      IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS tmp WHERE tmp.UserId = vbUserId AND tmp.RoleId = 8852398)
         AND COALESCE (inPaidKindId, 0) IN (0, zc_Enum_PaidKind_SecdondForm())
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав просмотра данных <НАЛ>.'
+         RAISE EXCEPTION 'Ошибка.Нет прав просмотра данных <НАЛ>.' ;
      END IF;
-     
+ */    
 
      -- Результат
     RETURN QUERY

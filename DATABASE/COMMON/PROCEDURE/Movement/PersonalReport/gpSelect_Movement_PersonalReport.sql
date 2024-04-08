@@ -45,6 +45,9 @@ BEGIN
          RETURN;
      END IF;
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      -- Результат
      RETURN QUERY

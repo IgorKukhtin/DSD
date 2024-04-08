@@ -40,6 +40,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProfitIncomeService());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- переопределяем,  важно, в случае с БН - ограничени по Филиалу не делать, что бы не выбрали
      IF COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()
      THEN

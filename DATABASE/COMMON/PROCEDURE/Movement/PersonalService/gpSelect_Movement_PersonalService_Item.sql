@@ -89,6 +89,8 @@ BEGIN
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.

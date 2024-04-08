@@ -33,6 +33,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderIncome());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      vbJuridicalDescId := (SELECT Object.DescId FROM Object WHERE Object.Id = inJuridicalId);
     
      RETURN QUERY

@@ -27,6 +27,8 @@ BEGIN
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- Результат
      RETURN QUERY

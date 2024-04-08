@@ -28,6 +28,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_QualityNumber());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- Результат
      RETURN QUERY 
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
@@ -89,4 +92,4 @@ ALTER FUNCTION gpSelect_Movement_QualityNumber (TDateTime, TDateTime, Integer, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_QualityNumber (inStartDate:= '01.05.2015', inEndDate:= '31.05.2016', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_QualityNumber (inStartDate:= '01.05.2015', inEndDate:= '31.05.2016', inIsErased:=false , inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
