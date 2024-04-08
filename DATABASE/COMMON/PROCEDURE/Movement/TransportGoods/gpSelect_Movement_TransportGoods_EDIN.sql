@@ -74,6 +74,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportGoods());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- Результат
      RETURN QUERY 
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
@@ -712,6 +715,4 @@ $BODY$
 */
 
 -- тест
--- 
-
-select * from gpSelect_Movement_TransportGoods_EDIN(instartdate := ('06.11.2023')::TDateTime , inenddate := ('13.11.2023')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+--  select * from gpSelect_Movement_TransportGoods_EDIN(instartdate := ('06.11.2023')::TDateTime , inenddate := ('13.11.2023')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');

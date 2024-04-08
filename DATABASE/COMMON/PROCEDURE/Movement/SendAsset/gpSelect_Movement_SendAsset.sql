@@ -25,6 +25,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendAsset());
      vbUserId:= lpGetUserBySession (inSession);
 
+      -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- проверка прав
      vbIsDocumentUser:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS View_RoleAccessKey WHERE View_RoleAccessKey.AccessKeyId = zc_Enum_Process_AccessKey_DocumentUser() AND View_RoleAccessKey.UserId = vbUserId);
@@ -60,9 +62,9 @@ BEGIN
            , Object_To.ValueData                    AS ToName
            , MovementString_Comment.ValueData       AS Comment
 
-           , ObjectString_InvNumber.ValueData      AS InvNumber
-           , ObjectString_SerialNumber.ValueData   AS SerialNumber
-           , ObjectString_PassportNumber.ValueData AS PassportNumber
+          -- , ObjectString_InvNumber.ValueData      AS InvNumber
+         --  , ObjectString_SerialNumber.ValueData   AS SerialNumber
+         --  , ObjectString_PassportNumber.ValueData AS PassportNumber
 
 
        FROM tmpMovement
