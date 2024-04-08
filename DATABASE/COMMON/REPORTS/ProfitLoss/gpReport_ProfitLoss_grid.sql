@@ -44,6 +44,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_ProfitLoss());
      vbUserId:= lpGetUserBySession (inSession);
 
+      -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);

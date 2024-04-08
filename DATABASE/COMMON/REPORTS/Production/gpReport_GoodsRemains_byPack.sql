@@ -48,7 +48,14 @@ RETURNS TABLE ( GoodsId Integer
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     -- группа товаров или товар или все товары 
     CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;

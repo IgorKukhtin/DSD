@@ -78,6 +78,9 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Select_Movement_ProductionUnionTech());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- пока только по дате заявки
      inisPeriodOrder = TRUE;
 

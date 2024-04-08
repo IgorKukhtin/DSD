@@ -64,8 +64,15 @@ RETURNS TABLE ( GoodsId Integer
               )
 AS
 $BODY$
-  DECLARE vbCountDays Integer;
+   DECLARE vbCountDays Integer;
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;

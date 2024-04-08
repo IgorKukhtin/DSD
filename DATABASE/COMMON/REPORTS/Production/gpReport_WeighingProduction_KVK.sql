@@ -29,7 +29,13 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Movem
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_WeighingPartner());

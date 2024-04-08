@@ -24,7 +24,14 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
     -- Заменили параметр
     IF inToId = 8458 -- Склад База ГП
        AND inFromId = 951601 -- ЦЕХ упаковки мясо 

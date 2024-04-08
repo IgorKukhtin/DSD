@@ -30,7 +30,14 @@ RETURNS TABLE  (Id Integer, InvNumber TVarChar, OperDate TDateTime
               )  
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
    -- если пустое значение прайс-листа тогда  - 2707438   -- расчет цен по дням - обвалка
    IF COALESCE (inPriceListId, 0) = 0
    THEN 
