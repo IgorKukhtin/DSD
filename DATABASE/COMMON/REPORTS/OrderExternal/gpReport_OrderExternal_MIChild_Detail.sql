@@ -41,6 +41,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!“олько просмотр јудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
+
+
      RETURN QUERY
      WITH 
           --документы заказов резерв дл€ выбранного товара

@@ -31,6 +31,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- Результат
      RETURN QUERY
   WITH tmpOrderExternal AS (SELECT Movement.Id
@@ -223,7 +226,7 @@ BEGIN
                       Left JOIN tmpSale ON tmpSale.MovementId_Order = tmpOrderExternal.Id
                  )
 
-)
+
                  SELECT tmpList.MovementId_Order
                       , tmpList.InvNumber
                       , tmpList.OperDate

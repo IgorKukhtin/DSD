@@ -145,6 +145,11 @@ $BODY$
    DECLARE vbDate_CarInfo1 TDateTime;
    DECLARE vbDate_CarInfo2 TDateTime;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- Ограничения по товарам
     /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;

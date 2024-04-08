@@ -23,6 +23,12 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
+ 
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- Ограничения по товарам
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
