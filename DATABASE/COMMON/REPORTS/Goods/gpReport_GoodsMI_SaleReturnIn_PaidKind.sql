@@ -73,6 +73,9 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 /*
  1) Sale_Summ_10200 - (10200)Разница с опт. грн (при прод.) 
  2) Sale_Summ_10250 - (10250)Скидка Акции, грн (при прод.) 

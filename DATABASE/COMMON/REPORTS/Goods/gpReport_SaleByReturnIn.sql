@@ -44,6 +44,9 @@ $BODY$
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
     CREATE TEMP TABLE _tmpListPartner (PartnerId Integer, JuridicalId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpListUnit (UnitId Integer) ON COMMIT DROP;
 

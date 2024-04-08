@@ -55,6 +55,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- !!!определяется!!!
     vbIsGoods_show:= TRUE;
@@ -608,5 +610,3 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 
 --select * from gpReport_GoodsMI_byMovement(inStartDate := ('03.05.2022')::TDateTime , inEndDate := ('03.05.2022')::TDateTime,inPriceDate:=('03.05.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 7835 ,  inSession := '9457');
-
-
