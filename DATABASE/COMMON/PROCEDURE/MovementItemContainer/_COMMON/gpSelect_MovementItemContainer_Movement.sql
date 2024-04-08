@@ -61,7 +61,8 @@ BEGIN
            
 
      -- !!!проводки только у Админа!!!
-     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604 )) -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр
+     -- Отчеты (управленческие) + Клиент банк-ввод документов + Касса Днепр + Только просмотр Аудитор
+     IF 1 = 1 AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 10898, 76933, 14604, 10597056 ))
      THEN
 
      RETURN QUERY
@@ -71,6 +72,7 @@ BEGIN
                             FROM Movement
                             WHERE Movement.ParentId = inMovementId
                               AND NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PersonalService())
+                            --AND vbUserId <> 5
                             --AND 1=0
                            )
                     -- все проводки: количественные + суммовые
