@@ -62,10 +62,10 @@ BEGIN
                             ;
          END IF;
 
-         IF COALESCE (inEndtDate, zc_DateStart()) < '01.01.2021'
+         IF COALESCE (inEndDate, zc_DateStart()) < '01.01.2021'
          THEN
              RAISE EXCEPTION 'Ошибка.Данные недоступны за <%>.'
-                           , zfConvert_DateToString (COALESCE (inEndtDate, CURRENT_DATE))
+                           , zfConvert_DateToString (COALESCE (inEndDate, CURRENT_DATE))
                             ;
          END IF;
 
