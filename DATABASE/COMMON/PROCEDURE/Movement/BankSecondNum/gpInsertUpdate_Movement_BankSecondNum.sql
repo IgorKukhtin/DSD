@@ -54,6 +54,14 @@ BEGIN
      -- Примечание
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     -- удалили - ВСЕ
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_BankSecondNum(), MovementLinkMovement.MovementId, NULL)
+     FROM MovementLinkMovement
+     WHERE MovementLinkMovement.DescId          = zc_MovementLinkMovement_BankSecondNum()
+       AND MovementLinkMovement.MovementChildId = ioId
+    ;
+
+
      -- сохранили связь с документом <Ведомость начисления и приоритет начисления>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_BankSecondNum(), inMovementId_PersonalService, ioId);
      
