@@ -19,7 +19,7 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , CountStart      TFloat
              , CountEnd        TFloat
              , CountIn         TFloat
-             , CountOut        TFloat  
+             , CountOut        TFloat
               )
 AS
 $BODY$
@@ -28,6 +28,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
      
      
     RETURN QUERY

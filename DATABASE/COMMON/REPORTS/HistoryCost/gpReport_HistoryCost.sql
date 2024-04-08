@@ -21,7 +21,15 @@ RETURNS TABLE (ObjectCostId Integer
              , StartSumm TFloat, StartSumm_calc TFloat, IncomeSumm TFloat, IncomeSumm_calc TFloat, OutSumm TFloat, OutSumm_calc TFloat, EndSumm TFloat, EndSumm_calc TFloat
               )
 AS
-$BODY$BEGIN
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpGetUserBySession (inSession);
+ 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_HistoryCost());
