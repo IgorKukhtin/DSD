@@ -41,7 +41,7 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- поиск сотрудник
-     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 6879542, 14473, 447972)) -- Персонал - табель учета р. времени (полный доступ) + Персонал ввод справочников + Просмотр СБ
+     IF EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 6879542, 14473, 447972, 10597056)) -- Персонал - табель учета р. времени (полный доступ) + Персонал ввод справочников + Просмотр СБ + Только просмотр Аудитор
      THEN vbMemberId:= 0;
      ELSE
          vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId

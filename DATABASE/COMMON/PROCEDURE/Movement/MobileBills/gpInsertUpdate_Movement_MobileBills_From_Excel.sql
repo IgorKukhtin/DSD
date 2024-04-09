@@ -19,6 +19,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_MobileBills());
      vbUserId := lpGetUserBySession (inSession);
+     
+     
+     RAISE EXCEPTION 'Ошибка. % ', inOperDate;
+     IF vbUserId = 5 THEN inOperDate:= '01.06.2024'; END IF;
 
      -- RAISE EXCEPTION 'Ошибка. Документ не сохранен';
 

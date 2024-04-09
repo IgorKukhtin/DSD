@@ -144,12 +144,14 @@ object OLAPSalesForm: TOLAPSalesForm
       item
         Name = 'inStartDate'
         Value = Null
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
         Value = Null
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
