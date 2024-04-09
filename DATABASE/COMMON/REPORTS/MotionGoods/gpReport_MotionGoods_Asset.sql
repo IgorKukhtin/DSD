@@ -176,11 +176,6 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
-
-    -- !!!Только просмотр Аудитор!!!
-    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
-
-
     -- !!!замена - Необоротные активы!!!
     -- IF COALESCE (inAccountGroupId, 0) = 0 THEN inAccountGroupId:= zc_Enum_AccountGroup_10000(); END IF;
 
