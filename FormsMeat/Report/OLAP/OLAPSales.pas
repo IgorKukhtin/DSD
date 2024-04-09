@@ -10,7 +10,17 @@ uses DataModul, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, c
   cxRichEdit, cxLabel, Vcl.ExtCtrls, Vcl.Controls, cxCustomPivotGrid,
   cxDBPivotGrid, Vcl.Forms, dsdOLAP, dsdAddOn, cxPropertiesStore, dxBarExtItems,
   dxBar, dsdDB, Datasnap.DBClient, dsdAction, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
 
@@ -157,6 +167,8 @@ begin
   FReportTime := Now;
 
   spSelect.ParamByName('SQL').Value := gfStrToXmlStr(TOlap.CreateSQLExpression(OlapReportOption, MasterCDS.FieldDefs, DataFields));
+  spSelect.ParamByName('inStartDate').Value := OlapReportOption.FromDate;
+  spSelect.ParamByName('inEndDate').Value := OlapReportOption.ToDate;
   spSelect.Execute;
 
   reRepReportData.Lines.Add('Дата построения отчета ' +  DateTimeToStr(Now));

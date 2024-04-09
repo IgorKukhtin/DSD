@@ -142,10 +142,23 @@ object OLAPSalesForm: TOLAPSalesForm
     OutputType = otMultiDataSet
     Params = <
       item
+        Name = 'inStartDate'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'SQL'
         Value = Null
         DataType = ftBlob
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     AutoWidth = True
