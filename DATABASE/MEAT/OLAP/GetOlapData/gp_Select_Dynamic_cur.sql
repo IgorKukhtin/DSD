@@ -1,10 +1,16 @@
 ﻿-- Function: gp_select_master_child_cur(tvarchar)
 
 DROP FUNCTION IF EXISTS gp_Select_Dynamic_cur (TVarChar);
-DROP FUNCTION IF EXISTS  gp_Select_Dynamic_cur (TBlob, TVarChar);
+-- DROP FUNCTION IF EXISTS  gp_Select_Dynamic_cur (TBlob, TVarChar);
+DROP FUNCTION IF EXISTS  gp_Select_Dynamic_cur (TDateTime, TDateTime, TBlob, TVarChar);
 
-CREATE OR REPLACE FUNCTION gp_Select_Dynamic_cur (inSQL TBlob, inSession TVarChar)
-  RETURNS SETOF refcursor
+CREATE OR REPLACE FUNCTION gp_Select_Dynamic_cur (
+    IN inStartDate           TDateTime , --
+    IN inEndDate             TDateTime , --
+    IN inSQL                 TBlob     , --
+    IN inSession             TVarChar    -- сессия пользователя
+)
+RETURNS SETOF refcursor
 AS
 $BODY$
    DECLARE cur1 refcursor;
@@ -12,6 +18,9 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
      IF inSQL ILIKE '%FROM SoldTable WHERE%'

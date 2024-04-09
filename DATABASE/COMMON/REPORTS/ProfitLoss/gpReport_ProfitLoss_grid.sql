@@ -1,4 +1,4 @@
- -- Function: gpReport_ProfitLoss_grid()
+-- Function: gpReport_ProfitLoss_grid()
 
 DROP FUNCTION IF EXISTS gpReport_ProfitLoss_grid (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
@@ -43,9 +43,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_ProfitLoss());
      vbUserId:= lpGetUserBySession (inSession);
-
-      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
