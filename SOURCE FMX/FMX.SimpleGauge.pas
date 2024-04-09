@@ -1,14 +1,10 @@
-unit SimpleGauge;
+unit FMX.SimpleGauge;
 
 interface
 
 uses
-  {$IFDEF MSWINDOWS}
-  VCL.Controls, VCL.Forms, Vcl.ComCtrls,
-  {$ELSE}
   FMX.Controls, FMX.Forms, FMX.StdCtrls, System.UITypes,
-  {$ENDIF}
-  System.Classes;
+  System.Classes, FMX.Types, FMX.Controls.Presentation;
 
 type
 
@@ -35,7 +31,7 @@ type
 
 implementation
 
-{$R *.DFM}
+{$R *.fmx}
 
 constructor TSimpleGaugeForm.Create(AOwner: TForm; ACaption: string; AMinValue, AMaxValue: integer);
 begin
@@ -43,11 +39,7 @@ begin
   Caption := ACaption;
   with Gauge do
   begin
-    {$IFDEF MSWINDOWS}
-    Position := AMinValue;
-    {$ELSE}
     Value := AMinValue;
-    {$ENDIF}
     Min := AMinValue;
     if AMaxValue < AMinValue then
       Max := AMinValue
@@ -70,11 +62,7 @@ end;
 procedure TSimpleGaugeForm.Start;
 begin
   Show;
-  {$IFDEF MSWINDOWS}
-  Gauge.Position := Gauge.Min;
-  {$ELSE}
   Gauge.Value := Gauge.Min;
-  {$ENDIF}
 end;
 
 { TGaugeFactory }
@@ -85,11 +73,7 @@ end;
 
 procedure TSimpleGaugeForm.IncProgress(IncValue: integer);
 begin
-  {$IFDEF MSWINDOWS}
-  Gauge.Position := Gauge.Position + IncValue;
-  {$ELSE}
   Gauge.Value := Gauge.Value + IncValue;
-  {$ENDIF}
   Application.ProcessMessages;
 end;
 

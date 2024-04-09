@@ -1,5 +1,5 @@
 {$J+} {параметр компил€тоcoра, позвол€ющий мен€ть типизированные константы}
-unit UtilConst;
+unit FMX.UtilConst;
 interface
 uses Classes, SysUtils;
 Type
@@ -413,7 +413,7 @@ const
 implementation
 
 {$IFDEF MSWINDOWS}
-uses Windows;
+uses Winapi.Windows;
 
  function ShiftDown : Boolean;
  var

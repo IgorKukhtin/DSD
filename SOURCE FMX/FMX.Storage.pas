@@ -1,4 +1,4 @@
-unit Storage;
+unit FMX.Storage;
 
 interface
 
@@ -50,13 +50,9 @@ type
 implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, idGlobal, Variants, ZLib,
-     StrUtils, IDComponent, SimpleGauge, CommonData,
-     {$IFDEF MSWINDOWS}
-     VCL.Forms, VCL.Dialogs,
-     {$ELSE}
+     StrUtils, IDComponent, FMX.SimpleGauge, FMX.CommonData,
      FMX.Forms, FMX.Dialogs,
-     {$ENDIF}
-     LogUtils, IdStack, IdExceptionCore, SyncObjS, UtilConst, System.IOUtils,
+     FMX.LogUtils, IdStack, IdExceptionCore, SyncObjS, FMX.UtilConst, System.IOUtils,
      Xml.xmldom, XML.OmniXMLDom;
 
 const
@@ -83,7 +79,7 @@ type
     isArchive: boolean;
     // критичесая секция нужна из-за таймера
     FCriticalSection: TCriticalSection;
-    function PrepareStr: String;
+    function PrepareStr: Variant;
     function PrepareDataSet: TBytes;
     function ExecuteProc(pData: String; pExecOnServer: boolean = false;
       AMaxAtempt: Byte = 10; ANeedShowException: Boolean = True): Variant;
@@ -179,23 +175,24 @@ procedure TIdHTTPWork.IdHTTPWorkBegin(ASender: TObject; AWorkMode: TWorkMode;
 begin
   if not FExecOnServer then
      exit;
-  if AWorkMode = wmWrite then begin
+  if AWorkMode = wmWrite then
+  begin
      TIdHTTP(ASender).IOHandler.RecvBufferSize := 1;
      Gauge := TGaugeFactory.GetGauge('Выполнение процедуры на сервере', 1, 100);
      Gauge.Start;
   end;
 end;
 
-function TStorage.PrepareStr: String;
-var inStream, outStream: TBytesStream;
+function TStorage.PrepareStr: Variant;
+var inStream: TBytesStream; outStream: TStringStream;
 begin
   if isArchive then
   begin
     inStream := TBytesStream.Create(InBytes);
-    outStream := TBytesStream.Create;
+    outStream := TStringStream.Create;
     try
       ZDecompressStream(inStream, outStream);
-      Result := StringReplace(TEncoding.UTF8.GetString(outStream.Bytes), #0, '', [rfReplaceAll]);;
+      Result := outStream.DataString;
     finally
       inStream.Free;
       outStream.Free;
@@ -452,6 +449,9 @@ end;
 
 initialization
   IdHTTPWork := TIdHTTPWork.Create;
-  DefaultDOMVendor := sOmniXmlVendor;
+
+finalization
+
+  IdHTTPWork.Free;
 
 end.

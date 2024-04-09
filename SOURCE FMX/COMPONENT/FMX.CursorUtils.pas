@@ -1,10 +1,10 @@
-unit CursorUtils;
+unit FMX.CursorUtils;
 
 interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,  FMX.Types, FMX.Controls, 
-  FMX.Forms, FMX.Dialogs,FMX.Platform;
+  FMX.Forms, FMX.Dialogs, FMX.Platform;
 
 Procedure Screen_Cursor_crHourGlass;
 Procedure Screen_Cursor_crDefault;
@@ -24,15 +24,12 @@ var
 
 implementation
 
-uses
-  uMain;
-
 // uses FMX.Platform, System.UITypes;
 Procedure Screen_Cursor_crHourGlass;
 begin
 {$IFDEF ANDROID}
-  frmMain.aiWait.Visible := true;
-  frmMain.aiWait.Enabled := true;
+//  frmMain.aiWait.Visible := true;
+//  frmMain.aiWait.Enabled := true;
 {$ELSE}
   {$IFDEF VER230}
     Platform.SetCursor(nil, crHourGlass);
@@ -50,8 +47,8 @@ end;
 Procedure Screen_Cursor_crDefault;
 begin
 {$IFDEF ANDROID}
-  frmMain.aiWait.Visible := false;
-  frmMain.aiWait.Enabled := false;
+//  frmMain.aiWait.Visible := false;
+//  frmMain.aiWait.Enabled := false;
 {$ELSE}
   {$IFDEF VER230}
     Platform.SetCursor(nil, crDefault);

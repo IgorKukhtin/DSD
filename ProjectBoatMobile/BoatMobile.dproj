@@ -420,8 +420,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="Components\UtilConst.pas"/>
-        <DCCReference Include="Components\FMX.DataWedgeBarCode.pas"/>
+        <DCCReference Include="..\SOURCE FMX\COMPONENT\FMX.UtilConst.pas"/>
         <None Include="ModelSupport_BoatMobile\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

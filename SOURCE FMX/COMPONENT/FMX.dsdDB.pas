@@ -1,4 +1,4 @@
-unit dsdDB;
+unit FMX.dsdDB;
 
 interface
 
@@ -162,10 +162,10 @@ type
 
 implementation
 
-uses Storage, TypInfo, UtilConvert, SysUtils,
-     XMLDoc, XMLIntf, StrUtils, CommonData,
-     Variants, UITypes, Defaults, UtilConst,
-     System.Rtti, CursorUtils;
+uses FMX.Storage, TypInfo, FMX.UtilConvert, SysUtils,
+     XMLDoc, XMLIntf, StrUtils, FMX.CommonData,
+     Variants, UITypes, FMX.Defaults, FMX.UtilConst,
+     System.Rtti, FMX.CursorUtils;
 
 procedure Register;
 begin
@@ -209,7 +209,7 @@ end;
 
 procedure TdsdStoredProc.DataSetRefresh(AMaxAtempt: Byte = 10);
 var B: TBookMark;
-    FStringStream: TBytesStream;
+    FBytesStream: TBytesStream;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -222,11 +222,11 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then begin
          try
-           FStringStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
+           FBytesStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
            try
-             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FBytesStream);
            finally
-             FreeAndNil(FStringStream);
+             FreeAndNil(FBytesStream);
            end;
          except
            on E : Exception do
@@ -265,7 +265,7 @@ begin
     if (OutputType = otResult) then
        FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otBlob) then
-        result := TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
+        result := VarToStr(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otMultiExecute) then
         MultiExecute(ExecPack, AnyExecPack, AMaxAtempt); //***12.07.2016 add AnyExecPack
   finally
