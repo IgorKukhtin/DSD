@@ -15,7 +15,14 @@ $BODY$
     DECLARE Cursor2 refcursor;
     DECLARE Cursor3 refcursor;
     DECLARE Cursor4 refcursor;
+    DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
         SELECT generate_series(inStartDate, inEndDate, '1 DAY'::interval) OperDate;

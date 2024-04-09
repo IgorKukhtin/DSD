@@ -51,6 +51,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inStartDate, NULL, NULL, NULL, vbUserId);
 
     -- кол-во месяцев после чего положен отпуск - 1 отпуск - после 6 м. непрерывного стажа
     vbMonthHoliday := 6;

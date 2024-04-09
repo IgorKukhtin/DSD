@@ -30,6 +30,9 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!“олько просмотр јудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
      -- !!!мен€ем значение!!! - с какими параметрами пользователь может просматривать данные с мобильного устройства
      vbUserId_Mobile:= (SELECT CASE WHEN lfGet.UserId > 0 THEN lfGet.UserId ELSE vbUserId END FROM lfGet_User_MobileCheck (inMemberId:= inMemberId, inUserId:= vbUserId) AS lfGet);
 
@@ -271,4 +274,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Sale_OrderExtList_Mobile (inStartDate:= '01.08.2018', inEndDate:= '01.08.2018', inUnitId:=0, inisSale:= TRUE, inisNoSale:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Sale_OrderExtList_Mobile (inStartDate:= '01.08.2018', inEndDate:= '01.08.2018', inUnitId:=0, inMemberId:=0, inisSale:= TRUE, inisNoSale:= TRUE, inSession:= zfCalc_UserAdmin())

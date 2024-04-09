@@ -20,7 +20,15 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
+     vbUserId:= lpGetUserBySession (inSession);
+     
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 -- zc_Movement_Loss - zc_MovementLinkObject_To + zc_Movement_Service - zc_MILinkObject_Asset - zc_ObjectLink_Asset_Car
 

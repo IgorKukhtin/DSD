@@ -21,10 +21,14 @@ $BODY$
   DECLARE vb_Kind_Fuel integer;
   DECLARE vb_Kind_Money integer;
   DECLARE vb_Kind_Ticket integer;
+  DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+    vbUserId:= lpGetUserBySession (inSession);
+
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
   vb_Kind_Fuel   := 1;
   vb_Kind_Money  := 2;

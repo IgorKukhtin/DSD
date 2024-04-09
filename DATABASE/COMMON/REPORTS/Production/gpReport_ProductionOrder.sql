@@ -14,11 +14,17 @@ RETURNS TABLE (Code Integer, GoodsName TVarChar,
                )  
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
 
-IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
-THEN RETURN;
-ELSE
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inOperDate, inOperDate, NULL, NULL, NULL, vbUserId);
+
+    IF inOperDate < DATE_TRUNC ('MONTH', CURRENT_DATE) - INTERVAL '1 MONTH'
+    THEN RETURN;
+    ELSE
 
     CREATE TEMP TABLE _tmpUnitGroup (UnitId Integer) ON COMMIT DROP;
 

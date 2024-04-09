@@ -23,7 +23,14 @@ $BODY$
           vbQueryText2 Text;
           vbFieldNameText Text;
           vbUnits Text;
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
     SELECT 
         STRING_AGG(T0.Id::TVarChar,',')
     INTO

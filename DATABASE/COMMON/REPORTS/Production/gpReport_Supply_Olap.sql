@@ -48,7 +48,14 @@ RETURNS TABLE ( MonthDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 
     --проверка период не более 3-х месяцев
     IF inEndDate > inStartDate + INTERVAL '3 MONTH'

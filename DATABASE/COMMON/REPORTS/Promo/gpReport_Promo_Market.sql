@@ -75,6 +75,9 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
      vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
 /*
 берем акциии которые попадают по StartSale + EndSale
      + условие не все акции а только у которых zc_MovementLinkObject_PromoKind = В счет маркетингового бюджета,

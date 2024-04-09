@@ -25,6 +25,9 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+     -- !!!Только просмотр Аудитор!!!
+     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
     -- Результат
     RETURN QUERY
     WITH  
@@ -163,5 +166,4 @@ $BODY$
 */
 
 -- тест
---
-SELECT * FROM gpReport_OrderReturnTare_ReturnIn (inStartDate := '01.01.2022'::TDatetime, inMovementId:=0, inPartnerId:=0,inGoodsId:=0,inisAll:=true,inEndDate:='08.01.2022'::TDatetime, inSession:='5'::TVarChar);
+-- SELECT * FROM gpReport_OrderReturnTare_ReturnIn (inStartDate := '01.01.2022'::TDatetime, inMovementId:=0, inPartnerId:=0,inGoodsId:=0,inisAll:=true,inEndDate:='08.01.2022'::TDatetime, inSession:='5'::TVarChar);

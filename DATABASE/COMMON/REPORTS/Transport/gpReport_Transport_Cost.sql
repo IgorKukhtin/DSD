@@ -66,6 +66,9 @@ $BODY$
 BEGIN
       vbUserId:= lpGetUserBySession (inSession);
 
+      -- !!!Только просмотр Аудитор!!!
+      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
       vbIsGroup:= (inSession = '');
 
     -- Результат
