@@ -295,6 +295,12 @@ type
     Image9: TImage;
     Layout12: TLayout;
     Layout13: TLayout;
+    Layout14: TLayout;
+    Label18: TLabel;
+    cbDictGoodsArticle: TCheckBox;
+    cbDictCode: TCheckBox;
+    cbDictGoodsEAN: TCheckBox;
+    cbDictGoodsCode: TCheckBox;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -1400,6 +1406,11 @@ begin
   // Поссветка включена
   cblluminationMode.IsChecked := isIlluminationMode;
 
+  cbDictGoodsArticle.IsChecked:= FisDictGoodsArticle;
+  cbDictGoodsCode.IsChecked:= FisDictGoodsCode;
+  cbDictGoodsEAN.IsChecked:= FisDictGoodsEAN;
+  cbDictCode.IsChecked:= FisDictCode;
+
   SwitchToForm(tiInformation, nil);
 end;
 
@@ -1997,6 +2008,16 @@ begin
     // Поссветка включена
     if isIlluminationMode <> cblluminationMode.IsChecked then
       isIlluminationMode := cblluminationMode.IsChecked;
+
+    if cbDictGoodsArticle.IsChecked <> FisDictGoodsArticle then
+      isDictGoodsArticle := cbDictGoodsArticle.IsChecked;
+    if cbDictGoodsCode.IsChecked <> FisDictGoodsCode then
+      isDictGoodsCode := cbDictGoodsCode.IsChecked;
+    if cbDictGoodsEAN.IsChecked <> FisDictGoodsEAN then
+      isDictGoodsEAN := cbDictGoodsEAN.IsChecked;
+    if cbDictCode.IsChecked <> FisDictCode then
+      isDictCode := cbDictCode.IsChecked;
+
   end;
 
   ReturnPriorForm;
