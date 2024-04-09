@@ -37,7 +37,7 @@ RETURNS TABLE (BarCodePref        TVarChar
              -- Interne Nr
              , isDictGoodsCodeSet    Boolean 
              , isDictGoodsCode       Boolean 
-             -- Interne Nr
+             -- EAN
              , isDictGoodsEANSet     Boolean 
              , isDictGoodsEAN        Boolean 
              
