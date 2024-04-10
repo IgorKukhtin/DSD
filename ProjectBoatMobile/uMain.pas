@@ -1422,8 +1422,10 @@ begin
 end;
 
 procedure TfrmMain.lwDictListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1475,8 +1477,10 @@ begin
 end;
 
 procedure TfrmMain.lwGoodsDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1526,8 +1530,10 @@ begin
 end;
 
 procedure TfrmMain.lwInventoryListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1570,8 +1576,10 @@ begin
 end;
 
 procedure TfrmMain.lwInventoryScanDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1953,7 +1961,6 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
-  var SettingsFile : TIniFile;
 begin
   if (tcMain.ActiveTab = tiScanBarCode) and (Sender = sbBack)  then
   begin
@@ -2024,7 +2031,6 @@ begin
 end;
 
 procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
-  var SettingsFile : TIniFile;
 begin
   isIlluminationMode := not isIlluminationMode;
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.SetIllumination;

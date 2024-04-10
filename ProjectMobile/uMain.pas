@@ -1272,7 +1272,7 @@ var
 implementation
 
 uses
-  uConstants, System.IOUtils, Authentication, Storage, CommonData, uDM, CursorUtils,
+  uConstants, System.IOUtils, FMX.Authentication, FMX.Storage, FMX.CommonData, uDM, FMX.CursorUtils,
   uNetwork, System.StrUtils, uIntf, Math;
 
 {$R *.fmx}
@@ -1805,7 +1805,7 @@ begin
       end
       else
       begin
-        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + E.Message);
+        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + GetTextMessage(E));
         exit;
       end;
     end;
@@ -3944,7 +3944,7 @@ begin
 
   except
     on E: Exception do
-      Showmessage(E.Message);
+      Showmessage(GetTextMessage(E));
   end;
 end;
 procedure TfrmMain.bOptimizeDBClick(Sender: TObject);
@@ -4133,7 +4133,7 @@ begin
                      + '   AND GPSN <> 0 AND GPSE <> 0');
     except
       on E: Exception do
-        Showmessage(E.Message);
+        Showmessage(GetTextMessage(E));
     end;
 
     RouteQuery.First;
@@ -4579,7 +4579,7 @@ begin
     end;
   Except
     on E: Exception do
-      Showmessage(E.Message);
+      Showmessage(GetTextMessage(E));
   end;
 
   vsbMain.Enabled := true;
@@ -6650,7 +6650,7 @@ begin
     end;
   except
     On E: Exception do
-      Showmessage(E.Message);
+      Showmessage(GetTextMessage(E));
   end;
 end;
 

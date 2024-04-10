@@ -8,7 +8,7 @@ implementation
 
 uses
   Data.DB,
-  dsdDB;
+  FMX.dsdDB;
 
 procedure ExecSQL(ASQL: string);
 var

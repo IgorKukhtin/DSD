@@ -313,7 +313,9 @@ begin
     FSendList.Clear;
     if dsdProject = prBoat then
       FSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' + pData)
-    else FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+    else FSendList.Add('XML=' + '<?xml version="1.1" encoding="UTF-8"?>' + pData);
+    //FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+
     if dsdProject = prBoat then
       FSendList.Add('ENC=UTF8');
     Logger.AddToLog(pData);
