@@ -45,6 +45,10 @@ BEGIN
      END IF;
 
 
+     -- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка. % ', vbOperDate; END IF;
+
+     IF vbUserId = 5 THEN vbOperDate:= '01.06.2024'; END IF;
+
      -- Парсим XML - получили строчную часть
      CREATE TEMP TABLE _tmpItem (PhoneNum TVarChar, TotalSumm TFloat) ON COMMIT DROP;
      IF vbUserId <> 5 AND 1=0
@@ -111,8 +115,16 @@ BEGIN
                                    AND ObjectLink_MobileTariff_Contract.DescId = zc_ObjectLink_MobileTariff_Contract()
        
             WHERE Object_MobileEmployee.DescId = zc_Object_MobileEmployee()
-           -- AND Object_MobileEmployee.isErased = FALSE - пусть пока будут и удаленные тоже
+            --AND Object_MobileEmployee.isErased = FALSE -- пусть пока ???НЕ??? будут и удаленные тоже
            ;
+
+     IF vbUserId = 5
+     THEN 
+         RAISE EXCEPTION 'Ошибка. %    % '
+                        , vbOperDate
+                        , (SELECT COUNT(*) FROM _tmpMobileEmployee WHERE PhoneNum ilike '0979965665')
+                         ;
+     END IF;
              
 
      -- сохранили - Новые моб.номера
