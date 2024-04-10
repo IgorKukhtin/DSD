@@ -270,7 +270,8 @@ BEGIN
 
                                 , _tmpReport.DayCount
                                 , _tmpReport.ContractConditionKindId
-                         HAVING SUM (_tmpReport.DebetRemains) > 0
+                         HAVING SUM (_tmpReport.DebetRemains) <> 0
+                             OR SUM (_tmpReport.KreditRemains) <> 0
                            --OR SUM (_tmpReport.SaleSumm) > 0
                              OR SUM (_tmpReport.DefermentPaymentRemains) > 0
                              OR SUM (_tmpReport.SaleSumm1) > 0
@@ -381,6 +382,7 @@ BEGIN
                                  LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                         ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                        AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+-- where tmpContainer.JuridicalId = 8578350
                             GROUP BY tmpContainer.JuridicalId
                                    , tmpContainer.PartnerId
                                    , tmpContainer.ContractId
@@ -393,6 +395,46 @@ BEGIN
                              OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 1 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 2 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
                              OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 2 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 3 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
                              OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 3 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 4 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+
+                          /* UNION ALL
+
+                            SELECT tmpContainer.JuridicalId
+                                 , tmpContainer.PartnerId
+                                 , tmpContainer.ContractId
+                                 , tmpContainer.PaidKindId
+                                 , tmpContainer.BranchId
+                                 , MIContainer.MovementId
+                                 , MAX (COALESCE (MovementDate_OperDatePartner.ValueData, MIContainer.OperDate)) AS OperDate
+                                 , SUM (CASE WHEN MIContainer.OperDate < inOperDate                                    AND MIContainer.OperDate >= tmpContainer.StartContractDate                THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 0 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 1 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount1
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 1 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 2 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount2
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 2 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 3 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount3
+                                 , SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 3 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 4 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS Amount4
+                            FROM tmpContainer
+                                 INNER JOIN MovementItemContainer AS MIContainer
+                                                                  ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                 AND MIContainer.DescId      = zc_MIContainer_Summ()
+                                                                 AND MIContainer.MovementDescId IN (zc_Movement_SendDebt())
+                                                                 AND MIContainer.Amount   > 0
+                                                                 AND MIContainer.OperDate >= tmpContainer.StartContractDate :: Date - tmpContainer.Period_add * 7
+                                                                 AND MIContainer.OperDate < inOperDate
+                                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                                        ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
+                                                       AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                            GROUP BY tmpContainer.JuridicalId
+                                   , tmpContainer.PartnerId
+                                   , tmpContainer.ContractId
+                                   , tmpContainer.PaidKindId
+                                   , tmpContainer.BranchId
+                                   , MIContainer.MovementId
+                            HAVING
+                                0 <> SUM (CASE WHEN MIContainer.OperDate < inOperDate                                    AND MIContainer.OperDate >= tmpContainer.StartContractDate                THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                             OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 0 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 1 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                             OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 1 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 2 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                             OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 2 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 3 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+                             OR 0 <> SUM (CASE WHEN MIContainer.OperDate < tmpContainer.StartContractDate:: Date - 3 * 7 AND MIContainer.OperDate >= tmpContainer.StartContractDate:: Date - 4 * 7 THEN CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount WHEN MIContainer.MovementDescId IN (zc_Movement_TransferDebtOut(), zc_Movement_Income()) AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END ELSE 0 END)
+
+*/
                            )
    -- Продажи за "период" + просрочка только 4 недели + накопительно
   , tmpContainerData_gr AS (SELECT tmpData.JuridicalId
@@ -446,6 +488,7 @@ BEGIN
                                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                 ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+-- where tmpContainer.JuridicalId = 8578350
                                     GROUP BY tmpContainer.JuridicalId
                                            , tmpContainer.PartnerId
                                            , tmpContainer.ContractId
@@ -514,6 +557,7 @@ BEGIN
                                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                 ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+-- where tmpContainer.JuridicalId = 8578350
                                     GROUP BY tmpContainer.JuridicalId
                                            , tmpContainer.PartnerId
                                            , tmpContainer.ContractId
@@ -599,6 +643,7 @@ BEGIN
                                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                 ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+-- where tmpContainer.JuridicalId = 8578350
                                     --WHERE vbUserId <> 5
                                     GROUP BY tmpContainer.JuridicalId
                                            , tmpContainer.PartnerId
@@ -705,6 +750,7 @@ BEGIN
                                          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                                 ON MovementDate_OperDatePartner.MovementId = MIContainer.MovementId
                                                                AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+-- where tmpContainer.JuridicalId = 8578350
                                     --WHERE vbUserId <> 5
                                     GROUP BY tmpContainer.JuridicalId
                                            , tmpContainer.PartnerId
@@ -1265,7 +1311,7 @@ BEGIN
                          END  ::TDateTime AS OperDate_pay
                          -- вся сумма накладной
                         , (tmpContainerData.Amount + tmpContainerData.Amount1 + tmpContainerData.Amount2 + tmpContainerData.Amount3 + tmpContainerData.Amount4 + tmpContainerData.Amount5) ::TFloat AS TotalSumm
-                        , tmpReport.DayCount 
+                        , tmpReport.DayCount
                  FROM tmpReport
                       LEFT JOIN tmpLastPayment_all AS tmpLastPayment
                                                    ON tmpLastPayment.JuridicalId = tmpReport.JuridicalId
@@ -1449,7 +1495,7 @@ BEGIN
         LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
 
    WHERE -- просрочка на эту сумму - 1 неделя
-         tmpReport.Summa_doc_1 > 0
+        (tmpReport.Summa_doc_1 > 0
       --  просрочка на эту сумму - 2 неделя
       OR tmpReport.Summa_doc_2 > 0
       --  просрочка на эту сумму - 3 неделя
@@ -1460,6 +1506,12 @@ BEGIN
       OR tmpReport.Summa_doc_5 > 0
       --  долг по накладной
       OR tmpReport.Summa_doc_0 > 0
+
+      OR CASE WHEN tmpReport.Ord = 1 THEN tmpReport.DebetRemains  ELSE 0 END <> 0
+      OR CASE WHEN tmpReport.Ord = 1 THEN tmpReport.KreditRemains ELSE 0 END <> 0
+    )
+-- and tmpReport.JuridicalId = 8578350
+
       --
       --OR vbUserId = 5
    ;
