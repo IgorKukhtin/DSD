@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Product_TendersPrint (Integer, TVarChar)
 DROP FUNCTION IF EXISTS gpSelect_Object_Product_OrderConfirmationPrint (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product_OrderConfirmationPrint(
-    IN inMovementId_OrderClient       Integer   ,   --        Integer   ,   -- 
+    IN inMovementId_OrderClient       Integer   ,   --        Integer   ,   --
     IN inSession                      TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -14,15 +14,15 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
     DECLARE Cursor3 refcursor;
-    
+
     DECLARE vbProductId    Integer;
     DECLARE vbOperDate_OrderClient   TDateTime;
     DECLARE vbInvNumber_OrderClient  TVarChar;
     DECLARE vbInsertName TVarChar;
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent   TFloat;
-    DECLARE vbDiscountTax  TFloat; 
-    DECLARE vbDiscountNextTax TFloat;   
+    DECLARE vbDiscountTax  TFloat;
+    DECLARE vbDiscountNextTax TFloat;
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -31,7 +31,7 @@ BEGIN
      -- данные из документа заказа
      SELECT MovementBoolean_PriceWithVAT.ValueData  AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData      AS VATPercent
-          , MovementFloat_DiscountTax.ValueData     AS DiscountTax 
+          , MovementFloat_DiscountTax.ValueData     AS DiscountTax
           , MovementFloat_DiscountNextTax.ValueData AS DiscountNextTax
           , Movement_OrderClient.OperDate
           , Movement_OrderClient.InvNumber
@@ -65,7 +65,7 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_User_Member
                               ON ObjectLink_User_Member.ObjectId = MLO_Insert.ObjectId
                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId 
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
      WHERE Movement_OrderClient.Id = inMovementId_OrderClient  -- по идее должен быть один док. заказа, но малоли
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
@@ -98,7 +98,7 @@ BEGIN
      FROM tmpOrderClient
      WHERE tmpOrderClient.GoodsDesc = zc_Object_Product()
      LIMIT 1;
-     
+
      -- данные по лодкe
      CREATE TEMP TABLE tmpProduct ON COMMIT DROP AS (SELECT tmp.*
                                                      FROM gpSelect_Object_Product (inMovementId_OrderClient:= inMovementId_OrderClient, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inSession) AS tmp
@@ -124,11 +124,11 @@ BEGIN
                                                                CASE WHEN TRIM (COALESCE (MovementBlob_Info1.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info1.ValueData END :: TBlob AS Text_Info1
                                                              , CASE WHEN TRIM (COALESCE (MovementBlob_Info2.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info2.ValueData END :: TBlob AS Text_Info2
                                                              , CASE WHEN TRIM (COALESCE (MovementBlob_Info3.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info3.ValueData END :: TBlob AS Text_Info3
-                                                             */                                                                                                                                                                   
+                                                             */
                                                                MovementBlob_Info1.ValueData  :: TBlob AS Text_Info1
                                                              , MovementBlob_Info2.ValueData  :: TBlob AS Text_Info2
                                                              , MovementBlob_Info3.ValueData  :: TBlob AS Text_Info3
-                                                        FROM Movement AS Movement_OrderClient 
+                                                        FROM Movement AS Movement_OrderClient
                                                             LEFT JOIN MovementBlob AS MovementBlob_Info1
                                                                                    ON MovementBlob_Info1.MovementId = Movement_OrderClient.Id
                                                                                   AND MovementBlob_Info1.DescId = zc_MovementBlob_Info1()
@@ -149,7 +149,7 @@ BEGIN
    -- данные всех док счет
      tmpInvoice AS (SELECT Movement.Id                             AS MovementId_Invoice
                          , SUM (CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END) ::TFloat AS AmountIn
-                    FROM Movement   
+                    FROM Movement
                          INNER JOIN MovementFloat AS MovementFloat_Amount
                                                   ON MovementFloat_Amount.MovementId = Movement.Id
                                                  AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -198,7 +198,8 @@ BEGIN
 
        -- Результат
        SELECT tmpProduct.*
-            , LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
+            , zfCalc_InvNumber_print (tmpProduct.InvNumber_OrderClient :: TVarChar) AS InvNumber_OrderClient_str
+            , tmpProduct.CIN ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
             , ObjectFloat_Power.ValueData               ::TFloat   AS EnginePower
@@ -215,7 +216,7 @@ BEGIN
             , tmpInfo.City_Firma2    ::TVarChar AS City_Firma
             , tmpInfo.Country_Firma2 ::TVarChar AS Country_Firma
             , tmpInfo.Text_tax2      ::TVarChar AS Text1   --**
-  */          
+  */
             , Object_Client.ValueData        ::TVarChar AS Name_Firma
             , ObjectString_Street.ValueData  ::TVarChar AS Street_Firma
             , ObjectString_City.ValueData    ::TVarChar AS City_Firma
@@ -224,12 +225,12 @@ BEGIN
 
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '||vbInsertName::TVarChar)     ::TVarChar AS Text3
-            
+
             , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber
-            
+
             , '' ::TVarChar AS Angebot
-            , '' ::TVarChar AS Seite   
-            
+            , '' ::TVarChar AS Seite
+
             , tmpInfo.Footer1        ::TVarChar AS Footer1              --*
             , tmpInfo.Footer2        ::TVarChar AS Footer2
             , tmpInfo.Footer3        ::TVarChar AS Footer3   --***
@@ -244,18 +245,18 @@ BEGIN
             , tmpInvoice.AmountIn     ::TFloat AS Invoice_summ
             -- сумма педоплаты
             , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ
-            
+
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
 
             , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
             , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
             , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
-            
+
             , CASE WHEN COALESCE (tmp_OrderInfo.Text_Info1,'') = '' THEN FALSE ELSE TRUE END AS isText_Info1
             , CASE WHEN COALESCE (tmp_OrderInfo.Text_Info2,'') = '' THEN FALSE ELSE TRUE END AS isText_Info2
             , CASE WHEN COALESCE (tmp_OrderInfo.Text_Info3,'') = '' THEN FALSE ELSE TRUE END AS isText_Info3
- 
+
        FROM tmpProduct
           LEFT JOIN ObjectFloat AS ObjectFloat_Power
                                 ON ObjectFloat_Power.ObjectId = tmpProduct.EngineId
@@ -272,11 +273,11 @@ BEGIN
                      FROM tmpProdOptItems
                      ) AS tmpProdOptItems ON 1=1
 
-          LEFT JOIN (SELECT SUM(tmp.Amount * tmp.OperPrice) AS Sale_summ 
+          LEFT JOIN (SELECT SUM(tmp.Amount * tmp.OperPrice) AS Sale_summ
                      FROM tmpOrderClient AS tmp
                      WHERE tmp.GoodsDesc <> zc_Object_Product()
                      ) AS tmpOrder ON 1 = 1
-          
+
           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
           LEFT JOIN (SELECT SUM (tmpInvoice.AmountIn) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           LEFT JOIN tmpBankAccount ON 1 = 1
@@ -286,11 +287,11 @@ BEGIN
           LEFT JOIN Object AS Object_Client ON Object_Client.Id = tmpProduct.ClientId
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_Client.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()  
+                                AND ObjectString_Comment.DescId = zc_ObjectString_Client_Comment()
 
           LEFT JOIN ObjectString AS ObjectString_Fax
                                  ON ObjectString_Fax.ObjectId = Object_Client.Id
-                                AND ObjectString_Fax.DescId = zc_ObjectString_Client_Fax()  
+                                AND ObjectString_Fax.DescId = zc_ObjectString_Client_Fax()
           LEFT JOIN ObjectString AS ObjectString_Phone
                                  ON ObjectString_Phone.ObjectId = Object_Client.Id
                                 AND ObjectString_Phone.DescId = zc_ObjectString_Client_Phone()
@@ -347,8 +348,8 @@ BEGIN
             --, vbDiscountTax                ::TFloat AS DiscountTax
             , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice
                                                                                     , COALESCE (vbDiscountTax,0))
-                                                            , COALESCE (vbDiscountNextTax,0)) 
-                                    , COALESCE (tmpProdOptItems.DiscountTax,0) ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой 
+                                                            , COALESCE (vbDiscountNextTax,0))
+                                    , COALESCE (tmpProdOptItems.DiscountTax,0) ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
             , tmpProdOptItems.CommentOpt
        FROM tmpProdOptItems
      UNION
@@ -380,8 +381,8 @@ BEGIN
             , 0  :: TFloat   AS SalePrice
             , 0  :: TFloat   AS DiscountTax
             , 0  :: TFloat   AS Sale_summ
-            , '' :: TVarChar AS CommentOpt 
-       WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0 
+            , '' :: TVarChar AS CommentOpt
+       WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
        ;
 
      RETURN NEXT Cursor2;

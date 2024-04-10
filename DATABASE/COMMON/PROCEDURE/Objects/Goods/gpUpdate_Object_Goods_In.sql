@@ -16,6 +16,8 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
 
+      -- ???сохраняем???
+      PERFORM gpInsertUpdate_Object_JuridicalDefermentPayment (inStartDate:= DATE_TRUNC ('YEAR', CURRENT_DATE), inEndDate:= CURRENT_DATE, inSession:= inSession);
 
       -- ограничиваем товар
       CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;

@@ -124,15 +124,16 @@ END IF;
                                                               ON ObjectLink_Personal_PersonalServiceListAvance_F2.ObjectId = Object_Personal.Id
                                                              AND ObjectLink_Personal_PersonalServiceListAvance_F2.DescId   = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
 
-                                         --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
+                                         -- только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
                                          INNER JOIN ObjectString AS ObjectString_CardSecond
                                                                  ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
                                                                 AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
+                                         -- только когда заполнен
                                          INNER JOIN ObjectString AS ObjectString_Member_CardBankSecond
                                                                  ON ObjectString_Member_CardBankSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                                                 AND ObjectString_Member_CardBankSecond.DescId    = zc_ObjectString_Member_CardBankSecond()
-                                                                AND ObjectString_Member_CardBankSecond.ValueData <> ''
+                                                                AND zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0                                                                
 
                                     WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
                                       AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
@@ -201,6 +202,11 @@ END IF;
                                                                  ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
                                                                 AND ObjectString_CardSecond.ValueData ILIKE '%UA%'
+                                         -- только когда заполнен
+                                         INNER JOIN ObjectString AS ObjectString_Member_CardBankSecond
+                                                                 ON ObjectString_Member_CardBankSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
+                                                                AND ObjectString_Member_CardBankSecond.DescId    = zc_ObjectString_Member_CardBankSecond()
+                                                                AND zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0                                                                
 
                                     WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
                                       AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
