@@ -1,4 +1,4 @@
-unit dsdDB;
+unit FMX.dsdDB;
 
 interface
 
@@ -33,6 +33,7 @@ type
   public
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
+    function AsStringDB: string;
     function AsFloat: double;
     procedure FixOldValue;
     procedure Assign(Source: TPersistent); override;
@@ -115,17 +116,17 @@ type
     procedure FillOutputParams(XML: String);
     function GetDataSet: TDataSet;
     procedure SetDataSet(const Value: TDataSet);
-    procedure DataSetRefresh;
-    procedure MultiDataSetRefresh;
+    procedure DataSetRefresh(AMaxAtempt: Byte = 10);
+    procedure MultiDataSetRefresh(AMaxAtempt: Byte = 10);
     procedure SetStoredProcName(const Value: String);
     function GetDataSetType: string;
     function getChanged: boolean;
     property CurrentPackSize: integer read FCurrentPackSize write FCurrentPackSize;
-    procedure MultiExecute(ExecPack, AnyExecPack: boolean); //***12.07.2016 add AnyExecPack
+    procedure MultiExecute(ExecPack, AnyExecPack: boolean; AMaxAtempt: Byte = 10); //***12.07.2016 add AnyExecPack
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string; //***12.07.2016 add AnyExecPack
+    function Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True; AMaxAtempt: Byte = 10): string; //***12.07.2016 add AnyExecPack
     function ParamByName(const Value: string): TdsdParam;
     // XML для вызова на сервере
     function GetXML: String;
@@ -161,10 +162,10 @@ type
 
 implementation
 
-uses Storage, TypInfo, UtilConvert, SysUtils,
-     XMLDoc, XMLIntf, StrUtils, CommonData,
-     Variants, UITypes, Defaults, UtilConst,
-     System.Rtti, CursorUtils;
+uses FMX.Storage, TypInfo, FMX.UtilConvert, SysUtils,
+     XMLDoc, XMLIntf, StrUtils, FMX.CommonData,
+     Variants, UITypes, FMX.Defaults, FMX.UtilConst,
+     System.Rtti, FMX.CursorUtils;
 
 procedure Register;
 begin
@@ -206,9 +207,9 @@ begin
   FisFunction := False;
 end;
 
-procedure TdsdStoredProc.DataSetRefresh;
+procedure TdsdStoredProc.DataSetRefresh(AMaxAtempt: Byte = 10);
 var B: TBookMark;
-    FStringStream: TStringStream;
+    FBytesStream: TBytesStream;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -221,11 +222,11 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then begin
          try
-           FStringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML), TEncoding.UTF8);
+           FBytesStream := TBytesStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
            try
-             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FStringStream);
+             TClientDataSet(DataSets[0].DataSet).LoadFromStream(FBytesStream);
            finally
-             FreeAndNil(FStringStream);
+             FreeAndNil(FBytesStream);
            end;
          except
            on E : Exception do
@@ -253,20 +254,20 @@ begin
   inherited;
 end;
 
-function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True): string;
+function TdsdStoredProc.Execute(ExecPack: boolean = false; AnyExecPack: boolean = false; ACursorHourGlass: Boolean = True; AMaxAtempt: Byte = 10): string;
 begin
   result := '';
   if ACursorHourGlass then
     Screen_Cursor_crHourGlass;
   try
-    if (OutputType = otDataSet) then DataSetRefresh;
-    if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
+    if (OutputType = otDataSet) then DataSetRefresh(AMaxAtempt);
+    if (OutputType = otMultiDataSet) then MultiDataSetRefresh(AMaxAtempt);
     if (OutputType = otResult) then
-       FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+       FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otBlob) then
-        result := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+        result := VarToStr(TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt));
     if (OutputType = otMultiExecute) then
-        MultiExecute(ExecPack, AnyExecPack); //***12.07.2016 add AnyExecPack
+        MultiExecute(ExecPack, AnyExecPack, AMaxAtempt); //***12.07.2016 add AnyExecPack
   finally
     if ACursorHourGlass then
       Screen_Cursor_crDefault;
@@ -324,20 +325,20 @@ begin
   for I := 0 to Params.Count - 1 do
       with Params[i] do
         if ParamType in [ptInput, ptInputOutput] then begin
-           ParamStr := asString;
+           ParamStr := asStringDB;
            if DataType = ftWideString then
               Result := Result + '<' + Name +
                    '  DataType="ftBlob" '+
                    '  Value="' + gfStrToXmlStr(ParamStr) + '" />'
            else
-             if DataType = ftBlob then
-                Result := Result + '<' + Name +
-                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + ParamStr + '" />'
-             else
-                Result := Result + '<' + Name +
-                     '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-                     '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
+           if DataType = ftBlob then
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + ParamStr + '" />'
+           else
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + gfStrToXmlStr(ParamStr) + '" />';
         end;
 end;
 
@@ -491,7 +492,7 @@ begin
            '</xml>';
 end;
 
-procedure TdsdStoredProc.MultiDataSetRefresh;
+procedure TdsdStoredProc.MultiDataSetRefresh(AMaxAtempt: Byte = 10);
 var B: TBookMark;
     i: integer;
     XMLResult: OleVariant;
@@ -500,7 +501,7 @@ begin
    for I := 0 to DataSets.Count - 1 do
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
           DataSets[i].DataSet.Post;
-  XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+  XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
   try
     for I := 0 to DataSets.Count - 1 do begin
        if DataSets[i].DataSet.Active then
@@ -527,7 +528,7 @@ begin
   end;
 end;
 
-procedure TdsdStoredProc.MultiExecute(ExecPack, AnyExecPack: boolean);
+procedure TdsdStoredProc.MultiExecute(ExecPack, AnyExecPack: boolean; AMaxAtempt: Byte = 10);
 begin
   // Заполняем значение Data + 12.07.2016 а если AnyExecPack - то Всегда
   if (not ExecPack) or (AnyExecPack = true) then
@@ -538,7 +539,7 @@ begin
   if (CurrentPackSize = PackSize) or ExecPack then begin
      CurrentPackSize := 0;
      try
-       TStorageFactory.GetStorage.ExecuteProc(GetXML);
+       TStorageFactory.GetStorage.ExecuteProc(GetXML, False, AMaxAtempt);
      finally
        FDataXML := '';
      end;
@@ -676,6 +677,7 @@ function TdsdParam.AsString: string;
 var i: Integer;
     Data: Variant;
 begin
+
   Data := Value;
   if VarisNull(Data) then
     case DataType of
@@ -696,52 +698,41 @@ begin
            if not TryStrToInt(result, i)
            then
              result := '0';
- {   ftFloat: ;
-    ftCurrency: ;
-    ftBCD: ;
-    ftDate: ;
-    ftTime: ;
-    ftDateTime: ;
-    ftBytes: ;
-    ftVarBytes: ;
-    ftAutoInc: ;
-    ftBlob: ;
-    ftMemo: ;
-    ftGraphic: ;
-    ftFmtMemo: ;
-    ftParadoxOle: ;
-    ftDBaseOle: ;
-    ftTypedBinary: ;
-    ftCursor: ;
-    ftFixedChar: ;
-    ftWideString: ;
-    ftLargeint: ;
-    ftADT: ;
-    ftArray: ;
-    ftReference: ;
-    ftDataSet: ;
-    ftOraBlob: ;
-    ftOraClob: ;
-    ftVariant: ;
-    ftInterface: ;
-    ftIDispatch: ;
-    ftGuid: ;
-    ftTimeStamp: ;
-    ftFMTBcd: ;
-    ftFixedWideChar: ;
-    ftWideMemo: ;
-    ftOraTimeStamp: ;
-    ftOraInterval: ;
-    ftLongWord: ;
-    ftShortint: ;
-    ftByte: ;
-    ftExtended: ;
-    ftConnection: ;
-    ftParams: ;
-    ftStream: ;
-    ftTimeStampOffset: ;
-    ftObject: ;
-    ftSingle: ;}
+  end;
+end;
+
+function TdsdParam.AsStringDB: string;
+var i: Integer;
+    Data: Variant;
+begin
+
+  {$IFDEF ANDROID}
+  if not VarisNull(Data) and (DataType in [ftDate, ftTime, ftDateTime]) then
+    Data := FormatDateTime('DD.MM.YYYY HH:NN:SS', Value)
+  else Data := Value;
+  {$ELSE}
+  Data := Value;
+  {$ENDIF}
+
+  if VarisNull(Data) then
+    case DataType of
+      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
+      else  Data := '';
+    end;
+  if varType(Data) in [varSingle, varDouble, varCurrency] then
+     result := gfFloatToStr(Data)
+  else begin
+     if (varType(Data) = varString) and (Data = #0) then
+        // При пустой строку result = #0
+        result := ''
+     else
+        result := Data;
+  end;
+  case DataType of
+    ftSmallint, ftInteger, ftWord:
+           if not TryStrToInt(result, i)
+           then
+             result := '0';
   end;
 end;
 

@@ -9,7 +9,7 @@ uses
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf,
   FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
   FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
-  FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, dsdDB, Datasnap.DBClient,
+  FireDAC.Comp.UI, Variants, FireDAC.FMXUI.Wait, FMX.dsdDB, Datasnap.DBClient,
   FMX.Dialogs, FMX.DialogService, System.UITypes, System.Sensors, DateUtils,
   FireDAC.Phys.SQLiteWrapper.Stat
   {$IFDEF ANDROID}
@@ -941,7 +941,7 @@ var
 implementation
 
 uses
-  System.IOUtils, CursorUtils, CommonData, Authentication, Storage, ZLib,
+  System.IOUtils, FMX.CursorUtils, FMX.CommonData, FMX.Authentication, FMX.Storage, ZLib,
   System.StrUtils,
   uMain, uExec, uIntf;
 
@@ -1365,22 +1365,22 @@ begin
             System.delete(FieldsStr, Length(FieldsStr), 1);
             System.delete(ValuesStr, Length(ValuesStr), 1);
 
-            Synchronize(procedure
-                        begin
+//            Synchronize(procedure
+//                        begin
                           if FindRec then
                             DM.conMain.ExecSQL('update ' + CurDictTable.TableName + ' set ' + ValuesStr + ' where ' + WhereStr)
                           else
                             DM.conMain.ExecSQL('insert into ' + CurDictTable.TableName + ' (' + FieldsStr + ') values (' + ValuesStr + ')');
-                        end);
+//                        end);
           end
           else
             if (AName <> 'PromoMain') and (AName <> 'PromoPartner') and (AName <> 'PromoGoods')  and
                (AName <> 'MovementTask') and (AName <> 'MovementItemTask')  then
             begin
-              Synchronize(procedure
-                          begin
+//              Synchronize(procedure
+//                          begin
                             DM.conMain.ExecSQL('update ' + CurDictTable.TableName + ' set isErased = 1 where ' + WhereStr)
-                          end);
+//                          end);
             end;
 
           Next;
@@ -2261,7 +2261,7 @@ begin
     except
       on E: Exception do
       begin
-        Result := E.Message;
+        Result := GetTextMessage(E);
       end;
     end;
   finally
