@@ -74,7 +74,7 @@
 			<DCC_UnitSearchPath>..\SOURCE\DBF;..\SOURCE\COMPONENT;..\SOURCE\DevAddOn;..\SOURCE\EDI;..\SOURCE;..\SOURCE\MeDOC;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<Icon_MainIcon>EDIOrdersLoader_Icon.ico</Icon_MainIcon>
-			<Debugger_RunParams>-interval 3 Excel /log</Debugger_RunParams>
+			<Debugger_RunParams>alan_dp_ua /log</Debugger_RunParams>
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -157,9 +157,9 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">EDIOrdersLoader.dpr</Source>
