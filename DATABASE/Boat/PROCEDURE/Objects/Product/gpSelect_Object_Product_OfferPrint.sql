@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Product_AgilisPrint (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Product_OfferPrint (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Product_OfferPrint(
-    IN inMovementId_OrderClient       Integer   ,   -- 
+    IN inMovementId_OrderClient       Integer   ,   --
     IN inSession                      TVarChar      -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -20,11 +20,11 @@ $BODY$
     DECLARE vbInsertName TVarChar;
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent   TFloat;
-    DECLARE vbDiscountTax  TFloat;    
+    DECLARE vbDiscountTax  TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      -- данные из документа заказа
      SELECT MovementBoolean_PriceWithVAT.ValueData  AS PriceWithVAT
           , MovementFloat_VATPercent.ValueData      AS VATPercent
@@ -60,8 +60,8 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_User_Member
                               ON ObjectLink_User_Member.ObjectId = MLO_Insert.ObjectId
                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId 
-     WHERE Movement_OrderClient.Id = inMovementId_OrderClient    
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+     WHERE Movement_OrderClient.Id = inMovementId_OrderClient
        AND Movement_OrderClient.DescId = zc_Movement_OrderClient();
 
      -- данные из документа заказа
@@ -114,7 +114,7 @@ BEGIN
      CREATE TEMP TABLE tmp_OrderInfo ON COMMIT DROP AS (SELECT CASE WHEN TRIM (COALESCE (MovementBlob_Info1.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info1.ValueData END :: TBlob AS Text_Info1
                                                           , CASE WHEN TRIM (COALESCE (MovementBlob_Info2.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info2.ValueData END :: TBlob AS Text_Info2
                                                           , CASE WHEN TRIM (COALESCE (MovementBlob_Info3.ValueData,'')) = '' THEN CHR (13) || CHR (13) || CHR (13) ELSE MovementBlob_Info3.ValueData END :: TBlob AS Text_Info3
-                                                        FROM Movement AS Movement_OrderClient 
+                                                        FROM Movement AS Movement_OrderClient
                                                             LEFT JOIN MovementBlob AS MovementBlob_Info1
                                                                                    ON MovementBlob_Info1.MovementId = Movement_OrderClient.Id
                                                                                   AND MovementBlob_Info1.DescId = zc_MovementBlob_Info1()
@@ -135,10 +135,10 @@ BEGIN
 
        -- Результат
        SELECT tmpProduct.*
+            , zfCalc_InvNumber_print (tmpProduct.InvNumber_OrderClient :: TVarChar) AS InvNumber_OrderClient_str
             , tmpProduct.BasisWVAT_summ_transport AS BasisWVAT_summ
             , (COALESCE (tmpProduct.BasisWVAT_summ_transport, 0)) AS Summ_total
             ,  COALESCE (tmpOrder.SaleWVAT_summ,0) :: TFloat AS SaleWVAT_summ_order
-            --, LEFT (tmpProduct.CIN, 8) ::TVarChar AS PatternCIN
             , tmpProduct.CIN        ::TVarChar AS PatternCIN
             , EXTRACT (YEAR FROM tmpProduct.DateBegin)  ::TVarChar AS YearBegin
             , '' ::TVarChar AS ModelGroupName
@@ -163,10 +163,10 @@ BEGIN
             , ObjectString_City.ValueData                 ::TVarChar AS City_Client
             , Object_Country.ValueData                    ::TVarChar AS Country_Client
             --
-            
+
            , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber
             , '' ::TVarChar AS Angebot
-            , '' ::TVarChar AS Seite   
+            , '' ::TVarChar AS Seite
 
             , tmpInfo.Footer1       ::TVarChar AS Footer1              --*
             , tmpInfo.Footer2       ::TVarChar AS Footer2
@@ -175,7 +175,7 @@ BEGIN
 
             , vbOperDate_OrderClient  AS OperDate_Order
             , vbInvNumber_OrderClient AS InvNumber_Order
-            
+
             , tmp_OrderInfo.Text_Info1 :: TBlob AS Text_Info1
             , tmp_OrderInfo.Text_Info2 :: TBlob AS Text_Info2
             , tmp_OrderInfo.Text_Info3 :: TBlob AS Text_Info3
@@ -191,13 +191,13 @@ BEGIN
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
 
           LEFT JOIN (SELECT SUM (tmp.Amount * tmp.OperPriceWithVAT) AS SaleWVAT_summ FROM tmpOrderClient AS tmp WHERE tmp.GoodsDesc <> zc_Object_Product()) AS tmpOrder ON 1 = 1
-          
+
           LEFT JOIN Object_Product_PrintInfo_View AS tmpInfo ON 1=1
-          LEFT JOIN tmp_OrderInfo ON 1=1 
+          LEFT JOIN tmp_OrderInfo ON 1=1
           ----
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = tmpProduct.ClientId
-                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()          
+                                AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = tmpProduct.ClientId
                               AND ObjectLink_PLZ.DescId = zc_ObjectLink_Client_PLZ()
