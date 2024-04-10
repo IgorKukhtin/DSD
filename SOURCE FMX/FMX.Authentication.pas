@@ -1,4 +1,4 @@
-unit Authentication;
+unit FMX.Authentication;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   //Androidapi.Helpers, // StringToJString
   FMX.Platform,
   {$ENDIF}
-  Storage;
+  FMX.Storage;
 
 
 type
@@ -64,7 +64,7 @@ type
 
 implementation
 
-uses Xml.XMLDoc, UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, CommonData, uDM;
+uses Xml.XMLDoc, FMX.UtilConst, SysUtils, IdIPWatch, Xml.XmlIntf, FMX.CommonData;
 
 {------------------------------------------------------------------------------}
 constructor TUser.Create(ALogin, APassword: string; ASession: String = '';
@@ -85,6 +85,8 @@ var
   obj: JObject;
   tm: JTelephonyManager;
   LocaleService: IFMXLocaleService;
+  PackageManager: JPackageManager;
+  PackageInfo : JPackageInfo;
   {$ENDIF}
   lIMEI      : String;
   lBrand     : String;
@@ -135,8 +137,10 @@ begin
   // Версия SDK
   try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
   try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;
-  // Версия ПРОГРАММЫ - захардкодим в SDK
-  lVesionSDK:= lVesionSDK + ' + PM: ' + DM.GetCurrentVersion;
+  // Версия ПРОГРАММЫ
+  PackageManager := TAndroidHelper.Activity.getPackageManager;
+  PackageInfo := PackageManager.getPackageInfo(TAndroidHelper.Context.getPackageName(), TJPackageManager.JavaClass.GET_ACTIVITIES);
+  lVesionSDK:= lVesionSDK + ' + PM: ' + JStringToString(PackageInfo.versionName);
   //
   try
     if TPlatformServices.Current.SupportsPlatformService(IFMXLocaleService, IInterface(LocaleService))
@@ -236,6 +240,8 @@ var
   obj: JObject;
   tm: JTelephonyManager;
   LocaleService: IFMXLocaleService;
+  PackageManager: JPackageManager;
+  PackageInfo : JPackageInfo;
   {$ENDIF}
   lIMEI      : String;
   lBrand     : String;
@@ -286,7 +292,9 @@ begin
   try lVesionSDK:= JStringToString(TJBuild_VERSION.JavaClass.SDK); except lVesionSDK:= '???'; end;
   try lVesionSDK:= lVesionSDK + '(' + IntToStr(TJBuild_VERSION.JavaClass.SDK_INT)+')'; except lVesionSDK:= lVesionSDK + ' (?)'; end;
   // Версия ПРОГРАММЫ - захардкодим в SDK
-  lVesionSDK:= lVesionSDK + ' + PM: ' + DM.GetCurrentVersion;
+  PackageManager := TAndroidHelper.Activity.getPackageManager;
+  PackageInfo := PackageManager.getPackageInfo(TAndroidHelper.Context.getPackageName(), TJPackageManager.JavaClass.GET_ACTIVITIES);
+  lVesionSDK:= lVesionSDK + ' + PM: ' + JStringToString(PackageInfo.versionName);
   //
   try
     if TPlatformServices.Current.SupportsPlatformService(IFMXLocaleService, IInterface(LocaleService))

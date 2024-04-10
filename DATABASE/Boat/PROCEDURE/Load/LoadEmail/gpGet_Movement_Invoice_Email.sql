@@ -31,15 +31,16 @@ BEGIN
                        WHERE tmp.Value <> '' AND tmp.EmailKindId IN (zc_Enum_EmailKind_Mail_InvoiceKredit())
                       )
         
-        , tmpMailSend AS (SELECT
-                                 STRING_AGG (Object_MailSend.ValueData, ';')::TVarChar AS Name
-                    
+        , tmpMailSend AS (SELECT STRING_AGG (Object_MailSend.ValueData, ';')::TVarChar AS Name
                           FROM Object AS Object_MailSend
                                 INNER JOIN ObjectLink AS ObjectLink_MailSend_User
                                                       ON ObjectLink_MailSend_User.ObjectId = Object_MailSend.Id
                                                      AND ObjectLink_MailSend_User.DescId = zc_ObjectLink_MailSend_User()
                                                      AND ObjectLink_MailSend_User.ChildObjectId = vbUserId
-                    
+                                INNER JOIN ObjectLink AS ObjectLink_MailSend_MailKind
+                                                      ON ObjectLink_MailSend_MailKind.ObjectId = Object_MailSend.Id
+                                                     AND ObjectLink_MailSend_MailKind.DescId = zc_ObjectLink_MailSend_MailKind()
+                                                     AND ObjectLink_MailSend_MailKind.ChildObjectId = zc_Enum_MailKind_Internal()
                          WHERE Object_MailSend.DescId = zc_Object_MailSend()
                            AND Object_MailSend.isErased = FALSE  
                          --  LIMIT 1
@@ -64,7 +65,7 @@ BEGIN
           , gpGet_Mail.Value :: TVarChar AS AddressFrom
 
           , CASE WHEN vbUserId = 5 AND 1=1 THEN tmpMailSend.Name
-                 ELSE tmpObjectMail.Email 
+                 ELSE CASE WHEN COALESCE (tmpMailSend.Name,'') <> '' THEN tmpMailSend.Name ELSE tmpObjectMail.Email END 
             END :: TVarChar AS AddressTo
 
           , CASE WHEN vbUserId = 5 AND 1=1 THEN 'smtp.gmail.com'
@@ -86,7 +87,7 @@ BEGIN
           INNER JOIN tmpEmail AS gpGet_Directory ON gpGet_Directory.EmailKindId = gpGet_Host.EmailKindId AND gpGet_Directory.EmailToolsId = zc_Enum_EmailTools_Directory()
 
           LEFT JOIN tmpObjectMail ON 1=1
-          LEFT JOIN tmpMailSend ON vbUserId = 5
+          LEFT JOIN tmpMailSend ON 1 = 1
 
      WHERE gpGet_Host.EmailToolsId = zc_Enum_EmailTools_Host()
     ;

@@ -2530,8 +2530,8 @@
       Body.DataType = ftString
       Body.MultiSelectSeparator = ','
       Subject.Value = Null
-      Subject.Component = ExportEmailCDS
-      Subject.ComponentItem = 'Subject'
+      Subject.Component = DocumentInvoice
+      Subject.ComponentItem = 'FileName'
       Subject.DataType = ftString
       Subject.MultiSelectSeparator = ','
       FromAddress.Value = Null

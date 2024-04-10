@@ -1,8 +1,8 @@
-unit CommonData;
+unit FMX.CommonData;
 
 //  В модуле хранятся глобальные переменные ддя приложения
 interface
-uses Authentication,
+uses FMX.Authentication,
      {$IFDEF MSWINDOWS}
      WinApi.Messages,
      {$ENDIF}
@@ -79,3 +79,4 @@ initialization
 finalization
   gc_StartParams.Free;
 end.
+

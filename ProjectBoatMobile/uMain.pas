@@ -295,6 +295,12 @@ type
     Image9: TImage;
     Layout12: TLayout;
     Layout13: TLayout;
+    Layout14: TLayout;
+    Label18: TLabel;
+    cbDictGoodsArticle: TCheckBox;
+    cbDictCode: TCheckBox;
+    cbDictGoodsEAN: TCheckBox;
+    cbDictGoodsCode: TCheckBox;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -525,8 +531,8 @@ var
 
 implementation
 
-uses System.IOUtils, System.Math, FMX.SearchBox, Authentication, Storage,
-     CommonData, CursorUtils;
+uses System.IOUtils, System.Math, FMX.SearchBox, FMX.Authentication, FMX.Storage,
+     FMX.CommonData, FMX.CursorUtils;
 
 {$R *.fmx}
 
@@ -1400,6 +1406,11 @@ begin
   // Поссветка включена
   cblluminationMode.IsChecked := isIlluminationMode;
 
+  cbDictGoodsArticle.IsChecked:= FisDictGoodsArticle;
+  cbDictGoodsCode.IsChecked:= FisDictGoodsCode;
+  cbDictGoodsEAN.IsChecked:= FisDictGoodsEAN;
+  cbDictCode.IsChecked:= FisDictCode;
+
   SwitchToForm(tiInformation, nil);
 end;
 
@@ -1411,8 +1422,10 @@ begin
 end;
 
 procedure TfrmMain.lwDictListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1464,8 +1477,10 @@ begin
 end;
 
 procedure TfrmMain.lwGoodsDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1515,8 +1530,10 @@ begin
 end;
 
 procedure TfrmMain.lwInventoryListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1559,8 +1576,10 @@ begin
 end;
 
 procedure TfrmMain.lwInventoryScanDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
@@ -1942,7 +1961,6 @@ end;
 
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
-  var SettingsFile : TIniFile;
 begin
   if (tcMain.ActiveTab = tiScanBarCode) and (Sender = sbBack)  then
   begin
@@ -1997,13 +2015,22 @@ begin
     // Поссветка включена
     if isIlluminationMode <> cblluminationMode.IsChecked then
       isIlluminationMode := cblluminationMode.IsChecked;
+
+    if cbDictGoodsArticle.IsChecked <> FisDictGoodsArticle then
+      isDictGoodsArticle := cbDictGoodsArticle.IsChecked;
+    if cbDictGoodsCode.IsChecked <> FisDictGoodsCode then
+      isDictGoodsCode := cbDictGoodsCode.IsChecked;
+    if cbDictGoodsEAN.IsChecked <> FisDictGoodsEAN then
+      isDictGoodsEAN := cbDictGoodsEAN.IsChecked;
+    if cbDictCode.IsChecked <> FisDictCode then
+      isDictCode := cbDictCode.IsChecked;
+
   end;
 
   ReturnPriorForm;
 end;
 
 procedure TfrmMain.sbIlluminationModeClick(Sender: TObject);
-  var SettingsFile : TIniFile;
 begin
   isIlluminationMode := not isIlluminationMode;
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.SetIllumination;

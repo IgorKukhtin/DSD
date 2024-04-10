@@ -18684,7 +18684,7 @@
             object pScanTest: TPanel
               Align = Client
               Size.Width = 336.000000000000000000
-              Size.Height = 213.000000000000000000
+              Size.Height = 143.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'PanelStyle'
               TabOrder = 1
@@ -18695,7 +18695,7 @@
                 FooterAppearanceClassName = 'TListHeaderObjects'
                 Align = Client
                 Size.Width = 336.000000000000000000
-                Size.Height = 190.000000000000000000
+                Size.Height = 120.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
                 ItemAppearance.ItemHeight = 80
@@ -18814,7 +18814,7 @@
               Size.Width = 336.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 4
+              TabOrder = 5
               object Label31: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -18904,7 +18904,7 @@
               Size.Width = 336.000000000000000000
               Size.Height = 95.000000000000000000
               Size.PlatformDefault = False
-              TabOrder = 3
+              TabOrder = 4
               object Label34: TLabel
                 Align = Top
                 StyledSettings = [Family, FontColor]
@@ -18917,7 +18917,7 @@
                 TextSettings.Font.Size = 11.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
                 TextSettings.Trimming = None
-                Text = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1110#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
+                Text = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080
                 TabOrder = 0
               end
               object cbOpenScanChangingMode: TCheckBox
@@ -19010,6 +19010,73 @@
                 Size.PlatformDefault = False
                 TabOrder = 2
                 Text = #1050#1072#1084#1077#1088#1091' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
+              end
+            end
+            object Layout14: TLayout
+              Align = Top
+              Position.Y = 271.000000000000000000
+              Size.Width = 336.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              object Label18: TLabel
+                Align = Top
+                StyledSettings = [Family, FontColor]
+                Margins.Left = 5.000000000000000000
+                Margins.Right = 5.000000000000000000
+                Position.X = 5.000000000000000000
+                Size.Width = 326.000000000000000000
+                Size.Height = 23.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 11.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.Trimming = None
+                Text = #1060#1080#1083#1100#1090#1088' '#1074' '#1089#1087#1088#1072#1074#1086#1095#1082#1080#1082#1077' '#1082#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1093
+                TabOrder = 0
+              end
+              object cbDictGoodsArticle: TCheckBox
+                StyledSettings = [Family, Style, FontColor]
+                Position.X = 5.000000000000000000
+                Position.Y = 25.000000000000000000
+                Size.Width = 84.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 4
+                Text = #1040#1088#1090#1080#1082#1091#1083
+                TextSettings.Font.Size = 11.000000000000000000
+              end
+              object cbDictCode: TCheckBox
+                StyledSettings = [Family, Style, FontColor]
+                Position.X = 5.000000000000000000
+                Position.Y = 48.000000000000000000
+                Size.Width = 313.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 3
+                Text = #1060#1080#1083#1100#1090#1100' '#1087#1086' '#1082#1086#1076#1091' '#1074' '#1086#1089#1090#1072#1083#1100#1085#1099#1093' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072#1093
+                TextSettings.Font.Size = 11.000000000000000000
+              end
+              object cbDictGoodsEAN: TCheckBox
+                StyledSettings = [Family, Style, FontColor]
+                Position.X = 193.000000000000000000
+                Position.Y = 27.000000000000000000
+                Size.Width = 63.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 2
+                Text = 'EAN'
+                TextSettings.Font.Size = 11.000000000000000000
+              end
+              object cbDictGoodsCode: TCheckBox
+                StyledSettings = [Family, Style, FontColor]
+                Position.X = 97.000000000000000000
+                Position.Y = 27.000000000000000000
+                Size.Width = 91.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                Text = 'Interne Nr'
+                TextSettings.Font.Size = 11.000000000000000000
               end
             end
           end

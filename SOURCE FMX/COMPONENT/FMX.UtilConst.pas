@@ -1,11 +1,11 @@
 {$J+} {параметр компил€тоcoра, позвол€ющий мен€ть типизированные константы}
-unit UtilConst;
+unit FMX.UtilConst;
 interface
 uses Classes, SysUtils;
 Type
 
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
-  TdsdProject = (prProject, prFarmacy, prBoutique);
+  TdsdProject = (prProject, prFarmacy, prBoutique, prBoat);
 
 var
   dsdProject: TdsdProject;
@@ -285,6 +285,8 @@ const
   gcUserInfo = 'UserInfo';
   gcUserName = 'UserName';
   gcMessage = 'outMessage';
+  gcUserLogin = 'outUserLogin';
+  gcUserPassword = 'outUserPassword';
 
   {контсатнты дл€ XML}
   gcEmptyXML = '<xml/>';
@@ -411,7 +413,7 @@ const
 implementation
 
 {$IFDEF MSWINDOWS}
-uses Windows;
+uses Winapi.Windows;
 
  function ShiftDown : Boolean;
  var

@@ -1,10 +1,10 @@
-unit CursorUtils;
+unit FMX.CursorUtils;
 
 interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,  FMX.Types, FMX.Controls, 
-  FMX.Forms, FMX.Dialogs,FMX.Platform;
+  FMX.Forms, FMX.Dialogs, FMX.Platform, FMX.StdCtrls;
 
 Procedure Screen_Cursor_crHourGlass;
 Procedure Screen_Cursor_crDefault;
@@ -24,15 +24,19 @@ var
 
 implementation
 
-uses
-  uMain;
-
 // uses FMX.Platform, System.UITypes;
 Procedure Screen_Cursor_crHourGlass;
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  var aiWait: TAniIndicator;
+{$ENDIF}
 begin
-{$IFDEF ANDROID}
-  frmMain.aiWait.Visible := true;
-  frmMain.aiWait.Enabled := true;
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  aiWait := TAniIndicator(Application.MainForm.FindComponent('aiWait'));
+  if Assigned(aiWait) then
+  begin
+    aiWait.Visible := true;
+    aiWait.Enabled := true;
+  end;
 {$ELSE}
   {$IFDEF VER230}
     Platform.SetCursor(nil, crHourGlass);
@@ -48,10 +52,17 @@ begin
 end;
 
 Procedure Screen_Cursor_crDefault;
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  var aiWait: TAniIndicator;
+{$ENDIF}
 begin
-{$IFDEF ANDROID}
-  frmMain.aiWait.Visible := false;
-  frmMain.aiWait.Enabled := false;
+{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  aiWait := TAniIndicator(Application.MainForm.FindComponent('aiWait'));
+  if Assigned(aiWait) then
+  begin
+    aiWait.Visible := false;
+    aiWait.Enabled := false;
+  end;
 {$ELSE}
   {$IFDEF VER230}
     Platform.SetCursor(nil, crDefault);
