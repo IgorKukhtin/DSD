@@ -3494,8 +3494,8 @@
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_OrderConfirmation_TotalDiscount'
-      ReportNameParam.Value = 'PrintProduct_OrderConfirmation_TotalDiscount'
+      ReportName = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3604,8 +3604,8 @@
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_OrderConfirmation'
-      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
+      ReportName = 'PrintProduct_OrderConfirmation_Discount'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation_Discount'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3651,8 +3651,8 @@
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Offer_TotalDiscount'
-      ReportNameParam.Value = 'PrintProduct_Offer_TotalDiscount'
+      ReportName = 'PrintProduct_Offer'
+      ReportNameParam.Value = 'PrintProduct_Offer'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3844,8 +3844,8 @@
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintProduct_Offer'
-      ReportNameParam.Value = 'PrintProduct_Offer'
+      ReportName = 'PrintProduct_Offer_Discount'
+      ReportNameParam.Value = 'PrintProduct_Offer_Discount'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
