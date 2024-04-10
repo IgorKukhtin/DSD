@@ -43,6 +43,8 @@ type
     Day_skip: TcxGridDBColumn;
     isSkip: TcxGridDBColumn;
     SummAdd: TcxGridDBColumn;
+    actOpenFormPersonalService: TdsdOpenForm;
+    bbOpenFormPersonalService: TdxBarButton;
   private
     { Private declarations }
   public

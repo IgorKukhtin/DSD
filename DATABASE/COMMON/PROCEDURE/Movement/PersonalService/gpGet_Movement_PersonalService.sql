@@ -32,6 +32,10 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalService());
      vbUserId := lpGetUserBySession (inSession);
 
+     IF COALESCE (inMovementId, 0) = -1
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не выбран.' ;
+     END IF;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN

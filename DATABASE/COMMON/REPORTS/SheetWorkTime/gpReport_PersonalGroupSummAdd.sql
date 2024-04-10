@@ -18,7 +18,14 @@ RETURNS TABLE (
         , PositionLevelId Integer
         , PositionLevelName TVarChar
         , PersonalGroupId Integer
-        , PersonalGroupName TVarChar
+        , PersonalGroupName TVarChar 
+        
+        , PersonalServiceListId  Integer
+        , PersonalServiceListName TVarChar
+        , MovementId_PersonalService Integer
+        , InvNumber_PersonalService  TVarChar
+        , SummAdd_PersonalService TFloat
+
         , NormHour   TFloat
         , TotalSumm  TFloat
         , Hour_work  TFloat
@@ -55,6 +62,64 @@ BEGIN
     RETURN QUERY
     WITH
     tmpOperDate AS ( SELECT generate_series(vbStartDate, vbEndDate, '1 DAY'::interval) OperDate) 
+
+  , tmpPersonal AS /*(SELECT lfSelect.MemberId
+                         , lfSelect.PersonalId
+                         , lfSelect.UnitId
+                         , lfSelect.PositionId
+                         , lfSelect.PositionLevelId
+                         , lfSelect.PersonalServiceListId
+                    FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
+                   )*/
+                   (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
+                         , ObjectLink_Personal_Member.ObjectId              AS PersonalId
+                         , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
+                         , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
+                         , ObjectLink_Personal_PositionLevel.ChildObjectId  AS PositionLevelId
+                         
+                         , ObjectLink_PersonalServiceList.ChildObjectId     AS PersonalServiceListId
+                         , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN FALSE ELSE TRUE END AS isDateOut
+                         , COALESCE (ObjectBoolean_Main.ValueData, FALSE) AS isMain
+                         , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
+                                              -- сортировкой определ€етс€ приоритет дл€ выбора, т.к. выбираем с Ord = 1
+                                              ORDER BY CASE WHEN ObjectBoolean_Main.ValueData = TRUE THEN 0 ELSE 1 END
+                                                     , CASE WHEN Object_Personal.isErased = FALSE THEN 0 ELSE 1 END
+                                                     , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN 0 ELSE 1 END
+                                                     , CASE WHEN ObjectBoolean_Official.ValueData = TRUE THEN 0 ELSE 1 END
+                                                     , ObjectLink_Personal_Member.ObjectId
+                                             ) AS Ord
+                         , ObjectDate_DateIn.ValueData                            AS DateIn
+                         , COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd())  AS DateOut
+                    FROM ObjectLink AS ObjectLink_Personal_Member
+                         LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ObjectId
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                              ON ObjectLink_Personal_Unit.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectLink_Personal_Unit.DescId   = zc_ObjectLink_Personal_Unit()
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+                                              ON ObjectLink_Personal_Position.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                                              ON ObjectLink_Personal_PositionLevel.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+                         LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                              ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                                 ON ObjectBoolean_Official.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                AND ObjectBoolean_Official.DescId   = zc_ObjectBoolean_Member_Official()
+                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                 ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
+                         LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                                              ON ObjectDate_DateIn.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectDate_DateIn.DescId   = zc_ObjectDate_Personal_In()
+                         LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                                              ON ObjectDate_DateOut.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                             AND ObjectDate_DateOut.DescId   = zc_ObjectDate_Personal_Out()          
+                    WHERE ObjectLink_Personal_Member.ChildObjectId > 0
+                      AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                      AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) >= '10.01.2024'
+                   )
 
   , tmpMovement AS (
                     SELECT Movement.*
@@ -171,6 +236,7 @@ BEGIN
                                           )
                      OR tmp.WorkTimeKind_Tax <> 0)
 */
+ 
 
   , tmpRes AS (SELECT tmpMovement.Id AS MovementId
                     , tmpMovement.InvNumber
@@ -181,7 +247,8 @@ BEGIN
                     , tmpSheetWorkTime.PositionId
                     , tmpSheetWorkTime.PositionLevelId
                     , tmpSheetWorkTime.PersonalGroupId
-                    , tmpSheetWorkTime.UnitId
+                    , tmpSheetWorkTime.UnitId  
+                    , tmpPersonal.PersonalServiceListId
                     , tmpSheetWorkTime.Amount          AS Hour_work
                     , tmpSheetWorkTime.Day_skip        AS Day_skip
                     , CASE WHEN COALESCE (tmpSkip.Day_skip,0) <> 0 THEN TRUE ELSE FALSE END AS isSkip 
@@ -203,9 +270,45 @@ BEGIN
                               FROM tmpSheetWorkTime AS tmp
                               WHERE COALESCE (tmp.Day_skip,0) <> 0
                               GROUP BY tmp.MemberId) AS tmpSkip
-                                                     ON tmpSkip.MemberId = tmpSheetWorkTime.MemberId
+                                                     ON tmpSkip.MemberId = tmpSheetWorkTime.MemberId 
+
+                   LEFT JOIN tmpPersonal ON tmpPersonal.MemberId        = tmpSheetWorkTime.MemberId
+                                        AND COALESCE (tmpPersonal.PositionLevelId,0) = COALESCE (tmpSheetWorkTime.PositionLevelId,0)
+                                        AND tmpPersonal.PositionId      = tmpSheetWorkTime.PositionId
+                                        AND tmpPersonal.UnitId          = tmpSheetWorkTime.UnitId
                ) 
-  
+
+  -- сумму из основной ведомости по фио из колонки "ѕреми€" 
+  , tmpPersonalService AS (SELECT MAX (Movement.Id)                                AS MovementId
+                                , ObjectLink_Personal_Member.ChildObjectId         AS MemberId --MemberId_Personal
+                                , MovementLinkObject_PersonalServiceList.ObjectId  AS PersonalServiceListId
+                                , SUM (COALESCE (MIFloat_SummAdd.ValueData,0))     AS SummAdd
+                           FROM MovementDate AS MovementDate_ServiceDate
+                               JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                            AND Movement.DescId = zc_Movement_PersonalService()
+                                            AND Movement.StatusId = zc_Enum_Status_Complete()
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
+
+                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId = zc_MI_Master()
+                                                  AND MovementItem.isErased = FALSE
+
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                    ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
+                                                           ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                           WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                            AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                           GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                                  , MovementLinkObject_PersonalServiceList.ObjectId
+                           --HAVING SUM (COALESCE (MIFloat_SummAdd.ValueData,0)) <> 0
+                           )
+
 
    ---
    SELECT Object_Unit.Id                  AS UnitId
@@ -218,7 +321,15 @@ BEGIN
         , Object_PositionLevel.Id         AS PositionLevelId
         , Object_PositionLevel.ValueData  AS PositionLevelName
         , Object_PersonalGroup.Id         AS PersonalGroupId
-        , Object_PersonalGroup.ValueData  AS PersonalGroupName
+        , Object_PersonalGroup.ValueData  AS PersonalGroupName    
+        
+        , Object_PersonalServiceList.Id        AS PersonalServiceListId
+        , Object_PersonalServiceList.ValueData AS PersonalServiceListName 
+        , CASE WHEN COALESCE (tmpPersonalService.MovementId,0) = 0 THEN -1 ELSE tmpPersonalService.MovementId END ::Integer AS MovementId_PersonalService
+        , ('є ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
+         
+        , tmpPersonalService.SummAdd ::TFloat  AS SummAdd_PersonalService
+        
         , tmpRes.NormHour   ::TFloat
         , tmpRes.TotalSumm  ::TFloat
         , tmpRes.Hour_work  ::TFloat
@@ -235,7 +346,12 @@ BEGIN
         LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpRes.PositionId
         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = tmpRes.PositionLevelId
         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = tmpRes.PersonalGroupId
-        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpRes.UnitId
+        LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpRes.UnitId       
+        
+        LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpRes.PersonalServiceListId 
+        LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpRes.MemberId
+                                    AND tmpPersonalService.PersonalServiceListId = tmpRes.PersonalServiceListId 
+        LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = tmpPersonalService.MovementId 
    ;
 
 
@@ -253,4 +369,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * from gpReport_PersonalGroupSummAdd (inOperDate:= '01.02.2024'::TDateTime, inUnitId := 0 , inSession := zfCalc_UserAdmin());
+-- SELECT * from gpReport_PersonalGroupSummAdd (inOperDate:= '01.04.2024'::TDateTime, inUnitId := 0 , inSession := zfCalc_UserAdmin());

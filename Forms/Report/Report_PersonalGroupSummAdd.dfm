@@ -34,6 +34,11 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
               Format = ',0.'
               Kind = skSum
               Column = Hour_work
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = SummAdd_PersonalService
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -50,6 +55,11 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
               Format = ',0.'
               Kind = skSum
               Column = Hour_work
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = SummAdd_PersonalService
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -171,6 +181,31 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object InvNumber_PersonalService: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'InvNumber_PersonalService'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 149
+          end
+          object PersonalServiceListName: TcxGridDBColumn
+            Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
+            DataBinding.FieldName = 'PersonalServiceListName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 161
+          end
+          object SummAdd_PersonalService: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080' ('#1076#1086#1082'. '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
+            DataBinding.FieldName = 'SummAdd_PersonalService'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 98
+          end
         end
       end
     end
@@ -270,6 +305,41 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actOpenFormPersonalService: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
+      ImageIndex = 26
+      FormName = 'TPersonalServiceForm'
+      FormNameParam.Value = 'TPersonalServiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'MovementId_PersonalService'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42094d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -333,6 +403,18 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenFormPersonalService'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -342,6 +424,10 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bbOpenFormPersonalService: TdxBarButton
+      Action = actOpenFormPersonalService
       Category = 0
     end
   end
