@@ -568,7 +568,7 @@ BEGIN
               --   AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              )
   -- сначала партии для итого расхода
-, tmpMI_summ  AS (SELECT tmpMI.GoodsId, SUM (tmpMI.OperCount) AS OperCount
+, tmpMI_summ  AS (SELECT tmpMI.GoodsId, SUM (tmpMI.OperCount) AS OperCount, tmpMI.isAsset_master
                   FROM tmpMI
                   WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                        , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
@@ -577,7 +577,7 @@ BEGIN
                      -- или новая схема - товары ОС или zc_Object_Asset
                      OR tmpMI.isAsset_master = TRUE
 
-                  GROUP BY tmpMI.GoodsId
+                  GROUP BY tmpMI.GoodsId, tmpMI.isAsset_master
                  )
   , tmpContainer_list AS (SELECT DISTINCT Container.Id               AS ContainerId
                                         , Container.ObjectId         AS GoodsId
@@ -605,7 +605,7 @@ BEGIN
                               AND vbUnitId_From     > 0
                               AND Container.DescId  = zc_Container_CountAsset()
                                  ))
-                            AND (CLO_PartionGoods.ObjectId > 0 OR CLO_AssetTo.ContainerId > 0)
+                            AND (CLO_PartionGoods.ObjectId > 0 OR CLO_AssetTo.ContainerId > 0 OR tmpMI.isAsset_master = TRUE)
                          )
      -- остаток с учетом движения
    , tmpContainer_rem AS (SELECT tmpContainer_list.ContainerId
@@ -784,7 +784,7 @@ BEGIN
              LEFT JOIN tmpContainer_res AS tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
        ;
 
-IF inMovementId = 27161178 AND 1=0
+IF inMovementId = 27900214  AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка.<%>  %   %'
                                    , (select _tmpItemChild.OperCount from _tmpItemChild where _tmpItemChild.MovementItemId_Parent = 278625370 )
