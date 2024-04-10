@@ -45,6 +45,9 @@ type
     SummAdd: TcxGridDBColumn;
     actOpenFormPersonalService: TdsdOpenForm;
     bbOpenFormPersonalService: TdxBarButton;
+    spUpdateMISummAdd: TdsdStoredProc;
+    actUpdateMISummAdd: TdsdExecStoredProc;
+    bbUpdateMISummAdd: TdxBarButton;
   private
     { Private declarations }
   public

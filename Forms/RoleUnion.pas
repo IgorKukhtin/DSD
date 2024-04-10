@@ -11,7 +11,17 @@ uses
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxSplitter, Vcl.ExtCtrls,
   cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter;
+  dxSkinsdxBarPainter, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxCurrencyEdit;
 
 type
   TRoleUnionForm = class(TParentForm)
@@ -69,6 +79,24 @@ type
     cxGridDBColumn5: TcxGridDBColumn;
     ActionGridLevel: TcxGridLevel;
     cldescName: TcxGridDBColumn;
+    UserDS: TDataSource;
+    UserCDS: TClientDataSet;
+    cxGridUser: TcxGrid;
+    cxGridDBTableViewUser: TcxGridDBTableView;
+    Code_ch3: TcxGridDBColumn;
+    Name_ch3: TcxGridDBColumn;
+    MemberName_ch3: TcxGridDBColumn;
+    BranchCode_ch3: TcxGridDBColumn;
+    BranchName_ch3: TcxGridDBColumn;
+    UnitCode_ch3: TcxGridDBColumn;
+    UnitName_ch3: TcxGridDBColumn;
+    PositionName_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    spSelectUser: TdsdStoredProc;
+    dsdDBViewAddOnUser: TdsdDBViewAddOn;
+    RoleName: TcxGridDBColumn;
   private
     { Private declarations }
   public
