@@ -87,7 +87,9 @@ BEGIN
          , zfCalc_Article_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '')) ::TVarChar AS Article_all
          , ObjectString_ArticleVergl.ValueData   :: TVarChar AS ArticleVergl
          , Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
-         , ObjectString_Goods_Comment.ValueData              AS Comment_goods
+
+       --, (Object_ReceiptGoodsChild.Id :: TVarChar || ' ' || COALESCE (ObjectString_Goods_Comment.ValueData, '')) :: TVarChar AS Comment_goods
+         , ObjectString_Goods_Comment.ValueData  :: TVarChar AS Comment_goods
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
 
          , Object_MaterialOptions.Id          ::Integer  AS MaterialOptionsId

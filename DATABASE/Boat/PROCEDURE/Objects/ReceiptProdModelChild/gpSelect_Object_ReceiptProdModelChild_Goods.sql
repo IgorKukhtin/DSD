@@ -151,6 +151,9 @@ BEGIN
              INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
                                    ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpReceiptProdModelChild.ObjectId
                                   AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+             -- не удален
+             INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                     AND Object_ReceiptGoods.isErased = FALSE
              -- это главный шаблон
              INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                       ON ObjectBoolean_Main.ObjectId  = ObjectLink_ReceiptGoods_Object.ObjectId
@@ -306,6 +309,7 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelId
                               ORDER BY CASE WHEN Object_ProdColorPattern.Id > 0 THEN 0 ELSE 1 END ASC
                                      , Object_ProdColorPattern.ObjectCode ASC
+                                     , Object_ReceiptLevel.ValueData ASC
                                      , tmpReceiptProdModelChild.ReceiptProdModelChildId ASC
                              ) :: Integer AS NPP
          , tmpReceiptProdModelChild.ValueData               AS Comment
@@ -437,6 +441,7 @@ BEGIN
                          )
      SELECT tmpResult.*
 
+        --, (tmpResult.Id :: TVarChar || ' ' || COALESCE (ObjectString_Goods_Comment.ValueData, '')) :: TVarChar AS Comment_goods
           , ObjectString_Goods_Comment.ValueData AS Comment_goods
 
           , CASE WHEN 1=0 AND tmpProtocol.UserId = 139 -- Maxim
