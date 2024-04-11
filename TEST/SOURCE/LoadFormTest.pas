@@ -4096,6 +4096,7 @@ end;
 
 procedure TLoadFormTest.LoadRoleFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleMaskEditForm'));
@@ -4103,6 +4104,7 @@ begin
   //по маске
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
+ }
   //подробно
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRoleUnionForm');

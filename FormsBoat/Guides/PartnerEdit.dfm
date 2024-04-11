@@ -49,7 +49,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitHeight = 297
       object edName: TcxTextEdit
         Left = 10
         Top = 72
@@ -106,13 +105,13 @@
       object edStreet: TcxTextEdit
         Left = 10
         Top = 161
-        TabOrder = 10
+        TabOrder = 9
         Width = 273
       end
       object edStreet_add: TcxTextEdit
         Left = 294
         Top = 161
-        TabOrder = 16
+        TabOrder = 15
         Width = 266
       end
       object cxLabel25: TcxLabel
@@ -139,7 +138,7 @@
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 11
+        TabOrder = 10
         Width = 130
       end
       object cxLabel16: TcxLabel
@@ -156,7 +155,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 12
+        TabOrder = 11
         Width = 130
       end
       object cxLabel20: TcxLabel
@@ -167,7 +166,7 @@
       object edTaxNumber: TcxTextEdit
         Left = 294
         Top = 30
-        TabOrder = 13
+        TabOrder = 12
         Width = 130
       end
       object cxLabel11: TcxLabel
@@ -211,7 +210,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = 'Detail'
       ImageIndex = 1
-      ExplicitHeight = 321
       object cxLabel7: TcxLabel
         Left = 287
         Top = 99

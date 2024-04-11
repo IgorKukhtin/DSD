@@ -159,6 +159,22 @@ object PartnerForm: TPartnerForm
         Options.Editing = False
         Width = 80
       end
+      object City: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'City'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 116
+      end
+      object CountryName: TcxGridDBColumn
+        Caption = #1057#1090#1088#1072#1085#1072
+        DataBinding.FieldName = 'CountryName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 106
+      end
       object Street: TcxGridDBColumn
         Caption = #1059#1083#1080#1094#1072
         DataBinding.FieldName = 'Street'

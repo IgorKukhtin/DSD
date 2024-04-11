@@ -22,6 +22,7 @@ RETURNS TABLE (
         
         , PersonalServiceListId  Integer
         , PersonalServiceListName TVarChar
+        , MI_Id_PersonalService      Integer
         , MovementId_PersonalService Integer
         , InvNumber_PersonalService  TVarChar
         , SummAdd_PersonalService TFloat
@@ -63,15 +64,7 @@ BEGIN
     WITH
     tmpOperDate AS ( SELECT generate_series(vbStartDate, vbEndDate, '1 DAY'::interval) OperDate) 
 
-  , tmpPersonal AS /*(SELECT lfSelect.MemberId
-                         , lfSelect.PersonalId
-                         , lfSelect.UnitId
-                         , lfSelect.PositionId
-                         , lfSelect.PositionLevelId
-                         , lfSelect.PersonalServiceListId
-                    FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
-                   )*/
-                   (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
+  , tmpPersonal AS (SELECT ObjectLink_Personal_Member.ChildObjectId         AS MemberId
                          , ObjectLink_Personal_Member.ObjectId              AS PersonalId
                          , ObjectLink_Personal_Unit.ChildObjectId           AS UnitId
                          , ObjectLink_Personal_Position.ChildObjectId       AS PositionId
@@ -279,10 +272,13 @@ BEGIN
                ) 
 
   -- сумму из основной ведомости по фио из колонки "Премия" 
-  , tmpPersonalService AS (SELECT MAX (Movement.Id)                                AS MovementId
-                                , ObjectLink_Personal_Member.ChildObjectId         AS MemberId --MemberId_Personal
+  , tmpPersonalService AS (SELECT Movement.Id                                      AS MovementId
+                                , MovementItem.Id                                  AS MovementItemId
+                                , ObjectLink_Personal_Member.ChildObjectId         AS MemberId       --MemberId_Personal 
+                                , MILinkObject_Position.ObjectId                   AS PositionId
+                                , MILinkObject_PositionLevel.ObjectId              AS PositionLevelId
                                 , MovementLinkObject_PersonalServiceList.ObjectId  AS PersonalServiceListId
-                                , SUM (COALESCE (MIFloat_SummAdd.ValueData,0))     AS SummAdd
+                                , (COALESCE (MIFloat_SummAdd.ValueData,0))         AS SummAdd
                            FROM MovementDate AS MovementDate_ServiceDate
                                JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
                                             AND Movement.DescId = zc_Movement_PersonalService()
@@ -302,11 +298,15 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                            ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                                ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+
                            WHERE MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inOperDate) AND (DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                           GROUP BY ObjectLink_Personal_Member.ChildObjectId
-                                  , MovementLinkObject_PersonalServiceList.ObjectId
-                           --HAVING SUM (COALESCE (MIFloat_SummAdd.ValueData,0)) <> 0
+                           --GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                           --       , MovementLinkObject_PersonalServiceList.ObjectId
                            )
 
 
@@ -324,7 +324,8 @@ BEGIN
         , Object_PersonalGroup.ValueData  AS PersonalGroupName    
         
         , Object_PersonalServiceList.Id        AS PersonalServiceListId
-        , Object_PersonalServiceList.ValueData AS PersonalServiceListName 
+        , Object_PersonalServiceList.ValueData AS PersonalServiceListName
+        , tmpPersonalService.MovementItemId  ::Integer  AS MI_Id_PersonalService
         , CASE WHEN COALESCE (tmpPersonalService.MovementId,0) = 0 THEN -1 ELSE tmpPersonalService.MovementId END ::Integer AS MovementId_PersonalService
         , ('№ ' || Movement_PersonalService.InvNumber || ' от ' || Movement_PersonalService.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_PersonalService
          
@@ -349,8 +350,13 @@ BEGIN
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpRes.UnitId       
         
         LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = tmpRes.PersonalServiceListId 
-        LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId = tmpRes.MemberId
-                                    AND tmpPersonalService.PersonalServiceListId = tmpRes.PersonalServiceListId 
+
+        LEFT JOIN tmpPersonalService ON tmpPersonalService.MemberId        = tmpRes.MemberId
+                                    AND tmpPersonalService.PositionId      = tmpRes.PositionId
+                                    AND COALESCE (tmpPersonalService.PositionLevelId,0) = COALESCE (tmpRes.PositionLevelId,0)
+                                    AND tmpPersonalService.PersonalServiceListId = tmpRes.PersonalServiceListId
+                                    --PositionLevel нет в мастере PersonalService
+
         LEFT JOIN Movement AS Movement_PersonalService ON Movement_PersonalService.Id = tmpPersonalService.MovementId 
    ;
 

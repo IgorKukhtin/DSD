@@ -2,8 +2,8 @@ object RoleUnionForm: TRoleUnionForm
   Left = 0
   Top = 0
   Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103' ('#1087#1086#1076#1088#1086#1073#1085#1086')'
-  ClientHeight = 631
-  ClientWidth = 778
+  ClientHeight = 559
+  ClientWidth = 772
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object RoleUnionForm: TRoleUnionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 465
-    Height = 605
+    Width = 529
+    Height = 287
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -89,29 +89,35 @@ object RoleUnionForm: TRoleUnionForm
     end
   end
   object cxLeftSplitter: TcxSplitter
-    Left = 465
+    Left = 529
     Top = 26
     Width = 7
-    Height = 605
+    Height = 287
     Control = cxGrid
+    ExplicitLeft = 465
   end
   object Panel1: TPanel
-    Left = 472
+    Left = 536
     Top = 26
-    Width = 306
-    Height = 605
+    Width = 236
+    Height = 287
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 6
+    TabOrder = 5
+    ExplicitLeft = 472
+    ExplicitWidth = 300
     object ActionGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 306
-      Height = 605
+      Width = 236
+      Height = 287
       Align = alClient
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -1
+      ExplicitTop = 1
+      ExplicitWidth = 300
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -141,6 +147,135 @@ object RoleUnionForm: TRoleUnionForm
         GridView = ActionGridView
       end
     end
+  end
+  object cxGridUser: TcxGrid
+    Left = 0
+    Top = 320
+    Width = 772
+    Height = 239
+    Align = alBottom
+    TabOrder = 7
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
+    object cxGridDBTableViewUser: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = UserDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = MemberName_ch3
+        end>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object RoleName: TcxGridDBColumn
+        Caption = #1056#1086#1083#1100
+        DataBinding.FieldName = 'RoleName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 161
+      end
+      object Code_ch3: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 41
+      end
+      object Name_ch3: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'UserName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object MemberName_ch3: TcxGridDBColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'MemberName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 87
+      end
+      object BranchCode_ch3: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092'.'
+        DataBinding.FieldName = 'BranchCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 47
+      end
+      object BranchName_ch3: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 61
+      end
+      object UnitCode_ch3: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087'.'
+        DataBinding.FieldName = 'UnitCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 59
+      end
+      object UnitName_ch3: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
+      end
+      object PositionName_ch3: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 160
+      end
+      object isErased_ch3: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGridDBTableViewUser
+    end
+  end
+  object cxSplitter1: TcxSplitter
+    Left = 0
+    Top = 313
+    Width = 772
+    Height = 7
+    AlignSplitter = salBottom
+    Control = cxGrid
+    ExplicitTop = 319
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -220,6 +355,10 @@ object RoleUnionForm: TRoleUnionForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -290,6 +429,9 @@ object RoleUnionForm: TRoleUnionForm
         end
         item
           StoredProc = spAction
+        end
+        item
+          StoredProc = spSelectUser
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -584,8 +726,8 @@ object RoleUnionForm: TRoleUnionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
-    Top = 104
+    Left = 192
+    Top = 144
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -608,10 +750,14 @@ object RoleUnionForm: TRoleUnionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 272
   end
@@ -633,7 +779,7 @@ object RoleUnionForm: TRoleUnionForm
     Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
+    Left = 352
     Top = 64
   end
   object spAction: TdsdStoredProc
@@ -675,10 +821,14 @@ object RoleUnionForm: TRoleUnionForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 608
     Top = 136
   end
@@ -714,5 +864,64 @@ object RoleUnionForm: TRoleUnionForm
     PackSize = 1
     Left = 608
     Top = 136
+  end
+  object UserDS: TDataSource
+    DataSet = UserCDS
+    Left = 58
+    Top = 456
+  end
+  object UserCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'Id'
+    MasterFields = 'Id'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 66
+    Top = 392
+  end
+  object spSelectUser: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_UserRoleUnion'
+    DataSet = UserCDS
+    DataSets = <
+      item
+        DataSet = UserCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 232
+    Top = 432
+  end
+  object dsdDBViewAddOnUser: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewUser
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 160
+    Top = 464
   end
 end

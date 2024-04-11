@@ -340,6 +340,18 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
         end>
       isShowModal = False
     end
+    object actUpdateMISummAdd: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMISummAdd
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMISummAdd
+        end>
+      Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080
+      ImageIndex = 30
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -407,6 +419,14 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMISummAdd'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenFormPersonalService'
         end
         item
@@ -428,6 +448,10 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
     end
     object bbOpenFormPersonalService: TdxBarButton
       Action = actOpenFormPersonalService
+      Category = 0
+    end
+    object bbUpdateMISummAdd: TdxBarButton
+      Action = actUpdateMISummAdd
       Category = 0
     end
   end
@@ -479,5 +503,31 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
       end>
     Left = 440
     Top = 8
+  end
+  object spUpdateMISummAdd: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_SummAdd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'MI_Id_PersonalService'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummAdd'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'SummAdd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 498
+    Top = 168
   end
 end
