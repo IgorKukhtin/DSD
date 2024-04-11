@@ -309,6 +309,7 @@ BEGIN
          , ROW_NUMBER() OVER (PARTITION BY tmpReceiptProdModelChild.ReceiptProdModelId
                               ORDER BY CASE WHEN Object_ProdColorPattern.Id > 0 THEN 0 ELSE 1 END ASC
                                      , Object_ProdColorPattern.ObjectCode ASC
+                                     , Object_ReceiptLevel.ValueData ASC
                                      , tmpReceiptProdModelChild.ReceiptProdModelChildId ASC
                              ) :: Integer AS NPP
          , tmpReceiptProdModelChild.ValueData               AS Comment

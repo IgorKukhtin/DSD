@@ -168,8 +168,13 @@ BEGIN
                                                         AND ObjectLink_GoodsChild.DescId        = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
                                                         AND ObjectLink_GoodsChild.ChildObjectId > 0
 
+                                   INNER JOIN Object AS Object_Goods_main  ON Object_Goods_main.Id  = ObjectLink_Goods.ChildObjectId
+                                   INNER JOIN Object AS Object_Goods_child ON Object_Goods_child.Id = ObjectLink_GoodsChild.ChildObjectId
+
                               WHERE Object_ReceiptGoods.DescId = zc_Object_ReceiptGoods()
                                AND (Object_ReceiptGoods.isErased = FALSE OR inIsErased = TRUE)
+                               -- они "идентичны"
+                               AND Object_Goods_child.ValueData ILIKE ( '%' || Object_Goods_main.ValueData)
                              )
            -- поиск "аналогов"
          , tmpReceiptProdModel AS (SELECT DISTINCT ObjectLink_Object.ChildObjectId                 AS GoodsId
