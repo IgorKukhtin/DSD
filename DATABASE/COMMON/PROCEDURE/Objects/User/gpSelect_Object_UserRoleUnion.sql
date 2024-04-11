@@ -21,10 +21,10 @@ BEGIN
 
    RETURN QUERY
    WITH
-       tmp_RoleUnion AS (SELECT DISTINCT tmp.Id, tmp.RoleId
+       tmp_RoleUnion AS (SELECT DISTINCT tmp.Id, tmp.RoleId , tmp.DescName
                          FROM gpSelect_Object_RoleUnion(inValue := 1 
                                                      ,  inSession := inSession) AS tmp
-                         WHERE tmp.process_enumname <>'' 
+                        -- WHERE tmp.process_enumname <>'' 
                         )
      
      , tmpRoleUser AS (SELECT DISTINCT tmp.RoleId, tmp.Id, tmp.Code, tmp.Name, tmp.BranchCode, tmp.BranchName, tmp.UnitCode, tmp.UnitName, tmp.PositionName , tmp.isErased 
@@ -52,7 +52,9 @@ BEGIN
 
    FROM tmp_RoleUnion
         
-        LEFT JOIN tmpRoleUser ON tmpRoleUser.RoleId = tmp_RoleUnion.RoleId
+        LEFT JOIN tmpRoleUser ON ((tmpRoleUser.RoleId = tmp_RoleUnion.RoleId AND tmp_RoleUnion.DescName <> 'Связь пользователей и ролей')
+                               OR (tmpRoleUser.RoleId = tmp_RoleUnion.RoleId AND tmpRoleUser.Id = tmp_RoleUnion.Id AND tmp_RoleUnion.DescName = 'Связь пользователей и ролей')
+                                 ) 
         JOIN Object AS Object_Role ON Object_Role.Id = tmpRoleUser.RoleId
    ;      
   
@@ -68,3 +70,5 @@ $BODY$
  10.04.24                         *
 */
 -- SELECT * FROM gpSelect_Object_UserRoleUnion ('2')
+
+--SELECT * FROM Objectdesc where id =  zc_Object_User()
