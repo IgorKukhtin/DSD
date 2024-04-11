@@ -457,6 +457,20 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Action = actSetUnErased
       Category = 0
     end
+    object bbInsert_client: TdxBarButton
+      Action = actInsert_client
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actInsert_Partner
+      Category = 0
+    end
+    object bbb: TdxBarButton
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList

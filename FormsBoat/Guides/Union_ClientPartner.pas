@@ -84,6 +84,9 @@ type
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
     InfoMoneyName_all: TcxGridDBColumn;
+    bbInsert_client: TdxBarButton;
+    bb: TdxBarButton;
+    bbb: TdxBarButton;
   private
     { Private declarations }
   public

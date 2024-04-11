@@ -291,6 +291,95 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           MultiSelectSeparator = ','
         end>
     end
+    object actInsert_client: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_client: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+      FormName = 'TClientEditForm'
+      FormNameParam.Value = 'TClientEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsert_Partner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actUpdate_partner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      ImageIndex = 1
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 80
@@ -311,6 +400,26 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLieferanten'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbKunden'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
@@ -339,6 +448,50 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbInsert_Partner: TdxBarButton
+      Action = actInsert_Partner
+      Category = 0
+    end
+    object bbInsert_client: TdxBarButton
+      Action = actInsert_client
+      Category = 0
+    end
+    object bbUpdate_client: TdxBarButton
+      Action = actUpdate_client
+      Category = 0
+    end
+    object bbLieferanten: TdxBarSubItem
+      Caption = 'Lieferanten'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert_Partner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_partner'
+        end>
+    end
+    object bbKunden: TdxBarSubItem
+      Caption = 'Kunden'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert_client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_client'
+        end>
+    end
+    object bbUpdate_partner: TdxBarButton
+      Action = actUpdate_partner
+      Category = 0
     end
   end
   object FieldFilter_Name: TdsdFieldFilter
