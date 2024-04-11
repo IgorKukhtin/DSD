@@ -45,6 +45,16 @@ type
     TaxKindName_Comment: TcxGridDBColumn;
     InfoMoneyName_all: TcxGridDBColumn;
     TaxNumber: TcxGridDBColumn;
+    actInsert_client: TdsdInsertUpdateAction;
+    actUpdate_client: TdsdInsertUpdateAction;
+    actInsert_Partner: TdsdInsertUpdateAction;
+    actUpdate_partner: TdsdInsertUpdateAction;
+    bbInsert_Partner: TdxBarButton;
+    bbInsert_client: TdxBarButton;
+    bbUpdate_client: TdxBarButton;
+    bbLieferanten: TdxBarSubItem;
+    bbKunden: TdxBarSubItem;
+    bbUpdate_partner: TdxBarButton;
   private
     { Private declarations }
   public
