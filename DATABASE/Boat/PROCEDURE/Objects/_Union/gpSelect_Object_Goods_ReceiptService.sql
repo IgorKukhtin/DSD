@@ -573,7 +573,7 @@ BEGIN
               -- ”далить
        SELECT 0                     AS Id
             , 0                     AS Code
-            , '”ƒјЋ»“№' ::TVarChar  AS Name
+            , 'ќчистить значение' ::TVarChar  AS Name
             , '' ::TVarChar         AS Name_all
             , '' ::TVarChar         AS DescName
             , '' ::TVarChar         AS Article
@@ -633,7 +633,7 @@ BEGIN
             , FALSE :: Boolean AS isReceiptGoods
             , FALSE :: Boolean AS isProdOptions
 
-            , FALSE         AS isErased
+            , TRUE  :: Boolean AS isErased
       ;
 
 END;
