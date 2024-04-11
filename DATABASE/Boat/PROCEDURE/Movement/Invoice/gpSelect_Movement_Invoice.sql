@@ -144,7 +144,8 @@ BEGIN
                                                      , zc_MovementLinkObject_InfoMoney()
                                                      --, zc_MovementLinkObject_Product()
                                                      , zc_MovementLinkObject_PaidKind()
-                                                     , zc_MovementLinkObject_InvoiceKind()
+                                                     , zc_MovementLinkObject_InvoiceKind() 
+                                                     , zc_MovementLinkObject_TaxKind()
                                                       )
                   )
        -- Все документы, в которых указан этот Счет, возьмем первый
@@ -245,6 +246,9 @@ BEGIN
                        , Object_Unit.Id                             AS UnitId
                        , Object_Unit.ValueData                      AS UnitName
 
+                       , Object_TaxKind.Id                          AS TaxKindId
+                       , Object_TaxKind.ValueData                   AS TaxKindName
+
                        , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
                        , MovementString_ReceiptNumber.ValueData     AS ReceiptNumber
                        , MovementString_Comment.ValueData           AS Comment
@@ -341,6 +345,14 @@ BEGIN
                                          AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
                          LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
+                         LEFT JOIN tmpMLO AS MovementLinkObject_TaxKind
+                                                      ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                                     AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+                         LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                              ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
+                                             AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+                         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (MovementLinkObject_TaxKind.ObjectId, ObjectLink_TaxKind.ChildObjectId)
+               
                          LEFT JOIN MovementDate AS MovementDate_Insert
                                                 ON MovementDate_Insert.MovementId = Movement.Id
                                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -475,7 +487,9 @@ BEGIN
       , tmpData.ObjectId
       , tmpData.ObjectName
       , tmpData.DescName
-      , Object_TaxKind.ValueData            AS TaxKindName
+      --, tmpData.TaxKindId   
+      , tmpData.TaxKindName   ::TVarChar
+      --, Object_TaxKind.ValueData            AS TaxKindName
       , ObjectString_TaxKind_Info.ValueData AS TaxKindName_info
       , ObjectString_TaxKind_Comment.ValueData AS TaxKindName_Comment
 
@@ -541,17 +555,18 @@ BEGIN
         LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = tmpData.MovementId_parent
                                 AND tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Pay()
 
-        LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+        /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                              ON ObjectLink_TaxKind.ObjectId = tmpData.ObjectId
                             AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
-
+        */
+        
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                               ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                               ON ObjectString_TaxKind_Info.ObjectId = tmpData.TaxKindId    --ObjectLink_TaxKind.ChildObjectId
                               AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
-                               ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                               ON ObjectString_TaxKind_Comment.ObjectId =  tmpData.TaxKindId
                               AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
         
         LEFT JOIN tmpDateUnloading ON tmpDateUnloading.Id = tmpData.Id
@@ -565,6 +580,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.24         *
  06.12.23         *
  02.02.21         *
 */

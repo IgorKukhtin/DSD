@@ -75,6 +75,15 @@ object PLZForm: TPLZForm
         Options.Editing = False
         Width = 106
       end
+      object ShortName_Country: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076' ('#1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077')'
+        DataBinding.FieldName = 'ShortName_Country'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 172
+      end
       object AreaCode: TcxGridDBColumn
         Caption = #1055#1088#1077#1092#1080#1082#1089' '
         DataBinding.FieldName = 'AreaCode'
@@ -137,7 +146,7 @@ object PLZForm: TPLZForm
     Width = 702
     Height = 41
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 1
     object btnInsert: TcxButton
       Left = 341
       Top = 8

@@ -102,7 +102,7 @@ BEGIN
                , lfObject_Status.Code       AS StatusCode
                , lfObject_Status.Name       AS StatusName
                , Object_InvoiceKind.Id        AS InvoiceKindId
-               , Object_InvoiceKind.ValueData AS InvoiceKindName
+               , Object_InvoiceKind.ValueData AS InvoiceKindName 
                , FALSE                      AS isAuto
 
                , 0::TFloat                  AS VATPercent
@@ -311,6 +311,13 @@ BEGIN
                                            AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
                LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = MovementLinkObject_InvoiceKind.ObjectId
 
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
+                                            ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                           AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+               LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                    ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
+                                   AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+               LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id =COALESCE (MovementLinkObject_TaxKind.ObjectId, ObjectLink_TaxKind.ChildObjectId)
 
                -- Документы Income + OrderClient, в которых указан этот Счет
                LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice
@@ -326,10 +333,6 @@ BEGIN
                                            AND MovementLinkObject_Product.DescId     = zc_MovementLinkObject_Product()
                LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
 
-               LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                    ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
-                                   AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
-               LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
                -- оплаты из документа BankAccount
                LEFT JOIN tmpMLM_BankAccount ON tmpMLM_BankAccount.MovementId_Invoice = Movement.Id
@@ -345,6 +348,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.24         *  zc_MovementLinkObject_TaxKind
  06.12.23         *
  03.02.21         *
 */

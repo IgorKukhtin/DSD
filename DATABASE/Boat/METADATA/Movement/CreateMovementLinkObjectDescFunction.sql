@@ -43,10 +43,16 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_InvoiceKind() RETURNS Integer A
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_InvoiceKind', 'Тип Счета' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InvoiceKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_TaxKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TaxKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_TaxKind', 'Тип НДС' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TaxKind');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.24         * zc_MovementLinkObject_TaxKind
  06.12.23         * zc_MovementLinkObject_InvoiceKind
  19.02.22         * zc_MovementLinkObject_Partner
  02.02.21         * zc_MovementLinkObject_PaidKind
