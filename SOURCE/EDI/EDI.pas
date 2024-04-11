@@ -3305,6 +3305,7 @@ var
   isMetro : Boolean;
   i: integer;
   s : String;
+  s1, s2 : String;
 begin
   with spHeader, ORDER do
   begin
@@ -3330,9 +3331,20 @@ begin
       then begin System.Insert('1/2', s, Pos(char(189), s) + 1);System.Delete(s, Pos(char(189), s), 1);end;
       ParamByName('inGoodsName').Value := s;
       //
-      if isMetro = TRUE
-      then ParamByName('inGLNCode').Value := BUYERPARTNUMBER //PRODUCTIDBUYER
-      else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+
+      try if isMetro = TRUE
+          then ParamByName('inGLNCode').Value := BUYERPARTNUMBER //PRODUCTIDBUYER
+          else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+      except
+            {try s1 := BUYERPARTNUMBER; //PRODUCTIDBUYER
+                ShowMessage (s1);
+                s2 := PRODUCTIDBUYER;
+                ShowMessage (s2);
+            except
+                ShowMessage ('not');
+            end;}
+
+      end;
       try ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY); except ParamByName('inAmountOrder').Value := 0; end;
       try ParamByName('inPriceOrder').Value := gfStrToFloat(ORDERPRICE); except ParamByName('inPriceOrder').Value := 0; end;
       Execute;
@@ -4018,34 +4030,70 @@ var
   fIsDelete : Boolean; // add 10.08.2018
   s, err_msg : String;
   ii: Integer;
+  ii_begin: Integer;
 begin
+  ii_begin:=0;
   try
+    AddToLog('');
+    AddToLog('');
+    AddToLog('1.1. start OrderLoad');
     FTPSetConnection;
+
+    AddToLog('1.2. start FIdFTP.Connect');
     // загружаем файлы с FTP
     FIdFTP.Connect;
+
+    if FIdFTP.Connected
+    then AddToLog('1.3. end FIdFTP.Connect = true')
+    else AddToLog('1.3. end FIdFTP.Connect = false');
+
     if FIdFTP.Connected then
     begin
+
       FIdFTP.ChangeDir(Directory);
+      AddToLog('1.4. FIdFTP.ChangeDir');
+
       List := TStringList.Create;
+      AddToLog('1.5. TStringList.Create');
+
       Stream := TStringStream.Create;
+      AddToLog('1.6. TStringStream.Create');
+
       try
         err_msg:= '';
         ii:=0;
         //
+        AddToLog('1.7. start FIdFTP.List');
         FIdFTP.List(List, '', false);
+        AddToLog('1.8. end FIdFTP.List count = '+IntToStr(List.Count));
+
         if List.Count = 0 then
           exit;
         with TGaugeFactory.GetGauge('Загрузка данных', 0, List.Count) do
           try
+            AddToLog('2.1. Start');
             Start;
+
+            AddToLog('2.2. finish Start');
+            AddToLog('2.3. List.Count = ' + IntToStr(List.Count));
+
             for i := 0 to List.Count - 1 do
             begin
+
               s:= List[i];
+              //AddToLog('2.4. i = (' + IntToStr(i)+')');
+              //AddToLog('2.5. List[i] = ' + s);
+
+
               //if (copy(s, 1, 5) = 'order') then showMessage(s);
               // если первые буквы файла order а последние .xml
               if ((copy(List[i], 1, 5) = 'order') and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
                or((AnsiUpperCase(copy(List[i], 1, 11)) = AnsiUpperCase('inbox\order')) and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
-              then
+              then begin
+
+                AddToLog('2.4. i = (' + IntToStr(i)+')');
+                AddToLog('2.5. List[i] = ' + s);
+
                 if fIsExistsOrder(List[i]) = true then
                    if err_msg = '' then err_msg:= '--- ignore file <'+ List[i]+')'
                    else
@@ -4054,22 +4102,51 @@ begin
                   DocData := gfStrFormatToDate(copy(List[i], 7, 8), 'yyyymmdd');
                   if (StartDate <= DocData) and (DocData <= EndDate) then
                   begin
+
+                    ii_begin:= ii_begin + 1;
+                    AddToLog('3.1. тянем файл к нам ii_begin = ' + IntToStr(ii_begin));
+
                     // тянем файл к нам
                     Stream.Clear;
+
+                    if FIdFTP.Connected
+                    then AddToLog('3.2. check FIdFTP.Connected = true')
+                    else AddToLog('3.2. check FIdFTP.Connected = false')
+                    ;
+
                     if not FIdFTP.Connected then
+                    begin
                       FIdFTP.Connect;
+                      //
+                      if FIdFTP.Connected
+                      then AddToLog('3.3. try FIdFTP.Connected = true')
+                      else AddToLog('3.3. try FIdFTP.Connected = false')
+                      ;
+                    end;
+
                     FIdFTP.ChangeDir(Directory);
+                    AddToLog('3.3. FIdFTP.ChangeDir = ' + Directory);
+
                     FIdFTP.Get(List[i], Stream);
+                    AddToLog('3.4. FIdFTP.Get');
+
                     ORDER := OrderXML.LoadORDER(Utf8ToAnsi(Stream.DataString));
+                    AddToLog('3.5. OrderXML.LoadORDER');
+
                     // загружаем в базенку
 //  gc_isDebugMode:= TRUE;
 //  gc_isShowTimeMode:= TRUE;
                     InsertUpdateOrder(ORDER, spHeader, spList, List[i]);
+
+                    AddToLog('3.6. InsertUpdateOrder = ok');
+
                     //
                     //Пытаемся найти параметр
                     if Assigned(spHeader.Params.ParamByName('gIsDelete'))
                     then fIsDelete:= spHeader.ParamByName('gIsDelete').Value
                     else fIsDelete:= false;
+
+                    AddToLog('3.7. теперь перенесли файл в директроию Archive');
                     // теперь перенесли файл в директроию Archive
                     if (DocData < Date) or (fIsDelete = true)
                     then
@@ -4099,8 +4176,12 @@ begin
                        //  FIdFTP.ChangeDir(Directory);
                        //  FIdFTP.Delete(List[i]);
                        end;
+                    //
+                    AddToLog('3.8. finish - перенесли файл в директроию Archive');
+
                   end;
                 end;
+              end;
               //
               IncProgress;
             end;
@@ -4108,20 +4189,34 @@ begin
             Finish;
           end;
       finally
+
+        AddToLog('4.1. FIdFTP.Disconnect');
+
         FIdFTP.Disconnect;
         List.Free;
         Stream.Free;
         //
         if (err_msg <> '') then raise Exception.Create (err_msg);
+
+        AddToLog('4.2. check err_msg = <'+err_msg+'>');
+        AddToLog('4.3. загружено = <'+IntToStr(ii_begin)+'>');
+
       end;
     end;
   except
     on E: Exception do begin
+
+        AddToLog('5. !!!ERROR!!! = <'+err_msg+'>');
+
         if (err_msg <> '')
         then raise Exception.Create (err_msg)
         else raise Exception.Create(E.Message);
     end;
   end;
+
+   AddToLog('6. !ok OrderLoad = ok!');
+   AddToLog('');
+   AddToLog('');
 end;
 
 procedure TEDI.ORDRSPSave(HeaderDataSet, ItemsDataSet: TDataSet);

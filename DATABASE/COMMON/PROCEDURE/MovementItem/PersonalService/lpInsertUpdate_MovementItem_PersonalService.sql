@@ -321,9 +321,17 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummService(), ioId, inSummService);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardRecalc(), ioId, inSummCardRecalc);
+
      -- сохранили свойство <Карта БН (ввод) - 2ф.>
    --PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, inSummCardSecondRecalc);
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondRecalc(), ioId, ROUND (inSummCardSecondRecalc, 1));
+     IF COALESCE (inSummCardSecondRecalc, 0) = 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecond_num(), ioId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecondTwo_num(), ioId, 0);
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ_BankSecondDiff_num(), ioId, 0);
+     END IF;
+
      -- сохранили свойство <Карта БН (округление) - 2ф>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCardSecondDiff(), ioId, inSummCardSecondRecalc - ROUND (inSummCardSecondRecalc, 1));
      -- сохранили свойство <>
