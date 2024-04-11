@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TaxNumber TVarChar
              , Comment TVarChar
              , BankId Integer, BankName TVarChar
-             , PLZId Integer, PLZName TVarChar, PLZName_full TVarChar            
+             , PLZId Integer, PLZName TVarChar, PLZName_full TVarChar
+             , CountryName TVarChar
+             , City TVarChar            
              , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_Info TVarChar, TaxKind_Value TFloat
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
@@ -60,7 +62,9 @@ BEGIN
            , Object_Bank.ValueData           AS BankName
            , Object_PLZ.Id                   AS PLZId
            , Object_PLZ.ValueData            AS PLZName
-           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName_full
+           , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS PLZName_full 
+           , Object_Country.ValueData        AS CountryName
+           , ObjectString_City.ValueData     AS City
 
            , Object_TaxKind.Id                   AS TaxKindId
            , Object_TaxKind.ValueData            AS TaxKindName
