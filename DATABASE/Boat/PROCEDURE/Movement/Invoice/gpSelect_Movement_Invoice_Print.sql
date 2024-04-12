@@ -181,7 +181,10 @@ BEGIN
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '|| tmpInvoice.InsertName ::TVarChar)  ::TVarChar AS Text3
 
-            , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber
+            , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber   
+            --, CASE WHEN MovementLinkObject_TaxKind.ObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber  
+            , Object_TaxKind.ValueData                AS TaxKindName
+            , ObjectString_TaxKind_Comment.ValueData  AS TaxKindName_Comment
 
             , '' ::TVarChar AS Angebot
             , '' ::TVarChar AS Seite
@@ -266,7 +269,14 @@ BEGIN
           LEFT JOIN MovementString AS MovementString_Comment
                                    ON MovementString_Comment.MovementId = tmpInvoice.Id
                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
+                                       ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                      AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
 
+          LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
+                                 ON ObjectString_TaxKind_Comment.ObjectId = MovementLinkObject_TaxKind.ObjectId
+                                AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
           ;
 
      RETURN NEXT Cursor1;
