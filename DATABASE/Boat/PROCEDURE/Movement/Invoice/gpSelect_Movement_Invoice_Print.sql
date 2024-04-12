@@ -270,7 +270,7 @@ BEGIN
                                    ON MovementString_Comment.MovementId = tmpInvoice.Id
                                   AND MovementString_Comment.DescId = zc_MovementString_Comment()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
-                                       ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                       ON MovementLinkObject_TaxKind.MovementId = tmpInvoice.Id
                                       AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
 
