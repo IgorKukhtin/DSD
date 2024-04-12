@@ -36,7 +36,7 @@ type
     dxBarManagerBar1: TdxBar;
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
@@ -45,9 +45,9 @@ type
     Code: TcxGridDBColumn;
     Name: TcxGridDBColumn;
     isErased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     actProtocolOpenForm: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
@@ -77,7 +77,6 @@ type
     Panel_btn: TPanel;
     btnFormClose: TcxButton;
     btnChoiceGuides: TcxButton;
-    btnShowErased: TcxButton;
     TaxKindName: TcxGridDBColumn;
     Panel2: TPanel;
     lbSearchName: TcxLabel;
@@ -86,7 +85,11 @@ type
     InfoMoneyName_all: TcxGridDBColumn;
     bbInsert_client: TdxBarButton;
     bb: TdxBarButton;
-    bbb: TdxBarButton;
+    mactInsert_Partner: TMultiAction;
+    mactInsert_client: TMultiAction;
+    btnInsert_Partner: TcxButton;
+    btnInsert_client: TcxButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

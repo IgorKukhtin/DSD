@@ -55,6 +55,10 @@ type
     bbLieferanten: TdxBarSubItem;
     bbKunden: TdxBarSubItem;
     bbUpdate_partner: TdxBarButton;
+    mactInsert_client: TMultiAction;
+    mactInsert_Partner: TMultiAction;
+    btnInsert_Partner: TcxButton;
+    btnInsert_client: TcxButton;
   private
     { Private declarations }
   public

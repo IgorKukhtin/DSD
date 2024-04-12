@@ -3,7 +3,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <Lieferanten / Kunden>'
   ClientHeight = 397
-  ClientWidth = 1065
+  ClientWidth = 855
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 1065
+    Width = 855
     Height = 297
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 1065
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -179,44 +180,53 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
   object Panel_btn: TPanel
     Left = 0
     Top = 356
-    Width = 1065
+    Width = 855
     Height = 41
     Align = alBottom
     TabOrder = 1
+    ExplicitTop = 362
+    ExplicitWidth = 1065
     object btnFormClose: TcxButton
-      Left = 423
-      Top = 7
+      Left = 250
+      Top = 8
       Width = 90
       Height = 25
       Action = actFormClose
       TabOrder = 0
     end
     object btnChoiceGuides: TcxButton
-      Left = 267
-      Top = 7
+      Left = 122
+      Top = 8
       Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 1
     end
-    object btnShowErased: TcxButton
-      Left = 616
-      Top = 7
-      Width = 153
+    object btnInsert_Partner: TcxButton
+      Left = 438
+      Top = 8
+      Width = 120
       Height = 25
-      Action = actShowErased
-      ParentShowHint = False
-      ShowHint = True
+      Action = mactInsert_Partner
       TabOrder = 2
+    end
+    object btnInsert_client: TcxButton
+      Left = 597
+      Top = 8
+      Width = 119
+      Height = 25
+      Action = mactInsert_client
+      TabOrder = 3
     end
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1065
+    Width = 855
     Height = 33
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 1065
     object lbSearchName: TcxLabel
       Left = 11
       Top = 6
@@ -307,22 +317,6 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarSubItem2'
         end
         item
@@ -339,11 +333,11 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -431,6 +425,26 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
         item
           Visible = True
           ItemName = 'bbUpdate_partner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbtInsert_client: TdxBarButton
@@ -465,11 +479,12 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Action = actInsert_Partner
       Category = 0
     end
-    object bbb: TdxBarButton
-      Caption = 'New Item'
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Separator'
       Visible = ivAlways
+      ShowCaption = False
     end
   end
   object ActionList: TActionList
@@ -655,10 +670,10 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -669,10 +684,10 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -690,6 +705,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 16434
       ImageIndex = 0
       FormName = 'TClientEditForm'
       FormNameParam.Value = 'TClientEditForm'
@@ -736,7 +752,7 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
+      ShortCut = 16433
       ImageIndex = 0
       FormName = 'TPartnerEditForm'
       FormNameParam.Value = 'TPartnerEditForm'
@@ -815,8 +831,28 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
       Caption = #1054#1090#1084#1077#1085#1072
       ImageIndex = 52
     end
+    object mactInsert_Partner: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_Partner
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ImageIndex = 47
+    end
+    object mactInsert_client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_client
+        end>
+      Caption = #1050#1083#1080#1077#1085#1090
+      ImageIndex = 48
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ClientPartner'
     DataSet = MasterCDS
     DataSets = <
@@ -836,11 +872,11 @@ object Union_ClientPartnerForm: TUnion_ClientPartnerForm
     Left = 144
     Top = 152
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 208
     Top = 224
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <

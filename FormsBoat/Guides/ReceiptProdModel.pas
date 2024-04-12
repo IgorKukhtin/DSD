@@ -117,7 +117,7 @@ type
     spGetImportSettingId: TdsdStoredProc;
     actGetImportSetting: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
-    actStartLoad: TMultiAction;
+    mactStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     actChoiceFormGoods: TOpenChoiceForm;
     bbShowAllColorItems: TdxBarButton;
