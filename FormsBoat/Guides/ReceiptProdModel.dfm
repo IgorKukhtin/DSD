@@ -1785,7 +1785,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShortCut = 49202
     end
     object bbStartLoad: TdxBarButton
-      Action = actStartLoad
+      Action = mactStartLoad
       Category = 0
     end
     object bbShowAllColorItems: TdxBarButton
@@ -2545,7 +2545,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           MultiSelectSeparator = ','
         end>
     end
-    object actStartLoad: TMultiAction
+    object mactStartLoad: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       Enabled = False

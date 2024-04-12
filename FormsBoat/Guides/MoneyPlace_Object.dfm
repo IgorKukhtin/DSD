@@ -138,20 +138,36 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
     Align = alBottom
     TabOrder = 5
     object btnFormClose: TcxButton
-      Left = 381
-      Top = 7
+      Left = 218
+      Top = 8
       Width = 90
       Height = 25
       Action = actFormClose
       TabOrder = 0
     end
     object btnChoiceGuides: TcxButton
-      Left = 203
-      Top = 7
+      Left = 85
+      Top = 8
       Width = 90
       Height = 25
       Action = actChoiceGuides
       TabOrder = 1
+    end
+    object btnInsert_Partner: TcxButton
+      Left = 375
+      Top = 8
+      Width = 120
+      Height = 25
+      Action = mactInsert_Partner
+      TabOrder = 2
+    end
+    object btnInsert_client: TcxButton
+      Left = 534
+      Top = 8
+      Width = 120
+      Height = 25
+      Action = mactInsert_client
+      TabOrder = 3
     end
   end
   object Panel2: TPanel [2]
@@ -296,6 +312,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 16434
       ImageIndex = 0
       FormName = 'TClientEditForm'
       FormNameParam.Value = 'TClientEditForm'
@@ -335,27 +352,6 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actInsert_Partner: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = '0'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
-    end
     object actUpdate_partner: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -379,6 +375,47 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       ActionType = acUpdate
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
+    end
+    object actInsert_Partner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 16433
+      ImageIndex = 0
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object mactInsert_Partner: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_Partner
+        end>
+      Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+      ImageIndex = 47
+    end
+    object mactInsert_client: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_client
+        end>
+      Caption = #1050#1083#1080#1077#1085#1090
+      ImageIndex = 48
     end
   end
   inherited MasterDS: TDataSource

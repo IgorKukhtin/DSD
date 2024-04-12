@@ -152,8 +152,19 @@ BEGIN
 
    -- inPLZId заменили на город и страну, можно вводить вручную, можно выбирать, если ввели и такого нет в справочнике создаем    ,
    -- страна
-   vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
-   --если не находим создаем
+   vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName) AND Object.isErased = FALSE);
+   --
+   IF COALESCE (vbCountryId, 0) = 0
+   THEN
+       IF (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName))
+       THEN 
+           RAISE EXCEPTION 'ќшибка.¬ справочнике найдено несколько значений <%>.', TRIM(inCountryName);
+       END IF;
+       --
+       vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
+   END IF;
+
+   -- если не находим создаем
    IF COALESCE (vbCountryId,0) = 0 AND TRIM (inCountryName) <> ''
    THEN
         vbCountryId := (SELECT tmp.ioId
