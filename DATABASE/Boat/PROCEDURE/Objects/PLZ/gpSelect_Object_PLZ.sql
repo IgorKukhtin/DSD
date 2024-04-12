@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PLZ(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar, NameSearch TVarChar
-             , CountryId Integer, CountryName TVarChar
+             , CountryId Integer, CountryName TVarChar, ShortName_Country TVarChar
              , City TVarChar, AreaCode TVarChar
              , Comment TVarChar
              , InsertName TVarChar
@@ -31,6 +31,7 @@ BEGIN
            , TRIM (Object_PLZ.ValueData ||' '||ObjectString_City.ValueData) ::TVarChar AS NameSearch
            , Object_Country.Id               AS CountryId
            , Object_Country.ValueData        AS CountryName
+           , COALESCE (ObjectString_ShortName.ValueData, NULL) :: TVarChar AS ShortName_Country
            , ObjectString_City.ValueData     AS City
            , ObjectString_AreaCode.ValueData AS AreaCode
            , ObjectString_Comment.ValueData  AS Comment
@@ -54,6 +55,10 @@ BEGIN
                                  ON ObjectLink_Country.ObjectId = Object_PLZ.Id
                                 AND ObjectLink_Country.DescId = zc_ObjectLink_PLZ_Country()
             LEFT JOIN Object AS Object_Country ON Object_Country.Id = ObjectLink_Country.ChildObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                   ON ObjectString_ShortName.ObjectId = Object_Country.Id
+                                  AND ObjectString_ShortName.DescId = zc_ObjectString_Country_ShortName()
 
             LEFT JOIN ObjectLink AS ObjectLink_Insert
                                  ON ObjectLink_Insert.ObjectId = Object_PLZ.Id

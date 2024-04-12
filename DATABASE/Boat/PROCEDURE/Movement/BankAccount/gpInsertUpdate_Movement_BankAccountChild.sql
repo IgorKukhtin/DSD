@@ -91,6 +91,14 @@ BEGIN
                                                                 , inInfoMoneyId      := inInfoMoneyId  ::Integer
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
                                                                 , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
+                                                                , inTaxKindId        := (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId
+                                                                                         FROM MovementLinkObject AS MovementLinkObject_From   
+                                                                                           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                                                                                                ON ObjectLink_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
+                                                                                                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                                         WHERE MovementLinkObject_From.MovementId = inMovementId_Parent
+                                                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                                         ) ::Integer
                                                                 , inSession          := inSession
                                                                  )
          ;

@@ -18,7 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
     IN inUnitId           Integer  ,  --
     IN inInfoMoneyId      Integer  ,  --
     IN inPaidKindId       Integer  ,  --
-    IN inInvoiceKindId    Integer  ,
+    IN inInvoiceKindId    Integer  ,  
+    IN inTaxKindId        Integer  ,  --
     IN inUserId           Integer      -- сессия пользователя
 )
 RETURNS Integer
@@ -194,6 +195,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
     -- сохранили связь с <>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InvoiceKind(), ioId, inInvoiceKindId);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TaxKind(), ioId, inTaxKindId);
 
 
     -- сохранили <>
@@ -250,6 +253,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.24         *
  07.12.23         *
  02.02.21         *
 */

@@ -587,6 +587,7 @@
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
       Hint = #1056#1072#1089#1095#1077#1090' '#1087#1088#1077#1076#1086#1087#1083#1072#1090#1099
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actGetPlanDate: TdsdDataSetRefresh
@@ -1176,6 +1177,14 @@
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 207
     Top = 363
@@ -1632,8 +1641,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 8
+    Left = 424
+    Top = 80
   end
   object GuidesParent: TdsdGuides
     KeyField = 'Id'
@@ -1651,7 +1660,6 @@
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1674,8 +1682,16 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDS'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 309
+    Left = 301
     Top = 130
   end
   object GuidesInvoiceKind: TdsdGuides
@@ -1975,6 +1991,7 @@
         Value = ''
         Component = GuidesTaxKind
         ComponentItem = 'Key'
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1983,6 +2000,7 @@
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -2408,7 +2426,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 177
+    Left = 137
     Top = 123
   end
   object GuidesTaxKind_add: TdsdGuides
