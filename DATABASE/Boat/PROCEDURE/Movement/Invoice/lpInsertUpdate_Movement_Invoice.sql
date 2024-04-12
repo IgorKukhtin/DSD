@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_Movement_Invoice()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Invoice (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Invoice(
  INOUT ioId               Integer  ,  --
@@ -43,11 +43,65 @@ BEGIN
      END IF;
 
      -- проверка - свойство должно быть установлено
+     IF COALESCE (inTaxKindId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Вид НДС>.';
+     END IF;
+
+     -- проверка - свойство должно быть установлено
      IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
         AND inAmount >= 0
      THEN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
      END IF;
+     
+     -- проверка - один счет на лодку
+     IF inParentId > 0 AND inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+        AND EXISTS (SELECT 1
+                    FROM Movement 
+                         INNER JOIN MovementLinkObject AS MLO_InvoiceKind
+                                                       ON MLO_InvoiceKind.MovementId = Movement.Id
+                                                      AND MLO_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                      AND MLO_InvoiceKind.ObjectId   = inInvoiceKindId
+                    WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId <> zc_Enum_Status_Erased()
+                      AND Movement.Id <> COALESCE (ioId, 0)
+                   )
+        AND NOT EXISTS (SELECT 1
+                        FROM Movement 
+                             INNER JOIN MovementLinkObject AS MLO_InvoiceKind
+                                                           ON MLO_InvoiceKind.MovementId = Movement.Id
+                                                          AND MLO_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                          AND MLO_InvoiceKind.ObjectId   = zc_Enum_InvoiceKind_Return()
+                        WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId = zc_Enum_Status_Complete()
+                       )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для Заказ клиента № <%> %уже создан счет № <%> от <%>.%Дублирование запрещено.'
+                        , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inParentId)
+                        , CHR (13)
+                        , (SELECT CASE WHEN MS_ReceiptNumber.ValueData <> '' THEN MS_ReceiptNumber.ValueData ELSE '*' || Movement.InvNumber END
+                           FROM Movement
+                                INNER JOIN MovementLinkObject AS MLO_InvoiceKind
+                                                              ON MLO_InvoiceKind.MovementId = Movement.Id
+                                                             AND MLO_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                             AND MLO_InvoiceKind.ObjectId   = inInvoiceKindId
+                                LEFT JOIN MovementString AS MS_ReceiptNumber ON MS_ReceiptNumber.MovementId = Movement.Id AND MS_ReceiptNumber.DescId = zc_MovementString_ReceiptNumber()
+                           WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId <> zc_Enum_Status_Erased()
+                             AND Movement.Id <> COALESCE (ioId, 0)
+                           LIMIT 1
+                          )
+                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                           FROM Movement
+                                INNER JOIN MovementLinkObject AS MLO_InvoiceKind
+                                                              ON MLO_InvoiceKind.MovementId = Movement.Id
+                                                             AND MLO_InvoiceKind.DescId     = zc_MovementLinkObject_InvoiceKind()
+                                                             AND MLO_InvoiceKind.ObjectId   = inInvoiceKindId
+                           WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_Invoice() AND Movement.StatusId <> zc_Enum_Status_Erased()
+                             AND Movement.Id <> COALESCE (ioId, 0)
+                           LIMIT 1
+                          )
+                        , CHR (13)
+                         ;
+     END IF;
+
 
      -- Проверка
      IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
