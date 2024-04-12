@@ -20,6 +20,9 @@ $BODY$
    DECLARE vbBankId_num_1  Integer;
    DECLARE vbBankId_num_2  Integer;
    DECLARE vbBankId_num_3  Integer;
+   DECLARE vbSummMin_1     TFloat;
+   DECLARE vbSummMin_2     TFloat;
+   DECLARE vbSummMin_3     TFloat;
    DECLARE vbSummMax_1     TFloat;
    DECLARE vbSummMax_2     TFloat;
    DECLARE vbSummMax_3     TFloat;
@@ -93,6 +96,45 @@ END IF;
 
              END AS BankId_num_3
 
+
+             -- ограничение мин - 1
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1
+                       THEN 4000
+
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 1
+                       THEN 0
+
+                  WHEN MovementFloat_BankSecondDiff_num.ValueData = 1
+                       THEN 0
+
+             END AS SummMin_1
+
+
+             -- ограничение мин - 2
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2
+                       THEN 4000
+
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 2
+                       THEN 0
+
+                  WHEN MovementFloat_BankSecondDiff_num.ValueData = 2
+                       THEN 0
+
+             END AS SummMin_2
+
+             -- ограничение мин - 3
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3
+                       THEN 4000
+
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 3
+                       THEN 0
+
+                  WHEN MovementFloat_BankSecondDiff_num.ValueData = 3
+                       THEN 0
+
+             END AS SummMin_3
+
+
              -- ограничение - 1
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
@@ -132,6 +174,7 @@ END IF;
 
 
              INTO vbBankId_num_1, vbBankId_num_2, vbBankId_num_3
+                , vbSummMin_1, vbSummMin_2, vbSummMin_3
                 , vbSummMax_1, vbSummMax_2, vbSummMax_3
 
        FROM MovementLinkMovement AS MLM_BankSecondNum
@@ -330,6 +373,7 @@ END IF;
                              , SummCardSecondRecalc TFloat
                              , BankId_1 Integer, BankId_2 Integer, BankId_3 Integer
                              , Num_1 Integer, Num_2 Integer, Num_3 Integer
+                             , Sum_min_1 TFloat, Sum_min_2 TFloat, Sum_min_3 TFloat
                              , Sum_max_1 TFloat, Sum_max_2 TFloat, Sum_max_3 TFloat
                              , SummCard_1 TFloat, SummCard_2 TFloat, SummCard_3 TFloat
                               ) ON COMMIT DROP;
@@ -337,6 +381,7 @@ END IF;
      INSERT INTO _tmpMI (MovementItemId, MemberId, PersonalId, UnitId, PositionId, InfoMoneyId, PersonalServiceListId, FineSubjectId, UnitId_FineSubject, SummCardSecondRecalc
                        , BankId_1, BankId_2, BankId_3
                        , Num_1, Num_2, Num_3
+                       , Sum_min_1, Sum_min_2, Sum_min_3
                        , Sum_max_1, Sum_max_2, Sum_max_3
                        , SummCard_1, SummCard_2, SummCard_3
                         )
@@ -701,7 +746,7 @@ END IF;
                                  , tmpMIContainer_all.FineSubjectId
                                  , tmpMIContainer_all.UnitId_FineSubject
                          )
-            -- Все ведомости БН - Ф1 - ?ОТП?
+            -- Все ведомости БН - Ф1 - ?ОТП? - !!!отключили!!!
           , tmpSummCard_otp AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                      , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) AS SummCard
                                 FROM Movement
@@ -731,7 +776,9 @@ END IF;
                                 WHERE Movement.Operdate BETWEEN vbStartDate AND vbEndDate
                                   AND Movement.DescId   = zc_Movement_PersonalService()
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
-                                  -- AND 1=0
+                                  -- !!!отключили!!!
+                                  AND 1=0
+
                                 GROUP BY ObjectLink_Personal_Member.ChildObjectId
                                )
        -- результат
@@ -760,6 +807,8 @@ END IF;
                             -- кто из 1,2,3 на третьем месте
                           , tmpData.Num_3
 
+                            -- лимит мин - для 1,2,3
+                          , tmpData.Sum_min_1, tmpData.Sum_min_2, tmpData.Sum_min_3
                             -- лимит - для 1
                           , tmpData.Sum_max_1
                             -- лимит - для 2
@@ -772,10 +821,11 @@ END IF;
                             -- сумма для второго места
                           , tmpData.SummCard_2
                             -- сумма для третьего места
-                          , CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0
-                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
-                                 WHEN tmpData.BankId_3 > 0
-                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                          , CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
+
+                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                  ELSE 0
                             END AS SummCard_3
 
@@ -784,9 +834,10 @@ END IF;
                             -- накопительно - 2
                           , SUM (tmpData.SummCard_2) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_2_sum
                             -- накопительно - 3
-                          , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0
+                          , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
-                                      WHEN tmpData.BankId_3 > 0
+
+                                      WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
                                       ELSE 0
                                  END) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_3_sum
@@ -796,9 +847,10 @@ END IF;
                     (SELECT tmpData.*
 
                             -- сумма для второго места
-                          , CASE WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0
+                          , CASE WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
                                  THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
-                                 WHEN tmpData.BankId_2 > 0
+
+                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
                                  THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
                                  ELSE 0
                             END AS SummCard_2
@@ -808,9 +860,10 @@ END IF;
                     (SELECT tmpData.*
 
                             -- сумма для первого места
-                          , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0
+                          , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData.SummCardSecondRecalc, 1)
                                  THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1 THEN tmpData.Sum_max_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
-                                 WHEN tmpData.BankId_1 > 0
+
+                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData.SummCardSecondRecalc, 1)
                                  THEN ROUND (tmpData.SummCardSecondRecalc, 1)
                                  ELSE 0
                             END AS SummCard_1
@@ -857,6 +910,11 @@ END IF;
                           , vbBankId_num_2 AS Num_2
                             -- кто из 1,2,3 на третьем месте
                           , vbBankId_num_3 AS Num_3
+
+                            -- ограничение мин - для 1,2,3
+                          , vbSummMin_1 AS Sum_min_1
+                          , vbSummMin_2 AS Sum_min_2
+                          , vbSummMin_3 AS Sum_min_3
 
                             -- ограничение - для 1
                           , vbSummMax_1 - CASE WHEN vbBankId_num_2 = 1 THEN COALESCE (tmpSummCard_otp.SummCard, 0)
@@ -950,6 +1008,7 @@ END IF;
                   --
                 , tmpMI_res.Num_1, tmpMI_res.Num_2, tmpMI_res.Num_3
                   --
+                , tmpMI_res.Sum_min_1, tmpMI_res.Sum_min_2, tmpMI_res.Sum_min_3
                 , tmpMI_res.Sum_max_1, tmpMI_res.Sum_max_2, tmpMI_res.Sum_max_3
                   --
                 , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
