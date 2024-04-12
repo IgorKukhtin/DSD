@@ -51,39 +51,12 @@ BEGIN
 
      -- Проверка
      IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                 FROM ObjectLink AS ObjectLink_TaxKind
-                                                      LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
-                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-                                                 WHERE ObjectLink_TaxKind.ObjectId = inObjectId
-                                                   AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
+                                                 FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                 WHERE ObjectFloat_TaxKind_Value.ObjectId = inTaxKindId
+                                                   AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                 ), 0)
-                                                -- and 1=0
      THEN
-         inVATPercent:= COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                   FROM ObjectLink AS ObjectLink_TaxKind
-                                        LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
-                                        LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                              ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                             AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-                                   WHERE ObjectLink_TaxKind.ObjectId = inObjectId
-                                     AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
-                                  ), 0);
-
-         /*RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у <Lieferanten / Kunden> = <%>.'
-                       , '%'
-                       , zfConvert_FloatToString (inVATPercent)
-                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                             FROM ObjectLink AS ObjectLink_TaxKind
-                                                                  LEFT JOIN Object ON Object.Id = ObjectLink_TaxKind.ObjectId
-                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
-                                                             WHERE ObjectLink_TaxKind.ObjectId = inObjectId
-                                                               AND ObjectLink_TaxKind.DescId   = CASE WHEN Object.DescId = zc_Object_Partner() THEN zc_ObjectLink_Partner_TaxKind() ELSE zc_ObjectLink_Client_TaxKind() END
-                                                            ), 0))
-                        ;*/
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе не соответствует значению <Вид НДС>.', '%' ;
      END IF;
 
 
