@@ -133,8 +133,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintReturnCDS: TClientDataSet;
     PrintOptionCDS: TClientDataSet;
-    Summà_ch4: TcxGridDBColumn;
-    Summà_WVAT_ch4: TcxGridDBColumn;
+    SummMVAT_ch4: TcxGridDBColumn;
+    SummPVAT_ch4: TcxGridDBColumn;
     Summà_VAT_ch4: TcxGridDBColumn;
     spInsertUpdateItem: TdsdStoredProc;
     actChoiceFormGoods_item: TOpenChoiceForm;

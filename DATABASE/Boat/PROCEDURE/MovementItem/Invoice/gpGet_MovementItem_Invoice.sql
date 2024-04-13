@@ -12,7 +12,11 @@ RETURNS TABLE (Id Integer
              , PartnerId Integer, PartnerName TVarChar
              , Amount         TFloat
              , OperPrice      TFloat
+             , SummMVAT       TFloat
+             , SummPVAT       TFloat     
+             , Summа_VAT      TFloat
              , Comment        TVarChar
+             , t1 integer, t2 integer, t3 integer,t4 Integer
               )
 AS
 $BODY$
@@ -33,8 +37,16 @@ BEGIN
            , CAST (0 AS Integer)    AS PartnerId
            , CAST ('' AS TVarChar)  AS PartnerName
            , CAST (1 AS TFloat)     AS Amount
-           , CAST (0 AS TFloat)     AS OperPrice
-           , CAST ('' AS TVarChar)  AS Comment;
+           , CAST (0 AS TFloat)     AS OperPrice  
+           , CAST (0 AS TFloat)     AS SummMVAT
+           , CAST (0 AS TFloat)     AS SummPVAT
+           , CAST (0 AS TFloat)     AS Summа_VAT
+           , CAST ('' AS TVarChar)  AS Comment
+           , CAST (0 AS Integer)    AS t1 
+           , CAST (0 AS Integer)    AS t2
+           , CAST (0 AS Integer)    AS t3
+           , CAST (0 AS Integer)    AS t3
+           ;
    ELSE
          RETURN QUERY
            -- Результат
@@ -46,13 +58,32 @@ BEGIN
                , ObjectString_Article.ValueData AS Article 
                , Object_Partner.Id              AS PartnerId
                , Object_Partner.ValueData       AS PartnerName
-               , MovementItem.Amount                       ::TFloat   AS Amount
-               , COALESCE (MIFloat_OperPrice.ValueData, 0) ::TFloat   AS OperPrice
-               , COALESCE (MIString_Comment.ValueData, '') ::TVarChar AS Comment
+               , MovementItem.Amount                       ::TFloat AS Amount
+               , COALESCE (MIFloat_OperPrice.ValueData, 0) ::TFloat AS OperPrice 
+               , COALESCE (MIFloat_SummMVAT.ValueData,0)   ::TFloat AS SummMVAT   --Сумма без ндс
+               , COALESCE (MIFloat_SummPVAT.ValueData,0)   ::TFloat AS SummPVAT   -- Сумма с НДС
+               --Сумма НДС
+               , ( COALESCE (MIFloat_SummPVAT.ValueData, 0) -  COALESCE (MIFloat_SummMVAT.ValueData,0) ) ::TFloat AS Summа_VAT 
+
+               , COALESCE (MIString_Comment.ValueData, '') ::TVarChar AS Comment 
+
+               --  при открытии сохраняем текущие значения в расчетные
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_calc(), MovementItem.Id, COALESCE (MIFloat_OperPrice.ValueData, 0)) ::integer 
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMVAT_calc(), MovementItem.Id, COALESCE (MIFloat_SummMVAT.ValueData, 0))   ::integer
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT_calc(), MovementItem.Id, COALESCE (MIFloat_SummPVAT.ValueData, 0))   ::integer
+               , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount_calc(), MovementItem.Id, MovementItem.Amount)                          ::integer
+
            FROM MovementItem
                 LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                             ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                            AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+
+                LEFT JOIN MovementItemFloat AS MIFloat_SummMVAT
+                                            ON MIFloat_SummMVAT.MovementItemId = MovementItem.Id
+                                           AND MIFloat_SummMVAT.DescId= zc_MIFloat_SummMVAT()  --Сумма без ндс
+                LEFT JOIN MovementItemFloat AS MIFloat_SummPVAT
+                                            ON MIFloat_SummPVAT.MovementItemId = MovementItem.Id
+                                           AND MIFloat_SummPVAT.DescId = zc_MIFloat_SummPVAT() -- Сумма с НДС
 
                 LEFT JOIN MovementItemString AS MIString_Comment
                                              ON MIString_Comment.MovementItemId = MovementItem.Id

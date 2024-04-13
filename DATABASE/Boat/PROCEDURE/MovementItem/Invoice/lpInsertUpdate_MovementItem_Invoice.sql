@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Invoice()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Invoice (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Invoice (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Invoice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Invoice(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , -- 
+    IN inSummMVAT            TFloat    , --
+    IN inSummPVAT            TFloat    , --  
     IN inComment             TVarChar  ,
     IN inUserId              Integer     -- сессия пользователя
 )
@@ -19,6 +22,7 @@ BEGIN
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
      
+    --гет сохраненные параметры и измененные
 
      -- !!!замена - временно!!!
      inGoodsId:= CASE WHEN inGoodsId > 0 THEN inGoodsId ELSE (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Object()) END;
@@ -28,6 +32,10 @@ BEGIN
 
      -- сохранили свойство <OperPrice>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, inOperPrice);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMVAT(), ioId, inSummMVAT);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT(), ioId, inSummPVAT);
 
      -- <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -53,6 +61,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.04.24         *
  07.12.23         *
 */
 

@@ -53,6 +53,14 @@ type
     EnterMoveNext: TEnterMoveNext;
     btnGoodsChoiceForm: TcxButton;
     actGoodsChoiceForm: TOpenChoiceForm;
+    cxLabel2: TcxLabel;
+    cxLabel4: TcxLabel;
+    ceSummPVAT: TcxCurrencyEdit;
+    ceSummMVAT: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceSummà_VAT: TcxCurrencyEdit;
+    spUpdate_before: TdsdStoredProc;
+    actUpdate_summ_before: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
