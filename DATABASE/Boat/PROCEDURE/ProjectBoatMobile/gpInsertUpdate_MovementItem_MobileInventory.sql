@@ -54,10 +54,34 @@ BEGIN
                  AND MI.isErased   = FALSE
                  AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,''))
      THEN
-       RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в инвентаризации.', lfGet_Object_ValueData (inGoodsId), vbInvNumber;
+       RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в инвентаризации.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
      END IF;
 
      
+     -- Если заполнен S/N то можно только 1 ша и раз.
+     IF COALESCE (inPartNumber, '') <> ''
+     THEN
+
+       IF COALESCE (inAmount, 0) <> 1
+       THEN
+         RAISE EXCEPTION 'Ошибка. Количество комплектующего <%> с S/N <%> должно быть 1.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
+       END IF;
+
+       IF EXISTS(SELECT MI.Id 
+                 FROM MovementItem AS MI
+                      LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                   ON MIString_PartNumber.MovementItemId = MI.Id
+                                                  AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                 WHERE MI.MovementId = inMovementId
+                   AND MI.DescId     = zc_MI_Detail()
+                   AND MI.ObjectId   = inGoodsId
+                   AND MI.isErased   = FALSE
+                   AND MI.Id <> COALESCE (ioId, 0) 
+                   AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,''))
+       THEN
+         RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже добавлено в инвентаризацию.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
+       END IF;
+     END IF;
 
      --находим ячейку хранения, если нет такой создаем
      IF COALESCE (inPartionCellName, '') <> '' THEN

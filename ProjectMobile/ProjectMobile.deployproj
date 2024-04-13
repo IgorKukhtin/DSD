@@ -5,7 +5,7 @@
     </ProjectExtensions>
     <PropertyGroup>
         <DeviceId Condition="'$(Platform)'=='Android'">2bd070279805</DeviceId>
-        <DeviceId Condition="'$(Platform)'=='Android64'">2bd070279805</DeviceId>
+        <DeviceId Condition="'$(Platform)'=='Android64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSSimARM64'"/>
     </PropertyGroup>

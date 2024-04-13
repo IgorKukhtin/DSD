@@ -46,7 +46,7 @@ object DM: TDM
     Params = <>
     AfterScroll = cdsInventoryListAfterScroll
     OnCalcFields = cdsInventoryListCalcFields
-    Left = 312
+    Left = 272
     Top = 312
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
@@ -299,6 +299,18 @@ object DM: TDM
     object tbGoodsMeasureName: TWideStringField
       FieldName = 'MeasureName'
     end
+    object tbGoodsUnitId: TIntegerField
+      FieldName = 'UnitId'
+    end
+    object tbGoodsUnitID_receipt: TIntegerField
+      FieldName = 'UnitID_receipt'
+    end
+    object tbGoodsUnitId_child_receipt: TIntegerField
+      FieldName = 'UnitId_child_receipt'
+    end
+    object tbGoodsUnitId_parent_receipt: TIntegerField
+      FieldName = 'UnitId_parent_receipt'
+    end
     object tbGoodsisErased: TBooleanField
       FieldName = 'isErased'
     end
@@ -345,7 +357,7 @@ object DM: TDM
     Params = <>
     AfterEdit = cdsInventoryItemEditAfterEdit
     OnCalcFields = cdsInventoryItemEditCalcFields
-    Left = 504
+    Left = 472
     Top = 312
     object cdsInventoryItemEditLocalId: TIntegerField
       FieldName = 'LocalId'
@@ -412,8 +424,8 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'Remains'
-    Left = 428
-    Top = 166
+    Left = 636
+    Top = 172
     object tbRemainsGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -434,7 +446,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 116
-    Top = 484
+    Top = 516
     object qurGoodsListId: TIntegerField
       FieldName = 'Id'
     end
@@ -486,7 +498,7 @@ object DM: TDM
     SQL.Strings = (
       '')
     Left = 348
-    Top = 476
+    Top = 524
     object qurDictListId: TIntegerField
       FieldName = 'Id'
     end
@@ -503,8 +515,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 548
-    Top = 468
+    Left = 556
+    Top = 508
     object qurGoodsEANId: TIntegerField
       FieldName = 'Id'
     end
@@ -519,8 +531,8 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     OnCalcFields = cdsInventoryListTopCalcFields
-    Left = 736
-    Top = 320
+    Left = 680
+    Top = 312
     object cdsInventoryListTopId: TIntegerField
       FieldName = 'Id'
     end
@@ -625,6 +637,111 @@ object DM: TDM
       FieldKind = fkCalculated
       FieldName = 'OrdUserLabel'
       Calculated = True
+    end
+  end
+  object cdsSendItemEdit: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    AfterEdit = cdsSendItemEditAfterEdit
+    OnCalcFields = cdsSendItemEditCalcFields
+    Left = 472
+    Top = 416
+    object cdsSendItemEditLocalId: TIntegerField
+      FieldName = 'LocalId'
+    end
+    object cdsSendItemEditId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsSendItemEditGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+      OnChange = cdsInventoryItemEditGoodsIdChange
+    end
+    object cdsSendItemEditGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsSendItemEditGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsSendItemEditArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 100
+    end
+    object cdsSendItemEditPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      OnChange = cdsInventoryItemEditPartNumberChange
+      Size = 255
+    end
+    object cdsSendItemEditGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsSendItemEditPartnerName: TWideStringField
+      FieldName = 'PartnerName'
+      Size = 255
+    end
+    object cdsSendItemEditPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsSendItemEditPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object cdsSendItemEditAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsSendItemEditTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object cdsSendItemEditAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsSendItemEditTotalCountCalc: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountCalc'
+      Calculated = True
+    end
+    object cdsSendItemEditFromId: TIntegerField
+      FieldName = 'FromId'
+    end
+    object cdsSendItemEditFromCode: TIntegerField
+      FieldName = 'FromCode'
+    end
+    object cdsSendItemEditFromName: TWideStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsSendItemEditToId: TIntegerField
+      FieldName = 'ToId'
+    end
+    object cdsSendItemEditToCode: TIntegerField
+      FieldName = 'ToCode'
+    end
+    object cdsSendItemEditToName: TWideStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
+  end
+  object tbUnit: TFDTable
+    Connection = conMain
+    TableName = 'Unit'
+    Left = 444
+    Top = 166
+    object tbUnitId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tbUnitCode: TIntegerField
+      FieldName = 'Code'
+    end
+    object tbUnitName: TWideStringField
+      FieldName = 'Name'
+      Size = 255
+    end
+    object tbUnitisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object tbUnitisLoad: TBooleanField
+      FieldName = 'isLoad'
     end
   end
 end

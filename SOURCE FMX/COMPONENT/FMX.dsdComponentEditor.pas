@@ -47,11 +47,11 @@ type
 
 implementation
 
-uses FMX.dsdDB, TypInfo, Db {, FMX.dsdGuides};
+uses FMX.dsdDB, TypInfo, Db, ParentForm {, FMX.dsdGuides};
 
 procedure Register;
 begin
-//   RegisterCustomModule(TParentForm, TCustomModule);
+   RegisterCustomModule(TParentForm, TCustomModule);
 //   RegisterPropertyEditor(TypeInfo(boolean),    TExecuteDialog,       'isShowModal',   nil);
 //   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,      'Grid',          TExcelGridProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,            'Component',     TdsdParamComponentProperty);
