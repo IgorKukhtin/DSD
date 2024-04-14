@@ -53,14 +53,14 @@ BEGIN
        vbToId := 0;
        vbGoodsId := 0;
      ELSE
-       SELECT MovementItem.MovementId
-       INTO vbMovementId
+       SELECT MovementItem.MovementId, MovementItem.ObjectId
+       INTO vbMovementId, vbGoodsId
        FROM MovementItem
        WHERE MovementItem.ID = inDetailId;
 
        -- Данные для остатков
-       SELECT Movement.OperDate, Movement.ObjectId, MLO_From.ObjectId, MLO_To.ObjectId
-       INTO vbOperDate, vbGoodsId, vbFromId, vbToId
+       SELECT Movement.OperDate, MLO_From.ObjectId, MLO_To.ObjectId
+       INTO vbOperDate, vbFromId, vbToId
        FROM Movement
             LEFT JOIN MovementLinkObject AS MLO_From
                                          ON MLO_From.MovementId = Movement.Id
@@ -285,4 +285,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpGet_MI_MobileSend(inDetailId := 0, inGoodsId := 261920 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');
+select * from gpGet_MI_MobileSend(inDetailId := 566448, inGoodsId := 261920 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');

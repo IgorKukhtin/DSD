@@ -47,7 +47,7 @@ object DM: TDM
     AfterScroll = cdsInventoryListAfterScroll
     OnCalcFields = cdsInventoryListCalcFields
     Left = 272
-    Top = 312
+    Top = 320
     object cdsInventoryListId: TIntegerField
       FieldName = 'Id'
     end
@@ -177,7 +177,7 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'InventoryGoods'
-    Left = 772
+    Left = 628
     Top = 172
     object tblInventoryGoodsLocalId: TAutoIncField
       FieldName = 'LocalId'
@@ -329,7 +329,7 @@ object DM: TDM
   object tbPartionCell: TFDTable
     Connection = conMain
     TableName = 'PartionCell'
-    Left = 276
+    Left = 244
     Top = 166
     object tbPartionCellId: TIntegerField
       FieldName = 'Id'
@@ -424,7 +424,7 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'Remains'
-    Left = 636
+    Left = 468
     Top = 172
     object tbRemainsGoodsId: TIntegerField
       FieldName = 'GoodsId'
@@ -445,8 +445,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 116
-    Top = 516
+    Left = 108
+    Top = 524
     object qurGoodsListId: TIntegerField
       FieldName = 'Id'
     end
@@ -497,7 +497,7 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 348
+    Left = 268
     Top = 524
     object qurDictListId: TIntegerField
       FieldName = 'Id'
@@ -515,8 +515,8 @@ object DM: TDM
     Connection = conMain
     SQL.Strings = (
       '')
-    Left = 556
-    Top = 508
+    Left = 420
+    Top = 524
     object qurGoodsEANId: TIntegerField
       FieldName = 'Id'
     end
@@ -725,7 +725,7 @@ object DM: TDM
   object tbUnit: TFDTable
     Connection = conMain
     TableName = 'Unit'
-    Left = 444
+    Left = 372
     Top = 166
     object tbUnitId: TIntegerField
       FieldName = 'Id'
@@ -742,6 +742,330 @@ object DM: TDM
     end
     object tbUnitisLoad: TBooleanField
       FieldName = 'isLoad'
+    end
+  end
+  object cdsSendList: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    AfterScroll = cdsSendListAfterScroll
+    OnCalcFields = cdsSendListCalcFields
+    Left = 272
+    Top = 416
+    object cdsSendListId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsSendListGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsSendListGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsSendListGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsSendListArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsSendListEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object cdsSendListGoodsGroupId: TIntegerField
+      FieldName = 'GoodsGroupId'
+    end
+    object cdsSendListGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsSendListMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsSendListPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object cdsSendListPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsSendListPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object cdsSendListAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsSendListTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object cdsSendListAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsSendListOrdUser: TIntegerField
+      FieldName = 'OrdUser'
+    end
+    object cdsSendListOperDate_protocol: TDateTimeField
+      FieldName = 'OperDate_protocol'
+    end
+    object cdsSendListUserName_protocol: TWideStringField
+      FieldName = 'UserName_protocol'
+      Size = 255
+    end
+    object cdsSendListisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object cdsSendListAmountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountLabel'
+      Calculated = True
+    end
+    object cdsSendListAmountRemainsLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountRemainsLabel'
+      Calculated = True
+    end
+    object cdsSendListTotalCountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountLabel'
+      Calculated = True
+    end
+    object cdsSendListOrdUserLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrdUserLabel'
+      Calculated = True
+    end
+    object cdsSendListErasedId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'ErasedId'
+      Calculated = True
+    end
+    object cdsSendListOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsSendListInvNumber: TWideStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsSendListFromId: TIntegerField
+      FieldName = 'FromId'
+    end
+    object cdsSendListFromCode: TIntegerField
+      FieldName = 'FromCode'
+    end
+    object cdsSendListFromName: TWideStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsSendListToId: TIntegerField
+      FieldName = 'ToId'
+    end
+    object cdsSendListToCode: TIntegerField
+      FieldName = 'ToCode'
+    end
+    object cdsSendListToName: TWideStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
+    object cdsSendListFromNameLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'FromNameLabel'
+      Size = 40
+      Calculated = True
+    end
+    object cdsSendListToNameLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'ToNameLabel'
+      Size = 40
+      Calculated = True
+    end
+  end
+  object cdsSendListTop: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnCalcFields = cdsSendListCalcFields
+    Left = 680
+    Top = 424
+    object cdsSendListTopId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsSendListTopLocalId: TIntegerField
+      FieldName = 'LocalId'
+    end
+    object cdsSendListTopGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsSendListTopGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsSendListTopGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsSendListTopArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsSendListTopEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object cdsSendListTopGoodsGroupId: TIntegerField
+      FieldName = 'GoodsGroupId'
+    end
+    object cdsSendListTopGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsSendListTopMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsSendListTopPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 255
+    end
+    object cdsSendListTopPartionCellId: TIntegerField
+      FieldName = 'PartionCellId'
+    end
+    object cdsSendListTopPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object cdsSendListTopAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsSendListTopTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object cdsSendListTopAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsSendListTopOrdUser: TIntegerField
+      FieldName = 'OrdUser'
+    end
+    object cdsSendListTopOperDate_protocol: TDateTimeField
+      FieldName = 'OperDate_protocol'
+    end
+    object cdsSendListTopUserName_protocol: TWideStringField
+      FieldName = 'UserName_protocol'
+      Size = 255
+    end
+    object cdsSendListTopisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object cdsSendListTopAmountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountLabel'
+      Calculated = True
+    end
+    object cdsSendListTopAmountRemainsLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountRemainsLabel'
+      Calculated = True
+    end
+    object cdsSendListTopTotalCountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'TotalCountLabel'
+      Calculated = True
+    end
+    object cdsSendListTopOrdUserLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrdUserLabel'
+      Calculated = True
+    end
+    object cdsSendListTopErasedId: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'ErasedId'
+      Calculated = True
+    end
+    object cdsSendListTopError: TWideStringField
+      FieldName = 'Error'
+    end
+    object cdsSendListTopOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsSendListTopInvNumber: TWideStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsSendListTopFromId: TIntegerField
+      FieldName = 'FromId'
+    end
+    object cdsSendListTopFromCode: TIntegerField
+      FieldName = 'FromCode'
+    end
+    object cdsSendListTopFromName: TWideStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsSendListTopToId: TIntegerField
+      FieldName = 'ToId'
+    end
+    object cdsSendListTopToCode: TIntegerField
+      FieldName = 'ToCode'
+    end
+    object cdsSendListTopToName: TWideStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
+    object cdsSendListTopFromNameLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'FromNameLabel'
+      Size = 40
+      Calculated = True
+    end
+    object cdsSendListTopToNameLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'ToNameLabel'
+      Size = 40
+      Calculated = True
+    end
+  end
+  object tbSendGoods: TFDTable
+    Connection = conMain
+    ResourceOptions.AssignedValues = [rvEscapeExpand]
+    TableName = 'SendGoods'
+    Left = 804
+    Top = 172
+    object tbSendGoodsLocalId: TAutoIncField
+      FieldName = 'LocalId'
+    end
+    object tbSendGoodsDateScan: TIntegerField
+      FieldName = 'DateScan'
+    end
+    object tbSendGoodsId: TIntegerField
+      FieldName = 'Id'
+    end
+    object tbSendGoodsGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object tbSendGoodsPartNumber: TWideStringField
+      FieldName = 'PartNumber'
+      Size = 50
+    end
+    object tbSendGoodsAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object tbSendGoodsAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object tbSendGoodsTotalCount: TFloatField
+      FieldName = 'TotalCount'
+    end
+    object tbSendGoodsPartionCellName: TWideStringField
+      FieldName = 'PartionCellName'
+      Size = 255
+    end
+    object tbSendGoodsFromId: TIntegerField
+      FieldName = 'FromId'
+    end
+    object tbSendGoodsToId: TIntegerField
+      FieldName = 'ToId'
+    end
+    object tbSendGoodsError: TWideStringField
+      FieldName = 'Error'
+      Size = 500
+    end
+    object tbSendGoodsisSend: TBooleanField
+      FieldName = 'isSend'
     end
   end
 end

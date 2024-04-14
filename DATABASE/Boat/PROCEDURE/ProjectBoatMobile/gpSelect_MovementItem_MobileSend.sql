@@ -1,9 +1,8 @@
--- Function: gpSelect_MovementItem_MobileInventory()
+-- Function: gpSelect_MovementItem_MobileSend()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileInventory (Integer, Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileSend (Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileInventory(
-    IN inMovementId       Integer      , -- ключ Документа
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileSend(
     IN inIsOrderBy        Boolean      , --
     IN inIsAllUser        Boolean      , --
     IN inLimit            Integer      , -- 
@@ -17,98 +16,96 @@ RETURNS TABLE (Id Integer
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar, PartNumber TVarChar
              , PartionCellId Integer, PartionCellName TVarChar
-             , Amount TFloat, TotalCount TFloat, AmountRemains TFloat, AmountDiff TFloat, AmountRemains_curr TFloat
+             , Amount TFloat, TotalCount TFloat, AmountRemains TFloat
+             , OperDate TDateTime, InvNumber TVarChar
+             , FromId Integer, FromCode Integer, FromName TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar
              , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
              , isErased Boolean
               )
 AS
 $BODY$
-  DECLARE vbUserId   Integer;
-  DECLARE vbUnitId   Integer;
-  DECLARE vbStatusId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbUserId    Integer;
+  DECLARE vbFilterArt TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
      
      IF COALESCE(inLimit, 0) <= 0 THEN inLimit := 1000; END IF;
 
-     -- Данные для остатков
-     SELECT Movement.OperDate, Movement.StatusId, MLO_Unit.ObjectId
-            INTO vbOperDate, vbStatusId, vbUnitId
-     FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_Unit
-                                       ON MLO_Unit.MovementId = inMovementId
-                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
-     WHERE Movement.Id = inMovementId;
-     
      vbFilterArt := REPLACE(REPLACE(REPLACE(inFilter, ' ', ''), '.', ''), '-', '');
 
      -- Результат такой
      RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id
+       WITH tmpMovement AS (SELECT Movement.Id
+                                 , Movement.OperDate
+                                 , Movement.InvNumber
+                                 , Movement.StatusId
+                                 , MLO_From.ObjectId      AS FromId
+                                 , MLO_To.ObjectId        AS ToId
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MLO_From
+                                                              ON MLO_From.MovementId = Movement.Id
+                                                             AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                 LEFT JOIN MovementLinkObject AS MLO_To
+                                                              ON MLO_To.MovementId = Movement.Id
+                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                            WHERE Movement.DescId   = zc_Movement_Send()
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              AND Movement.OperDate = CURRENT_DATE) 
+       
+          , tmpMI AS (SELECT MovementItem.Id
                            , MovementItem.ObjectId AS GoodsId
-                           , MovementItem.PartionId
+                           , Movement.OperDate
+                           , Movement.InvNumber
+                           , Movement.FromId
+                           , Movement.ToId
                            , MovementItem.Amount
                            , COALESCE (MIString_PartNumber.ValueData, '')::TVarChar  AS PartNumber
                            , MILO_PartionCell.ObjectId                               AS PartionCellId
                            , MovementItem.isErased
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                            AND MovementItem.DescId     = zc_MI_Detail()
-                                            AND MovementItem.isErased   = tmpIsErased.isErased
+                      FROM tmpMovement AS Movement
+                      
+                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                  AND MovementItem.DescId     = zc_MI_Detail()
+                                                  AND (MovementItem.isErased  = False OR inisErased = TRUE)
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
 
-                          LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                           ON MILO_PartionCell.MovementItemId = MovementItem.Id
-                                                          AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
+                           LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                            ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                                           AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                      )
 
-         , tmpRemains AS (SELECT Container.Id       AS ContainerId
-                               , Container.ObjectId AS GoodsId
-                               , Container.Amount
-                               , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
-                                                                             THEN COALESCE (MIContainer.Amount, 0)
-                                                                        WHEN MIContainer.OperDate > vbOperDate
-                                                                             THEN COALESCE (MIContainer.Amount, 0)
-                                                                        ELSE 0
-                                                                   END)
-                                                            , 0) AS Remains
+         , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                               , Container.WhereObjectId       AS UnitId
                                , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                               , Sum(Container.Amount)::TFloat AS Remains
                           FROM Container
                                LEFT JOIN MovementItemString AS MIString_PartNumber
                                                             ON MIString_PartNumber.MovementItemId = Container.PartionId
                                                            AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
-                               LEFT JOIN MovementItemContainer AS MIContainer
-                                                               ON MIContainer.ContainerId =  Container.Id
-                                                              AND MIContainer.OperDate    >= vbOperDate
-                                                              AND vbStatusId              =  zc_Enum_Status_Complete()
-                          WHERE Container.WhereObjectId = vbUnitId
+                          WHERE Container.WhereObjectId IN (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement)
                             AND Container.DescId        = zc_Container_Count()
                             AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
-                          GROUP BY Container.Id
+                            AND Container.Amount <> 0
+                          GROUP BY Container.WhereObjectId
                                  , Container.ObjectId
-                                 , Container.Amount
                                  , COALESCE (MIString_PartNumber.ValueData, '')
-                          HAVING Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
-                                                                             THEN COALESCE (MIContainer.Amount, 0)
-                                                                        WHEN MIContainer.OperDate > vbOperDate
-                                                                             THEN COALESCE (MIContainer.Amount, 0)
-                                                                        ELSE 0
-                                                                   END)
-                                                            , 0) <> 0
-                              OR Container.Amount <> 0
+                          HAVING Sum(Container.Amount) <> 0
                          )
+                         
          , tmpProtocol AS (SELECT MovementItemProtocol.*
                                   -- № п/п
                                 , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate) AS Ord
                            FROM MovementItemProtocol
                            WHERE MovementItemProtocol.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI)
                           )
+                          
          , tmpDataAll AS (SELECT
                                  tmpMI.Id
+                               , tmpMI.FromId
                                , tmpMI.GoodsId
                                , tmpMI.PartNumber
                                , tmpMI.Amount
@@ -123,6 +120,7 @@ BEGIN
                           )
          , tmpData AS (SELECT
                               tmpDataAll.Id
+                            , tmpDataAll.FromId
                             , tmpDataAll.GoodsId
                             , tmpDataAll.PartNumber
                             , tmpDataAll.OperDate_protocol
@@ -132,13 +130,15 @@ BEGIN
                        FROM tmpDataAll 
                        
                             LEFT JOIN tmpDataAll AS tmpDataPrew 
-                                                 ON tmpDataPrew.GoodsId        = tmpDataAll.GoodsId
+                                                 ON tmpDataPrew.FromId         = tmpDataAll.FromId
+                                                AND tmpDataPrew.GoodsId        = tmpDataAll.GoodsId
                                                 AND tmpDataPrew.PartNumber     = tmpDataAll.PartNumber
                                                 AND tmpDataPrew.OrdGoodsDate  <= tmpDataAll.OrdGoodsDate
                                                 AND tmpDataPrew.isErased = False
                                                   
                        GROUP BY tmpDataAll.Id
                               , tmpDataAll.GoodsId
+                              , tmpDataAll.FromId
                               , tmpDataAll.PartNumber
                               , tmpDataAll.OperDate_protocol
                               , tmpDataAll.UserId_protocol
@@ -168,10 +168,16 @@ BEGIN
 
            , tmpMI.Amount                        AS Amount
            , tmpData.TotalCount ::TFloat         AS TotalCount
-           , COALESCE(tmpRemains.Remains, 0)::TFloat      AS AmountRemains
-           , (COALESCE (tmpData.TotalCount, 0) - COALESCE (tmpRemains.Remains, 0)) ::TFloat AS AmountDiff
+           , tmpRemains.Remains                  AS AmountRemains
 
-           , tmpRemains.Amount                   AS AmountRemains_curr
+           , tmpMI.OperDate
+           , tmpMI.InvNumber
+           , tmpMI.FromId
+           , Object_From.ObjectCode                      AS FromCode
+           , Object_From.ValueData                       AS FromName
+           , tmpMI.ToId
+           , Object_ToId.ObjectCode                      AS ToCode
+           , Object_ToId.ValueData                       AS ToName
 
            , tmpData.OrdUserDate::Integer
            , tmpData.OperDate_protocol
@@ -186,6 +192,9 @@ BEGIN
             LEFT JOIN tmpData ON tmpData.Id = tmpMI.Id
                               
             LEFT JOIN Object AS Object_User ON Object_User.Id = tmpData.UserId_protocol
+
+            LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMI.FromId
+            LEFT JOIN Object AS Object_ToId ON Object_ToId.Id = tmpMI.ToId
 
             LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
                                  ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
@@ -204,11 +213,9 @@ BEGIN
                                    ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
-            LEFT JOIN (SELECT tmpRemains.GoodsId, tmpRemains.PartNumber, SUM (tmpRemains.Amount)::TFloat AS Amount, SUM (tmpRemains.Remains)::TFloat AS Remains
-                       FROM tmpRemains
-                       GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber
-                      ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
-                                     AND tmpRemains.PartNumber = tmpMI.PartNumber
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
+                                AND tmpRemains.UnitId     = tmpMI.FromId
+                                AND tmpRemains.PartNumber = tmpMI.PartNumber
 
        WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
@@ -227,9 +234,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 23.02.24                                                       *
+ 23.04.24                                                       *
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3183, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_MobileSend (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
