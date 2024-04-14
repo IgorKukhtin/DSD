@@ -312,7 +312,7 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
       end
       object edClient: TcxButtonEdit
-        Left = 331
+        Left = 332
         Top = 78
         Properties.Buttons = <
           item
@@ -335,7 +335,7 @@ object ProductEditForm: TProductEditForm
         Width = 77
       end
       object cxLabel8: TcxLabel
-        Left = 331
+        Left = 332
         Top = 9
         Caption = #1057#1090#1072#1090#1091#1089' '#1079#1072#1082#1072#1079#1072
       end
@@ -367,7 +367,7 @@ object ProductEditForm: TProductEditForm
         Width = 88
       end
       object ceStatus: TcxButtonEdit
-        Left = 331
+        Left = 332
         Top = 28
         Properties.Buttons = <
           item
@@ -389,12 +389,12 @@ object ProductEditForm: TProductEditForm
         Width = 148
       end
       object cxLabel19: TcxLabel
-        Left = 332
+        Left = 419
         Top = 285
         Caption = #1057#1091#1084#1084#1072' c '#1053#1044#1057
       end
       object edTotalSummPVAT: TcxCurrencyEdit
-        Left = 333
+        Left = 419
         Top = 304
         ParentFont = False
         Properties.DecimalPlaces = 2
@@ -409,12 +409,12 @@ object ProductEditForm: TProductEditForm
         Width = 80
       end
       object cxLabel20: TcxLabel
-        Left = 419
+        Left = 332
         Top = 285
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
       end
       object edTotalSummMVAT: TcxCurrencyEdit
-        Left = 419
+        Left = 332
         Top = 305
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
@@ -436,12 +436,13 @@ object ProductEditForm: TProductEditForm
         Width = 68
       end
       object ceAmountInInvoice: TcxCurrencyEdit
-        Left = 331
+        Left = 332
         Top = 350
-        Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1087#1077#1088#1074#1086#1084#1091' '#1074#1099#1087#1080#1089#1072#1085#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+        Hint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
         ParentShowHint = False
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
+        Properties.ReadOnly = True
         ShowHint = True
         TabOrder = 46
         Width = 114
@@ -453,6 +454,7 @@ object ProductEditForm: TProductEditForm
         ParentShowHint = False
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
+        Properties.ReadOnly = True
         ShowHint = True
         TabOrder = 49
         Width = 114
@@ -466,17 +468,17 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
       end
       object cxLabel27: TcxLabel
-        Left = 331
+        Left = 332
         Top = 375
-        Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1087#1077#1088#1074#1086#1084#1091' '#1074#1099#1087#1080#1089#1072#1085#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+        Hint = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091
         Caption = #1054#1087#1083#1072#1090#1072' (Invoice)'
         ParentShowHint = False
         ShowHint = True
       end
       object ceAmountInBankAccount: TcxCurrencyEdit
-        Left = 331
+        Left = 332
         Top = 393
-        Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1087#1077#1088#1074#1086#1084#1091' '#1074#1099#1087#1080#1089#1072#1085#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+        Hint = #1054#1087#1083#1072#1090#1072' '#1087#1086' '#1057#1095#1077#1090#1091
         ParentShowHint = False
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
@@ -522,17 +524,17 @@ object ProductEditForm: TProductEditForm
         Width = 88
       end
       object cxLabel30: TcxLabel
-        Left = 333
+        Left = 332
         Top = 419
-        Hint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1057#1045#1052' '#1089#1095#1077#1090#1072#1084
-        Caption = #1044#1086#1083#1075' '#1087#1086' '#1089#1095#1077#1090#1072#1084
+        Hint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
+        Caption = #1044#1086#1083#1075' (Invoice)'
         ParentShowHint = False
         ShowHint = True
       end
       object edAmountIn_rem: TcxCurrencyEdit
-        Left = 331
+        Left = 332
         Top = 438
-        Hint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1042#1057#1045#1052' '#1089#1095#1077#1090#1072#1084
+        Hint = #1054#1089#1090#1072#1090#1086#1082' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
         ParentFont = False
         ParentShowHint = False
         Properties.DecimalPlaces = 2
@@ -585,13 +587,13 @@ object ProductEditForm: TProductEditForm
         TabOrder = 60
       end
       object edInvNumberOrderClient_load: TcxTextEdit
-        Left = 331
+        Left = 332
         Top = 485
         TabOrder = 64
         Width = 114
       end
       object cxLabel32: TcxLabel
-        Left = 331
+        Left = 332
         Top = 465
         Caption = #8470' '#1079#1072#1082#1072#1079#1072' '#1089#1072#1081#1090
       end
@@ -619,7 +621,7 @@ object ProductEditForm: TProductEditForm
       object cxLabel34: TcxLabel
         Left = 505
         Top = 241
-        Caption = 'Transp (Order)'
+        Caption = 'Transport'
       end
       object cxLabel35: TcxLabel
         Left = 71
@@ -640,7 +642,7 @@ object ProductEditForm: TProductEditForm
         Width = 72
       end
       object cxLabel36: TcxLabel
-        Left = 334
+        Left = 332
         Top = 241
         Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
         Caption = #1057#1082#1080#1076#1082#1072' ('#1074#1074#1086#1076')'
@@ -648,7 +650,7 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
       end
       object edSummTax: TcxCurrencyEdit
-        Left = 333
+        Left = 332
         Top = 261
         Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
         ParentShowHint = False
@@ -690,9 +692,9 @@ object ProductEditForm: TProductEditForm
         Width = 80
       end
       object cxLabel25: TcxLabel
-        Left = 331
+        Left = 332
         Top = 330
-        Hint = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1087#1086' '#1087#1077#1088#1074#1086#1084#1091' '#1074#1099#1087#1080#1089#1072#1085#1085#1086#1084#1091' '#1089#1095#1077#1090#1091
+        Hint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1057#1095#1077#1090#1091
         Caption = #1057#1091#1084#1084#1072' (Invoice)'
         ParentShowHint = False
         ShowHint = True
@@ -703,7 +705,7 @@ object ProductEditForm: TProductEditForm
         Caption = #1058#1080#1087' '#1053#1044#1057
       end
       object edTaxKind: TcxButtonEdit
-        Left = 331
+        Left = 332
         Top = 121
         Properties.Buttons = <
           item
@@ -745,7 +747,7 @@ object ProductEditForm: TProductEditForm
         Width = 70
       end
       object cxLabel46: TcxLabel
-        Left = 334
+        Left = 332
         Top = 148
         Hint = 
           #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
@@ -755,7 +757,7 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
       end
       object edSummDiscount_total: TcxCurrencyEdit
-        Left = 333
+        Left = 332
         Top = 215
         Hint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
         ParentShowHint = False
@@ -769,7 +771,7 @@ object ProductEditForm: TProductEditForm
         Width = 91
       end
       object cxLabel47: TcxLabel
-        Left = 333
+        Left = 332
         Top = 195
         Hint = #1048#1090#1086#1075#1086#1074#1072#1103' '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1074#1089#1077#1084' % '#1089#1082#1080#1076#1082#1080
         Caption = #1057#1082#1080#1076#1082#1072' % '#1080#1090#1086#1075#1086' :'
@@ -4504,8 +4506,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 280
-    Top = 64
+    Left = 272
+    Top = 56
   end
   object spGet_ProductPhoto: TdsdStoredProc
     StoredProcName = 'gpGet_Object_ProductPhoto_https'
@@ -4970,8 +4972,8 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 304
-    Top = 88
+    Left = 288
+    Top = 104
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

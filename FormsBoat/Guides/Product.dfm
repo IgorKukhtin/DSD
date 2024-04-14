@@ -430,20 +430,21 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1055#1086#1089#1083#1077#1076#1085#1080#1081' '#1089#1086#1079#1076#1072#1085#1085#1099#1081' '#1044#1086#1082#1091#1084#1077#1085#1090' '#1089#1095#1077#1090
+          HeaderHint = #8470' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
           Options.Editing = False
           Width = 80
         end
         object Amount_Invoice: TcxGridDBColumn
-          Caption = #1057#1091#1084#1084#1072' '#1089#1095#1077#1090
+          Caption = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083'. '#1087#1086' '#1089#1095#1077#1090#1091
           DataBinding.FieldName = 'Amount_Invoice'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1082' '#1086#1087#1083#1072#1090#1077' '#1087#1086' '#1089#1095#1077#1090#1091
           Options.Editing = False
-          Width = 70
+          Width = 100
         end
         object OperDate_BankAccount: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' '#1086#1087#1083#1072#1090#1099
@@ -464,6 +465,7 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1048#1090#1086#1075#1086' '#1086#1087#1083#1072#1090#1072' '#1087#1086' '#1074#1089#1077#1084' '#1089#1095#1077#1090#1072#1084
           Options.Editing = False
           Width = 70
         end
