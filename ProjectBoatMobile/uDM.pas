@@ -20,7 +20,7 @@ uses
 
 type
 
-  TDictType = (dtGoods, dtPartionCell);
+  TDictType = (dtGoods, dtUnit, dtPartionCell);
   TDataSetRefresh = (dsrNone, dsrGoods, dsrDict, dsrInventoryList);
 
   { отдельный поток для показа бегущего круга }
@@ -238,6 +238,38 @@ type
     tbGoodsArticleFilter: TWideStringField;
     qurGoodsListRemains: TFloatField;
     qurGoodsListRemains_curr: TFloatField;
+    cdsSendItemEdit: TClientDataSet;
+    cdsSendItemEditLocalId: TIntegerField;
+    cdsSendItemEditId: TIntegerField;
+    cdsSendItemEditGoodsId: TIntegerField;
+    cdsSendItemEditGoodsCode: TIntegerField;
+    cdsSendItemEditGoodsName: TWideStringField;
+    cdsSendItemEditArticle: TWideStringField;
+    cdsSendItemEditPartNumber: TWideStringField;
+    cdsSendItemEditGoodsGroupName: TWideStringField;
+    cdsSendItemEditPartnerName: TWideStringField;
+    cdsSendItemEditPartionCellId: TIntegerField;
+    cdsSendItemEditPartionCellName: TWideStringField;
+    cdsSendItemEditAmount: TFloatField;
+    cdsSendItemEditTotalCount: TFloatField;
+    cdsSendItemEditAmountRemains: TFloatField;
+    cdsSendItemEditTotalCountCalc: TFloatField;
+    tbGoodsUnitId: TIntegerField;
+    tbGoodsUnitID_receipt: TIntegerField;
+    tbGoodsUnitId_child_receipt: TIntegerField;
+    tbGoodsUnitId_parent_receipt: TIntegerField;
+    tbUnit: TFDTable;
+    tbUnitId: TIntegerField;
+    tbUnitCode: TIntegerField;
+    tbUnitName: TWideStringField;
+    tbUnitisLoad: TBooleanField;
+    tbUnitisErased: TBooleanField;
+    cdsSendItemEditFromId: TIntegerField;
+    cdsSendItemEditFromCode: TIntegerField;
+    cdsSendItemEditFromName: TWideStringField;
+    cdsSendItemEditToId: TIntegerField;
+    cdsSendItemEditToCode: TIntegerField;
+    cdsSendItemEditToName: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -257,6 +289,8 @@ type
       DisplayText: Boolean);
     procedure qurGoodsListRemainsGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure cdsSendItemEditAfterEdit(DataSet: TDataSet);
+    procedure cdsSendItemEditCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -307,9 +341,12 @@ type
 
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
+    function GetMISendGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
+    function GetMISend(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
     function UploadMIInventory: Boolean;
+    function UploadMISend: Boolean;
 
     function LoadDictList : Boolean;
     function LoadGoodsList : Boolean;
@@ -341,8 +378,8 @@ type
 const
   DataBaseFileName = 'BoatMobile.sdb';
 
-  DictTypeName: Array[0..Ord(High(TDictType))] of String = ('Справочник комплектующих', 'Ячейки хранения');
-  DictTypeTableName: Array[0..Ord(High(TDictType))] of String = ('Goods', 'PartionCell');
+  DictTypeName: Array[0..Ord(High(TDictType))] of String = ('Справочник комплектующих', 'Подразделение', 'Ячейки хранения');
+  DictTypeTableName: Array[0..Ord(High(TDictType))] of String = ('Goods', 'Unit', 'PartionCell');
 
 var
   DM: TDM;
@@ -661,6 +698,10 @@ begin
     // Получение справочника Комплектующих
     SetTaskName('Получение справочника Комплектующих');
     DoLoadDict(DM.tbGoods.TableName, 'gpSelect_Object_MobileGoods', DM.tbGoods);
+
+      // Получение справочника Подразделений
+    SetTaskName('Получение справочника Подразделений');
+    DoLoadDict(DM.tbUnit.TableName, 'gpSelect_Object_MobileUnit', DM.tbUnit);
 
       // Получение справочника Ячейки хранения
     SetTaskName('Получение справочника Ячейки хранения');
@@ -1135,6 +1176,18 @@ begin
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
+end;
+
+procedure TDM.cdsSendItemEditAfterEdit(DataSet: TDataSet);
+begin
+  FGoodsId := DataSet.FieldByName('GoodsId').AsInteger;
+  FPartNumber := DataSet.FieldByName('PartNumber').AsString;
+end;
+
+procedure TDM.cdsSendItemEditCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('TotalCountCalc').AsFloat := cdsInventoryItemEdit.FieldByName('TotalCount').AsFloat +
+    cdsInventoryItemEdit.FieldByName('Amount').AsFloat;
 end;
 
 { проверка структуры БД }
@@ -1992,7 +2045,6 @@ begin
 
     StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
     StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
@@ -2021,6 +2073,50 @@ begin
   end;
 end;
 
+{ Начитка информации по строке перемещения}
+function TDM.GetMISend(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  DataSet: TClientDataSet;
+  I: Integer;
+begin
+  Result := False;
+  cdsSendItemEdit.Close;
+  StoredProc := TdsdStoredProc.Create(nil);
+  DataSet := TClientDataSet.Create(Nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MI_MobileSend';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
+    StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
+    StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, APartNumber);
+    StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, AAmount);
+
+    StoredProc.DataSet := DataSet;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+
+      cdsSendItemEdit.Close;
+      cdsSendItemEdit.CreateDataSet;
+      cdsSendItemEdit.Insert;
+      for I := 0 to DataSet.FieldCount - 1 do
+        if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
+          cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+      cdsSendItemEdit.Post;
+
+      Result := True;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    FreeAndNil(DataSet);
+  end;
+end;
+
 { Начитка информации по строке инвентаризации, при изменении комплектующего}
 function TDM.GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
 var
@@ -2039,6 +2135,59 @@ begin
     StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
+    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
+    StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, ADataSet.FieldByName('GoodsId').AsInteger);
+    StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, ADataSet.FieldByName('PartionCellId').AsInteger);
+    StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, ADataSet.FieldByName('PartNumber').AsString);
+    StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, ADataSet.FieldByName('GoodsId').AsFloat);
+
+    StoredProc.DataSet := DataSet;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+
+      ADataSet.FieldByName('PartnerName').AsString := DataSet.FieldByName('PartnerName').AsString;
+      ADataSet.FieldByName('TotalCount').AsCurrency := DataSet.FieldByName('TotalCount').AsCurrency;
+      ADataSet.FieldByName('AmountRemains').AsCurrency := DataSet.FieldByName('AmountRemains').AsCurrency;
+      if DataSet.FieldByName('PartionCellId').AsInteger <> 0 then
+      begin
+        ADataSet.FieldByName('PartionCellId').AsInteger := DataSet.FieldByName('PartionCellId').AsInteger;
+        ADataSet.FieldByName('PartionCellName').AsString := DataSet.FieldByName('PartionCellName').AsString;
+      end;
+      Result := True;
+    except
+      ADataSet.FieldByName('PartnerName').AsVariant := Null;
+      ADataSet.FieldByName('TotalCount').AsVariant := 0;
+      ADataSet.FieldByName('AmountRemains').AsVariant := 0;
+      if ADataSet.FieldByName('PartionCellName').AsVariant <> '' then
+      begin
+        ADataSet.FieldByName('PartionCellId').AsVariant := Null;
+        ADataSet.FieldByName('PartionCellName').AsVariant := Null;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    FreeAndNil(DataSet);
+  end;
+end;
+
+{ Начитка информации по строке перемещения, при изменении комплектующего}
+function TDM.GetMISendGoods(ADataSet : TDataSet) : Boolean;
+var
+  StoredProc: TdsdStoredProc;
+  DataSet: TClientDataSet;
+begin
+  Result := False;
+  if not ADataSet.Active then Exit;
+  if not (ADataSet.State in dsEditModes) then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  DataSet := TClientDataSet.Create(Nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MI_MobileSend';
+    StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, ADataSet.FieldByName('GoodsId').AsInteger);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, ADataSet.FieldByName('PartionCellId').AsInteger);
@@ -2135,6 +2284,65 @@ begin
 
 end;
 
+// Отправить строку перемещения
+function TDM.UploadMISend: Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId, I: Integer;
+begin
+
+  Result := False;
+  nId := cdsSendItemEditId.AsInteger;
+
+//  StoredProc := TdsdStoredProc.Create(nil);
+//  try
+//    StoredProc.OutputType := otResult;
+//
+//    try
+//      StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_MobileInventory';
+//      StoredProc.Params.Clear;
+//      StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, cdsInventoryItemEditId.AsInteger);
+//      StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
+//      StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, cdsInventoryItemEditGoodsId.AsInteger);
+//      StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, cdsInventoryItemEditAmount.AsFloat);
+//      StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, cdsInventoryItemEditPartNumber.AsWideString);
+//      StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsInventoryItemEditPartionCellName.AsWideString);
+//
+//      StoredProc.Execute(false, false, false, 2);
+//
+//      nId := StoredProc.ParamByName('ioId').Value;
+//
+//      Result := True;
+//    except
+//        on E : Exception do
+//         if (Pos('context TStorage', E.Message) = 0) or DM.cdsInventoryList.Active then
+//         begin
+//           raise Exception.Create(GetTextMessage(E));
+//           Exit;
+//         end;
+//    end;
+//
+//    if not cdsInventoryList.Active then
+//    begin
+//      DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
+//                                   cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
+//                                   cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
+//                                   cdsInventoryItemEditPartionCellName.AsString, '', Result);
+//    end else
+//    begin
+//      cdsInventoryList.Edit;
+//      for I := 0 to cdsInventoryItemEdit.FieldCount - 1 do
+//        if Assigned(cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName)) then
+//          cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName).AsVariant := cdsInventoryItemEdit.Fields.Fields[I].AsVariant;
+//      cdsInventoryList.FieldByName('TotalCount').AsFloat := cdsInventoryList.FieldByName('TotalCount').AsFloat + cdsInventoryList.FieldByName('Amount').AsFloat;
+//      cdsInventoryList.Post;
+//    end;
+//
+//  finally
+//    FreeAndNil(StoredProc);
+//  end;
+
+end;
 
 { Создание документа производства}
 function TDM.InsertProductionUnion(AId : Integer) : Boolean;

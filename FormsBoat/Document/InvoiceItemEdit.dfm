@@ -1,9 +1,9 @@
-object InvoiceItemEditForm: TInvoiceItemEditForm
+﻿object InvoiceItemEditForm: TInvoiceItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1057#1095#1077#1090#1072'>'
-  ClientHeight = 267
-  ClientWidth = 420
+  ClientHeight = 269
+  ClientWidth = 529
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,7 +23,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
   end
   object cxButtonOK: TcxButton
     Left = 196
-    Top = 234
+    Top = 225
     Width = 90
     Height = 25
     Action = actInsertUpdate
@@ -33,7 +33,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
   end
   object cxButtonCancel: TcxButton
     Left = 313
-    Top = 234
+    Top = 225
     Width = 90
     Height = 25
     Action = actFormClose
@@ -57,12 +57,12 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
   end
   object cxLabel18: TcxLabel
     Left = 8
-    Top = 116
+    Top = 117
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object ceAmount: TcxCurrencyEdit
     Left = 8
-    Top = 136
+    Top = 137
     ParentFont = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -75,7 +75,7 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     Style.TextColor = clBlack
     Style.IsFontAssigned = True
     TabOrder = 0
-    Width = 120
+    Width = 62
   end
   object cxLabel14: TcxLabel
     Left = 8
@@ -102,14 +102,14 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     Width = 103
   end
   object cxLabel5: TcxLabel
-    Left = 146
-    Top = 116
+    Left = 78
+    Top = 117
     Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
     Caption = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
   end
   object ceOperPrice: TcxCurrencyEdit
-    Left = 146
-    Top = 136
+    Left = 78
+    Top = 137
     Hint = #1042#1093'. '#1094#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080
     ParentShowHint = False
     Properties.DecimalPlaces = 4
@@ -117,22 +117,22 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     Properties.EditFormat = ',0.####'
     ShowHint = True
     TabOrder = 1
-    Width = 128
+    Width = 80
   end
   object ceComment: TcxTextEdit
     Left = 8
-    Top = 197
+    Top = 188
     TabOrder = 12
     Width = 401
   end
   object cxLabel16: TcxLabel
     Left = 8
-    Top = 174
+    Top = 165
     Caption = #1054#1087#1080#1089#1072#1085#1080#1077
   end
   object btnGoodsChoiceForm: TcxButton
     Left = 8
-    Top = 234
+    Top = 225
     Width = 150
     Height = 25
     Hint = #1042#1099#1073#1086#1088' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -141,10 +141,67 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     ShowHint = True
     TabOrder = 14
   end
+  object cxLabel2: TcxLabel
+    Left = 166
+    Top = 117
+    Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+  end
+  object cxLabel4: TcxLabel
+    Left = 329
+    Top = 117
+    Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+    Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+  end
+  object ceSummPVAT: TcxCurrencyEdit
+    Left = 329
+    Top = 137
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    ShowHint = True
+    TabOrder = 17
+    Width = 80
+  end
+  object ceSummMVAT: TcxCurrencyEdit
+    Left = 166
+    Top = 137
+    ParentFont = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clBlue
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.TextColor = clBlack
+    Style.IsFontAssigned = True
+    TabOrder = 18
+    Width = 80
+  end
+  object cxLabel6: TcxLabel
+    Left = 255
+    Top = 117
+    Hint = #1062#1077#1085#1072' '#1073#1077#1079' '#1053#1044#1057
+    Caption = #1053#1044#1057
+  end
+  object ceSummа_VAT: TcxCurrencyEdit
+    Left = 255
+    Top = 137
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    Properties.EditFormat = ',0.####'
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 20
+    Width = 64
+  end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 196
-    Top = 213
+    Top = 204
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -240,9 +297,21 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         end>
       isShowModal = True
     end
+    object actUpdate_summ_before: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_before
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_before
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = False
+    end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Invoice'
+    StoredProcName = 'gpInsertUpdate_MI_Invoice_Edit'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -282,6 +351,22 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Name = 'inOperPrice'
         Value = Null
         Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummMVAT'
+        Value = Null
+        Component = ceSummMVAT
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummPVAT'
+        Value = Null
+        Component = ceSummPVAT
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -382,6 +467,27 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Component = ceComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummMVAT'
+        Value = Null
+        Component = ceSummMVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPVAT'
+        Value = Null
+        Component = ceSummPVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Summ'#1072'_VAT'
+        Value = Null
+        Component = ceSummа_VAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -400,11 +506,11 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 352
-    Top = 169
+    Top = 160
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 208
-    Top = 192
+    Top = 143
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -455,8 +561,8 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 201
-    Top = 63
+    Left = 177
+    Top = 55
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -464,17 +570,17 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Control = ceAmount
       end
       item
-      end
-      item
-      end
-      item
         Control = ceOperPrice
       end
       item
+        Control = ceSummMVAT
+      end
+      item
+        Control = ceSummPVAT
       end>
-    Action = actRefresh_Price
-    Left = 276
-    Top = 221
+    Action = actUpdate_summ_before
+    Left = 396
+    Top = 52
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -506,6 +612,70 @@ object InvoiceItemEditForm: TInvoiceItemEditForm
         Control = cxButtonOK
       end>
     Left = 28
-    Top = 214
+    Top = 205
+  end
+  object spUpdate_before: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Invoice_SummCalc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice'
+        Value = 0.000000000000000000
+        Component = ceOperPrice
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummMVAT'
+        Value = 0.000000000000000000
+        Component = ceSummMVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummPVAT'
+        Value = 0.000000000000000000
+        Component = ceSummPVAT
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummVAT'
+        Value = 0.000000000000000000
+        Component = ceSummа_VAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 330
+    Top = 16
   end
 end

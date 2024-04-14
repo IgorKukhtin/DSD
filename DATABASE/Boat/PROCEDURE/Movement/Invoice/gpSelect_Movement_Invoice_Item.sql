@@ -17,8 +17,8 @@ RETURNS TABLE (MovementId Integer
              , Article    TVarChar
              , Amount     TFloat
              , OperPrice  TFloat
-             , Summ‡      TFloat 
-             , Summ‡_WVAT TFloat
+             , SummMVAT   TFloat 
+             , SummPVAT   TFloat
              , Summ‡_VAT  TFloat
              , Comment    TVarChar
              , Ord Integer
@@ -65,15 +65,29 @@ BEGIN
             , Object_Goods.ObjectCode         AS GoodsCode
             , Object_Goods.ValueData          AS GoodsName
             , ObjectString_Article.ValueData  AS Article
-            , MovementItem.Amount         ::TFloat AS Amount
-            , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice
-            , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summ‡ 
-            , zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summ‡_WVAT
-            , (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summ‡_VAT 
+            , MovementItem.Amount         ::TFloat AS Amount 
+            --ˆÂÌ‡ ·ÂÁ Õƒ—
+            , MIFloat_OperPrice.ValueData ::TFloat AS OperPrice  
+             --—ÛÏÏ‡ ·ÂÁ Ì‰Ò
+            , COALESCE (MIFloat_SummMVAT.ValueData
+                     , (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))
+                        )  ::TFloat AS SummMVAT
+            -- —ÛÏÏ‡ Ò Õƒ—
+            , COALESCE (MIFloat_SummPVAT.ValueData
+                     , zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat, MovementFloat_VATPercent.ValueData)
+                        )  ::TFloat AS SummPVAT  
+            --—ÛÏÏ‡ Õƒ—
+            , ( COALESCE (MIFloat_SummPVAT.ValueData, zfCalc_SummWVAT_4 ((COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))::TFloat, MovementFloat_VATPercent.ValueData)) 
+             -  COALESCE (MIFloat_SummMVAT.ValueData, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ) ::TFloat AS Summ‡_VAT 
+
+            --, (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0)) ::TFloat AS Summ‡ 
+            --, zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0), MovementFloat_VATPercent.ValueData) ::TFloat Summ‡_WVAT
+            --, (zfCalc_SummWVAT_4 (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0),MovementFloat_VATPercent.ValueData) -  (COALESCE (MovementItem.Amount,0) * COALESCE (MIFloat_OperPrice.ValueData, 0))) ::TFloat Summ‡_VAT 
+
             , MIString_Comment.ValueData      AS Comment
             , ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) :: Integer AS Ord
             , MovementItem.isErased           AS isErased
-
+            
        FROM tmpMovement AS Movement 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
@@ -82,9 +96,18 @@ BEGIN
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                    AND MovementItem.DescId = zc_MI_Master()
                                    AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
+
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
+                                       AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice() 
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummMVAT                                        
+                                        ON MIFloat_SummMVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummMVAT.DescId         = zc_MIFloat_SummMVAT()  --—ÛÏÏ‡ ·ÂÁ Ì‰Ò
+            LEFT JOIN MovementItemFloat AS MIFloat_SummPVAT
+                                        ON MIFloat_SummPVAT.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummPVAT.DescId         = zc_MIFloat_SummPVAT() -- —ÛÏÏ‡ Ò Õƒ—
+
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -104,6 +127,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.04.24         *
  07.12.23         *
 */
 

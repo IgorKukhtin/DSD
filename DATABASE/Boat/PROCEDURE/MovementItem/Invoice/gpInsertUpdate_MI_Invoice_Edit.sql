@@ -1,13 +1,15 @@
--- Function: gpInsertUpdate_MovementItem_Invoice()
+-- Function: gpInsertUpdate_MI_Invoice_Edit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Invoice (Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Invoice_Edit (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Invoice(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Invoice_Edit(
  INOUT ioId                  Integer   , -- Ключ объекта <>
     IN inMovementId          Integer   , -- Ключ объекта <>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inOperPrice           TFloat    , --
+    IN inSummMVAT            TFloat    , --
+    IN inSummPVAT            TFloat    , --     
     IN inComment             TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -16,9 +18,6 @@ AS
 $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbIsInsert          Boolean;
-   DECLARE vbSummMVAT          TFloat;
-           vbSummPVAT          TFloat;
-           vbVATPercent        TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Invoice());
@@ -27,19 +26,14 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     --
-     vbVATPercent := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_VATPercent());
-     vbSummMVAT := (COALESCE (inAmount,0) * COALESCE (inOperPrice, 0));
-     vbSummPVAT := zfCalc_SummWVAT_4 ((COALESCE (inAmount,0) * COALESCE (inOperPrice, 0)) ::TFloat, vbVATPercent);
-
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem_Invoice (ioId
                                                 , inMovementId
                                                 , inGoodsId
                                                 , inAmount
                                                 , inOperPrice 
-                                                , vbSummMVAT
-                                                , vbSummPVAT
+                                                , inSummMVAT
+                                                , inSummPVAT
                                                 , inComment
                                                 , vbUserId
                                                 );
@@ -63,7 +57,6 @@ LANGUAGE PLPGSQL VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.04.24         *
- 08.02.21         *
 */
 
 -- тест

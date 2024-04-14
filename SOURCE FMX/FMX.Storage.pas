@@ -189,7 +189,7 @@ begin
   if isArchive then
   begin
     inStream := TBytesStream.Create(InBytes);
-    outStream := TStringStream.Create;
+    outStream := TStringStream.Create('', TEncoding.UTF8);
     try
       ZDecompressStream(inStream, outStream);
       Result := outStream.DataString;

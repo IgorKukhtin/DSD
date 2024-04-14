@@ -976,12 +976,12 @@
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Summа_ch4
+          Column = SummMVAT_ch4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Summа_WVAT_ch4
+          Column = SummPVAT_ch4
         end
         item
           Format = ',0.####'
@@ -1034,12 +1034,12 @@
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Summа_ch4
+          Column = SummMVAT_ch4
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = Summа_WVAT_ch4
+          Column = SummPVAT_ch4
         end
         item
           Format = ',0.####'
@@ -1136,9 +1136,9 @@
         Options.Editing = False
         Width = 70
       end
-      object Summа_ch4: TcxGridDBColumn
+      object SummMVAT_ch4: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-        DataBinding.FieldName = 'Summ'#1072
+        DataBinding.FieldName = 'SummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
@@ -1146,9 +1146,9 @@
         Options.Editing = False
         Width = 70
       end
-      object Summа_WVAT_ch4: TcxGridDBColumn
+      object SummPVAT_ch4: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'Summ'#1072'_WVAT'
+        DataBinding.FieldName = 'SummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
