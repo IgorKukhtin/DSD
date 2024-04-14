@@ -34,7 +34,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , TaxKindName_Client  TVarChar
              , TaxKindName_info_Client TVarChar
 
-               -- данные последнего счета
+               -- данные Счета
              , MovementId_Invoice      Integer
              , InvNumberFull_Invoice   TVarChar
              , ReceiptNumber_Invoice   Integer
@@ -745,7 +745,7 @@ BEGIN
                              -- с НДС
                            , MovementFloat_Amount.ValueData          AS Amount
                              -- данные последнего счета
-                           , ROW_NUMBER () OVER (PARTITION BY Movement.ParentId ORDER BY Movement.Id DESC) AS Ord
+                             -- , ROW_NUMBER () OVER (PARTITION BY Movement.ParentId ORDER BY Movement.Id DESC) AS Ord
                       FROM Movement
                            LEFT JOIN MovementFloat AS MovementFloat_Amount
                                                    ON MovementFloat_Amount.MovementId = Movement.Id
@@ -1011,9 +1011,12 @@ BEGIN
                                  ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
                                 AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
-          -- данные последнего счета
-          LEFT JOIN tmpInvoice ON tmpInvoice.MovementId_OrderClient = tmpResAll.MovementId_OrderClient
-                              AND tmpInvoice.Ord = 1
+          -- данные Счета
+          LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                         ON MLM_Invoice.MovementId = tmpResAll.MovementId_OrderClient
+                                        AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()
+          LEFT JOIN tmpInvoice ON tmpInvoice.MovementId_Invoice = MLM_Invoice.MovementChildId
+
           -- Итого оплата
           LEFT JOIN tmpBankAccount ON tmpBankAccount.MovementId_OrderClient = tmpResAll.MovementId_OrderClient
      ;

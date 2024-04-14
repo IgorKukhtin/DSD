@@ -163,13 +163,20 @@ BEGIN
                                                   INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                                                 ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                                                AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                                               AND MovementLinkObject_InvoiceKind.ObjectId = CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
-                                                                                                                                       THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
-                                                                                                                                       THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                  WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                                                                                                                                       THEN zc_Enum_InvoiceKind_Pay() 
-                                                                                                                             END
+                                                                               AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
+                                                                                                                                                THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
+                                                                                                                                                THEN zc_Enum_InvoiceKind_PrePay() 
+                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                                                                                                                                                THEN zc_Enum_InvoiceKind_Pay() 
+                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Service()
+                                                                                                                                                THEN zc_Enum_InvoiceKind_Service()
+                                                                                                                                      END
+                                                                                                                              UNION
+                                                                                                                               SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
+                                                                                                                              UNION
+                                                                                                                               SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Service()
+                                                                                                                              )
                                              WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                             ), 0);
             -- !!!проверка уникальности!!! - потом добавить
@@ -179,30 +186,45 @@ BEGIN
     END IF;
 
 
-    -- сначала Parent
+    -- RAISE EXCEPTION 'Ошибка.%   %.', inReceiptNumber;
+
+
+    -- сначала проверка Parent - обнулить если надо у Заказа
     IF inParentId > 0
     THEN
-         -- если меняют на другой документ - Заказ или Заказ
+         -- если меняют на другой документ - Заказ
          IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0 AND Movement.ParentId <> inParentId)
+         -- или есть Заказ который связан с этим Счетом
+         OR (EXISTS (SELECT 1
+                     FROM MovementLinkMovement AS MLM
+                          JOIN Movement ON Movement.Id = MLM.MovementId AND Movement.DescId = zc_Movement_OrderClient()
+                     WHERE MLM.MovementChildId = ioId AND MLM.DescId = zc_MovementLinkMovement_Invoice()
+                    )
+             -- + тип счета не для связи
+             AND inInvoiceKindId <> zc_Enum_InvoiceKind_Pay()
+            )
          THEN
-             -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со Счетом
-             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
+             -- Заказ который связан с этим Счетом - Обнуляем связь со Счетом
+             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), MLM.MovementId, NULL)
+             FROM MovementLinkMovement AS MLM
+                  JOIN Movement ON Movement.Id = MLM.MovementId AND Movement.DescId = zc_Movement_OrderClient()
+             WHERE MLM.MovementChildId = ioId AND MLM.DescId = zc_MovementLinkMovement_Invoice()
+            ;
          END IF;
 
-         -- если Счет уже создан, а у Заказа нет связи со счетом или это Счет
-         IF ioId > 0 AND (NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inParentId AND MLM.DescId = zc_MovementLinkMovement_Invoice())
-                       OR inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                         )
-         THEN
-             -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
-             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
-         END IF;
-
-    -- если был счет
-    ELSEIF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.ParentId > 0)
+    -- если была связь у Заказа с этим Счетом
+    ELSEIF EXISTS (SELECT 1
+                   FROM MovementLinkMovement AS MLM
+                        JOIN Movement ON Movement.Id = MLM.MovementId AND Movement.DescId = zc_Movement_OrderClient()
+                   WHERE MLM.MovementChildId = ioId AND MLM.DescId = zc_MovementLinkMovement_Invoice()
+                  )
     THEN
-         -- в док. ParentId - это Заказ или Заказ - Обнуляем связь со Счетом
-         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId), NULL);
+         -- Заказ который связан с этим Счетом - это Заказ - Обнуляем связь со Счетом
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), MLM.MovementId, NULL)
+         FROM MovementLinkMovement AS MLM
+              JOIN Movement ON Movement.Id = MLM.MovementId AND Movement.DescId = zc_Movement_OrderClient()
+         WHERE MLM.MovementChildId = ioId AND MLM.DescId = zc_MovementLinkMovement_Invoice()
+        ;
     END IF;
 
 
@@ -242,14 +264,12 @@ BEGIN
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
 
-    -- если Счет был Создан + у Заказа нет связи со счетом или это Счет
-    IF vbIsInsert = TRUE AND inParentId > 0
-       AND (NOT EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM JOIN Movement ON Movement.Id = MLM.MovementChildId AND Movement.StatusId <> zc_Enum_Status_Erased() WHERE MLM.MovementId = inParentId AND MLM.DescId = zc_MovementLinkMovement_Invoice())
-         OR inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-           )
+    -- если это InvoiceKind = Счет, тогда ВСЕГДА у Заказа связь ТОЛЬКО с этим Счетом
+    IF inParentId > 0 AND inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
     THEN
         -- в док. ParentId - это Заказ или Заказ сохраняеем связь со Счетом
         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), inParentId, ioId);
+
     END IF;
 
     -- !!!протокол через свойства конкретного объекта!!!

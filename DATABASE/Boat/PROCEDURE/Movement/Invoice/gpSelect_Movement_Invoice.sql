@@ -144,7 +144,7 @@ BEGIN
                                                      , zc_MovementLinkObject_InfoMoney()
                                                      --, zc_MovementLinkObject_Product()
                                                      , zc_MovementLinkObject_PaidKind()
-                                                     , zc_MovementLinkObject_InvoiceKind() 
+                                                     , zc_MovementLinkObject_InvoiceKind()
                                                      , zc_MovementLinkObject_TaxKind()
                                                       )
                   )
@@ -348,11 +348,8 @@ BEGIN
                          LEFT JOIN tmpMLO AS MovementLinkObject_TaxKind
                                                       ON MovementLinkObject_TaxKind.MovementId = Movement.Id
                                                      AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
-                         LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                              ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
-                                             AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
-                         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (MovementLinkObject_TaxKind.ObjectId, ObjectLink_TaxKind.ChildObjectId)
-               
+                         LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
+
                          LEFT JOIN MovementDate AS MovementDate_Insert
                                                 ON MovementDate_Insert.MovementId = Movement.Id
                                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -400,16 +397,16 @@ BEGIN
                                 , MAX(ObjectDate_DateUnloading.ValueData)::TDateTime  AS DateUnloading
                                 , MAX(CASE WHEN ObjectDate_DateUnloading.ValueData IS NULL THEN 1 ELSE 0 END) = 1 AS isNotSend
                            FROM tmpData
-                           
+
                                 INNER JOIN ObjectFloat AS ObjectFloat_InvoicePdf_MovmentId
                                                        ON ObjectFloat_InvoicePdf_MovmentId.ValueData = tmpData.Id
                                                       AND ObjectFloat_InvoicePdf_MovmentId.DescId = zc_ObjectFloat_InvoicePdf_MovementId()
 
                                 LEFT JOIN ObjectDate AS ObjectDate_DateUnloading
                                                      ON ObjectDate_DateUnloading.ObjectId = ObjectFloat_InvoicePdf_MovmentId.ObjectId
-                                                    AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()    
-                                                     
-                           GROUP BY tmpData.Id                          
+                                                    AND ObjectDate_DateUnloading.DescId = zc_ObjectDate_InvoicePdf_DateUnloading()
+
+                           GROUP BY tmpData.Id
                            )
       , tmpSummProduct AS (SELECT  -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
                                    gpSelect.MovementId_OrderClient
@@ -419,8 +416,8 @@ BEGIN
                                  , gpSelect.BasisWVAT_summ_transport
 
                            FROM gpSelect_Object_Product (0, FALSE, FALSE, '') AS gpSelect
-                          )    
-    
+                          )
+
     -- Результат
     SELECT
         tmpData.Id
@@ -434,18 +431,18 @@ BEGIN
       , tmpData.InvoiceKindName
       , tmpData.isAuto
         -- с НДС
-      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0
               AND tmpData.AmountIn > 0
                   -- Замена - кривая схема
                   THEN tmpSummProduct.BasisWVAT_summ_transport
               ELSE tmpData.AmountIn
         END :: TFloat AS AmountIn
-        
+
       , tmpData.AmountIn AS AmountIn_real
       , tmpData.AmountOut
 
         -- без НДС
-      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0
               AND tmpData.AmountIn > 0
               THEN tmpSummProduct.Basis_summ_transport
               ELSE tmpData.AmountIn_NotVAT
@@ -453,7 +450,7 @@ BEGIN
       , tmpData.AmountOut_NotVAT
 
         -- Сумма НДС
-      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0 
+      , CASE WHEN tmpSummProduct.MovementId_OrderClient  > 0
               AND tmpData.AmountIn > 0
               THEN tmpSummProduct.BasisWVAT_summ_transport - tmpSummProduct.Basis_summ_transport
               ELSE tmpData.AmountIn_VAT
@@ -487,7 +484,7 @@ BEGIN
       , tmpData.ObjectId
       , tmpData.ObjectName
       , tmpData.DescName
-      --, tmpData.TaxKindId   
+      --, tmpData.TaxKindId
       , tmpData.TaxKindName   ::TVarChar
       --, Object_TaxKind.ValueData            AS TaxKindName
       , ObjectString_TaxKind_Info.ValueData AS TaxKindName_info
@@ -555,20 +552,14 @@ BEGIN
         LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = tmpData.MovementId_parent
                                 AND tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Pay()
 
-        /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                             ON ObjectLink_TaxKind.ObjectId = tmpData.ObjectId
-                            AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
-        LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
-        */
-        
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                               ON ObjectString_TaxKind_Info.ObjectId = tmpData.TaxKindId    --ObjectLink_TaxKind.ChildObjectId
+                               ON ObjectString_TaxKind_Info.ObjectId = tmpData.TaxKindId
                               AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
         LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
                                ON ObjectString_TaxKind_Comment.ObjectId =  tmpData.TaxKindId
                               AND ObjectString_TaxKind_Comment.DescId = zc_ObjectString_TaxKind_Comment()
-        
+
         LEFT JOIN tmpDateUnloading ON tmpDateUnloading.Id = tmpData.Id
 
 ;

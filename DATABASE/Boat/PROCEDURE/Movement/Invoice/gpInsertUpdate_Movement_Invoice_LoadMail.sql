@@ -11,10 +11,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice_LoadMail(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   
+
    DECLARE vbObjectId Integer;
    DECLARE vbAmount TFloat;
-   
+
    DECLARE vbPartner TVarChar;
    DECLARE vbAmountStr TVarChar;
    DECLARE vbPos Integer;
@@ -22,12 +22,12 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
 
-    --проверка, если заказ проведен сумму и дату счета уже менять нельзя
+    -- проверка, если заказ проведен сумму и дату счета уже менять нельзя
     IF COALESCE (ioId, 0) <> 0
     THEN
       RAISE EXCEPTION 'Ошибка. Процедура для создание новых документов.';
     END IF;
-    
+
     -- Ищем партнера
     vbPartner := SPLIT_PART (inSubject, ',', 1)||' '||SPLIT_PART (inSubject, ',', 2);
 
@@ -47,14 +47,14 @@ BEGIN
                       ORDER BY ID DESC
                       LIMIT 1
                      );
-      
+
         EXIT;
 
       END IF;
-      
+
       -- теперь следуюющий
       vbPartner := SUBSTRING(vbPartner, 1, length(vbPartner) - 1);
-    END LOOP;    
+    END LOOP;
 
 
     -- Ищем сумму
@@ -65,9 +65,9 @@ BEGIN
 
       IF SUBSTRING(vbPartner, vbPos, 1) in ('.',',','0','1','2','3','4','5','6','7','8','9')
       THEN
-        IF SUBSTRING(vbPartner, vbPos, 1) = ',' 
+        IF SUBSTRING(vbPartner, vbPos, 1) = ','
         THEN
-          vbAmountStr := '.'||vbAmountStr;        
+          vbAmountStr := '.'||vbAmountStr;
         ELSE
           vbAmountStr := SUBSTRING(vbPartner, vbPos, 1)||vbAmountStr;
         END IF;
@@ -75,17 +75,17 @@ BEGIN
 
       -- теперь следуюющий
       vbPos := vbPos - 1;
-    END LOOP;    
-    
+    END LOOP;
+
     -- сохранили <>
     IF vbAmountStr <> ''
     THEN
-      BEGIN  
+      BEGIN
         vbAmount := vbAmountStr::TFloat;
       EXCEPTION WHEN others THEN vbAmount := Null;
       END;
-    END IF;     
-    
+    END IF;
+
     -- сохранили <Документ>
     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Invoice(), NEXTVAL ('movement_Invoice_seq'):: TVarChar, CURRENT_DATE, Null, 0);
 
@@ -93,7 +93,15 @@ BEGIN
     IF COALESCE(vbObjectId, 0) <> 0
     THEN
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Object(), ioId, vbObjectId);
+
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TaxKind(), ioId, (SELECT ObjectLink_TaxKind.ChildObjectId
+                                                                                         FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                         WHERE ObjectLink_TaxKind.ObjectId = vbObjectId
+                                                                                           AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
+                                                                                        ));
     END IF;
+
+
     -- Сохранили свойство <Итого Сумма>
     IF COALESCE(vbAmount, 0) <> 0
     THEN
@@ -116,5 +124,5 @@ $BODY$
 
 */
 
--- 
-select * from gpInsertUpdate_Movement_Invoice_LoadMail(ioId := 0, inSubject := 'Schlauchland', inSession := '5');;
+--
+-- select * from gpInsertUpdate_Movement_Invoice_LoadMail(ioId := 0, inSubject := 'Schlauchland', inSession := '5');;

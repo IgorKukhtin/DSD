@@ -77,14 +77,7 @@ BEGIN
                                                                 , inAmountIn         := CASE WHEN vbAmount > 0 THEN  1 * vbAmount ELSE 0 END
                                                                 , inAmountOut        := CASE WHEN vbAmount < 0 THEN -1 * vbAmount ELSE 0 END
                                                                 , inInvNumberPartner := ''                                  ::TVarChar
-                                                                , inReceiptNumber    := (1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
-                                                                                                        FROM MovementString
-                                                                                                             JOIN Movement ON Movement.Id       = MovementString.MovementId
-                                                                                                                          AND Movement.DescId   = zc_Movement_Invoice()
-                                                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                                                                                        WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
-                                                                                                       ), 0)
-                                                                                        ) :: TVarChar
+                                                                , inReceiptNumber    := '0' :: TVarChar
                                                                 , inComment          := ''                                  ::TVarChar
                                                                 , inObjectId         := inMoneyPlaceId
                                                                 , inUnitId           := NULL                                ::Integer
@@ -92,13 +85,13 @@ BEGIN
                                                                 , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
                                                                 , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END :: Integer
                                                                 , inTaxKindId        := (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId
-                                                                                         FROM MovementLinkObject AS MovementLinkObject_From   
-                                                                                           LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                                                                                                ON ObjectLink_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
-                                                                                                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+                                                                                         FROM MovementLinkObject AS MovementLinkObject_From
+                                                                                              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                                                                                                   ON ObjectLink_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
+                                                                                                                  AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
                                                                                          WHERE MovementLinkObject_From.MovementId = inMovementId_Parent
-                                                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                                                         ) ::Integer
+                                                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                                                        )
                                                                 , inSession          := inSession
                                                                  )
          ;

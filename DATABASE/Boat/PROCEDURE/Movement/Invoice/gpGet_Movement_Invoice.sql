@@ -314,10 +314,7 @@ BEGIN
                LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
                                             ON MovementLinkObject_TaxKind.MovementId = Movement.Id
                                            AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
-               LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                    ON ObjectLink_TaxKind.ObjectId = Object_Object.Id
-                                   AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
-               LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id =COALESCE (MovementLinkObject_TaxKind.ObjectId, ObjectLink_TaxKind.ChildObjectId)
+               LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
 
                -- Документы Income + OrderClient, в которых указан этот Счет
                LEFT JOIN tmpMLM AS MovementLinkMovement_Invoice

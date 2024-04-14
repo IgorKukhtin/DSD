@@ -31,9 +31,14 @@ BEGIN
                             WHERE Movement.Id = inMovementId
                            );
 
-     -- 
+     -- Поиск
      vbInvoiceKindId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_InvoiceKind());
 
+     -- проверка
+     IF COALESCE (vbMovementId_order, 0) = 0 AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Необходимо заполнить элементы <Детально>.%Или заполнить <№ Заказ Клиента>.', CHR (13);
+     END IF;
 
 
     CREATE TEMP TABLE tmpInvoice ON COMMIT DROP AS
@@ -141,7 +146,7 @@ BEGIN
             , zfCalc_Summ_VAT (tmpInvoice.AmountOut, tmpInvoice.VATPercent) AS Invoice_summOut_VAT
 
               -- % НДС - Счет
-            , tmpInvoice.VATPercent ::TFloat      AS VATPercent
+            , tmpInvoice.VATPercent ::TFloat      AS VATPercent_Invoice
 
             -- сумма педоплаты
             , tmpBankAccount.AmountIn ::TFloat AS Prepayment_summ
@@ -181,8 +186,7 @@ BEGIN
             , tmpInfo.Text_Freight   ::TVarChar AS Text2
             , (' '||tmpInfo.Text_sign ||' '|| tmpInvoice.InsertName ::TVarChar)  ::TVarChar AS Text3
 
-            , CASE WHEN ObjectLink_TaxKind.ChildObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber   
-            --, CASE WHEN MovementLinkObject_TaxKind.ObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber  
+            , CASE WHEN MovementLinkObject_TaxKind.ObjectId = zc_Enum_TaxKind_Basis() THEN '<b>USt-IdNr.:</b> ' || COALESCE (ObjectString_TaxNumber.ValueData,'') ELSE '' END ::TVarChar AS TaxNumber   
             , Object_TaxKind.ValueData                AS TaxKindName
             , ObjectString_TaxKind_Comment.ValueData  AS TaxKindName_Comment
 
@@ -245,10 +249,6 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Street
                                  ON ObjectString_Street.ObjectId = Object_Client.Id
                                 AND ObjectString_Street.DescId = zc_ObjectString_Client_Street()
-
-          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                               ON ObjectLink_TaxKind.ObjectId = Object_Client.Id
-                              AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
 
           LEFT JOIN ObjectLink AS ObjectLink_PLZ
                                ON ObjectLink_PLZ.ObjectId = Object_Client.Id
@@ -391,7 +391,8 @@ BEGIN
 
      -- печать опций
      OPEN Cursor4 FOR
-        SELECT Object_Object.Id                         AS ObjectId
+        SELECT inMovementId                             AS MovementId
+             , Object_Object.Id                         AS ObjectId
              , Object_Object.ObjectCode                 AS ObjectCode
              , (Object_Object.ValueData || CASE WHEN Object_ProdColor.Id > 0 OR ObjectString_Comment.ValueData <> '' 
                                                   THEN ' : '  || CASE WHEN Object_ProdColor.Id > 0
@@ -446,7 +447,8 @@ BEGIN
           AND Object_ProdOptItems.isErased = FALSE
 
        UNION
-        SELECT 0 :: Integer                    AS ObjectId
+        SELECT inMovementId                    AS MovementId
+             , 0 :: Integer                    AS ObjectId
              , 0 :: Integer                    AS ObjectCode
              , '' :: TVarChar                  AS ObjectName
         WHERE 1=1 /*NOT EXISTS (SELECT 1 

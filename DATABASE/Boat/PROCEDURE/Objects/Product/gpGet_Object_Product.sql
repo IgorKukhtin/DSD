@@ -239,7 +239,7 @@ BEGIN
                                       ELSE MovementFloat_Amount.ValueData     
                                  END ::TFloat AS AmountIn
                                  -- первый счет
-                               , ROW_NUMBER () OVER (ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord
+                                 -- , ROW_NUMBER () OVER (ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord
                           FROM Movement
                                LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -374,11 +374,11 @@ BEGIN
          , COALESCE (ObjectBoolean_Reserve.ValueData, FALSE)   :: Boolean AS isReserve
          , CAST (FALSE AS Boolean)          AS isProdColorPattern
 
-         , tmpInvoice_First.MovementId_Invoice :: Integer    AS MovementId_Invoice
-         , tmpInvoice_First.OperDate           :: TDateTime  AS OperDate_Invoice
-         , zfCalc_InvNumber_isErased ('', tmpInvoice_First.InvNumber, tmpInvoice_First.OperDate, tmpInvoice_First.StatusId) AS InvNumber_Invoice
-         , tmpInvoice_First.StatusCode         :: Integer    AS StatusCode_Invoice
-         , tmpInvoice_First.StatusName         :: TVarChar   AS StatusName_Invoice   
+         , tmpInvoice_main.MovementId_Invoice :: Integer    AS MovementId_Invoice
+         , tmpInvoice_main.OperDate           :: TDateTime  AS OperDate_Invoice
+         , zfCalc_InvNumber_isErased ('', tmpInvoice_main.InvNumber, tmpInvoice_main.OperDate, tmpInvoice_main.StatusId) AS InvNumber_Invoice
+         , tmpInvoice_main.StatusCode         :: Integer    AS StatusCode_Invoice
+         , tmpInvoice_main.StatusName         :: TVarChar   AS StatusName_Invoice   
          
          , 0 ::Integer                   AS MovementId_BankAccount
          , ''               :: TVarChar  AS InvNumber_BankAccount
@@ -387,7 +387,7 @@ BEGIN
          , ''               :: TVarChar  AS BankAccountName
          
           -- Сумма первого счета
-         , tmpInvoice_First.AmountIn           ::TFloat AS AmountIn_Invoice
+         , tmpInvoice_main.AmountIn           ::TFloat AS AmountIn_Invoice
            -- ИТОГО по всем счетам
          , tmpInvoice.AmountIn                 ::TFloat AS AmountIn_InvoiceAll
 
@@ -509,10 +509,15 @@ BEGIN
           /*LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                   ON MovementFloat_TotalSumm.MovementId = tmpOrderClient.MovementId
                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm() */
-          -- данные первого счета
-          LEFT JOIN tmpInvoice AS tmpInvoice_First ON tmpInvoice_First.Ord = 1
+
+          -- данные Счета
+          LEFT JOIN MovementLinkMovement AS MLM_Invoice
+                                         ON MLM_Invoice.MovementId = tmpOrderClient.MovementId
+                                        AND MLM_Invoice.DescId     = zc_MovementLinkMovement_Invoice()
+          LEFT JOIN tmpInvoice AS tmpInvoice_main ON tmpInvoice_main.MovementId_Invoice = MLM_Invoice.MovementChildId
+
           -- ИТОГО оплата по первому счету
-          LEFT JOIN tmpBankAccount AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_First.MovementId_Invoice
+          LEFT JOIN tmpBankAccount AS tmpBankAccount_first ON tmpBankAccount_first.MovementId_Invoice = tmpInvoice_main.MovementId_Invoice
           -- ИТОГО по всем счетам
           LEFT JOIN (SELECT SUM (COALESCE (tmpInvoice.AmountIn,0)) AS AmountIn FROM tmpInvoice) AS tmpInvoice ON 1 = 1
           -- ИТОГО по всем оплатам
