@@ -219,7 +219,12 @@ BEGIN
                                               , inTransportSumm_load := inTransportSumm_load
                                               , inFromId             := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                               , inToId               := zc_Unit_Production() -- Участок сборки Основной
-                                              , inPaidKindId         := zc_Enum_PaidKind_FirstForm()
+                                              , inPaidKindId         := zc_Enum_PaidKind_FirstForm() 
+                                              , inTaxKindId          := (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId       -- значение у Клиента
+                                                                         FROM ObjectLink AS ObjectLink_TaxKind
+                                                                         WHERE ObjectLink_TaxKind.ObjectId = inClientId
+                                                                           AND ObjectLink_TaxKind.DescId  = zc_ObjectLink_Client_TaxKind()
+                                                                        )
                                               , inProductId          := ioId
                                               , inMovementId_Invoice := 0
                                               , inComment            := ''
@@ -243,14 +248,18 @@ BEGIN
                                                  , inInvNumberPartner := tmp.InvNumberPartner      ::TVarChar
                                                  , inOperDate         := inOperDate_OrderClient    ::TDateTime           --пересохраняем
                                                  , inPriceWithVAT     := tmp.PriceWithVAT          ::Boolean
-                                                 , inVATPercent       := (SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                                          FROM ObjectLink AS ObjectLink_TaxKind
-                                                                               LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                                     ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                                                                                                    AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()
-                                                                          WHERE ObjectLink_TaxKind.ObjectId = inClientId
-                                                                            AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-                                                                         )
+                                                 , inVATPercent       := COALESCE (-- значение в Заказе
+                                                                                    tmp.VATPercent
+                                                                                    -- значение у Клиента
+                                                                                  , (SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                                                     FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                          LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                                                                                ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                                                                                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+                                                                                     WHERE ObjectLink_TaxKind.ObjectId = inClientId
+                                                                                       AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind())
+                                                                                    )
+                                                                                   )
                                                  , inDiscountTax      := inDiscountTax             ::TFloat              --пересохраняем
                                                  , inDiscountNextTax  := inDiscountNextTax         ::TFloat              --пересохраняем
                                                  , ioSummTax          := ioSummTax                 ::TFloat
@@ -259,6 +268,12 @@ BEGIN
                                                  , inFromId           := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
+                                                 , inTaxKindId        := COALESCE (tmp.TaxKindId
+                                                                                  , (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId       -- значение у Клиента
+                                                                                     FROM ObjectLink AS ObjectLink_TaxKind
+                                                                                     WHERE ObjectLink_TaxKind.ObjectId = inClientId
+                                                                                       AND ObjectLink_TaxKind.DescId  = zc_ObjectLink_Client_TaxKind() )
+                                                                                   )
                                                  , inProductId        := ioId                      ::Integer
                                                  , inMovementId_Invoice := tmp.MovementId_Invoice  ::Integer  --пересохраняем
                                                  , inComment          := tmp.Comment               ::TVarChar

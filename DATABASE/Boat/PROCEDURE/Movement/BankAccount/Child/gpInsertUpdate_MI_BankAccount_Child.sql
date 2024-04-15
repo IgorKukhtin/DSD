@@ -123,13 +123,10 @@ BEGIN
                                                                , inInfoMoneyId      := inInfoMoneyId
                                                                , inPaidKindId       := zc_Enum_PaidKind_FirstForm()
                                                                , inInvoiceKindId    := CASE WHEN COALESCE (inInvoiceKindId,0) = 0 THEN zc_Enum_InvoiceKind_PrePay() ELSE inInvoiceKindId END
-                                                               , inTaxKindId        := (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId
-                                                                                        FROM MovementLinkObject AS MovementLinkObject_From   
-                                                                                             LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                                                                                                  ON ObjectLink_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
-                                                                                                                 AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
-                                                                                        WHERE MovementLinkObject_From.MovementId = inMovementId_OrderClient
-                                                                                          AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                               , inTaxKindId        := (SELECT MovementLinkObject_TaxKind.ObjectId
+                                                                                        FROM MovementLinkObject AS MovementLinkObject_TaxKind
+                                                                                         WHERE MovementLinkObject_TaxKind.MovementId = inMovementId_OrderClient
+                                                                                           AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
                                                                                         ) ::Integer
                                                                , inSession          := inSession
                                                                 );

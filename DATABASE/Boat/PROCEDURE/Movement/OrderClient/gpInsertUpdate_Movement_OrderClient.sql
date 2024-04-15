@@ -53,7 +53,8 @@ BEGIN
                                            , ioSummTax, ioSummReal
                                            , inTransportSumm_load
                                            , inFromId, inToId
-                                           , inPaidKindId
+                                           , inPaidKindId 
+                                           , inTaxKindId
                                            , inProductId
                                            , inMovementId_Invoice
                                            , inComment
