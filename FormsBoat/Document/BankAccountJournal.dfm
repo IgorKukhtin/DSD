@@ -4,7 +4,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientWidth = 1213
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -319
   ExplicitWidth = 1229
   ExplicitHeight = 632
   PixelsPerInch = 96
@@ -1815,6 +1814,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Component = ChildCDS
           ComponentItem = 'InvoiceKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvoiceKindId'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'InvoiceKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Amount_Invoice'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'Amount_invoice'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       isShowModal = True

@@ -1169,7 +1169,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Parent'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = GuidesParent
         ComponentItem = 'Key'
@@ -1215,7 +1215,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_parent'
+        Name = 'inMovementId_OrderClient'
         Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId_parent'
@@ -1341,14 +1341,14 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'MovementId_parent'
+        Name = 'MovementId_OrderClient'
         Value = Null
         Component = GuidesParent
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_parent'
+        Name = 'InvNumber_OrderClient'
         Value = Null
         Component = GuidesParent
         ComponentItem = 'TextValue'

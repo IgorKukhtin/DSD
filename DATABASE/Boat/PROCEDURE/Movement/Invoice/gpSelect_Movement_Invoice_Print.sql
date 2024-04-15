@@ -116,7 +116,8 @@ BEGIN
                          )
 
        -- Результат
-       SELECT tmpProduct.*
+       SELECT inMovementId                             AS MovementId
+            , tmpProduct.*
               -- без НДС
             , tmpProduct.Basis_summ_transport AS Basis_summ_transport_NotVAT
               -- НДС
@@ -312,7 +313,11 @@ BEGIN
               LEFT JOIN ObjectString AS ObjectString_Article
                                      ON ObjectString_Article.ObjectId = MovementItem.ObjectId
                                     AND ObjectString_Article.DescId   = zc_ObjectString_Article()
-         WHERE Movement.Id = inMovementId;
+         WHERE Movement.Id = inMovementId
+         ORDER BY CASE WHEN MIFloat_OperPrice.ValueData <> 0 THEN 0 ELSE 1 END
+                , CASE WHEN ObjectString_Article.ValueData <> '' THEN 0 ELSE 1 END
+                , Object_Goods.ValueData
+        ;
 
      RETURN NEXT Cursor2;
 
@@ -343,6 +348,7 @@ BEGIN
                                   AND MovementFloat_Amount.ValueData > 0
                                )
        SELECT tmpMov_Invoice.InvNumber
+            , inMovementId AS MovementId
             , zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData)     AS ReceiptNumber
             , CASE WHEN MovementFloat_Amount.ValueData > 0 THEN  1 * MovementFloat_Amount.ValueData ELSE 0 END::TFloat AS AmountIn
             --, CASE WHEN tmpMov_Invoice.Ord = 1 THEN 'Reservation fee' ELSE 'First, Second and Third Advance-payment'  END AS Text_ret
@@ -481,4 +487,4 @@ $BODY$
 
 -- [IIf (<frxDBDReturn."ord"> = 1, '', '%') ] [IIf (<frxDBDReturn."ord"> = 1, '', <frxDBDHeader."modelname_full") ] [IIf (<frxDBDReturn."ord"> = 1, '', 'Order:' <frxDBDHeader."invnumber_orderclient">) ]
 -- тест
--- SELECT * FROM gpSelect_Movement_Invoice_Print (inMovementId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_Movement_Invoice_Print (inMovementId:= 5632, inSession:= zfCalc_UserAdmin());
