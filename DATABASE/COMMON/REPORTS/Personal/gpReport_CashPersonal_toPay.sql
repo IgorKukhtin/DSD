@@ -34,7 +34,7 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inServiceDate, NULL, NULL, NULL, vbUserId);
+     PERFORM lpCheckPeriodClose_auditor (inServiceDate, inServiceDate, NULL, NULL, NULL, vbUserId);
 
     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
     PERFORM lpCheck_UserRole_8813637 (vbUserId);
