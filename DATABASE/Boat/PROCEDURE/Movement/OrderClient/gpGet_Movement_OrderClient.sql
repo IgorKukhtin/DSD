@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderClient(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
+             , StatusId Integer, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean
              , VATPercent TFloat
                -- % скидки осн
@@ -96,6 +96,7 @@ BEGIN
                  , CAST (NEXTVAL ('movement_OrderClient_seq') AS TVarChar) AS InvNumber
                  , CAST ('' AS TVarChar)     AS InvNumberPartner
                  , CURRENT_DATE :: TDateTime AS OperDate
+                 , Object_Status.Code        AS StatusId
                  , Object_Status.Code        AS StatusCode
                  , Object_Status.Name        AS StatusName
                  , CAST (False as Boolean)   AS PriceWithVAT
@@ -201,6 +202,7 @@ BEGIN
           , Movement_OrderClient.InvNumber
           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
           , Movement_OrderClient.OperDate             AS OperDate
+          , Object_Status.Id                          AS StatusId
           , Object_Status.ObjectCode                  AS StatusCode
           , Object_Status.ValueData                   AS StatusName
             --

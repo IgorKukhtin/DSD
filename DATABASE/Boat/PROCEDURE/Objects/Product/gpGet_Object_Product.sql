@@ -165,66 +165,28 @@ BEGIN
    ELSE
      RETURN QUERY
      WITH
-     tmpOrderClient AS (SELECT Object_From.Id             AS ClientId
-                             , Object_From.ValueData      AS ClientName
-                             , Movement.StatusId
-                             , Object_Status.ObjectCode   AS StatusCode
-                             , Object_Status.ValueData    AS StatusName
-                             , Movement.InvNumber ::TVarChar
-                             , Movement.OperDate  ::TDateTime
-                             , Movement.Id                AS MovementId
-                             , MovementFloat_DiscountTax.ValueData        AS DiscountTax
-                             , MovementFloat_DiscountNextTax.ValueData    AS DiscountNextTax
-                             , MovementFloat_VATPercent.ValueData         AS VATPercent
-                             , MovementFloat_OperPrice_load.ValueData     AS OperPrice_load
-                             , MovementFloat_TransportSumm_load.ValueData AS TransportSumm_load
-                             , COALESCE (MovementFloat_NPP.ValueData,0) ::TFloat AS NPP
-                             --, MovementFloat_SummReal.ValueData AS SummReal 
-                             , (COALESCE (MovementFloat_TotalSumm.ValueData, 0) - COALESCE (MovementFloat_SummTax.ValueData, 0)) :: TFloat AS SummReal
-                             , MovementFloat_SummTax.ValueData  AS SummTax
-                             , COALESCE (MovementFloat_TotalSumm.ValueData, 0) AS TotalSumm
-                        FROM Movement
-                             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-                             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-                             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-
-                             LEFT JOIN MovementFloat AS MovementFloat_DiscountTax
-                                                     ON MovementFloat_DiscountTax.MovementId = Movement.Id
-                                                    AND MovementFloat_DiscountTax.DescId = zc_MovementFloat_DiscountTax()
-
-                             LEFT JOIN MovementFloat AS MovementFloat_DiscountNextTax
-                                                     ON MovementFloat_DiscountNextTax.MovementId = Movement.Id
-                                                    AND MovementFloat_DiscountNextTax.DescId = zc_MovementFloat_DiscountNextTax()
-
-                             LEFT JOIN MovementFloat AS MovementFloat_SummTax
-                                                     ON MovementFloat_SummTax.MovementId = Movement.Id
-                                                    AND MovementFloat_SummTax.DescId = zc_MovementFloat_SummTax()
-                            
-                             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-                             LEFT JOIN MovementFloat AS MovementFloat_OperPrice_load
-                                                     ON MovementFloat_OperPrice_load.MovementId = Movement.Id
-                                                    AND MovementFloat_OperPrice_load.DescId     = zc_MovementFloat_OperPrice_load()
-                             LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
-                                                     ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
-                                                    AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
-
-                              LEFT JOIN MovementFloat AS MovementFloat_NPP
-                                                      ON MovementFloat_NPP.MovementId = Movement.Id
-                                                     AND MovementFloat_NPP.DescId = zc_MovementFloat_NPP()
-
-                        WHERE Movement.Id = inMovementId_OrderClient
-                          AND Movement.DescId = zc_Movement_OrderClient()
+     tmpOrderClient AS (
+                        SELECT spSelect.FromId             AS ClientId
+                             , spSelect.FromName           AS ClientName
+                             , spSelect.StatusId
+                             , spSelect.StatusCode
+                             , spSelect.StatusName
+                             , spSelect.InvNumber ::TVarChar
+                             , spSelect.OperDate  ::TDateTime
+                             , spSelect.Id                              AS MovementId
+                             , spSelect.DiscountTax                     AS DiscountTax
+                             , spSelect.DiscountNextTax                 AS DiscountNextTax
+                             , spSelect.SummDiscount_total              AS SummDiscount_total
+                             , spSelect.VATPercent                      AS VATPercent
+                             , spSelect.Basis_summ_orig                 AS Basis_summ_orig
+                             , spSelect.TransportSumm_load              AS TransportSumm_load
+                             , COALESCE (spSelect.NPP,0)       ::TFloat AS NPP
+                             , COALESCE (spSelect.SummReal, 0) ::TFloat AS SummReal
+                             , spSelect.SummTax                         AS SummTax
+                             , COALESCE (spSelect.Basis_summ, 0)        AS TotalSumm
+                        FROM gpGet_Movement_OrderClient (inMovementId_OrderClient, CURRENT_DATE, inSession) AS spSelect
                        )
+
            -- данные всех док счет
          , tmpInvoice AS (SELECT Movement.Id              AS MovementId_Invoice
                                , Movement.ParentId        AS MovementId_OrderClient
@@ -362,12 +324,12 @@ BEGIN
                           , tmpOrderClient.VATPercent
                            )  :: TFloat AS TotalSummVAT
 
-         , tmpOrderClient.OperPrice_load      :: TFloat AS OperPrice_load
+         , (tmpOrderClient.Basis_summ_orig + COALESCE (tmpOrderClient.TransportSumm_load, 0))   :: TFloat AS OperPrice_load
          , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load  
          
-         , (COALESCE (tmpOrderClient.OperPrice_load,0) - COALESCE (tmpOrderClient.TotalSumm,0)  - COALESCE (tmpOrderClient.TransportSumm_load, 0) ) ::TFloat AS SummDiscount_total
+         , COALESCE (tmpOrderClient.SummDiscount_total,0)::TFloat AS SummDiscount_total
          , (COALESCE (tmpOrderClient.TotalSumm,0) ) ::TFloat AS Basis_summ   
-         , (COALESCE (tmpOrderClient.OperPrice_load,0) - COALESCE (tmpOrderClient.TransportSumm_load, 0))      :: TFloat AS Basis_summ_orig
+         , (COALESCE (tmpOrderClient.Basis_summ_orig,0))      :: TFloat AS Basis_summ_orig
          ---, (COALESCE (tmpOrderClient.TotalSumm,0) - COALESCE (tmpOrderClient.SummTax,0) ) ::TFloat AS SummReal 
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf
