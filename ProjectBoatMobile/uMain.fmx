@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 4
+        TabIndex = 12
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -19121,7 +19121,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -21203,7 +21203,7 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 40.000000000000000000
+                Appearance.Width = 42.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 105.000000000000000000
               end
@@ -21213,9 +21213,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 120.000000000000000000
+                Appearance.Width = 119.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 42.000000000000000000
+                Appearance.PlaceOffset.X = 43.000000000000000000
                 Appearance.PlaceOffset.Y = 105.000000000000000000
               end
               item
@@ -21583,7 +21583,7 @@
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.WordWrap = True
               EnabledScroll = False
-              Position.X = 62.000000000000000000
+              Position.X = 68.000000000000000000
               Position.Y = 136.000000000000000000
               Size.Width = 229.000000000000000000
               Size.Height = 53.000000000000000000
@@ -21767,7 +21767,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -21991,7 +21991,7 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 40.000000000000000000
+                Appearance.Width = 42.000000000000000000
                 Appearance.Height = 20.000000000000000000
                 Appearance.PlaceOffset.Y = 127.000000000000000000
               end
@@ -22001,9 +22001,9 @@
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 120.000000000000000000
+                Appearance.Width = 119.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 42.000000000000000000
+                Appearance.PlaceOffset.X = 43.000000000000000000
                 Appearance.PlaceOffset.Y = 127.000000000000000000
               end
               item
@@ -22059,7 +22059,7 @@
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 2
-              OnChange = pbILErasedChange
+              OnChange = pbSLOrderByChange
             end
             object pbSLAllUser: TPopupBox
               Items.Strings = (
@@ -22073,7 +22073,7 @@
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 1
-              OnChange = pbILErasedChange
+              OnChange = pbSLOrderByChange
             end
             object pbSLOrderBy: TPopupBox
               Items.Strings = (
@@ -22081,13 +22081,13 @@
                 #1055#1086' '#1072#1083#1092#1086#1074#1080#1090#1091)
               ItemIndex = 0
               Position.X = 8.000000000000000000
-              Position.Y = 3.000000000000000000
+              Position.Y = 4.000000000000000000
               Size.Width = 116.000000000000000000
               Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 3
-              OnChange = pbILErasedChange
+              OnChange = pbSLOrderByChange
             end
             object llwSendList: TLabel
               Align = Bottom

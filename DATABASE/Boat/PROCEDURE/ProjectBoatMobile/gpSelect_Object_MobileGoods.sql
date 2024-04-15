@@ -13,10 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , EAN TVarChar
              , GoodsGroupName TVarChar
              , MeasureName TVarChar
-             , UnitId Integer
-             , UnitID_receipt Integer
-             , UnitId_child_receipt Integer
-             , UnitId_parent_receipt Integer
+             , FromId Integer
+             , ToId Integer
              , isErased Boolean
               )
 AS
@@ -187,14 +185,12 @@ BEGIN
                    -- Склад Основной
                    ELSE 35139
 
-              END  :: Integer AS UnitId
+              END  :: Integer AS FromId
 
-              -- На каком участке происходит расход Узла/Детали на сборку
-            , tmpReceiptGoods.UnitID_receipt
-              -- На каком участке происходит расход Детали на сборку ПФ
-            , tmpReceiptGoods.UnitId_child_receipt
-              -- На каком участке происходит сборка Узла
-            , tmpReceiptGoods.UnitId_parent_receipt
+            , COALESCE(tmpReceiptGoods.UnitID_receipt
+                     , tmpReceiptGoods.UnitId_child_receipt
+                     , tmpReceiptGoods.UnitId_parent_receipt
+                     , 33347) AS ToId
 
             , Object_Goods.isErased
        FROM tmpGoods AS Object_Goods

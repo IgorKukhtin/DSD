@@ -503,6 +503,7 @@ type
     procedure lwSendScanDblClick(Sender: TObject);
     procedure lwSendScanGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure pbSLOrderByChange(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -814,10 +815,10 @@ end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
 begin
-    FIsUpdate := DM.IsUpdate;
-    DM.IsUpdate := False;
-    FOldControl := FCuurControl;
-    FCuurControl := ActiveControl;
+  FIsUpdate := DM.IsUpdate;
+  DM.IsUpdate := False;
+  FOldControl := FCuurControl;
+  FCuurControl := ActiveControl;
 end;
 
 procedure TfrmMain.SetDateDownloadDict(Values : TDateTime);
@@ -1470,7 +1471,6 @@ begin
         sbScanClick(Sender);
       end;
       sbRefresh.Visible := True;
-      if FActiveTabPrew = tiMain then DM.DownloadRemains;
     end
     else
     if tcMain.ActiveTab = tiInventoryItemEdit then
@@ -2248,15 +2248,15 @@ end;
 procedure TfrmMain.bSIEOkClick(Sender: TObject);
 begin
 
-//  if DM.cdsInventoryList.Active then
-//  begin
+  if DM.cdsSendList.Active then
+  begin
     if (FScanType = 2) and (Trim(DM.cdsSendItemEditPartNumber.AsString) = '') then
     begin
       ShowMessage('Не заполнен серийный номер.');
       edIIEPartNumber.SetFocus;
       Exit;
     end;
-//  end;
+  end;
 
   if DM.cdsSendItemEdit.State in dsEditModes then DM.cdsSendItemEdit.Post;
 
@@ -2291,14 +2291,14 @@ begin
   end;
 
   if DM.UploadMISend then
-    //if not DM.cdsInventoryList.Active and not DM.isInventoryGoodsSend then DM.UploadInventoryGoods;
-    ;
+    if not DM.cdsSendList.Active and not DM.isSendGoodsSend then DM.UploadSendGoods;
+
 
   DM.cdsSendItemEdit.Close;
   FisScanOk := not DM.cdsInventoryList.Active;
   ReturnPriorForm;
 
-//  if tcMain.ActiveTab = tiInventory then DM.DownloadInventoryList(pbILOrderBy.ItemIndex > 0, pbILAllUser.ItemIndex > 0, pbILErased.ItemIndex > 0, GetSearshBox(lwInventoryList).Text);
+  if tcMain.ActiveTab = tiSendList then DM.DownloadSendList(pbSLOrderBy.ItemIndex > 0, pbSLAllUser.ItemIndex > 0, pbSLErased.ItemIndex > 0, GetSearshBox(lwSendList).Text);
 end;
 
 procedure TfrmMain.bSIEOpenDictGoodsClick(Sender: TObject);
@@ -2518,7 +2518,7 @@ end;
 
 procedure TfrmMain.bUploadClick(Sender: TObject);
 begin
-  if not DM.isInventoryGoodsSend then
+  if not DM.isInventoryGoodsSend or not DM.isSendGoodsSend then
     TDialogService.MessageDialog('Отправить все несохраненные данные?',
        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UploadAllData)
   else ShowMessage('Нет данных для отправки.');
@@ -3019,7 +3019,12 @@ end;
 
 procedure TfrmMain.pbILErasedChange(Sender: TObject);
 begin
-  ShowInventory;
+  if DM.cdsInventoryList.Active then ShowInventory;
+end;
+
+procedure TfrmMain.pbSLOrderByChange(Sender: TObject);
+begin
+  if DM.cdsSendList.Active then ShowSend;
 end;
 
 // клик по паролю для изменения сервера

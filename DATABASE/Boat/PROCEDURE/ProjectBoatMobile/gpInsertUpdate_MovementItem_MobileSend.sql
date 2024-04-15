@@ -30,6 +30,13 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
      
+     -- Проверим подразделения
+     IF COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0
+     THEN
+       RAISE EXCEPTION 'Ошибка. Не заполнено подразделение.';
+     END IF;
+     
+     
      -- Если чтото изменили проверяем
      IF COALESCE(ioId, 0) <> 0
      THEN

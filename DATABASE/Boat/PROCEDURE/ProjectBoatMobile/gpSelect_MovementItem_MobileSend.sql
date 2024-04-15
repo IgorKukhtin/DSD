@@ -44,12 +44,12 @@ BEGIN
                                  , MLO_From.ObjectId      AS FromId
                                  , MLO_To.ObjectId        AS ToId
                             FROM Movement
-                                 LEFT JOIN MovementLinkObject AS MLO_From
-                                                              ON MLO_From.MovementId = Movement.Id
-                                                             AND MLO_From.DescId     = zc_MovementLinkObject_From()
-                                 LEFT JOIN MovementLinkObject AS MLO_To
-                                                              ON MLO_To.MovementId = Movement.Id
-                                                             AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                 INNER JOIN MovementLinkObject AS MLO_From
+                                                               ON MLO_From.MovementId = Movement.Id
+                                                              AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                 INNER JOIN MovementLinkObject AS MLO_To
+                                                               ON MLO_To.MovementId = Movement.Id
+                                                              AND MLO_To.DescId     = zc_MovementLinkObject_To()
                             WHERE Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               AND Movement.OperDate = CURRENT_DATE) 
@@ -168,7 +168,7 @@ BEGIN
 
            , tmpMI.Amount                        AS Amount
            , tmpData.TotalCount ::TFloat         AS TotalCount
-           , tmpRemains.Remains                  AS AmountRemains
+           , COALESCE(tmpRemains.Remains, 0) ::TFloat  AS AmountRemains
 
            , tmpMI.OperDate
            , tmpMI.InvNumber
