@@ -72,7 +72,6 @@ type
     DateSale: TcxGridDBColumn;
     CIN: TcxGridDBColumn;
     EngineNum: TcxGridDBColumn;
-    BrandName: TcxGridDBColumn;
     ModelName: TcxGridDBColumn;
     EngineName: TcxGridDBColumn;
     ProdOptItemsCDS: TClientDataSet;
@@ -265,6 +264,7 @@ type
     bbPrintOffer_TD: TdxBarButton;
     bbPrintOrderConfirmation_TD: TdxBarButton;
     bbSeparator: TdxBarSeparator;
+    Amount_Debt: TcxGridDBColumn;
   private
     { Private declarations }
   public
