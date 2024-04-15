@@ -370,13 +370,17 @@ BEGIN
                                                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                                                           AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                                 WHERE Object_Personal.DescId = zc_Object_Personal()
+                                  AND Object_Personal.isErased = FALSE
                                 )
 
          , tmpPersonal_all AS (SELECT View_Personal.*
-                               FROM (SELECT UnitId_PersonalService FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE AND vbUserId <> 5
-                                     UNION
+                               FROM (SELECT UnitId_PersonalService
+                                     FROM Object_RoleAccessKeyGuide_View
+                                     WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId AND inShowAll = TRUE --AND vbUserId <> 5
+
+                                    UNION
                                       -- Админ видит ВСЕХ
-                                      SELECT Object.Id AS UnitId_PersonalService FROM Object WHERE Object.DescId = zc_Object_Unit() AND inShowAll = TRUE AND vbUserId <> 5
+                                      SELECT Object.Id AS UnitId_PersonalService FROM Object WHERE Object.DescId = zc_Object_Unit() AND inShowAll = TRUE --AND vbUserId <> 5
                                                                                                AND EXISTS (SELECT 1 FROM tmpUserAll)
                                      ) AS View_RoleAccessKeyGuide
                                      INNER JOIN tmp_Personal_View AS View_Personal ON View_Personal.UnitId = View_RoleAccessKeyGuide.UnitId_PersonalService
@@ -411,7 +415,7 @@ BEGIN
 
                            WHERE tmpMI.PersonalId IS NULL
                              AND inShowAll = TRUE
-                             AND vbUserId <> 5
+                             --AND vbUserId <> 5
                           )
           , tmpAll AS (SELECT tmpMI.MovementItemId, tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.InfoMoneyId, tmpMI.MemberId_Personal, tmpMI.MemberId , tmpMI.PersonalServiceListId, tmpMI.isErased, tmpMI.Ord FROM tmpMI
                       UNION ALL
