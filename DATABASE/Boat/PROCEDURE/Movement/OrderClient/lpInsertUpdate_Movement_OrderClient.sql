@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
+    IN inTaxKindId           Integer  ,  --
     IN inProductId           Integer   , -- Лодка
     IN inMovementId_Invoice  Integer,
     IN inComment             TVarChar  , -- Примечание
@@ -41,28 +43,13 @@ BEGIN
      END IF;
 
      -- Проверка
-     IF COALESCE (inFromId, 0) <> -1
-    AND COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                 FROM ObjectLink AS OL_Client_TaxKind
-                                                      LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                            ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
-                                                                           AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                 WHERE OL_Client_TaxKind.ObjectId = inFromId
-                                                   AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
+     IF COALESCE (inVATPercent, 0) <> COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                 FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                 WHERE ObjectFloat_TaxKind_Value.ObjectId = inTaxKindId
+                                                   AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                 ), 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе = <%> не соответствует значению у Клиента = <%>.'
-                       , '%'
-                       , zfConvert_FloatToString (inVATPercent)
-                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
-                                                             FROM ObjectLink AS OL_Client_TaxKind
-                                                                  LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                                                                        ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
-                                                                                       AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
-                                                             WHERE OL_Client_TaxKind.ObjectId = inFromId
-                                                               AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
-                                                            ), 0))
-                        ;
+         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе не соответствует значению <Тип НДС>.', '%' ;
      END IF;
 
 
@@ -82,6 +69,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Лодка>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Product(), ioId, inProductId);
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TaxKind(), ioId, inTaxKindId);
 
      -- сохранили значение <НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);

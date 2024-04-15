@@ -56,7 +56,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
                -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , BasisWVAT_summ_transport TFloat
              
-             , Value_TaxKind TFloat, TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
              --
              , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer
               )
@@ -147,7 +147,6 @@ BEGIN
                  , CAST (0 as TFloat)        AS Basis_summ_transport
                  , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
 
-                 , CAST (0 as TFloat)        AS Value_TaxKind
                  , 0                         AS TaxKindId
                  , CAST ('' as TVarChar)     AS TaxKindName
                  , CAST ('' as TVarChar)     AS TaxKindName_info    
@@ -271,7 +270,6 @@ BEGIN
             -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
           , tmpSummProduct.BasisWVAT_summ_transport
 
-          , ObjectFloat_TaxKind_Value.ValueData          AS Value_TaxKind
           , Object_TaxKind.Id                            AS TaxKindId
           , Object_TaxKind.ValueData                     AS TaxKindName
           , ObjectString_TaxKind_Info.ValueData          AS TaxKindName_info
@@ -306,6 +304,11 @@ BEGIN
                                          ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
+                                         ON MovementLinkObject_TaxKind.MovementId = Movement_OrderClient.Id
+                                        AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Product_Reserve
                                     ON ObjectBoolean_Product_Reserve.ObjectId = Object_Product.Id
@@ -379,16 +382,13 @@ BEGIN
 
             LEFT JOIN tmpSummProduct ON 1 = 1
             --
-            LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+            /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                  ON ObjectLink_TaxKind.ObjectId = Object_From.Id
                                 AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId*/
                                 
-            LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                  ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId 
-                                 AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value()   
             LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                                   ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                   ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id
                                   AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
