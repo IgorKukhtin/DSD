@@ -47,13 +47,6 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не определено значение <Вид НДС>.';
      END IF;
 
-     -- проверка - свойство должно быть установлено
-     IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
-        AND inAmount >= 0
-     THEN
-        RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
-     END IF;
-     
      -- проверка - один счет на лодку
      IF inParentId > 0 AND inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
         AND EXISTS (SELECT 1
@@ -187,6 +180,13 @@ BEGIN
 
 
     -- RAISE EXCEPTION 'Ошибка.%   %.', inReceiptNumber;
+
+     -- проверка - свойство должно быть установлено
+     IF zfConvert_StringToNumber (inReceiptNumber) = 0 AND inInvoiceKindId <> zc_Enum_InvoiceKind_Proforma()
+        AND inAmount >= 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.Не определено значение <Invoice No>.';
+     END IF;
 
 
     -- сначала проверка Parent - обнулить если надо у Заказа

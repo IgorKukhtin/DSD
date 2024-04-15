@@ -900,14 +900,14 @@ BEGIN
             , tmpData.SummCardSecond   :: TFloat AS SummCardSecond
             , tmpData.SummAvCardSecond :: TFloat AS SummAvCardSecond
               -- Карта БН (касса)- 2ф.
-            , tmpData.SummCardSecondCAsh  :: TFloat AS SummCardSecondCash
+            , tmpData.SummCardSecondCash  :: TFloat AS SummCardSecondCash
 
-            , (FLOOR (100 * CAST (tmpData.SummCardSecondCAsh * vbKoeffSummCardSecond
+            , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
                                  AS NUMERIC (16, 0))
                      ) / 100) :: TFloat AS SummCardSecond_all_00807
-            , (FLOOR (100 * CAST (tmpData.SummCardSecondCAsh * vbKoeffSummCardSecond
+            , (FLOOR (100 * CAST (tmpData.SummCardSecondCash * vbKoeffSummCardSecond
                                  AS NUMERIC (16, 0))
-                     ) / 100 - tmpData.SummCardSecondCAsh) :: TFloat AS SummCardSecond_diff_00807
+                     ) / 100 - tmpData.SummCardSecondCash) :: TFloat AS SummCardSecond_diff_00807
 
             , CAST (CASE WHEN tmpMI_card_b2.Summ_calc < 4000
                                THEN 0
@@ -921,7 +921,13 @@ BEGIN
                           WHEN tmpMI_card_b2.Summ_calc <= 29999
                           THEN tmpMI_card_b2.Summ_calc
                           ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
-                    END AS NUMERIC (16, 0)) - tmpMI_card_b2.Summ_calc) :: TFloat AS SummCardSecond_diff_005
+                    END AS NUMERIC (16, 0))
+                  - CASE WHEN tmpMI_card_b2.Summ_calc < 4000
+                               THEN 0
+                          WHEN tmpMI_card_b2.Summ_calc <= 29999
+                          THEN tmpMI_card_b2.Summ_calc
+                          ELSE tmpMI_card_b2.Summ_calc
+                    END) :: TFloat AS SummCardSecond_diff_005
 
               --
             , tmpData.SummNalog        :: TFloat AS SummNalog
