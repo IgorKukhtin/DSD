@@ -43,9 +43,12 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , InvoiceKindName         TVarChar
 
                -- Итого оплата
-             , OperDate_BankAccount   TDateTime
-             , Amount_BankAccount     TFloat
-             , MovementId_BankAccount Integer
+             , MovementId_BankAccount  Integer
+             , OperDate_BankAccount    TDateTime
+             , Amount_BankAccount      TFloat
+
+               -- ДОЛГ
+             , Amount_Debt             TFloat
 
                --
              , NPP_OrderClient Integer
@@ -293,7 +296,7 @@ BEGIN
                          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) AS isBasicConf
                            -- !!!Предварительный заказ с нейизвестной конфигурацией!!
                          , COALESCE (ObjectBoolean_Reserve.ValueData, FALSE) AS isReserve
-                         
+
                            -- % скидки №1
                          , COALESCE (tmpOrderClient.DiscountTax, 0)     AS DiscountTax
                            -- % скидки №2
@@ -767,7 +770,7 @@ BEGIN
      , tmpBankAccount AS (SELECT tmpInvoice.MovementId_OrderClient   AS MovementId_OrderClient
                                , MAX (Movement_BankAccount.OperDate) AS OperDate
                                , MAX (Movement_BankAccount.Id)       AS MovementId_BankAccount
-                               , SUM (MovementItem.Amount)           AS AmountIn
+                               , SUM (MovementItem.Amount)           AS Amount
                           FROM tmpInvoice
                                INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = tmpInvoice.MovementId_Invoice
                                                               AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Invoice()
@@ -838,14 +841,25 @@ BEGIN
          , tmpInvoice.MovementId_Invoice  :: Integer  AS MovementId_Invoice
          , zfCalc_InvNumber_two_isErased ('', tmpInvoice.InvNumber, tmpInvoice.ReceiptNumber, tmpInvoice.OperDate, tmpInvoice.StatusId) AS InvNumberFull_Invoice
          , zfConvert_StringToNumber_null (tmpInvoice.ReceiptNumber) AS ReceiptNumber_Invoice
-         , tmpInvoice.Amount              :: TFloat   AS Amount_Invoice          
+         , tmpInvoice.Amount              :: TFloat   AS Amount_Invoice
          , tmpInvoice.InvoiceKindId
          , tmpInvoice.InvoiceKindName
+
+           -- последняя оплата
+         , tmpBankAccount.MovementId_BankAccount ::Integer
            -- Итого оплата
          , tmpBankAccount.OperDate               ::TDateTime AS OperDate_BankAccount
-         , tmpBankAccount.AmountIn               ::TFloat    AS AmountIn_BankAccount
-         --последняя оплата
-         , tmpBankAccount.MovementId_BankAccount ::Integer
+         , tmpBankAccount.Amount                 ::TFloat    AS Amount_BankAccount
+
+           -- ДОЛГ
+         , (COALESCE (tmpCalc_1.BasisPriceWVAT_summ_disc, 0) + COALESCE (tmpCalc_2.BasisPriceWVAT_summ_disc, 0)
+            -- минус Скидка (ввод)
+          - zfCalc_SummWVAT (tmpResAll.SummTax, tmpOrderClient.VATPercent)
+            -- плюс Транспорт
+          + zfCalc_SummWVAT (tmpResAll.TransportSumm_load, tmpOrderClient.VATPercent)
+            -- минус оплаты
+          - COALESCE (tmpBankAccount.Amount, 0)
+           ) :: TFloat AS Amount_Debt
 
            --
          , tmpOrderClient.NPP    :: Integer AS NPP_OrderClient
@@ -1045,11 +1059,11 @@ $BODY$
             --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), MovementItem.Id, gpSelect.Basis_summ_orig)
             --, lpInsertUpdate_MovementItemFloat (zc_MIFloat_BasisPrice(), MovementItem.Id, gpSelect.Basis_summ1_orig)
 
-       FROM gpSelect_Object_Product (0, FALSE, FALSE, '5' :: TVarChar) AS gpSelect                                           
+       FROM gpSelect_Object_Product (0, FALSE, FALSE, '5' :: TVarChar) AS gpSelect
             INNER JOIN MovementItem ON MovementItem.MovementId = MovementId_OrderClient
                                    AND MovementItem.DescId     IN (zc_MI_Master())
                                    AND MovementItem.isErased   = false
-      
+
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPrice.DescId         = zc_MIFloat_OperPrice()
@@ -1059,7 +1073,7 @@ $BODY$
             LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice
                                         ON MIFloat_BasisPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_BasisPrice.DescId         = zc_MIFloat_BasisPrice()
-      
+
        WHERE MIFloat_OperPrice.ValueData      <> gpSelect.Basis_summ
           OR MIFloat_OperPriceList.ValueData  <> gpSelect.Basis_summ_orig
           OR MIFloat_BasisPrice.ValueData     <> gpSelect.Basis_summ1_orig
