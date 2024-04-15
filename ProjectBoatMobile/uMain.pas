@@ -361,6 +361,17 @@ type
     Label45: TLabel;
     LinkControlToField31: TLinkControlToField;
     LinkControlToField32: TLinkControlToField;
+    tiSendList: TTabItem;
+    lwSendList: TListView;
+    Panel8: TPanel;
+    pbSLErased: TPopupBox;
+    pbSLAllUser: TPopupBox;
+    pbSLOrderBy: TPopupBox;
+    llwSendList: TLabel;
+    BindSourceDB10: TBindSourceDB;
+    LinkListControlToField2: TLinkListControlToField;
+    BindSourceDB11: TBindSourceDB;
+    LinkListControlToField6: TLinkListControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -381,8 +392,11 @@ type
     procedure ShowInventory;
     procedure ShowInventoryItemEdit;
     procedure ShowSendItemEdit;
+    procedure ShowSend;
     procedure ShowEditInventoryItemEdit;
     procedure ShowEditInventoryListEdit;
+    procedure ShowEditSendItemEdit;
+    procedure ShowEditSendListEdit;
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -480,6 +494,15 @@ type
     procedure bSIEOkClick(Sender: TObject);
     procedure bSIEFromNameClick(Sender: TObject);
     procedure bSIEToNameClick(Sender: TObject);
+    procedure bViewSendClick(Sender: TObject);
+    procedure lwSendListDblClick(Sender: TObject);
+    procedure lwSendListFilter(Sender: TObject; const AFilter, AValue: string;
+      var Accept: Boolean);
+    procedure lwSendListGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwSendScanDblClick(Sender: TObject);
+    procedure lwSendScanGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -557,6 +580,9 @@ type
     procedure DeleteInventoryGoods(const AResult: TModalResult);
     procedure ErasedInventoryList(const AResult: TModalResult);
     procedure UnErasedInventoryList(const AResult: TModalResult);
+    procedure DeleteSendGoods(const AResult: TModalResult);
+    procedure ErasedSendList(const AResult: TModalResult);
+    procedure UnErasedSendList(const AResult: TModalResult);
     procedure BackInventoryScan(const AResult: TModalResult);
     procedure DownloadDict(const AResult: TModalResult);
     procedure UploadAllData(const AResult: TModalResult);
@@ -1434,7 +1460,7 @@ begin
     begin
       lCaption.TextSettings.Font.Size := FCaptionFontSize - 4;
       lCaption.Text := 'Перемещени'#13'Сканирование/выбор комплектующих';
-      //DM.OpenInventoryGoods;
+      DM.OpenSendGoods;
       SetSendScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultSendScan;
       if FisNextScan and FisScanOk and not FisZebraScaner then
@@ -1476,6 +1502,12 @@ begin
               edSIEPartNumber.SelectAll;
             end;
       end;
+      sbRefresh.Visible := True;
+    end
+     else
+    if tcMain.ActiveTab = tiSendList then
+    begin
+      lCaption.Text := 'Перемещения';
       sbRefresh.Visible := True;
     end
     else
@@ -1709,6 +1741,92 @@ begin
   TimerRefresh.Enabled := True;
 end;
 
+procedure TfrmMain.lwSendListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwSendListGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwSendListFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  Accept := True;
+end;
+
+procedure TfrmMain.lwSendListGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование инвентаризации
+  if (tcMain.ActiveTab = tiSendList) and DM.cdsSendList.Active and not DM.cdsSendList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := not DM.cdsSendListisErased.AsBoolean;
+    btaUnEraseRecord.Visible := DM.cdsSendListisErased.AsBoolean;
+    btaEditRecord.Visible :=  not DM.cdsSendListisErased.AsBoolean;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
+procedure TfrmMain.lwSendScanDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwSendScanGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwSendScanGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование в сканированиях перемещения
+  if (tcMain.ActiveTab = tiSendScan) and DM.cdsSendListTop.Active and not DM.cdsSendListTop.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaErrorInfo.Visible := DM.cdsSendListTopError.AsString <> '';
+    btaEraseRecord.Visible := True;
+    btaEditRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
 procedure TfrmMain.lwInventoryListDblClick(Sender: TObject);
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
@@ -1932,6 +2050,15 @@ begin
     SwitchToForm(tiSendItemEdit, nil);
 end;
 
+// начитка информации журнала перемещений
+procedure TfrmMain.ShowSend;
+begin
+
+  if not DM.DownloadSendList(pbSLOrderBy.ItemIndex > 0, pbSLAllUser.ItemIndex > 0, pbSLErased.ItemIndex > 0, GetSearshBox(lwInventoryList).Text) then Exit;
+
+  if tcMain.ActiveTab <> tiSendList then SwitchToForm(tiSendList, nil);
+end;
+
 // открытие на редактирование ранее введенной строки
 procedure TfrmMain.ShowEditInventoryItemEdit;
 begin
@@ -1990,6 +2117,78 @@ begin
   if DM.cdsInventoryItemEdit.Active then
     SwitchToForm(tiInventoryItemEdit, nil);
   lCaption.Text := 'Редактирование Инвентаризации';
+end;
+
+// открытие на редактирование ранее введенной строки
+procedure TfrmMain.ShowEditSendItemEdit;
+begin
+  if not DM.cdsSendListTop.Active and not DM.cdsSendListTop.IsEmpty then Exit;
+
+   DM.cdsSendItemEdit.Close;
+   DM.cdsSendItemEdit.CreateDataSet;
+   DM.cdsSendItemEdit.Insert;
+
+   DM.cdsSendItemEditLocalId.AsInteger := DM.cdsSendListTopLocalId.AsInteger;
+   DM.cdsSendItemEditId.AsInteger := DM.cdsSendListTopId.AsInteger;
+   DM.cdsSendItemEditGoodsId.AsInteger := DM.cdsSendListTopGoodsId.AsInteger;
+   DM.cdsSendItemEditGoodsCode.AsInteger := DM.cdsSendListTopGoodsCode.AsInteger;
+   DM.cdsSendItemEditGoodsName.AsString := DM.cdsSendListTopGoodsName.AsString;
+   DM.cdsSendItemEditArticle.AsString := DM.cdsSendListTopArticle.AsString;
+   DM.cdsSendItemEditPartNumber.AsString := DM.cdsSendListTopPartNumber.AsString;
+   DM.cdsSendItemEditGoodsGroupName.AsString := DM.cdsSendListTopGoodsGroupName.AsString;
+   DM.cdsSendItemEditAmount.AsFloat := DM.cdsSendListTopAmount.AsFloat;
+   DM.cdsSendItemEditPartionCellName.AsString := DM.cdsSendListTopPartionCellName.AsString;
+   DM.cdsSendItemEditFromId.AsInteger := DM.cdsSendListTopFromId.AsInteger;
+   DM.cdsSendItemEditFromCode.AsInteger := DM.cdsSendListTopFromCode.AsInteger;
+   DM.cdsSendItemEditFromName.AsString := DM.cdsSendListTopFromName.AsString;
+   DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListTopToId.AsInteger;
+   DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListTopToCode.AsInteger;
+   DM.cdsSendItemEditToName.AsString := DM.cdsSendListTopToName.AsString;
+
+   DM.GetMISendGoods(DM.cdsSendItemEdit);
+
+   DM.cdsSendItemEdit.Post;
+
+  if DM.cdsSendItemEdit.Active then
+    SwitchToForm(tiSendItemEdit, nil);
+  lCaption.Text := 'Редактирование Перемещения';
+end;
+
+// открытие на редактирование ранее введенной строки
+procedure TfrmMain.ShowEditSendListEdit;
+begin
+  if not DM.cdsSendList.Active and not DM.cdsSendList.IsEmpty then Exit;
+
+   DM.cdsSendItemEdit.Close;
+   DM.cdsSendItemEdit.CreateDataSet;
+   DM.cdsSendItemEdit.Insert;
+
+   DM.cdsSendItemEditLocalId.AsInteger := 0;
+   DM.cdsSendItemEditId.AsInteger := DM.cdsSendListId.AsInteger;
+   DM.cdsSendItemEditGoodsId.AsInteger := DM.cdsSendListGoodsId.AsInteger;
+   DM.cdsSendItemEditGoodsCode.AsInteger := DM.cdsSendListGoodsCode.AsInteger;
+   DM.cdsSendItemEditGoodsName.AsString := DM.cdsSendListGoodsName.AsString;
+   DM.cdsSendItemEditArticle.AsString := DM.cdsSendListArticle.AsString;
+   DM.cdsSendItemEditPartNumber.AsString := DM.cdsSendListPartNumber.AsString;
+   DM.cdsSendItemEditGoodsGroupName.AsString := DM.cdsSendListGoodsGroupName.AsString;
+   DM.cdsSendItemEditAmount.AsFloat := DM.cdsSendListAmount.AsFloat;
+   DM.cdsSendItemEditPartionCellName.AsString := DM.cdsSendListPartionCellName.AsString;
+   DM.cdsSendItemEditTotalCount.AsFloat := DM.cdsSendListTotalCount.AsFloat - DM.cdsSendItemEditAmount.AsFloat;
+   DM.cdsSendItemEditAmountRemains.AsFloat := DM.cdsSendListAmountRemains.AsFloat;
+   DM.cdsSendItemEditFromId.AsInteger := DM.cdsSendListFromId.AsInteger;
+   DM.cdsSendItemEditFromCode.AsInteger := DM.cdsSendListFromCode.AsInteger;
+   DM.cdsSendItemEditFromName.AsString := DM.cdsSendListFromName.AsString;
+   DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListToId.AsInteger;
+   DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListToCode.AsInteger;
+   DM.cdsSendItemEditToName.AsString := DM.cdsSendListToName.AsString;
+
+   DM.GetMISendGoods(DM.cdsSendItemEdit);
+
+   DM.cdsSendItemEdit.Post;
+
+  if DM.cdsSendItemEdit.Active then
+    SwitchToForm(tiSendItemEdit, nil);
+  lCaption.Text := 'Редактирование Перемещения';
 end;
 
 // Сборка Узла / Лодки
@@ -2070,6 +2269,27 @@ begin
     Exit;
   end;
 
+  if DM.cdsSendItemEditFromId.AsInteger = 0 then
+  begin
+    ShowMessage('Не заполнено подразделение <От кого>.');
+    edIIEPartNumber.SetFocus;
+    Exit;
+  end;
+
+  if DM.cdsSendItemEditToId.AsInteger = 0 then
+  begin
+    ShowMessage('Не заполнено подразделение <Кому>.');
+    edIIEPartNumber.SetFocus;
+    Exit;
+  end;
+
+  if DM.cdsSendItemEditToId.AsInteger = DM.cdsSendItemEditFromId.AsInteger then
+  begin
+    ShowMessage('Подразделения <От кого> и <Кому> должны отличаться.');
+    edIIEPartNumber.SetFocus;
+    Exit;
+  end;
+
   if DM.UploadMISend then
     //if not DM.cdsInventoryList.Active and not DM.isInventoryGoodsSend then DM.UploadInventoryGoods;
     ;
@@ -2124,7 +2344,6 @@ begin
 
   if tcMain.ActiveTab <> tiInventory then SwitchToForm(tiInventory, nil);
 end;
-
 
 // переход на форму журнала инвентаризаций
 procedure TfrmMain.bInventoryScanClick(Sender: TObject);
@@ -2310,6 +2529,11 @@ begin
   ShowInventory;
 end;
 
+procedure TfrmMain.bViewSendClick(Sender: TObject);
+begin
+  ShowSend;
+end;
+
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
 begin
   if AResult = mrOK then
@@ -2361,6 +2585,10 @@ begin
     DM.cdsSendItemEdit.Close;
     FisNextScan := False;
     FisScanOk := False;
+  end
+  else if (tcMain.ActiveTab = tiSendList)  then
+  begin
+    DM.cdsSendList.Close;
   end else if tcMain.ActiveTab = tiProductionUnion then
   begin
     DM.cdsOrderInternal.Close;
@@ -2437,6 +2665,9 @@ begin
     finally
       DM.cdsInventoryItemEdit.Post;
     end;
+  end else if tcMain.ActiveTab = tiSendScan then
+  begin
+    DM.OpenSendGoods;
   end else if (tcMain.ActiveTab = tiSendItemEdit) then
   begin
     DM.cdsSendItemEdit.Edit;
@@ -2445,6 +2676,9 @@ begin
     finally
       DM.cdsSendItemEdit.Post;
     end;
+  end else if tcMain.ActiveTab = tiSendList then
+  begin
+    ShowSend;
   end;
 end;
 
@@ -2682,6 +2916,21 @@ begin
   if AResult = mrYes then DM.UnErasedInventoryList;
 end;
 
+procedure TfrmMain.DeleteSendGoods(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.DeleteSendGoods;
+end;
+
+procedure TfrmMain.ErasedSendList(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.ErasedSendList;
+end;
+
+procedure TfrmMain.UnErasedSendList(const AResult: TModalResult);
+begin
+  if AResult = mrYes then DM.UnErasedSendList;
+end;
+
 procedure TfrmMain.DownloadDict(const AResult: TModalResult);
 begin
   if AResult = mrYes then DM.DownloadDict;
@@ -2845,6 +3094,56 @@ begin
                                    '<' + DM.cdsInventoryListGoodsName.AsString + '>'#13#10 +
                                    'в документе?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedInventoryList)
+    end;
+  end else if (tcMain.ActiveTab = tiSendScan) then
+  begin
+    // Изменить позицию комплектующих
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditSendItemEdit;
+    end else
+    // Удаление позиции комплектующих
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + IfThen(DM.cdsSendListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsSendListTopOrdUser.AsString) + '>'#13#10 +
+                                   'кол-во = <' + DM.cdsSendListTopAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsSendListTopGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsSendListTopArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsSendListTopGoodsName.AsString + '>'#13#10 +
+                                   'из документа?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteSendGoods)
+    else
+    // Информация об ошибке
+    if TButton(Sender).Tag = 4  then
+    begin
+       ShowMessage(DM.cdsSendListTopError.AsString);
+    end;
+  end else if (tcMain.ActiveTab = tiSendList) then
+  begin
+    // Изменить позицию комплектующих
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditSendListEdit;
+    end else
+    // Удаление позиции комплектующего
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + DM.cdsSendListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsSendListAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsSendListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsSendListArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsSendListGoodsName.AsString + '>'#13#10 +
+                                   'из документа?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedSendList)
+    else
+    // Востановление позиции комплектующего
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление'#13#10'№ п/п = <' + DM.cdsSendListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsSendListAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsSendListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsSendListArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsSendListGoodsName.AsString + '>'#13#10 +
+                                   'в документе?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedSendList)
     end;
   end;
 
