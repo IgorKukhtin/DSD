@@ -69,8 +69,13 @@ BEGIN
                                      , ReceiptChildId, GoodsId_out, GoodsKindId_out, Amount_out, isStart, isCost
                                       )
           SELECT lpSelect.ReceiptId_from, lpSelect.ReceiptId, lpSelect.GoodsId_in, lpSelect.GoodsKindId_in, lpSelect.Amount_in
-               , lpSelect.ReceiptChildId, lpSelect.GoodsId_out, lpSelect.GoodsKindId_out, lpSelect.Amount_out, lpSelect.isStart, lpSelect.isCost
-          FROM lpSelect_Object_ReceiptChildDetail () AS lpSelect
+               , lpSelect.ReceiptChildId
+               , lpSelect.GoodsId_out
+                 -- нар.
+               , CASE WHEN inEndDate < '01.01.2024' AND lpSelect.GoodsKindId_out = 8333 THEN 0 ELSE lpSelect.GoodsKindId_out END AS GoodsKindId_out
+               , lpSelect.Amount_out
+               , lpSelect.isStart, lpSelect.isCost
+          FROM lpSelect_Object_ReceiptChildDetail() AS lpSelect
          ;
 
 
@@ -108,7 +113,7 @@ BEGIN
               AND MIContainer.IsActive = TRUE
               AND MIContainer.Amount <> 0
               AND MovementBoolean_Peresort.MovementId IS NULL -- !!!убрали Пересортицу!!!
-              AND MIContainer.ObjectIntId_Analyzer > 0        -- !!!убрали ПФ!!!
+              --AND MIContainer.ObjectIntId_Analyzer > 0      -- !!!НЕ убрали ПФ!!!
             GROUP BY MIReceipt.ObjectId
                    , MIContainer.ObjectId_Analyzer
                    , MIContainer.ObjectIntId_Analyzer
