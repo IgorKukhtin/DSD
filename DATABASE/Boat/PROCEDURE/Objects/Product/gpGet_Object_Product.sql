@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              
              , OperPrice_load       TFloat
              , TransportSumm_load   TFloat 
+             , TransportSumm        TFloat 
              , SummDiscount_total TFloat
              , Basis_summ TFloat , Basis_summ_orig TFloat
              , isBasicConf Boolean, isReserve Boolean, isProdColorPattern Boolean   --40
@@ -53,7 +54,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AmountIn_rem  TFloat
              , AmountIn_remAll  TFloat   
              -- данные для автопересчета
-             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer
+             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer, t7 integer
               ) AS
 $BODY$
     DECLARE vbNPP TFloat;
@@ -122,7 +123,8 @@ BEGIN
            , CAST (0 AS TFloat)        AS TotalSummPVAT
            , CAST (0 AS TFloat)        AS TotalSummVAT
            , CAST (0 AS TFloat)        AS OperPrice_load
-           , CAST (0 AS TFloat)        AS TransportSumm_load  
+           , CAST (0 AS TFloat)        AS TransportSumm_load
+           , CAST (0 AS TFloat)        AS TransportSumm  
            , CAST (0 AS TFloat)        AS SummDiscount_total 
            , CAST (0 AS TFloat)        AS Basis_summ
            , CAST (0 AS TFloat)        AS Basis_summ_orig
@@ -159,6 +161,7 @@ BEGIN
            , CAST (0 AS Integer) ::integer AS t4
            , CAST (0 AS Integer) ::integer AS t5
            , CAST (0 AS Integer) ::integer AS t6
+           , CAST (0 AS Integer) ::integer AS t7
 
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
@@ -182,6 +185,7 @@ BEGIN
                              , spSelect.TaxKindName                     AS TaxKindName
                              , spSelect.Basis_summ_orig                 AS Basis_summ_orig
                              , spSelect.TransportSumm_load              AS TransportSumm_load
+                             , spSelect.TransportSumm                   AS TransportSumm
                              , COALESCE (spSelect.NPP,0)       ::TFloat AS NPP
                              , COALESCE (spSelect.SummReal, 0) ::TFloat AS SummReal
                              , spSelect.SummTax                         AS SummTax
@@ -307,6 +311,7 @@ BEGIN
           - COALESCE (tmpOrderClient.SummTax, 0)
             -- плюс Транспорт
           + COALESCE (tmpOrderClient.TransportSumm_load, 0)
+          + COALESCE (tmpOrderClient.TransportSumm, 0)
            ) :: TFloat AS TotalSummMVAT
 
            -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
@@ -315,6 +320,7 @@ BEGIN
           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
           + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
            ) :: TFloat AS TotalSummPVAT
 
            -- ИТОГО НДС
@@ -323,11 +329,13 @@ BEGIN
                           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
                             -- плюс Транспорт
                           + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+                          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
                           , tmpOrderClient.VATPercent
                            )  :: TFloat AS TotalSummVAT
 
-         , (tmpOrderClient.Basis_summ_orig + COALESCE (tmpOrderClient.TransportSumm_load, 0))   :: TFloat AS OperPrice_load
-         , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load  
+         , (tmpOrderClient.Basis_summ_orig + COALESCE (tmpOrderClient.TransportSumm_load, 0)+ COALESCE (tmpOrderClient.TransportSumm, 0))   :: TFloat AS OperPrice_load
+         , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load
+         , tmpOrderClient.TransportSumm       :: TFloat AS TransportSumm  
          
          , COALESCE (tmpOrderClient.SummDiscount_total,0)::TFloat AS SummDiscount_total
          , (COALESCE (tmpOrderClient.TotalSumm,0) ) ::TFloat AS Basis_summ   
@@ -370,6 +378,7 @@ BEGIN
           - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
           + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
             -- оплата
           - COALESCE (tmpBankAccount.AmountIn,0)
            ) ::TFloat AS AmountIn_remAll
@@ -378,19 +387,21 @@ BEGIN
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), tmpOrderClient.MovementId, COALESCE (tmpOrderClient.SummTax, 0)) ::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), tmpOrderClient.MovementId, COALESCE (tmpOrderClient.TotalSumm, 0) - COALESCE (tmpOrderClient.SummTax,0))::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), tmpOrderClient.MovementId, tmpOrderClient.TransportSumm_load)::integer
+         , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_calc(), tmpOrderClient.MovementId, tmpOrderClient.TransportSumm)::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), tmpOrderClient.MovementId, COALESCE (tmpOrderClient.VATPercent, 0) )::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), tmpOrderClient.MovementId, (zfCalc_Summ_NoVAT (tmpOrderClient.TotalSumm, tmpOrderClient.VATPercent)
-            -- минус откорректированная скидка
-          - COALESCE (tmpOrderClient.SummTax, 0)
-            -- плюс Транспорт
-          + COALESCE (tmpOrderClient.TransportSumm_load, 0)
-           ))    ::integer
+                                                                                                                     -- минус откорректированная скидка
+                                                                                                                   - COALESCE (tmpOrderClient.SummTax, 0)
+                                                                                                                     -- плюс Транспорт
+                                                                                                                   + COALESCE (tmpOrderClient.TransportSumm_load, 0)+ COALESCE (tmpOrderClient.TransportSumm, 0)
+                                                                                                                    ))    ::integer
          , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), tmpOrderClient.MovementId, (tmpOrderClient.TotalSumm
-            -- минус откорректированная скидка
-          - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
-            -- плюс Транспорт
-          + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
-           ))::integer
+                                                                                                                        -- минус откорректированная скидка
+                                                                                                                      - zfCalc_SummWVAT (tmpOrderClient.SummTax, tmpOrderClient.VATPercent)
+                                                                                                                        -- плюс Транспорт
+                                                                                                                      + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
+                                                                                                                      + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
+                                                                                                                       ))::integer
  
      FROM Object AS Object_Product
           -- включать базовую Комплектацию 

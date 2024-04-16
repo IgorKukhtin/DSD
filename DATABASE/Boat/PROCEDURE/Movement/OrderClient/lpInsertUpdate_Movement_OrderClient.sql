@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_OrderClient (Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer,Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_OrderClient(
  INOUT ioSummTax             TFloat    , -- Cумма откорректированной скидки, без НДС
  INOUT ioSummReal            TFloat    , -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
     IN inTransportSumm_load  TFloat    , -- транспорт
+    IN inTransportSumm       TFloat    , -- транспорт
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
     IN inPaidKindId          Integer   , -- ФО
@@ -78,8 +80,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), ioId, inDiscountTax);
      -- сохранили значение <% скидки доп>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), ioId, inDiscountNextTax);
-     -- сохранили значение <% скидки доп>
+     -- сохранили значение <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load(), ioId, inTransportSumm_load);
+     -- сохранили значение <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm(), ioId, inTransportSumm);
      
      -- сохранили <>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
@@ -278,6 +282,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.24         * inTransportSumm
  16.03.24         *
  01.06.23         * inTransportSumm_load
  15.05.23         *

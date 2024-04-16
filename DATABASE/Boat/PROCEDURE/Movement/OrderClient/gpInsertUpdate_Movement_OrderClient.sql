@@ -11,6 +11,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, T
                                                           , Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                           , Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_OrderClient(Integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                          , Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -24,6 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_OrderClient(
  INOUT ioSummTax             TFloat    , -- Cумма откорректированной скидки, без НДС
  INOUT ioSummReal            TFloat    , -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
     IN inTransportSumm_load  TFloat    , --транспорт
+    IN inTransportSumm       TFloat    , --транспорт
     --IN inNPP                 TFloat    , -- Очередность сборки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому
@@ -52,6 +55,7 @@ BEGIN
                                            , inVATPercent, inDiscountTax, inDiscountNextTax
                                            , ioSummTax, ioSummReal
                                            , inTransportSumm_load
+                                           , inTransportSumm
                                            , inFromId, inToId
                                            , inPaidKindId 
                                            , inTaxKindId

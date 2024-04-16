@@ -443,8 +443,6 @@ type
     cxLabel8: TcxLabel;
     edBasis_summ_orig: TcxCurrencyEdit;
     actUpdateDataSetProdOptItems: TdsdUpdateDataSet;
-    cxLabel7: TcxLabel;
-    edTaxKind_Value: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edInfo_TaxKind: TcxTextEdit;
     cxLabel23: TcxLabel;
@@ -492,6 +490,8 @@ type
     actPrintOffer_TD: TdsdPrintAction;
     bbPrintOffer_TD: TdxBarButton;
     bbPrintOrderConfirmation_TD: TdxBarButton;
+    edTransportSumm: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
   private
   public
   end;

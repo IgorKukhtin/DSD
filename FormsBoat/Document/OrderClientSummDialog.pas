@@ -78,6 +78,8 @@ type
     actUpdate_summ_after: TdsdInsertUpdateGuides;
     spUpdate_before: TdsdStoredProc;
     spUpdate_after: TdsdStoredProc;
+    cxLabel1: TcxLabel;
+    edTransportSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

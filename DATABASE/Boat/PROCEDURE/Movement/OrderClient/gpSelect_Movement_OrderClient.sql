@@ -35,7 +35,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_full  TVarChar, InvNumbe
                -- Базовая цена продажи модели с сайта
              , BasisPrice_load TFloat
                -- load Сумма транспорт с сайта
-             , TransportSumm_load TFloat
+             , TransportSumm_load TFloat  
+               --Сумма транспорт
+             , TransportSumm TFloat
 
                -- Скидка (ввод)
              , SummTax TFloat
@@ -280,6 +282,7 @@ BEGIN
               - COALESCE (MovementFloat_SummTax.ValueData, 0)
                 -- плюс Транспорт
               + COALESCE (MovementFloat_TransportSumm_load.ValueData, 0)
+              + COALESCE (MovementFloat_TransportSumm.ValueData, 0)
                ) :: TFloat AS TotalSumm_transport
 
                -- Total LP + Vat - ИТОГО с учетом всех скидок и Транспорта, Сумма продажи с НДС
@@ -287,7 +290,8 @@ BEGIN
                -- минус откорректированная скидка
              - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
                -- плюс Транспорт
-             + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)
+             + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData) 
+             + zfCalc_SummWVAT (MovementFloat_TransportSumm.ValueData, MovementFloat_VATPercent.ValueData) - COALESCE (MovementFloat_TransportSumm.ValueData, 0)
                ) :: TFloat AS TotalSummPVAT
 
                -- Сумма НДС
@@ -297,6 +301,7 @@ BEGIN
               - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData) + COALESCE (MovementFloat_SummTax.ValueData, 0)
                 -- плюс Транспорт
               + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData) - COALESCE (MovementFloat_TransportSumm_load.ValueData, 0)
+              + zfCalc_SummWVAT (MovementFloat_TransportSumm.ValueData, MovementFloat_VATPercent.ValueData) - COALESCE (MovementFloat_TransportSumm.ValueData, 0)
                ) :: TFloat AS TotalSummVAT
 
                -- ***Скидка % итого - Итоговая сумма скидки по всем % скидки
@@ -310,6 +315,8 @@ BEGIN
              , MIFloat_BasisPrice_load.ValueData           AS BasisPrice_load
                -- load Сумма транспорт с сайта
              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
+               -- load Сумма транспорт
+             , MovementFloat_TransportSumm.ValueData       AS TransportSumm
 
                -- Скидка (ввод)
              , MovementFloat_SummTax.ValueData  ::TFloat AS SummTax
@@ -382,7 +389,8 @@ BEGIN
                          -- минус откорректированная скидка
                        - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
                          -- плюс Транспорт
-                       + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)
+                       + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData) 
+                       + zfCalc_SummWVAT (MovementFloat_TransportSumm.ValueData , MovementFloat_VATPercent.ValueData) 
 
                           --  Счет
                          THEN zc_Enum_InvoiceKind_Pay()
@@ -404,6 +412,7 @@ BEGIN
                        - zfCalc_SummWVAT (MovementFloat_SummTax.ValueData, MovementFloat_VATPercent.ValueData)
                          -- плюс Транспорт
                        + zfCalc_SummWVAT (MovementFloat_TransportSumm_load.ValueData, MovementFloat_VATPercent.ValueData)
+                       + zfCalc_SummWVAT (MovementFloat_TransportSumm.ValueData, MovementFloat_VATPercent.ValueData)
 
                           --  Счет
                           THEN lfGet_Object_ValueData_sh (zc_Enum_InvoiceKind_Pay())
@@ -570,6 +579,10 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
                                      ON MovementFloat_TransportSumm_load.MovementId = Movement_OrderClient.Id
                                     AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+             -- load Сумма транспорт
+             LEFT JOIN MovementFloat AS MovementFloat_TransportSumm
+                                     ON MovementFloat_TransportSumm.MovementId = Movement_OrderClient.Id
+                                    AND MovementFloat_TransportSumm.DescId     = zc_MovementFloat_TransportSumm()
 
              -- Заказ клиента - Лодка
              LEFT JOIN MovementItem ON MovementItem.MovementId = Movement_OrderClient.Id

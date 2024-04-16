@@ -3,7 +3,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
-  ClientHeight = 276
+  ClientHeight = 306
   ClientWidth = 767
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,8 +20,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 145
-    Top = 237
+    Left = 497
+    Top = 269
     Width = 75
     Height = 25
     Action = actUpdate_summ_after
@@ -31,8 +31,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 273
-    Top = 237
+    Left = 625
+    Top = 269
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -43,7 +43,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object edSummReal: TcxCurrencyEdit
     Left = 133
-    Top = 188
+    Top = 200
     Hint = 
       #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
       #1057
@@ -57,8 +57,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     Width = 70
   end
   object cxLabel36: TcxLabel
-    Left = 46
-    Top = 162
+    Left = 47
+    Top = 174
     Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
     Caption = #1057#1082#1080#1076#1082#1072' ('#1074#1074#1086#1076') :'
     ParentShowHint = False
@@ -66,7 +66,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object edSummTax: TcxCurrencyEdit
     Left = 133
-    Top = 161
+    Top = 173
     Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.DecimalPlaces = 2
@@ -121,15 +121,15 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     Width = 70
   end
   object cxLabel29: TcxLabel
-    Left = 423
-    Top = 162
+    Left = 422
+    Top = 174
     Caption = '% '#1053#1044#1057' :'
     ParentShowHint = False
     ShowHint = True
   end
   object edVATPercent: TcxCurrencyEdit
     Left = 472
-    Top = 161
+    Top = 173
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -138,10 +138,10 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     Width = 70
   end
   object cxLabel27: TcxLabel
-    Left = 227
-    Top = 162
+    Left = 208
+    Top = 174
     Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-    Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+    Caption = 'Tr. Preparation:'
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
@@ -154,7 +154,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object edTransportSumm_load: TcxCurrencyEdit
     Left = 302
-    Top = 161
+    Top = 173
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -374,7 +374,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     ShowHint = True
   end
   object edBasis_summ: TcxCurrencyEdit
-    Left = 653
+    Left = 649
     Top = 89
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
@@ -388,8 +388,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     Width = 70
   end
   object cxLabel26: TcxLabel
-    Left = 3
-    Top = 189
+    Left = 4
+    Top = 201
     Hint = 
       #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044 +
       #1057
@@ -406,7 +406,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object cxLabel28: TcxLabel
     Left = 250
-    Top = 189
+    Top = 227
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     Caption = 'Total LP :'
     ParentShowHint = False
@@ -414,7 +414,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object edBasis_summ_transport: TcxCurrencyEdit
     Left = 302
-    Top = 188
+    Top = 227
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -427,8 +427,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     Width = 70
   end
   object cxLabel30: TcxLabel
-    Left = 391
-    Top = 189
+    Left = 390
+    Top = 201
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
     Caption = 'Total LP + Vat :'
     ParentShowHint = False
@@ -436,7 +436,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
   end
   object edBasisWVAT_summ_transport: TcxCurrencyEdit
     Left = 472
-    Top = 188
+    Top = 200
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -448,9 +448,35 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
     TabOrder = 39
     Width = 70
   end
+  object cxLabel1: TcxLabel
+    Left = 227
+    Top = 201
+    Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+    Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    Style.Font.Charset = DEFAULT_CHARSET
+    Style.Font.Color = clWindowText
+    Style.Font.Height = -11
+    Style.Font.Name = 'Tahoma'
+    Style.Font.Style = [fsBold]
+    Style.IsFontAssigned = True
+  end
+  object edTransportSumm: TcxCurrencyEdit
+    Left = 302
+    Top = 200
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Style.Color = clWindow
+    TabOrder = 41
+    Width = 70
+  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 13
-    Top = 223
+    Left = 16
+    Top = 235
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -462,8 +488,8 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 382
-    Top = 213
+    Left = 385
+    Top = 225
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -563,13 +589,13 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 215
+    Left = 443
+    Top = 227
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 113
-    Top = 235
+    Top = 267
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -593,6 +619,7 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object actUpdate_summ_after: TdsdInsertUpdateGuides
@@ -884,6 +911,13 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'TransportSumm'
+        Value = Null
+        Component = edTransportSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Basis_summ_transport'
         Value = 0.000000000000000000
         Component = edBasis_summ_transport
@@ -928,6 +962,9 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         Control = edBasisWVAT_summ_transport
       end
       item
+        Control = edTransportSumm
+      end
+      item
       end>
     Action = actUpdate_summ_before
     Left = 584
@@ -952,6 +989,9 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
       end
       item
         Control = edTransportSumm_load
+      end
+      item
+        Control = edTransportSumm
       end
       item
         Control = edBasis_summ_transport
@@ -1024,6 +1064,14 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         Name = 'inTransportSumm_load'
         Value = 0.000000000000000000
         Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm'
+        Value = Null
+        Component = edTransportSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1171,6 +1219,14 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         Name = 'inTransportSumm_load'
         Value = 0.000000000000000000
         Component = edTransportSumm_load
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTransportSumm'
+        Value = Null
+        Component = edTransportSumm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
