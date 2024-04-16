@@ -333,6 +333,23 @@ else*/
                               FROM (SELECT MAX (tmpMI_Detail_all.NPP) AS NPP FROM tmpMI_Detail_all) AS tmp_max
                                    JOIN tmpMI_Detail_all ON tmpMI_Detail_all.NPP = tmp_max.NPP - CASE WHEN inIsByDay = TRUE THEN 1 ELSE 0 END
                              )
+            -- Не упаковывать
+          , tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                             , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                        FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                             JOIN Object AS Object_GoodsByGoodsKind
+                                                         ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND Object_GoodsByGoodsKind.isErased = FALSE
+                                             JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                             JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                                ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                               AND ObjectBoolean_NotPack.ValueData = TRUE
+                                        WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                          AND 1=0
+                                       )
            -- Результат
            SELECT tmpMI.MovementItemId
                 , tmpMI.GoodsId_complete
@@ -674,10 +691,15 @@ else*/
                                                     ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                                    AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
 
+                      -- Не упаковывать
+                      LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = MovementItem.ObjectId
+                                                       AND tmpGoodsByGoodsKind_not.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
                    AND COALESCE (MIFloat_ContainerId.ValueData, 0) = 0 -- отбросили остатки на ПР-ВЕ
+                   AND tmpGoodsByGoodsKind_not.GoodsId IS NULL         -- отбросили Не упаковывать
 
                   -- AND MIBoolean_Calculated.MovementItemId IS NULL
 
@@ -688,6 +710,7 @@ else*/
           ;
 
 
+-- TEST
 IF vbUserId = 5 AND inIsByDay = TRUE
 AND 1=0
 THEN

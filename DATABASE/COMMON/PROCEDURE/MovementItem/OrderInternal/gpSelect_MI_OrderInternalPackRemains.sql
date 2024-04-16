@@ -339,6 +339,7 @@ BEGIN
                                        , GoodsId_complete Integer, GoodsKindId_complete Integer
                                        , NormPack TFloat, HourPack_calc TFloat
                                        , NormInDays TFloat
+                                       , isNotPack Boolean
                                         ) ON COMMIT DROP;
 
     INSERT INTO _tmpResult_Child (Id, ContainerId, KeyId
@@ -364,14 +365,33 @@ BEGIN
                                 , GoodsCode_packTo, GoodsName_packTo, GoodsKindName_packTo
                                 , GoodsId_complete, GoodsKindId_complete
                                 , NormPack, HourPack_calc, NormInDays
+                                , isNotPack
                                  )
 
-            WITH -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
-                 tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
+            WITH -- Не упаковывать
+                 tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                                  , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                                  , ObjectBoolean_NotPack.ValueData                          AS isNotPack
+                                             FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                  JOIN Object AS Object_GoodsByGoodsKind
+                                                              ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                             AND Object_GoodsByGoodsKind.isErased = FALSE
+                                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                  JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                                     ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                    AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                                    AND ObjectBoolean_NotPack.ValueData = TRUE
+                                             WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                            )
+                 -- заменяем товары на "Главный Товар в планировании прихода с упаковки"
+               , tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId         AS GoodsId
                                               , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId     AS GoodsKindId
                                               , ObjectLink_GoodsByGoodsKind_GoodsPack.ChildObjectId     AS GoodsId_pack
                                               , ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId AS GoodsKindId_pack
                                               , ObjectFloat_NormPack.ValueData                          AS NormPack
+                                              , CASE WHEN ObjectBoolean_NotPack.ValueData = TRUE OR tmpGoodsByGoodsKind_not.isNotPack = TRUE THEN TRUE ELSE FALSE END AS isNotPack
                                          FROM Object AS Object_GoodsByGoodsKind
                                               INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                                                     ON ObjectLink_GoodsByGoodsKind_Goods.ObjectId          = Object_GoodsByGoodsKind.Id
@@ -391,9 +411,16 @@ BEGIN
                                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKindPack.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKindPack()
                                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId > 0
 
+                                              LEFT JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                                      ON ObjectBoolean_NotPack.ObjectId  = Object_GoodsByGoodsKind.Id
+                                                                     AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+
                                               LEFT JOIN ObjectFloat AS ObjectFloat_NormPack
                                                                     ON ObjectFloat_NormPack.ObjectId = Object_GoodsByGoodsKind.Id
                                                                    AND ObjectFloat_NormPack.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormPack()
+
+                                              LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = ObjectLink_GoodsByGoodsKind_GoodsPack.ChildObjectId
+                                                                               AND tmpGoodsByGoodsKind_not.GoodsKindId = ObjectLink_GoodsByGoodsKind_GoodsKindPack.ChildObjectId
 
                                          WHERE Object_GoodsByGoodsKind.DescId   = zc_Object_GoodsByGoodsKind()
                                            AND Object_GoodsByGoodsKind.isErased = FALSE
@@ -564,6 +591,14 @@ BEGIN
                          ELSE 0
                     END  AS NUMERIC (16,2))  ::TFloat AS HourPack_calc  -- расчет сколько врмени надо на весь план
             , _tmpGoodsByGoodsKind_NormPack.NormInDays ::TFloat
+
+          , CASE WHEN tmpGoodsByGoodsKind_not.isNotPack = TRUE
+                   OR tmpGoodsByGoodsKind.isNotPack = TRUE
+                   OR _Result_Child.isNotPack = TRUE
+                 THEN TRUE
+                 ELSE FALSE
+            END AS isNotPack
+
        FROM (SELECT _Result_Child.Id
                   , _Result_Child.ContainerId
                   , _Result_Child.KeyId
@@ -1057,6 +1092,8 @@ BEGIN
                   , _Result_Child.ReceiptCode_basis
                   , _Result_Child.ReceiptName_basis
                   , _Result_Child.isErased
+                  
+                  , COALESCE (tmpGoodsByGoodsKind.isNotPack, FALSE) AS isNotPack
 
                     --  № п/п
                   , ROW_NUMBER() OVER (PARTITION BY CASE WHEN inShowAll = TRUE AND _Result_Child.Id > 0 THEN _Result_Child.Id :: TVarChar
@@ -1075,6 +1112,10 @@ BEGIN
             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = _Result_Child.GoodsId
                                          AND tmpGoodsByGoodsKind.GoodsKindId = _Result_Child.GoodsKindId
                                          AND inShowAll = TRUE
+
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = _Result_Child.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = _Result_Child.GoodsKindId
+
             LEFT JOIN Object AS Object_Goods_packTo     ON Object_Goods_packTo.Id     = tmpGoodsByGoodsKind.GoodsId_pack
             LEFT JOIN Object AS Object_GoodsKind_packTo ON Object_GoodsKind_packTo.Id = tmpGoodsByGoodsKind.GoodsKindId_pack
 
@@ -1089,11 +1130,28 @@ BEGIN
        OPEN Cursor1 FOR
 
        -- Результат
+       WITH -- Не упаковывать
+            tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                             , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                             , ObjectBoolean_NotPack.ValueData                          AS isNotPack
+                                        FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                             JOIN Object AS Object_GoodsByGoodsKind
+                                                         ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND Object_GoodsByGoodsKind.isErased = FALSE
+                                             JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                             ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                            AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                             JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                                ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                               AND ObjectBoolean_NotPack.ValueData = TRUE
+                                        WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                       )
        SELECT _Result_Master.Id
             , _Result_Master.KeyId
             , _Result_Master.GoodsId
             , _Result_Master.GoodsCode
-            , _Result_Master.GoodsName
+            , (CASE WHEN _Result_Child.isNotPack = 0 AND vbUserId = 5 THEN '---не упаковывать ' ELSE '' END || _Result_Master.GoodsName) :: TVarChar AS GoodsName
             , _Result_Master.GoodsId_basis
             , _Result_Master.GoodsCode_basis
             , _Result_Master.GoodsName_basis
@@ -1255,7 +1313,10 @@ BEGIN
 
                            , SUM (_Result_Child.AmountPackNext_calc)       AS AmountPackNext_calc
                            , SUM (_Result_Child.AmountPackNextSecond_calc) AS AmountPackNextSecond_calc
+                           , MIN (CASE WHEN tmpGoodsByGoodsKind_not.isNotPack = TRUE THEN 0 ELSE 1 END) AS isNotPack
                       FROM _Result_Child
+                           LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = _Result_Child.GoodsId
+                                                            AND tmpGoodsByGoodsKind_not.GoodsKindId = _Result_Child.GoodsKindId
                       GROUP BY _Result_Child.KeyId
                      ) AS _Result_Child ON _Result_Child.KeyId = _Result_Master.KeyId
 
@@ -1290,7 +1351,7 @@ BEGIN
             , _Result_Child.KeyId
             , _Result_Child.GoodsId
             , _Result_Child.GoodsCode
-            , _Result_Child.GoodsName
+            , (CASE WHEN _Result_Child.isNotPack = TRUE AND vbUserId = 5 THEN '---не упаковывать ' ELSE '' END || _Result_Child.GoodsName) :: TVarChar AS GoodsName
             , _Result_Child.GoodsKindId
             , _Result_Child.GoodsKindName
             , _Result_Child.MeasureName
@@ -1419,6 +1480,7 @@ BEGIN
             , _Result_Child.NormPack      ::TFloat
             , _Result_Child.HourPack_calc ::TFloat
             , _Result_Child.NormInDays    ::TFloat
+
        FROM _tmpResult_Child AS _Result_Child
            LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                          ON MIBoolean_Calculated.MovementItemId = _Result_Child.Id
@@ -1450,11 +1512,28 @@ BEGIN
        RETURN NEXT Cursor2;
 
        OPEN Cursor3 FOR
+            WITH -- Не упаковывать
+                 tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                                  , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                                  , ObjectBoolean_NotPack.ValueData                          AS isNotPack
+                                             FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                                  JOIN Object AS Object_GoodsByGoodsKind
+                                                              ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                             AND Object_GoodsByGoodsKind.isErased = FALSE
+                                                  JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                                  JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                                     ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                    AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                                    AND ObjectBoolean_NotPack.ValueData = TRUE
+                                             WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                            )
        SELECT _Result_ChildTotal.Id
             , _Result_ChildTotal.ContainerId
             , _Result_ChildTotal.GoodsId
             , _Result_ChildTotal.GoodsCode
-            , _Result_ChildTotal.GoodsName
+            , (CASE WHEN tmpGoodsByGoodsKind_not.isNotPack = TRUE AND vbUserId = 5 THEN '---не упаковывать ' ELSE '' END || _Result_ChildTotal.GoodsName) :: TVarChar AS GoodsName
             , _Result_ChildTotal.GoodsId_complete
             , _Result_ChildTotal.GoodsCode_complete
             , _Result_ChildTotal.GoodsName_complete
@@ -1617,6 +1696,8 @@ BEGIN
        FROM _Result_ChildTotal
             LEFT JOIN _tmpGoodsByGoodsKind_NormPack ON _tmpGoodsByGoodsKind_NormPack.GoodsId     = _Result_ChildTotal.GoodsId
                                                    AND _tmpGoodsByGoodsKind_NormPack.GoodsKindId = _Result_ChildTotal.GoodsKindId
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = _Result_ChildTotal.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = _Result_ChildTotal.GoodsKindId
        ;
 
        RETURN NEXT Cursor3;
@@ -1651,7 +1732,7 @@ BEGIN
             , _Result_Child.ContainerId
             , _Result_Child.GoodsId
             , _Result_Child.GoodsCode
-            , _Result_Child.GoodsName
+            , (CASE WHEN _Result_Child.isNotPack = TRUE AND vbUserId = 5 THEN '---не упаковывать ' ELSE '' END || _Result_Child.GoodsName) :: TVarChar AS GoodsName
             , _Result_Child.GoodsKindId
             , _Result_Child.GoodsKindName
             , _Result_Child.MeasureName

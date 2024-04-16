@@ -23,6 +23,11 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Дата документа <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
     END IF;
 
+if vbUserId = 5 AND 1=0
+then
+    inOperDate:= CURRENT_DATE;
+end if;
+
     -- !!!пересчет Рецептур, временно захардкодил!!!
     PERFORM lpUpdate_Object_Receipt_Parent (0, 0, 0);
 
@@ -70,11 +75,11 @@ BEGIN
        FROM (SELECT CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END AS ContainerId
                   , Container.ObjectId                   AS GoodsId
                   , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                    -- 
+                    --
                   , Container.Amount - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_start
-                    -- 
+                    --
                   , CASE WHEN tmpUnit_RK.UnitId > 0 THEN Container.Amount ELSE 0 END - SUM (CASE WHEN tmpUnit_RK.UnitId > 0 THEN COALESCE (MIContainer.Amount, 0) ELSE 0 END) AS AmountRK_start
-                    -- 
+                    --
                   , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END) AS Amount_next
                   , SUM (CASE WHEN MIContainer.OperDate = inOperDate AND MIContainer.isActive = TRUE
                                AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
@@ -107,7 +112,7 @@ BEGIN
                   LEFT JOIN tmpUnit_SKLAD ON tmpUnit_SKLAD.UnitId = CLO_Unit.ObjectId
                   -- Склад Реализации
                   LEFT JOIN tmpUnit_RK ON tmpUnit_RK.UnitId = CLO_Unit.ObjectId
-                  
+
 
              WHERE CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
              GROUP BY CASE WHEN tmpUnit_all.isContainer = TRUE THEN Container.Id ELSE 0 END
@@ -143,6 +148,23 @@ BEGIN
                         AND MovementItem.DescId     = zc_MI_Master()
                         AND MovementItem.isErased   = FALSE
                      )
+    -- Не упаковывать
+  , tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                     , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     JOIN Object AS Object_GoodsByGoodsKind
+                                                 ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                AND Object_GoodsByGoodsKind.isErased = FALSE
+                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                     JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                        ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                       AND ObjectBoolean_NotPack.ValueData = TRUE
+                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  AND 1=0
+                               )
        -- результат - для SKLAD
        SELECT tmp.MovementItemId
             , tmp.ContainerId
@@ -164,23 +186,51 @@ BEGIN
                             ) AS tmpMI ON tmpMI.GoodsId     = tmpContainer.GoodsId
                                       AND tmpMI.GoodsKindId = tmpContainer.GoodsKindId
             ) AS tmp
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmp.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = tmp.GoodsKindId
+       WHERE tmpGoodsByGoodsKind_not.GoodsId IS NULL
        GROUP BY tmp.MovementItemId
               , tmp.ContainerId
               , tmp.GoodsId
               , tmp.GoodsKindId
+
+      UNION ALL
+        -- Обнулили
+       SELECT tmpMI.MovementItemId
+            , tmpMI.ContainerId
+            , tmpMI.GoodsId
+            , tmpMI.GoodsKindId
+            , 0 AS Amount_start
+            , 0 AS AmountRK_start
+            , 0 AS AmountPrIn
+       FROM tmpMI
+            INNER JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmpMI.GoodsId
+                                              AND tmpGoodsByGoodsKind_not.GoodsKindId = tmpMI.GoodsKindId
+
       UNION ALL
        -- результат - для CEH
-       SELECT tmpMI.MovementItemId
-            , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
-            , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
-            , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
-            , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
-            , 0                                                       AS AmountRK_start
-            , 0                                                       AS AmountPrIn
-       FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
-            ) AS tmpContainer
-            FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
-                      ) AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
+       SELECT tmp.MovementItemId
+            , tmp.ContainerId
+            , tmp.GoodsId
+            , tmp.GoodsKindId
+            ,  (tmp.Amount_start)   AS Amount_start
+            ,  (tmp.AmountRK_start) AS AmountRK_start
+            ,  (tmp.AmountPrIn)     AS AmountPrIn
+       FROM (SELECT tmpMI.MovementItemId
+                  , COALESCE (tmpContainer.ContainerId,  tmpMI.ContainerId) AS ContainerId
+                  , COALESCE (tmpContainer.GoodsId,      tmpMI.GoodsId)     AS GoodsId
+                  , COALESCE (tmpContainer.GoodsKindId,  tmpMI.GoodsKindId) AS GoodsKindId
+                  , COALESCE (tmpContainer.Amount_start, 0)                 AS Amount_start
+                  , 0                                                       AS AmountRK_start
+                  , 0                                                       AS AmountPrIn
+             FROM (SELECT * FROM tmpContainer WHERE tmpContainer.ContainerId > 0
+                  ) AS tmpContainer
+                  FULL JOIN (SELECT * FROM tmpMI WHERE tmpMI.ContainerId > 0
+                            ) AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
+            ) AS tmp
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmp.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = tmp.GoodsKindId
+       WHERE tmpGoodsByGoodsKind_not.GoodsId IS NULL
       ;
 
 --    RAISE EXCEPTION '<%>', (select count(*) from tmpAll where tmpAll.ContainerId = 0 and tmpAll.GoodsId = 593238 and tmpAll.GoodsKindId = 8335);
@@ -238,7 +288,7 @@ end if;
                                                )
     FROM tmpAll;
 
-if inSession = '5' AND 1=1
+if vbUserId = 5 AND 1=1
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     , (select sum (tmpAll.AmountRK_start) from tmpAll) -- where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
