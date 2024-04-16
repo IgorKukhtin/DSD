@@ -476,8 +476,8 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE THEN 0 ELSE tmpReport.ObjectId_inf END
-
+           LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
@@ -574,7 +574,8 @@ BEGIN
            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Detail ON View_InfoMoney_Detail.InfoMoneyId = tmpReport.InfoMoneyId_Detail
                                                                    -- AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = tmpReport.DirectionId
-           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE THEN 0 ELSE tmpReport.ObjectId_inf END
+           LEFT JOIN Object AS Object_Destination_calc ON Object_Destination_calc.Id = tmpReport.ObjectId_inf
+           LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = CASE WHEN vbIsUserRole_8813637 = TRUE AND Object_Destination_calc.DescId IN (zc_Object_Personal(), zc_Object_Member()) THEN NULL ELSE tmpReport.ObjectId_inf END
 
            LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
