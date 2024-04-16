@@ -1482,6 +1482,8 @@ type
     actCashOperationFIO_2: TdsdOpenForm;
     miCashOperationFIO_2: TMenuItem;
     miCashOperationFIO_1: TMenuItem;
+    actReport_ReceiptProductionOutAnalyzeLineForm: TdsdOpenForm;
+    miReport_ReceiptProductionOutAnalyzeLine: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
