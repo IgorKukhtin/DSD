@@ -16,6 +16,11 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
+if vbUserId = 5 AND 1=0
+then
+    inOperDate:= CURRENT_DATE;
+end if;
+
 
      -- ЦЕХ упаковки
      IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To() AND MLO.ObjectId = 8451)
@@ -198,19 +203,63 @@ BEGIN
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                 )
+    -- Не упаковывать
+  , tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                     , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     JOIN Object AS Object_GoodsByGoodsKind
+                                                 ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                AND Object_GoodsByGoodsKind.isErased = FALSE
+                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                     JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                        ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                       AND ObjectBoolean_NotPack.ValueData = TRUE
+                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  AND 1=0
+                               )
        -- Результат
        SELECT tmp.MovementItemId
-             , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
-             , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartner, 0)             END AS AmountPartner
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNext, 0)         END AS AmountPartnerNext
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPromo, 0)        END AS AmountPartnerPromo
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNextPromo, 0)    END AS AmountPartnerNextPromo
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPrior, 0)        END AS AmountPartnerPrior
-             , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   END AS AmountPartnerPriorPromo
-       FROM tmpOrder
-            FULL JOIN tmpMI AS tmp ON tmp.GoodsId     = tmpOrder.GoodsId
-                                 AND tmp.GoodsKindId = tmpOrder.GoodsKindId
+            , tmp.GoodsId
+            , tmp.GoodsKindId
+            , tmp.AmountPartner
+            , tmp.AmountPartnerNext
+            , tmp.AmountPartnerPromo
+            , tmp.AmountPartnerNextPromo
+            , tmp.AmountPartnerPrior
+            , tmp.AmountPartnerPriorPromo
+       FROM (SELECT tmp.MovementItemId
+                   , COALESCE (tmp.GoodsId,tmpOrder.GoodsId)          AS GoodsId
+                   , COALESCE (tmp.GoodsKindId, tmpOrder.GoodsKindId) AS GoodsKindId
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartner, 0)             END AS AmountPartner
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNext, 0)         END AS AmountPartnerNext
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPromo, 0)        END AS AmountPartnerPromo
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerNextPromo, 0)    END AS AmountPartnerNextPromo
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPrior, 0)        END AS AmountPartnerPrior
+                   , CASE WHEN tmp.ContainerId > 0 THEN 0 ELSE COALESCE (tmpOrder.AmountPartnerPriorPromo, 0)   END AS AmountPartnerPriorPromo
+             FROM tmpOrder
+                  FULL JOIN tmpMI AS tmp ON tmp.GoodsId   = tmpOrder.GoodsId
+                                       AND tmp.GoodsKindId = tmpOrder.GoodsKindId
+            ) AS tmp
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmp.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = tmp.GoodsKindId
+       WHERE tmpGoodsByGoodsKind_not.GoodsId IS NULL
+
+      UNION ALL
+       SELECT tmpMI.MovementItemId
+            , tmpMI.GoodsId
+            , tmpMI.GoodsKindId
+            , 0 AS AmountPartner
+            , 0 AS AmountPartnerNext
+            , 0 AS AmountPartnerPromo
+            , 0 AS AmountPartnerNextPromo
+            , 0 AS AmountPartnerPrior
+            , 0 AS AmountPartnerPriorPromo
+       FROM tmpMI
+            INNER JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmpMI.GoodsId
+                                              AND tmpGoodsByGoodsKind_not.GoodsKindId = tmpMI.GoodsKindId
       ;
 
        -- сохранили

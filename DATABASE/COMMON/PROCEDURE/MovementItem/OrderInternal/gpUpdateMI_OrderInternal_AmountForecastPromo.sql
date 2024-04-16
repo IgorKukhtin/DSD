@@ -302,71 +302,143 @@ BEGIN
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
                     )
+    -- Не упаковывать
+  , tmpGoodsByGoodsKind_not AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId          AS GoodsId
+                                     , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId      AS GoodsKindId
+                                FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                     JOIN Object AS Object_GoodsByGoodsKind
+                                                 ON Object_GoodsByGoodsKind.Id       = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                AND Object_GoodsByGoodsKind.isErased = FALSE
+                                     JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                     ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                    AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                     JOIN ObjectBoolean AS ObjectBoolean_NotPack
+                                                        ON ObjectBoolean_NotPack.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                       AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
+                                                       AND ObjectBoolean_NotPack.ValueData = TRUE
+                                WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                  AND 1=0
+                               )
         -- Результат
         INSERT INTO tmpAll (MovementItemId, ContainerId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecastOrderPromo, AmountForecast, AmountForecastPromo
                           , Value1, Value2, Value3, Value4, Value5, Value6, Value7
                           , Promo1, Promo2, Promo3, Promo4, Promo5, Promo6, Promo7
                            )
-          SELECT tmpMI.MovementItemId                             AS MovementItemId
-               , COALESCE (tmpMI.ContainerId, 0)                  AS ContainerId
-               , COALESCE (tmpMI.GoodsId, tmpAll.GoodsId)         AS GoodsId
-               , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrder, 0)      END AS AmountForecastOrder
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrderPromo, 0) END AS AmountForecastOrderPromo
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSale, 0)       END AS AmountForecast
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSalePromo, 0)  END AS AmountForecastPromo
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value1, 0)           END AS Value1
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value2, 0)           END AS Value2
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value3, 0)           END AS Value3
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value4, 0)           END AS Value4
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value5, 0)           END AS Value5
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value6, 0)           END AS Value6
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value7, 0)           END AS Value7
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo1, 0)           END AS Promo1
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo2, 0)           END AS Promo2
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo3, 0)           END AS Promo3
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo4, 0)           END AS Promo4
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo5, 0)           END AS Promo5
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo6, 0)           END AS Promo6
-               , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo7, 0)           END AS Promo7
-          FROM (SELECT tmpMIAll.GoodsId
-                     , tmpMIAll.GoodsKindId
-                     , SUM (tmpMIAll.AmountOrder)      AS AmountOrder
-                     , SUM (tmpMIAll.AmountOrderPromo) AS AmountOrderPromo
-                     , SUM (tmpMIAll.AmountSale)       AS AmountSale
-                     , SUM (tmpMIAll.AmountSalePromo)  AS AmountSalePromo
-                       -- !!!Приоритет - по продаже!!!
-                     /*, MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
-                     , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
-                     */
-                       -- !!!Приоритет - по Заявке!!!
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
-                     , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
-                       -- !!!акции - план на 1 неделю вперед!!!
-                     , 0 AS Promo1
-                     , 0 AS Promo2
-                     , 0 AS Promo3
-                     , 0 AS Promo4
-                     , 0 AS Promo5
-                     , 0 AS Promo6
-                     , 0 AS Promo7
-                FROM tmpMIAll
-                GROUP BY tmpMIAll.GoodsId
-                       , tmpMIAll.GoodsKindId
-                ) AS tmpAll
-                FULL JOIN tmpMI ON tmpMI.GoodsId     = tmpAll.GoodsId
-                               AND tmpMI.GoodsKindId = tmpAll.GoodsKindId
-       ;
+          SELECT tmpMI.MovementItemId
+               , tmpMI.ContainerId
+               , tmpMI.GoodsId
+               , tmpMI.GoodsKindId
+               , tmpMI.AmountForecastOrder
+               , tmpMI.AmountForecastOrderPromo
+               , tmpMI.AmountForecast
+               , tmpMI.AmountForecastPromo
+               , tmpMI.Value1
+               , tmpMI.Value2
+               , tmpMI.Value3
+               , tmpMI.Value4
+               , tmpMI.Value5
+               , tmpMI.Value6
+               , tmpMI.Value7
+               , tmpMI.Promo1
+               , tmpMI.Promo2
+               , tmpMI.Promo3
+               , tmpMI.Promo4
+               , tmpMI.Promo5
+               , tmpMI.Promo6
+               , tmpMI.Promo7
+
+          FROM (SELECT tmpMI.MovementItemId                             AS MovementItemId
+                     , COALESCE (tmpMI.ContainerId, 0)                  AS ContainerId
+                     , COALESCE (tmpMI.GoodsId, tmpAll.GoodsId)         AS GoodsId
+                     , COALESCE (tmpMI.GoodsKindId, tmpAll.GoodsKindId) AS GoodsKindId
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrder, 0)      END AS AmountForecastOrder
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountOrderPromo, 0) END AS AmountForecastOrderPromo
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSale, 0)       END AS AmountForecast
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.AmountSalePromo, 0)  END AS AmountForecastPromo
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value1, 0)           END AS Value1
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value2, 0)           END AS Value2
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value3, 0)           END AS Value3
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value4, 0)           END AS Value4
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value5, 0)           END AS Value5
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value6, 0)           END AS Value6
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Value7, 0)           END AS Value7
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo1, 0)           END AS Promo1
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo2, 0)           END AS Promo2
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo3, 0)           END AS Promo3
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo4, 0)           END AS Promo4
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo5, 0)           END AS Promo5
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo6, 0)           END AS Promo6
+                     , CASE WHEN tmpMI.ContainerId > 0 THEN 0 ELSE COALESCE (tmpAll.Promo7, 0)           END AS Promo7
+                FROM (SELECT tmpMIAll.GoodsId
+                           , tmpMIAll.GoodsKindId
+                           , SUM (tmpMIAll.AmountOrder)      AS AmountOrder
+                           , SUM (tmpMIAll.AmountOrderPromo) AS AmountOrderPromo
+                           , SUM (tmpMIAll.AmountSale)       AS AmountSale
+                           , SUM (tmpMIAll.AmountSalePromo)  AS AmountSalePromo
+                             -- !!!Приоритет - по продаже!!!
+                           /*, MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
+                           , MAX (CASE WHEN tmpMIAll.AmountSale > 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
+                           */
+                             -- !!!Приоритет - по Заявке!!!
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount1 + tmpMIAll.Branch1 ELSE tmpMIAll.Order1 + tmpMIAll.OrderBranch1 END) AS Value1
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount2 + tmpMIAll.Branch2 ELSE tmpMIAll.Order2 + tmpMIAll.OrderBranch2 END) AS Value2
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount3 + tmpMIAll.Branch3 ELSE tmpMIAll.Order3 + tmpMIAll.OrderBranch3 END) AS Value3
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount4 + tmpMIAll.Branch4 ELSE tmpMIAll.Order4 + tmpMIAll.OrderBranch4 END) AS Value4
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount5 + tmpMIAll.Branch5 ELSE tmpMIAll.Order5 + tmpMIAll.OrderBranch5 END) AS Value5
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount6 + tmpMIAll.Branch6 ELSE tmpMIAll.Order6 + tmpMIAll.OrderBranch6 END) AS Value6
+                           , MAX (CASE WHEN tmpMIAll.AmountOrder = 0 THEN tmpMIAll.Amount7 + tmpMIAll.Branch7 ELSE tmpMIAll.Order7 + tmpMIAll.OrderBranch7 END) AS Value7
+                             -- !!!акции - план на 1 неделю вперед!!!
+                           , 0 AS Promo1
+                           , 0 AS Promo2
+                           , 0 AS Promo3
+                           , 0 AS Promo4
+                           , 0 AS Promo5
+                           , 0 AS Promo6
+                           , 0 AS Promo7
+                      FROM tmpMIAll
+                      GROUP BY tmpMIAll.GoodsId
+                             , tmpMIAll.GoodsKindId
+                      ) AS tmpAll
+                      FULL JOIN tmpMI ON tmpMI.GoodsId     = tmpAll.GoodsId
+                                     AND tmpMI.GoodsKindId = tmpAll.GoodsKindId
+               ) AS tmpMI
+            LEFT JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmpMI.GoodsId
+                                             AND tmpGoodsByGoodsKind_not.GoodsKindId = tmpMI.GoodsKindId
+       WHERE tmpGoodsByGoodsKind_not.GoodsId IS NULL
+
+      UNION ALL
+       SELECT tmpMI.MovementItemId
+            , tmpMI.ContainerId
+            , tmpMI.GoodsId
+            , tmpMI.GoodsKindId
+            , 0 AS AmountForecastOrder
+            , 0 AS AmountForecastOrderPromo
+            , 0 AS AmountForecast
+            , 0 AS AmountForecastPromo
+            , 0 AS Value1
+            , 0 AS Value2
+            , 0 AS Value3
+            , 0 AS Value4
+            , 0 AS Value5
+            , 0 AS Value6
+            , 0 AS Value7
+            , 0 AS Promo1
+            , 0 AS Promo2
+            , 0 AS Promo3
+            , 0 AS Promo4
+            , 0 AS Promo5
+            , 0 AS Promo6
+            , 0 AS Promo7
+       FROM tmpMI
+            INNER JOIN tmpGoodsByGoodsKind_not ON tmpGoodsByGoodsKind_not.GoodsId     = tmpMI.GoodsId
+                                              AND tmpGoodsByGoodsKind_not.GoodsKindId = tmpMI.GoodsKindId
+      ;
+
 
 
        -- сохранили
