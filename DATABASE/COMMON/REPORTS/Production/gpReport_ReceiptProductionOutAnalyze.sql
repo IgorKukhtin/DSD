@@ -820,37 +820,37 @@ BEGIN
            , tmpCursor1.GoodsKindName_complete
            , tmpCursor1.MeasureName
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCount ELSE 0 END         AS OperCount
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCount_Weight  ELSE 0 END AS OperCount_Weight
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSumm ELSE 0 END          AS OperSumm
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount ELSE 0 END         AS OperCount
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_Weight  ELSE 0 END AS OperCount_Weight
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSumm ELSE 0 END          AS OperSumm
            , tmpCursor1.Price     AS Price
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan_real ELSE 0 END AS OperSummPlan_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan_real ELSE 0 END AS OperSummPlan_real
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCountPlan ELSE 0 END        AS  OperCountPlan
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCountPlan_Weight ELSE 0 END AS OperCountPlan_Weight
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCountPlan ELSE 0 END        AS  OperCountPlan
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCountPlan_Weight ELSE 0 END AS OperCountPlan_Weight
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan1_real  ELSE 0 END AS  OperSummPlan1_real
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan2_real  ELSE 0 END AS  OperSummPlan2_real
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan3_real  ELSE 0 END AS  OperSummPlan3_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan1_real  ELSE 0 END AS  OperSummPlan1_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan2_real  ELSE 0 END AS  OperSummPlan2_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan3_real  ELSE 0 END AS  OperSummPlan3_real
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan1  ELSE 0 END AS OperSummPlan1
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan2  ELSE 0 END AS OperSummPlan2
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperSummPlan3  ELSE 0 END AS OperSummPlan3
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan1  ELSE 0 END AS OperSummPlan1
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan2  ELSE 0 END AS OperSummPlan2
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan3  ELSE 0 END AS OperSummPlan3
            , tmpCursor1.PricePlan1 AS PricePlan1
            , tmpCursor1.PricePlan2 AS PricePlan2
            , tmpCursor1.PricePlan3 AS PricePlan3
 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.TaxSumm_min       ELSE 0 END AS  TaxSumm_min      
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.TaxSumm_max       ELSE 0 END AS  TaxSumm_max      
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCount_ReWork  ELSE 0 END AS  OperCount_ReWork 
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount       
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.LossGP_plan       ELSE 0 END AS  LossGP_plan      
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.TaxGP_real        ELSE 0 END AS  TaxGP_real       
-           , CASE WHEN tmpCursor2 = 1 THEN tmpCursor1.TaxGP_plan        ELSE 0 END AS  TaxGP_plan       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_min       ELSE 0 END AS  TaxSumm_min      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_max       ELSE 0 END AS  TaxSumm_max      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_ReWork  ELSE 0 END AS  OperCount_ReWork 
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_plan       ELSE 0 END AS  LossGP_plan      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_real        ELSE 0 END AS  TaxGP_real       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_plan        ELSE 0 END AS  TaxGP_plan       
            , tmpCursor1.Price_sale
 
            , tmpCursor1.InfoMoneyGroupName              AS InfoMoneyGroupName
@@ -906,7 +906,7 @@ BEGIN
            , tmpCursor2.InfoMoneyCode            AS InfoMoneyCode_child
            , tmpCursor2.InfoMoneyName            AS InfoMoneyName_child      
       FROM tmpCursor1
-          LEFT JOIN tmpCursor2 ON tmpCursor2.MasterKey = tmpCursor1.MasterKey
+          LEFT JOIN tmp AS tmpCursor2 ON tmpCursor2.MasterKey = tmpCursor1.MasterKey
       ;
       
       RETURN NEXT Cursor3;
