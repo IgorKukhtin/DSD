@@ -50,7 +50,10 @@ BEGIN
                                                , inInvNumber        := inInvNumber                         :: TVarChar
                                                , inOperDate         := inOperDate
                                                , inPlanDate         := NULL                                ::TDateTime
-                                               , inVATPercent       := ObjectFloat_TaxKind_Value.ValueData ::TFloat
+                                               , inVATPercent       := COALESCE (-- значение в Заказе
+                                                                                 (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId_OrderClient AND MF.DescId = zc_MovementFloat_VATPercent())
+                                                                                   -- значение у Клиента
+                                                                                , ObjectFloat_TaxKind_Value.ValueData) ::TFloat
                                                , inAmount           := vbAmount                            ::TFloat
                                                , inInvNumberPartner := ''                                  ::TVarChar
                                                , inReceiptNumber    := (1 + COALESCE ((SELECT MAX (zfConvert_StringToNumber (MovementString.ValueData))
@@ -67,7 +70,14 @@ BEGIN
                                                , inInfoMoneyId      := ObjectLink_InfoMoney.ChildObjectId  ::Integer
                                                , inPaidKindId       := zc_Enum_PaidKind_FirstForm()        ::Integer
                                                , inInvoiceKindId    := zc_Enum_InvoiceKind_PrePay()        ::Integer
-                                               , inTaxKindId        := ObjectLink_TaxKind.ChildObjectId    ::Integer 
+                                               , inTaxKindId        := COALESCE (-- значение в Заказе
+                                                                                 (SELECT MovementLinkObject_TaxKind.ObjectId
+                                                                                  FROM MovementLinkObject AS MovementLinkObject_TaxKind
+                                                                                  WHERE MovementLinkObject_TaxKind.MovementId = inMovementId_OrderClient
+                                                                                    AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+                                                                                 )
+                                                                                 , ObjectLink_TaxKind.ChildObjectId 
+                                                                                 )   ::Integer 
                                                , inUserId           := vbUserId
                                                )
                 FROM Object AS Object_Client

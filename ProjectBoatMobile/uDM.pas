@@ -12,6 +12,9 @@ uses
   FireDAC.Comp.UI, FireDAC.Stan.Param, FireDAC.DApt, Datasnap.Provider,
   FMX.Forms, FireDAC.Phys.SQLiteWrapper, FireDAC.DatS, FireDAC.DApt.Intf,
   FireDAC.Comp.DataSet, System.Generics.Collections
+  {$IFDEF MSWINDOWS}
+  , Winapi.ActiveX
+  {$ENDIF}
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
@@ -48,7 +51,9 @@ type
     function LoadRemains: string;
     function OpenDictList: string;
     function OpenGoodsList: string;
+    function OpenSendGoods: string;
     function UploadInventoryGoods: string;
+    function UploadSendGoods: string;
     function OpenInventoryGoods: string;
   protected
     procedure Execute; override;
@@ -254,10 +259,8 @@ type
     cdsSendItemEditTotalCount: TFloatField;
     cdsSendItemEditAmountRemains: TFloatField;
     cdsSendItemEditTotalCountCalc: TFloatField;
-    tbGoodsUnitId: TIntegerField;
-    tbGoodsUnitID_receipt: TIntegerField;
-    tbGoodsUnitId_child_receipt: TIntegerField;
-    tbGoodsUnitId_parent_receipt: TIntegerField;
+    tbGoodsFromId: TIntegerField;
+    tbGoodsToId: TIntegerField;
     tbUnit: TFDTable;
     tbUnitId: TIntegerField;
     tbUnitCode: TIntegerField;
@@ -454,6 +457,8 @@ type
     function isInventoryGoodsSend : Boolean;
 
     procedure OpenSendGoods;
+    procedure InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
+                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
     procedure DeleteSendGoods;
     procedure ErasedSendList;
     procedure UnErasedSendList;
@@ -461,6 +466,7 @@ type
 
     procedure UploadAllData;
     procedure UploadInventoryGoods;
+    procedure UploadSendGoods;
 
     property Connected: Boolean read FConnected;
     property LimitList : Integer read FLimitList write FLimitList default 300;
@@ -839,37 +845,17 @@ end;
 // Открытие справочника
 function TWaitThread.OpenDictList: string;
 begin
-  frmMain.lwDictList.Visible := False;
-  frmMain.lDictListSelect.Visible := False;
-  try
-    DM.LoadDictList;
-  finally
-    Synchronize(procedure
-              begin
-                frmMain.lwDictList.Visible := True;
-                frmMain.lDictListSelect.Visible := True;
+  Synchronize(procedure
+              begin DM.LoadDictList;
               end);
-  end;
 end;
 
 // Открытие справочника Комплектующих
 function TWaitThread.OpenGoodsList: string;
-  var nID: Integer;
 begin
-  frmMain.lwGoods.Visible := False;
-  frmMain.lGoodsSelect.Visible := False;
-  if DM.qurGoodsList.Active then nID := DM.qurGoodsListId.AsInteger
-  else nID := 0;
-  try
-    DM.LoadGoodsList;
-  finally
-    if DM.qurGoodsList.Active and (nID <> 0) then DM.qurGoodsList.Locate('Id', nId, []);
-    Synchronize(procedure
-              begin
-                frmMain.lwGoods.Visible := True;
-                frmMain.lGoodsSelect.Visible := True;
+  Synchronize(procedure
+              begin DM.LoadGoodsList;
               end);
-  end;
 end;
 
 // Отправить инвентаризации
@@ -947,18 +933,97 @@ begin
 
 end;
 
+// Отправить перемещений
+function TWaitThread.UploadSendGoods: string;
+var
+  StoredProc : TdsdStoredProc;
+  FDQuery: TFDQuery;
+  cError: String;
+begin
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  FDQuery := TFDQuery.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_MobileSend';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+    StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inAmount', ftFloat, ptInput, 0);
+    StoredProc.Params.AddParam('inPartNumber', ftWideString, ptInput, '');
+    StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, '');
+    StoredProc.Params.AddParam('inFromId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inToId', ftInteger, ptInput, 0);
+
+    try
+
+      FDQuery.Connection := DM.conMain;
+      FDQuery.SQL.Text := 'Select LocalId, Id, GoodsId, Amount, PartNumber, PartionCellName, FromId, ToId, Error, isSend FROM SendGoods where isSend = 0 and DateScan = ' + IntToStr(StrToIntDef(FormatDateTime('YYYYMMDD', Date), 0));
+      FDQuery.Open;
+
+      FDQuery.First;
+      while not FDQuery.Eof do
+      begin
+        cError := '';
+        StoredProc.ParamByName('ioId').Value := FDQuery.FieldByName('Id').AsInteger;
+        StoredProc.ParamByName('inGoodsId').Value := FDQuery.FieldByName('GoodsId').AsInteger;
+        StoredProc.ParamByName('inAmount').Value := FDQuery.FieldByName('Amount').AsInteger;
+        StoredProc.ParamByName('inPartNumber').Value := FDQuery.FieldByName('PartNumber').AsWideString;
+        StoredProc.ParamByName('inPartionCellName').Value := FDQuery.FieldByName('PartionCellName').AsWideString;
+        StoredProc.ParamByName('inFromId').Value := FDQuery.FieldByName('FromId').AsInteger;
+        StoredProc.ParamByName('inToId').Value := FDQuery.FieldByName('ToId').AsInteger;
+
+        try
+          StoredProc.Execute(false, false, false, 2);
+        except
+          on E : Exception do
+          begin
+            cError := GetTextMessage(E);
+            if Pos('context TStorage', E.Message) > 0 then
+            begin
+              Result := cError;
+              Exit;
+            end;
+          end;
+        end;
+
+        FDQuery.Edit;
+        FDQuery.FieldByName('Id').AsInteger := StoredProc.ParamByName('ioId').Value;
+        FDQuery.FieldByName('Error').AsString := cError;
+        FDQuery.FieldByName('isSend').AsBoolean := cError = '';
+        FDQuery.Post;
+        FDQuery.Next;
+      end;
+
+      if frmMain.tcMain.ActiveTab = frmMain.tiSendScan then TaskName := 'OpeenSendGoods';
+    except
+      on E : Exception do
+      begin
+        Result := GetTextMessage(E);
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    FreeAndNil(FDQuery);
+  end;
+
+end;
+
 // Открытие списка не отправлено
 function TWaitThread.OpenInventoryGoods: string;
 begin
-  frmMain.lwInventoryScan.Visible := False;
-  try
-    DM.OpenInventoryGoods;
-  finally
-    Synchronize(procedure
-              begin
-                frmMain.lwInventoryScan.Visible := True;
+  Synchronize(procedure
+              begin DM.OpenInventoryGoods;
               end);
-  end;
+end;
+
+// Открытие списка не отправлено
+function TWaitThread.OpenSendGoods: string;
+begin
+  Synchronize(procedure
+              begin DM.OpenSendGoods;
+              end);
 end;
 
 procedure TWaitThread.Execute;
@@ -967,7 +1032,14 @@ var
 begin
   Res := '';
 
-  if not FidSecretly then
+  if FidSecretly then
+  begin
+    Synchronize(procedure
+                begin
+                  frmMain.vsbMain.Enabled := false;
+                end);
+
+  end else
   begin
     Synchronize(procedure
                 begin
@@ -980,6 +1052,9 @@ begin
     ProgressThread := TProgressThread.Create(true);
   end;
 
+  {$IFDEF MSWINDOWS}
+  CoInitialize(nil);
+  {$ENDIF}
   try
 
     if not FidSecretly then
@@ -1022,14 +1097,36 @@ begin
       Res := UploadInventoryGoods;
     end;
 
+    if (Res = '') and (TaskName = 'UploadSendGoods') or (TaskName = 'UploadAll') then
+    begin
+      SetTaskName('Отправка перемещений');
+      Res := UploadSendGoods;
+    end;
+
     if (Res = '') and (TaskName = 'OpeenInventoryGoods') then
     begin
       SetTaskName('Открытие списка не отправлено');
       Res := OpenInventoryGoods;
     end;
 
+    if (Res = '') and (TaskName = 'OpeenSendGoods') then
+    begin
+      SetTaskName('Открытие списка не отправлено');
+      Res := OpenSendGoods;
+    end;
+
   finally
-    if not FidSecretly then
+    {$IFDEF MSWINDOWS}
+    CoUninitialize;
+    {$ENDIF}
+    if FidSecretly then
+    begin
+      Synchronize(procedure
+                  begin
+                    frmMain.vsbMain.Enabled := true;
+                  end);
+
+    end else
     begin
       ProgressThread.Terminate;
 
@@ -2235,6 +2332,7 @@ begin
 
     StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
     StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
     StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
@@ -2516,27 +2614,28 @@ begin
       Result := True;
     except
         on E : Exception do
-         if (Pos('context TStorage', E.Message) = 0) or DM.cdsInventoryList.Active then
+         if (Pos('context TStorage', E.Message) = 0) or DM.cdsSendList.Active then
          begin
            raise Exception.Create(GetTextMessage(E));
            Exit;
          end;
     end;
 
-    if not cdsInventoryList.Active then
+    if not cdsSendList.Active then
     begin
-      DM.InsUpdLocalInventoryGoods(cdsInventoryItemEditLocalId.AsInteger, nId, cdsInventoryItemEditGoodsId.AsInteger,
-                                   cdsInventoryItemEditAmount.AsFloat, cdsInventoryItemEditAmountRemains.AsFloat,
-                                   cdsInventoryItemEditTotalCount.AsFloat, cdsInventoryItemEditPartNumber.AsString,
-                                   cdsInventoryItemEditPartionCellName.AsString, '', Result);
+      DM.InsUpdLocalSendGoods(cdsSendItemEditLocalId.AsInteger, nId, cdsSendItemEditGoodsId.AsInteger,
+                                   cdsSendItemEditFromId.AsInteger, cdsSendItemEditToId.AsInteger,
+                                   cdsSendItemEditAmount.AsFloat, cdsSendItemEditAmountRemains.AsFloat,
+                                   cdsSendItemEditTotalCount.AsFloat, cdsSendItemEditPartNumber.AsString,
+                                   cdsSendItemEditPartionCellName.AsString, '', Result);
     end else
     begin
-      cdsInventoryList.Edit;
-      for I := 0 to cdsInventoryItemEdit.FieldCount - 1 do
-        if Assigned(cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName)) then
-          cdsInventoryList.FindField(cdsInventoryItemEdit.Fields.Fields[I].FieldName).AsVariant := cdsInventoryItemEdit.Fields.Fields[I].AsVariant;
-      cdsInventoryList.FieldByName('TotalCount').AsFloat := cdsInventoryList.FieldByName('TotalCount').AsFloat + cdsInventoryList.FieldByName('Amount').AsFloat;
-      cdsInventoryList.Post;
+      cdsSendList.Edit;
+      for I := 0 to cdsSendItemEdit.FieldCount - 1 do
+        if Assigned(cdsSendList.FindField(cdsSendItemEdit.Fields.Fields[I].FieldName)) then
+          cdsSendList.FindField(cdsSendItemEdit.Fields.Fields[I].FieldName).AsVariant := cdsSendItemEdit.Fields.Fields[I].AsVariant;
+      cdsSendList.FieldByName('TotalCount').AsFloat := cdsSendList.FieldByName('TotalCount').AsFloat + cdsSendList.FieldByName('Amount').AsFloat;
+      cdsSendList.Post;
     end;
 
   finally
@@ -2780,15 +2879,15 @@ begin
                         '     , G.EAN ' +
                         '     , G.GoodsGroupName ' +
                         '     , G.MeasureName ' +
-                        '     , G.UnitId        AS FromId ' +
+                        '     , G.FromId        AS FromId ' +
                         '     , UFrom.Code      AS FromCode ' +
                         '     , UFrom.Name      AS FromName ' +
-                        '     , UTo.Id          AS ToId ' +
+                        '     , G.ToId          AS ToId ' +
                         '     , UTo.Code        AS ToCode ' +
                         '     , UTo.Name        AS ToName ' +
                         'FROM Goods G ' +
-                        '     LEFT JOIN Unit UFrom ON UFrom.Id = G.UnitId ' +
-                        '     LEFT JOIN Unit UTo   ON UTo.Id   = COALESCE(NULLIF (G.UnitID_receipt, 0), NULLIF (G.UnitId_child_receipt, 0), NULLIF (G.UnitId_parent_receipt, 0), 33347) ' +
+                        '     LEFT JOIN Unit UFrom ON UFrom.Id = G.FromId ' +
+                        '     LEFT JOIN Unit UTo   ON UTo.Id   = G.ToId  ' +
                         'WHERE G.ID = ' + IntToStr(AId);
 
     try
@@ -3199,6 +3298,51 @@ begin
   if cdsSendListTop.Active then cdsSendListTop.First;
 end;
 
+// Добавить/изменить товаркомплектующее для вставки в инвентаризацию
+procedure TDM.InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
+                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
+  var FDQuery: TFDQuery;
+begin
+
+  FDQuery := TFDQuery.Create(nil);
+  try
+    FDQuery.Connection := conMain;
+    FDQuery.SQL.Text := 'Select * FROM SendGoods WHERE LocalId = :LocalId';
+    FDQuery.ParamByName('LocalId').AsInteger := ALocalId;
+    FDQuery.Open;
+
+    if FDQuery.IsEmpty then FDQuery.Insert
+    else FDQuery.Edit;
+
+    FDQuery.FieldByName('Id').AsInteger := AId;
+    FDQuery.FieldByName('DateScan').AsInteger := StrToIntDef(FormatDateTime('YYYYMMDD', Date), 0);
+    FDQuery.FieldByName('GoodsId').AsInteger := AGoodsId;
+    FDQuery.FieldByName('PartNumber').AsString := APartNumber;
+    FDQuery.FieldByName('PartionCellName').AsString := APartionCell;
+    FDQuery.FieldByName('Amount').AsFloat := AAmount;
+    FDQuery.FieldByName('AmountRemains').AsFloat := AAmountRemains;
+    FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount + AAmount;
+    FDQuery.FieldByName('FromId').AsInteger := AFromId;
+    FDQuery.FieldByName('ToId').AsInteger := AToId;
+    FDQuery.FieldByName('Error').AsString := AError;
+    FDQuery.FieldByName('isSend').AsBoolean := AisSend;
+    FDQuery.Post;
+    ALocalId := FDQuery.FieldByName('LocalId').AsInteger;
+
+  finally
+    FDQuery.Free;
+  end;
+
+  cdsSendListTop.DisableControls;
+  try
+    OpenSendGoods;
+    if AId <> 0 then cdsSendListTop.Locate('Id', AId, [loCaseInsensitive])
+    else  cdsSendListTop.Locate('LocalId', ALocalId, [loCaseInsensitive])
+  finally
+    cdsSendListTop.EnableControls;
+  end;
+end;
+
 procedure TDM.DeleteSendGoods;
   var FDQuery: TFDQuery;
       StoredProc : TdsdStoredProc;
@@ -3353,6 +3497,14 @@ begin
   WaitThread := TWaitThread.Create(true);
   WaitThread.FreeOnTerminate := true;
   WaitThread.TaskName := 'UploadInventoryGoods';
+  WaitThread.Start;
+end;
+
+procedure TDM.UploadSendGoods;
+begin
+  WaitThread := TWaitThread.Create(true);
+  WaitThread.FreeOnTerminate := true;
+  WaitThread.TaskName := 'UploadSendGoods';
   WaitThread.Start;
 end;
 

@@ -177,7 +177,9 @@ BEGIN
                              , spSelect.DiscountTax                     AS DiscountTax
                              , spSelect.DiscountNextTax                 AS DiscountNextTax
                              , spSelect.SummDiscount_total              AS SummDiscount_total
-                             , spSelect.VATPercent                      AS VATPercent
+                             , spSelect.VATPercent                      AS VATPercent   
+                             , spSelect.TaxKindId                       AS TaxKindId
+                             , spSelect.TaxKindName                     AS TaxKindName
                              , spSelect.Basis_summ_orig                 AS Basis_summ_orig
                              , spSelect.TransportSumm_load              AS TransportSumm_load
                              , COALESCE (spSelect.NPP,0)       ::TFloat AS NPP
@@ -287,8 +289,8 @@ BEGIN
 
          , tmpOrderClient.ClientId                 AS ClientId
          , tmpOrderClient.ClientName               AS ClientName
-         , Object_TaxKind.Id                       AS TaxKindId_Client
-         , Object_TaxKind.ValueData                AS TaxKindName_Client
+         , tmpOrderClient.TaxKindId                AS TaxKindId_Client
+         , tmpOrderClient.TaxKindName              AS TaxKindName_Client
 
          , tmpOrderClient.MovementId :: Integer    AS MovementId_OrderClient
          , tmpOrderClient.OperDate   :: TDateTime  AS OperDate_OrderClient
@@ -485,11 +487,11 @@ BEGIN
           -- »“Œ√Œ ÔÓ ‚ÒÂÏ ÓÔÎ‡Ú‡Ï
           LEFT JOIN (SELECT SUM (COALESCE (tmpBankAccount.AmountIn,0)) AS AmountIn FROM tmpBankAccount) AS tmpBankAccount ON 1 = 1 
           
-          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+          /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = tmpOrderClient.ClientId
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
           LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
-
+          */
        WHERE Object_Product.Id = inId
        --LIMIT 1
       ;
@@ -503,6 +505,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.04.24         *
  24.06.23         *
  15.05.23         *
  05.02.23         *

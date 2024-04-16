@@ -161,18 +161,34 @@ BEGIN
            RAISE EXCEPTION 'Ошибка.В справочнике найдено несколько значений <%>.', TRIM(inCountryName);
        END IF;
        --
-       vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName));
+       vbCountryId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Country() AND TRIM(Object.ValueData) ILIKE TRIM(inCountryName)); 
+      
+       --если не нашли пробуем поиск по короткому названию 
+       IF COALESCE (vbCountryId,0) = 0 
+       THEN
+           vbCountryId := (SELECT ObjectString.ObjectId
+                           FROM ObjectString
+                           WHERE ObjectString.DescId = zc_ObjectString_Country_ShortName()
+                           AND UPPER(TRIM(ObjectString.ValueData))  ILIKE UPPER (TRIM(inCountryName))
+                           );
+       END IF;
+       
    END IF;
    -- если не находим создаем
    IF COALESCE (vbCountryId,0) = 0 AND TRIM (inCountryName) <> ''
-   THEN
+   THEN  
+        IF LENGTH (TRIM (inCountryName)) > 3 
+        THEN
         vbCountryId := (SELECT tmp.ioId
                         FROM gpInsertUpdate_Object_Country (ioId        := 0         :: Integer
                                                           , ioCode      := 0         :: Integer
                                                           , inName      := TRIM(inCountryName) :: TVarChar
                                                           , inShortName := ''        :: TVarChar
                                                           , inSession   := inSession :: TVarChar
-                                                           ) AS tmp);
+                                                           ) AS tmp); 
+        ELSE
+             RAISE EXCEPTION 'Ошибка.Слишком короткое название страны <%>.', TRIM(inCountryName);
+        END IF;
    END IF;
 
    -- пробуем найти  PLZId

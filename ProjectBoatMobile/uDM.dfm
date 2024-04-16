@@ -299,17 +299,11 @@ object DM: TDM
     object tbGoodsMeasureName: TWideStringField
       FieldName = 'MeasureName'
     end
-    object tbGoodsUnitId: TIntegerField
-      FieldName = 'UnitId'
+    object tbGoodsFromId: TIntegerField
+      FieldName = 'FromId'
     end
-    object tbGoodsUnitID_receipt: TIntegerField
-      FieldName = 'UnitID_receipt'
-    end
-    object tbGoodsUnitId_child_receipt: TIntegerField
-      FieldName = 'UnitId_child_receipt'
-    end
-    object tbGoodsUnitId_parent_receipt: TIntegerField
-      FieldName = 'UnitId_parent_receipt'
+    object tbGoodsToId: TIntegerField
+      FieldName = 'ToId'
     end
     object tbGoodsisErased: TBooleanField
       FieldName = 'isErased'
@@ -613,6 +607,7 @@ object DM: TDM
     object cdsInventoryListTopAmountRemainsLabel: TWideStringField
       FieldKind = fkCalculated
       FieldName = 'AmountRemainsLabel'
+      Size = 500
       Calculated = True
     end
     object cdsInventoryListTopTotalCountLabel: TWideStringField
@@ -632,6 +627,7 @@ object DM: TDM
     end
     object cdsInventoryListTopError: TWideStringField
       FieldName = 'Error'
+      Size = 500
     end
     object cdsInventoryListTopOrdUserLabel: TWideStringField
       FieldKind = fkCalculated
@@ -978,6 +974,7 @@ object DM: TDM
     end
     object cdsSendListTopError: TWideStringField
       FieldName = 'Error'
+      Size = 500
     end
     object cdsSendListTopOperDate: TDateTimeField
       FieldName = 'OperDate'

@@ -105,7 +105,7 @@ object OrderClientForm: TOrderClientForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 7
-      Width = 70
+      Width = 68
     end
     object cxLabel5: TcxLabel
       Left = 85
@@ -1773,9 +1773,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -2789,9 +2786,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
@@ -2849,9 +2843,6 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
@@ -3705,7 +3696,7 @@ object OrderClientForm: TOrderClientForm
       end>
     PackSize = 1
     Left = 112
-    Top = 319
+    Top = 255
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -5828,6 +5819,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTaxKindId'
+        Value = Null
+        Component = GuidesTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inProductId'
         Value = Null
         Component = GuidesProduct
@@ -5852,8 +5851,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 162
-    Top = 336
+    Left = 194
+    Top = 264
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -6288,8 +6287,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 256
+    Left = 160
+    Top = 248
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -7383,8 +7382,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
-    Top = 271
+    Left = 328
+    Top = 319
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -7816,13 +7815,12 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 442
-    Top = 296
+    Left = 410
+    Top = 224
   end
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -7845,9 +7843,17 @@ object OrderClientForm: TOrderClientForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDS'
+        Value = Null
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 333
-    Top = 31
+    Left = 309
+    Top = 71
   end
   object spSelectPrint_Invoice: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Invoice_Print'
@@ -8030,7 +8036,7 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 530
+    Left = 538
     Top = 120
   end
   object HeaderExit: THeaderExit
@@ -8058,10 +8064,13 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edBasisWVAT_summ_transport
+      end
+      item
+        Control = edTaxKind
       end>
     Action = actUpdate_summ_before
-    Left = 512
-    Top = 96
+    Left = 624
+    Top = 128
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -8094,7 +8103,7 @@ object OrderClientForm: TOrderClientForm
       item
         Control = cxButton1
       end>
-    Left = 584
-    Top = 104
+    Left = 680
+    Top = 128
   end
 end

@@ -167,7 +167,8 @@ BEGIN
                               , Object_Status.ValueData    AS StatusName
                               , Object_From.Id             AS FromId
                               , Object_From.ObjectCode     AS FromCode
-                              , Object_From.ValueData      AS FromName
+                              , Object_From.ValueData      AS FromName 
+                              , MovementLinkObject_TaxKind.ObjectId         AS TaxKindId
                               , MovementLinkObject_Product.ObjectId         AS ProductId
                               , MovementFloat_DiscountTax.ValueData         AS DiscountTax
                               , MovementFloat_DiscountNextTax.ValueData     AS DiscountNextTax
@@ -191,6 +192,10 @@ BEGIN
                                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                               LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
+                                                           ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                                          AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
 
                               LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -832,10 +837,9 @@ BEGIN
          , tmpOrderClient.InfoMoneyId       AS InfoMoneyId_Client
          , tmpOrderClient.InfoMoneyName_all AS InfoMoneyName_Client
            -- % НДС Заказ клиента
-         , tmpOrderClient.VATPercent        AS TaxKind_Value_Client
-         --, ObjectFloat_TaxKind_Value.ValueData  AS Value_TaxKind
-         , Object_TaxKind.ValueData              AS TaxKindName_Client
-         , ObjectString_TaxKind_Info.ValueData   AS TaxKindName_info_Client
+         , tmpOrderClient.VATPercent             AS TaxKind_Value_Client       --заказ клиента
+         , Object_TaxKind.ValueData              AS TaxKindName_Client         --заказ клиента
+         , ObjectString_TaxKind_Info.ValueData   AS TaxKindName_info_Client    --заказ клиента
 
            -- данные последнего счета
          , tmpInvoice.MovementId_Invoice  :: Integer  AS MovementId_Invoice
@@ -1013,16 +1017,14 @@ BEGIN
           LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_1 ON tmpProductionUnion_1.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion_1.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_1.ObjectDescId = zc_Object_Product()
           LEFT JOIN tmpMIFloat_MovementId AS tmpProductionUnion_2 ON tmpProductionUnion_2.MovementId_OrderClient = tmpResAll.MovementId_OrderClient AND tmpProductionUnion_2.DescId = zc_Movement_ProductionUnion() AND tmpProductionUnion_2.ObjectDescId = zc_Object_Goods()
 
-          LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+          /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                ON ObjectLink_TaxKind.ObjectId = tmpOrderClient.FromId
                               AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+          */                     
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = tmpOrderClient.TaxKindId --ObjectLink_TaxKind.ChildObjectId
 
-          /*LEFT JOIN ObjectFloat AS ObjectFloat_TaxKind_Value
-                                ON ObjectFloat_TaxKind_Value.ObjectId = ObjectLink_TaxKind.ChildObjectId
-                               AND ObjectFloat_TaxKind_Value.DescId = zc_ObjectFloat_TaxKind_Value() */
           LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                                 ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                 ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id 
                                 AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
           -- данные Счета

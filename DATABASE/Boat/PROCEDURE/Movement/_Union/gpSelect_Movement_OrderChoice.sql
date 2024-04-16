@@ -297,15 +297,22 @@ BEGIN
                                     ON ObjectString_CIN.ObjectId = Object_Product.Id
                                    AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN()
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
+                                          ON MovementLinkObject_TaxKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
+                                         AND Movement.DescId = zc_Movement_OrderClient()
+
              LEFT JOIN ObjectLink AS ObjectLink_TaxKind
                                   ON ObjectLink_TaxKind.ObjectId = Movement.ObjectId
                                  AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
-             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
+
+             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = CASE WHEN Movement.DescId = zc_Movement_OrderClient() THEN MovementLinkObject_TaxKind.ObjectId ELSE ObjectLink_TaxKind.ChildObjectId END
+
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                                    ON ObjectString_TaxKind_Info.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                    ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id
                                    AND ObjectString_TaxKind_Info.DescId   = zc_ObjectString_TaxKind_Info()
              LEFT JOIN ObjectString AS ObjectString_TaxKind_Comment
-                                    ON ObjectString_TaxKind_Comment.ObjectId = ObjectLink_TaxKind.ChildObjectId
+                                    ON ObjectString_TaxKind_Comment.ObjectId = Object_TaxKind.Id
                                    AND ObjectString_TaxKind_Comment.DescId   = zc_ObjectString_TaxKind_Comment()
 
              LEFT JOIN tmpSummProduct ON tmpSummProduct.MovementId_OrderClient = Movement.Id

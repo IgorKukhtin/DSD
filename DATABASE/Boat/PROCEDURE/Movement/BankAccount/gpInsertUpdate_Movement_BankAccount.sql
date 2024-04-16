@@ -130,13 +130,10 @@ BEGIN
                                                                 , inTaxKindId        := COALESCE (-- значение в Счете
                                                                                                   (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Invoice AND MLO.DescId = zc_MovementLinkObject_TaxKind())
                                                                                                   -- значение в Заказе
-                                                                                                , (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId
-                                                                                                   FROM MovementLinkObject AS MovementLinkObject_From
-                                                                                                        LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                                                                                                             ON ObjectLink_TaxKind.ObjectId = MovementLinkObject_From.ObjectId
-                                                                                                                            AND ObjectLink_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
-                                                                                                   WHERE MovementLinkObject_From.MovementId = inMovementId_OrderClient
-                                                                                                     AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                                                                                , (SELECT MovementLinkObject_TaxKind.ObjectId
+                                                                                                   FROM MovementLinkObject AS MovementLinkObject_TaxKind
+                                                                                                   WHERE MovementLinkObject_TaxKind.MovementId = inMovementId_OrderClient
+                                                                                                     AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
                                                                                                   )
                                                                                                   -- значение у Клиента
                                                                                                 , (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId

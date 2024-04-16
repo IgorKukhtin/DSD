@@ -78,6 +78,7 @@ BEGIN
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
     ;
 
+     /*
      -- Пересохранили VATPercent
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inMovementId, COALESCE (ObjectFloat_TaxKind_Value.ValueData, 0))
      FROM ObjectLink AS OL_Client_TaxKind
@@ -85,8 +86,8 @@ BEGIN
                                 ON ObjectFloat_TaxKind_Value.ObjectId = OL_Client_TaxKind.ChildObjectId 
                                AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()   
      WHERE OL_Client_TaxKind.ObjectId = vbClientId_From
-       AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind()
-    ;
+       AND OL_Client_TaxKind.DescId   = zc_ObjectLink_Client_TaxKind();
+     */
 
      -- Проверка - Boat Structure
      IF EXISTS (SELECT ObjectLink_ProdColorPattern.ChildObjectId
