@@ -109,7 +109,7 @@ BEGIN
 
     -- inReceiptNumber формируется только для Amount > 0
     IF (COALESCE (inAmount, 0) < 0
-    AND inInvoiceKindId NOT IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return())
+    AND inInvoiceKindId NOT IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_Return(), zc_Enum_InvoiceKind_ReturnPay())
        )
     OR inInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
     OR (COALESCE (inParentId, 0) = 0 AND COALESCE (inAmount, 0) < 0)
@@ -127,19 +127,21 @@ BEGIN
                         INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                       ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                      AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                     AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
-                                                                                                                      THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                 WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
-                                                                                                                      THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                 WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                                                                                                                      THEN zc_Enum_InvoiceKind_Pay() 
-                                                                                                                 WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Service()
-                                                                                                                      THEN zc_Enum_InvoiceKind_Service()
-                                                                                                            END
-                                                                                                    UNION
-                                                                                                     SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                                                                                                    UNION
-                                                                                                     SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Service()
+                                                     AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT tmp.InvoiceKindId
+                                                                                                     FROM (SELECT zc_Enum_InvoiceKind_PrePay() AS InvoiceKindId
+                                                                                                          UNION 
+                                                                                                           SELECT zc_Enum_InvoiceKind_Return() AS InvoiceKindId
+                                                                                                           ) AS tmp
+                                                                                                     WHERE inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return())
+                                                                                                    UNION 
+                                                                                                     SELECT tmp.InvoiceKindId
+                                                                                                     FROM (SELECT zc_Enum_InvoiceKind_Pay() AS InvoiceKindId
+                                                                                                          UNION 
+                                                                                                           SELECT zc_Enum_InvoiceKind_ReturnPay() AS InvoiceKindId
+                                                                                                          UNION 
+                                                                                                           SELECT zc_Enum_InvoiceKind_Service() AS InvoiceKindId
+                                                                                                           ) AS tmp
+                                                                                                     WHERE inInvoiceKindId IN (zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_ReturnPay(), zc_Enum_InvoiceKind_Service())
                                                                                                     )
                    WHERE MovementString.DescId    = zc_MovementString_ReceiptNumber()
                      AND MovementString.ValueData = TRIM (inReceiptNumber)
@@ -156,19 +158,21 @@ BEGIN
                                                   INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                                                 ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                                                AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                                               AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT CASE WHEN inInvoiceKindId = zc_Enum_InvoiceKind_PrePay()
-                                                                                                                                                THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Return()
-                                                                                                                                                THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                                                                                                                                                THEN zc_Enum_InvoiceKind_Pay() 
-                                                                                                                                           WHEN inInvoiceKindId = zc_Enum_InvoiceKind_Service()
-                                                                                                                                                THEN zc_Enum_InvoiceKind_Service()
-                                                                                                                                      END
-                                                                                                                              UNION
-                                                                                                                               SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Pay()
-                                                                                                                              UNION
-                                                                                                                               SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindId = zc_Enum_InvoiceKind_Service()
+                                                                               AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT tmp.InvoiceKindId
+                                                                                                                               FROM (SELECT zc_Enum_InvoiceKind_PrePay() AS InvoiceKindId
+                                                                                                                                    UNION 
+                                                                                                                                     SELECT zc_Enum_InvoiceKind_Return() AS InvoiceKindId
+                                                                                                                                     ) AS tmp
+                                                                                                                               WHERE inInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return())
+                                                                                                                              UNION 
+                                                                                                                               SELECT tmp.InvoiceKindId
+                                                                                                                               FROM (SELECT zc_Enum_InvoiceKind_Pay() AS InvoiceKindId
+                                                                                                                                    UNION 
+                                                                                                                                     SELECT zc_Enum_InvoiceKind_ReturnPay() AS InvoiceKindId
+                                                                                                                                    UNION 
+                                                                                                                                     SELECT zc_Enum_InvoiceKind_Service() AS InvoiceKindId
+                                                                                                                                     ) AS tmp
+                                                                                                                               WHERE inInvoiceKindId IN (zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_ReturnPay(), zc_Enum_InvoiceKind_Service())
                                                                                                                               )
                                              WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                             ), 0);

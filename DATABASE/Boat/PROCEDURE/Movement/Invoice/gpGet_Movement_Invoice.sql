@@ -61,7 +61,12 @@ BEGIN
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
-         IF inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Proforma'
+     
+         -- нашли
+         vbInvoiceKindId:= (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.ValueData ILIKE inInvoiceKindDesc AND ObjectString.DescId = zc_ObjectString_Enum());
+     
+     
+         IF vbInvoiceKindId = zc_Enum_InvoiceKind_Proforma()
          THEN vbReceiptNumber:= 0;
          ELSE
              -- Quittung Nr последний+1  -- формируется только для Amount>0
@@ -73,19 +78,21 @@ BEGIN
                                                    INNER JOIN MovementLinkObject AS MovementLinkObject_InvoiceKind
                                                                                  ON MovementLinkObject_InvoiceKind.MovementId = Movement.Id
                                                                                 AND MovementLinkObject_InvoiceKind.DescId = zc_MovementLinkObject_InvoiceKind()
-                                                                                AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT CASE WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_PrePay'
-                                                                                                                                                 THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Return'
-                                                                                                                                                 THEN zc_Enum_InvoiceKind_PrePay() 
-                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
-                                                                                                                                                 THEN zc_Enum_InvoiceKind_Pay() 
-                                                                                                                                            WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Service'
-                                                                                                                                                 THEN zc_Enum_InvoiceKind_Service() 
-                                                                                                                                       END
-                                                                                                                               UNION
-                                                                                                                                SELECT zc_Enum_InvoiceKind_Service() WHERE inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'
-                                                                                                                               UNION
-                                                                                                                                SELECT zc_Enum_InvoiceKind_Pay() WHERE inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Service'
+                                                                                AND MovementLinkObject_InvoiceKind.ObjectId IN (SELECT tmp.InvoiceKindId
+                                                                                                                                FROM (SELECT zc_Enum_InvoiceKind_PrePay() AS InvoiceKindId
+                                                                                                                                     UNION 
+                                                                                                                                      SELECT zc_Enum_InvoiceKind_Return() AS InvoiceKindId
+                                                                                                                                      ) AS tmp
+                                                                                                                                WHERE vbInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return())
+                                                                                                                               UNION 
+                                                                                                                                SELECT tmp.InvoiceKindId
+                                                                                                                                FROM (SELECT zc_Enum_InvoiceKind_Pay() AS InvoiceKindId
+                                                                                                                                     UNION 
+                                                                                                                                      SELECT zc_Enum_InvoiceKind_ReturnPay() AS InvoiceKindId
+                                                                                                                                     UNION 
+                                                                                                                                      SELECT zc_Enum_InvoiceKind_Service() AS InvoiceKindId
+                                                                                                                                      ) AS tmp
+                                                                                                                                WHERE vbInvoiceKindId IN (zc_Enum_InvoiceKind_Pay(), zc_Enum_InvoiceKind_ReturnPay(), zc_Enum_InvoiceKind_Service())
                                                                                                                                )
                                                WHERE MovementString.DescId = zc_MovementString_ReceiptNumber()
                                               ), 0);
@@ -150,12 +157,7 @@ BEGIN
                                    AND ObjectLink_TaxKind.DescId IN (zc_ObjectLink_Client_TaxKind(), zc_ObjectLink_Partner_TaxKind())
                LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId
 
-               LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = CASE WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_PrePay'   THEN zc_Enum_InvoiceKind_PrePay()
-                                                                                      WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Pay'      THEN zc_Enum_InvoiceKind_Pay()
-                                                                                      WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Proforma' THEN zc_Enum_InvoiceKind_Proforma()
-                                                                                      WHEN inInvoiceKindDesc ILIKE 'zc_Enum_InvoiceKind_Service'  THEN zc_Enum_InvoiceKind_Service()
-                                                                                      ELSE 0
-                                                                                 END
+               LEFT JOIN Object AS Object_InvoiceKind ON Object_InvoiceKind.Id = vbInvoiceKindId
           ;
 
      ELSE
