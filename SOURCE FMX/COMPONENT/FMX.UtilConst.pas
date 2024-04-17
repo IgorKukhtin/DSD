@@ -34,11 +34,9 @@ var
   gc_DateStart: TDateTime;
   gc_DateEnd: TDateTime;
 
-  {$IFDEF MSWINDOWS}
   function ShiftDown : Boolean;
   function CtrlDown : Boolean;
   function AltDown : Boolean;
-  {$ENDIF}
 
 const
 
@@ -414,31 +412,49 @@ implementation
 
 {$IFDEF MSWINDOWS}
 uses Winapi.Windows;
+{$ENDIF}
 
  function ShiftDown : Boolean;
+{$IFDEF MSWINDOWS}
  var
     State : TKeyboardState;
+{$ENDIF}
  begin
+{$IFDEF MSWINDOWS}
     GetKeyboardState(State) ;
     Result := ((State[vk_Shift] and 128) <> 0) ;
+{$ELSE}
+    Result := False;
+{$ENDIF}
  end;
 
  function AltDown : Boolean;
+{$IFDEF MSWINDOWS}
  var
     State : TKeyboardState;
+{$ENDIF}
  begin
+{$IFDEF MSWINDOWS}
     GetKeyboardState(State) ;
     Result := ((State[vk_Menu] and 128) <> 0) ;
+{$ELSE}
+    Result := False;
+{$ENDIF}
  end;
 
  function CtrlDown : Boolean;
+{$IFDEF MSWINDOWS}
  var
     State : TKeyboardState;
+{$ENDIF}
  begin
+{$IFDEF MSWINDOWS}
     GetKeyboardState(State) ;
     Result := ((State[vk_Control] and 128) <> 0) ;
- end;
+{$ELSE}
+    Result := False;
 {$ENDIF}
+ end;
 
 initialization
   with LocalFormatSettings do begin

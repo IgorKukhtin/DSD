@@ -2,7 +2,7 @@ unit FMX.dsdDB;
 
 interface
 
-uses Classes, DBClient, DB;
+uses Classes, DBClient, DB, FMX.Dialogs;
 
 type
   TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob, otMultiExecute);
@@ -763,24 +763,7 @@ function TdsdParam.GetDisplayName: string;
 begin
   result := Name
 end;
-{
-function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
-begin
-  if DataSet.Active then begin
-    if FieldName = '' then
-       raise Exception.Create('ѕараметр ' + Name + '. не установлено ComponentItem');
-    Result := DataSet.FieldByName(FieldName).Value;
-    if VarIsNull(Result) then
-    case DataType of
-      ftString: Result := '';
-      ftInteger: Result := 0;
-      ftBoolean: Result := false;
-      ftFloat: Result := 0;
-      ftDateTime: Result := 'NULL';
-    end;
-  end;
-end;
-}
+
 function TdsdParam.GetisChanged: boolean;
 begin
   Result := varToStr(FOldValue) <> VarToStr(Value)
@@ -811,18 +794,7 @@ var
   FRttiProperty: TRttiProperty;
   FRttiType: TRttiType;
   RttiValue : TValue;
-  //Done: Boolean;
 begin
-  { ???
-  if Assigned(Component) and
-     (Self.GetOwner is TvtCustomForm) and
-     not(csDesigning in Component.ComponentState) then
-  begin
-    (Self.GetOwner as TvtCustomForm).GetComponentData(Component, ComponentItem, FValue, Done);
-    if Done then
-      exit(FValue);
-  end;
-  }
   if Assigned(Component) AND (ComponentItem <> '') and not(csDesigning in Component.ComponentState) then
   begin
     FRttiContext := TRttiContext.Create;
@@ -848,8 +820,11 @@ begin
                 case DataType of
                   ftSmallint, ftInteger, ftWord, ftShortint, ftByte:
                     Result := VarAsType(Result, varInteger);
-                  ftBoolean :
-                    Result := VarAsType(Result, varBoolean);
+                  ftBoolean : if VarIsType(Result, varBoolean) then
+                                Result := VarAsType(Result, varBoolean)
+                              else if Copy(Result, 1, 1) = 't' then Result := True
+                              else if Copy(Result, 1, 1) = 'f' then Result := False
+                              else Result := StrToBoolDef(Result, False);
                   ftFloat, ftCurrency, ftBCD, ftFMTBcd, TFieldType.ftExtended, TFieldType.ftSingle:
                     Result := VarAsType(Result, varCurrency);
                   ftDate, ftTime, ftDateTime:
@@ -871,87 +846,6 @@ begin
     finally
       FRttiContext.Free;
     end;
-(* TODO
-  if Assigned(FComponent) and (not Assigned(FComponent.Owner)
-       or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
-     // ¬ зависимости от типа компонента Value содержитс€ в разных property
-     if Component is TCrossDBViewAddOn then
-        result := GetFromCrossDBViewAddOn;
-     if Component is TPivotAddOn then
-        result := (Component as TPivotAddOn).GetCurrentData;
-     if Component is TcxTextEdit then
-        Result := (Component as TcxTextEdit).Text;
-     if Component is TcxMemo then
-        Result := (Component as TcxMemo).Text;
-     if Component is TcxButtonEdit then
-        Result := (Component as TcxButtonEdit).Text;
-     if (Component is TDataSet) then
-        Result := GetFromDataSet(TDataSet(Component), ComponentItem);
-     if (Component is TdsdFormParams) then
-        if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
-           Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
-        else
-          case DataType of
-            ftInteger: Result := '0';
-          end;
-     if Component is TcxCurrencyEdit then begin
-        with (Component as TcxCurrencyEdit) do
-          if Parent.ClassName = 'TPlaceForm' then begin // ≈сли стоим в тулбаре, то приходитс€ брать из текста
-             Result := StrToFloatDef(EditingText, 0)
-          end
-          else
-            Result := (Component as TcxCurrencyEdit).Value;
-     end;
-     if Component is TCustomGuides then begin
-        if LowerCase(ComponentItem) = 'textvalue'  then
-           Result := (Component as TCustomGuides).TextValue
-        else
-           Result := (Component as TCustomGuides).Key;
-     end;
-     if Component is TcxCheckBox then
-        Result := BoolToStr((Component as TcxCheckBox).Checked, true);
-     if Component is TcxDateEdit then begin
-        if (Component as TcxDateEdit).Date = -700000 then
-           (Component as TcxDateEdit).Date := Date;
-        Result := (Component as TcxDateEdit).Date;
-     end;
-     if Component is TBooleanStoredProcAction then
-        Result := (Component as TBooleanStoredProcAction).Value;
-     if Component is TEDI then
-        result := (Component as TEDI).Directory;
-     if Component is TDocument then begin
-        if LowerCase(ComponentItem) = 'name' then
-           result := TDocument(Component).GetName
-        else
-           result := TDocument(Component).GetData;
-     end;
-     if Component is TDefaultKey then begin
-        if LowerCase(ComponentItem) = 'key' then
-           result := TDefaultKey(Component).Key
-        else
-           result := TDefaultKey(Component).JSONKey;
-     end;
-     if Component is TcxGridDBTableView then
-     Begin
-       IDs := '';
-       clmn := nil;
-       if (Component.Owner.FindComponent(ComponentItem) <> nil) AND
-          (Component.Owner.FindComponent(ComponentItem) is TcxGridDBColumn) then
-         clmn := TcxGridDBColumn(Component.Owner.FindComponent(ComponentItem));
-       if Clmn <> nil then
-       Begin
-         with TcxGridDBTableView(Component) do
-         Begin
-           for i := 0 to Controller.SelectedRecordCount - 1 do
-           Begin
-             if IDs <> '' then
-               IDs := IDs + FMultiSelectSeparator;
-             IDs := IDs + VarToStr(Controller.SelectedRecords[I].Values[Clmn.Index]);
-           End;
-         End;
-       end;
-       Result := IDs;
-     End;*)
   end
   else
   Begin
@@ -972,38 +866,7 @@ begin
      FComponent := Value;
   end
 end;
-{
-procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
-var Field: TField;
-begin
-  if DataSet.Active then begin
-    if not (DataSet.State in [dsEdit, dsInsert]) then
-       DataSet.Edit;
-    Field := DataSet.FieldByName(FieldName);
-    if Assigned(Field) then begin
-         // в случае дробного числа и если строка, то надо конвертить
-         if (Field.DataType in [ftFloat, ftInteger]) and (VarType(FValue) in [vtString, vtClass]) then begin
-             if FValue = '' then
-                Field.Value := null
-             else
-                Field.Value := gfStrToFloat(FValue)
-         end
-         else
-           // в случае даты и если строка, то надо конвертить
-           if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-              if FValue = '' then
-                Field.Value := null
-              else
-                Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
-           end
-           else
-              Field.Value := FValue;
-    end
-    else
-      raise Exception.Create('” дата сета "' + Component.Name + '" нет пол€ "' + FieldName + '"');
-  end;
-end;
-}
+
 procedure TdsdParam.SetIsFillOutParams(const Value: Boolean);
 begin
   FIsFillOutParams := Value;
@@ -1041,18 +904,6 @@ var
 begin
   FValue := Value;
   DateTimeValue := 0;
-  { ???
-  if Assigned(Component) and
-     (Self.GetOwner is TvtCustomForm) and
-     not(csDesigning in Component.ComponentState) then
-  Begin
-    (Self.GetOwner as TvtCustomForm).SetComponentData(Component, ComponentItem, FValue, Done);
-    if FIsFillOutParams then
-      FOldValue := FValue;
-    if Done then
-      exit;
-  end;
-  }
   if Assigned(Component) AND (ComponentItem <> '') and not(csDesigning in Component.ComponentState) then
   Begin
     FRttiContext := TRttiContext.Create;
@@ -1159,8 +1010,11 @@ begin
     case DataType of
       ftSmallint, ftInteger, ftWord, ftShortint, ftByte:
         FValue := VarAsType(FValue, varInteger);
-      ftBoolean :
-        FValue := VarAsType(FValue, varBoolean);
+      ftBoolean : if VarIsType(FValue, varBoolean) then
+                    FValue := VarAsType(FValue, varBoolean)
+                  else if Copy(FValue, 1, 1) = 't' then FValue := True
+                  else if Copy(FValue, 1, 1) = 'f' then FValue := False
+                  else FValue := StrToBoolDef(FValue, False);
       ftFloat, ftCurrency, ftBCD, ftFMTBcd, TFieldType.ftExtended, TFieldType.ftSingle:
         FValue := VarAsType(FValue, varCurrency);
       ftDate, ftTime, ftDateTime:
@@ -1174,112 +1028,6 @@ begin
   Begin
     FOldValue := FValue;
   End;
-(* TODO
-  // передаем значение параметра дальше по цепочке
-  if Assigned(FComponent) then begin
-     if (Component is TCrossDBViewAddOn) then
-        SetInCrossDBViewAddOn(FValue);
-     if (Component is TDataSet) then
-        SetInDataSet(TDataSet(Component), ComponentItem, FValue);
-     if Component is TcxTextEdit then
-        (Component as TcxTextEdit).Text := FValue;
-     if Component is TcxMemo then
-        (Component as TcxMemo).Text := FValue;
-     if Component is TcxButtonEdit then
-        (Component as TcxButtonEdit).Text := FValue;
-     if Component is TdsdFormParams then
-        with (Component as TdsdFormParams) do begin
-          if Assigned(ParamByName(FComponentItem)) then
-             ParamByName(FComponentItem).Value := FValue
-          else
-             Params.AddParam(FComponentItem, ftString, ptInput, FValue);
-        end;
-     if Component is TcxCurrencyEdit then
-        (Component as TcxCurrencyEdit).Value := gfStrToFloat(FValue);
-     if Component is TcxCheckBox then
-        (Component as TcxCheckBox).Checked := StrToBool(FValue);
-     if Component is TcxDateEdit then
-        if VarType(FValue) = vtObject then
-          (Component as TcxDateEdit).Date := FValue
-        else begin
-          if (FValue <> '') AND (FValue <> 'NULL') then
-             (Component as TcxDateEdit).Date := gfXSStrToDate(FValue) // convert to TDateTime
-          else
-             (Component as TcxDateEdit).Text := '';
-        end;
-     if Component is TEDI then
-        (Component as TEDI).Directory := FValue;
-     if (Component is TExportGrid)
-        AND
-        ((LowerCase(ComponentItem) = LowerCase('DefaultFileName'))
-         or
-         (LowerCase(ComponentItem) = LowerCase('ExportType'))) then begin
-        if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
-           (Component as TExportGrid).DefaultFileName := FValue;
-        if LowerCase(ComponentItem) = LowerCase('ExportType') then
-           (Component as TExportGrid).ExportType := FValue;
-     end
-     else
-     if Component is TBooleanStoredProcAction then
-        (Component as TBooleanStoredProcAction).Value := FValue
-     else
-     if (Component is TADOQueryAction)
-        AND
-        (
-           (LowerCase(ComponentItem) = 'connectionstring')
-           or
-           (LowerCase(ComponentItem) = 'querytext')
-        ) then begin
-       if LowerCase(ComponentItem) = 'connectionstring' then begin
-          (Component as TADOQueryAction).ConnectionString := FValue;
-       end else
-         if LowerCase(ComponentItem) = 'querytext' then
-           (Component as TADOQueryAction).QueryText := FValue;
-     end
-     else
-     if Component is TMedocAction then
-        (Component as TMedocAction).Directory := FValue
-     else
-     if Component is TdsdSMTPFileAction then
-       (Component as TdsdSMTPFileAction).FileName := FValue
-     else
-     if Component is TShowMessageAction then
-       (Component as TShowMessageAction).MessageText := String(FValue)
-     else
-     if (Component is TCustomAction) AND (ComponentItem <> '') then
-     Begin
-       FRttiProperty := FRttiContext.GetType(Component.ClassType).GetProperty(ComponentItem);
-       if FRttiProperty <> nil then
-       Begin
-         case FRttiProperty.PropertyType.TypeKind of
-           tkInteger: RttiValue := StrToInt(VarToStr(FValue));
-           tkFloat: RttiValue := StrToFloat(VarToStr(FValue));
-           tkString: RttiValue := VarToStr(FValue);
-           tkEnumeration: RttiValue := (FValue = True);
-           else RttiValue := VarToStr(FValue);
-         end;
-         FRttiProperty.SetValue(Component,RttiValue);
-         FRttiProperty.Free;
-       End;
-     End;
-     if Component is TCustomGuides then
-        if LowerCase(ComponentItem) = 'textvalue' then begin
-           if VarIsNull(FValue) then
-              FValue := '';
-           (Component as TCustomGuides).TextValue := FValue;
-        end else
-          if LowerCase(ComponentItem) = 'parentid' then
-             (Component as TCustomGuides).ParentId := FValue
-          else begin
-             if VarIsNull(FValue) then
-                FValue := 0;
-             (Component as TCustomGuides).Key := FValue;
-          end;
-
-  end;
-  if Assigned(FonChange) then
-     FonChange(Self);
-  *)
 end;
 
 { TdsdFormParams }

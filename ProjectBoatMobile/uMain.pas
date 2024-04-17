@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  System.DateUtils, Data.DB,
+  System.DateUtils, System.Threading, Data.DB,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.TabControl, FMX.Objects, FMX.Edit,
   System.Generics.Collections, System.Actions, FMX.ActnList, FMX.Platform,
@@ -1223,7 +1223,7 @@ var
   Barcode: TObrSymbol;
   pOnScanResult: TDataWedgeBarCodeResult;
   pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
-  var cDATA_STRING: String;
+  cDATA_STRING, SymbologyName: String;
 begin
   if Assigned(FObr) and FisCameraScanBarCode and (FObr.BarcodeCount > 0) and (tcMain.ActiveTab = tiScanBarCode) then
   begin
@@ -1233,14 +1233,16 @@ begin
     pOnScanResultDetails := FDataWedgeBarCode.OnScanResultDetails;
     pOnScanResult := FDataWedgeBarCode.OnScanResult;
 
-    sbBackClick(Sender);
 
     cDATA_STRING := Barcode.DataUtf8;
+    SymbologyName := Barcode.SymbologyName;
 
     if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then cDATA_STRING := Copy(cDATA_STRING, 1, Length(cDATA_STRING) - 1);
 
-    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, Barcode.SymbologyName,
-                          'Camera', Barcode.SymbologyName, cDATA_STRING);
+    sbBackClick(Sender);
+
+    if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, 'Scan',
+                          'Camera', SymbologyName, cDATA_STRING);
 
     if Assigned(pOnScanResult) then pOnScanResult(Self, cDATA_STRING);
   end;
@@ -1345,19 +1347,43 @@ end;
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
 
+  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  if tcMain.ActiveTab = tiStart then
+  begin
+    bGoods.Enabled := False;
+    bInfo.Enabled := False;
+    bInventoryScan.Enabled := False;
+    bLogIn.Enabled := False;
+    bProductionUnion.Enabled := False;
+    bRelogin.Enabled := False;
+    bSendScan.Enabled := False;
+    bUpload.Enabled := False;
+  end else if not bGoods.Enabled then
+  begin
+    TTask.Run(
+    procedure
+    begin
+      sleep(1000);
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          bGoods.Enabled := True;
+          bInfo.Enabled := True;
+          bInventoryScan.Enabled := True;
+          bLogIn.Enabled := True;
+          bProductionUnion.Enabled := True;
+          bRelogin.Enabled := True;
+          bSendScan.Enabled := True;
+          bUpload.Enabled := True;
+        end);
+    end);
+  end;
+  {$ENDIF}
+
   if tcMain.ActiveTab <> tiScanBarCode then
   begin
     FDataWedgeBarCode.OnScanResultDetails := Nil;
     FDataWedgeBarCode.OnScanResult := Nil;
-    if Assigned(FObr) then FObr.OnBarcodeDetected := Nil;
-    if Assigned(FCameraScanBarCode) then
-    begin
-      FCameraScanBarCode.OnSampleBufferReady := Nil;
-      if FCameraScanBarCode.HasFlash then FCameraScanBarCode.TorchMode := TTorchMode.ModeOff;
-      {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-      FCameraScanBarCode.Active := False;
-      {$ENDIF}
-    end;
   end;
   if (tcMain.ActiveTab <> tiInformation) and (tcMain.ActiveTab <> tiScanBarCode) then lwBarCodeResult.Items.Clear;
   PasswordEdit.Text := '';
@@ -2546,6 +2572,19 @@ begin
   if (tcMain.ActiveTab = tiScanBarCode) then
   begin
     imgCameraScanBarCode.Bitmap.Clear(TAlphaColorRec.White);
+    if Assigned(FObr) then
+    begin
+      FObr.OnBarcodeDetected := Nil;
+      //FObr.Active := False;
+    end;
+    if Assigned(FCameraScanBarCode) then
+    begin
+      FCameraScanBarCode.OnSampleBufferReady := Nil;
+      if FCameraScanBarCode.HasFlash then FCameraScanBarCode.TorchMode := TTorchMode.ModeOff;
+      {$IF DEFINED(ANDROID)}
+      FCameraScanBarCode.Active := False;
+      {$ENDIF}
+    end;
     if Sender = sbBack then
     begin
       FisNextScan := False;
@@ -2867,7 +2906,7 @@ begin
       begin
         Wait(False);
 
-        ShowMessage('Нет связи с сервером. Продолжение работы невозможно'+#13#10 + GetTextMessage(E));
+        ShowMessage('Нет связи с сервером. Продолжение работы невозможно. '+#13#10 + GetTextMessage(E));
         Exit;
       end;
       //
@@ -2994,7 +3033,7 @@ begin
     except on E: Exception do
       begin
         Wait(False);
-        ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно';
+        ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно. ';
         ShowMessage(ErrorMessage+#13#10 + GetTextMessage(E));
         exit;
       end;
@@ -3004,6 +3043,9 @@ begin
     {$IFDEF ANDROID}
     DM.CheckUpdate; // проверка небходимости обновления
     {$ENDIF}
+
+    // загрузили конфиг
+    DM.DownloadConfig;
 
   finally
     if (ErrorMessage <> '') and (tcMain.ActiveTab <> tiStart) then

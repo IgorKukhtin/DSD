@@ -203,7 +203,7 @@ begin
       lVesion:= lVesion + ' '  + lVesion_two;
       //lVesionSDK:= lVesionSDK;
 
-      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, lIMEI, lModel, lVesion, lVesionSDK]), False, 1, ANeedShowException)).DocumentElement;
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pUserName, pPassword, lIMEI, lModel, lVesion, lVesionSDK]), False, 2, ANeedShowException)).DocumentElement;
       if Assigned(N) then
       begin
         Result := N.GetAttribute(AnsiLowerCase(gcMessage));
@@ -357,7 +357,7 @@ begin
       lVesion:= lVesion + ' '  + lVesion_two;
       //lVesionSDK:= lVesionSDK;
 
-      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pCode, lIMEI, lModel, lVesion, lVesionSDK]), False, 1, ANeedShowException)).DocumentElement;
+      N := LoadXMLData(pStorage.ExecuteProc(Format(pXML, [pCode, lIMEI, lModel, lVesion, lVesionSDK]), False, 2, ANeedShowException)).DocumentElement;
       if Assigned(N) then
       begin
         Result := N.GetAttribute(AnsiLowerCase(gcMessage));
