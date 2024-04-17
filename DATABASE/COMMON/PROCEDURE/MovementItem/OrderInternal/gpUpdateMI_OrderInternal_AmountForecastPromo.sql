@@ -317,7 +317,8 @@ BEGIN
                                                        AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
                                                        AND ObjectBoolean_NotPack.ValueData = TRUE
                                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                  AND 1=0
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                --AND 1=0
                                )
         -- Результат
         INSERT INTO tmpAll (MovementItemId, ContainerId, GoodsId, GoodsKindId, AmountForecastOrder, AmountForecastOrderPromo, AmountForecast, AmountForecastPromo

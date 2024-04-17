@@ -16,7 +16,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
-if vbUserId = 5 AND 1=0
+if vbUserId = 5 AND 1=1
 then
     inOperDate:= CURRENT_DATE;
 end if;
@@ -218,7 +218,8 @@ end if;
                                                        AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
                                                        AND ObjectBoolean_NotPack.ValueData = TRUE
                                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                  AND 1=0
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                --AND 1=0
                                )
        -- Результат
        SELECT tmp.MovementItemId

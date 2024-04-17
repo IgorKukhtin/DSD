@@ -348,7 +348,7 @@ else*/
                                                                AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
                                                                AND ObjectBoolean_NotPack.ValueData = TRUE
                                         WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                          AND 1=0
+                                        --AND 1=0
                                        )
            -- Результат
            SELECT tmpMI.MovementItemId

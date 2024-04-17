@@ -23,7 +23,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Дата документа <%> не сохранена.<%>', inOperDate, (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
     END IF;
 
-if vbUserId = 5 AND 1=0
+if vbUserId = 5 AND 1=1
 then
     inOperDate:= CURRENT_DATE;
 end if;
@@ -163,7 +163,8 @@ end if;
                                                        AND ObjectBoolean_NotPack.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()
                                                        AND ObjectBoolean_NotPack.ValueData = TRUE
                                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                                  AND 1=0
+                                  AND ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                --AND 1=0
                                )
        -- результат - для SKLAD
        SELECT tmp.MovementItemId
@@ -288,7 +289,7 @@ end if;
                                                )
     FROM tmpAll;
 
-if vbUserId = 5 AND 1=1
+if vbUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Ошибка. end <%>  %   %', (select sum (tmpAll.Amount_start) from tmpAll where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
     , (select sum (tmpAll.AmountRK_start) from tmpAll) -- where tmpAll.GoodsId = 6749 and tmpAll.GoodsKindId = 8352)
