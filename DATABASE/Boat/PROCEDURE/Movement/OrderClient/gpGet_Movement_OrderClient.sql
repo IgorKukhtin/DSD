@@ -313,7 +313,14 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_TaxKind
                                          ON MovementLinkObject_TaxKind.MovementId = Movement_OrderClient.Id
                                         AND MovementLinkObject_TaxKind.DescId = zc_MovementLinkObject_TaxKind()
-            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_TaxKind.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_TaxKind
+                                 ON ObjectLink_TaxKind.ObjectId = Object_From.Id
+                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = COALESCE (MovementLinkObject_TaxKind.ObjectId, ObjectLink_TaxKind.ChildObjectId)
+                                
+            LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
+                                   ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id
+                                  AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Product_Reserve
                                     ON ObjectBoolean_Product_Reserve.ObjectId = Object_Product.Id
@@ -387,14 +394,7 @@ BEGIN
 
             LEFT JOIN tmpSummProduct ON 1 = 1
             --
-            /*LEFT JOIN ObjectLink AS ObjectLink_TaxKind
-                                 ON ObjectLink_TaxKind.ObjectId = Object_From.Id
-                                AND ObjectLink_TaxKind.DescId = zc_ObjectLink_Client_TaxKind()
-            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = ObjectLink_TaxKind.ChildObjectId*/
-                                
-            LEFT JOIN ObjectString AS ObjectString_TaxKind_Info
-                                   ON ObjectString_TaxKind_Info.ObjectId = Object_TaxKind.Id
-                                  AND ObjectString_TaxKind_Info.DescId = zc_ObjectString_TaxKind_Info()
+
         WHERE Movement_OrderClient.Id = inMovementId
           AND Movement_OrderClient.DescId = zc_Movement_OrderClient()
           ;
