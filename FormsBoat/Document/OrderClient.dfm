@@ -3,7 +3,7 @@ object OrderClientForm: TOrderClientForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1047#1072#1082#1072#1079' '#1050#1083#1080#1077#1085#1090#1072'>'
   ClientHeight = 632
-  ClientWidth = 1349
+  ClientWidth = 1390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object OrderClientForm: TOrderClientForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1349
-    Height = 167
+    Width = 1390
+    Height = 172
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 8
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -98,7 +99,7 @@ object OrderClientForm: TOrderClientForm
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 1097
+      Left = 1119
       Top = 94
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -395,10 +396,10 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel27: TcxLabel
-      Left = 865
+      Left = 866
       Top = 98
       Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+      Caption = 'Tr. Preparation:'
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -410,22 +411,22 @@ object OrderClientForm: TOrderClientForm
       Style.IsFontAssigned = True
     end
     object cxLabel28: TcxLabel
-      Left = 888
-      Top = 121
+      Left = 909
+      Top = 146
       Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
       Caption = 'Total LP :'
       ParentShowHint = False
       ShowHint = True
     end
     object cxLabel29: TcxLabel
-      Left = 1049
+      Left = 1071
       Top = 98
       Caption = '% '#1053#1044#1057' :'
       ParentShowHint = False
       ShowHint = True
     end
     object cxLabel30: TcxLabel
-      Left = 1017
+      Left = 1039
       Top = 121
       Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
       Caption = 'Total LP + Vat :'
@@ -621,7 +622,7 @@ object OrderClientForm: TOrderClientForm
       Width = 70
     end
     object cbReserve: TcxCheckBox
-      Left = 1206
+      Left = 1208
       Top = 88
       Caption = #1056#1077#1079#1077#1088#1074#1072#1094#1080#1103
       ParentFont = False
@@ -635,37 +636,61 @@ object OrderClientForm: TOrderClientForm
       TabOrder = 63
       Width = 133
     end
+    object cxLabel7: TcxLabel
+      Left = 886
+      Top = 121
+      Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -11
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 193
-    Width = 1349
-    Height = 375
+    Top = 198
+    Width = 1390
+    Height = 370
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 375
-    ClientRectRight = 1349
+    ExplicitTop = 193
+    ExplicitWidth = 1349
+    ExplicitHeight = 375
+    ClientRectBottom = 370
+    ClientRectRight = 1390
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1349
+      ExplicitHeight = 351
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 1349
-        Height = 166
+        Width = 1390
+        Height = 161
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 0
+        ExplicitWidth = 1349
+        ExplicitHeight = 166
         object cxGrid: TcxGrid
           Left = 1
           Top = 1
-          Width = 1347
-          Height = 164
+          Width = 1388
+          Height = 159
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 1347
+          ExplicitHeight = 164
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = MasterDS
@@ -1037,21 +1062,25 @@ object OrderClientForm: TOrderClientForm
       end
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
-        Top = 166
-        Width = 1349
+        Top = 161
+        Width = 1390
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel4
+        ExplicitTop = 166
+        ExplicitWidth = 1349
       end
       object Panel4: TPanel
         Left = 0
-        Top = 174
-        Width = 1349
+        Top = 169
+        Width = 1390
         Height = 177
         Align = alBottom
         Caption = 'Panel4'
         TabOrder = 2
+        ExplicitTop = 174
+        ExplicitWidth = 1349
         object PanelProdColorItems: TPanel
           Left = 1
           Top = 1
@@ -1352,21 +1381,23 @@ object OrderClientForm: TOrderClientForm
         object PanelProdOptItems: TPanel
           Left = 529
           Top = 1
-          Width = 819
+          Width = 860
           Height = 175
           Align = alClient
           BevelEdges = [beLeft]
           BevelOuter = bvNone
           TabOrder = 1
+          ExplicitWidth = 819
           object cxGridProdOptItems: TcxGrid
             Left = 0
             Top = 17
-            Width = 819
+            Width = 860
             Height = 158
             Align = alClient
             TabOrder = 0
             LookAndFeel.NativeStyle = True
             LookAndFeel.SkinName = 'UserSkin'
+            ExplicitWidth = 819
             object cxGridDBTableViewProdOptItems: TcxGridDBTableView
               Navigator.Buttons.CustomButtons = <>
               DataController.DataSource = ProdOptItemsDS
@@ -1752,13 +1783,14 @@ object OrderClientForm: TOrderClientForm
           object Panel3: TPanel
             Left = 0
             Top = 0
-            Width = 819
+            Width = 860
             Height = 17
             Align = alTop
             Caption = #1054#1087#1094#1080#1080
             Color = clAqua
             ParentBackground = False
             TabOrder = 1
+            ExplicitWidth = 819
           end
         end
         object cxSplitter_Left: TcxSplitter
@@ -1773,13 +1805,17 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
+      ExplicitWidth = 1349
+      ExplicitHeight = 351
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1349
-        Height = 351
+        Width = 1390
+        Height = 346
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1349
+        ExplicitHeight = 351
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -2786,15 +2822,19 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
+      ExplicitWidth = 1349
+      ExplicitHeight = 351
       object cxGridInfo: TcxGrid
         Left = 0
         Top = 0
-        Width = 1349
-        Height = 351
+        Width = 1390
+        Height = 346
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = True
         LookAndFeel.SkinName = 'UserSkin'
+        ExplicitWidth = 1349
+        ExplicitHeight = 351
         object cxGridDBTableViewInfo: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InfoDS
@@ -2843,14 +2883,18 @@ object OrderClientForm: TOrderClientForm
     object cxTabSheetInvoice: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 3
+      ExplicitWidth = 1349
+      ExplicitHeight = 351
       object cxGridInvoice: TcxGrid
         Left = 0
         Top = 0
-        Width = 1349
-        Height = 351
+        Width = 1390
+        Height = 346
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1349
+        ExplicitHeight = 351
         object cxGridDBTableViewInvoice: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = InvoiceDS
@@ -3445,8 +3489,8 @@ object OrderClientForm: TOrderClientForm
     Width = 44
   end
   object edBasis_summ_transport: TcxCurrencyEdit
-    Left = 939
-    Top = 120
+    Left = 963
+    Top = 145
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -3474,8 +3518,8 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edTransportSumm_load: TcxCurrencyEdit
-    Left = 939
-    Top = 94
+    Left = 963
+    Top = 93
     Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
@@ -3487,7 +3531,7 @@ object OrderClientForm: TOrderClientForm
     Width = 70
   end
   object edBasisWVAT_summ_transport: TcxCurrencyEdit
-    Left = 1097
+    Left = 1119
     Top = 120
     Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1089' '#1053#1044#1057
     ParentShowHint = False
@@ -3496,31 +3540,8 @@ object OrderClientForm: TOrderClientForm
     Properties.DisplayFormat = ',0.####'
     ShowHint = True
     Style.Color = clGradientInactiveCaption
-    TabOrder = 9
-    Width = 70
-  end
-  object cxLabel7: TcxLabel
-    Left = 855
-    Top = 156
-    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
-    Caption = #1053#1044#1057' (Kunden)'
-    ParentShowHint = False
-    ShowHint = True
-    Visible = False
-  end
-  object edTaxKind_Value: TcxCurrencyEdit
-    Left = 879
-    Top = 155
-    Hint = 'C'#1091#1084#1084#1072' '#1086#1090#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1072#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080', '#1073#1077#1079' '#1053#1044#1057
-    ParentShowHint = False
-    Properties.Alignment.Horz = taRightJustify
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    ShowHint = True
-    TabOrder = 11
-    Visible = False
-    Width = 70
+    TabOrder = 8
+    Width = 68
   end
   object cxLabel14: TcxLabel
     Left = 344
@@ -3531,16 +3552,17 @@ object OrderClientForm: TOrderClientForm
     Left = 344
     Top = 63
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 10
     Width = 132
   end
   object Panel_btn: TPanel
     Left = 0
     Top = 568
-    Width = 1349
+    Width = 1390
     Height = 64
     Align = alBottom
-    TabOrder = 17
+    TabOrder = 15
+    ExplicitWidth = 1349
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
@@ -3641,6 +3663,19 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
       TabOrder = 9
     end
+  end
+  object edTransportSumm: TcxCurrencyEdit
+    Left = 963
+    Top = 120
+    Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+    ParentShowHint = False
+    Properties.Alignment.Horz = taRightJustify
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    ShowHint = True
+    Style.Color = clWindow
+    TabOrder = 16
+    Width = 70
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -5795,6 +5830,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTransportSumm'
+        Value = Null
+        Component = edTransportSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -5899,6 +5942,9 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edPaidKind
+      end
+      item
+        Control = edTaxKind
       end>
     GetStoredProc = spGet
     Left = 808
@@ -6244,6 +6290,13 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'TransportSumm'
+        Value = Null
+        Component = edTransportSumm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Basis_summ_transport'
         Value = Null
         Component = edBasis_summ_transport
@@ -6260,7 +6313,6 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'Value_TaxKind'
         Value = Null
-        Component = edTaxKind_Value
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -6364,8 +6416,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 838
-    Top = 328
+    Left = 902
+    Top = 304
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
@@ -6986,8 +7038,8 @@ object OrderClientForm: TOrderClientForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 744
-    Top = 288
+    Left = 1248
+    Top = 416
   end
   object DBViewAddOnProdOptItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7024,8 +7076,8 @@ object OrderClientForm: TOrderClientForm
   end
   object ProdOptItemsDS: TDataSource
     DataSet = ProdOptItemsCDS
-    Left = 784
-    Top = 296
+    Left = 1280
+    Top = 416
   end
   object spErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
@@ -7089,8 +7141,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 864
-    Top = 352
+    Left = 1200
+    Top = 440
   end
   object spUnErasedOpt: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ProdOptItems'
@@ -7299,8 +7351,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1104
-    Top = 328
+    Left = 1248
+    Top = 256
   end
   object spSelectPrintStructure: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_StructurePrint'
@@ -7323,8 +7375,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1048
-    Top = 256
+    Left = 1256
+    Top = 216
   end
   object spSelectPrintOrderConfirmation: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Product_OrderConfirmationPrint'
@@ -7350,8 +7402,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1216
-    Top = 312
+    Left = 1312
+    Top = 232
   end
   object spSelectMI_Child: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_OrderClient_Child'
@@ -7424,8 +7476,8 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 760
-    Top = 312
+    Left = 768
+    Top = 456
   end
   object DBViewAddOnInfo: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -7455,18 +7507,18 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 808
-    Top = 264
+    Left = 1096
+    Top = 328
   end
   object InfoCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 840
+    Left = 1064
     Top = 279
   end
   object InfoDS: TDataSource
     DataSet = InfoCDS
-    Left = 894
+    Left = 1030
     Top = 279
   end
   object spSelectMovement_Info: TdsdStoredProc
@@ -7551,8 +7603,8 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 952
-    Top = 304
+    Left = 1032
+    Top = 320
   end
   object ChildLevelDS: TDataSource
     DataSet = ChildLevelCDS
@@ -7597,8 +7649,8 @@ object OrderClientForm: TOrderClientForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 728
-    Top = 256
+    Left = 624
+    Top = 456
   end
   object InvoiceCDS: TClientDataSet
     Aggregates = <>
@@ -7955,6 +8007,14 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTransportSumm'
+        Value = Null
+        Component = edTransportSumm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBasis_summ1_orig'
         Value = 0.000000000000000000
         Component = edBasis_summ1_orig
@@ -8037,7 +8097,7 @@ object OrderClientForm: TOrderClientForm
       end>
     PackSize = 1
     Left = 538
-    Top = 120
+    Top = 152
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -8058,6 +8118,9 @@ object OrderClientForm: TOrderClientForm
       end
       item
         Control = edTransportSumm_load
+      end
+      item
+        Control = edTransportSumm
       end
       item
         Control = edBasis_summ_transport
@@ -8093,6 +8156,9 @@ object OrderClientForm: TOrderClientForm
         Control = edTransportSumm_load
       end
       item
+        Control = edTransportSumm
+      end
+      item
         Control = edBasis_summ_transport
       end
       item
@@ -8103,7 +8169,7 @@ object OrderClientForm: TOrderClientForm
       item
         Control = cxButton1
       end>
-    Left = 680
-    Top = 128
+    Left = 704
+    Top = 152
   end
 end

@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
     IN inId                          Integer   , -- Ключ объекта <Документ>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
     IN inDiscountTax                 TFloat    , --
     IN inDiscountNextTax             TFloat    , -- 
     IN inTransportSumm_load          TFloat    , --транспорт 
+    IN inTransportSumm               TFloat    , --транспорт 
     IN inBasis_summ1_orig            TFloat, --для врм. расчета на форме
     IN inBasis_summ2_orig            TFloat, --для врм. расчета на форме
    OUT outSummDiscount1              TFloat , 
@@ -37,7 +39,8 @@ $BODY$
    DECLARE vbBasis_summ_transport TFloat;
    DECLARE vbSummReal TFloat;
    DECLARE vbSummTax TFloat;
-   DECLARE vbTransportsumm_load TFloat;  
+   DECLARE vbTransportsumm_load TFloat; 
+   DECLARE vbTransportsumm      TFloat;  
    DECLARE vbVATPercent TFloat;
    DECLARE vbTotalSumm TFloat;
    DECLARE vbisVat Boolean;
@@ -55,10 +58,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), inId, inVATPercent);
      -- сохранили значение <% скидки>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountTax(), inId, inDiscountTax);
-     -- сохранили значение <% скидки доп>
+     -- сохранили значение <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountNextTax(), inId, inDiscountNextTax);
-     -- сохранили значение <% скидки доп>
+     -- сохранили значение <>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load(), inId, inTransportSumm_load);
+     -- сохранили значение <>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm(), inId, inTransportSumm);
 
      -- Результат
      PERFORM lpInsert_MovementItemProtocol (MovementItem.MovementItemId, vbUserId, FALSE)
@@ -111,7 +116,8 @@ BEGIN
           vbSummTax        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTax());
           
           vbTotalSumm      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm());
-          vbTransportSumm_load      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_load());
+          vbTransportSumm_load := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_load());
+          vbTransportSumm      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm());
           vbVATPercent     := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_VATPercent()); 
           vbisVat          := FALSE;
           --vbBasis_summ_transport    := (COALESCE (vbTotalSumm,0) - COALESCE (vbSummTax,0) + COALESCE (vbTransportSumm_load,0));
@@ -133,6 +139,7 @@ BEGIN
           vbBasis_summ_transport    := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_Basis_summ_transport_calc());
           vbBasisWVAT_summ_transport:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_BasisWVAT_summ_transport_calc());
           vbTransportSumm_load      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_load_calc());
+          vbTransportSumm           := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_calc());
           vbVATPercent     := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_VATPercent_calc()); 
           vbisVat          := (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_isVat_calc()); --какое значение вносилось последним с НДС  Да - нет
      END IF;
@@ -151,6 +158,7 @@ BEGIN
             AND vbSummTax = ioSummTax AND vbSummReal = ioSummReal
             AND vbBasis_summ_transport = ioBasis_summ_transport AND vbBasisWVAT_summ_transport = ioBasisWVAT_summ_transport
             AND vbTransportSumm_load = inTransportSumm_load
+            AND vbTransportSumm = inTransportSumm
             AND vbVATPercent = inVATPercent
          THEN
              -- !!!выход!!!
@@ -166,18 +174,18 @@ BEGIN
              IF COALESCE (vbisVat, False) = FALSE
              THEN
                  ioBasisWVAT_summ_transport := zfCalc_SummWVAT (vbBasis_summ_transport, inVATPercent);
-                 ioSummTax :=  (outBasis_summ - (COALESCE (ioBasis_summ_transport,0) - COALESCE (inTransportSumm_load,0)));
+                 ioSummTax :=  (outBasis_summ - (COALESCE (ioBasis_summ_transport,0) - COALESCE (inTransportSumm_load,0)- COALESCE (inTransportSumm,0)));
              ELSE
                  ioBasis_summ_transport := zfCalc_Summ_NoVAT (vbBasisWVAT_summ_transport, inVATPercent); 
                  ioBasisWVAT_summ_transport := zfCalc_SummWVAT (ioBasis_summ_transport, inVATPercent);
-                 ioSummTax := (outBasis_summ - (zfCalc_Summ_NoVAT (ioBasisWVAT_summ_transport, inVATPercent) - COALESCE (inTransportSumm_load,0))); 
+                 ioSummTax := (outBasis_summ - (zfCalc_Summ_NoVAT (ioBasisWVAT_summ_transport, inVATPercent) - COALESCE (inTransportSumm_load,0) - COALESCE (inTransportSumm,0))); 
              END IF; 
          --сумма со скидкой и транспортом без НДС
          ELSEIF COALESCE (vbBasis_summ_transport,0) <> COALESCE (ioBasis_summ_transport,0)
          THEN 
              --RAISE EXCEPTION '2 Ошибка. Basis_summ_transport %    -  %.', vbBasis_summ_transport, ioBasis_summ_transport;    
              --
-             ioSummTax := (outBasis_summ - (COALESCE (ioBasis_summ_transport,0) - COALESCE (inTransportSumm_load,0)));
+             ioSummTax := (outBasis_summ - (COALESCE (ioBasis_summ_transport,0) - COALESCE (inTransportSumm_load,0)- COALESCE (inTransportSumm,0)));
              --
              PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), inId, FALSE);
          -- сумма с НДС
@@ -185,7 +193,7 @@ BEGIN
          THEN  
             -- RAISE EXCEPTION '3 Ошибка. BasisWVAT_summ_transport %    -  %.', vbBasisWVAT_summ_transport, ioBasisWVAT_summ_transport;  
              --   
-             ioSummTax := (outBasis_summ - (zfCalc_Summ_NoVAT (ioBasisWVAT_summ_transport, inVATPercent) - COALESCE (inTransportSumm_load,0)) );
+             ioSummTax := (outBasis_summ - (zfCalc_Summ_NoVAT (ioBasisWVAT_summ_transport, inVATPercent) - COALESCE (inTransportSumm_load,0) - COALESCE (inTransportSumm,0)) );
              --
              PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), inId, True);
          --- изменилась ручн. скидка
@@ -203,7 +211,7 @@ BEGIN
          
 
          ioSummReal := COALESCE (outBasis_summ,0) - COALESCE (ioSummTax,0); 
-         ioBasis_summ_transport := (COALESCE (outBasis_summ,0) - COALESCE (ioSummTax) + COALESCE (inTransportSumm_load,0)); 
+         ioBasis_summ_transport := (COALESCE (outBasis_summ,0) - COALESCE (ioSummTax) + COALESCE (inTransportSumm_load,0)+ COALESCE (inTransportSumm,0)); 
          ioBasisWVAT_summ_transport := zfCalc_SummWVAT (ioBasis_summ_transport, inVATPercent);       
 
          outTotalSummVAT := ioBasisWVAT_summ_transport - ioBasis_summ_transport;
@@ -218,6 +226,12 @@ BEGIN
                                                    THEN zc_MovementFloat_TransportSumm_load()
                                                    ELSE zc_MovementFloat_TransportSumm_load_calc()
                                               END, inId, inTransportSumm_load);
+
+         PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
+                                                   THEN zc_MovementFloat_TransportSumm()
+                                                   ELSE zc_MovementFloat_TransportSumm_calc()
+                                              END, inId, inTransportSumm);
+
 
          PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
                                                    THEN zc_MovementFloat_VATPercent()

@@ -22,6 +22,7 @@ AS
 $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
+  DECLARE Cursor3 refcursor;
 BEGIN
 
      CREATE TEMP TABLE _tmpUnit_from (UnitId Integer) ON COMMIT DROP;
@@ -32,7 +33,9 @@ BEGIN
                                            , ReceiptChildId integer, GoodsId_out Integer, GoodsKindId_out Integer, Amount_out TFloat, isStart Boolean, isCost Boolean
                                             ) ON COMMIT DROP;
      CREATE TEMP TABLE tmpResult_in  (ReceiptId Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCount TFloat, OperSumm TFloat, CuterCount TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat, PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpResult_out (ReceiptId Integer, PartionGoodsDate_in TDateTime, GoodsId_in Integer, GoodsKindId_in Integer, GoodsKindId_complete_in Integer, PartionGoodsDate TDateTime, GoodsId Integer
+                                    , GoodsKindId Integer, GoodsKindId_complete Integer, OperCountPlan TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
+                                    , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat, OperCount TFloat, OperSumm TFloat, CuterCount TFloat, OperCount_ReWork TFloat) ON COMMIT DROP;
 
 
      -- Ограничения по товару
@@ -481,10 +484,23 @@ BEGIN
                , tmpPrice3.Price
                 ;
 
-
-      -- Результат
-      OPEN Cursor1 FOR
-      WITH tmpTaxSumm AS (SELECT tmpResult.GoodsId
+ -- в отдельные таблицы соберам данные для курсора 1 и 2, чтоб иметь возможность объеденить их в третьем курсоре 
+      CREATE TEMP TABLE tmpCursor1 ( GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime
+                                   , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+                                   , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat, OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
+                                   , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
+                                   , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
+                                   , TaxSumm_min TFloat, TaxSumm_max TFloat, OperCount_ReWork TFloat, CuterCount TFloat, OperCount_gp_plan TFloat, OperCount_gp_real TFloat, LossGP_real  NUMERIC (16, 1), LossGP_plan  NUMERIC (16, 1)
+                                   , TaxGP_real NUMERIC (16, 1), TaxGP_plan NUMERIC (16, 1)
+                                   , Price_sale TFloat, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
+      INSERT INTO tmpCursor1 ( GoodsId, GoodsKindId, MasterKey, PartionGoodsDate
+                             , GoodsGroupNameFull, GoodsGroupName, GoodsCode, GoodsName, GoodsKindName, GoodsKindName_complete, MeasureName
+                             , OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
+                             , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
+                             , TaxSumm_min, TaxSumm_max, OperCount_ReWork, CuterCount, OperCount_gp_plan, OperCount_gp_real, LossGP_real, LossGP_plan, TaxGP_real, TaxGP_plan
+                             , Price_sale , InfoMoneyGroupName, InfoMoneyDestinationName, InfoMoneyCode, InfoMoneyName)
+ 
+       WITH tmpTaxSumm AS (SELECT tmpResult.GoodsId
                                , tmpResult.GoodsKindId
                                , tmpResult.PartionGoodsDate
                                , tmpResult.GoodsKindId_complete
@@ -639,35 +655,23 @@ BEGIN
        WHERE tmpResult.OperCount        <> 0
           OR tmpResult.OperCountPlan    <> 0
           OR tmpResult.OperCount_ReWork <> 0
-          OR tmpResult.CuterCount       <> 0
-           ;
-      -- Результат
-      RETURN NEXT Cursor1;
+          OR tmpResult.CuterCount       <> 0;
 
+    -- 
+      CREATE TEMP TABLE tmpCursor2 ( GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime, Code Integer, ReceiptCode TVarChar, Comment TVarChar, isMain Boolean
+                                   , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+                                   , OperCountIn TFloat, OperCountIn_Weight TFloat, OperSummIn TFloat, PriceIn TFloat, TaxSumm TFloat
+                                   , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat
+                                   , OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
+                                   , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
+                                   , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
+                                   , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
+      INSERT INTO tmpCursor2 ( GoodsId, GoodsKindId, MasterKey, PartionGoodsDate, COde, ReceiptCode, Comment, isMain
+                             , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsCode, GoodsName, GoodsKindName, GoodsKindName_complete, MeasureName
+                             , OperCountIn, OperCountIn_Weight, OperSummIn, PriceIn, TaxSumm,  OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
+                             , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
+                             , InfoMoneyGroupName, InfoMoneyDestinationName, InfoMoneyCode, InfoMoneyName)
 
-     -- Результат
-     OPEN Cursor2 FOR
-      /*WITH tmpPricePlan AS (SELECT DISTINCT
-                                   tmpResult.GoodsId
-                                 , tmpResult.GoodsKindId
-                                 , tmpResult.PartionGoodsDate
-                                 , tmpResult.GoodsKindId_complete
-                                 -- , CAST (SUM (tmpResult.OperSummPlan1) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan1
-                                 -- , CAST (SUM (tmpResult.OperSummPlan2) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan2
-                                 -- , CAST (SUM (tmpResult.OperSummPlan3) / SUM (tmpResult.OperCountPlan) AS NUMERIC (16, 3)) AS PricePlan3
-                                 , tmpResult_out.PricePlan1
-                                 , tmpResult_out.PricePlan2
-                                 , tmpResult_out.PricePlan3
-                            FROM tmpResult_out AS tmpResult
-                            WHERE tmpResult.OperCountPlan <> 0
-                           )*/
-                            /*GROUP BY tmpResult.GoodsId
-                                   , tmpResult.GoodsKindId
-                                   , tmpResult.PartionGoodsDate
-                                   , tmpResult.GoodsKindId_complete
-                                   , tmpResult_out.PricePlan1
-                                   , tmpResult_out.PricePlan2
-                                   , tmpResult_out.PricePlan3*/
        SELECT tmpResult.GoodsId
             , tmpResult.GoodsKindId
             , (tmpResult.GoodsId :: TVarChar || ';' || tmpResult.GoodsKindId :: TVarChar || ';' || tmpResult.PartionGoodsDate :: TVarChar|| ';' || tmpResult.GoodsKindId_complete :: TVarChar) :: TVarChar AS MasterKey
@@ -721,13 +725,9 @@ BEGIN
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
-
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName 
+           
        FROM tmpResult_out AS tmpResult
-            /*LEFT JOIN tmpPricePlan ON tmpPricePlan.GoodsId              = tmpResult.GoodsId
-                                  AND tmpPricePlan.GoodsKindId          = tmpResult.GoodsKindId
-                                  AND tmpPricePlan.PartionGoodsDate     = tmpResult.PartionGoodsDate
-                                  AND tmpPricePlan.GoodsKindId_complete = tmpResult.GoodsKindId_complete*/
 
             LEFT JOIN tmpResult_in ON tmpResult_in.ReceiptId            = tmpResult.ReceiptId
                                   AND tmpResult_in.PartionGoodsDate     = tmpResult.PartionGoodsDate_in
@@ -781,8 +781,135 @@ BEGIN
           OR tmpResult.OperCountPlan <> 0
           OR tmpResult_in.OperCount  <> 0
        ;
-      RETURN NEXT Cursor2;
 
+
+      -- Результат
+      OPEN Cursor1 FOR
+
+      SELECT tmpCursor1.*
+      FROM tmpCursor1;
+      
+      RETURN NEXT Cursor1;
+
+
+     -- Результат
+     OPEN Cursor2 FOR
+
+      SELECT tmpCursor2.*
+      FROM tmpCursor2;
+      
+      RETURN NEXT Cursor2;
+      
+     OPEN Cursor3 FOR
+      WITH
+      tmp AS (SELECT tmpCursor2.*
+                   , ROW_NUMBER() OVER (PARTITION BY tmpCursor2.MasterKey ORDER BY tmpCursor2.ReceiptCode) AS Ord
+              FROM tmpCursor2
+             )
+
+      SELECT tmpCursor1.GoodsId
+           , tmpCursor1.GoodsKindId
+           , tmpCursor1.MasterKey
+           , tmpCursor1.PartionGoodsDate
+
+           , tmpCursor1.GoodsGroupNameFull
+           , tmpCursor1.GoodsGroupName
+           , tmpCursor1.GoodsCode
+           , tmpCursor1.GoodsName
+           , tmpCursor1.GoodsKindName
+           , tmpCursor1.GoodsKindName_complete
+           , tmpCursor1.MeasureName
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount ELSE 0 END         AS OperCount
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_Weight  ELSE 0 END AS OperCount_Weight
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSumm ELSE 0 END          AS OperSumm
+           , tmpCursor1.Price     AS Price
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan_real ELSE 0 END AS OperSummPlan_real
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCountPlan ELSE 0 END        AS  OperCountPlan
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCountPlan_Weight ELSE 0 END AS OperCountPlan_Weight
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan1_real  ELSE 0 END AS  OperSummPlan1_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan2_real  ELSE 0 END AS  OperSummPlan2_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan3_real  ELSE 0 END AS  OperSummPlan3_real
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan1  ELSE 0 END AS OperSummPlan1
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan2  ELSE 0 END AS OperSummPlan2
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperSummPlan3  ELSE 0 END AS OperSummPlan3
+           , tmpCursor1.PricePlan1 AS PricePlan1
+           , tmpCursor1.PricePlan2 AS PricePlan2
+           , tmpCursor1.PricePlan3 AS PricePlan3
+
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_min       ELSE 0 END AS  TaxSumm_min      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_max       ELSE 0 END AS  TaxSumm_max      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_ReWork  ELSE 0 END AS  OperCount_ReWork 
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_plan       ELSE 0 END AS  LossGP_plan      
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_real        ELSE 0 END AS  TaxGP_real       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_plan        ELSE 0 END AS  TaxGP_plan       
+           , tmpCursor1.Price_sale
+
+           , tmpCursor1.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , tmpCursor1.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , tmpCursor1.InfoMoneyCode                   AS InfoMoneyCode
+           , tmpCursor1.InfoMoneyName                   AS InfoMoneyName
+           
+           --
+           , tmpCursor2.GoodsId               AS GoodsId_child        
+           , tmpCursor2.GoodsKindId           AS GoodsKindId_child     
+           , tmpCursor2.PartionGoodsDate      AS PartionGoodsDate_child
+
+           , tmpCursor2.Code                   AS Code_child                  
+           , tmpCursor2.ReceiptCode            AS ReceiptCode_child           
+           , tmpCursor2.Comment                AS Comment_child               
+           , tmpCursor2.isMain                 AS isMain_child                
+           , tmpCursor2.GoodsGroupNameFull     AS GoodsGroupNameFull_child    
+           , tmpCursor2.GoodsGroupAnalystName  AS GoodsGroupAnalystName_child 
+           , tmpCursor2.GoodsTagName           AS GoodsTagName_child          
+           , tmpCursor2.TradeMarkName          AS TradeMarkName_child         
+           , tmpCursor2.GoodsCode              AS GoodsCode_child             
+           , tmpCursor2.GoodsName              AS GoodsName_child             
+           , tmpCursor2.GoodsKindName          AS GoodsKindName_child         
+           , tmpCursor2.GoodsKindName_complete AS GoodsKindName_complete_child
+           , tmpCursor2.MeasureName            AS MeasureName_child           
+
+           , tmpCursor2.OperCountIn          AS OperCountIn_child         
+           , tmpCursor2.OperCountIn_Weight   AS OperCountIn_Weight_child  
+           , tmpCursor2.OperSummIn           AS OperSummIn_child          
+           , tmpCursor2.PriceIn              AS PriceIn_child             
+           , tmpCursor2.TaxSumm              AS TaxSumm_child             
+           , tmpCursor2.OperCount            AS OperCount_child           
+           , tmpCursor2.OperCount_Weight     AS OperCount_Weight_child    
+           , tmpCursor2.OperSumm             AS OperSumm_child            
+           , tmpCursor2.Price                AS Price_child               
+           , tmpCursor2.OperSummPlan_real    AS OperSummPlan_real_child   
+           , tmpCursor2.OperCountPlan        AS OperCountPlan_child       
+           , tmpCursor2.OperCountPlan_Weight AS OperCountPlan_Weight_child
+           , tmpCursor2.OperSummPlan1_real   AS OperSummPlan1_real_child  
+           , tmpCursor2.OperSummPlan2_real   AS OperSummPlan2_real_child  
+           , tmpCursor2.OperSummPlan3_real   AS OperSummPlan3_real_child  
+
+           , tmpCursor2.OperSummPlan1 AS OperSummPlan1_child
+           , tmpCursor2.OperSummPlan2 AS OperSummPlan2_child
+           , tmpCursor2.OperSummPlan3 AS OperSummPlan3_child
+
+           , tmpCursor2.PricePlan1 AS PricePlan1_child
+           , tmpCursor2.PricePlan2 AS PricePlan2_child
+           , tmpCursor2.PricePlan3 AS PricePlan3_child
+
+           , tmpCursor2.InfoMoneyGroupName       AS InfoMoneyGroupName_child
+           , tmpCursor2.InfoMoneyDestinationName AS InfoMoneyDestinationName_child
+           , tmpCursor2.InfoMoneyCode            AS InfoMoneyCode_child
+           , tmpCursor2.InfoMoneyName            AS InfoMoneyName_child      
+      FROM tmpCursor1
+          LEFT JOIN tmp AS tmpCursor2 ON tmpCursor2.MasterKey = tmpCursor1.MasterKey
+      ;
+      
+      RETURN NEXT Cursor3;
 
 END;
  $BODY$
@@ -791,6 +918,7 @@ END;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.24         * add Cursor3
  10.08.15                                        *
 */
 

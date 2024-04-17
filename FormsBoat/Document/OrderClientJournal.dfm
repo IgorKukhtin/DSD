@@ -178,6 +178,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = SummDiscount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TransportSumm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -249,6 +254,11 @@ object OrderClientJournalForm: TOrderClientJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = SummDiscount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TransportSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -613,7 +623,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 75
       end
       object TransportSumm_load: TcxGridDBColumn
-        Caption = 'Transport site'
+        Caption = 'Transport Preparation'
         DataBinding.FieldName = 'TransportSumm_load'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -621,6 +631,17 @@ object OrderClientJournalForm: TOrderClientJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+        Width = 70
+      end
+      object TransportSumm: TcxGridDBColumn
+        Caption = 'Transport'
+        DataBinding.FieldName = 'TransportSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057
         Width = 70
       end
       object TotalSumm_transport: TcxGridDBColumn

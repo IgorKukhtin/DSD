@@ -94,6 +94,7 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , BasisPrice_load TFloat
                -- load Сумма транспорт с сайта
              , TransportSumm_load TFloat
+             , TransportSumm TFloat
 
                -- ИТОГО Сумма Скидка № 1 (Basis) - без НДС
              , SummDiscount1      TFloat
@@ -173,7 +174,8 @@ BEGIN
                               , MovementFloat_DiscountTax.ValueData         AS DiscountTax
                               , MovementFloat_DiscountNextTax.ValueData     AS DiscountNextTax
                               , MovementFloat_OperPrice_load.ValueData      AS OperPrice_load
-                              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load
+                              , MovementFloat_TransportSumm_load.ValueData  AS TransportSumm_load 
+                              , MovementFloat_TransportSumm.ValueData       AS TransportSumm
                                 -- Скидка (ввод)
                               , MovementFloat_SummTax.ValueData             AS SummTax
                                 --
@@ -215,6 +217,9 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_TransportSumm_load
                                                       ON MovementFloat_TransportSumm_load.MovementId = Movement.Id
                                                      AND MovementFloat_TransportSumm_load.DescId     = zc_MovementFloat_TransportSumm_load()
+                              LEFT JOIN MovementFloat AS MovementFloat_TransportSumm
+                                                      ON MovementFloat_TransportSumm.MovementId = Movement.Id
+                                                     AND MovementFloat_TransportSumm.DescId     = zc_MovementFloat_TransportSumm()
 
                               LEFT JOIN MovementFloat AS MovementFloat_NPP
                                                       ON MovementFloat_NPP.MovementId = Movement.Id
@@ -316,6 +321,8 @@ BEGIN
                          , COALESCE (tmpOrderClient.OperPrice_load, 0)         AS OperPrice_load
                            -- Сумма транспорт с сайта
                          , COALESCE (tmpOrderClient.TransportSumm_load, 0)     AS TransportSumm_load
+                             -- Сумма транспорт
+                         , COALESCE (tmpOrderClient.TransportSumm, 0)          AS TransportSumm
                            -- Базовая цена продажи модели с сайта
                          , COALESCE (MIFloat_BasisPrice_load.ValueData, 0)     AS BasisPrice_load
 
@@ -649,6 +656,8 @@ BEGIN
                        , Object_Product.OperPrice_load
                          -- Сумма транспорт с сайта
                        , Object_Product.TransportSumm_load
+                         -- Сумма транспорт
+                       , Object_Product.TransportSumm
                          -- Базовая цена продажи модели с сайта
                        , Object_Product.BasisPrice_load
 
@@ -861,6 +870,7 @@ BEGIN
           - zfCalc_SummWVAT (tmpResAll.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
           + zfCalc_SummWVAT (tmpResAll.TransportSumm_load, tmpOrderClient.VATPercent)
+          + zfCalc_SummWVAT (tmpResAll.TransportSumm, tmpOrderClient.VATPercent)
             -- минус оплаты
           - COALESCE (tmpBankAccount.Amount, 0)
            ) :: TFloat AS Amount_Debt
@@ -901,7 +911,7 @@ BEGIN
             -- минус Скидка (ввод)
           - COALESCE (tmpResAll.SummTax, 0)
             -- плюс Транспорт
-          + COALESCE (tmpResAll.TransportSumm_load, 0)
+          + COALESCE (tmpResAll.TransportSumm_load, 0)+ COALESCE (tmpResAll.TransportSumm, 0)
            ) :: TFloat AS Basis_summ_transport
 
            -- 5.Total LP + Vat - ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
@@ -910,6 +920,7 @@ BEGIN
           - zfCalc_SummWVAT (tmpResAll.SummTax, tmpOrderClient.VATPercent)
             -- плюс Транспорт
           + zfCalc_SummWVAT (tmpResAll.TransportSumm_load, tmpOrderClient.VATPercent)
+          + zfCalc_SummWVAT (tmpResAll.TransportSumm, tmpOrderClient.VATPercent)
            ) :: TFloat AS BasisWVAT_summ_transport
 
            -- Цена продажи с сайта - без НДС, Basis+options
@@ -917,7 +928,8 @@ BEGIN
            -- Базовая цена продажи модели с сайта
          , tmpResAll.BasisPrice_load    :: TFloat AS BasisPrice_load
            -- Сумма транспорт с сайта
-         , tmpResAll.TransportSumm_load :: TFloat AS TransportSumm_load
+         , tmpResAll.TransportSumm_load :: TFloat AS TransportSumm_load  
+         , tmpResAll.TransportSumm      :: TFloat AS TransportSumm
 
            -- ИТОГО Сумма Скидка № 1 (Basis) - без НДС
          , (COALESCE (tmpCalc_1.BasisPrice_summ, 0) - COALESCE (tmpCalc_1.BasisPrice_summ_disc_1, 0)) :: TFloat AS SummDiscount1
@@ -1044,6 +1056,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.24         *
  18.05.23         * add inMovementId_OrderClient
  05.02.23         *
  04.01.21         *

@@ -312,6 +312,8 @@ type
     spUpdate_before: TdsdStoredProc;
     actUpdate_summ_before: TdsdDataSetRefresh;
     EnterMoveNext: TEnterMoveNext;
+    cxLabel49: TcxLabel;
+    edTransportSumm: TcxCurrencyEdit;
   private
     { Private declarations }
   public

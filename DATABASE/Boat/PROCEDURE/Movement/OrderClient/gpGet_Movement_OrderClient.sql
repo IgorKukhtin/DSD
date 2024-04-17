@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              , Basis_summ              TFloat
                -- Сумма транспорт с сайта
              , TransportSumm_load     TFloat
+             , TransportSumm          TFloat
 
               -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
              , Basis_summ_transport    TFloat
@@ -58,7 +59,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar
              
              , TaxKindId Integer, TaxKindName TVarChar, TaxKindName_info TVarChar
              --
-             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer
+             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer, t7 integer
               )
 AS
 $BODY$
@@ -142,7 +143,8 @@ BEGIN
                  , CAST (0 as TFloat)        AS SummDiscount_total
     
                  , CAST (0 as TFloat)        AS Basis_summ
-                 , CAST (0 as TFloat)        AS TransportSumm_load
+                 , CAST (0 as TFloat)        AS TransportSumm_load 
+                 , CAST (0 as TFloat)        AS TransportSumm
     
                  , CAST (0 as TFloat)        AS Basis_summ_transport
                  , CAST (0 as TFloat)        AS BasisWVAT_summ_transport
@@ -185,8 +187,9 @@ BEGIN
                                    -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
                                  , gpSelect.Basis_summ
                                    -- Сумма транспорт с сайта
-                                 , gpSelect.TransportSumm_load
-
+                                 , gpSelect.TransportSumm_load  
+                                 -- Сумма транспорт
+                                 , gpSelect.TransportSumm
                                    -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
                                  , gpSelect.Basis_summ_transport
                                    -- ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
@@ -264,6 +267,7 @@ BEGIN
           , tmpSummProduct.Basis_summ
            -- Сумма транспорт с сайта
           , tmpSummProduct.TransportSumm_load
+          , tmpSummProduct.TransportSumm
 
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
           , tmpSummProduct.Basis_summ_transport
@@ -278,6 +282,7 @@ BEGIN
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummTax_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_SummTax.ValueData, 0)) ::integer
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReal_calc(), Movement_OrderClient.Id, COALESCE (tmpSummProduct.Basis_summ, 0) - MovementFloat_SummTax.ValueData)::integer
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm_load_calc(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm_load)::integer
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_TransportSumm(), Movement_OrderClient.Id, tmpSummProduct.TransportSumm)::integer
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent_calc(), Movement_OrderClient.Id, COALESCE (MovementFloat_VATPercent.ValueData, 0) )::integer
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_Basis_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.Basis_summ_transport)    ::integer
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_BasisWVAT_summ_transport_calc(), Movement_OrderClient.Id, tmpSummProduct.BasisWVAT_summ_transport)::integer

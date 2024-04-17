@@ -10,6 +10,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar
                                                     , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
                                                     , Integer, TVarChar, TDateTime, TFloat
                                                     , TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Product(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean
+                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                    , TDateTime, TDateTime, TDateTime, TVarChar, TVarChar, TVarChar
+                                                    , Integer, TVarChar, TDateTime, TFloat
+                                                    , TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioId                    Integer   ,    -- ключ объекта <Лодки>
@@ -29,6 +35,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Product(
  INOUT ioSummTax               TFloat    ,    -- Cумма откорректированной скидки, без НДС
  INOUT ioSummReal              TFloat    ,    -- ИТОГО откорректированная сумма, с учетом всех скидок, без Транспорта, Сумма продажи без НДС
     IN inTransportSumm_load    TFloat    ,    --транспорт
+    IN inTransportSumm         TFloat    ,    --транспорт
     IN inDateStart             TDateTime ,
     IN inDateBegin             TDateTime ,
     IN inDateSale              TDateTime ,
@@ -217,6 +224,7 @@ BEGIN
                                               , ioSummTax            := ioSummTax
                                               , ioSummReal           := ioSummReal
                                               , inTransportSumm_load := inTransportSumm_load
+                                              , inTransportSumm      := inTransportSumm
                                               , inFromId             := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                               , inToId               := zc_Unit_Production() -- Участок сборки Основной
                                               , inPaidKindId         := zc_Enum_PaidKind_FirstForm() 
@@ -265,6 +273,7 @@ BEGIN
                                                  , ioSummTax          := ioSummTax                 ::TFloat
                                                  , ioSummReal         := ioSummReal                ::TFloat
                                                  , inTransportSumm_load := inTransportSumm_load
+                                                 , inTransportSumm    := inTransportSumm
                                                  , inFromId           := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
@@ -499,6 +508,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.24         *
  30.03.21         *
  24.02.21         *
  11.01.21         *
