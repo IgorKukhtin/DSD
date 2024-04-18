@@ -1894,10 +1894,10 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     Width = 1221
     ExplicitWidth = 1221
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 45292d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 45292d
     end
     object cbIsServiceDate: TcxCheckBox
       Left = 401
@@ -2565,6 +2565,9 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
           Action = actSMTPFileCSV
         end
         item
+          Action = actUpdate_isMail
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
@@ -2572,6 +2575,17 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' CSV '#1087#1086' '#1087#1086#1095#1090#1077
       ImageIndex = 53
+    end
+    object actUpdate_isMail: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMail
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMail
+        end>
+      Caption = 'actUpdate_isMail'
     end
   end
   inherited MasterDS: TDataSource
@@ -2725,6 +2739,14 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbsExport'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -2738,31 +2760,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbExportZp'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExport'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExportCSV'
         end>
     end
     object bbTax: TdxBarButton
@@ -2825,6 +2822,40 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     object bbExportCSV: TdxBarButton
       Action = mactExportCSV
       Category = 0
+    end
+    object bbsExport: TdxBarSubItem
+      Caption = #1069#1082#1089#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 50
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbExportZp'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExportCSV'
+        end>
+    end
+    object bbSeparate: TdxBarSeparator
+      Caption = 'bbSeparate'
+      Category = 0
+      Hint = 'bbSeparate'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3452,5 +3483,22 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     PackSize = 1
     Left = 600
     Top = 512
+  end
+  object spUpdate_isMail: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isMail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 80
+    Top = 376
   end
 end

@@ -183,6 +183,8 @@ type
     expPersonalName: TcxGridDBColumn;
     expBankSecondName: TcxGridDBColumn;
     expCardBankSecond: TcxGridDBColumn;
+    spUpdate_isMail: TdsdStoredProc;
+    actUpdate_isMail: TdsdExecStoredProc;
   private
     { Private declarations }
   public

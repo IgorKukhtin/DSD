@@ -1566,6 +1566,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actSMTPFileCSV
         end
         item
+          Action = actUpdate_isMail
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = 
@@ -2256,6 +2259,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actSMTPFileCSV
         end
         item
+          Action = actUpdate_isMail
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1086#1090#1087#1088#1072#1074#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' CSV '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1087#1086#1095#1090#1077'?'
@@ -2351,6 +2357,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actSMTPFileCSV
         end
         item
+          Action = actUpdate_isMail
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = 
@@ -2414,6 +2423,9 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Action = actSMTPFileCSV
         end
         item
+          Action = actUpdate_isMail
+        end
+        item
           Action = actRefresh
         end>
       QuestionBeforeExecute = 
@@ -2425,6 +2437,17 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1072#1085#1082#1072#1084' '#1060'2'
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' XLS - '#8470' '#1082#1072#1088#1090#1099' '#1060'2'
       ImageIndex = 89
+    end
+    object actUpdate_isMail: TdsdExecStoredProc
+      Category = 'Export_Email'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isMail
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isMail
+        end>
+      Caption = 'actUpdate_isMail'
     end
   end
   inherited MasterDS: TDataSource
@@ -3795,5 +3818,22 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
     PackSize = 1
     Left = 567
     Top = 312
+  end
+  object spUpdate_isMail: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_isMail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 432
   end
 end

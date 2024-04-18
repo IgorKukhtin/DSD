@@ -107,6 +107,10 @@ type
     bbExportCSV: TdxBarButton;
     ContainerId_max: TcxGridDBColumn;
     ContainerId_min: TcxGridDBColumn;
+    bbsExport: TdxBarSubItem;
+    bbSeparate: TdxBarSeparator;
+    spUpdate_isMail: TdsdStoredProc;
+    actUpdate_isMail: TdsdExecStoredProc;
   private
     { Private declarations }
   public
