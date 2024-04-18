@@ -54,7 +54,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , AmountIn_rem  TFloat
              , AmountIn_remAll  TFloat   
              -- данные для автопересчета
-             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer, t7 integer
+             , t1 integer, t2 integer, t3 integer, t4 integer, t5 integer, t6 integer, t7 integer, t8 Integer
               ) AS
 $BODY$
     DECLARE vbNPP TFloat;
@@ -162,6 +162,7 @@ BEGIN
            , CAST (0 AS Integer) ::integer AS t5
            , CAST (0 AS Integer) ::integer AS t6
            , CAST (0 AS Integer) ::integer AS t7
+           , CAST (0 AS Integer) ::Integer AS t8
 
        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
        ;
@@ -402,6 +403,7 @@ BEGIN
                                                                                                                       + zfCalc_SummWVAT (tmpOrderClient.TransportSumm_load, tmpOrderClient.VATPercent)
                                                                                                                       + zfCalc_SummWVAT (tmpOrderClient.TransportSumm, tmpOrderClient.VATPercent)
                                                                                                                        ))::integer
+         , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), tmpOrderClient.MovementId, FALSE)  ::integer
  
      FROM Object AS Object_Product
           -- включать базовую Комплектацию 
