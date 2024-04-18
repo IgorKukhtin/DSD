@@ -118,10 +118,10 @@ BEGIN
 
      END IF;
 
-     -- сохранили свойство <Сформирована Выгрузка (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
+     -- !!!нельзя здесь!!! - сохранили свойство <Сформирована Выгрузка (да/нет)>
+     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Mail(), inMovementId, TRUE);
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     -- PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
      -- Результат
     -- RETURN QUERY
