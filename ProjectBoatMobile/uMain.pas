@@ -590,7 +590,7 @@ type
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
 
-    {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+    {$IF DEFINED(ANDROID)}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
     {$ENDIF}
 
@@ -815,10 +815,13 @@ end;
 
 procedure TfrmMain.FormFocusChanged(Sender: TObject);
 begin
-  FIsUpdate := DM.IsUpdate;
-  DM.IsUpdate := False;
-  FOldControl := FCuurControl;
-  FCuurControl := ActiveControl;
+  if Assigned(ActiveControl) then
+  begin
+    FIsUpdate := DM.IsUpdate;
+    DM.IsUpdate := False;
+    FOldControl := FCuurControl;
+    FCuurControl := ActiveControl;
+  end;
 end;
 
 procedure TfrmMain.SetDateDownloadDict(Values : TDateTime);
@@ -1091,7 +1094,7 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
-{$IF DEFINED(iOS) or DEFINED(ANDROID)}
+{$IF DEFINED(ANDROID)}
 function TfrmMain.HandleAppEvent(AAppEvent: TApplicationEvent;
   AContext: TObject): Boolean;
 begin
@@ -1347,7 +1350,7 @@ end;
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
 
-  {$IF DEFINED(iOS) or DEFINED(ANDROID)}
+  {$IF DEFINED(ANDROID)}
   if tcMain.ActiveTab = tiStart then
   begin
     bGoods.Enabled := False;
@@ -1379,6 +1382,8 @@ begin
     end);
   end;
   {$ENDIF}
+
+  if tcMain.ActiveTab = Nil then ShowMessage('Nil');
 
   if tcMain.ActiveTab <> tiScanBarCode then
   begin
@@ -2466,6 +2471,7 @@ end;
 // Добавление в инвентаризацию
 procedure TfrmMain.bIIEOkClick(Sender: TObject);
 begin
+
   if DM.cdsInventoryList.Active then
   begin
     if (FScanType = 2) and (Trim(DM.cdsInventoryItemEditPartNumber.AsString) = '') then
@@ -2681,13 +2687,21 @@ begin
 end;
 
 procedure TfrmMain.sbRefreshClick(Sender: TObject);
+var
+  Svc: IFMXVirtualKeyboardService;
 begin
+
+  if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, Svc) then
+    if TVirtualKeyboardState.Visible in Svc.VirtualKeyboardState then Svc.HideVirtualKeyboard;
+
   if tcMain.ActiveTab = tiGoods then
   begin
+    lwGoods.SetFocus;
     TDialogService.MessageDialog('Загрузить справочник Комплектующих?',
          TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadDict);
-  end else if tcMain.ActiveTab = tiGoods then
+  end else if tcMain.ActiveTab = tiDictList then
   begin
+    lwDictList.SetFocus;
     TDialogService.MessageDialog('Загрузить все справочники?',
          TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DownloadDict);
   end else if tcMain.ActiveTab = tiInventory then
