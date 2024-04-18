@@ -486,7 +486,7 @@ BEGIN
 
  -- в отдельные таблицы соберам данные для курсора 1 и 2, чтоб иметь возможность объеденить их в третьем курсоре 
       CREATE TEMP TABLE tmpCursor1 ( GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime
-                                   , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+                                   , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindId_complete Integer, GoodsKindName_complete TVarChar, MeasureName TVarChar
                                    , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat, OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
                                    , OperSummPlan1_real TFloat, OperSummPlan2_real TFloat, OperSummPlan3_real TFloat, OperSummPlan1 TFloat, OperSummPlan2 TFloat, OperSummPlan3 TFloat
                                    , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
@@ -494,7 +494,7 @@ BEGIN
                                    , TaxGP_real NUMERIC (16, 1), TaxGP_plan NUMERIC (16, 1)
                                    , Price_sale TFloat, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
       INSERT INTO tmpCursor1 ( GoodsId, GoodsKindId, MasterKey, PartionGoodsDate
-                             , GoodsGroupNameFull, GoodsGroupName, GoodsCode, GoodsName, GoodsKindName, GoodsKindName_complete, MeasureName
+                             , GoodsGroupNameFull, GoodsGroupName, GoodsCode, GoodsName, GoodsKindName, GoodsKindId_complete, GoodsKindName_complete, MeasureName
                              , OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
                              , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
                              , TaxSumm_min, TaxSumm_max, OperCount_ReWork, CuterCount, OperCount_gp_plan, OperCount_gp_real, LossGP_real, LossGP_plan, TaxGP_real, TaxGP_plan
@@ -536,7 +536,8 @@ BEGIN
            , Object_GoodsGroup.ValueData                 AS GoodsGroupName
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName
-           , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_GoodsKind.ValueData                  AS GoodsKindName         
+           , Object_GoodsKind_complete.Id                AS GoodsKindId_complete
            , Object_GoodsKind_complete.ValueData         AS GoodsKindName_complete
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -659,7 +660,7 @@ BEGIN
 
     -- 
       CREATE TEMP TABLE tmpCursor2 ( GoodsId Integer, GoodsKindId Integer, MasterKey TVarChar, PartionGoodsDate TDateTime, Code Integer, ReceiptCode TVarChar, Comment TVarChar, isMain Boolean
-                                   , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, GoodsKindName_complete TVarChar, MeasureName TVarChar
+                                   , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar, GoodsId_in Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId_in Integer, GoodsKindName TVarChar, GoodsKindId_complete_in Integer, GoodsKindName_complete TVarChar,MeasureId Integer, MeasureName TVarChar
                                    , OperCountIn TFloat, OperCountIn_Weight TFloat, OperSummIn TFloat, PriceIn TFloat, TaxSumm TFloat
                                    , OperCount TFloat, OperCount_Weight TFloat, OperSumm TFloat, Price TFloat
                                    , OperSummPlan_real TFloat, OperCountPlan TFloat, OperCountPlan_Weight TFloat
@@ -667,10 +668,11 @@ BEGIN
                                    , PricePlan1 TFloat, PricePlan2 TFloat, PricePlan3 TFloat
                                    , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName  TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar) ON COMMIT DROP;
       INSERT INTO tmpCursor2 ( GoodsId, GoodsKindId, MasterKey, PartionGoodsDate, COde, ReceiptCode, Comment, isMain
-                             , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsCode, GoodsName, GoodsKindName, GoodsKindName_complete, MeasureName
+                             , GoodsGroupNameFull, GoodsGroupAnalystName, GoodsTagName, TradeMarkName, GoodsId_in, GoodsCode, GoodsName, GoodsKindId_in, GoodsKindName, GoodsKindId_complete_in, GoodsKindName_complete, MeasureId, MeasureName
                              , OperCountIn, OperCountIn_Weight, OperSummIn, PriceIn, TaxSumm,  OperCount, OperCount_Weight, OperSumm, Price, OperSummPlan_real, OperCountPlan, OperCountPlan_Weight
                              , OperSummPlan1_real, OperSummPlan2_real, OperSummPlan3_real, OperSummPlan1, OperSummPlan2, OperSummPlan3, PricePlan1, PricePlan2, PricePlan3
                              , InfoMoneyGroupName, InfoMoneyDestinationName, InfoMoneyCode, InfoMoneyName)
+
 
        SELECT tmpResult.GoodsId
             , tmpResult.GoodsKindId
@@ -687,10 +689,14 @@ BEGIN
            , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
            , Object_GoodsTag.ValueData                   AS GoodsTagName
            , Object_TradeMark.ValueData                  AS TradeMarkName
+           , Object_Goods.Id                             AS GoodsId_in
            , Object_Goods.ObjectCode                     AS GoodsCode
            , Object_Goods.ValueData                      AS GoodsName
+           , Object_GoodsKind.Id                         AS GoodsKindId_in 
            , Object_GoodsKind.ValueData                  AS GoodsKindName
+           , Object_GoodsKind_complete.Id                AS GoodsKindId_complete_in
            , Object_GoodsKind_complete.ValueData         AS GoodsKindName_complete
+           , Object_Measure.Id                           AS MeasureId
            , Object_Measure.ValueData                    AS MeasureName
 
            , tmpResult_in.OperCount AS OperCountIn
@@ -776,7 +782,7 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
                                                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId   
        WHERE tmpResult.OperCount     <> 0
           OR tmpResult.OperCountPlan <> 0
           OR tmpResult_in.OperCount  <> 0
@@ -847,10 +853,10 @@ BEGIN
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount       
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_plan       ELSE 0 END AS  LossGP_plan      
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_real        ELSE 0 END AS  TaxGP_real       
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_plan        ELSE 0 END AS  TaxGP_plan       
+           --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
+           --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_plan       ELSE 0 END AS  LossGP_plan      
+           --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_real        ELSE 0 END AS  TaxGP_real       
+           --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxGP_plan        ELSE 0 END AS  TaxGP_plan       
            , tmpCursor1.Price_sale
 
            , tmpCursor1.InfoMoneyGroupName              AS InfoMoneyGroupName
@@ -904,9 +910,23 @@ BEGIN
            , tmpCursor2.InfoMoneyGroupName       AS InfoMoneyGroupName_child
            , tmpCursor2.InfoMoneyDestinationName AS InfoMoneyDestinationName_child
            , tmpCursor2.InfoMoneyCode            AS InfoMoneyCode_child
-           , tmpCursor2.InfoMoneyName            AS InfoMoneyName_child      
+           , tmpCursor2.InfoMoneyName            AS InfoMoneyName_child 
+           
+           , CAST (CASE WHEN (tmpCursor2.OperCount_Weight) <> 0
+                             THEN 100 - 100 * tmpCursor2.OperCountIn_Weight / (tmpCursor2.OperCount_Weight)
+                         ELSE 0
+                    END AS NUMERIC (16, 1)) AS LossGP_real---_child          --++
+
+           , CAST (CASE WHEN (tmpCursor2.OperCountPlan) <> 0
+                             THEN 100 - 100 * tmpCursor2.OperCount / tmpCursor2.OperCountPlan
+                         ELSE 0
+                    END AS NUMERIC (16, 1)) AS LossGP_plan --_child
+
+           , CAST (CASE WHEN tmpCursor1.CuterCount <> 0 THEN tmpCursor2.OperCountIn_Weight / tmpCursor1.CuterCount ELSE 0 END AS NUMERIC (16, 1)) AS TaxGP_real
+           , CAST (CASE WHEN tmpCursor1.CuterCount <> 0 THEN tmpCursor2.OperCount / tmpCursor1.CuterCount ELSE 0 END          AS NUMERIC (16, 1)) AS TaxGP_plan
+
       FROM tmpCursor1
-          LEFT JOIN tmp AS tmpCursor2 ON tmpCursor2.MasterKey = tmpCursor1.MasterKey
+          LEFT JOIN tmp AS tmpCursor2 ON tmpCursor2.MasterKey = tmpCursor1.MasterKey  
       ;
       
       RETURN NEXT Cursor3;
@@ -925,3 +945,4 @@ END;
 -- тест
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze (inStartDate:= '01.06.2014', inEndDate:= '01.06.2014', inFromId:= 8447, inToId:= 8447, inGoodsGroupId:= 0, inPriceListId_1:= 0, inPriceListId_2:= 0, inPriceListId_3:= 0, inPriceListId_sale:= 0, inIsPartionGoods:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpReport_ReceiptProductionOutAnalyze( ('01.09.2020')::TDateTime ,  ('01.09.2020')::TDateTime ,  8447 , 8447 ,  1918 ,  18887 ,  18886 ,  18885 , 18840 , 'False' ,   '5');
+--select * from gpReport_ReceiptProductionOutAnalyze(inStartDate := ('16.04.2024')::TDateTime , inEndDate := ('17.04.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inGoodsGroupId := 0 , inPriceListId_1 := 18887 , inPriceListId_2 := 18886 , inPriceListId_3 := 2515112 , inPriceListId_sale := 18840 , inIsPartionGoods := 'False' ,  inSession := '9457'::TVarChar);

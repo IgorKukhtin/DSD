@@ -1993,6 +1993,7 @@ begin
 
     try
       StoredProc.Execute(false, false, false);
+
       if StoredProc.ParamByName('BarCodePref').Value <> frmMain.BarCodePref then
         frmMain.BarCodePref := StoredProc.ParamByName('BarCodePref').Value;
       if StoredProc.ParamByName('ArticleSeparators').Value <> frmMain.ArticleSeparators then

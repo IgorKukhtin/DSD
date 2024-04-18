@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 589
-  ClientWidth = 679
+  ClientWidth = 736
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,21 +46,21 @@ object ProductEditForm: TProductEditForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 0
-    Width = 679
+    Width = 736
     Height = 537
     Align = alTop
     TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitWidth = 686
+    ExplicitWidth = 679
     ClientRectBottom = 537
-    ClientRectRight = 679
+    ClientRectRight = 736
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 686
+      ExplicitWidth = 679
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -819,7 +819,7 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitWidth = 686
+      ExplicitWidth = 679
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -1067,29 +1067,29 @@ object ProductEditForm: TProductEditForm
       object Panel1: TPanel
         Left = 0
         Top = 217
-        Width = 679
+        Width = 736
         Height = 296
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitWidth = 686
+        ExplicitWidth = 679
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 677
+          Width = 734
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 684
+          ExplicitWidth = 677
         end
         object cxGrid1: TcxGrid
           Left = 1
           Top = 27
-          Width = 677
+          Width = 734
           Height = 268
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 684
+          ExplicitWidth = 677
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1333,29 +1333,29 @@ object ProductEditForm: TProductEditForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 679
+        Width = 736
         Height = 217
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitWidth = 686
+        ExplicitWidth = 679
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 677
+          Width = 734
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 684
+          ExplicitWidth = 677
         end
         object cxGrid: TcxGrid
           Left = 1
           Top = 27
-          Width = 677
+          Width = 734
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 684
+          ExplicitWidth = 677
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -4596,6 +4596,9 @@ object ProductEditForm: TProductEditForm
       end
       item
         Control = edTotalSummMVAT
+      end
+      item
+        Control = edTaxKind
       end>
     Action = actUpdate_summ_before
     Left = 688
@@ -5024,7 +5027,6 @@ object ProductEditForm: TProductEditForm
   object GuidesTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTaxKind
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TTaxKindForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -5269,6 +5271,9 @@ object ProductEditForm: TProductEditForm
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
+      item
+        Control = edTaxKind
+      end
       item
         Control = edDiscountTax
       end

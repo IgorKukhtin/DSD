@@ -335,7 +335,9 @@ begin
               Inc(ReadOnlyCount);
               idHTTP.Post(gc_WebServers_r[ReadOnlyCount] + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
             end else
+            begin
               idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+            end;
 
             ok := true;
             break;
@@ -360,7 +362,7 @@ begin
                     10065: raise EStorageException.Create('Нет соединения с интернетом. Обратитесь к системному администратору. context TStorage. ' + E.Message);
                     10061: raise EStorageException.Create('Потеряно соединения с WEB сервером. Необходимо перезайти в программу после восстановления соединения. context TStorage. ' + E.Message);
                   else
-                    raise Exception.Create(E.Message+ '.context TStorage');
+                    raise EStorageException.Create(E.Message+ '.context TStorage');
                   end;
                 End;
               End
