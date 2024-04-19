@@ -93,7 +93,6 @@
         object Name: TcxGridDBColumn
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077
           DataBinding.FieldName = 'Name'
-          Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderGlyphAlignmentHorz = taCenter
@@ -2119,7 +2118,7 @@
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 24
-    Top = 96
+    Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
