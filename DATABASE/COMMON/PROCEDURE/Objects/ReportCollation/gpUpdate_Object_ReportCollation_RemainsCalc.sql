@@ -104,7 +104,7 @@ END;$BODY$
 */
 
 -- тест
-SELECT * FROM gpUpdate_Object_ReportCollation_RemainsCalc (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '10 MONTH')
+/*SELECT * FROM gpUpdate_Object_ReportCollation_RemainsCalc (DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '10 MONTH')
                                                          , CURRENT_DATE
                                                          , 0 -- inJuridicalId
                                                          , 0 -- inPartnerId
@@ -112,4 +112,4 @@ SELECT * FROM gpUpdate_Object_ReportCollation_RemainsCalc (DATE_TRUNC ('MONTH', 
                                                          , 0 -- inPaidKindId
                                                          , 0 -- inInfoMoneyId
                                                          ,zc_Enum_Process_Auto_PrimeCost() :: TVarChar
-                                                         );
+                                                         );*/
