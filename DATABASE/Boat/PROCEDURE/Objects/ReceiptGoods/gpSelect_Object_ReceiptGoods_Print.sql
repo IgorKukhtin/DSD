@@ -237,129 +237,138 @@ BEGIN
                                                AND tmpObject.ProdColorPatternId = tmpItems.ProdColorPatternId
                       )
      -- Результат
-     SELECT 
-         (ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) 
-           + CASE WHEN Object_ProdColorPattern.Id IS NULL THEN 1000 ELSE 0 END)  :: Integer AS NPP
-
-         , tmpProdColorPattern.Value  :: NUMERIC (16, 8) AS Value
-         --, CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value
-         --, CASE WHEN Object_Goods.DescId =  zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value_service
-
-          , Object_Goods.ObjectCode            ::Integer  AS ObjectCode
-          , CASE WHEN COALESCE (Object_Goods.ValueData,'') <> '' THEN Object_Goods.ValueData ELSE Object_ProdColorGroup.ValueData END ::TVarChar AS ObjectName
-       -- ,  Object_Goods.ValueData  ::TVarChar AS ObjectName
-
-         , ObjectString_EAN.ValueData                AS EAN
-
-         , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
-         , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
-         , ObjectString_Article.ValueData        ::TVarChar  AS Article
-         --, Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
-         , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
-         , Object_Measure.ValueData              ::TVarChar  AS MeasureName
-         , Object_ProdColorGroup.ValueData       AS  ProdColorGroupName
-          -- Этап сборки
-         , Object_ReceiptLevel.ValueData         ::TVarChar  AS ReceiptLevelName
-          -- Комплектующие
-         , Object_GoodsChild.ValueData           ::TVarChar  AS GoodsChildName
-         , ObjectString_ArticleChild.ValueData   ::TVarChar  AS ArticleChild
-         , Object_ProdColorPattern.ValueData     ::TVarChar  AS ProdColorPattern
-         
-         , Object_GoodsMain.ValueData           ::TVarChar  AS GoodsMainName
-
-         , COALESCE(Object_GoodsChild.ValueData,
-                    Object_GoodsMain.ValueData)    ::TVarChar  AS GoodsNameShow
-
-         , COALESCE(ObjectString_ArticleChild.ValueData,
-                    ObjectString_ArticleChildMain.ValueData)    ::TVarChar  AS ArticleShow
-
-         , COALESCE(Object_GoodsChildGroup.ValueData,
-                    Object_GoodsMainGroup.ValueData)    ::TVarChar  AS GoodsGroupNameShow
-         
-         , CASE WHEN COALESCE (Object_ProdColorPattern.Id, 0) <> 0 THEN 'ДА' ELSE '' END :: TVarChar  AS Replacement
-         , COALESCE (tmpProdColorPattern.ReceiptLevelId, 1000000000)  :: Integer AS GroupBy
-
-         , CASE WHEN COALESCE(tmpProdColorPattern.GoodsChildId, 0) = 0
-                THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_GoodsMain.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_GoodsMain.ValueData, '')
-                ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')||
-                     CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
-                     COALESCE(Object_GoodsChildGroup.ValueData, '') END:: TVarChar AS TitleGroup
-     FROM tmpProdColorPattern
-          LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
-
-          LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmpProdColorPattern.ReceiptLevelId
-          LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = tmpProdColorPattern.GoodsChildId
-          LEFT JOIN Object AS Object_GoodsMain ON Object_GoodsMain.Id = tmpProdColorPattern.GoodsMainId
-
-          LEFT JOIN ObjectString AS ObjectString_ArticleChildMain
-                                 ON ObjectString_ArticleChildMain.ObjectId = tmpProdColorPattern.GoodsMainId
-                                AND ObjectString_ArticleChildMain.DescId = zc_ObjectString_Article()
-
-          LEFT JOIN ObjectString AS ObjectString_ArticleChild
-                                 ON ObjectString_ArticleChild.ObjectId = tmpProdColorPattern.GoodsChildId
-                                AND ObjectString_ArticleChild.DescId = zc_ObjectString_Article()
-
-          LEFT JOIN ObjectString AS ObjectString_Comment
-                                 ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
-
-          LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
-                               ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
-          LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
-                               ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
-          LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods
-                               ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
-                              AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
-          -- !!!замена!!!
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)   
-
-          --
-          LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
-                                 ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-
-          LEFT JOIN ObjectString AS ObjectString_Article
-                                 ON ObjectString_Article.ObjectId = Object_Goods.Id
-                                AND ObjectString_Article.DescId = zc_ObjectString_Article()
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
-                               ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
-          LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsMainGroup
-                               ON ObjectLink_Goods_GoodsMainGroup.ObjectId = tmpProdColorPattern.GoodsMainId
-                              AND ObjectLink_Goods_GoodsMainGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsMainGroup ON Object_GoodsMainGroup.Id = ObjectLink_Goods_GoodsMainGroup.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsChildGroup
-                               ON ObjectLink_Goods_GoodsChildGroup.ObjectId = tmpProdColorPattern.GoodsChildId
-                              AND ObjectLink_Goods_GoodsChildGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsChildGroup ON Object_GoodsChildGroup.Id = ObjectLink_Goods_GoodsChildGroup.ChildObjectId
-
-          LEFT JOIN ObjectString AS ObjectString_EAN
-                                 ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                AND ObjectString_EAN.DescId = zc_ObjectString_EAN() 
-     ORDER BY CASE WHEN COALESCE(Object_ReceiptLevel.ValueData, '') = '' THEN 1 ELSE 0 END
-            , Object_ReceiptLevel.ValueData
-            , Object_ProdColorPattern.ObjectCode ASC        
+    , tmpResult AS (SELECT 
+                          (ROW_NUMBER() OVER (PARTITION BY tmpProdColorPattern.ReceiptGoodsId ORDER BY Object_ProdColorPattern.ObjectCode ASC) 
+                            + CASE WHEN Object_ProdColorPattern.Id IS NULL THEN 1000 ELSE 0 END)  :: Integer AS NPP
+                 
+                          , tmpProdColorPattern.Value  :: NUMERIC (16, 8) AS Value
+                          --, CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value
+                          --, CASE WHEN Object_Goods.DescId =  zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value_service
+                 
+                           , Object_Goods.ObjectCode            ::Integer  AS ObjectCode
+                           , CASE WHEN COALESCE (Object_Goods.ValueData,'') <> '' THEN Object_Goods.ValueData ELSE Object_ProdColorGroup.ValueData END ::TVarChar AS ObjectName
+                        -- ,  Object_Goods.ValueData  ::TVarChar AS ObjectName
+                 
+                          , ObjectString_EAN.ValueData                AS EAN
+                 
+                          , ObjectString_GoodsGroupFull.ValueData ::TVarChar  AS GoodsGroupNameFull
+                          , Object_GoodsGroup.ValueData           ::TVarChar  AS GoodsGroupName
+                          , ObjectString_Article.ValueData        ::TVarChar  AS Article
+                          --, Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
+                          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
+                          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
+                          , Object_ProdColorGroup.ValueData       AS  ProdColorGroupName
+                           -- Этап сборки
+                          , Object_ReceiptLevel.ValueData         ::TVarChar  AS ReceiptLevelName
+                           -- Комплектующие
+                          , Object_GoodsChild.ValueData           ::TVarChar  AS GoodsChildName
+                          , ObjectString_ArticleChild.ValueData   ::TVarChar  AS ArticleChild 
+                          , tmpProdColorPattern.ProdColorPatternId 
+                          , Object_ProdColorPattern.ValueData     ::TVarChar  AS ProdColorPattern
+                          
+                          , Object_GoodsMain.ValueData           ::TVarChar  AS GoodsMainName
+                 
+                          , COALESCE(Object_GoodsChild.ValueData,
+                                     Object_GoodsMain.ValueData)    ::TVarChar  AS GoodsNameShow
+                 
+                          , COALESCE(ObjectString_ArticleChild.ValueData,
+                                     ObjectString_ArticleChildMain.ValueData)    ::TVarChar  AS ArticleShow
+                 
+                          , COALESCE(Object_GoodsChildGroup.ValueData,
+                                     Object_GoodsMainGroup.ValueData)    ::TVarChar  AS GoodsGroupNameShow
+                          
+                          , CASE WHEN COALESCE (Object_ProdColorPattern.Id, 0) <> 0 THEN 'ДА' ELSE '' END :: TVarChar  AS Replacement
+                          , COALESCE (tmpProdColorPattern.ReceiptLevelId, 1000000000)  :: Integer AS GroupBy
+                 
+                          , CASE WHEN COALESCE(tmpProdColorPattern.GoodsChildId, 0) = 0
+                                 THEN COALESCE(ObjectString_ArticleChildMain.ValueData, '')||
+                                      CASE WHEN COALESCE(ObjectString_ArticleChildMain.ValueData, '') <> '' AND COALESCE(Object_GoodsMain.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                                      COALESCE(Object_GoodsMain.ValueData, '')
+                                 ELSE COALESCE(ObjectString_ArticleChild.ValueData, '')||
+                                      CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
+                                      COALESCE(Object_GoodsChildGroup.ValueData, '')
+                                 END:: TVarChar AS TitleGroup
+                      FROM tmpProdColorPattern
+                           LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
+                 
+                           LEFT JOIN Object AS Object_ReceiptLevel ON Object_ReceiptLevel.Id = tmpProdColorPattern.ReceiptLevelId
+                           LEFT JOIN Object AS Object_GoodsChild ON Object_GoodsChild.Id = tmpProdColorPattern.GoodsChildId
+                           LEFT JOIN Object AS Object_GoodsMain ON Object_GoodsMain.Id = tmpProdColorPattern.GoodsMainId
+                 
+                           LEFT JOIN ObjectString AS ObjectString_ArticleChildMain
+                                                  ON ObjectString_ArticleChildMain.ObjectId = tmpProdColorPattern.GoodsMainId
+                                                 AND ObjectString_ArticleChildMain.DescId = zc_ObjectString_Article()
+                 
+                           LEFT JOIN ObjectString AS ObjectString_ArticleChild
+                                                  ON ObjectString_ArticleChild.ObjectId = tmpProdColorPattern.GoodsChildId
+                                                 AND ObjectString_ArticleChild.DescId = zc_ObjectString_Article()
+                 
+                           LEFT JOIN ObjectString AS ObjectString_Comment
+                                                  ON ObjectString_Comment.ObjectId = Object_ProdColorPattern.Id
+                                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_ProdColorGroup
+                                                ON ObjectLink_ProdColorGroup.ObjectId = Object_ProdColorPattern.Id
+                                               AND ObjectLink_ProdColorGroup.DescId = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+                           LEFT JOIN Object AS Object_ProdColorGroup ON Object_ProdColorGroup.Id = ObjectLink_ProdColorGroup.ChildObjectId
+                           LEFT JOIN ObjectLink AS ObjectLink_ColorPattern
+                                                ON ObjectLink_ColorPattern.ObjectId = Object_ProdColorPattern.Id
+                                               AND ObjectLink_ColorPattern.DescId = zc_ObjectLink_ProdColorPattern_ColorPattern()
+                           LEFT JOIN Object AS Object_ColorPattern ON Object_ColorPattern.Id = ObjectLink_ColorPattern.ChildObjectId
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                ON ObjectLink_Goods.ObjectId = Object_ProdColorPattern.Id
+                                               AND ObjectLink_Goods.DescId   = zc_ObjectLink_ProdColorPattern_Goods()
+                           -- !!!замена!!!
+                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (tmpProdColorPattern.ObjectId, ObjectLink_Goods.ChildObjectId)   
+                 
+                           --
+                           LEFT JOIN ObjectString AS ObjectString_GoodsGroupFull
+                                                  ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                                 AND ObjectString_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                 
+                           LEFT JOIN ObjectString AS ObjectString_Article
+                                                  ON ObjectString_Article.ObjectId = Object_Goods.Id
+                                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_ProdColor
+                                                ON ObjectLink_Goods_ProdColor.ObjectId = Object_Goods.Id
+                                               AND ObjectLink_Goods_ProdColor.DescId = zc_ObjectLink_Goods_ProdColor()
+                           LEFT JOIN Object AS Object_ProdColor ON Object_ProdColor.Id = ObjectLink_Goods_ProdColor.ChildObjectId
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsMainGroup
+                                                ON ObjectLink_Goods_GoodsMainGroup.ObjectId = tmpProdColorPattern.GoodsMainId
+                                               AND ObjectLink_Goods_GoodsMainGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                           LEFT JOIN Object AS Object_GoodsMainGroup ON Object_GoodsMainGroup.Id = ObjectLink_Goods_GoodsMainGroup.ChildObjectId
+                 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsChildGroup
+                                                ON ObjectLink_Goods_GoodsChildGroup.ObjectId = tmpProdColorPattern.GoodsChildId
+                                               AND ObjectLink_Goods_GoodsChildGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                           LEFT JOIN Object AS Object_GoodsChildGroup ON Object_GoodsChildGroup.Id = ObjectLink_Goods_GoodsChildGroup.ChildObjectId
+                 
+                           LEFT JOIN ObjectString AS ObjectString_EAN
+                                                  ON ObjectString_EAN.ObjectId = Object_Goods.Id
+                                                 AND ObjectString_EAN.DescId = zc_ObjectString_EAN() 
+                      ORDER BY CASE WHEN COALESCE(Object_ReceiptLevel.ValueData, '') = '' THEN 1 ELSE 0 END
+                             , Object_ReceiptLevel.ValueData
+                             , Object_ProdColorPattern.ObjectCode ASC
+                     )
+                     
+     ---
+     SELECT tmpResult.*
+          , (SELECT COUNT(*) FROM tmpResult AS tmp WHERE tmp.TitleGroup = tmpResult.TitleGroup) ::Integer AS Count_Object
+     FROM tmpResult
+     ;        
 
      /*
      SELECT (ROW_NUMBER() OVER (ORDER BY Object_ReceiptGoodsChild.Id ASC)
@@ -459,8 +468,7 @@ BEGIN
        */
   
                                
-     ;
-
+     
      RETURN NEXT Cursor2;
 END;
 $BODY$

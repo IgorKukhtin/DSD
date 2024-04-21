@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 1
+        TabIndex = 12
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -17572,7 +17572,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -21767,7 +21767,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False

@@ -59,13 +59,14 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
     LoadReportFromFile('PrintMovement_Invoice_Pay', ReportPath + '\PrintMovement_Invoice_Pay.fr3');
     LoadReportFromFile('PrintMovement_Invoice_PrePay', ReportPath + '\PrintMovement_Invoice_PrePay.fr3');
     LoadReportFromFile('PrintMovement_Invoice_PrePay2', ReportPath + '\PrintMovement_Invoice_PrePay2.fr3');
     LoadReportFromFile('PrintMovement_Invoice_Return', ReportPath + '\PrintMovement_Invoice_Return.fr3');
     LoadReportFromFile('PrintMovement_Invoice_Master', ReportPath + '\PrintMovement_Invoice_Master.fr3');
     exit;
-
+ }
     {
     LoadReportFromFile('PrintMovement_IncomePrice', ReportPath + '\PrintMovement_IncomePrice.fr3');
     exit;
@@ -121,8 +122,10 @@ begin
     LoadReportFromFile('PrintMovement_OrderClientBarcode', ReportPath + '\PrintMovement_OrderClientBarcode.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionPersonal', ReportPath + '\PrintMovement_ProductionPersonal.fr3');
-
+    }
     LoadReportFromFile('PrintReceiptGoods_Structure', ReportPath + '\PrintReceiptGoods_Structure.fr3');
+    exit;
+    {
     //LoadReportFromFile('PrintReceiptProdModel_StructureGoods', ReportPath + '\PrintReceiptProdModel_StructureGoods.fr3');
     LoadReportFromFile('PrintReceiptProdModelGoods_Structure', ReportPath + '\PrintReceiptProdModelGoods_Structure.fr3');
     LoadReportFromFile('PrintReceiptProdModel_Structure', ReportPath + '\PrintReceiptProdModel_Structure.fr3');
