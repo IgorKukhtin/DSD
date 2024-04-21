@@ -34,6 +34,10 @@ BEGIN
 
      -- Если Корректировка подтверждена
      IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+     OR (EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Sign() AND MovementItem.isErased   = FALSE)
+        -- этот User удалет все подписи
+        AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.ObjectId = vbUserId AND MovementItem.DescId = zc_MI_Sign() AND MovementItem.isErased   = FALSE)
+        )
      THEN
          -- Удаляем ВСЕ подписи
          PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
@@ -51,12 +55,15 @@ BEGIN
            AND MovementItem.isErased = FALSE
            ;
 
-         -- Возвращаем обратно Child <-> Master
-         UPDATE MovementItem SET DescId = CASE WHEN MovementItem.DescId = zc_MI_Master() THEN zc_MI_Child() ELSE zc_MI_Master() END
-         WHERE MovementItem.MovementId = inMovementId
-           AND MovementItem.DescId IN (zc_MI_Master(), zc_MI_Child())
-           AND MovementItem.isErased = FALSE
-           ;
+         IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Sign() AND MB.ValueData = TRUE)
+         THEN
+             -- Возвращаем обратно Child <-> Master
+             UPDATE MovementItem SET DescId = CASE WHEN MovementItem.DescId = zc_MI_Master() THEN zc_MI_Child() ELSE zc_MI_Master() END
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId IN (zc_MI_Master(), zc_MI_Child())
+               AND MovementItem.isErased = FALSE
+               ;
+         END IF;
 
          -- Корректировка НЕ подтверждена
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Sign(), inMovementId, FALSE);
@@ -76,7 +83,7 @@ BEGIN
          -- Проверка
          IF COALESCE (vbId_mi, 0) = 0
          THEN
-            RAISE EXCEPTION 'Ошибка.Нельзя отменить <Разрешение корректировки>.Элемент не найден.';
+            RAISE EXCEPTION 'Ошибка.Нельзя отменить <Разрешение корректировки>.Элемент не найден.(%)', vbId_mi;
          END IF;
 
          -- Удаляем ОДНУ подпись
