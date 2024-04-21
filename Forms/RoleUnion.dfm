@@ -94,7 +94,6 @@ object RoleUnionForm: TRoleUnionForm
     Width = 7
     Height = 287
     Control = cxGrid
-    ExplicitLeft = 465
   end
   object Panel1: TPanel
     Left = 536
@@ -103,10 +102,8 @@ object RoleUnionForm: TRoleUnionForm
     Height = 287
     Align = alClient
     BevelOuter = bvNone
-    TabOrder = 5
-    ExplicitLeft = 472
-    ExplicitWidth = 300
-    object ActionGrid: TcxGrid
+    TabOrder = 4
+    object RoleGrid: TcxGrid
       Left = 0
       Top = 0
       Width = 236
@@ -115,10 +112,7 @@ object RoleUnionForm: TRoleUnionForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -1
-      ExplicitTop = 1
-      ExplicitWidth = 300
-      object ActionGridView: TcxGridDBTableView
+      object RoleGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
         DataController.Filter.Options = [fcoCaseInsensitive]
@@ -143,8 +137,8 @@ object RoleUnionForm: TRoleUnionForm
           Width = 224
         end
       end
-      object ActionGridLevel: TcxGridLevel
-        GridView = ActionGridView
+      object RoleGridLevel: TcxGridLevel
+        GridView = RoleGridView
       end
     end
   end
@@ -275,7 +269,6 @@ object RoleUnionForm: TRoleUnionForm
     Height = 7
     AlignSplitter = salBottom
     Control = cxGrid
-    ExplicitTop = 319
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -349,9 +342,16 @@ object RoleUnionForm: TRoleUnionForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -366,9 +366,20 @@ object RoleUnionForm: TRoleUnionForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbGridToExcel_Role'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_User'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -397,14 +408,13 @@ object RoleUnionForm: TRoleUnionForm
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -412,6 +422,14 @@ object RoleUnionForm: TRoleUnionForm
     end
     object bbInsertMask: TdxBarButton
       Action = actInsertMask
+      Category = 0
+    end
+    object bbGridToExcel_Role: TdxBarButton
+      Action = actGridToExcel_Role
+      Category = 0
+    end
+    object bbGridToExcel_User: TdxBarButton
+      Action = actGridToExcel_User
       Category = 0
     end
   end
@@ -543,14 +561,32 @@ object RoleUnionForm: TRoleUnionForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
-      ShortCut = 16472
+      ShortCut = 16433
+    end
+    object actGridToExcel_Role: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = RoleGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16434
+    end
+    object actGridToExcel_User: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = cxGridUser
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16435
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'

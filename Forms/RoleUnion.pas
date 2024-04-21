@@ -50,7 +50,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -74,10 +74,10 @@ type
     bbInsertMask: TdxBarButton;
     colProcess_EnumName: TcxGridDBColumn;
     Panel1: TPanel;
-    ActionGrid: TcxGrid;
-    ActionGridView: TcxGridDBTableView;
+    RoleGrid: TcxGrid;
+    RoleGridView: TcxGridDBTableView;
     cxGridDBColumn5: TcxGridDBColumn;
-    ActionGridLevel: TcxGridLevel;
+    RoleGridLevel: TcxGridLevel;
     cldescName: TcxGridDBColumn;
     UserDS: TDataSource;
     UserCDS: TClientDataSet;
@@ -97,6 +97,10 @@ type
     spSelectUser: TdsdStoredProc;
     dsdDBViewAddOnUser: TdsdDBViewAddOn;
     RoleName: TcxGridDBColumn;
+    actGridToExcel_User: TdsdGridToExcel;
+    actGridToExcel_Role: TdsdGridToExcel;
+    bbGridToExcel_Role: TdxBarButton;
+    bbGridToExcel_User: TdxBarButton;
   private
     { Private declarations }
   public
