@@ -173,21 +173,22 @@ BEGIN
     CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
     CREATE TEMP TABLE _tmpLocation_by (LocationId Integer) ON COMMIT DROP;
     -- таблица -
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyDestinationId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer) ON COMMIT DROP;
 
     -- товары
     IF inGoodsGroupId <> 0 AND COALESCE (inGoodsId, 0) = 0
     THEN
-        INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId)
-          SELECT lfObject.GoodsId, 0 FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject;
+        INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId, InfoMoneyId)
+          SELECT lfObject.GoodsId, 0, 0 FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject;
     ELSE IF inGoodsId <> 0
          THEN
-             INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId)
-               SELECT inGoodsId, 0;
+             INSERT INTO _tmpGoods (GoodsId, InfoMoneyDestinationId, InfoMoneyId)
+               SELECT inGoodsId, 0, 0;
          END IF;
    END IF;
    --
    UPDATE _tmpGoods SET InfoMoneyDestinationId = View_InfoMoney.InfoMoneyDestinationId
+                      , InfoMoneyId            = ObjectLink_Goods_InfoMoney.ChildObjectId
    FROM ObjectLink AS ObjectLink_Goods_InfoMoney
         LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
    WHERE ObjectLink_Goods_InfoMoney.ObjectId = _tmpGoods.GoodsId
@@ -303,7 +304,16 @@ BEGIN
                                                                               , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                )
                                            THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+
+                                      WHEN _tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                       AND _tmpGoods.InfoMoneyId NOT IN (zc_Enum_InfoMoney_10105()  -- Прочее мясное сырье
+                                                                       , zc_Enum_InfoMoney_10106()  -- Сыр
+                                                                        )
+                                       AND ObjectLink_ReceiptChild_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                           THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+
                                       ELSE 0
+
                                  END AS GoodsKindId
                                , SUM (CASE WHEN tmpMIContainer_GP.CuterCount <> 0 AND tmpMIContainer_GP.isTaxExit = TRUE
                                                 THEN tmpMIContainer_GP.CuterCount * COALESCE (ObjectFloat_Value.ValueData, 0)
@@ -340,6 +350,14 @@ BEGIN
                                                                                 , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
                                                                                  )
                                              THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+
+                                        WHEN _tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+                                         AND _tmpGoods.InfoMoneyId NOT IN (zc_Enum_InfoMoney_10105()  -- Прочее мясное сырье
+                                                                         , zc_Enum_InfoMoney_10106()  -- Сыр
+                                                                          )
+                                         AND ObjectLink_ReceiptChild_GoodsKind.ChildObjectId <> zc_GoodsKind_Basis()
+                                             THEN COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0)
+
                                         ELSE 0
                                    END
                           HAVING SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN tmpMIContainer_GP.OperCount * COALESCE (ObjectFloat_Value.ValueData, 0) / ObjectFloat_Value_master.ValueData ELSE 0 END) <> 0
