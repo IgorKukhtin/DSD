@@ -1002,7 +1002,50 @@ END IF;
                           )
            -- Результат
            SELECT tmpMI_res.MovementItemId, tmpMI_res.MemberId, tmpMI_res.PersonalId, tmpMI_res.UnitId, tmpMI_res.PositionId, tmpMI_res.InfoMoneyId
-                , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject, tmpMI_res.SummCardSecondRecalc
+                , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject
+
+                  -- пересчитали
+                  -- 1
+                , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_1
+                  END
+                  -- 2
+                + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 2
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_2
+                            -- плюс разница из 1 - если для 2 есть банк
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1 AND tmpMI_res.BankId_2 > 0
+                                      THEN tmpMI_res.SummCard_1 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                  END
+                  -- 3
+                + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 3
+                       -- новая сумма
+                       THEN tmpList_limit_res.SummCard_new
+
+                       -- оригинал
+                       ELSE tmpMI_res.SummCard_3
+                            -- плюс разница из 1 - если для 3 есть банк + если для 2 банк не нашли
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1 AND tmpMI_res.BankId_3 > 0
+                                  -- здесь для 2 банк не нашли
+                                  AND COALESCE (tmpMI_res.BankId_2, 0) = 0
+                                      THEN tmpMI_res.SummCard_1 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                            -- плюс разница из 2 - если для 3 есть банк
+                          + CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 2 AND tmpMI_res.BankId_3 > 0
+                                      THEN tmpMI_res.SummCard_2 - tmpList_limit_res.SummCard_new
+                                 ELSE 0
+                            END
+                  END AS SummCardSecondRecalc
+
                   --
                 , tmpMI_res.BankId_1, tmpMI_res.BankId_2, tmpMI_res.BankId_3
                   --

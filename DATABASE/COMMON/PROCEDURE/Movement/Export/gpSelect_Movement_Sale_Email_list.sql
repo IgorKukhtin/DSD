@@ -83,7 +83,9 @@ BEGIN
                                     WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '7 DAY' AND CURRENT_DATE + INTERVAL '7 DAY'
                                       AND Movement.DescId = zc_Movement_Sale()
                                       AND Movement.StatusId = zc_Enum_Status_Complete()
-                                      AND MovementBoolean_Mail.MovementId IS NULL
+                                      AND (MovementBoolean_Mail.MovementId IS NULL
+                                      --OR Movement.Id = 27974591
+                                          )
                                     --AND (MovementBoolean_Mail.MovementId IS NULL OR tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Nedavn2244900110()))
                                   --LIMIT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Logistik41750857() THEN 1 ELSE 100 END
                                    )

@@ -21,6 +21,11 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+/*if inMovementId = 27974591 
+then 
+    vbUserId:= 5;
+end if;*/
+
      -- определяется <Контрагент>
      vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
                     FROM Movement
