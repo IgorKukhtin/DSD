@@ -55,7 +55,7 @@ BEGIN
                                                 ON MIString_PartNumber.MovementItemId = MI.Id
                                                AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
               WHERE MI.MovementId = vbMovementId
-                AND MI.DescId     = zc_MI_Detail()
+                AND MI.DescId     = zc_MI_Scan()
                 AND MI.ObjectId   = vbGoodsId
                 AND MI.isErased   = FALSE
                 AND MI.Id <> COALESCE (inMovementItemId, 0) 

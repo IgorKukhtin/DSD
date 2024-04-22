@@ -294,6 +294,30 @@ type
     PanelScan_all: TPanel;
     actSetVisible_PanelScan: TBooleanSetVisibleAction;
     bynSetVisible_PanelScan: TcxButton;
+    cxTabSheetScan: TcxTabSheet;
+    ScanDS: TDataSource;
+    ScanCDS: TClientDataSet;
+    spSelectScan: TdsdStoredProc;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    Scan_Ord: TcxGridDBColumn;
+    Scan_GoodsGroupNameFull: TcxGridDBColumn;
+    Scan_EAN: TcxGridDBColumn;
+    Scan_Article: TcxGridDBColumn;
+    Scan_Article_all: TcxGridDBColumn;
+    Scan_GoodsCode: TcxGridDBColumn;
+    Scan_GoodsName: TcxGridDBColumn;
+    Scan_MeasureName: TcxGridDBColumn;
+    Scan_PartNumber: TcxGridDBColumn;
+    Scan_PartionCellCode: TcxGridDBColumn;
+    Scan_PartionCellName: TcxGridDBColumn;
+    Scan_Amount: TcxGridDBColumn;
+    Scan_OperDate_protocol: TcxGridDBColumn;
+    Scan_UserName_protocol: TcxGridDBColumn;
+    Scan_isErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    DBViewAddOnScan: TdsdDBViewAddOn;
+    Color_Scan: TcxGridDBColumn;
   private
   public
   end;

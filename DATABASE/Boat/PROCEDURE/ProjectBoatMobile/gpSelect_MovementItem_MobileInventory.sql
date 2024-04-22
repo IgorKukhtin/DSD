@@ -23,10 +23,11 @@ RETURNS TABLE (Id Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId   Integer;
-  DECLARE vbUnitId   Integer;
-  DECLARE vbStatusId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbUserId    Integer;
+  DECLARE vbUnitId    Integer;
+  DECLARE vbStatusId  Integer;
+  DECLARE vbOperDate  TDateTime;
+  DECLARE vbFilterArt TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -55,7 +56,7 @@ BEGIN
                            , MovementItem.isErased
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                            AND MovementItem.DescId     = zc_MI_Detail()
+                                            AND MovementItem.DescId     = zc_MI_Scan()
                                             AND MovementItem.isErased   = tmpIsErased.isErased
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
@@ -231,5 +232,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3183, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3183, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());

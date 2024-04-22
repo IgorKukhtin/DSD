@@ -67,7 +67,7 @@ BEGIN
                       FROM tmpMovement AS Movement
                       
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                  AND MovementItem.DescId     = zc_MI_Detail()
+                                                  AND MovementItem.DescId     = zc_MI_Scan()
                                                   AND (MovementItem.isErased  = False OR inisErased = TRUE)
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id

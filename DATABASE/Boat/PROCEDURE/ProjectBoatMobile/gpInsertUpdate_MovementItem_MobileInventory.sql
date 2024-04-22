@@ -73,7 +73,7 @@ BEGIN
                                                    ON MIString_PartNumber.MovementItemId = MI.Id
                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                  WHERE MI.MovementId = inMovementId
-                   AND MI.DescId     = zc_MI_Detail()
+                   AND MI.DescId     = zc_MI_Scan()
                    AND MI.ObjectId   = inGoodsId
                    AND MI.isErased   = FALSE
                    AND MI.Id <> COALESCE (ioId, 0) 
@@ -126,7 +126,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inGoodsId, NULL, inMovementId, inAmount, NULL, vbUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Scan(), inGoodsId, NULL, inMovementId, inAmount, NULL, vbUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
