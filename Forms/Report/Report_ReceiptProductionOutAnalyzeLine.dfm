@@ -46,17 +46,6 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCountIn_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = OperCountIn_Weight_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = OperSummIn_ch
             end
             item
               Format = ',0.####'
@@ -127,6 +116,11 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = TaxGP_plan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_real
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -147,17 +141,6 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             item
               Format = ',0.####'
               Kind = skSum
-              Column = OperCountIn_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = OperCountIn_Weight_ch
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = OperSummIn_ch
             end
             item
               Format = ',0.####'
@@ -228,6 +211,11 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
               Format = ',0.####'
               Kind = skSum
               Column = TaxGP_plan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_gp_real
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -367,6 +355,7 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 69
@@ -381,17 +370,6 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object OperSummIn_ch: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1087#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'OperSummIn_child'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object GoodsId_ch: TcxGridDBColumn
             DataBinding.FieldName = 'GoodsId_child'
@@ -713,6 +691,28 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object CuterCount_inf: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1082#1091#1090#1090#1077#1088#1086#1074' ('#1088#1072#1089#1093#1086#1076') ('#1080#1085#1092'.)'
+            DataBinding.FieldName = 'CuterCount_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object OperCount_gp_real: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055' '#1092#1072#1082#1090' '#1074#1077#1089' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'OperCount_gp_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object OperCount_gp_plan: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' '#1043#1055' '#1087#1083#1072#1085' '#1074#1077#1089' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'OperCount_gp_plan'
@@ -743,30 +743,6 @@ inherited Report_ReceiptProductionOutAnalyzeLineForm: TReport_ReceiptProductionO
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object TaxSumm_min: TcxGridDBColumn
-            Caption = '% '#1076#1086#1083#1103' '#1074' '#1089'/'#1089' '#1086#1090
-            DataBinding.FieldName = 'TaxSumm_min'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
-            Width = 55
-          end
-          object TaxSumm_max: TcxGridDBColumn
-            Caption = '% '#1076#1086#1083#1103' '#1074' '#1089'/'#1089' '#1076#1086
-            DataBinding.FieldName = 'TaxSumm_max'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 55
           end
           object InfoMoneyCode: TcxGridDBColumn

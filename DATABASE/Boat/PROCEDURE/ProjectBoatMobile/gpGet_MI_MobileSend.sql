@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpGet_MI_MobileSend (Integer, Integer, Integer, TVarChar, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MI_MobileSend(
-    IN inDetailId          Integer    , -- Ключ объекта <Строка сканирования>
+    IN inScanId            Integer    , -- Ключ объекта <Строка сканирования>
     IN inGoodsId           Integer    , -- вариант когда вібирают товар из справочника
     IN inPartionCellId     Integer    , --
     IN inPartNumber        TVarChar   , --
@@ -46,7 +46,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
      
-     IF COALESCE (inDetailId, 0) = 0
+     IF COALESCE (inScanId, 0) = 0
      THEN
        vbMovementId := 0;
        vbFromId := 0;
@@ -56,7 +56,7 @@ BEGIN
        SELECT MovementItem.MovementId, MovementItem.ObjectId
        INTO vbMovementId, vbGoodsId
        FROM MovementItem
-       WHERE MovementItem.ID = inDetailId;
+       WHERE MovementItem.ID = inScanId;
 
        -- Данные для остатков
        SELECT Movement.OperDate, MLO_From.ObjectId, MLO_To.ObjectId
@@ -110,9 +110,9 @@ BEGIN
                       GROUP BY MI.ObjectId
                              , COALESCE (MIString_PartNumber.ValueData, '')
                      )
-          , tmpMIDetail AS (SELECT MI.ObjectId                                      AS GoodsId
+          , tmpMIScan AS (SELECT MI.ObjectId                                      AS GoodsId
                                  , COALESCE (MIString_PartNumber.ValueData, '')     AS PartNumber
-                                 , SUM (CASE WHEN MI.Id <> COALESCE(inDetailId, 0)
+                                 , SUM (CASE WHEN MI.Id <> COALESCE(inScanId, 0)
                                              THEN MI.Amount END)                    AS Amount
                                  , MAX(MI.Id)                                       AS MaxID  
                             FROM MovementItem AS MI
@@ -121,7 +121,7 @@ BEGIN
                                                              AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
 
                             WHERE MI.MovementId = vbMovementId
-                              AND MI.DescId     = zc_MI_Detail()
+                              AND MI.DescId     = zc_MI_Scan()
                               AND MI.ObjectId   = inGoodsId
                               AND MI.isErased   = FALSE
                               AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,'')
@@ -223,7 +223,7 @@ BEGIN
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
                 , COALESCE (inAmount, 1)                                          :: TFloat AS Amount
-                , COALESCE (tmpMI.Amount, tmpMIDetail.Amount, 0)                  :: TFloat AS TotalCount
+                , COALESCE (tmpMI.Amount, tmpMIScan.Amount, 0)                  :: TFloat AS TotalCount
                 , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
 
                 , Object_Goods.FromId
@@ -238,11 +238,11 @@ BEGIN
                                     AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
                                AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
-                LEFT JOIN tmpMIDetail ON tmpMIDetail.GoodsId    = Object_Goods.Id
-                                     AND tmpMIDetail.PartNumber = COALESCE (inPartNumber,'')
+                LEFT JOIN tmpMIScan ON tmpMIScan.GoodsId    = Object_Goods.Id
+                                     AND tmpMIScan.PartNumber = COALESCE (inPartNumber,'')
 
                 LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                 ON MILO_PartionCell.MovementItemId = COALESCE(NULLIF(inDetailId, 0), tmpMIDetail.MaxId)
+                                                 ON MILO_PartionCell.MovementItemId = COALESCE(NULLIF(inScanId, 0), tmpMIScan.MaxId)
                                                 AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Partner
@@ -283,6 +283,4 @@ $BODY$
 */
 
 -- тест
--- 
-
-select * from gpGet_MI_MobileSend(inDetailId := 566448, inGoodsId := 261920 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');
+-- select * from gpGet_MI_MobileSend(inScanId := 566448, inGoodsId := 261920 , inPartionCellId := 0 , inPartNumber := '', inAmount := 1 ,  inSession := '5');

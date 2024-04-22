@@ -33,6 +33,15 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Send());
      vbUserId := lpGetUserBySession (inSession);
 
+     -- Если были сканирования
+     IF EXISTS (SELECT MovementItem.Id
+                FROM MovementItem 
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Scan())
+     THEN
+       RAISE EXCEPTION 'Ошибка.Изменять документ созданный из мобильного приложения запрешщено.';
+     END IF;
+
      -- нужен ПОИСК
      IF ioId < 0
      THEN

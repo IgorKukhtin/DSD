@@ -472,8 +472,8 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object Color_Detail: TcxGridDBColumn
-            DataBinding.FieldName = 'Color_Detail'
+          object Color_Scan: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Scan'
             Visible = False
             VisibleForCustomization = False
           end
@@ -493,7 +493,7 @@ object InventoryForm: TInventoryForm
         Control = cxGrid
       end
     end
-    object cxTabSheetDetail: TcxTabSheet
+    object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
       object cxGrid1: TcxGrid
@@ -505,13 +505,13 @@ object InventoryForm: TInventoryForm
         TabOrder = 0
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DetailDS
+          DataController.DataSource = ScanDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Detail_Amount
+              Column = Scan_Amount
             end
             item
               Format = ',0.####'
@@ -533,7 +533,7 @@ object InventoryForm: TInventoryForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Detail_Amount
+              Column = Scan_Amount
             end
             item
               Format = ',0.####'
@@ -542,7 +542,7 @@ object InventoryForm: TInventoryForm
             item
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
-              Column = Detail_GoodsName
+              Column = Scan_GoodsName
             end
             item
               Format = ',0.####'
@@ -571,7 +571,7 @@ object InventoryForm: TInventoryForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object Detail_Ord: TcxGridDBColumn
+          object Scan_Ord: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Ord'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -582,7 +582,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 55
           end
-          object Detail_GoodsGroupNameFull: TcxGridDBColumn
+          object Scan_GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
@@ -590,7 +590,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 120
           end
-          object Detail_EAN: TcxGridDBColumn
+          object Scan_EAN: TcxGridDBColumn
             DataBinding.FieldName = 'EAN'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -606,7 +606,7 @@ object InventoryForm: TInventoryForm
             HeaderHint = 'EAN'
             Width = 106
           end
-          object Detail_Article: TcxGridDBColumn
+          object Scan_Article: TcxGridDBColumn
             Caption = 'Artikel Nr'
             DataBinding.FieldName = 'Article'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -621,7 +621,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
-          object Detail_Article_all: TcxGridDBColumn
+          object Scan_Article_all: TcxGridDBColumn
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -635,7 +635,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object Detail_GoodsCode: TcxGridDBColumn
+          object Scan_GoodsCode: TcxGridDBColumn
             Caption = 'Interne Nr'
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -650,7 +650,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object Detail_GoodsName: TcxGridDBColumn
+          object Scan_GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -665,7 +665,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 137
           end
-          object Detail_MeasureName: TcxGridDBColumn
+          object Scan_MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             Visible = False
@@ -674,7 +674,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 47
           end
-          object Detail_PartNumber: TcxGridDBColumn
+          object Scan_PartNumber: TcxGridDBColumn
             Caption = 'S/N'
             DataBinding.FieldName = 'PartNumber'
             HeaderAlignmentHorz = taCenter
@@ -682,7 +682,7 @@ object InventoryForm: TInventoryForm
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
             Width = 100
           end
-          object Detail_PartionCellCode: TcxGridDBColumn
+          object Scan_PartionCellCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1095'.'
             DataBinding.FieldName = 'PartionCellCode'
             Visible = False
@@ -692,7 +692,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 70
           end
-          object Detail_PartionCellName: TcxGridDBColumn
+          object Scan_PartionCellName: TcxGridDBColumn
             Caption = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
             DataBinding.FieldName = 'PartionCellName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -707,7 +707,7 @@ object InventoryForm: TInventoryForm
             HeaderHint = #1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
             Width = 76
           end
-          object Detail_Amount: TcxGridDBColumn
+          object Scan_Amount: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -718,7 +718,7 @@ object InventoryForm: TInventoryForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
             Width = 70
           end
-          object Detail_OperDate_protocol: TcxGridDBColumn
+          object Scan_OperDate_protocol: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
             DataBinding.FieldName = 'OperDate_protocol'
             HeaderAlignmentHorz = taCenter
@@ -727,7 +727,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 100
           end
-          object Detail_UserName_protocol: TcxGridDBColumn
+          object Scan_UserName_protocol: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
             DataBinding.FieldName = 'UserName_protocol'
             HeaderAlignmentHorz = taCenter
@@ -736,7 +736,7 @@ object InventoryForm: TInventoryForm
             Options.Editing = False
             Width = 100
           end
-          object Detail_isErased: TcxGridDBColumn
+          object Scan_isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -1381,7 +1381,7 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectDetail
+          StoredProc = spSelectScan
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1440,7 +1440,7 @@ object InventoryForm: TInventoryForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectDetail
+          StoredProc = spSelectScan
         end
         item
           StoredProc = spBarcode_null
@@ -2744,7 +2744,7 @@ object InventoryForm: TInventoryForm
     ChartList = <>
     ColorRuleList = <
       item
-        ValueColumn = Color_Detail
+        ValueColumn = Color_Scan
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -3597,7 +3597,7 @@ object InventoryForm: TInventoryForm
     Left = 368
     Top = 472
   end
-  object DBViewAddOnDetail: TdsdDBViewAddOn
+  object DBViewAddOnScan: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView1
     OnDblClickActionList = <
@@ -3624,12 +3624,12 @@ object InventoryForm: TInventoryForm
     Left = 726
     Top = 377
   end
-  object spSelectDetail: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_InventoryDetail'
-    DataSet = DetailCDS
+  object spSelectScan: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_InventoryScan'
+    DataSet = ScanCDS
     DataSets = <
       item
-        DataSet = DetailCDS
+        DataSet = ScanCDS
       end>
     Params = <
       item
@@ -3652,12 +3652,12 @@ object InventoryForm: TInventoryForm
     Left = 144
     Top = 495
   end
-  object DetailDS: TDataSource
-    DataSet = DetailCDS
+  object ScanDS: TDataSource
+    DataSet = ScanCDS
     Left = 294
     Top = 495
   end
-  object DetailCDS: TClientDataSet
+  object ScanCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 224

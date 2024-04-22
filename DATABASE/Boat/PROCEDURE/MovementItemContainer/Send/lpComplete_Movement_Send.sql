@@ -98,6 +98,141 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Подразделение (Кому)>.';
      END IF;
 
+     -- Если были сканирования
+     IF EXISTS (SELECT MovementItem.Id
+                FROM MovementItem 
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Scan())
+     THEN
+     
+     
+       -- Если проводить нечего ругаемся 
+       IF NOT EXISTS (SELECT MovementItem.ObjectId AS GoodsId
+                           , SUM(MovementItem.Amount)::TFloat             AS Amount
+                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                      FROM MovementItem 
+
+                           LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                           
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Scan()
+                        AND MovementItem.isErased   = False
+                      GROUP BY MovementItem.ObjectId
+                             , COALESCE (MIString_PartNumber.ValueData, '')
+                      HAVING SUM(MovementItem.Amount) <> 0)
+       THEN
+         RAISE EXCEPTION 'Ошибка.По документу № <%> нет отсканированного товара с количеством. Провести документ не возможно.', vbInvNumber;
+       END IF;
+
+       -- Проверим вдруг минус по какойто позиции
+       IF EXISTS (SELECT MovementItem.ObjectId AS GoodsId
+                       , SUM(MovementItem.Amount)::TFloat             AS Amount
+                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                  FROM MovementItem 
+
+                       LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                    ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                       
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId     = zc_MI_Scan()
+                    AND MovementItem.isErased   = False
+                  GROUP BY MovementItem.ObjectId
+                         , COALESCE (MIString_PartNumber.ValueData, '')
+                  HAVING SUM(MovementItem.Amount) < 0)
+       THEN
+         RAISE EXCEPTION 'Ошибка.По документу № <%> как минимум по одному товару <%> количество по строке отрицательное. Провести документ не возможно.', vbInvNumber, 
+                         lfGet_Object_ValueData ((SELECT MovementItem.ObjectId AS GoodsId
+                                                  FROM MovementItem 
+
+                                                       LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                                    ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                                                       
+                                                  WHERE MovementItem.MovementId = inMovementId
+                                                    AND MovementItem.DescId     = zc_MI_Scan()
+                                                    AND MovementItem.isErased   = False
+                                                  GROUP BY MovementItem.ObjectId
+                                                         , COALESCE (MIString_PartNumber.ValueData, '')
+                                                  HAVING SUM(MovementItem.Amount) < 0
+                                                  LIMIT 1));
+       END IF;
+              
+       -- Востановим удаленные строки в мастере
+       UPDATE MovementItem SET isErased = False
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = True;       
+     
+       -- Создали Элементы по zc_MI_Scan
+       PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := tmp.Id
+                                               , inMovementId             := inMovementId
+                                               , inMovementId_OrderClient := 0
+                                               , inGoodsId                := tmp.GoodsId 
+                                               , inPartionCellId          := tmp.PartionCellId
+                                               , inAmount                 := tmp.Amount
+                                               , inOperPrice              := 0
+                                               , inCountForPrice          := 0
+                                               , inPartNumber             := tmp.PartNumber
+                                               , inComment                := ''
+                                               , inUserId                 := inUserId
+                                               )
+
+       FROM (WITH tmpMIScan AS (SELECT MovementItem.ObjectId AS GoodsId
+                                       , SUM(MovementItem.Amount)::TFloat             AS Amount
+                                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                                       , MAX(MovementItem.Id)                         AS MaxID  
+                                  FROM MovementItem 
+
+                                       LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                    ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                       
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Scan()
+                                    AND MovementItem.isErased   = False
+                                  GROUP BY MovementItem.ObjectId
+                                         , COALESCE (MIString_PartNumber.ValueData, '')
+                                 )
+                , tmpMIMaster AS (SELECT MovementItem.Id
+                                       , MovementItem.ObjectId AS GoodsId
+                                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                                  FROM MovementItem 
+                                  
+                                       LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                    ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                      
+                                  WHERE MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = False
+                                 )
+                                 
+              SELECT COALESCE(tmpMIMaster.Id, 0)                  AS ID
+                   , tmpMIScan.GoodsId                            AS GoodsId
+                   , tmpMIScan.Amount                             AS Amount
+                   , tmpMIScan.PartNumber                         AS PartNumber
+                   , COALESCE(MILO_PartionCell.ObjectId, 0)         AS PartionCellId
+              FROM tmpMIScan
+                            
+                   FULL JOIN tmpMIMaster ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
+                                        AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
+
+                   LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                    ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId
+                                                   AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()                                                   
+            ) AS tmp;
+            
+       -- Удалим строки в мастере с нолевым количеством
+       UPDATE MovementItem SET isErased = True
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = False
+         AND MovementItem.Amount     = 0;       
+            
+     END IF;
 
      -- заполняем таблицу - элементы документа
      INSERT INTO _tmpItem (MovementItemId
@@ -654,4 +789,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 687, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_Send (inMovementId:= 3190 , inSession:= zfCalc_UserAdmin())

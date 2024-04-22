@@ -314,6 +314,7 @@ type
     EnterMoveNext: TEnterMoveNext;
     cxLabel49: TcxLabel;
     edTransportSumm: TcxCurrencyEdit;
+    HeaderChangerVAT: THeaderChanger;
   private
     { Private declarations }
   public

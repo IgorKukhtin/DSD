@@ -66,7 +66,6 @@ type
     MeasureName: TcxGridDBColumn;
     GoodsKindId: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
-    OperSummIn_ch: TcxGridDBColumn;
     PriceIn_ch: TcxGridDBColumn;
     GoodsKindId_ch: TcxGridDBColumn;
     GoodsId: TcxGridDBColumn;
@@ -74,8 +73,6 @@ type
     PartionGoodsDate_ch: TcxGridDBColumn;
     GoodsKindName_complete_ch: TcxGridDBColumn;
     TaxSumm_ch: TcxGridDBColumn;
-    TaxSumm_min: TcxGridDBColumn;
-    TaxSumm_max: TcxGridDBColumn;
     GoodsGroupName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     actPrint_Reserve: TdsdPrintAction;

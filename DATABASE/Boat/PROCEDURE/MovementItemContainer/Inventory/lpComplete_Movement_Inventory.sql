@@ -82,7 +82,7 @@ BEGIN
      -- доопределили - Аналитику для проводок
      vbWhereObjectId_Analyzer:= CASE WHEN vbUnitId <> 0 THEN vbUnitId END;
 
-     -- Создали Элементы по zc_MI_Detail
+     -- Создали Элементы по zc_MI_Scan
      PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                     := 0
                                                   , inMovementId             := inMovementId
                                                   , inMovementId_OrderClient := 0
@@ -98,21 +98,21 @@ BEGIN
                                                   , inUserId                 := inUserId
                                                    )
 
-     FROM (WITH tmpMIDetail AS (SELECT MovementItem.ObjectId AS GoodsId
-                                     , SUM(MovementItem.Amount)::TFloat             AS Amount
-                                     , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                                     , MAX(MovementItem.Id)                         AS MaxID  
-                                FROM MovementItem 
+     FROM (WITH tmpMIScan AS (SELECT MovementItem.ObjectId AS GoodsId
+                                   , SUM(MovementItem.Amount)::TFloat             AS Amount
+                                   , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                                   , MAX(MovementItem.Id)                         AS MaxID  
+                              FROM MovementItem 
 
-                                     LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                                  ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                   LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                                ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                               AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                                                                      
-                                WHERE MovementItem.MovementId = inMovementId
-                                  AND MovementItem.DescId     = zc_MI_Detail()
-                                  AND MovementItem.isErased   = False
-                                GROUP BY MovementItem.ObjectId
-                                       , COALESCE (MIString_PartNumber.ValueData, '')
+                              WHERE MovementItem.MovementId = inMovementId
+                                AND MovementItem.DescId     = zc_MI_Scan()
+                                AND MovementItem.isErased   = False
+                              GROUP BY MovementItem.ObjectId
+                                     , COALESCE (MIString_PartNumber.ValueData, '')
                                )
               , tmpMIMaster AS (SELECT MovementItem.Id
                                      , MovementItem.ObjectId AS GoodsId
@@ -128,21 +128,21 @@ BEGIN
                                   AND MovementItem.isErased   = False
                                )
                                
-            SELECT tmpMIDetail.GoodsId                            AS GoodsId
-                 , tmpMIDetail.Amount                             AS Amount
-                 , tmpMIDetail.PartNumber                         AS PartNumber
+            SELECT tmpMIScan.GoodsId                            AS GoodsId
+                 , tmpMIScan.Amount                             AS Amount
+                 , tmpMIScan.PartNumber                         AS PartNumber
                  , COALESCE(MILO_PartionCell.ObjectId, 0)         AS PartionCellId
-            FROM tmpMIDetail
+            FROM tmpMIScan
                           
-                 LEFT JOIN tmpMIMaster ON tmpMIDetail.GoodsId = tmpMIMaster.GoodsId
-                                      AND tmpMIDetail.PartNumber = tmpMIMaster.PartNumber
+                 LEFT JOIN tmpMIMaster ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
+                                      AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
 
                  LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                  ON MILO_PartionCell.MovementItemId = tmpMIDetail.MaxId
+                                                  ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId
                                                  AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                                                  
             WHERE COALESCE(tmpMIMaster.Id, 0) = 0
-              AND COALESCE(tmpMIDetail.Amount, 0) <> 0
+              AND COALESCE(tmpMIScan.Amount, 0) <> 0
 
           ) AS tmp;
 

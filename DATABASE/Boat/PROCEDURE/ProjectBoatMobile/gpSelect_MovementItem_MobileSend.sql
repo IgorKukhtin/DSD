@@ -51,7 +51,7 @@ BEGIN
                                                                ON MLO_To.MovementId = Movement.Id
                                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
                             WHERE Movement.DescId   = zc_Movement_Send()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                               AND Movement.OperDate = CURRENT_DATE) 
        
           , tmpMI AS (SELECT MovementItem.Id
@@ -67,7 +67,7 @@ BEGIN
                       FROM tmpMovement AS Movement
                       
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                  AND MovementItem.DescId     = zc_MI_Detail()
+                                                  AND MovementItem.DescId     = zc_MI_Scan()
                                                   AND (MovementItem.isErased  = False OR inisErased = TRUE)
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id

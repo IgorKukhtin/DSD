@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_MobileSend()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileSend (Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileSend (Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileSend(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -19,12 +19,17 @@ $BODY$
    DECLARE vbIsInsert   Boolean;
    DECLARE vbPartionCellId Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbMovementOldId Integer;
    DECLARE vbStatusId   Integer;
    DECLARE vbInvNumber  TVarChar;
    DECLARE vbFromId     Integer;
    DECLARE vbToId       Integer;
+   DECLARE vbInsertId   Integer;
    DECLARE vbOperDate   TDateTime;
    DECLARE vbGoodsId    Integer;
+   DECLARE vbisErased   Boolean;
+   DECLARE vbPartNumber TVarChar;
+   DECLARE vbAmount     TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
@@ -36,14 +41,21 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Не заполнено подразделение.';
      END IF;
      
+     vbMovementOldId := 0;
      
      -- Если чтото изменили проверяем
      IF COALESCE(ioId, 0) <> 0
      THEN
+
        -- Данные по документу
-       SELECT Movement.Id,  Movement.StatusId,  Movement.OperDate, MovementItem.ObjectId, MLO_From.ObjectId, MLO_To.ObjectId
-       INTO vbMovementId, vbStatusId, vbOperDate, vbGoodsId, vbFromId, vbToId
+       SELECT Movement.Id,  Movement.StatusId, Movement.OperDate, Movement.InvNumber, MLO_From.ObjectId, MLO_To.ObjectId, MLO_Insert.ObjectId
+            , MovementItem.ObjectId, MovementItem.Amount, MovementItem.isErased, COALESCE (MIString_PartNumber.ValueData,'')
+       INTO vbMovementId, vbStatusId, vbOperDate, vbInvNumber, vbFromId, vbToId, vbInsertId
+          , vbGoodsId, vbAmount, vbisErased, vbPartNumber
        FROM MovementItem 
+            LEFT JOIN MovementItemString AS MIString_PartNumber
+                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
             INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
             LEFT JOIN MovementLinkObject AS MLO_From
                                          ON MLO_From.MovementId = Movement.Id
@@ -51,6 +63,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MLO_To
                                          ON MLO_To.MovementId = Movement.Id
                                         AND MLO_To.DescId     = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MLO_Insert
+                                         ON MLO_Insert.MovementId = Movement.Id
+                                        AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
        WHERE MovementItem.ID = ioId;
        
        IF COALESCE (vbMovementId, 0) = 0
@@ -58,25 +73,74 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Не найден документ перемещения по строке.';
        END IF;
 
-       IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) <> zc_Enum_Status_UnComplete()
+       IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) = zc_Enum_Status_Erased()
        THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
        END IF; 
        
-       -- Если изменилось подраздегения то сбрасываем номер документа перемещения
-       IF COALESCE (vbFromId, 0) <> inFromId OR COALESCE (vbToId, 0) <> inToId
+       IF vbUserId <> COALESCE(vbInsertId, 0)
        THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> созданного сотрудником <%> вам запрещено.', vbInvNumber, lfGet_Object_ValueData (vbInsertId);
+       END IF; 
+
+       -- Если строка удалена то ругаемся
+       IF COALESCE(vbisErased, TRUE) = TRUE
+       THEN
+         RAISE EXCEPTION 'Ошибка. Изменение удаленных записей запрещено.';
+       END IF;
+       
+
+       -- Если ничего не изменилось то просто выходим
+       IF COALESCE (vbFromId, 0) = inFromId AND COALESCE (vbToId, 0) = inToId AND 
+          COALESCE (vbGoodsId, 0) = inGoodsId AND COALESCE (vbAmount, 0) = inAmount AND COALESCE (vbPartNumber, '') = COALESCE (inPartNumber, '')
+       THEN
+         Return;
+       END IF;
+              
+       -- Отменяес проведение найденого документа если проведен
+       IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) = zc_Enum_Status_Complete()
+       THEN
+         PERFORM gpUnComplete_Movement_Send (vbMovementId, inSession);
+       END IF;
+       
+       -- Если изменилось подраздегения или сотрудник то сбрасываем номер документа перемещения
+       IF COALESCE (vbFromId, 0) <> inFromId OR COALESCE (vbToId, 0) <> inToId OR COALESCE (vbInsertId, 0) <> vbUserId
+       THEN
+         vbMovementOldId := vbMovementId;
          vbMovementId := 0;
        END IF;
      
      END IF;
      
-     -- Ищем документ перемещения 
+     -- Ищем документ перемещения по сотруднику
      IF COALESCE(vbMovementId, 0) = 0
      THEN
-       SELECT Movement.Id
-            , Movement.InvNumber
-       INTO vbMovementId, vbInvNumber
+     
+       if COALESCE((SELECT COUNT(DISTINCT Movement.Id) CountDoc
+                    FROM Movement
+                         INNER JOIN MovementLinkObject AS MLO_From
+                                                       ON MLO_From.MovementId = Movement.Id
+                                                      AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                      AND MLO_From.ObjectId   = inFromId
+                         INNER JOIN MovementLinkObject AS MLO_To
+                                                       ON MLO_To.MovementId = Movement.Id
+                                                      AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                      AND MLO_To.ObjectId   = inToId
+                         INNER JOIN MovementLinkObject AS MLO_Insert
+                                                       ON MLO_Insert.MovementId = Movement.Id
+                                                      AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
+                                                      AND MLO_Insert.ObjectId   = vbUserId  
+                         INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                AND MovementItem.DescId     = zc_MI_Scan()
+                    WHERE Movement.DescId   = zc_Movement_Send()
+                      AND Movement.StatusId <> zc_Enum_Status_Erased()
+                      AND Movement.OperDate = CURRENT_DATE), 0) > 1
+       THEN 
+         RAISE EXCEPTION 'Ошибка. Активно более одного документа для сканирования. Удалите лишний.';
+       END IF;
+       
+       SELECT Movement.Id, Movement.StatusId, Movement.InvNumber
+       INTO vbMovementId, vbStatusId, vbInvNumber
        FROM Movement
             INNER JOIN MovementLinkObject AS MLO_From
                                           ON MLO_From.MovementId = Movement.Id
@@ -86,9 +150,22 @@ BEGIN
                                           ON MLO_To.MovementId = Movement.Id
                                          AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                          AND MLO_To.ObjectId   = inToId
+            INNER JOIN MovementLinkObject AS MLO_Insert
+                                          ON MLO_Insert.MovementId = Movement.Id
+                                         AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
+                                         AND MLO_Insert.ObjectId   = vbUserId  
+            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                   AND MovementItem.DescId     = zc_MI_Scan()
        WHERE Movement.DescId   = zc_Movement_Send()
-         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-         AND Movement.OperDate = CURRENT_DATE;
+         AND Movement.StatusId <> zc_Enum_Status_Erased()
+         AND Movement.OperDate = CURRENT_DATE
+       LIMIT 1;
+
+       -- Отменяес проведение найденого документа если проведен
+       IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) = zc_Enum_Status_Complete()
+       THEN
+         PERFORM gpUnComplete_Movement_Send (vbMovementId, inSession);
+       END IF;
      END IF;
      
      -- Создаем документ перемещения
@@ -109,22 +186,7 @@ BEGIN
      INTO vbOperDate, vbInvNumber
      FROM Movement 
      WHERE Movement.ID = vbMovementId;
-     
-     -- Ищем может уже есть такой товар ругаемся
-     IF EXISTS(SELECT MI.Id 
-               FROM MovementItem AS MI
-                    LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                 ON MIString_PartNumber.MovementItemId = MI.Id
-                                                AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-               WHERE MI.MovementId = vbMovementId
-                 AND MI.DescId     = zc_MI_Master()
-                 AND MI.ObjectId   = inGoodsId
-                 AND MI.isErased   = FALSE
-                 AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (inPartNumber,''))
-     THEN
-       RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в перемещении.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
-     END IF;
-          
+               
      -- Если заполнен S/N то можно только 1 ша и раз.
      IF COALESCE (inPartNumber, '') <> ''
      THEN
@@ -140,7 +202,7 @@ BEGIN
                                                     ON MIString_PartNumber.MovementItemId = MI.Id
                                                    AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
                  WHERE MI.MovementId = vbMovementId
-                   AND MI.DescId     = zc_MI_Detail()
+                   AND MI.DescId     = zc_MI_Scan()
                    AND MI.ObjectId   = inGoodsId
                    AND MI.isErased   = FALSE
                    AND MI.Id <> COALESCE (ioId, 0) 
@@ -193,7 +255,7 @@ BEGIN
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Detail(), inGoodsId, NULL, vbMovementId, inAmount, NULL, vbUserId);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Scan(), inGoodsId, NULL, vbMovementId, inAmount, NULL, vbUserId);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartNumber(), ioId, inPartNumber);
@@ -204,6 +266,46 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
 
+     -- Проводим документ из которого изяли товар если есть количество
+     IF COALESCE(vbMovementOldId, 0) <> 0 AND
+        EXISTS (SELECT MovementItem.ObjectId AS GoodsId
+                     , SUM(MovementItem.Amount)::TFloat             AS Amount
+                     , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                FROM MovementItem 
+
+                     LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                  ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                     
+                WHERE MovementItem.MovementId = vbMovementOldId
+                  AND MovementItem.DescId     = zc_MI_Scan()
+                  AND MovementItem.isErased   = False
+                GROUP BY MovementItem.ObjectId
+                       , COALESCE (MIString_PartNumber.ValueData, '')
+                HAVING SUM(MovementItem.Amount) <> 0)
+     THEN
+       PERFORM gpComplete_Movement_Send (vbMovementOldId, inSession);
+     END IF;
+
+     -- Проводим документ 
+     IF EXISTS (SELECT MovementItem.ObjectId AS GoodsId
+                     , SUM(MovementItem.Amount)::TFloat             AS Amount
+                     , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                FROM MovementItem 
+
+                     LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                  ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                 AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                                     
+                WHERE MovementItem.MovementId = vbMovementId
+                  AND MovementItem.DescId     = zc_MI_Scan()
+                  AND MovementItem.isErased   = False
+                GROUP BY MovementItem.ObjectId
+                       , COALESCE (MIString_PartNumber.ValueData, '')
+                HAVING SUM(MovementItem.Amount) <> 0)
+     THEN
+       PERFORM gpComplete_Movement_Send (vbMovementId, inSession);
+     END IF;
 
 END;
 $BODY$
@@ -216,4 +318,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_MobileSend(ioId := 566447, inGoodsId := 261920, inAmount := 1, inPartNumber := '', inPartionCellName := '', inFromId := 35139, inToId := 33347, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_MovementItem_MobileSend(ioId := 567436, inGoodsId := 41728, inAmount := 2, inPartNumber := '', inPartionCellName := '', inFromId := 35139, inToId := 33347, inSession := zfCalc_UserAdmin())

@@ -4,6 +4,7 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFl
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
     IN inId                          Integer   , -- Ключ объекта <Документ>
@@ -24,6 +25,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
  INOUT ioBasis_summ_transport        TFloat,
  INOUT ioBasisWVAT_summ_transport    TFloat,
    OUT outTotalSummVAT               TFloat,
+    IN inAmountInBankAccountAll      TFloat,   -- итого оплата для Эдит формы лодки
+   OUT outAmountIn_remAll            TFloat,   --Долг Итого  - для Эдит формы лодки 
     IN inIsBefore                    Boolean   , -- временный расчет на форме 
     IN inIsEdit                      Boolean   , 
     IN inSession                     TVarChar    -- сессия пользователя
@@ -151,6 +154,7 @@ BEGIN
          outSummDiscount_total := (COALESCE (outSummDiscount1,0) + COALESCE (outSummDiscount2,0) + COALESCE (outSummDiscount3,0));
          outBasis_summ := (COALESCE (inBasis_summ1_orig, 0) + COALESCE (inBasis_summ2_orig, 0) - COALESCE (outSummDiscount_total,0)); 
 
+         outAmountIn_remAll := (COALESCE (ioBasisWVAT_summ_transport,0) - COALESCE (inAmountInBankAccountAll,0));
 --RAISE EXCEPTION '2 Ошибка. Basis_summ_transport %    .', outSummDiscount_total;   
 
           -- если ничего не поменялось
@@ -216,6 +220,9 @@ BEGIN
 
          outTotalSummVAT := ioBasisWVAT_summ_transport - ioBasis_summ_transport;
          
+         --для єдит формі лодки
+         outAmountIn_remAll := (COALESCE (ioBasisWVAT_summ_transport,0) - COALESCE (inAmountInBankAccountAll,0));
+         
          --
          PERFORM lpInsertUpdate_MovementFloat (CASE WHEN inIsEdit = FALSE
                                                    THEN zc_MovementFloat_SummTax()
@@ -273,5 +280,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
 select * from gpUpdate_Movement_OrderClient_Summ(inId := 664 , ioSummTax := 0 , ioSummReal := 0 , inVATPercent := 19 , inDiscountTax := 0 , inDiscountNextTax := 10
  , inTransportSumm_load := 1000 , inBasis_summ1_orig := 19950 , inBasis_summ2_orig := 13220
- , ioBasis_summ_transport := 24882.4 , ioBasisWVAT_summ_transport := 29610.04 , inIsBefore := 'True' , inIsEdit := 'True' ,  inSession := '5');
+ , ioBasis_summ_transport := 24882.4 , ioBasisWVAT_summ_transport := 29610.04 , inAmountInBankAccountAll := 0, IsBefore := 'True' , inIsEdit := 'True' ,  inSession := '5');
 */
+
+Такого вроде нет, надо или какой-то из существующих доработать или новый написать типи THeaderChange

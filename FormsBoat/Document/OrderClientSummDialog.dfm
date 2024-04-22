@@ -1144,6 +1144,13 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountInBankAccountAll'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsBefore'
         Value = True
         DataType = ftBoolean
@@ -1261,6 +1268,13 @@ object OrderClientSummDialogForm: TOrderClientSummDialogForm
         Component = edBasisWVAT_summ_transport
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountInBankAccountAll'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
