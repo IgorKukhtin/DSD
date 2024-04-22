@@ -3203,7 +3203,7 @@
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'TitleGroup;ObjectCode'
+          IndexFieldNames = 'TitleGroup;NPP_3;ObjectCode'
         end>
       Params = <
         item
