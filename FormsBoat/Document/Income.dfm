@@ -5273,7 +5273,7 @@ object IncomeForm: TIncomeForm
       end>
     PackSize = 1
     Left = 734
-    Top = 263
+    Top = 239
   end
   object CostDS: TDataSource
     DataSet = CostCDS
@@ -5525,8 +5525,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 735
-    Top = 264
+    Left = 783
+    Top = 248
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <

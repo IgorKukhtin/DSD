@@ -3,7 +3,7 @@ object ProductEditForm: TProductEditForm
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1051#1086#1076#1082#1072'>'
   ClientHeight = 589
-  ClientWidth = 736
+  ClientWidth = 695
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -46,21 +46,23 @@ object ProductEditForm: TProductEditForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 0
-    Width = 736
+    Width = 695
     Height = 537
     Align = alTop
     TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitWidth = 679
+    ExplicitWidth = 736
     ClientRectBottom = 537
-    ClientRectRight = 736
+    ClientRectRight = 695
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitWidth = 679
+      ExplicitLeft = 24
+      ExplicitTop = 104
+      ExplicitWidth = 872
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -491,7 +493,7 @@ object ProductEditForm: TProductEditForm
       end
       object ceAmountInBankAccountAll: TcxCurrencyEdit
         Left = 459
-        Top = 393
+        Top = 392
         Hint = #1054#1087#1083#1072#1090#1072' '#1080#1090#1086#1075#1086' '#1087#1086' '#1074#1089#1077#1084' '#1089#1095#1077#1090#1072#1084
         ParentShowHint = False
         Properties.DecimalPlaces = 2
@@ -819,7 +821,7 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitWidth = 679
+      ExplicitWidth = 736
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -1067,29 +1069,29 @@ object ProductEditForm: TProductEditForm
       object Panel1: TPanel
         Left = 0
         Top = 217
-        Width = 736
+        Width = 695
         Height = 296
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitWidth = 679
+        ExplicitWidth = 736
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 734
+          Width = 693
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 677
+          ExplicitWidth = 734
         end
         object cxGrid1: TcxGrid
           Left = 1
           Top = 27
-          Width = 734
+          Width = 693
           Height = 268
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 677
+          ExplicitWidth = 734
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1333,29 +1335,29 @@ object ProductEditForm: TProductEditForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 736
+        Width = 695
         Height = 217
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitWidth = 679
+        ExplicitWidth = 736
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
-          Width = 734
+          Width = 693
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 677
+          ExplicitWidth = 734
         end
         object cxGrid: TcxGrid
           Left = 1
           Top = 27
-          Width = 734
+          Width = 693
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 677
+          ExplicitWidth = 734
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
@@ -4601,8 +4603,8 @@ object ProductEditForm: TProductEditForm
         Control = edTaxKind
       end>
     Action = actUpdate_summ_before
-    Left = 688
-    Top = 192
+    Left = 616
+    Top = 200
   end
   object spInsertUpdateBank: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_BankAccountByProduct'
@@ -5245,6 +5247,28 @@ object ProductEditForm: TProductEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountInBankAccountAll'
+        Value = Null
+        Component = ceAmountInBankAccountAll
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummVAT'
+        Value = Null
+        Component = edTotalSummVAT
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outAmountIn_remAll'
+        Value = Null
+        Component = edAmountIn_remAll
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsBefore'
         Value = True
         DataType = ftBoolean
@@ -5257,17 +5281,10 @@ object ProductEditForm: TProductEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outTotalSummVAT'
-        Value = Null
-        Component = edTotalSummVAT
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 634
-    Top = 208
+    Left = 674
+    Top = 120
   end
   object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
@@ -5306,7 +5323,18 @@ object ProductEditForm: TProductEditForm
       item
         Control = cxButton1
       end>
-    Left = 680
+    Left = 616
     Top = 248
+  end
+  object HeaderChangerVAT: THeaderChanger
+    IdParam.Value = Null
+    IdParam.MultiSelectSeparator = ','
+    ChangerList = <
+      item
+        Control = edVATPercentOrderClient
+      end>
+    Action = actUpdate_summ_before
+    Left = 640
+    Top = 48
   end
 end
