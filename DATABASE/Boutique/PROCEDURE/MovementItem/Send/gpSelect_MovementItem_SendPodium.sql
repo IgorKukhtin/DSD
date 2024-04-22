@@ -74,7 +74,7 @@ BEGIN
      THEN
          -- inShowAll:= NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE);
          -- теперь попробуем в таком режиме
-         inShowAll:= FALSE;
+         -- inShowAll:= FALSE;
      END IF;
 
 
@@ -132,6 +132,7 @@ BEGIN
                            WHERE Object.DescId = zc_Object_ReportOLAP()
                              AND Object.ObjectCode IN (3)
                              AND Object.isErased = FALSE
+                             AND 1=0
                            )
 
        , tmpMI AS (SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) AS NPP
@@ -207,20 +208,25 @@ BEGIN
                              , Object_PartionGoods.OperPrice
                              , Object_PartionGoods.CountForPrice
                            --, Object_PartionGoods.OperPriceList
-                             , Container.Amount                   AS Remains
+
+                             , Container.Amount                   AS Remains_all
+                               -- !!!отбросили Долги Покупателей!!!
+                             , CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END AS Remains
+                               --
                              , COALESCE (tmp.Amount, 1)           AS CurrencyValue
                              , COALESCE (tmp.ParValue,0)          AS ParValue
                         FROM Object_PartionGoods
                              INNER JOIN Container ON Container.PartionId     = Object_PartionGoods.MovementItemId
                                                  AND Container.WhereObjectId = vbUnitId_From
                                                  AND Container.DescId        = zc_Container_count()
-                                                 AND COALESCE (Container.Amount,0)  <> 0
+                                                 AND Container.Amount        <> 0
                                                  -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
                                                  AND Container.ObjectId      = Object_PartionGoods.GoodsId
                              LEFT JOIN ContainerLinkObject AS CLO_Client
                                                            ON CLO_Client.ContainerId = Container.Id
                                                           AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
                              LEFT JOIN tmpCurrency AS tmp ON 1=0
+
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                        )
     -- Последняя цена из Прайс-листа - vbPriceListId_from
@@ -274,25 +280,14 @@ BEGIN
                           GROUP BY tmp.GoodsId
                                  , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_to)
                          )
-     -- остатки
-   , tmpContainer AS (SELECT Container.ObjectId
-                           , Container.PartionId
-                           , SUM (COALESCE(Container.Amount, 0)) AS Amount
-                      FROM tmpMI
-                           INNER JOIN Container ON Container.PartionId     = tmpMI.PartionId
-                                               AND Container.WhereObjectId = vbUnitId_From
-                                               AND Container.DescId        = zc_Container_count()
-                                               AND COALESCE(Container.Amount, 0) <> 0
-                                               -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
-                                               AND Container.ObjectId      = tmpMI.GoodsId
-                                               -- !!!обязательно условие, т.к. мог меняться GoodsSizeId и тогда в Container - несколько строк!!!
-                                               AND Container.Amount        <> 0
-                           LEFT JOIN ContainerLinkObject AS CLO_Client
-                                                         ON CLO_Client.ContainerId = Container.Id
-                                                        AND CLO_Client.DescId      = zc_ContainerLinkObject_Client()
-                      WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
-                      GROUP BY Container.ObjectId
-                             , Container.PartionId
+     -- остатки - !!!отбросили Долги Покупателей!!!
+   , tmpContainer AS (SELECT tmpPartion.GoodsId AS ObjectId
+                           , tmpPartion.PartionId
+                           , SUM (tmpPartion.Remains) AS Amount
+                      FROM tmpPartion
+                      WHERE tmpPartion.Remains > 0
+                      GROUP BY tmpPartion.GoodsId
+                             , tmpPartion.PartionId
                      )
      --- сезонная скидка
    , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpPartion.GoodsId FROM tmpPartion
@@ -509,14 +504,14 @@ BEGIN
                , Object_PartionGoods.PeriodYear AS PeriodYear
 
                , tmpMI.Amount
-               , Container_From.Amount      ::TFloat AS Remains
+               , Container_From.Amount       ::TFloat AS Remains
                  -- Цена вх.
-               , tmpMI.OperPrice            ::TFloat
-               , tmpMI.CountForPrice        ::TFloat
+               , tmpMI.OperPrice             ::TFloat
+               , tmpMI.CountForPrice         ::TFloat
                  -- Цена в прайсе для магазина От кого
-               , tmpMI.OperPriceList        ::TFloat
+               , tmpMI.OperPriceList         ::TFloat
                  -- Цена в прайсе для магазина Кому
-               , tmpMI.OperPriceListTo      ::TFloat
+               , tmpMI.OperPriceListTo       ::TFloat
                  -- Цена-start в прайсе для магазина Кому
                , tmpMI.OperPriceListTo_start ::TFloat
 
@@ -551,7 +546,7 @@ BEGIN
                                                     ) AS NUMERIC (16, 0)) :: TFloat AS OperPriceListToBalance_disc
 
                  -- Сумма вх.
-               , tmpMI.TotalSumm  :: TFloat AS TotalSumm
+               , tmpMI.TotalSumm           ::TFloat
                  -- Сумма вх. - ГРН
                , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))
                  ) :: TFloat AS TotalSummBalance
@@ -572,18 +567,18 @@ BEGIN
 
                  -- Сумма-start по прайсу - ГРН для магазина Кому
                , (CAST (tmpMI.TotalSummPriceListTo_start * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis()
-                                                                THEN 1
-                                                                ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
-                                                           END AS NUMERIC (16, 2))
+                                                               THEN 1
+                                                               ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
+                                                          END AS NUMERIC (16, 2))
                  ) :: TFloat AS TotalSummPriceListToBalance_start
 
                  -- Сумма по прайсу - для магазина От кого
-               , tmpMI.TotalSummPriceList          :: TFloat
+               , tmpMI.TotalSummPriceList         :: TFloat
                  -- Сумма по прайсу - для магазина Кому
-               , tmpMI.TotalSummPriceListTo        :: TFloat
+               , tmpMI.TotalSummPriceListTo       :: TFloat
                  -- Сумма-start по прайсу - для магазина Кому
-               , tmpMI.TotalSummPriceListTo_start  :: TFloat
-                
+               , tmpMI.TotalSummPriceListTo_start :: TFloat
+
                  -- итого с учетом сезонной скидки
                , CAST (zfCalc_SummChangePercentNext (1, tmpMI.TotalSummPriceList, tmpDiscount_From.DiscountTax, tmpDiscount_From.DiscountTaxNext) AS NUMERIC (16, 0)) :: TFloat AS TotalSummPriceList_disc
                  -- итого с учетом сезонной скидки
@@ -636,12 +631,11 @@ BEGIN
 
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
-
                , tmpMI.isErased
 
            FROM tmpMI
-                LEFT JOIN Object_PartionGoods           ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
-                LEFT JOIN Movement  AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
+                LEFT JOIN Object_PartionGoods          ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
+                LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
 
                 LEFT JOIN tmpPriceList_from ON tmpPriceList_from.GoodsId = tmpMI.GoodsId
                 LEFT JOIN tmpPriceList_to   ON tmpPriceList_to.GoodsId   = tmpMI.GoodsId
@@ -650,12 +644,6 @@ BEGIN
                 LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
                                                         AND Container_From.ObjectId  = tmpMI.GoodsId
 
-            /*    LEFT JOIN Container AS Container_From
-                                    ON Container_From.PartionId     = tmpMI.PartionId
-                                   AND Container_From.ObjectId      = tmpMI.GoodsId
-                                   AND Container_From.WhereObjectId = vbUnitId_From
-                                   AND Container_From.DescId        = zc_Container_count()
-*/
                 LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
