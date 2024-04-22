@@ -42,9 +42,25 @@ object PLZ_CityForm: TPLZ_CityForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
-      OptionsView.HeaderHeight = 50
+      OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object CountryName: TcxGridDBColumn
+        Caption = #1057#1090#1088#1072#1085#1072
+        DataBinding.FieldName = 'CountryName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
+      object CountryName_short: TcxGridDBColumn
+        Caption = '***'#1057#1090#1088#1072#1085#1072
+        DataBinding.FieldName = 'CountryName_short'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        Options.Editing = False
+        Width = 80
+      end
       object City: TcxGridDBColumn
         Caption = #1043#1086#1088#1086#1076
         DataBinding.FieldName = 'City'
@@ -52,12 +68,14 @@ object PLZ_CityForm: TPLZ_CityForm
         HeaderAlignmentVert = vaCenter
         Width = 300
       end
-      object CountryName: TcxGridDBColumn
-        Caption = #1057#1090#1088#1072#1085#1072
-        DataBinding.FieldName = 'CountryName'
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 300
+        Options.Editing = False
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -70,7 +88,7 @@ object PLZ_CityForm: TPLZ_CityForm
     Width = 650
     Height = 41
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -98,9 +116,9 @@ object PLZ_CityForm: TPLZ_CityForm
     Align = alTop
     TabOrder = 6
     object lbSearchName: TcxLabel
-      Left = 36
+      Left = 67
       Top = 6
-      Caption = #1055#1086#1080#1089#1082' City :'
+      Caption = #1055#1086#1080#1089#1082':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -186,10 +204,6 @@ object PLZ_CityForm: TPLZ_CityForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic1'
@@ -386,11 +400,17 @@ object PLZ_CityForm: TPLZ_CityForm
     Left = 304
     Top = 152
   end
-  object FieldFilter_City: TdsdFieldFilter
+  object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchCity
     DataSet = MasterCDS
-    Column = City
+    Column = CountryName
     ColumnList = <
+      item
+        Column = CountryName
+      end
+      item
+        Column = CountryName_short
+      end
       item
         Column = City
       end>

@@ -56,7 +56,9 @@ type
     Panel2: TPanel;
     lbSearchName: TcxLabel;
     edSearchCity: TcxTextEdit;
-    FieldFilter_City: TdsdFieldFilter;
+    FieldFilter_Name: TdsdFieldFilter;
+    CountryName_short: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public
