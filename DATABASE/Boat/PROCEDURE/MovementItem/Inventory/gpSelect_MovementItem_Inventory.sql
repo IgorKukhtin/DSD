@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer
              , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, OperDate_OrderClient TDateTime
              , FromName TVarChar, ProductName TVarChar, CIN TVarChar  
              , PartionCellId Integer, PartionCellCode Integer, PartionCellName TVarChar
-             , Color_Detail Integer
+             , Color_Scan Integer
               )
 AS
 $BODY$
@@ -51,22 +51,22 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-       WITH tmpMIDetail AS (SELECT MovementItem.ObjectId AS GoodsId
-                                 , SUM(MovementItem.Amount)::TFloat             AS Amount
-                                 , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                                 , MAX(MovementItem.Id)                         AS MaxID  
-                            FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                                 JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                  AND MovementItem.DescId     = zc_MI_Detail()
-                                                  AND MovementItem.isErased   = tmpIsErased.isErased
+       WITH tmpMIScan AS (SELECT MovementItem.ObjectId AS GoodsId
+                               , SUM(MovementItem.Amount)::TFloat             AS Amount
+                               , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                               , MAX(MovementItem.Id)                         AS MaxID  
+                          FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                               JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                AND MovementItem.DescId     = zc_MI_Scan()
+                                                AND MovementItem.isErased   = tmpIsErased.isErased
 
-                                 LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                 
-                            GROUP BY MovementItem.ObjectId
-                                   , COALESCE (MIString_PartNumber.ValueData, '')
-                           )
+                               LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                            ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                           AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                                                               
+                          GROUP BY MovementItem.ObjectId
+                                 , COALESCE (MIString_PartNumber.ValueData, '')
+                         )
           , tmpMIMaster AS (SELECT MovementItem.Id
                                  , MovementItem.ObjectId AS GoodsId
                                  , MovementItem.PartionId
@@ -106,24 +106,24 @@ BEGIN
                            )
                            
           , tmpMI AS (SELECT tmpMIMaster.Id
-                           , COALESCE(tmpMIMaster.GoodsId, tmpMIDetail.GoodsId)             AS GoodsId
+                           , COALESCE(tmpMIMaster.GoodsId, tmpMIScan.GoodsId)             AS GoodsId
                            , tmpMIMaster.PartionId
-                           , COALESCE(tmpMIMaster.Amount, tmpMIDetail.Amount)               AS Amount
-                           , tmpMIDetail.Amount                                             AS AmountScan
+                           , COALESCE(tmpMIMaster.Amount, tmpMIScan.Amount)               AS Amount
+                           , tmpMIScan.Amount                                             AS AmountScan
                            , tmpMIMaster.Price
                            , tmpMIMaster.Comment
-                           , COALESCE(tmpMIMaster.PartNumber, tmpMIDetail.PartNumber)       AS PartNumber
+                           , COALESCE(tmpMIMaster.PartNumber, tmpMIScan.PartNumber)       AS PartNumber
                            , tmpMIMaster.PartnerId
                            , COALESCE(tmpMIMaster.PartionCellId, MILO_PartionCell.ObjectId) AS PartionCellId
                            , tmpMIMaster.isErased
                            , tmpMIMaster.MovementId_OrderClient
                       FROM tmpMIMaster
                       
-                           FULL JOIN tmpMIDetail ON tmpMIDetail.GoodsId = tmpMIMaster.GoodsId
-                                                AND tmpMIDetail.PartNumber = tmpMIMaster.PartNumber
+                           FULL JOIN tmpMIScan ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
+                                              AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
 
                            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                            ON MILO_PartionCell.MovementItemId = tmpMIDetail.MaxId
+                                                            ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId
                                                            AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                       )
                      
@@ -271,7 +271,7 @@ BEGIN
            , Object_PartionCell.ObjectCode ::Integer  AS PartionCellCode
            , Object_PartionCell.ValueData  ::TVarChar AS PartionCellName
            
-           , CASE WHEN COALESCE(tmpMI.Id, 0) = 0 THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_Detail
+           , CASE WHEN COALESCE(tmpMI.Id, 0) = 0 THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_Scan
        FROM tmpMI
 
             LEFT JOIN tmpPL_item ON tmpPL_item.GoodsId     = tmpMI.GoodsId

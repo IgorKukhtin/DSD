@@ -1,8 +1,8 @@
--- Function: gpSelect_MovementItem_InventoryScan()
+-- Function: gpSelect_MovementItem_SendScan()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_InventoryScan (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_SendScan (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_InventoryScan(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendScan(
     IN inMovementId       Integer      , -- ключ Документа
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
@@ -138,8 +138,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 26.03.24                                                       *
+ 16.04.24                                                       *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_InventoryScan (inMovementId := 3179 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- 
+
+SELECT * FROM gpSelect_MovementItem_SendScan (inMovementId := 3179 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
