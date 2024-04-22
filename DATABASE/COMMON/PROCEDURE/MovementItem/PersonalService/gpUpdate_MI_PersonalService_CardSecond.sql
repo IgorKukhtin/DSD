@@ -470,6 +470,7 @@ END IF;
                OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
 
            UNION
+            -- Аванс
             SELECT 0 AS MovementItemId
                  , ObjectLink_Personal_Member.ChildObjectId AS MemberId
                  , MovementItem.ObjectId                    AS PersonalId
@@ -504,7 +505,7 @@ END IF;
                  INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                        ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
                                       AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
-                -- все Физ лица - по ним все варианты Personal возьмем из Container
+                 -- все Физ лица - по ним все варианты Personal возьмем из Container
                  INNER JOIN tmpMember ON tmpMember.MemberId = ObjectLink_Personal_Member.ChildObjectId
 
             WHERE MovementItem.MovementId = vbMovementId_avance

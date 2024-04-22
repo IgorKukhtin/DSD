@@ -15,6 +15,8 @@ $BODY$
    DECLARE vbStartDate     TDateTime;
    DECLARE vbEndDate       TDateTime;
    DECLARE vbPersonalServiceListId Integer;
+   DECLARE vbPersonalServiceListId_avance Integer;
+   DECLARE vbMovementId_avance Integer;
    DECLARE vbMemberId_check Integer;
 
    DECLARE vbBankId_num_1  Integer;
@@ -58,6 +60,37 @@ END IF;
      vbBankId_const_1:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.isErased = FALSE AND Object.ValueData ILIKE '%Банк Восток%' ORDER BY Object.Id DESC LIMIT 1);
      vbBankId_const_2:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.isErased = FALSE AND Object.ValueData ILIKE '%ОТП БАНК%' ORDER BY Object.Id DESC LIMIT 1);
 
+
+     -- определяем <Ведомость> - что б выбрать только этих Сотрудников
+     vbPersonalServiceListId := (SELECT MLO_PersonalServiceList.ObjectId
+                                 FROM MovementLinkObject AS MLO_PersonalServiceList
+                                 WHERE MLO_PersonalServiceList.MovementId = inMovementId
+                                   AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                );
+
+     -- определяем <Ведомость> - Аванс, из неё может быть заполнение данных 
+     vbPersonalServiceListId_avance:= (SELECT OL_PersonalServiceList_Avance_F2.ChildObjectId 
+                                       FROM ObjectLink AS OL_PersonalServiceList_Avance_F2
+                                       WHERE OL_PersonalServiceList_Avance_F2.ObjectId = vbPersonalServiceListId
+                                         AND OL_PersonalServiceList_Avance_F2.DescId     = zc_ObjectLink_PersonalServiceList_Avance_F2()
+                                      );
+     -- определяем документ - Аванс, из него может быть заполнение данных 
+     vbMovementId_avance:= (SELECT Movement.Id
+                            FROM Movement
+                                 INNER JOIN MovementLinkObject AS MLO_PersonalServiceList
+                                                               ON MLO_PersonalServiceList.MovementId = Movement.Id
+                                                              AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                                                              AND MLO_PersonalServiceList.ObjectId   = vbPersonalServiceListId_avance
+                                 INNER JOIN MovementDate AS MovementDate_ServiceDate
+                                                               ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                              AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate()
+                                                              AND MovementDate_ServiceDate.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate())
+                            WHERE Movement.DescId   = zc_Movement_PersonalService()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                            LIMIT 1
+                           );
+
+
      -- определяем
      SELECT
              -- какой банк надо первый
@@ -98,7 +131,10 @@ END IF;
 
 
              -- ограничение мин - 1
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
+                       THEN 3000
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 1
                        THEN 4000
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 1
@@ -111,7 +147,10 @@ END IF;
 
 
              -- ограничение мин - 2
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
+                       THEN 3000
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 2
                        THEN 4000
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 2
@@ -123,7 +162,10 @@ END IF;
              END AS SummMin_2
 
              -- ограничение мин - 3
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
+                       THEN 3000
+
+                  WHEN MovementFloat_BankSecond_num.ValueData = 3
                        THEN 4000
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 3
@@ -139,7 +181,7 @@ END IF;
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
-                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 1
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 1 AND COALESCE (vbMovementId_avance, 0) = 0
                        THEN 39999 -- ObjectFloat_BankSecondTwo_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondDiff_num.ValueData = 1
@@ -152,7 +194,7 @@ END IF;
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
-                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 2
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 2 AND COALESCE (vbMovementId_avance, 0) = 0
                        THEN 39999 -- ObjectFloat_BankSecondTwo_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondDiff_num.ValueData = 2
@@ -164,7 +206,7 @@ END IF;
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3
                        THEN 0 -- ObjectFloat_BankSecond_SummMax.ValueData
 
-                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 3
+                  WHEN MovementFloat_BankSecondTwo_num.ValueData = 3 AND COALESCE (vbMovementId_avance, 0) = 0
                        THEN 39999 -- ObjectFloat_BankSecondTwo_SummMax.ValueData
 
                   WHEN MovementFloat_BankSecondDiff_num.ValueData = 3
@@ -249,13 +291,6 @@ END IF;
        ;*/
 
 
-     -- определяем <Ведомость> - что б выбрать только этих Сотрудников
-     vbPersonalServiceListId := (SELECT MLO_PersonalServiceList.ObjectId
-                                 FROM MovementLinkObject AS MLO_PersonalServiceList
-                                 WHERE MLO_PersonalServiceList.MovementId = inMovementId
-                                   AND MLO_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                                );
-
 
 
      -- Проверка, у каждого сотрудника с zc_ObjectLink_Personal_PersonalServiceListCardSecond должен быть isMain
@@ -267,7 +302,10 @@ END IF;
                                          , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
                                          , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
                                          , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
-                                         , ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId AS PersonalServiceListId_CardSecond
+                                         , CASE WHEN vbPersonalServiceListId_avance > 0
+                                                THEN ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId
+                                                ELSE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+                                           END AS PersonalServiceListId_CardSecond
                                          , ObjectBoolean_isMain.ValueData                             AS isMain
 
                                     FROM ObjectLink AS ObjectLink_Personal_PersonalServiceList
@@ -292,6 +330,10 @@ END IF;
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
                                                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
                                                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId   = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListAvance_F2
+                                                              ON ObjectLink_Personal_PersonalServiceListAvance_F2.ObjectId = Object_Personal.Id
+                                                             AND ObjectLink_Personal_PersonalServiceListAvance_F2.DescId   = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+                                                             AND vbMovementId_avance >  0
 
                                          --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
 
@@ -337,7 +379,9 @@ END IF;
 
 
                                     WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                      AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                      AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                        OR ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId > 0
+                                          )
                                       AND (-- 1 - Восток
                                            (/*ObjectString_CardSecond.ValueData ILIKE '%UA%' AND*/  zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0
                                         --AND ObjectLink_Member_BankSecond.ChildObjectId > 0
@@ -392,7 +436,11 @@ END IF;
                                          , ObjectLink_Personal_Position.ChildObjectId                 AS PositionId
                                          , zc_Enum_InfoMoney_60101()                                  AS InfoMoneyId  -- 60101 Заработная плата
                                          , ObjectLink_Personal_PersonalServiceList.ChildObjectId      AS PersonalServiceListId
-                                         , ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId AS PersonalServiceListId_CardSecond
+                                         , CASE WHEN vbPersonalServiceListId_avance > 0
+                                                THEN ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId
+                                                ELSE ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId
+                                           END AS PersonalServiceListId_CardSecond
+
                                          , ObjectBoolean_isMain.ValueData                             AS isMain
                                            -- 1 - справочно - Восток
                                          , CASE WHEN zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0
@@ -432,6 +480,10 @@ END IF;
                                          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListCardSecond
                                                               ON ObjectLink_Personal_PersonalServiceListCardSecond.ObjectId = ObjectLink_Personal_PersonalServiceList.ObjectId
                                                              AND ObjectLink_Personal_PersonalServiceListCardSecond.DescId   = zc_ObjectLink_Personal_PersonalServiceListCardSecond()
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceListAvance_F2
+                                                              ON ObjectLink_Personal_PersonalServiceListAvance_F2.ObjectId = Object_Personal.Id
+                                                             AND ObjectLink_Personal_PersonalServiceListAvance_F2.DescId   = zc_ObjectLink_Personal_PersonalServiceListAvance_F2()
+                                                             AND vbMovementId_avance >  0
 
                                          --  только строки, которые содержат в графе "№ карт. ЗП (Ф2)" признак "UA".
                                          -- 1- № карточного счета ЗП - Ф2(Восток)
@@ -475,7 +527,9 @@ END IF;
                                                              AND ObjectLink_Member_BankSecondDiff.DescId   = zc_ObjectLink_Member_BankSecondDiff()
 
                                     WHERE ObjectLink_Personal_PersonalServiceList.DescId = zc_ObjectLink_Personal_PersonalServiceList()
-                                      AND ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                      AND (ObjectLink_Personal_PersonalServiceListCardSecond.ChildObjectId > 0
+                                        OR ObjectLink_Personal_PersonalServiceListAvance_F2.ChildObjectId > 0
+                                          )
                                       AND (-- 1 - Восток
                                            (/*ObjectString_CardSecond.ValueData ILIKE '%UA%' AND*/ zfConvert_StringToNumber(LEFT (ObjectString_Member_CardBankSecond.ValueData, 8)) > 0
                                         --AND ObjectLink_Member_BankSecond.ChildObjectId > 0
@@ -559,7 +613,7 @@ END IF;
                                   -- !!!исключили!!!
                                   AND ObjectBoolean_BankNot.ObjectId IS NULL
                                   -- если это не Аванс
-                                  -- AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
+                                  AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                                )
              , tmpPersonal AS (SELECT DISTINCT
                                       tmpContainer_all.PersonalId
@@ -598,7 +652,7 @@ END IF;
                                     , tmpPersonal_only.BankId_3
                                FROM tmpPersonal_only
                                -- если это не Аванс
-                               -- WHERE COALESCE (vbPersonalServiceListId_avance, 0) = 0
+                               WHERE COALESCE (vbPersonalServiceListId_avance, 0) = 0
                               )
                 -- текущие элементы
               , tmpMI AS (SELECT MovementItem.Id                                        AS MovementItemId
@@ -629,7 +683,7 @@ END IF;
                             AND MovementItem.DescId     = zc_MI_Master()
                             AND MovementItem.isErased   = FALSE
                             -- если это не Аванс
-                            -- AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
+                            AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
                          )
          -- нашли Сотрудникам - существующие MovementItemId, причем ТОЛЬКО ОДИН
        , tmpListPersonal AS (SELECT COALESCE (tmpMI.MovementItemId, 0)                    AS MovementItemId
@@ -947,6 +1001,91 @@ END IF;
                                                AND tmpSummCard.UnitId_FineSubject     = tmpListPersonal.UnitId_FineSubject
                      WHERE tmpListPersonal.MovementItemId > 0
                         OR -1 * COALESCE (tmpMIContainer.Amount, 0) - COALESCE (tmpSummCard.Amount, 0) > 0 -- !!! т.е. если есть долг по ЗП
+
+
+                    UNION
+                     -- Аванс
+                     SELECT 0 AS MovementItemId
+                          , tmpMember.MemberId
+                          , MovementItem.ObjectId          AS PersonalId
+                          , MILinkObject_Unit.ObjectId     AS UnitId
+                          , MILinkObject_Position.ObjectId AS PositionId
+                          , tmpMember.InfoMoneyId
+                          , tmpMember.PersonalServiceListId
+                          , 0 AS FineSubjectId
+                          , 0 AS UnitId_FineSubject
+                            -- вычитаем начисления, а не выплаты
+                          , MIF_SummAvanceRecalc.ValueData AS SummCardSecondRecalc
+
+                            -- подставили на первое место
+                          , CASE WHEN vbBankId_num_1 = 1 THEN tmpMember.BankId_1
+                                 WHEN vbBankId_num_2 = 1 THEN tmpMember.BankId_2
+                                 WHEN vbBankId_num_3 = 1 THEN tmpMember.BankId_3
+                            END AS BankId_1
+
+                            -- подставили на второе место
+                          , CASE WHEN vbBankId_num_1 = 2 THEN tmpMember.BankId_1
+                                 WHEN vbBankId_num_2 = 2 THEN tmpMember.BankId_2
+                                 WHEN vbBankId_num_3 = 2 THEN tmpMember.BankId_3
+                            END AS BankId_2
+
+                            -- подставили на третье место
+                          , CASE WHEN vbBankId_num_1 = 3 THEN tmpMember.BankId_1
+                                 WHEN vbBankId_num_2 = 3 THEN tmpMember.BankId_2
+                                 WHEN vbBankId_num_3 = 3 THEN tmpMember.BankId_3
+                            END AS BankId_3
+
+                            -- кто из 1,2,3 на первом месте
+                          , vbBankId_num_1 AS Num_1
+                            -- кто из 1,2,3 на втором месте
+                          , vbBankId_num_2 AS Num_2
+                            -- кто из 1,2,3 на третьем месте
+                          , vbBankId_num_3 AS Num_3
+
+                            -- ограничение мин - для 1,2,3
+                          , vbSummMin_1 AS Sum_min_1
+                          , vbSummMin_2 AS Sum_min_2
+                          , vbSummMin_3 AS Sum_min_3
+
+                            -- ограничение - для 1
+                          , vbSummMax_1 AS Sum_max_1
+                            -- ограничение - для 2
+                          , vbSummMax_2 AS Sum_max_2
+                            -- ограничение - для 3
+                          , vbSummMax_3 AS Sum_max_3
+                          
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                           ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                                           ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_Position.DescId         = zc_MILinkObject_Position()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalServiceList
+                                                           ON MILinkObject_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_FineSubject
+                                                           ON MILinkObject_FineSubject.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_FineSubject.DescId = zc_MILinkObject_FineSubject()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_UnitFineSubject
+                                                           ON MILinkObject_UnitFineSubject.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_UnitFineSubject.DescId = zc_MILinkObject_UnitFineSubject()
+                          LEFT JOIN MovementItemFloat AS MIF_SummAvanceRecalc
+                                                      ON MIF_SummAvanceRecalc.MovementItemId = MovementItem.Id
+                                                     AND MIF_SummAvanceRecalc.DescId         = zc_MIFloat_SummAvanceRecalc()
+         
+                          INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                               AND ObjectLink_Personal_Member.DescId   = zc_ObjectLink_Personal_Member()
+
+                          -- все Физ лица
+                          INNER JOIN tmpMember ON tmpMember.MemberId = ObjectLink_Personal_Member.ChildObjectId
+
+                     WHERE MovementItem.MovementId = vbMovementId_avance
+                       AND MovementItem.isErased   = FALSE
+                       AND MovementItem.DescId     = zc_MI_Master()
+                       AND MIF_SummAvanceRecalc.ValueData > 0
+         
                     ) AS tmpData
                     ) AS tmpData
                     ) AS tmpData
@@ -1193,9 +1332,9 @@ END IF;
                                                             , inIsMain             := COALESCE (ObjectBoolean_Main.ValueData, FALSE)
                                                             , inSummService        := 0
                                                             , inSummCardRecalc     := 0
-                                                            , inSummCardSecondRecalc:= _tmpMI.SummCardSecondRecalc -- CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0 ELSE _tmpMI.SummCardSecondRecalc END
+                                                            , inSummCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN 0 ELSE _tmpMI.SummCardSecondRecalc END
                                                             , inSummCardSecondCash := 0
-                                                            , inSummAvCardSecondRecalc:= 0 -- CASE WHEN vbPersonalServiceListId_avance > 0 THEN _tmpMI.SummCardSecondRecalc ELSE 0 END
+                                                            , inSummAvCardSecondRecalc:= CASE WHEN vbPersonalServiceListId_avance > 0 THEN _tmpMI.SummCardSecondRecalc ELSE 0 END
                                                             , inSummNalogRecalc    := 0
                                                             , inSummNalogRetRecalc := 0
                                                             , inSummMinus          := 0
