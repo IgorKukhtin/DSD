@@ -44,6 +44,7 @@ BEGIN
      RETURN QUERY 
        WITH tmpMLO_Contract AS (SELECT * FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
           , tmpObject_Contract AS (SELECT * FROM Object WHERE Object.Id IN (SELECT DISTINCT tmpMLO_Contract.ObjectId FROM tmpMLO_Contract))
+          , tmpMLM_child AS (SELECT * FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId)
           , tmp AS
       (SELECT
              Movement.Id
@@ -191,10 +192,10 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+            LEFT JOIN tmpMLM_child AS MovementLinkMovement_Sale
                                            ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+            LEFT JOIN tmpMLM_child AS MovementLinkMovement_MasterEDI
                                            ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
             LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = COALESCE (MovementLinkMovement_Sale.MovementId, MovementLinkMovement_MasterEDI.MovementId)
@@ -220,7 +221,7 @@ BEGIN
                                         AND MovementLinkObject_To_Sale.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To_Sale ON Object_To_Sale.Id = MovementLinkObject_To_Sale.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_ChildEDI
+            LEFT JOIN tmpMLM_child AS MovementLinkMovement_ChildEDI
                                            ON MovementLinkMovement_ChildEDI.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_ChildEDI.DescId = zc_MovementLinkMovement_ChildEDI()
 
@@ -235,7 +236,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner_TaxCorrective.MovementId =  Movement_TaxCorrective.Id
                                     AND MovementString_InvNumberPartner_TaxCorrective.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
+            LEFT JOIN tmpMLM_child AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Tax.DescId = zc_MovementLinkMovement_Tax()
             LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = COALESCE (MovementLinkMovement_Tax.MovementId, MovementLinkMovement_TaxCorrective_Tax.MovementChildId)
@@ -244,7 +245,7 @@ BEGIN
                                      ON MovementString_InvNumberPartner_Tax.MovementId =  Movement_Tax.Id
                                     AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+            LEFT JOIN tmpMLM_child AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementId
