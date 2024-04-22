@@ -351,7 +351,9 @@ BEGIN
          , tmpMI_Child.ProdColorPatternName AS ProdColorPatternName_ch
          , tmpMI_Child.ProdColorPatternId   AS ProdColorPatternId_ch
 
-         , (SELECT COUNT(*) FROM tmpMI_Child WHERE tmpMI_Child.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
+         , (COALESCE ((SELECT COUNT(*) FROM tmpMI_Child  WHERE tmpMI_Child.ParentId  = tmpMI_Master.MovementItemId), 0)
+          + COALESCE ((SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId), 0)
+           ) ::Integer AS mi_child_count
 
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Child        ON tmpMI_Child.ParentId        = tmpMI_Master.MovementItemId
@@ -362,13 +364,16 @@ BEGIN
                                    AND tmpMI_Production.GoodsId  = tmpMI_Child.GoodsId
 
    UNION ALL
+    -- работы
     SELECT
            tmpMI_Master.NPP_1 :: Integer AS NPP_1
          , 2                  :: Integer AS NPP_2
-         , ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.InvNumber_OrderClient, tmpMI_Master.GoodsName
+         , (ROW_NUMBER() OVER (PARTITION BY tmpMI_Master.InvNumber_OrderClient, tmpMI_Master.GoodsName
                               ORDER BY tmpMI_Detail.ReceiptServiceCode
                                      , tmpMI_Detail.PersonalName
-                             ) :: Integer AS NPP_3
+                             )
+          + COALESCE ((SELECT COUNT(*) FROM tmpMI_Child WHERE tmpMI_Child.ParentId = tmpMI_Master.MovementItemId), 0)
+           ) :: Integer AS NPP_3
            --
          , tmpMI_Master.InvNumber_OrderClient      :: Integer  AS InvNumber_OrderClient
          , tmpMI_Master.InvNumberFull_OrderClient  :: TVarChar AS InvNumberFull_OrderClient
@@ -411,7 +416,9 @@ BEGIN
          , '' :: TVarChar AS ProdColorPatternName_ch
          , 0  :: Integer  AS ProdColorPatternId_ch
 
-         , (SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId) ::Integer AS mi_child_count
+         , (COALESCE ((SELECT COUNT(*) FROM tmpMI_Child  WHERE tmpMI_Child.ParentId  = tmpMI_Master.MovementItemId), 0)
+          + COALESCE ((SELECT COUNT(*) FROM tmpMI_Detail WHERE tmpMI_Detail.ParentId = tmpMI_Master.MovementItemId), 0)
+           ) ::Integer AS mi_child_count
 
     FROM tmpMI_Master
          LEFT JOIN tmpMI_Detail_group  ON tmpMI_Detail_group.ParentId  = tmpMI_Master.MovementItemId

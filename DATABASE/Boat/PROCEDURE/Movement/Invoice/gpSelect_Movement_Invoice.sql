@@ -468,15 +468,15 @@ BEGIN
       , tmpData.AmountOut_BankAccount
       , tmpData.Amount_BankAccount
         -- остаток по счету
-      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+      , CASE WHEN tmpData.InvoiceKindId IN (zc_Enum_InvoiceKind_Return(), zc_Enum_InvoiceKind_ReturnPay())
                   THEN 0
              ELSE tmpData.AmountIn_rem
         END :: TFloat AS AmountIn_rem
-      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+      , CASE WHEN tmpData.InvoiceKindId IN (zc_Enum_InvoiceKind_Return(), zc_Enum_InvoiceKind_ReturnPay())
                   THEN 0
              ELSE tmpData.AmountOut_rem
         END :: TFloat AS AmountOut_rem
-      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+      , CASE WHEN tmpData.InvoiceKindId IN (zc_Enum_InvoiceKind_Return(), zc_Enum_InvoiceKind_ReturnPay())
                   THEN 0
              ELSE tmpData.Amount_rem
         END :: TFloat AS Amount_rem
@@ -533,7 +533,7 @@ BEGIN
       , tmpDateUnloading.DateUnloading
 
         -- подсветить если счет не оплачен + подсветить красным - если оплата больше чем сумма счета + добавить кнопку - в новой форме показать все оплаты для этого счета
-      , CASE WHEN tmpData.InvoiceKindId = zc_Enum_InvoiceKind_Return()
+      , CASE WHEN tmpData.InvoiceKindId IN (zc_Enum_InvoiceKind_Return(), zc_Enum_InvoiceKind_ReturnPay())
              THEN zc_Color_Black()
 
              WHEN (CASE WHEN COALESCE (tmpData.AmountIn,0)  <> 0 THEN tmpData.AmountIn  ELSE 0 END > COALESCE (tmpData.AmountIn_BankAccount,0)) -- AND COALESCE (tmpData.AmountIn_BankAccount,0)<>0
