@@ -49,6 +49,7 @@ $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbMemberId   Integer;
    DECLARE vbIsList_all Boolean;
+   DECLARE vbIsLevelMax01 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
@@ -69,6 +70,11 @@ BEGIN
          --vbUserId:= NULL;
          --RETURN;
      END IF;
+
+
+     -- доступ Документы-меню (управленцы) + ЗП просмотр ВСЕ
+     vbIsLevelMax01:= EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId);
+
  
      -- !!! права пользователей !!!
      IF EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId)
@@ -173,7 +179,7 @@ BEGIN
                                 WHERE ObjectLink_User_Member.ObjectId = vbUserId
                                   AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                                )
-            OR vbUserId = 14599 
+            OR vbUserId = 14599 -- Коротченко Т.Н.
                    ;
 
      -- Результат
@@ -644,9 +650,12 @@ BEGIN
        AND (Operation.PersonalServiceListId NOT IN (293443 -- Ведомость Админ
                                                   , 418967 -- Ведомость Админ ДП
                                                   , 593890 -- Премии АП
+                                                  , 541887 -- Премии АДМИН KPI
                                                    )
-            OR vbUserId <> 2573318 -- Любарський Георгій Олегович
-            OR vbUserId <> 14599 
+            OR vbUserId IN (2573318 -- Любарський Георгій Олегович
+                          , 14599   -- Коротченко Т.Н.
+                           )
+            OR vbIsLevelMax01 = TRUE
            )
      ;
 
