@@ -4,7 +4,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   ClientWidth = 1130
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1146
-  ExplicitHeight = 468
+  ExplicitHeight = 469
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1348,7 +1348,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1359,7 +1359,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1455,7 +1455,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1466,7 +1466,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1562,7 +1562,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1573,7 +1573,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1668,7 +1668,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1679,7 +1679,7 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -2461,15 +2461,18 @@ inherited Report_ReceiptProductionOutAnalyzeForm: TReport_ReceiptProductionOutAn
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = ChildView
+    View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 544
     Top = 320

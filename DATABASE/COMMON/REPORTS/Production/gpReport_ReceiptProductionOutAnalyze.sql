@@ -850,7 +850,8 @@ BEGIN
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_min       ELSE 0 END AS  TaxSumm_min      
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.TaxSumm_max       ELSE 0 END AS  TaxSumm_max      
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_ReWork  ELSE 0 END AS  OperCount_ReWork 
-           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount       
+           , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.CuterCount        ELSE 0 END AS  CuterCount
+           , tmpCursor1.CuterCount                                                     AS  CuterCount_inf      -- 
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_plan ELSE 0 END AS  OperCount_gp_plan
            , CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.OperCount_gp_real ELSE 0 END AS  OperCount_gp_real
            --, CASE WHEN tmpCursor2.Ord = 1 THEN tmpCursor1.LossGP_real       ELSE 0 END AS  LossGP_real      
