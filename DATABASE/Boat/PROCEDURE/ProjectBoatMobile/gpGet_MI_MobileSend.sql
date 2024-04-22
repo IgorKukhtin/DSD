@@ -49,9 +49,77 @@ BEGIN
      IF COALESCE (inScanId, 0) = 0
      THEN
        vbMovementId := 0;
-       vbFromId := 0;
-       vbToId := 0;
        vbGoodsId := 0;
+       
+       WITH
+          tmpReceiptGoods AS (SELECT Object_ReceiptGoods_find_View.GoodsId
+                                     -- это узел (да/нет)
+                                   , Object_ReceiptGoods_find_View.isReceiptGoods_group
+                                     -- все из чего собирается + узлы
+                                   , Object_ReceiptGoods_find_View.isReceiptGoods
+                                     -- Опция (да/нет) - Участвует в опциях
+                                   , Object_ReceiptGoods_find_View.isProdOptions
+                           
+                                     -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
+                                   , Object_ReceiptGoods_find_View.GoodsId_receipt
+                                     -- в каком ОДНОМ Узле/Модель лодки Детали/узлы участвуют в сборке, т.е. что собирается
+                                   , Object_ReceiptGoods_find_View.GoodsName_receipt
+                                     -- в каких ВСЕХ Узлах/Моделях лодки Детали/узлы участвуют в сборке, т.е. что собирается
+                                   , Object_ReceiptGoods_find_View.GoodsName_receipt_all
+                           
+                                     -- На каком участке происходит расход Узла/Детали на сборку
+                                   , Object_ReceiptGoods_find_View.UnitId_receipt
+                                   , Object_ReceiptGoods_find_View.UnitName_receipt
+                                     -- На каком участке происходит расход Детали на сборку ПФ
+                                   , Object_ReceiptGoods_find_View.UnitId_child_receipt
+                                   , Object_ReceiptGoods_find_View.UnitName_child_receipt
+                                     -- На каком участке происходит сборка Узла
+                                   , Object_ReceiptGoods_find_View.UnitId_parent_receipt
+                                   , Object_ReceiptGoods_find_View.UnitName_parent_receipt
+                
+                              FROM Object_ReceiptGoods_find_View
+                              WHERE Object_ReceiptGoods_find_View.GoodsId = inGoodsId
+                             )
+                             
+       SELECT CASE  -- узел Стеклопластик + Опция
+                    WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE AND tmpReceiptGoods.isProdOptions = TRUE
+                         -- Склад Основной
+                         THEN 35139
+
+                    -- Опция
+                    WHEN tmpReceiptGoods.isProdOptions = TRUE
+                         -- Склад Основной
+                         THEN 35139
+
+                    -- узел
+                    WHEN tmpReceiptGoods.isReceiptGoods_group = TRUE
+                         -- Склад Основной
+                         THEN 35139
+
+                    -- Деталь + НЕ Узел + есть Unit-ПФ
+                    WHEN tmpReceiptGoods.isReceiptGoods = TRUE AND tmpReceiptGoods.isReceiptGoods_group = FALSE AND tmpReceiptGoods.UnitName_child_receipt <> ''
+                         THEN tmpReceiptGoods.UnitId_child_receipt
+
+                    -- Участок сборки Hypalon
+                    WHEN tmpReceiptGoods.UnitId_receipt = 38875
+                         THEN tmpReceiptGoods.UnitId_receipt
+
+                    -- Участок UPHOLSTERY
+                    WHEN tmpReceiptGoods.UnitId_receipt = 253225
+                         THEN tmpReceiptGoods.UnitId_receipt
+
+                    -- Склад Основной
+                    ELSE 35139
+
+               END  :: Integer AS FromId
+             , COALESCE(tmpReceiptGoods.UnitID_receipt
+                      , tmpReceiptGoods.UnitId_child_receipt
+                      , tmpReceiptGoods.UnitId_parent_receipt
+                      , 33347) AS ToId
+       INTO vbFromId, vbToId      
+       FROM Object AS Object_Goods
+            LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id;
+                         
      ELSE
        SELECT MovementItem.MovementId, MovementItem.ObjectId
        INTO vbMovementId, vbGoodsId
@@ -222,9 +290,9 @@ BEGIN
                 , Object_PartionCell.ValueData                AS PartionCellName
                 , (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList (vbOperDate, inGoodsId, vbUserId) AS lpGet) :: TFloat  AS Price
 
-                , COALESCE (inAmount, 1)                                          :: TFloat AS Amount
+                , COALESCE (inAmount, 1)                                        :: TFloat AS Amount
                 , COALESCE (tmpMI.Amount, tmpMIScan.Amount, 0)                  :: TFloat AS TotalCount
-                , COALESCE (tmpRemains.Remains, 0)                                :: TFloat AS AmountRemains
+                , COALESCE (tmpRemains.Remains, 0)                              :: TFloat AS AmountRemains
 
                 , Object_Goods.FromId
                 , Object_From.ObjectCode                      AS FromCode

@@ -1057,20 +1057,20 @@ begin
 
     if COPY(edOrderInternalBarCode.Text, 1, 3) <> '224' then
     begin
-      ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
+      TDialogService.ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
       Exit;
     end;
 
     if not TryStrToInt(COPY(edOrderInternalBarCode.Text, 4, 9), Code) then
     begin
-      ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
+      TDialogService.ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
       Exit;
     end;
 
     if not DM.DownloadOrderInternal(Code) then Exit;
 
     if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
-      ShowMessage('По заказу уже создана сборку узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
+      TDialogService.ShowMessage('По заказу уже создана сборку узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
 
   finally
     bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
@@ -1116,12 +1116,12 @@ begin
       except
         on E : Exception do
         begin
-          ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
+          TDialogService.ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
         end;
       end;
       DM.DownloadOrderInternal(DM.cdsOrderInternalMovementItemId.AsInteger);
       if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
-        ShowMessage('По заказу создана сборка узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
+        TDialogService.ShowMessage('По заказу создана сборка узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
     finally
       bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
       pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
@@ -1382,8 +1382,6 @@ begin
     end);
   end;
   {$ENDIF}
-
-  if tcMain.ActiveTab = Nil then ShowMessage('Nil');
 
   if tcMain.ActiveTab <> tiScanBarCode then
   begin
@@ -2283,7 +2281,7 @@ begin
   begin
     if (FScanType = 2) and (Trim(DM.cdsSendItemEditPartNumber.AsString) = '') then
     begin
-      ShowMessage('Не заполнен серийный номер.');
+      TDialogService.ShowMessage('Не заполнен серийный номер.');
       edIIEPartNumber.SetFocus;
       Exit;
     end;
@@ -2302,21 +2300,21 @@ begin
 
   if DM.cdsSendItemEditFromId.AsInteger = 0 then
   begin
-    ShowMessage('Не заполнено подразделение <От кого>.');
+    TDialogService.ShowMessage('Не заполнено подразделение <От кого>.');
     edIIEPartNumber.SetFocus;
     Exit;
   end;
 
   if DM.cdsSendItemEditToId.AsInteger = 0 then
   begin
-    ShowMessage('Не заполнено подразделение <Кому>.');
+    TDialogService.ShowMessage('Не заполнено подразделение <Кому>.');
     edIIEPartNumber.SetFocus;
     Exit;
   end;
 
   if DM.cdsSendItemEditToId.AsInteger = DM.cdsSendItemEditFromId.AsInteger then
   begin
-    ShowMessage('Подразделения <От кого> и <Кому> должны отличаться.');
+    TDialogService.ShowMessage('Подразделения <От кого> и <Кому> должны отличаться.');
     edIIEPartNumber.SetFocus;
     Exit;
   end;
@@ -2476,7 +2474,7 @@ begin
   begin
     if (FScanType = 2) and (Trim(DM.cdsInventoryItemEditPartNumber.AsString) = '') then
     begin
-      ShowMessage('Не заполнен серийный номер.');
+      TDialogService.ShowMessage('Не заполнен серийный номер.');
       edIIEPartNumber.SetFocus;
       Exit;
     end;
@@ -2553,7 +2551,7 @@ begin
   if not DM.isInventoryGoodsSend or not DM.isSendGoodsSend then
     TDialogService.MessageDialog('Отправить все несохраненные данные?',
        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UploadAllData)
-  else ShowMessage('Нет данных для отправки.');
+  else TDialogService.ShowMessage('Нет данных для отправки.');
 end;
 
 procedure TfrmMain.bViewInventoryClick(Sender: TObject);
@@ -2887,7 +2885,7 @@ begin
 
     if not FPermissionState then
     begin
-      ShowMessage('Необходимые разрешения не предоставлены');
+      TDialogService.ShowMessage('Необходимые разрешения не предоставлены');
       exit;
     end;
 
@@ -2913,14 +2911,14 @@ begin
 
       if ErrorMessage <> '' then
       begin
-        ShowMessage(ErrorMessage);
+        TDialogService.ShowMessage(ErrorMessage);
         exit;
       end;
     except on E: Exception do
       begin
         Wait(False);
 
-        ShowMessage('Нет связи с сервером. Продолжение работы невозможно. '+#13#10 + GetTextMessage(E));
+        TDialogService.ShowMessage('Нет связи с сервером. Продолжение работы невозможно. '+#13#10 + GetTextMessage(E));
         Exit;
       end;
       //
@@ -3041,14 +3039,14 @@ begin
 
       if ErrorMessage <> '' then
       begin
-        ShowMessage(ErrorMessage);
+        TDialogService.ShowMessage(ErrorMessage);
         exit;
       end;
     except on E: Exception do
       begin
         Wait(False);
         ErrorMessage := 'Нет связи с сервером. Продолжение работы невозможно. ';
-        ShowMessage(ErrorMessage+#13#10 + GetTextMessage(E));
+        TDialogService.ShowMessage(ErrorMessage+#13#10 + GetTextMessage(E));
         exit;
       end;
       //
@@ -3126,7 +3124,7 @@ begin
     // Информация об ошибке
     if TButton(Sender).Tag = 4  then
     begin
-       ShowMessage(DM.cdsInventoryListTopError.AsString);
+       TDialogService.ShowMessage(DM.cdsInventoryListTopError.AsString);
     end;
   end else if (tcMain.ActiveTab = tiInventory) then
   begin
@@ -3176,7 +3174,7 @@ begin
     // Информация об ошибке
     if TButton(Sender).Tag = 4  then
     begin
-       ShowMessage(DM.cdsSendListTopError.AsString);
+       TDialogService.ShowMessage(DM.cdsSendListTopError.AsString);
     end;
   end else if (tcMain.ActiveTab = tiSendList) then
   begin
@@ -3269,7 +3267,7 @@ begin
       DM.FilterGoodsEAN := True;
       Result := 2;
       Exit;
-    end else ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
+    end else TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
     exit;
   end;
 
@@ -3287,7 +3285,7 @@ begin
       GetSearshBox(lwGoods).Text := Data_String;
       DM.FilterGoodsEAN := True;
       Result := 2;
-    end else ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
+    end else TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
   end;
 end;
 

@@ -1142,7 +1142,7 @@ begin
       begin
         Synchronize(procedure
                     begin
-                      ShowMessage(Res);
+                      TDialogService.ShowMessage(Res);
                     end);
       end;
     end;
@@ -2184,8 +2184,6 @@ var
   nId: Integer;
 begin
 
-  Result := False;
-
   if cdsSendList.Active and not cdsSendList.IsEmpty then
     nID := DM.cdsSendListId.AsInteger
   else nID := 0;
@@ -2276,11 +2274,7 @@ begin
       StoredProc.Execute(false, false, false);
       Result := cdsOrderInternal.Active;
     except
-      on E : Exception do
-      begin
-        raise Exception.Create(GetTextMessage(E));
-        exit;
-      end;
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
   finally
     FreeAndNil(StoredProc);
@@ -2666,11 +2660,7 @@ begin
       StoredProc.Execute(false, false, false);
       Result := True;
     except
-      on E : Exception do
-      begin
-        raise Exception.Create(GetTextMessage(E));
-        exit;
-      end;
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
   finally
     FreeAndNil(StoredProc);
@@ -2930,7 +2920,7 @@ begin
     begin
       if not TryStrToInt(COPY(ABarCode, Length(frmMain.BarCodePref), 12 - Length(frmMain.BarCodePref)), Code) then
       begin
-        ShowMessage('Не правельный штрихкод <' + ABarCode + '>');
+        TDialogService.ShowMessage('Не правельный штрихкод <' + ABarCode + '>');
         Exit;
       end else sql := sql + 'Code = ' + IntToStr(Code);
     end else sql := sql + 'EAN LIKE ''' + ABarCode + '%''';
@@ -3128,11 +3118,7 @@ begin
         try
           StoredProc.Execute(false, false, false);
         except
-          on E : Exception do
-          begin
-            raise Exception.Create(GetTextMessage(E));
-            exit;
-          end;
+          on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
         end;
       finally
         FreeAndNil(StoredProc);
@@ -3165,11 +3151,7 @@ begin
         cdsInventoryListisErased.AsBoolean := True; //StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
-        on E : Exception do
-        begin
-          raise Exception.Create(GetTextMessage(E));
-          exit;
-        end;
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
       end;
     finally
       FreeAndNil(StoredProc);
@@ -3200,11 +3182,7 @@ begin
         cdsInventoryListisErased.AsBoolean := False; //StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
-        on E : Exception do
-        begin
-          raise Exception.Create(GetTextMessage(E));
-          exit;
-        end;
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
       end;
     finally
       FreeAndNil(StoredProc);
@@ -3384,11 +3362,7 @@ begin
         try
           StoredProc.Execute(false, false, false);
         except
-          on E : Exception do
-          begin
-            raise Exception.Create(GetTextMessage(E));
-            exit;
-          end;
+          on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
         end;
       finally
         FreeAndNil(StoredProc);
@@ -3421,11 +3395,7 @@ begin
         cdsSendListisErased.AsBoolean := True; //StoredProc.ParamByName('outIsErased').Value;
         cdsSendList.Post;
       except
-        on E : Exception do
-        begin
-          raise Exception.Create(GetTextMessage(E));
-          exit;
-        end;
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
       end;
     finally
       FreeAndNil(StoredProc);
@@ -3456,11 +3426,7 @@ begin
         cdsSendListisErased.AsBoolean := False; //StoredProc.ParamByName('outIsErased').Value;
         cdsSendList.Post;
       except
-        on E : Exception do
-        begin
-          raise Exception.Create(GetTextMessage(E));
-          exit;
-        end;
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
       end;
     finally
       FreeAndNil(StoredProc);

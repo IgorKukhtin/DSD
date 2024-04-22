@@ -900,6 +900,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="..\BIN\Android64\Debug\provider_paths.xml" Configuration="Debug" Class="AndroidFileProvider">
+                    <Platform Name="Android64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\BIN\Android64\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef">
                     <Platform Name="Android64">
                         <Overwrite>true</Overwrite>
