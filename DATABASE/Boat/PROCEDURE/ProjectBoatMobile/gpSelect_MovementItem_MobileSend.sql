@@ -51,7 +51,7 @@ BEGIN
                                                                ON MLO_To.MovementId = Movement.Id
                                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
                             WHERE Movement.DescId   = zc_Movement_Send()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                               AND Movement.OperDate = CURRENT_DATE) 
        
           , tmpMI AS (SELECT MovementItem.Id

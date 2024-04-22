@@ -2334,7 +2334,7 @@ begin
     StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
-    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inScanId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
     StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, APartNumber);
@@ -2378,7 +2378,7 @@ begin
 
     StoredProc.StoredProcName := 'gpGet_MI_MobileSend';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inScanId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, AGoodsId);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, APartionCellId);
     StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, APartNumber);
@@ -2424,7 +2424,7 @@ begin
     StoredProc.StoredProcName := 'gpGet_MI_MobileInventory';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, cdsInventoryId.AsInteger);
-    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
+    StoredProc.Params.AddParam('inScanId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, ADataSet.FieldByName('GoodsId').AsInteger);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, ADataSet.FieldByName('PartionCellId').AsInteger);
     StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, ADataSet.FieldByName('PartNumber').AsString);
@@ -2477,7 +2477,7 @@ begin
 
     StoredProc.StoredProcName := 'gpGet_MI_MobileSend';
     StoredProc.Params.Clear;
-    StoredProc.Params.AddParam('inDetailId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
+    StoredProc.Params.AddParam('inScanId', ftInteger, ptInput, ADataSet.FieldByName('Id').AsInteger);
     StoredProc.Params.AddParam('inGoodsId', ftInteger, ptInput, ADataSet.FieldByName('GoodsId').AsInteger);
     StoredProc.Params.AddParam('inPartionCellId', ftInteger, ptInput, ADataSet.FieldByName('PartionCellId').AsInteger);
     StoredProc.Params.AddParam('inPartNumber', ftString, ptInput, ADataSet.FieldByName('PartNumber').AsString);

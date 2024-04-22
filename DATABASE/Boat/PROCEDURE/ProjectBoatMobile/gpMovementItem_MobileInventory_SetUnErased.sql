@@ -42,7 +42,7 @@ BEGIN
               AND MI.isErased   = FALSE
               AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (vbPartNumber,''))
   THEN
-    RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в инвентаризации. Востановить строку нельзя.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
+    RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в инвентаризации. Востановить строку нельзя.', lfGet_Object_ValueData (vbGoodsId), vbPartNumber;
   END IF;
 
   -- Если заполнен S/N то можно только 1 ша и раз.

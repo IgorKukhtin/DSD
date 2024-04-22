@@ -41,7 +41,7 @@ BEGIN
               AND MI.isErased   = FALSE
               AND COALESCE (MIString_PartNumber.ValueData,'') = COALESCE (vbPartNumber,''))
   THEN
-    RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в переещении. Удалить строку нельзя.', lfGet_Object_ValueData (inGoodsId), inPartNumber;
+    RAISE EXCEPTION 'Ошибка. Комплектующее <%> с S/N <%> уже сохранено в переещении. Удалить строку нельзя.', lfGet_Object_ValueData (vbGoodsId), inPartNumber;
   END IF;
 
   -- устанавливаем новое значение

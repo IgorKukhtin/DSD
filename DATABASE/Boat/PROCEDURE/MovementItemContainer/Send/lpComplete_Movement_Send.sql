@@ -98,7 +98,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Подразделение (Кому)>.';
      END IF;
 
-     -- Проводим документ 
+     -- Если были сканирования
      IF EXISTS (SELECT MovementItem.Id
                 FROM MovementItem 
                 WHERE MovementItem.MovementId = inMovementId
