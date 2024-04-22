@@ -327,6 +327,8 @@ BEGIN
     WHERE MovementItem.Id = inMovementItemId
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.isErased = False;
+      
+    PERFORM gpComplete_Movement_ProductionUnion  (vbProductionUnionId, inSession);
 
 END;
 $BODY$

@@ -54,7 +54,7 @@ object CountryForm: TCountryForm
         Width = 61
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -62,11 +62,12 @@ object CountryForm: TCountryForm
         Width = 295
       end
       object ShortName: TcxGridDBColumn
-        Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+        Caption = '***'#1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         Width = 172
       end
       object InsertDate: TcxGridDBColumn
@@ -108,9 +109,9 @@ object CountryForm: TCountryForm
     Width = 694
     Height = 41
     Align = alBottom
-    TabOrder = 4
+    TabOrder = 3
     object btnInsert: TcxButton
-      Left = 341
+      Left = 295
       Top = 8
       Width = 100
       Height = 25
@@ -118,7 +119,7 @@ object CountryForm: TCountryForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 467
+      Left = 421
       Top = 8
       Width = 100
       Height = 25
@@ -126,7 +127,7 @@ object CountryForm: TCountryForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 28
+      Left = 53
       Top = 8
       Width = 90
       Height = 25
@@ -134,7 +135,7 @@ object CountryForm: TCountryForm
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 592
+      Left = 546
       Top = 8
       Width = 100
       Height = 25
@@ -142,7 +143,7 @@ object CountryForm: TCountryForm
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 146
+      Left = 167
       Top = 8
       Width = 90
       Height = 25
@@ -160,9 +161,9 @@ object CountryForm: TCountryForm
     Align = alTop
     TabOrder = 6
     object lbSearchName: TcxLabel
-      Left = 2
+      Left = 25
       Top = 6
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+      Caption = #1055#1086#1080#1089#1082':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -172,34 +173,13 @@ object CountryForm: TCountryForm
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 77
+      Left = 76
       Top = 7
       TabOrder = 1
       DesignSize = (
-        140
+        221
         21)
-      Width = 140
-    end
-    object cxLabel1: TcxLabel
-      Left = 250
-      Top = 6
-      Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077':'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clBlue
-      Style.Font.Height = -13
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = [fsBold]
-      Style.IsFontAssigned = True
-    end
-    object edSearchShortName: TcxTextEdit
-      Left = 406
-      Top = 7
-      TabOrder = 3
-      DesignSize = (
-        140
-        21)
-      Width = 140
+      Width = 221
     end
   end
   object DataSource: TDataSource
@@ -266,6 +246,10 @@ object CountryForm: TCountryForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -281,17 +265,20 @@ object CountryForm: TCountryForm
           ItemName = 'bbSetUnErased'
         end
         item
-          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbShowAll'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -308,6 +295,10 @@ object CountryForm: TCountryForm
         item
           Visible = True
           ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -398,7 +389,7 @@ object CountryForm: TCountryForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
+      ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -461,7 +452,7 @@ object CountryForm: TCountryForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
@@ -476,7 +467,7 @@ object CountryForm: TCountryForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 8238
+      ShortCut = 49220
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
@@ -697,6 +688,7 @@ object CountryForm: TCountryForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 216
     Top = 160
@@ -820,7 +812,6 @@ object CountryForm: TCountryForm
       end
       item
         Column = ShortName
-        TextEdit = edSearchShortName
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

@@ -79,7 +79,7 @@ BEGIN
    FROM ObjectHistory WHERE Id = ioId;
 
 
-   IF inUserId :: TVarChar = zfCalc_UserAdmin()
+   IF inUserId :: TVarChar = zfCalc_UserAdmin() AND 1=1
    THEN
        RAISE EXCEPTION 'Error.Admin test - ok';
    END IF;

@@ -59,30 +59,31 @@ object PLZForm: TPLZForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 136
       end
-      object City: TcxGridDBColumn
-        Caption = #1043#1086#1088#1086#1076
-        DataBinding.FieldName = 'City'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 116
-      end
       object CountryName: TcxGridDBColumn
         Caption = #1057#1090#1088#1072#1085#1072
         DataBinding.FieldName = 'CountryName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 106
+        Width = 150
       end
-      object ShortName_Country: TcxGridDBColumn
-        Caption = #1043#1086#1088#1086#1076' ('#1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077')'
-        DataBinding.FieldName = 'ShortName_Country'
+      object CountryName_short: TcxGridDBColumn
+        Caption = '***'#1057#1090#1088#1072#1085#1072
+        DataBinding.FieldName = 'CountryName_short'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
         Options.Editing = False
-        Width = 172
+        Width = 80
+      end
+      object City: TcxGridDBColumn
+        Caption = #1043#1086#1088#1086#1076
+        DataBinding.FieldName = 'City'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 150
       end
       object AreaCode: TcxGridDBColumn
         Caption = #1055#1088#1077#1092#1080#1082#1089' '
@@ -148,7 +149,7 @@ object PLZForm: TPLZForm
     Align = alBottom
     TabOrder = 1
     object btnInsert: TcxButton
-      Left = 341
+      Left = 309
       Top = 8
       Width = 100
       Height = 25
@@ -156,7 +157,7 @@ object PLZForm: TPLZForm
       TabOrder = 0
     end
     object btnUpdate: TcxButton
-      Left = 467
+      Left = 435
       Top = 8
       Width = 100
       Height = 25
@@ -164,7 +165,7 @@ object PLZForm: TPLZForm
       TabOrder = 1
     end
     object btnChoiceGuides: TcxButton
-      Left = 28
+      Left = 47
       Top = 8
       Width = 90
       Height = 25
@@ -173,7 +174,7 @@ object PLZForm: TPLZForm
       TabOrder = 2
     end
     object btnSetErased: TcxButton
-      Left = 592
+      Left = 560
       Top = 8
       Width = 100
       Height = 25
@@ -181,7 +182,7 @@ object PLZForm: TPLZForm
       TabOrder = 3
     end
     object btnFormClose: TcxButton
-      Left = 146
+      Left = 165
       Top = 8
       Width = 90
       Height = 25
@@ -303,15 +304,6 @@ object PLZForm: TPLZForm
           ItemName = 'bbSetUnErased'
         end
         item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -325,7 +317,19 @@ object PLZForm: TPLZForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -654,14 +658,14 @@ object PLZForm: TPLZForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 496
-    Top = 72
+    Left = 472
+    Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
     Top = 200
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object DBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -720,10 +724,19 @@ object PLZForm: TPLZForm
   object FieldFilter_Name: TdsdFieldFilter
     TextEdit = edSearchName
     DataSet = MasterCDS
-    Column = NameSearch
+    Column = Name
     ColumnList = <
       item
-        Column = NameSearch
+        Column = Name
+      end
+      item
+        Column = CountryName
+      end
+      item
+        Column = CountryName_short
+      end
+      item
+        Column = City
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>

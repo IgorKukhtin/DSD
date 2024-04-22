@@ -2353,6 +2353,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
+    Left = 88
     Top = 131
   end
   inherited BarManager: TdxBarManager

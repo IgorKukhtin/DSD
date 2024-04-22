@@ -57,7 +57,7 @@ type
     Erased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     actChoiceGuides: TdsdChoiceGuides;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
     City: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
     actProtocol: TdsdOpenForm;

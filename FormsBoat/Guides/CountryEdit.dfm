@@ -64,7 +64,7 @@ object CountryEditForm: TCountryEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 100
-    Caption = #1050#1088#1072#1090#1082#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
+    Caption = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1086#1077' '#1086#1073#1086#1079#1085#1072#1095#1077#1085#1080#1077
   end
   object edShortName: TcxTextEdit
     Left = 10

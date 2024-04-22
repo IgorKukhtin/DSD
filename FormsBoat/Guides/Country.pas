@@ -82,8 +82,6 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
-    cxLabel1: TcxLabel;
-    edSearchShortName: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -3,41 +3,41 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_PLZ (Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_PLZ(
-    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет 
+    IN inIsShowAll   Boolean,            -- признак показать удаленные да / нет
     IN inSession     TVarChar            -- сессия пользователя
-   
+
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar, NameSearch TVarChar
-             , CountryId Integer, CountryName TVarChar, ShortName_Country TVarChar
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, NameFull TVarChar
+             , CountryId Integer, CountryName TVarChar, CountryName_short TVarChar
              , City TVarChar, AreaCode TVarChar
              , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
-             , isErased boolean)
+             , isErased Boolean
+              )
 AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PLZ());
 
-
-   -- результат
+   -- Результат
    RETURN QUERY
-      SELECT Object_PLZ.Id                   AS Id
-           , Object_PLZ.ObjectCode           AS Code
-           , Object_PLZ.ValueData            AS Name
-           --PLZ + Город + Страна
+      SELECT Object_PLZ.Id                    AS Id
+           , Object_PLZ.ObjectCode            AS Code
+           , Object_PLZ.ValueData             AS Name
+             -- PLZ + Город + Страна
            , TRIM (COALESCE (Object_PLZ.ValueData,'')||' '||ObjectString_City.ValueData||' '||Object_Country.ValueData) ::TVarChar AS NameFull
-           , TRIM (Object_PLZ.ValueData ||' '||ObjectString_City.ValueData) ::TVarChar AS NameSearch
-           , Object_Country.Id               AS CountryId
-           , Object_Country.ValueData        AS CountryName
-           , COALESCE (ObjectString_ShortName.ValueData, NULL) :: TVarChar AS ShortName_Country
-           , ObjectString_City.ValueData     AS City
-           , ObjectString_AreaCode.ValueData AS AreaCode
-           , ObjectString_Comment.ValueData  AS Comment
-           , Object_Insert.ValueData         AS InsertName
-           , ObjectDate_Insert.ValueData     AS InsertDate
-           , Object_PLZ.isErased             AS isErased
+             --
+           , Object_Country.Id                AS CountryId
+           , Object_Country.ValueData         AS CountryName
+           , ObjectString_ShortName.ValueData AS CountryName_short
+           , ObjectString_City.ValueData      AS City
+           , ObjectString_AreaCode.ValueData  AS AreaCode
+           , ObjectString_Comment.ValueData   AS Comment
+           , Object_Insert.ValueData          AS InsertName
+           , ObjectDate_Insert.ValueData      AS InsertDate
+           , Object_PLZ.isErased              AS isErased
        FROM Object AS Object_PLZ
             LEFT JOIN ObjectString AS ObjectString_City
                                    ON ObjectString_City.ObjectId = Object_PLZ.Id

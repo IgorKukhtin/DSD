@@ -80,23 +80,14 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Кол-во не может быть меньше 0.';
      END IF;
 
+
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     -- !!!Замена!!!
-     IF zc_Enum_GlobalConst_isTerry() = FALSE
-     THEN
-         IF vbIsInsert = TRUE AND ioAmount = 0 THEN ioAmount:= 1; END IF;
-         --
-         IF COALESCE (ioOperPriceListTo, 0) = 0 AND ioOperPriceListTo_start > 0
-         THEN
-             ioOperPriceListTo:= ioOperPriceListTo_start;
-         END IF;
-     END IF;
 
      -- определяем товар по inGoodsName
      SELECT MAX (Object.Id)
-       INTO vbGoodsId
+            INTO vbGoodsId
      FROM Object
      WHERE Object.DescId    = zc_Object_Goods()
        AND Object.ValueData = inGoodsName;
@@ -141,6 +132,36 @@ BEGIN
                                                                                                    , vbGoodsId
                                                                                                     ) AS tmp), 0);
      END IF;
+
+     -- !!!Замена!!!
+     IF zc_Enum_GlobalConst_isTerry() = FALSE
+     THEN
+         IF vbIsInsert = TRUE AND ioAmount = 0 THEN ioAmount:= 1; END IF;
+         -- если ваоюта такая же
+         IF vbCurrencyId_pl_to = (SELECT OL_Currency_from.ChildObjectId
+                                  FROM ObjectLink AS OL
+                                       LEFT JOIN ObjectLink AS OL_Currency_from
+                                                            ON OL_Currency_from.ObjectId = OL.ChildObjectId
+                                                           AND OL_Currency_from.DescId   = zc_ObjectLink_PriceList_Currency()
+                                  WHERE OL.ObjectId = vbFromId AND OL.DescId = zc_ObjectLink_Unit_PriceList()
+                                 )
+        -- прайс получателя
+        AND vbPriceListId_to <> zc_PriceList_Basis()
+        -- только при создании
+        AND vbIsInsert = TRUE
+         THEN
+              -- еще замена - на валютную цену
+              ioOperPriceListTo      := ioOperPriceList ;
+              ioOperPriceListTo_start:= ioOperPriceList;
+         END IF;
+         
+         -- добавили
+         IF COALESCE (ioOperPriceListTo, 0) = 0 AND ioOperPriceListTo_start > 0
+         THEN
+             ioOperPriceListTo:= ioOperPriceListTo_start;
+         END IF;
+     END IF;
+
 
      -- проверка - свойство должно быть установлено
      IF COALESCE (ioOperPriceList, 0) <= 0 THEN
@@ -271,7 +292,8 @@ BEGIN
              OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo_start())
             )
             -- !!!временно
-            AND vbToId = 6319 -- магазин Киев
+            -- AND vbToId = 6319 -- магазин Киев
+            AND vbPriceListId_to <> zc_PriceList_Basis()
          THEN
              PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                                , inPriceListId:= vbPriceListId_to

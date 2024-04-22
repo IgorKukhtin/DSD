@@ -120,7 +120,7 @@ BEGIN
                                                                 , inAmountIn         := CASE WHEN vbAmount > 0 THEN 1 * ABS (inAmount_Invoice) ELSE 0 END
                                                                 , inAmountOut        := CASE WHEN vbAmount < 0 THEN 1 * ABS (inAmount_Invoice) ELSE 0 END
                                                                 , inInvNumberPartner := ''                                  ::TVarChar
-                                                                , inReceiptNumber    := '0'                                 ::TVarChar
+                                                                , inReceiptNumber    := CASE WHEN inMovementId_Invoice > 0 THEN (SELECT MS.ValueData FROM MovementString AS MS WHERE MS.MovementId = inMovementId_Invoice AND MS.DescId = zc_MovementString_ReceiptNumber()) ELSE '0' END :: TVarChar
                                                                 , inComment          := ''                                  ::TVarChar
                                                                 , inObjectId         := inMoneyPlaceId
                                                                 , inUnitId           := NULL                                ::Integer
