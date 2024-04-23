@@ -80,7 +80,7 @@ BEGIN
 
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
                                , Container.WhereObjectId       AS UnitId
-                               , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                               --, COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                                , Sum(Container.Amount)::TFloat AS Remains
                           FROM Container
                                LEFT JOIN MovementItemString AS MIString_PartNumber
@@ -92,7 +92,7 @@ BEGIN
                             AND Container.Amount <> 0
                           GROUP BY Container.WhereObjectId
                                  , Container.ObjectId
-                                 , COALESCE (MIString_PartNumber.ValueData, '')
+                                 --, COALESCE (MIString_PartNumber.ValueData, '')
                           HAVING Sum(Container.Amount) <> 0
                          )
                          
@@ -215,7 +215,7 @@ BEGIN
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
                                 AND tmpRemains.UnitId     = tmpMI.FromId
-                                AND tmpRemains.PartNumber = tmpMI.PartNumber
+                               -- AND tmpRemains.PartNumber = tmpMI.PartNumber
 
        WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 

@@ -19,10 +19,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , InsertId Integer, InsertName TVarChar, InsertDate TDateTime
              , MovementId_parent Integer
              , InvNumber_parent TVarChar
+             , isScan Boolean
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbisScan Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -56,11 +58,17 @@ BEGIN
 
              , 0                          AS MovementId_parent
              , CAST ('' as TVarChar)      AS InvNumber_parent
+             , False                      AS isScan
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
 
      ELSE
+     
+       vbisScan := EXISTS (SELECT MovementItem.Id
+                           FROM MovementItem 
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Scan());
 
      RETURN QUERY
 
@@ -85,8 +93,9 @@ BEGIN
           , Object_Insert.ValueData        AS InsertName
           , MovementDate_Insert.ValueData  AS InsertDate
 
-         , Movement_Parent.Id             ::Integer  AS MovementId_parent
-         , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+          , Movement_Parent.Id             ::Integer  AS MovementId_parent
+          , zfCalc_InvNumber_isErased ('', Movement_Parent.InvNumber, Movement_Parent.OperDate, Movement_Parent.StatusId) AS InvNumber_parent
+          , vbisScan                       AS isScan
         FROM Movement AS Movement_ProductionUnion
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_ProductionUnion.StatusId
 
@@ -145,4 +154,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ProductionUnion (inMovementId:= 0, inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_ProductionUnion (inMovementId:= 3171 , inOperDate := '02.02.2021'::TDateTime, inSession:= '9818')

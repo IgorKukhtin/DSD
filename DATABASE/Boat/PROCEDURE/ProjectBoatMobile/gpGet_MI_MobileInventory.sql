@@ -52,7 +52,7 @@ BEGIN
      RETURN QUERY
        WITH
        tmpRemains AS (SELECT Container.ObjectId                           AS GoodsId
-                           , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                           --, COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                            , SUM (Container.Amount)                       AS Remains
                       FROM Container
                            LEFT JOIN MovementItemString AS MIString_PartNumber
@@ -61,9 +61,9 @@ BEGIN
                       WHERE Container.WhereObjectId = vbUnitId
                         AND Container.DescId        = zc_Container_Count()
                         AND Container.ObjectId      = inGoodsId
-                        AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
+                        --AND COALESCE (MIString_PartNumber.ValueData, '') = COALESCE (inPartNumber,'')
                       GROUP BY Container.ObjectId
-                             , COALESCE (MIString_PartNumber.ValueData, '')
+                             --, COALESCE (MIString_PartNumber.ValueData, '')
                      )
           , tmpMI AS (SELECT MI.ObjectId                                   AS GoodsId
                            , COALESCE (MIString_PartNumber.ValueData, '')  AS PartNumber
@@ -125,7 +125,7 @@ BEGIN
 
            FROM Object AS Object_Goods
                 LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = Object_Goods.Id
-                                    AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
+                                    --AND tmpRemains.PartNumber = COALESCE (inPartNumber,'')
                 LEFT JOIN tmpMI ON tmpMI.GoodsId    = Object_Goods.Id
                                AND tmpMI.PartNumber = COALESCE (inPartNumber,'')
                 LEFT JOIN tmpMIScan ON tmpMIScan.GoodsId    = Object_Goods.Id

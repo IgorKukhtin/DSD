@@ -77,7 +77,7 @@ BEGIN
                                                                         ELSE 0
                                                                    END)
                                                             , 0) AS Remains
-                               , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
+                               --, COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                           FROM Container
                                LEFT JOIN MovementItemString AS MIString_PartNumber
                                                             ON MIString_PartNumber.MovementItemId = Container.PartionId
@@ -92,7 +92,7 @@ BEGIN
                           GROUP BY Container.Id
                                  , Container.ObjectId
                                  , Container.Amount
-                                 , COALESCE (MIString_PartNumber.ValueData, '')
+                                 --, COALESCE (MIString_PartNumber.ValueData, '')
                           HAVING Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                                                              THEN COALESCE (MIContainer.Amount, 0)
                                                                         WHEN MIContainer.OperDate > vbOperDate
@@ -205,11 +205,11 @@ BEGIN
                                    ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
-            LEFT JOIN (SELECT tmpRemains.GoodsId, tmpRemains.PartNumber, SUM (tmpRemains.Amount)::TFloat AS Amount, SUM (tmpRemains.Remains)::TFloat AS Remains
+            LEFT JOIN (SELECT tmpRemains.GoodsId/*, tmpRemains.PartNumber*/, SUM (tmpRemains.Amount)::TFloat AS Amount, SUM (tmpRemains.Remains)::TFloat AS Remains
                        FROM tmpRemains
-                       GROUP BY tmpRemains.GoodsId, tmpRemains.PartNumber
+                       GROUP BY tmpRemains.GoodsId --, tmpRemains.PartNumber
                       ) AS tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
-                                     AND tmpRemains.PartNumber = tmpMI.PartNumber
+                                     --AND tmpRemains.PartNumber = tmpMI.PartNumber
 
        WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 

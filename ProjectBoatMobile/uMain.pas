@@ -637,14 +637,14 @@ var
 
 implementation
 
-uses System.IOUtils, System.Math, FMX.SearchBox, FMX.Authentication, FMX.Storage,
+uses System.IOUtils, System.Math, System.RegularExpressions, FMX.SearchBox, FMX.Authentication, FMX.Storage,
      FMX.CommonData, FMX.CursorUtils;
 
 {$R *.fmx}
 
 const
-  WebServer = 'http://217.92.58.239:11011/projectBoat_utf8/index.php';
-  WebServerTest = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+  WebServer : string = 'http://217.92.58.239:11011/projectBoat_utf8/index.php;http://291.168.0.50/projectBoat_utf8/index.php';
+  WebServerTest : string = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
   MainWidth = 336;
 
 function GetSearshBox(AListView: TListView): TSearchBox;
@@ -2878,6 +2878,8 @@ procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
   SettingsFile : TIniFile;
+  I: Integer;
+  Res: TArray<string>;
 begin
 
   try
@@ -2889,9 +2891,12 @@ begin
       exit;
     end;
 
-    if FisTestWebServer then
-      gc_WebService := WebServerTest
-    else gc_WebService := WebServer;
+    if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+    else Res := TRegEx.Split(WebServer, ';');
+
+    SetLength(gc_WebServers, High(Res) + 1);
+    for I := Low(Res) to High(Res) do gc_WebServers[I] := Res[I];
+    gc_WebService := gc_WebServers[0];
 
     Wait(True);
     try

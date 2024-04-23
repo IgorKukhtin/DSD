@@ -233,14 +233,14 @@ object ProductionUnionForm: TProductionUnionForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 123
+    Top = 132
     Width = 1084
-    Height = 409
+    Height = 400
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 409
+    ClientRectBottom = 400
     ClientRectRight = 1084
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -250,13 +250,13 @@ object ProductionUnionForm: TProductionUnionForm
         Left = 0
         Top = 0
         Width = 1084
-        Height = 385
+        Height = 376
         Align = alClient
         Caption = 'Panel_all'
         TabOrder = 0
         object cxSplitter_Bottom_Child: TcxSplitter
           Left = 1
-          Top = 261
+          Top = 252
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -265,7 +265,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxGrid_Child: TcxGrid
           Left = 1
-          Top = 269
+          Top = 260
           Width = 1082
           Height = 115
           Align = alBottom
@@ -608,7 +608,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxGrid_Detail: TcxGrid
           Left = 1
-          Top = 146
+          Top = 137
           Width = 1082
           Height = 115
           Align = alBottom
@@ -884,7 +884,7 @@ object ProductionUnionForm: TProductionUnionForm
         end
         object cxSplitter_Bottom_Detail: TcxSplitter
           Left = 1
-          Top = 138
+          Top = 129
           Width = 1082
           Height = 8
           HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -895,7 +895,7 @@ object ProductionUnionForm: TProductionUnionForm
           Left = 1
           Top = 1
           Width = 1082
-          Height = 137
+          Height = 128
           Align = alClient
           TabOrder = 0
           object cxGridDBTableViewMaster: TcxGridDBTableView
@@ -1266,14 +1266,11 @@ object ProductionUnionForm: TProductionUnionForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
         Width = 1084
-        Height = 385
+        Height = 376
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView_DetAll: TcxGridDBTableView
@@ -1655,6 +1652,227 @@ object ProductionUnionForm: TProductionUnionForm
         end
       end
     end
+    object cxTabSheetScan: TcxTabSheet
+      Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
+      ImageIndex = 2
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1084
+        Height = 376
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView_Scan: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ScanDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Scan_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Scan_Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Scan_GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object Scan_Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.;-,0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object Scan_GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object Scan_EAN: TcxGridDBColumn
+            DataBinding.FieldName = 'EAN'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 'EAN'
+            Width = 106
+          end
+          object Scan_Article: TcxGridDBColumn
+            Caption = 'Artikel Nr'
+            DataBinding.FieldName = 'Article'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object Scan_Article_all: TcxGridDBColumn
+            Caption = '***Artikel Nr'
+            DataBinding.FieldName = 'Article_all'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
+          object Scan_GoodsCode: TcxGridDBColumn
+            Caption = 'Interne Nr'
+            DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Scan_GoodsName: TcxGridDBColumn
+            Caption = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
+            DataBinding.FieldName = 'GoodsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 268
+          end
+          object Scan_MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 47
+          end
+          object Scan_Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
+            Width = 70
+          end
+          object Scan_OperDate_protocol: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            DataBinding.FieldName = 'OperDate_protocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1086#1087#1077#1088#1072#1094#1080#1080' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            Options.Editing = False
+            Width = 100
+          end
+          object Scan_UserName_protocol: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            DataBinding.FieldName = 'UserName_protocol'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1087#1086#1089#1083#1077#1076#1085#1077#1081' '#1086#1087#1077#1088#1072#1094#1080#1080' ('#1055#1088#1086#1090#1086#1082#1086#1083')'
+            Options.Editing = False
+            Width = 100
+          end
+          object Scan_isErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+        end
+        object cxGridLevel3: TcxGridLevel
+          GridView = cxGridDBTableView_Scan
+        end
+      end
+    end
   end
   object Panel_btn: TPanel
     Left = 0
@@ -1799,6 +2017,12 @@ object ProductionUnionForm: TProductionUnionForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 295
@@ -1834,7 +2058,7 @@ object ProductionUnionForm: TProductionUnionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
+    Font.Height = -18
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -1853,7 +2077,7 @@ object ProductionUnionForm: TProductionUnionForm
     DockControlHeights = (
       0
       0
-      26
+      35
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -2596,6 +2820,7 @@ object ProductionUnionForm: TProductionUnionForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actSetVisibleScan
       StoredProc = spGet
       StoredProcList = <
         item
@@ -2612,6 +2837,9 @@ object ProductionUnionForm: TProductionUnionForm
         end
         item
           StoredProc = spSelectMI_DetailAll
+        end
+        item
+          StoredProc = spSelectScan
         end>
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -4270,6 +4498,20 @@ object ProductionUnionForm: TProductionUnionForm
       ImageIndexTrue = 31
       ImageIndexFalse = 32
     end
+    object actSetVisibleScan: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisibleScan'
+      SetVisibleParams = <
+        item
+          Component = cxTabSheetScan
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isScan'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4670,6 +4912,14 @@ object ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = edInvNumberInvoice
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isScan'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5806,5 +6056,71 @@ object ProductionUnionForm: TProductionUnionForm
     PackSize = 1
     Left = 966
     Top = 319
+  end
+  object ScanDS: TDataSource
+    DataSet = ScanCDS
+    Left = 630
+    Top = 471
+  end
+  object ScanCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 560
+    Top = 471
+  end
+  object spSelectScan: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_ProductionUnion_Scan'
+    DataSet = ScanCDS
+    DataSets = <
+      item
+        DataSet = ScanCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 480
+    Top = 471
+  end
+  object DBViewAddOnScan: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_Scan
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <
+      item
+      end
+      item
+      end>
+    SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 574
+    Top = 409
   end
 end

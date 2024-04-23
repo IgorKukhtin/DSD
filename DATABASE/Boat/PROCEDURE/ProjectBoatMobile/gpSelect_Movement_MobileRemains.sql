@@ -19,22 +19,27 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
      
-     -- Данные для остатков
-     SELECT Movement.OperDate, Movement.StatusId, MLO_Unit.ObjectId
-            INTO vbOperDate, vbStatusId, vbUnitId
+     vbUnitId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Unit() AND Object.ObjectCode = 1);
+     
+     -- Данные для остатков по инвентаризации
+     SELECT Movement.OperDate, Movement.StatusId
+     INTO vbOperDate, vbStatusId
      FROM Movement
-          LEFT JOIN MovementLinkObject AS MLO_Unit
-                                       ON MLO_Unit.MovementId = Movement.Id
-                                      AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+          INNER JOIN MovementLinkObject AS MLO_Unit
+                                        ON MLO_Unit.MovementId = Movement.Id
+                                       AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                                       AND MLO_Unit.ObjectId   = vbUnitId
      WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
        AND Movement.DescId = zc_Movement_Inventory()
-       AND Movement.StatusId = zc_Enum_Status_UnComplete();     
-
+       AND Movement.StatusId = zc_Enum_Status_UnComplete()
+     ORDER BY Movement.Id desc
+     LIMIT 1;  
+     
      -- Результат такой
      RETURN QUERY
            WITH
-           tmpRemains AS (SELECT Container.Id       AS ContainerId
-                               , Container.ObjectId AS GoodsId
+           tmpRemains AS (SELECT Container.Id            AS ContainerId
+                               , Container.ObjectId      AS GoodsId
                                , Container.Amount
                                , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
                                                                              THEN COALESCE (MIContainer.Amount, 0)
@@ -52,8 +57,8 @@ BEGIN
                                                                ON MIContainer.ContainerId =  Container.Id
                                                               AND MIContainer.OperDate    >= vbOperDate
                                                               AND vbStatusId              =  zc_Enum_Status_Complete()
-                          WHERE Container.WhereObjectId = vbUnitId
-                            AND Container.DescId        = zc_Container_Count()
+                          WHERE Container.DescId        = zc_Container_Count()
+                            AND Container.WhereObjectId = vbUnitId
                           GROUP BY Container.Id
                                  , Container.ObjectId
                                  , Container.Amount
@@ -86,4 +91,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_MobileRemains (inShowAll := False, inSession := zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpSelect_Movement_MobileRemains (inShowAll := False, inSession := zfCalc_UserAdmin());

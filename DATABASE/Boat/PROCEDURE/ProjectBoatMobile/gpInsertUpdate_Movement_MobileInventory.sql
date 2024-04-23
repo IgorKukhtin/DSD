@@ -43,7 +43,9 @@ BEGIN
                     
        WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 MONTH'
          AND Movement.DescId = zc_Movement_Inventory()
-         AND Movement.StatusId = zc_Enum_Status_UnComplete();     
+         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+       ORDER BY Movement.Id desc
+       LIMIT 1;     
      ELSE 
        outMovementId := 0;
      END IF;

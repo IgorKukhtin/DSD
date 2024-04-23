@@ -196,7 +196,7 @@ type
     actGetPartionCell_Name: TdsdExecStoredProc;
     cxTabSheetScan: TcxTabSheet;
     cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableView_Scan: TcxGridDBTableView;
     Scan_Ord: TcxGridDBColumn;
     Scan_GoodsGroupNameFull: TcxGridDBColumn;
     Scan_EAN: TcxGridDBColumn;
@@ -219,6 +219,7 @@ type
     ScanCDS: TClientDataSet;
     Color_Scan: TcxGridDBColumn;
     AmountScan: TcxGridDBColumn;
+    actSetVisibleScan: TdsdSetVisibleAction;
   private
   public
   end;

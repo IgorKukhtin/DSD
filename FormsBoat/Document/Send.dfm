@@ -1053,7 +1053,7 @@ object SendForm: TSendForm
         Height = 264
         Align = alClient
         TabOrder = 0
-        object cxGridDBTableView1: TcxGridDBTableView
+        object cxGridDBTableView_Scan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ScanDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -1293,7 +1293,7 @@ object SendForm: TSendForm
           end
         end
         object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
+          GridView = cxGridDBTableView_Scan
         end
       end
     end
@@ -1440,6 +1440,12 @@ object SendForm: TSendForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 246
@@ -2160,6 +2166,7 @@ object SendForm: TSendForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actSetVisibleScan
       StoredProc = spGet
       StoredProcList = <
         item
@@ -3962,6 +3969,20 @@ object SendForm: TSendForm
       ImageIndexTrue = 31
       ImageIndexFalse = 29
     end
+    object actSetVisibleScan: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisibleScan'
+      SetVisibleParams = <
+        item
+          Component = cxTabSheetScan
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isScan'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4461,6 +4482,14 @@ object SendForm: TSendForm
         Value = Null
         Component = edInvNumberInvoice
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isScan'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5413,7 +5442,7 @@ object SendForm: TSendForm
   end
   object DBViewAddOnScan: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableView_Scan
     OnDblClickActionList = <
       item
       end>

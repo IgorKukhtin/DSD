@@ -6828,6 +6828,11 @@ begin
           if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value then
             TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivAlways
           else TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivNever;
+     end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'TabVisible') then
+     begin
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
+         then
+          SetPropValue(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'TabVisible', TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value)
      end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
      begin
         if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
@@ -9152,6 +9157,9 @@ begin
         if Value then
           TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivAlways
         else TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivNever;
+     end else if IsPublishedProp(TdsdComponentItem(FComponents.Items[i]).Component, 'TabVisible') then
+     begin
+       SetPropValue(TdsdComponentItem(FComponents.Items[i]).Component, 'TabVisible', Value)
      end else if IsPublishedProp(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible') then
      begin
        SetPropValue(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible', Value)
