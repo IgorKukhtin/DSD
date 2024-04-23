@@ -717,6 +717,10 @@ object DM: TDM
       FieldName = 'ToName'
       Size = 255
     end
+    object cdsSendItemEditInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
   end
   object tbUnit: TFDTable
     Connection = conMain
@@ -874,6 +878,16 @@ object DM: TDM
       Size = 40
       Calculated = True
     end
+    object cdsSendListInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
+    object cdsSendListInvNumber_OrderClientLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumber_OrderClientLabel'
+      Size = 40
+      Calculated = True
+    end
   end
   object cdsSendListTop: TClientDataSet
     Aggregates = <>
@@ -1012,6 +1026,16 @@ object DM: TDM
     object cdsSendListTopToNameLabel: TWideStringField
       FieldKind = fkCalculated
       FieldName = 'ToNameLabel'
+      Size = 40
+      Calculated = True
+    end
+    object cdsSendListTopInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
+    object cdsSendListTopInvNumber_OrderClientLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumber_OrderClientLabel'
       Size = 40
       Calculated = True
     end

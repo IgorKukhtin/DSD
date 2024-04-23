@@ -359,6 +359,11 @@ type
     tbSendGoodsFromId: TIntegerField;
     tbSendGoodsToId: TIntegerField;
     tbSendGoodsDateScan: TIntegerField;
+    cdsSendListInvNumber_OrderClient: TWideStringField;
+    cdsSendListTopInvNumber_OrderClient: TWideStringField;
+    cdsSendItemEditInvNumber_OrderClient: TWideStringField;
+    cdsSendListInvNumber_OrderClientLabel: TWideStringField;
+    cdsSendListTopInvNumber_OrderClientLabel: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -433,6 +438,7 @@ type
     function InsertProductionUnion(AId : Integer) : Boolean;
 
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+    function GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
     function GetMISendGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
@@ -1354,6 +1360,7 @@ begin
   DataSet.FieldByName('OrdUserLabel').AsString := '№ п/п';
   DataSet.FieldByName('FromNameLabel').AsString := 'От кого:';
   DataSet.FieldByName('ToNameLabel').AsString := 'Кому:';
+  DataSet.FieldByName('InvNumber_OrderClientLabel').AsString := '№ заказа:';
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
@@ -1925,6 +1932,8 @@ begin
     StoredProc.StoredProcName := 'gpGet_MobilebConfig';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('BarCodePref', ftString, ptOutput, frmMain.BarCodePref);
+    StoredProc.Params.AddParam('DocBarCodePref', ftString, ptOutput, frmMain.DocBarCodePref);
+    StoredProc.Params.AddParam('ItemBarCodePref', ftString, ptOutput, frmMain.ItemBarCodePref);
     StoredProc.Params.AddParam('ArticleSeparators', ftString, ptOutput, frmMain.ArticleSeparators);
 
     StoredProc.Params.AddParam('isCameraScanerSet', ftBoolean, ptOutput, False);
@@ -1953,6 +1962,11 @@ begin
 
       if StoredProc.ParamByName('BarCodePref').Value <> frmMain.BarCodePref then
         frmMain.BarCodePref := StoredProc.ParamByName('BarCodePref').Value;
+      if StoredProc.ParamByName('DocBarCodePref').Value <> frmMain.DocBarCodePref then
+        frmMain.DocBarCodePref := StoredProc.ParamByName('DocBarCodePref').Value;
+      if StoredProc.ParamByName('ItemBarCodePref').Value <> frmMain.ItemBarCodePref then
+        frmMain.ItemBarCodePref := StoredProc.ParamByName('ItemBarCodePref').Value;
+
       if StoredProc.ParamByName('ArticleSeparators').Value <> frmMain.ArticleSeparators then
         frmMain.ArticleSeparators := StoredProc.ParamByName('ArticleSeparators').Value;
 
@@ -2254,7 +2268,6 @@ begin
     StoredProc.Params.AddParam('inBarCode', ftWideString, ptInput, ABarcode);
     StoredProc.Params.AddParam('GoodsId', ftInteger, ptOutput, 0);
     StoredProc.Params.AddParam('CountGoods', ftInteger, ptOutput, 0);
-    StoredProc.Params.AddParam('BarCodePref', ftWideString, ptOutput, '');
 
     try
       StoredProc.Execute(false, false, false, 2);
@@ -2262,6 +2275,38 @@ begin
       ACount := StoredProc.ParamByName('CountGoods').Value;
       Result := ACount = 1;
     except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+// Поиск заказа покупателя по штрих коду
+function TDM.GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpGet_Movement_MobilebyOrderClient';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftWideString, ptInput, ABarcode);
+    StoredProc.Params.AddParam('inInvNumber', ftWideString, ptInput, AInvNumber);
+    StoredProc.Params.AddParam('Id', ftInteger, ptOutput, 0);
+    StoredProc.Params.AddParam('InvNumber', ftWideString, ptOutput, '');
+    StoredProc.Params.AddParam('InvNumberFull', ftWideString, ptOutput, '');
+
+    try
+      StoredProc.Execute(false, false, false);
+      outID := StoredProc.ParamByName('Id').Value;
+      outInvNumber := StoredProc.ParamByName('InvNumber').Value;
+      outInvNumberFull := StoredProc.ParamByName('InvNumberFull').Value;
+      Result := outID <> 0;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
   finally
     FreeAndNil(StoredProc);
