@@ -177,6 +177,9 @@ type
     mactExport_invoice: TMultiAction;
     bbExport_invoice: TdxBarButton;
     Comment_Product: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edLanguage: TcxButtonEdit;
+    GuidesLanguage: TdsdGuides;
   private
     { Private declarations }
   public

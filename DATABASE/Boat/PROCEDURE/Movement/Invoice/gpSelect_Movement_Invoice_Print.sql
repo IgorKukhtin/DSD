@@ -220,6 +220,23 @@ BEGIN
 
               END  :: TVarChar AS Comment_PrePay
 
+            , CASE WHEN COALESCE (MovementString_Comment.ValueData,'') <> '' THEN MovementString_Comment.ValueData
+                   ELSE CASE WHEN tmpPrePay.Ord = 1 THEN 'REservierungs-Gebuhr '
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| tmpProduct.invnumber_orderclient
+                             WHEN tmpPrePay.Ord = 2 THEN 'First Advance-payment '
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| tmpProduct.invnumber_orderclient
+                             WHEN tmpPrePay.Ord = 3 THEN 'Erste und zweite Vorauszahlung'
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| tmpProduct.invnumber_orderclient
+                             ELSE /*WHEN tmpPrePay.Ord = 4 THEN*/ 'Erste, zweite und dritte Vorauszahlung'
+                               || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN tmpInvoice.AmountIn*100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                               || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| tmpProduct.invnumber_orderclient
+                          END
+
+              END  :: TVarChar AS Comment_PrePay_deu
+
             , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'Receipt'   ELSE 'Invoice' END :: TVarChar AS InvoiceName_en
             , CASE WHEN tmpInvoice.InvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN 'ReceiptNo' ELSE 'Invoice' END :: TVarChar AS InvoiceNameRet_en
 
@@ -373,6 +390,24 @@ BEGIN
                         END
                    else ''
               END  :: TVarChar AS Text_ret
+              
+            , CASE WHEN COALESCE (MovementString_Comment.ValueData,'') = ''
+                   THEN CASE WHEN 1=0 AND COALESCE (tmpMov_Invoice.Comment,'') <> '' THEN tmpMov_Invoice.Comment
+                         ELSE CASE WHEN tmpMov_Invoice.Ord = 1 THEN 'Storno ' || tmpMov_Invoice.InvoiceName || ' ' || zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData)
+                                                                              || CASE WHEN vbInvoiceKindId IN (zc_Enum_InvoiceKind_PrePay(), zc_Enum_InvoiceKind_Return()) THEN ' REservierungs-Gebuhr ' ELSE '' END
+                                   WHEN tmpMov_Invoice.Ord = 2 THEN 'Storno ' || tmpMov_Invoice.InvoiceName || ' ' || zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData) ||' Erste Vorauszahlung '
+                                     || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData *100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                     || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                   WHEN tmpMov_Invoice.Ord = 3 THEN 'Storno ' || tmpMov_Invoice.InvoiceName || ' ' || zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData) ||' Erste und zweite Vorauszahlung '
+                                     || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                     || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                                   ELSE  'Storno ' || tmpMov_Invoice.InvoiceName || ' ' || zfCalc_ReceiptNumber_print (MovementString_ReceiptNumber.ValueData) ||' Erste, zweite und dritte Vorauszahlung '
+                                     || ROUND (CASE WHEN COALESCE(tmpProduct.BasisWVAT_summ_transport,0) <> 0 THEN MovementFloat_Amount.ValueData * 100 / tmpProduct.BasisWVAT_summ_transport ELSE 0 END, 0)
+                                     || '% fur '||tmpProduct.modelname_full || ' Befehl: '|| zfCalc_InvNumber_print (tmpProduct.invnumber_orderclient)
+                              END
+                        END
+                   else ''
+              END  :: TVarChar AS Text_ret_deu
 
        FROM tmpMov_Invoice
             LEFT JOIN MovementFloat AS MovementFloat_Amount

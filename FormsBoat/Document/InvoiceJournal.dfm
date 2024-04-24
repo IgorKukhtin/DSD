@@ -8,19 +8,20 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 91
     Width = 1279
-    Height = 316
+    Height = 282
     TabOrder = 3
     ExplicitWidth = 1279
     ExplicitHeight = 316
-    ClientRectBottom = 316
+    ClientRectBottom = 282
     ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1279
       ExplicitHeight = 316
       inherited cxGrid: TcxGrid
         Width = 1279
-        Height = 316
+        Height = 282
         ExplicitWidth = 1279
         ExplicitHeight = 316
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -681,14 +682,16 @@
   end
   inherited Panel: TPanel
     Width = 1279
+    Height = 65
     ExplicitWidth = 1279
+    ExplicitHeight = 65
     inherited deEnd: TcxDateEdit
       Left = 315
       ExplicitLeft = 315
     end
     object cxLabel4: TcxLabel
-      Left = 659
-      Top = 4
+      Left = 248
+      Top = 34
       Caption = #8470' '#1079#1072#1082#1072#1079':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -699,8 +702,8 @@
       Style.IsFontAssigned = True
     end
     object edSearch_InvNumber_OrderClient: TcxTextEdit
-      Left = 728
-      Top = 5
+      Left = 318
+      Top = 35
       TabOrder = 5
       DesignSize = (
         100
@@ -708,8 +711,8 @@
       Width = 100
     end
     object edSearch_ReceiptNumber_Invoice: TcxTextEdit
-      Left = 545
-      Top = 5
+      Left = 135
+      Top = 35
       Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
       ParentShowHint = False
       ShowHint = True
@@ -720,8 +723,8 @@
       Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 835
-      Top = 4
+      Left = 426
+      Top = 34
       Caption = 'Lieferanten / Kunden: '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -732,8 +735,8 @@
       Style.IsFontAssigned = True
     end
     object edSearch_ObjectName: TcxTextEdit
-      Left = 989
-      Top = 5
+      Left = 577
+      Top = 35
       TabOrder = 8
       DesignSize = (
         120
@@ -741,8 +744,8 @@
       Width = 120
     end
     object lbSearchArticle: TcxLabel
-      Left = 411
-      Top = 4
+      Left = 3
+      Top = 34
       Hint = #1055#1086#1080#1089#1082' '#1076#1083#1103' '#1054#1092#1080#1094#1080#1072#1083#1100#1085#1099#1081' '#1085#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1057#1095#1077#1090
       Caption = #1055#1086#1080#1089#1082' Inv No '#1089#1095#1077#1090': '
       ParentFont = False
@@ -754,6 +757,24 @@
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
+    end
+    object cxLabel5: TcxLabel
+      Left = 710
+      Top = 6
+      Caption = #1071#1079#1099#1082':'
+    end
+    object edLanguage: TcxButtonEdit
+      Left = 745
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Text = #1040#1085#1075#1083#1080#1081#1089#1082#1080#1081
+      Width = 141
     end
   end
   object Panel_btn: TPanel [2]
@@ -1739,6 +1760,14 @@
           Value = 44927d
           Component = deEnd
           DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LanguageCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LanguageCode'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_Invoice1'
@@ -2960,6 +2989,26 @@
         Name = 'InvoicePdfId'
         Value = Null
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LanguageId'
+        Value = '179'
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LanguageName'
+        Value = #1040#1085#1075#1083#1080#1081#1089#1082#1080#1081
+        Component = GuidesLanguage
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LanguageCode'
+        Value = '3'
+        MultiSelectSeparator = ','
       end>
   end
   inherited spMovementReComplete: TdsdStoredProc
@@ -3458,5 +3507,43 @@
     PackSize = 1
     Left = 1144
     Top = 176
+  end
+  object GuidesLanguage: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage
+    Key = '179'
+    TextValue = #1040#1085#1075#1083#1080#1081#1089#1082#1080#1081
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LanguageCode'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 840
   end
 end
