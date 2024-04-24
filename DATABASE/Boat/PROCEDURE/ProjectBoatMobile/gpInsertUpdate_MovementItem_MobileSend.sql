@@ -93,7 +93,7 @@ BEGIN
        END IF;
        
        -- Если строка удалена то ругаемся
-       IF COALESCE(vbParentId, 0) = COALESCE(inMovementId_OrderClient, 0)
+       IF COALESCE(vbParentId, 0) <> COALESCE(inMovementId_OrderClient, 0)
        THEN
          RAISE EXCEPTION 'Ошибка. Изменение заказа покупателя запрещено.';
        END IF;

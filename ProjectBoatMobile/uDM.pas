@@ -444,6 +444,7 @@ type
 
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
     function GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
+    function GetBarcodeSendOrderInternal(AId: Integer) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
     function GetMISendGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
@@ -2289,6 +2290,46 @@ begin
   end;
 end;
 
+{ поиск узла по штрихкоду в базе}
+function TDM.GetBarcodeSendOrderInternal(AId: Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  DataSet: TClientDataSet;
+  I: Integer;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  DataSet := TClientDataSet.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_Goods_MobilebyOrderInternal';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
+
+    StoredProc.DataSet := DataSet;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+
+      cdsSendItemEdit.Close;
+      cdsSendItemEdit.CreateDataSet;
+      cdsSendItemEdit.Insert;
+      for I := 0 to DataSet.FieldCount - 1 do
+        if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
+          cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+      cdsSendItemEdit.Post;
+
+      Result := cdsSendItemEdit.Active;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    FreeAndNil(DataSet);
+  end;
+end;
+
 // Поиск заказа покупателя по штрих коду
 function TDM.GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
 var
@@ -2399,7 +2440,6 @@ begin
       for I := 0 to DataSet.FieldCount - 1 do
         if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
           cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
-      if True then
 
       cdsSendItemEditMovementId_OrderClient.AsInteger := frmMain.OrderClientId;
       cdsSendItemEditInvNumber_OrderClient.AsString := frmMain.OrderClientInvNumberFull;

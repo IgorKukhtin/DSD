@@ -1113,13 +1113,13 @@ begin
 
   try
 
-    if COPY(edOrderInternalBarCode.Text, 1, 3) <> '224' then
+    if COPY(edOrderInternalBarCode.Text, 1, Length(FItemBarCodePref)) <> FItemBarCodePref then
     begin
       TDialogService.ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
       Exit;
     end;
 
-    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, 4, 9), Code) then
+    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, Length(FItemBarCodePref) + 1, 9), Code) then
     begin
       TDialogService.ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
       Exit;
@@ -3427,6 +3427,22 @@ begin
       end;
     except
       on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  end else if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
+  begin
+
+    if Length(AData_String) > 12 then AData_String := Copy(AData_String, 1, Length(AData_String) - 1);
+
+    if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
+    begin
+      TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
+      Exit;
+    end;
+
+    if DM.GetBarcodeSendOrderInternal(Id) then
+    begin
+      SwitchToForm(tiSendItemEdit, nil);
+      lCaption.Text := 'Редактирование Перемещения';
     end;
   end else
   begin
