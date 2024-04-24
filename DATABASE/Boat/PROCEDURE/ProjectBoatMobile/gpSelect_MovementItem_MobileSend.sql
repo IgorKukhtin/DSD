@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
              , isErased Boolean
               )
 AS
@@ -63,6 +64,7 @@ BEGIN
                            , MovementItem.Amount
                            , COALESCE (MIString_PartNumber.ValueData, '')::TVarChar  AS PartNumber
                            , MILO_PartionCell.ObjectId                               AS PartionCellId
+                           , MIFloat_MovementId.ValueData :: Integer                 AS MovementId_OrderClient
                            , MovementItem.isErased
                       FROM tmpMovement AS Movement
                       
@@ -76,6 +78,10 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                             ON MILO_PartionCell.MovementItemId = MovementItem.Id
                                                            AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                      )
 
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
@@ -182,6 +188,10 @@ BEGIN
            , tmpData.OrdUserDate::Integer
            , tmpData.OperDate_protocol
            , Object_User.ValueData AS UserName_protocol
+
+           , Movement_OrderClient.Id                     AS MovementId_OrderClient
+           , Movement_OrderClient.InvNumber              AS InvNumber_OrderClient
+
            , tmpMI.isErased
 
        FROM tmpMI
@@ -217,6 +227,8 @@ BEGIN
                                 AND tmpRemains.UnitId     = tmpMI.FromId
                                -- AND tmpRemains.PartNumber = tmpMI.PartNumber
 
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
+ 
        WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
                                           OR ObjectString_Article.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
@@ -238,4 +250,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_MobileSend (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpSelect_MovementItem_MobileSend (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());

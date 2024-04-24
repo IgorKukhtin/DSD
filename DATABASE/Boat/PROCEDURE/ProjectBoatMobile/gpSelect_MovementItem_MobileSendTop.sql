@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_MobileSendTop (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_MobileSendTop(
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, LocalId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Article TVarChar, EAN TVarChar 
              , GoodsGroupId Integer, GoodsGroupName TVarChar
@@ -16,7 +16,8 @@ RETURNS TABLE (Id Integer
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
-             , isErased Boolean
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
+             , isErased Boolean, Error TVarChar
               )
 AS
 $BODY$
@@ -29,6 +30,7 @@ BEGIN
      RETURN QUERY
        SELECT
              tmpMI.Id
+           , 0                                   AS LocalId  
            , tmpMI.GoodsId
            , tmpMI.GoodsCode
            , tmpMI.GoodsName
@@ -58,7 +60,12 @@ BEGIN
            , tmpMI.OrdUser
            , tmpMI.OperDate_protocol
            , tmpMI.UserName_protocol
+
+           , tmpMI.MovementId_OrderClient
+           , tmpMI.InvNumber_OrderClient
+
            , tmpMI.isErased
+           , ''::TVarChar                        AS Error
 
        FROM gpSelect_MovementItem_MobileSend (inIsOrderBy := False, inIsAllUser := False, inIsErased := False, inLimit := 3, inFilter := '', inSession := inSession) AS tmpMI
        ;

@@ -5,8 +5,11 @@ DROP FUNCTION IF EXISTS gpGet_MobilebConfig (TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_MobilebConfig(
     IN inSession           TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (BarCodePref        TVarChar
-             , ArticleSeparators  TVarChar  
+RETURNS TABLE (BarCodePref         TVarChar
+             , DocBarCodePref      TVarChar
+             , ItemBarCodePref     TVarChar
+ 
+             , ArticleSeparators   TVarChar  
              
              -- ***** Настройки сканера
              -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
@@ -57,6 +60,8 @@ BEGIN
     -- Результат такой
     RETURN QUERY
     SELECT zc_BarCodePref_Object()::TVarChar   AS BarCodePref
+         , zc_BarCodePref_Movement()::TVarChar AS DocBarCodePref
+         , zc_BarCodePref_Mi()::TVarChar       AS ItemBarCodePref
          , ' ,-'::TVarChar                     AS ArticleSeparators
          -- ***** Настройки сканера
          -- Для сканирования использовать True - Сканер штрихкода, False - Камеру устройства
@@ -108,5 +113,4 @@ $BODY$
 */
 
 -- тест
---
- select * from gpGet_MobilebConfig(inSession := '5');
+-- select * from gpGet_MobilebConfig(inSession := '5');
