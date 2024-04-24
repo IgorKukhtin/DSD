@@ -378,6 +378,8 @@ type
     edSSInvNumber_OrderClient: TEdit;
     Label47: TLabel;
     Panel9: TPanel;
+    bSendScanClear: TSpeedButton;
+    Image16: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -513,6 +515,7 @@ type
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure pbSLOrderByChange(Sender: TObject);
     procedure edSSInvNumber_OrderClientClick(Sender: TObject);
+    procedure bSendScanClearClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1641,18 +1644,21 @@ begin
       FOrderClientInvNumber := '';
       FOrderClientInvNumberFull := '';
       edSSInvNumber_OrderClient.Text := '';
+      bSendScanClear.Visible := False;
     end else if DM.GetOrderClient('', Trim(AValues[0]), Id, InvNumber, InvNumberFull) then
     begin
       FOrderClientId := Id;
       FOrderClientInvNumber := InvNumber;
       FOrderClientInvNumberFull := InvNumberFull;
       edSSInvNumber_OrderClient.Text := InvNumberFull;
+      bSendScanClear.Visible := True;
     end else
     begin
       FOrderClientId := 0;
       FOrderClientInvNumber := '';
       FOrderClientInvNumberFull := '';
       edSSInvNumber_OrderClient.Text := '';
+      bSendScanClear.Visible := False;
     end;
   end;
 
@@ -2339,12 +2345,22 @@ begin
   if FisOpenScanChangingMode then sbScanClick(Sender);
 end;
 
+procedure TfrmMain.bSendScanClearClick(Sender: TObject);
+begin
+  FOrderClientId := 0;
+  FOrderClientInvNumber := '';
+  FOrderClientInvNumberFull := '';
+  edSSInvNumber_OrderClient.Text := '';
+  bSendScanClear.Visible := False;
+end;
+
 procedure TfrmMain.bSendScanClick(Sender: TObject);
 begin
   FOrderClientId := 0;
   FOrderClientInvNumber := '';
   FOrderClientInvNumberFull := '';
   edSSInvNumber_OrderClient.Text := '';
+  bSendScanClear.Visible := False;
   ShowSendScan;
 end;
 
@@ -3424,6 +3440,7 @@ begin
         FOrderClientInvNumber := InvNumber;
         FOrderClientInvNumberFull := InvNumberFull;
         edSSInvNumber_OrderClient.Text := InvNumberFull;
+        bSendScanClear.Visible := True;
       end;
     except
       on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));

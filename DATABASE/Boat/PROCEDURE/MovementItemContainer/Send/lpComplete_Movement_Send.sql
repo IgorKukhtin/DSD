@@ -169,7 +169,7 @@ BEGIN
        -- Создали Элементы по zc_MI_Scan
        PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := tmp.Id
                                                , inMovementId             := inMovementId
-                                               , inMovementId_OrderClient := tmp.MovementId_OrderClient
+                                               , inMovementId_OrderClient := COALESCE(tmp.MovementId_OrderClient, 0)
                                                , inGoodsId                := tmp.GoodsId 
                                                , inPartionCellId          := tmp.PartionCellId
                                                , inAmount                 := tmp.Amount
