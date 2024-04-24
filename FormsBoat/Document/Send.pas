@@ -319,6 +319,7 @@ type
     DBViewAddOnScan: TdsdDBViewAddOn;
     Color_Scan: TcxGridDBColumn;
     actSetVisibleScan: TdsdSetVisibleAction;
+    Scan_InvNumberFull_OrderClient: TcxGridDBColumn;
   private
   public
   end;

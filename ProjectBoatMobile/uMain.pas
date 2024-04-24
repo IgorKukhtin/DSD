@@ -2149,6 +2149,8 @@ begin
      DM.cdsSendItemEditPartNumber.AsString := '';
      DM.cdsSendItemEditGoodsGroupName.AsString := DM.qurGoodsListGoodsGroupName.AsString;
      DM.cdsSendItemEditAmount.AsFloat := 1;
+     DM.cdsSendItemEditMovementId_OrderClient.AsInteger := FOrderClientId;
+     DM.cdsSendItemEditInvNumber_OrderClient.AsString := FOrderClientInvNumberFull;
 
      DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2266,6 +2268,8 @@ begin
    DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListTopToId.AsInteger;
    DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListTopToCode.AsInteger;
    DM.cdsSendItemEditToName.AsString := DM.cdsSendListTopToName.AsString;
+   DM.cdsSendItemEditMovementId_OrderClient.AsInteger := DM.cdsSendListTopMovementId_OrderClient.AsInteger;
+   DM.cdsSendItemEditInvNumber_OrderClient.AsString := DM.cdsSendListTopInvNumber_OrderClient.AsString;
 
    DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2303,6 +2307,8 @@ begin
    DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListToId.AsInteger;
    DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListToCode.AsInteger;
    DM.cdsSendItemEditToName.AsString := DM.cdsSendListToName.AsString;
+   DM.cdsSendItemEditMovementId_OrderClient.AsInteger := DM.cdsSendListMovementId_OrderClient.AsInteger;
+   DM.cdsSendItemEditInvNumber_OrderClient.AsString := DM.cdsSendListInvNumber_OrderClient.AsString;
 
    DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2351,7 +2357,8 @@ begin
   ShowGoods;
   bGoodsChoice.Visible := True;
   for I := 0 to High(lwGoods.ItemAppearanceObjects.ItemObjects.Objects) do
-    if Pos('Remains', TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name) > 0 then
+    if (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'RemainsLabel') or
+       (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'Remains') then
        TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Visible := False;
 end;
 
@@ -2962,12 +2969,14 @@ procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  if Focused.GetObject is TEdit then
+  if (Focused.GetObject is TEdit) and (Screen.ActiveForm = frmMain)  then
+  begin
     TEdit(Focused.GetObject).CaretPosition := Length(TEdit(Focused.GetObject).Text);
-  FKBBounds := TRectF.Create(Bounds);
-  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
-  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
-  UpdateKBBounds;
+    FKBBounds := TRectF.Create(Bounds);
+    FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
+    FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
+    UpdateKBBounds;
+  end;
   {$ENDIF}
 end;
 

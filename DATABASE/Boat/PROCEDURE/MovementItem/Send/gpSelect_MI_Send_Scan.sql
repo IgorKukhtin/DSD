@@ -1,8 +1,9 @@
--- Function: gpSelect_MovementItem_SendScan()
+-- Function: gpSelect_MI_Send_Scan()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_SendScan (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MovementItem_SendScan (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Send_Scan (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendScan(
+CREATE OR REPLACE FUNCTION gpSelect_MI_Send_Scan(
     IN inMovementId       Integer      , -- ключ Документа
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
@@ -16,6 +17,7 @@ RETURNS TABLE (Id Integer, Ord Integer
              , Amount TFloat
              , PartNumber TVarChar
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
+             , MovementId_OrderClient Integer, InvNumber_OrderClient Integer, InvNumberFull_OrderClient TVarChar, OperDate_OrderClient TDateTime
              , isErased Boolean
               )
 AS
@@ -46,11 +48,16 @@ BEGIN
                            , MovementItem.Amount
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
                            , MILO_PartionCell.ObjectId                    AS PartionCellId
+                           , MIFloat_MovementId.ValueData :: Integer      AS MovementId_OrderClient
                            , MovementItem.isErased
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                             AND MovementItem.DescId     = zc_MI_Scan()
                                             AND MovementItem.isErased   = tmpIsErased.isErased
+
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
 
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
@@ -92,6 +99,11 @@ BEGIN
 
            , tmpProtocol.OperDate  AS OperDate_protocol
            , Object_User.ValueData AS UserName_protocol
+
+           , Movement_OrderClient.Id                                   AS MovementId_OrderClient
+           , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber_OrderClient
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+           , Movement_OrderClient.OperDate                             AS OperDate_OrderClient
            
            , tmpMI.isErased
        FROM tmpMI
@@ -127,6 +139,8 @@ BEGIN
                                 AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
 
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id  
+
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
             
        ORDER BY 2 DESC
        ;
@@ -144,4 +158,4 @@ $BODY$
 -- тест
 -- 
 
-SELECT * FROM gpSelect_MovementItem_SendScan (inMovementId := 3179 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+SELECT * FROM gpSelect_MI_Send_Scan (inMovementId := 3214 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

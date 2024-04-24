@@ -364,6 +364,11 @@ type
     cdsSendItemEditInvNumber_OrderClient: TWideStringField;
     cdsSendListInvNumber_OrderClientLabel: TWideStringField;
     cdsSendListTopInvNumber_OrderClientLabel: TWideStringField;
+    cdsSendListTopMovementId_OrderClient: TIntegerField;
+    cdsSendListMovementId_OrderClient: TIntegerField;
+    tbSendGoodsMovementId_OrderClient: TIntegerField;
+    tbSendGoodsInvNumber_OrderClient: TWideStringField;
+    cdsSendItemEditMovementId_OrderClient: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -464,7 +469,8 @@ type
 
     procedure OpenSendGoods;
     procedure InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
-                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
+                                   APartNumber, APartionCell : String;  AMovementId_OrderClient: Integer;
+                                   AInvNumber_OrderClient, AError: String; AisSend: Boolean);
     procedure DeleteSendGoods;
     procedure ErasedSendList;
     procedure UnErasedSendList;
@@ -918,6 +924,7 @@ begin
     StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, '');
     StoredProc.Params.AddParam('inFromId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inToId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inMovementId_OrderClient', ftInteger, ptInput, 0);
 
     try
 
@@ -936,6 +943,7 @@ begin
         StoredProc.ParamByName('inPartionCellName').Value := FDQuery.FieldByName('PartionCellName').AsWideString;
         StoredProc.ParamByName('inFromId').Value := FDQuery.FieldByName('FromId').AsInteger;
         StoredProc.ParamByName('inToId').Value := FDQuery.FieldByName('ToId').AsInteger;
+        StoredProc.ParamByName('inMovementId_OrderClient').Value := FDQuery.FieldByName('MovementId_OrderClient').AsInteger;
 
         try
           StoredProc.Execute(false, false, false, 2);
@@ -2391,6 +2399,10 @@ begin
       for I := 0 to DataSet.FieldCount - 1 do
         if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
           cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+      if True then
+
+      cdsSendItemEditMovementId_OrderClient.AsInteger := frmMain.OrderClientId;
+      cdsSendItemEditInvNumber_OrderClient.AsString := frmMain.OrderClientInvNumberFull;
       cdsSendItemEdit.Post;
 
       Result := True;
@@ -2603,6 +2615,7 @@ begin
       StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsSendItemEditPartionCellName.AsWideString);
       StoredProc.Params.AddParam('inFromId', ftInteger, ptInput, cdsSendItemEditFromId.AsInteger);
       StoredProc.Params.AddParam('inToId', ftInteger, ptInput, cdsSendItemEditToId.AsInteger);
+      StoredProc.Params.AddParam('inMovementId_OrderClient', ftInteger, ptInput, cdsSendItemEditMovementId_OrderClient.AsInteger);
 
       StoredProc.Execute(false, false, false, 2);
 
@@ -2621,10 +2634,12 @@ begin
     if not cdsSendList.Active then
     begin
       DM.InsUpdLocalSendGoods(cdsSendItemEditLocalId.AsInteger, nId, cdsSendItemEditGoodsId.AsInteger,
-                                   cdsSendItemEditFromId.AsInteger, cdsSendItemEditToId.AsInteger,
-                                   cdsSendItemEditAmount.AsFloat, cdsSendItemEditAmountRemains.AsFloat,
-                                   cdsSendItemEditTotalCount.AsFloat, cdsSendItemEditPartNumber.AsString,
-                                   cdsSendItemEditPartionCellName.AsString, '', Result);
+                              cdsSendItemEditFromId.AsInteger, cdsSendItemEditToId.AsInteger,
+                              cdsSendItemEditAmount.AsFloat, cdsSendItemEditAmountRemains.AsFloat,
+                              cdsSendItemEditTotalCount.AsFloat, cdsSendItemEditPartNumber.AsString,
+                              cdsSendItemEditPartionCellName.AsString,
+                              cdsSendItemEditMovementId_OrderClient.AsInteger,
+                              cdsSendItemEditInvNumber_OrderClient.AsString, '', Result);
     end else
     begin
       cdsSendList.Edit;
@@ -3281,7 +3296,8 @@ end;
 
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию
 procedure TDM.InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
-                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
+                                        APartNumber, APartionCell : String;  AMovementId_OrderClient: Integer;
+                                        AInvNumber_OrderClient, AError: String; AisSend: Boolean);
   var FDQuery: TFDQuery;
 begin
 
@@ -3305,6 +3321,8 @@ begin
     FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount + AAmount;
     FDQuery.FieldByName('FromId').AsInteger := AFromId;
     FDQuery.FieldByName('ToId').AsInteger := AToId;
+    FDQuery.FieldByName('MovementId_OrderClient').AsInteger := AMovementId_OrderClient;
+    FDQuery.FieldByName('InvNumber_OrderClient').AsString := AInvNumber_OrderClient;
     FDQuery.FieldByName('Error').AsString := AError;
     FDQuery.FieldByName('isSend').AsBoolean := AisSend;
     FDQuery.Post;

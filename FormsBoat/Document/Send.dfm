@@ -1291,6 +1291,13 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
+          object Scan_InvNumberFull_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 114
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView_Scan
@@ -5413,7 +5420,7 @@ object SendForm: TSendForm
     Top = 391
   end
   object spSelectScan: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_SendScan'
+    StoredProcName = 'gpSelect_MI_Send_Scan'
     DataSet = ScanCDS
     DataSets = <
       item
