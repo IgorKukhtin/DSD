@@ -1,7 +1,7 @@
 object DM: TDM
   OnCreate = DataModuleCreate
   Height = 836
-  Width = 1603
+  Width = 1262
   PixelsPerInch = 144
   object cdsInventory: TClientDataSet
     Aggregates = <>
@@ -234,37 +234,6 @@ object DM: TDM
     Flags = [sfIgnoreCase]
     Left = 1056
     Top = 32
-  end
-  object cdsOrderInternal: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 1112
-    Top = 488
-    object cdsOrderInternalMovementItemId: TIntegerField
-      FieldName = 'MovementItemId'
-    end
-    object cdsOrderInternalInvNumber_Full: TWideStringField
-      FieldName = 'InvNumber_Full'
-      Size = 255
-    end
-    object cdsOrderInternalInvNumberFull_OrderClient: TWideStringField
-      FieldName = 'InvNumberFull_OrderClient'
-      Size = 255
-    end
-    object cdsOrderInternalGoodsName: TWideStringField
-      FieldName = 'GoodsName'
-      Size = 255
-    end
-    object cdsOrderInternalAmount: TFloatField
-      FieldName = 'Amount'
-    end
-    object cdsOrderInternalMovementPUId: TIntegerField
-      FieldName = 'MovementPUId'
-    end
-    object cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField
-      FieldName = 'InvNumberFull_ProductionUnion'
-      Size = 255
-    end
   end
   object tbGoods: TFDTable
     Connection = conMain
@@ -1109,8 +1078,8 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     OnCalcFields = cdProductionUnionListCalcFields
-    Left = 760
-    Top = 480
+    Left = 744
+    Top = 476
     object cdsProductionUnionListTopId: TIntegerField
       FieldName = 'Id'
     end
@@ -1263,99 +1232,11 @@ object DM: TDM
       Size = 40
     end
   end
-  object cdsProductionUnionItemEdit: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    AfterEdit = cdsSendItemEditAfterEdit
-    OnCalcFields = cdsSendItemEditCalcFields
-    Left = 504
-    Top = 480
-    object IntegerField26: TIntegerField
-      FieldName = 'LocalId'
-    end
-    object IntegerField27: TIntegerField
-      FieldName = 'Id'
-    end
-    object IntegerField28: TIntegerField
-      FieldName = 'GoodsId'
-      OnChange = cdsInventoryItemEditGoodsIdChange
-    end
-    object IntegerField29: TIntegerField
-      FieldName = 'GoodsCode'
-    end
-    object WideStringField40: TWideStringField
-      FieldName = 'GoodsName'
-      Size = 255
-    end
-    object WideStringField41: TWideStringField
-      FieldName = 'Article'
-      Size = 100
-    end
-    object WideStringField42: TWideStringField
-      FieldName = 'PartNumber'
-      OnChange = cdsInventoryItemEditPartNumberChange
-      Size = 255
-    end
-    object WideStringField43: TWideStringField
-      FieldName = 'GoodsGroupName'
-      Size = 255
-    end
-    object WideStringField44: TWideStringField
-      FieldName = 'PartnerName'
-      Size = 255
-    end
-    object IntegerField30: TIntegerField
-      FieldName = 'PartionCellId'
-    end
-    object WideStringField45: TWideStringField
-      FieldName = 'PartionCellName'
-      Size = 255
-    end
-    object FloatField7: TFloatField
-      FieldName = 'Amount'
-    end
-    object FloatField8: TFloatField
-      FieldName = 'TotalCount'
-    end
-    object FloatField9: TFloatField
-      FieldName = 'AmountRemains'
-    end
-    object FloatField10: TFloatField
-      FieldKind = fkCalculated
-      FieldName = 'TotalCountCalc'
-      Calculated = True
-    end
-    object IntegerField31: TIntegerField
-      FieldName = 'FromId'
-    end
-    object IntegerField32: TIntegerField
-      FieldName = 'FromCode'
-    end
-    object WideStringField46: TWideStringField
-      FieldName = 'FromName'
-      Size = 255
-    end
-    object IntegerField33: TIntegerField
-      FieldName = 'ToId'
-    end
-    object IntegerField34: TIntegerField
-      FieldName = 'ToCode'
-    end
-    object WideStringField47: TWideStringField
-      FieldName = 'ToName'
-      Size = 255
-    end
-    object IntegerField35: TIntegerField
-      FieldName = 'MovementId_OrderClient'
-    end
-    object WideStringField48: TWideStringField
-      FieldName = 'InvNumber_OrderClient'
-      Size = 255
-    end
-  end
   object cdsProductionUnionList: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = cdsProductionUnionListAfterScroll
+    OnCalcFields = cdProductionUnionListCalcFields
     Left = 264
     Top = 476
     object cdsProductionUnionListId: TIntegerField
@@ -1506,6 +1387,112 @@ object DM: TDM
       FieldName = 'StatusCode_OrderInternal'
     end
     object cdsProductionUnionListStatusName_OrderInternal: TWideStringField
+      FieldName = 'StatusName_OrderInternal'
+      Size = 40
+    end
+  end
+  object cdsProductionUnionItemEdit: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 501
+    Top = 476
+    object cdsProductionUnionItemEditId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsProductionUnionItemEditGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsProductionUnionItemEditGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsProductionUnionItemEditGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsProductionUnionItemEditEAN: TWideStringField
+      FieldName = 'EAN'
+    end
+    object cdsProductionUnionItemEditGoodsGroupId: TIntegerField
+      FieldName = 'GoodsGroupId'
+    end
+    object cdsProductionUnionItemEditGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditMeasureName: TWideStringField
+      FieldName = 'MeasureName'
+    end
+    object cdsProductionUnionItemEditAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsProductionUnionItemEditAmountRemains: TFloatField
+      FieldName = 'AmountRemains'
+    end
+    object cdsProductionUnionItemEditisErased: TBooleanField
+      FieldName = 'isErased'
+    end
+    object cdsProductionUnionItemEditOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsProductionUnionItemEditInvNumber: TWideStringField
+      FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditStatusCode: TIntegerField
+      FieldName = 'StatusCode'
+    end
+    object cdsProductionUnionItemEditStatusName: TWideStringField
+      FieldName = 'StatusName'
+      Size = 40
+    end
+    object cdsProductionUnionItemEditFromId: TIntegerField
+      FieldName = 'FromId'
+    end
+    object cdsProductionUnionItemEditFromCode: TIntegerField
+      FieldName = 'FromCode'
+    end
+    object cdsProductionUnionItemEditFromName: TWideStringField
+      FieldName = 'FromName'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditToId: TIntegerField
+      FieldName = 'ToId'
+    end
+    object cdsProductionUnionItemEditToCode: TIntegerField
+      FieldName = 'ToCode'
+    end
+    object cdsProductionUnionItemEditToName: TWideStringField
+      FieldName = 'ToName'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditToNameLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'ToNameLabel'
+      Size = 40
+      Calculated = True
+    end
+    object cdsProductionUnionItemEditMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object cdsProductionUnionItemEditInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditOperDate_OrderInternal: TDateTimeField
+      FieldName = 'OperDate_OrderInternal'
+    end
+    object cdsProductionUnionItemEditInvNumber_OrderInternal: TWideStringField
+      FieldName = 'InvNumber_OrderInternal'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditStatusCode_OrderInternal: TIntegerField
+      FieldName = 'StatusCode_OrderInternal'
+    end
+    object cdsProductionUnionItemEditStatusName_OrderInternal: TWideStringField
       FieldName = 'StatusName_OrderInternal'
       Size = 40
     end
