@@ -73,7 +73,10 @@ BEGIN
 
 
      -- доступ Документы-меню (управленцы) + ЗП просмотр ВСЕ
-     vbIsLevelMax01:= EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId);
+     vbIsLevelMax01:= EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId)
+             -- Ограниченние - только разрешенные ведомости ЗП
+             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326)
+           ;
 
  
      -- !!! права пользователей !!!
@@ -151,35 +154,38 @@ BEGIN
    --vbIsList_all:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    --            OR NOT EXISTS (SELECT 1 FROM _tmpList)
    --              ;
-     vbIsList_all:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-                 OR NOT EXISTS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
-                                FROM ObjectLink AS ObjectLink_User_Member
-                                     INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
-                                                           ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                                          AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
-                                     INNER JOIN Object AS Object_MemberPersonalServiceList
-                                                       ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
-                                                      AND Object_MemberPersonalServiceList.isErased = FALSE
-                                     LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
-                                                            AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
-                                     LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
-                                                          ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
-                                                         AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
-                                     LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                                                                                   AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
-                                                                                     OR ObjectBoolean.ValueData          = TRUE)
-                                WHERE ObjectLink_User_Member.ObjectId = vbUserId
-                                  AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-                               UNION
-                                SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
-                                FROM ObjectLink AS ObjectLink_User_Member
-                                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
-                                                           ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                                          AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
-                                WHERE ObjectLink_User_Member.ObjectId = vbUserId
-                                  AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
-                               )
-            OR vbUserId = 14599 -- Коротченко Т.Н.
+     vbIsList_all:= (EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+                  OR NOT EXISTS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                                 FROM ObjectLink AS ObjectLink_User_Member
+                                      INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                            ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                           AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                      INNER JOIN Object AS Object_MemberPersonalServiceList
+                                                        ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                       AND Object_MemberPersonalServiceList.isErased = FALSE
+                                      LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                             AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                                      LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                           ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                          AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                                      LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                                    AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                                      OR ObjectBoolean.ValueData          = TRUE)
+                                 WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                   AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                UNION
+                                 SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
+                                 FROM ObjectLink AS ObjectLink_User_Member
+                                      INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                            ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                           AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                                 WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                   AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                )
+                  OR vbUserId = 14599 -- Коротченко Т.Н.
+                    )
+             -- Ограниченние - только разрешенные ведомости ЗП
+             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326)
                    ;
 
      -- Результат

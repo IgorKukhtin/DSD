@@ -54,6 +54,12 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
 
+     -- Ограниченние - нет доступа к Движению по счету
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 10657332)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету Движению по счету.';
+     END IF;
+
      -- Блокируем ему просмотр
      IF inUserId = 9457 -- Климентьев К.И.
      THEN
@@ -550,4 +556,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Account_noBalance(inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('31.12.2020')::TDateTime , inAccountGroupId := 9014 , inAccountDirectionId := 9025 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 9215 , inProfitLossDirectionId := 9244 , inProfitLossId := 0 , inBranchId := 0 ,  inSession := '5');
+-- SELECT * FROM gpReport_Account_noBalance(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('31.12.2024')::TDateTime , inAccountGroupId := 9014 , inAccountDirectionId := 9025 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 9215 , inProfitLossDirectionId := 9244 , inProfitLossId := 0 , inBranchId := 0 ,  inSession := '5');

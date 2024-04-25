@@ -55,6 +55,12 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
 
+     -- Ограниченние - нет доступа к Движению по счету
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 10657332)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету Движению по счету.';
+     END IF;
+
      -- Блокируем ему просмотр
      IF inUserId = 9457 -- Климентьев К.И.
      THEN
@@ -560,4 +566,4 @@ ALTER FUNCTION lpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2016', inEndDate:= '01.12.2016', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2024', inEndDate:= '01.12.2024', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());

@@ -1,4 +1,4 @@
--- Function: lpReport_byAccount ()
+-- Function: lpReport_AccountMotion()
 
 DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpReport_AccountMotion (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean);
@@ -59,6 +59,13 @@ $BODY$
 BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
+
+
+     -- Ограниченние - нет доступа к Отчету по счету
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 10657333)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету По счету.';
+     END IF;
 
 
      -- Блокируем ему просмотр
