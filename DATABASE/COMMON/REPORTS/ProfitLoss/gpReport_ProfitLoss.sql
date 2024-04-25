@@ -52,6 +52,12 @@ BEGIN
      vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
 
 
+     -- Ограниченние - нет доступа к ОПиУ
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657330)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету ОПиУ.';
+     END IF;
+
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -607,4 +613,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '04.03.2022', inEndDate:= '04.03.2022', inSession:= '5') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '04.05.2024', inEndDate:= '04.05.2024', inSession:= '5') WHERE Amount <> 0 ORDER BY 5
