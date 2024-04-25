@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_MobileSend()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileSend (Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileSend (Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_MobileSend (Integer, Integer, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileSend(
  INOUT ioId                                 Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_MobileSend(
     IN inPartionCellName                    TVarChar  , -- код или название
     IN inFromId                             Integer   , -- От кого
     IN inToId                               Integer   , -- Кому
+    IN inMovementId_OrderClient             Integer   , -- Заказ Клиента
     IN inSession                            TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -24,6 +26,7 @@ $BODY$
    DECLARE vbInvNumber  TVarChar;
    DECLARE vbFromId     Integer;
    DECLARE vbToId       Integer;
+   DECLARE vbParentId   Integer;
    DECLARE vbInsertId   Integer;
    DECLARE vbOperDate   TDateTime;
    DECLARE vbGoodsId    Integer;
@@ -48,9 +51,9 @@ BEGIN
      THEN
 
        -- Данные по документу
-       SELECT Movement.Id,  Movement.StatusId, Movement.OperDate, Movement.InvNumber, MLO_From.ObjectId, MLO_To.ObjectId, MLO_Insert.ObjectId
+       SELECT Movement.Id,  Movement.StatusId,  Movement.ParentId, Movement.OperDate, Movement.InvNumber, MLO_From.ObjectId, MLO_To.ObjectId, MLO_Insert.ObjectId
             , MovementItem.ObjectId, MovementItem.Amount, MovementItem.isErased, COALESCE (MIString_PartNumber.ValueData,'')
-       INTO vbMovementId, vbStatusId, vbOperDate, vbInvNumber, vbFromId, vbToId, vbInsertId
+       INTO vbMovementId, vbStatusId, vbParentId, vbOperDate, vbInvNumber, vbFromId, vbToId, vbInsertId
           , vbGoodsId, vbAmount, vbisErased, vbPartNumber
        FROM MovementItem 
             LEFT JOIN MovementItemString AS MIString_PartNumber
@@ -89,6 +92,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Изменение удаленных записей запрещено.';
        END IF;
        
+       -- Если строка удалена то ругаемся
+       IF COALESCE(vbParentId, 0) <> COALESCE(inMovementId_OrderClient, 0)
+       THEN
+         RAISE EXCEPTION 'Ошибка. Изменение заказа покупателя запрещено.';
+       END IF;
 
        -- Если ничего не изменилось то просто выходим
        IF COALESCE (vbFromId, 0) = inFromId AND COALESCE (vbToId, 0) = inToId AND 
@@ -112,7 +120,7 @@ BEGIN
      
      END IF;
      
-     -- Ищем документ перемещения по сотруднику
+     -- Ищем документ перемещения по сотруднику и заказу покупателя
      IF COALESCE(vbMovementId, 0) = 0
      THEN
      
@@ -134,6 +142,7 @@ BEGIN
                                                 AND MovementItem.DescId     = zc_MI_Scan()
                     WHERE Movement.DescId   = zc_Movement_Send()
                       AND Movement.StatusId <> zc_Enum_Status_Erased()
+                      AND COALESCE(Movement.ParentId, 0) = COALESCE(inMovementId_OrderClient, 0)
                       AND Movement.OperDate = CURRENT_DATE), 0) > 1
        THEN 
          RAISE EXCEPTION 'Ошибка. Активно более одного документа для сканирования. Удалите лишний.';
@@ -158,10 +167,11 @@ BEGIN
                                    AND MovementItem.DescId     = zc_MI_Scan()
        WHERE Movement.DescId   = zc_Movement_Send()
          AND Movement.StatusId <> zc_Enum_Status_Erased()
+         AND COALESCE(Movement.ParentId, 0) = COALESCE(inMovementId_OrderClient, 0)
          AND Movement.OperDate = CURRENT_DATE
        LIMIT 1;
 
-       -- Отменяес проведение найденого документа если проведен
+       -- Отменяем проведение найденого документа если проведен
        IF COALESCE(vbStatusId, zc_Enum_Status_Erased()) = zc_Enum_Status_Complete()
        THEN
          PERFORM gpUnComplete_Movement_Send (vbMovementId, inSession);
@@ -179,6 +189,11 @@ BEGIN
                                                    , ''
                                                    , ''
                                                    , vbUserId);  
+                                                   
+        IF COALESCE(inMovementId_OrderClient, 0) <> 0
+        THEN
+          UPDATE Movement SET ParentId = inMovementId_OrderClient WHERE Movement.Id = vbMovementId AND COALESCE (Movement.ParentId, 0) <> inMovementId_OrderClient;
+        END IF;
      END IF;
      
      -- Данные по документу
@@ -265,6 +280,12 @@ BEGIN
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     
+     -- сохранили свойство <Заказ Клиента>
+     IF COALESCE(inMovementId_OrderClient, 0) <> 0
+     THEN
+       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_MovementId(), ioId, inMovementId_OrderClient ::TFloat);       
+     END IF; 
 
      -- Проводим документ из которого изяли товар если есть количество
      IF COALESCE(vbMovementOldId, 0) <> 0 AND
@@ -318,4 +339,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_MobileSend(ioId := 567436, inGoodsId := 41728, inAmount := 2, inPartNumber := '', inPartionCellName := '', inFromId := 35139, inToId := 33347, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpInsertUpdate_MovementItem_MobileSend(ioId := 0 , inGoodsId := 261920 , inAmount := 1 , inPartNumber := '' , inPartionCellName := '' , inFromId := 35139 , inToId := 33347 , inMovementId_OrderClient := 908 , inSession := zfCalc_UserAdmin())

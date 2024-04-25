@@ -169,7 +169,7 @@ BEGIN
        -- Создали Элементы по zc_MI_Scan
        PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := tmp.Id
                                                , inMovementId             := inMovementId
-                                               , inMovementId_OrderClient := 0
+                                               , inMovementId_OrderClient := COALESCE(tmp.MovementId_OrderClient, 0)
                                                , inGoodsId                := tmp.GoodsId 
                                                , inPartionCellId          := tmp.PartionCellId
                                                , inAmount                 := tmp.Amount
@@ -214,11 +214,16 @@ BEGIN
                    , tmpMIScan.GoodsId                            AS GoodsId
                    , tmpMIScan.Amount                             AS Amount
                    , tmpMIScan.PartNumber                         AS PartNumber
-                   , COALESCE(MILO_PartionCell.ObjectId, 0)         AS PartionCellId
+                   , COALESCE(MILO_PartionCell.ObjectId, 0)       AS PartionCellId
+                   , MIFloat_MovementId.ValueData :: Integer      AS MovementId_OrderClient
               FROM tmpMIScan
                             
                    FULL JOIN tmpMIMaster ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
                                         AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                               ON MIFloat_MovementId.MovementItemId = COALESCE(tmpMIScan.MaxID, tmpMIMaster.Id)
+                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
 
                    LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                     ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId

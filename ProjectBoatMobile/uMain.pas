@@ -372,6 +372,14 @@ type
     LinkListControlToField2: TLinkListControlToField;
     BindSourceDB11: TBindSourceDB;
     LinkListControlToField6: TLinkListControlToField;
+    edSIEInvNumber_OrderClient: TEdit;
+    Label46: TLabel;
+    LinkControlToField33: TLinkControlToField;
+    edSSInvNumber_OrderClient: TEdit;
+    Label47: TLabel;
+    Panel9: TPanel;
+    bSendScanClear: TSpeedButton;
+    Image16: TImage;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -418,6 +426,8 @@ type
     procedure edАmountChangeTracking(Sender: TObject);
     procedure SetDateDownloadDict(Values : TDateTime);
     procedure SetBarCodePref(Values : String);
+    procedure SetDocBarCodePref(Values : String);
+    procedure SetItemBarCodePref(Values : String);
     procedure SetArticleSeparators(Values : String);
 
     procedure SetisCameraScaner(Values : boolean);
@@ -504,6 +514,8 @@ type
     procedure lwSendScanGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure pbSLOrderByChange(Sender: TObject);
+    procedure edSSInvNumber_OrderClientClick(Sender: TObject);
+    procedure bSendScanClearClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -565,10 +577,18 @@ type
 
     // Настройки
     FBarCodePref: String;
+    FDocBarCodePref: String;
+    FItemBarCodePref: String;
     FArticleSeparators: String;
     FCaptionFontSize: Single;
 
+    // предвдущая страница
     FActiveTabPrew: TTabItem;
+
+    // Заказ аокупателя
+    FOrderClientId: Integer;
+    FOrderClientInvNumber: String;
+    FOrderClientInvNumberFull: String;
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
@@ -589,6 +609,7 @@ type
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
+    procedure InputOrderClient(const AResult: TModalResult; const AValues: array of string);
 
     {$IF DEFINED(ANDROID)}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
@@ -604,6 +625,8 @@ type
 
     property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
     property BarCodePref: String read FBarCodePref write SetBarCodePref;
+    property DocBarCodePref: String read FDocBarCodePref write SetDocBarCodePref;
+    property ItemBarCodePref: String read FItemBarCodePref write SetItemBarCodePref;
     property ArticleSeparators: String read FArticleSeparators write SetArticleSeparators;
 
     // Использовать в любом случае камеру устройства
@@ -625,6 +648,10 @@ type
     // Interne Nr
     property isDictGoodsEAN: Boolean read FisDictGoodsEAN write SetisDictGoodsEAN;
 
+    // Заказ аокупателя
+    property OrderClientId: Integer read FOrderClientId;
+    property OrderClientInvNumber: String read FOrderClientInvNumber;
+    property OrderClientInvNumberFull: String read FOrderClientInvNumberFull;
 
     // ***** Фильтр в остальных справочкиках
     // Interne Nr (Code)
@@ -637,14 +664,14 @@ var
 
 implementation
 
-uses System.IOUtils, System.Math, FMX.SearchBox, FMX.Authentication, FMX.Storage,
+uses System.IOUtils, System.Math, System.RegularExpressions, FMX.SearchBox, FMX.Authentication, FMX.Storage,
      FMX.CommonData, FMX.CursorUtils;
 
 {$R *.fmx}
 
 const
-  WebServer = 'http://217.92.58.239:11011/projectBoat_utf8/index.php';
-  WebServerTest = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
+  WebServer : string = 'http://217.92.58.239:11011/projectBoat_utf8/index.php;http://291.168.0.50/projectBoat_utf8/index.php';
+  WebServerTest : string = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
   MainWidth = 336;
 
 function GetSearshBox(AListView: TListView): TSearchBox;
@@ -700,6 +727,12 @@ begin
   FisScanOk := False;
   FDataSetRefresh := dsrNone;
   FBarCodePref := '0000';
+  FDocBarCodePref := '2230';
+  FItemBarCodePref := '2240';
+  FOrderClientId := 0;
+  FOrderClientInvNumber := '';
+  FOrderClientInvNumberFull := '';
+
 
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListSearchChange;
   GetSearshBox(lwGoods).OnChangeTracking := lwGoodsSearchChange;
@@ -767,6 +800,8 @@ begin
     FDateDownloadDict := SettingsFile.ReadDateTime('Params', 'DateDownloadDict', IncDay(Now, - 2));
 
     FBarCodePref := SettingsFile.ReadString('Params', 'BarCodePref', '0000');
+    FDocBarCodePref := SettingsFile.ReadString('Params', 'DocBarCodePref', '2230');
+    FItemBarCodePref := SettingsFile.ReadString('Params', 'ItemBarCodePref', '2240');
     FArticleSeparators := SettingsFile.ReadString('Params', 'ArticleSeparators', ' ,-');
 
     FisCameraScaner := SettingsFile.ReadBool('DataWedge', 'isCameraScaner', False);
@@ -845,6 +880,32 @@ begin
   try
     FBarCodePref := Values;
     SettingsFile.WriteString('Params', 'BarCodePref', FBarCodePref);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetDocBarCodePref(Values : String);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FDocBarCodePref := Values;
+    SettingsFile.WriteString('Params', 'DocBarCodePref', FDocBarCodePref);
+  finally
+    FreeAndNil(SettingsFile);
+  end;
+end;
+
+procedure TfrmMain.SetItemBarCodePref(Values : String);
+  var SettingsFile : TIniFile;
+begin
+  // Сохраним в ini файла
+  SettingsFile := TIniFile.Create(FINIFile);
+  try
+    FItemBarCodePref := Values;
+    SettingsFile.WriteString('Params', 'BarCodePref', FItemBarCodePref);
   finally
     FreeAndNil(SettingsFile);
   end;
@@ -1055,13 +1116,13 @@ begin
 
   try
 
-    if COPY(edOrderInternalBarCode.Text, 1, 3) <> '224' then
+    if COPY(edOrderInternalBarCode.Text, 1, Length(FItemBarCodePref)) <> FItemBarCodePref then
     begin
       TDialogService.ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
       Exit;
     end;
 
-    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, 4, 9), Code) then
+    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, Length(FItemBarCodePref) + 1, 9), Code) then
     begin
       TDialogService.ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
       Exit;
@@ -1571,6 +1632,44 @@ begin
   end;
 end;
 
+procedure TfrmMain.InputOrderClient(const AResult: TModalResult; const AValues: array of string);
+  var InvNumber, InvNumberFull: String; ID: Integer;
+begin
+
+  if (AResult = mrOk) and (AValues[0] <> FOrderClientInvNumberFull) then
+  begin
+    if Trim(AValues[0]) = '' then
+    begin
+      FOrderClientId := 0;
+      FOrderClientInvNumber := '';
+      FOrderClientInvNumberFull := '';
+      edSSInvNumber_OrderClient.Text := '';
+      bSendScanClear.Visible := False;
+    end else if DM.GetOrderClient('', Trim(AValues[0]), Id, InvNumber, InvNumberFull) then
+    begin
+      FOrderClientId := Id;
+      FOrderClientInvNumber := InvNumber;
+      FOrderClientInvNumberFull := InvNumberFull;
+      edSSInvNumber_OrderClient.Text := InvNumberFull;
+      bSendScanClear.Visible := True;
+    end else
+    begin
+      FOrderClientId := 0;
+      FOrderClientInvNumber := '';
+      FOrderClientInvNumberFull := '';
+      edSSInvNumber_OrderClient.Text := '';
+      bSendScanClear.Visible := False;
+    end;
+  end;
+
+  lwSendScan.SetFocus;
+end;
+
+procedure TfrmMain.edSSInvNumber_OrderClientClick(Sender: TObject);
+begin
+  TDialogService.InputQuery('Ввод № док. заказа', ['№ док. заказа'], [FOrderClientInvNumberFull], InputOrderClient);
+end;
+
 procedure TfrmMain.edАmountChangeTracking(Sender: TObject);
 Var FEdit : TEdit;
     FFloat : Single;
@@ -2056,6 +2155,8 @@ begin
      DM.cdsSendItemEditPartNumber.AsString := '';
      DM.cdsSendItemEditGoodsGroupName.AsString := DM.qurGoodsListGoodsGroupName.AsString;
      DM.cdsSendItemEditAmount.AsFloat := 1;
+     DM.cdsSendItemEditMovementId_OrderClient.AsInteger := FOrderClientId;
+     DM.cdsSendItemEditInvNumber_OrderClient.AsString := FOrderClientInvNumberFull;
 
      DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2173,6 +2274,8 @@ begin
    DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListTopToId.AsInteger;
    DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListTopToCode.AsInteger;
    DM.cdsSendItemEditToName.AsString := DM.cdsSendListTopToName.AsString;
+   DM.cdsSendItemEditMovementId_OrderClient.AsInteger := DM.cdsSendListTopMovementId_OrderClient.AsInteger;
+   DM.cdsSendItemEditInvNumber_OrderClient.AsString := DM.cdsSendListTopInvNumber_OrderClient.AsString;
 
    DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2210,6 +2313,8 @@ begin
    DM.cdsSendItemEditToId.AsInteger := DM.cdsSendListToId.AsInteger;
    DM.cdsSendItemEditToCode.AsInteger := DM.cdsSendListToCode.AsInteger;
    DM.cdsSendItemEditToName.AsString := DM.cdsSendListToName.AsString;
+   DM.cdsSendItemEditMovementId_OrderClient.AsInteger := DM.cdsSendListMovementId_OrderClient.AsInteger;
+   DM.cdsSendItemEditInvNumber_OrderClient.AsString := DM.cdsSendListInvNumber_OrderClient.AsString;
 
    DM.GetMISendGoods(DM.cdsSendItemEdit);
 
@@ -2240,8 +2345,22 @@ begin
   if FisOpenScanChangingMode then sbScanClick(Sender);
 end;
 
+procedure TfrmMain.bSendScanClearClick(Sender: TObject);
+begin
+  FOrderClientId := 0;
+  FOrderClientInvNumber := '';
+  FOrderClientInvNumberFull := '';
+  edSSInvNumber_OrderClient.Text := '';
+  bSendScanClear.Visible := False;
+end;
+
 procedure TfrmMain.bSendScanClick(Sender: TObject);
 begin
+  FOrderClientId := 0;
+  FOrderClientInvNumber := '';
+  FOrderClientInvNumberFull := '';
+  edSSInvNumber_OrderClient.Text := '';
+  bSendScanClear.Visible := False;
   ShowSendScan;
 end;
 
@@ -2254,7 +2373,8 @@ begin
   ShowGoods;
   bGoodsChoice.Visible := True;
   for I := 0 to High(lwGoods.ItemAppearanceObjects.ItemObjects.Objects) do
-    if Pos('Remains', TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name) > 0 then
+    if (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'RemainsLabel') or
+       (TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Name = 'Remains') then
        TTextObjectAppearance(lwGoods.ItemAppearanceObjects.ItemObjects.Objects[I]).Visible := False;
 end;
 
@@ -2865,12 +2985,14 @@ procedure TfrmMain.FormVirtualKeyboardShown(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 begin
   {$IF DEFINED(iOS) or DEFINED(ANDROID)}
-  if Focused.GetObject is TEdit then
+  if (Focused.GetObject is TEdit) and (Screen.ActiveForm = frmMain)  then
+  begin
     TEdit(Focused.GetObject).CaretPosition := Length(TEdit(Focused.GetObject).Text);
-  FKBBounds := TRectF.Create(Bounds);
-  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
-  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
-  UpdateKBBounds;
+    FKBBounds := TRectF.Create(Bounds);
+    FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
+    FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
+    UpdateKBBounds;
+  end;
   {$ENDIF}
 end;
 
@@ -2878,6 +3000,8 @@ procedure TfrmMain.LogInButtonClick(Sender: TObject);
 var
   ErrorMessage: String;
   SettingsFile : TIniFile;
+  I: Integer;
+  Res: TArray<string>;
 begin
 
   try
@@ -2889,9 +3013,12 @@ begin
       exit;
     end;
 
-    if FisTestWebServer then
-      gc_WebService := WebServerTest
-    else gc_WebService := WebServer;
+    if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+    else Res := TRegEx.Split(WebServer, ';');
+
+    SetLength(gc_WebServers, High(Res) + 1);
+    for I := Low(Res) to High(Res) do gc_WebServers[I] := Res[I];
+    gc_WebService := gc_WebServers[0];
 
     Wait(True);
     try
@@ -3300,10 +3427,46 @@ end;
 
 // Обрабатываем отсканированное комплектующее для перемещения
 procedure TfrmMain.OnScanResultSendScan(Sender: TObject; AData_String: String);
+  var InvNumber, InvNumberFull: String; ID: Integer;
 begin
-  case SearchByBarcode(AData_String) of
-    1 : ShowSendItemEdit;
-    2 : bSendScanSearchClick(Sender);
+
+  // Если штрих код документа
+  if COPY(AData_String, 1, LengTh(FDocBarCodePref)) = FDocBarCodePref then
+  begin
+    try
+      if DM.GetOrderClient(AData_String, '', Id, InvNumber, InvNumberFull) then
+      begin
+        FOrderClientId := Id;
+        FOrderClientInvNumber := InvNumber;
+        FOrderClientInvNumberFull := InvNumberFull;
+        edSSInvNumber_OrderClient.Text := InvNumberFull;
+        bSendScanClear.Visible := True;
+      end;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  end else if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
+  begin
+
+    if Length(AData_String) > 12 then AData_String := Copy(AData_String, 1, Length(AData_String) - 1);
+
+    if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
+    begin
+      TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
+      Exit;
+    end;
+
+    if DM.GetBarcodeSendOrderInternal(Id) then
+    begin
+      SwitchToForm(tiSendItemEdit, nil);
+      lCaption.Text := 'Редактирование Перемещения';
+    end;
+  end else
+  begin
+    case SearchByBarcode(AData_String) of
+      1 : ShowSendItemEdit;
+      2 : bSendScanSearchClick(Sender);
+    end;
   end;
 end;
 

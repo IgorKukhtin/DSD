@@ -1053,7 +1053,7 @@ object SendForm: TSendForm
         Height = 264
         Align = alClient
         TabOrder = 0
-        object cxGridDBTableView1: TcxGridDBTableView
+        object cxGridDBTableView_Scan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ScanDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -1291,9 +1291,16 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 70
           end
+          object Scan_InvNumberFull_OrderClient: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
+            DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 114
+          end
         end
         object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
+          GridView = cxGridDBTableView_Scan
         end
       end
     end
@@ -1440,6 +1447,12 @@ object SendForm: TSendForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 246
@@ -2160,6 +2173,7 @@ object SendForm: TSendForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actSetVisibleScan
       StoredProc = spGet
       StoredProcList = <
         item
@@ -3962,6 +3976,20 @@ object SendForm: TSendForm
       ImageIndexTrue = 31
       ImageIndexFalse = 29
     end
+    object actSetVisibleScan: TdsdSetVisibleAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actSetVisibleScan'
+      SetVisibleParams = <
+        item
+          Component = cxTabSheetScan
+          ValueParam.Value = Null
+          ValueParam.Component = FormParams
+          ValueParam.ComponentItem = 'isScan'
+          ValueParam.DataType = ftBoolean
+          ValueParam.MultiSelectSeparator = ','
+        end>
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -4461,6 +4489,14 @@ object SendForm: TSendForm
         Value = Null
         Component = edInvNumberInvoice
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isScan'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isScan'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -5384,7 +5420,7 @@ object SendForm: TSendForm
     Top = 391
   end
   object spSelectScan: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_SendScan'
+    StoredProcName = 'gpSelect_MI_Send_Scan'
     DataSet = ScanCDS
     DataSets = <
       item
@@ -5413,7 +5449,7 @@ object SendForm: TSendForm
   end
   object DBViewAddOnScan: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView1
+    View = cxGridDBTableView_Scan
     OnDblClickActionList = <
       item
       end>

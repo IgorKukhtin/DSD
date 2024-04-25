@@ -18,10 +18,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar
              , ReceiptGoodsId Integer, ReceiptGoodsName TVarChar
              , MovementId_OrderClient Integer
              , InvNumberFull_OrderClient TVarChar
+             , isScan Boolean
               )
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbisScan Boolean;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -54,6 +56,7 @@ BEGIN
 
              , 0                         AS MovementId_OrderClient
              , CAST ('' AS TVarChar)     AS InvNumberFull_OrderClient
+             , False                      AS isScan
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
@@ -61,6 +64,11 @@ BEGIN
           ;
 
      ELSE
+
+       vbisScan := EXISTS (SELECT MovementItem.Id
+                           FROM MovementItem 
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Scan());
 
      RETURN QUERY
         WITH tmpMI AS (SELECT MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
@@ -98,6 +106,7 @@ BEGIN
           , CAST ('' AS TVarChar)     AS ReceiptGoodsName
           , Movement_OrderClient.Id   AS MovementId_OrderClient
           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+          , vbisScan                       AS isScan
 
         FROM Movement AS Movement_Send
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Send.StatusId

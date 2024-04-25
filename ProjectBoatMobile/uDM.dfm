@@ -717,6 +717,13 @@ object DM: TDM
       FieldName = 'ToName'
       Size = 255
     end
+    object cdsSendItemEditMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object cdsSendItemEditInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
   end
   object tbUnit: TFDTable
     Connection = conMain
@@ -874,6 +881,19 @@ object DM: TDM
       Size = 40
       Calculated = True
     end
+    object cdsSendListMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object cdsSendListInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
+    object cdsSendListInvNumber_OrderClientLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumber_OrderClientLabel'
+      Size = 40
+      Calculated = True
+    end
   end
   object cdsSendListTop: TClientDataSet
     Aggregates = <>
@@ -1015,6 +1035,19 @@ object DM: TDM
       Size = 40
       Calculated = True
     end
+    object cdsSendListTopMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object cdsSendListTopInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 255
+    end
+    object cdsSendListTopInvNumber_OrderClientLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumber_OrderClientLabel'
+      Size = 40
+      Calculated = True
+    end
   end
   object tbSendGoods: TFDTable
     Connection = conMain
@@ -1056,6 +1089,13 @@ object DM: TDM
     end
     object tbSendGoodsToId: TIntegerField
       FieldName = 'ToId'
+    end
+    object tbSendGoodsMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object tbSendGoodsInvNumber_OrderClient: TWideStringField
+      FieldName = 'InvNumber_OrderClient'
+      Size = 40
     end
     object tbSendGoodsError: TWideStringField
       FieldName = 'Error'

@@ -6828,6 +6828,16 @@ begin
           if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value then
             TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivAlways
           else TdxBarButton(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).Visible := ivNever;
+     end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'TabVisible') then
+     begin
+        if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
+         then
+         begin
+          SetPropValue(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'TabVisible', TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value);
+          if not TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.Value and (TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component is TcxTabSheet) and
+             not Assigned(TcxTabSheet(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).PageControl.ActivePage) then
+             TcxTabSheet(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component).PageControl.ActivePageIndex := 0;
+         end;
      end else if IsPublishedProp(TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).Component, 'Visible') then
      begin
         if TdsdSetVisibleParamsItem(FSetVisibleParams.Items[i]).FParam.DataType = ftBoolean
@@ -9152,6 +9162,12 @@ begin
         if Value then
           TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivAlways
         else TdxBarButton(TdsdComponentItem(FComponents.Items[i]).Component).Visible := ivNever;
+     end else if IsPublishedProp(TdsdComponentItem(FComponents.Items[i]).Component, 'TabVisible') then
+     begin
+       SetPropValue(TdsdComponentItem(FComponents.Items[i]).Component, 'TabVisible', Value);
+       if not Value and (TdsdComponentItem(FComponents.Items[i]).Component is TcxTabSheet) and
+          not Assigned(TcxTabSheet(TdsdComponentItem(FComponents.Items[i]).Component).PageControl.ActivePage) then
+          TcxTabSheet(TdsdComponentItem(FComponents.Items[i]).Component).PageControl.ActivePageIndex := 0;
      end else if IsPublishedProp(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible') then
      begin
        SetPropValue(TdsdComponentItem(FComponents.Items[i]).Component, 'Visible', Value)

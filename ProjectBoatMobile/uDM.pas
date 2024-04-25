@@ -359,6 +359,16 @@ type
     tbSendGoodsFromId: TIntegerField;
     tbSendGoodsToId: TIntegerField;
     tbSendGoodsDateScan: TIntegerField;
+    cdsSendListInvNumber_OrderClient: TWideStringField;
+    cdsSendListTopInvNumber_OrderClient: TWideStringField;
+    cdsSendItemEditInvNumber_OrderClient: TWideStringField;
+    cdsSendListInvNumber_OrderClientLabel: TWideStringField;
+    cdsSendListTopInvNumber_OrderClientLabel: TWideStringField;
+    cdsSendListTopMovementId_OrderClient: TIntegerField;
+    cdsSendListMovementId_OrderClient: TIntegerField;
+    tbSendGoodsMovementId_OrderClient: TIntegerField;
+    tbSendGoodsInvNumber_OrderClient: TWideStringField;
+    cdsSendItemEditMovementId_OrderClient: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -433,6 +443,8 @@ type
     function InsertProductionUnion(AId : Integer) : Boolean;
 
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
+    function GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
+    function GetBarcodeSendOrderInternal(AId: Integer) : Boolean;
     function GetMIInventoryGoods(ADataSet : TDataSet) : Boolean;
     function GetMISendGoods(ADataSet : TDataSet) : Boolean;
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
@@ -458,7 +470,8 @@ type
 
     procedure OpenSendGoods;
     procedure InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
-                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
+                                   APartNumber, APartionCell : String;  AMovementId_OrderClient: Integer;
+                                   AInvNumber_OrderClient, AError: String; AisSend: Boolean);
     procedure DeleteSendGoods;
     procedure ErasedSendList;
     procedure UnErasedSendList;
@@ -495,51 +508,9 @@ implementation
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 uses System.IOUtils, System.DateUtils, System.ZLib, System.RegularExpressions,
-     FMX.Dialogs, FMX.Storage, uMain;
+     FMX.Dialogs, FMX.Storage, FMX.FormStorage, uMain;
 
 {$R *.dfm}
-
-{ Процедура по символьно переводит строку в набор цифр }
-function ReConvertConvert(S: string): TBytes;
-var
-  i, l, k: integer;
-  InB: TBytes;
-  inStream, outStream: TBytesStream;
-begin
-  i := Low(S);
-  l := High(S);
-  SetLength(InB, Length(S) div 2);
-  k := 0;
-  while i <= l do
-  begin
-    InB[k] := StrToInt('$' + s[i] + s[i+1]);
-    inc(k);
-    i := i + 2;
-  end;
-
-  inStream := TBytesStream.Create(InB);
-  outStream := TBytesStream.Create;
-  try
-    ZDecompressStream(inStream, outStream);
-    Result := outStream.Bytes;
-  finally
-    inStream.Free;
-    outStream.Free;
-  end;
-end;
-
-{ Процедура по символьно переводит строку в набор цифр }
-function ConvertConvert(S: TBytes): String;
-var
-  i, l: integer;
-  ArcS: TBytes;
-begin
-  ZCompress(S, ArcS);
-  result := '';
-  l := Length(ArcS);
-  for I := 0 to l - 1 do
-    result := result + IntToHex(ArcS[i], 2);
-end;
 
 { обновление бегущего круга }
 procedure TProgressThread.Update;
@@ -600,7 +571,7 @@ function TWaitThread.UpdateProgram: string;
 var
   GetStoredProc : TdsdStoredProc;
   ApplicationName: string;
-  FileStream : TMemoryStream;
+  BytesStream : TBytesStream;
   FileBytes: TBytes;
   {$IFDEF ANDROID}
   OutputDir: JFile;
@@ -615,29 +586,28 @@ begin
   ApplicationName := DM.GetAPKFileName;
 
   GetStoredProc := TdsdStoredProc.Create(nil);
-  FileStream := TMemoryStream.Create;
+  BytesStream := TBytesStream.Create;
   try
     GetStoredProc.StoredProcName := 'gpGet_Object_Program';
     GetStoredProc.OutputType := otBlob;
     GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
     try
-      FileBytes := ReConvertConvert(GetStoredProc.Execute(false, false, false));
-      FileStream.Write(FileBytes, Length(FileBytes));
+      ReConvertConvert(GetStoredProc.Execute(false, false, false), BytesStream);
 
-      if FileStream.Size = 0 then
+      if BytesStream.Size = 0 then
       begin
         Result := 'Новая версия программы не загружена из базы данных';
         exit;
       end;
 
-      FileStream.Position := 0;
+      BytesStream.Position := 0;
       {$IFDEF ANDROID}
       OutputDir := TAndroidHelper.Context.getExternalCacheDir();
       Path := JStringToString(OutputDir.getAbsolutePath);
       FileName := path + '/' + ApplicationName;
-      FileStream.SaveToFile(filename);
+      BytesStream.SaveToFile(filename);
       {$ELSE}
-      FileStream.SaveToFile(ApplicationName);
+      BytesStream.SaveToFile(ApplicationName);
       {$ENDIF}
 
     except
@@ -649,7 +619,7 @@ begin
     end;
   finally
     FreeAndNil(GetStoredProc);
-    FreeAndNil(FileStream);
+    FreeAndNil(BytesStream);
   end;
 
   // Update programm
@@ -955,6 +925,7 @@ begin
     StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, '');
     StoredProc.Params.AddParam('inFromId', ftInteger, ptInput, 0);
     StoredProc.Params.AddParam('inToId', ftInteger, ptInput, 0);
+    StoredProc.Params.AddParam('inMovementId_OrderClient', ftInteger, ptInput, 0);
 
     try
 
@@ -973,6 +944,7 @@ begin
         StoredProc.ParamByName('inPartionCellName').Value := FDQuery.FieldByName('PartionCellName').AsWideString;
         StoredProc.ParamByName('inFromId').Value := FDQuery.FieldByName('FromId').AsInteger;
         StoredProc.ParamByName('inToId').Value := FDQuery.FieldByName('ToId').AsInteger;
+        StoredProc.ParamByName('inMovementId_OrderClient').Value := FDQuery.FieldByName('MovementId_OrderClient').AsInteger;
 
         try
           StoredProc.Execute(false, false, false, 2);
@@ -1397,6 +1369,7 @@ begin
   DataSet.FieldByName('OrdUserLabel').AsString := '№ п/п';
   DataSet.FieldByName('FromNameLabel').AsString := 'От кого:';
   DataSet.FieldByName('ToNameLabel').AsString := 'Кому:';
+  DataSet.FieldByName('InvNumber_OrderClientLabel').AsString := '№ заказа:';
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
@@ -1968,6 +1941,8 @@ begin
     StoredProc.StoredProcName := 'gpGet_MobilebConfig';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('BarCodePref', ftString, ptOutput, frmMain.BarCodePref);
+    StoredProc.Params.AddParam('DocBarCodePref', ftString, ptOutput, frmMain.DocBarCodePref);
+    StoredProc.Params.AddParam('ItemBarCodePref', ftString, ptOutput, frmMain.ItemBarCodePref);
     StoredProc.Params.AddParam('ArticleSeparators', ftString, ptOutput, frmMain.ArticleSeparators);
 
     StoredProc.Params.AddParam('isCameraScanerSet', ftBoolean, ptOutput, False);
@@ -1996,6 +1971,11 @@ begin
 
       if StoredProc.ParamByName('BarCodePref').Value <> frmMain.BarCodePref then
         frmMain.BarCodePref := StoredProc.ParamByName('BarCodePref').Value;
+      if StoredProc.ParamByName('DocBarCodePref').Value <> frmMain.DocBarCodePref then
+        frmMain.DocBarCodePref := StoredProc.ParamByName('DocBarCodePref').Value;
+      if StoredProc.ParamByName('ItemBarCodePref').Value <> frmMain.ItemBarCodePref then
+        frmMain.ItemBarCodePref := StoredProc.ParamByName('ItemBarCodePref').Value;
+
       if StoredProc.ParamByName('ArticleSeparators').Value <> frmMain.ArticleSeparators then
         frmMain.ArticleSeparators := StoredProc.ParamByName('ArticleSeparators').Value;
 
@@ -2297,7 +2277,6 @@ begin
     StoredProc.Params.AddParam('inBarCode', ftWideString, ptInput, ABarcode);
     StoredProc.Params.AddParam('GoodsId', ftInteger, ptOutput, 0);
     StoredProc.Params.AddParam('CountGoods', ftInteger, ptOutput, 0);
-    StoredProc.Params.AddParam('BarCodePref', ftWideString, ptOutput, '');
 
     try
       StoredProc.Execute(false, false, false, 2);
@@ -2305,6 +2284,78 @@ begin
       ACount := StoredProc.ParamByName('CountGoods').Value;
       Result := ACount = 1;
     except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+{ поиск узла по штрихкоду в базе}
+function TDM.GetBarcodeSendOrderInternal(AId: Integer) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  DataSet: TClientDataSet;
+  I: Integer;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  DataSet := TClientDataSet.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_Goods_MobilebyOrderInternal';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
+
+    StoredProc.DataSet := DataSet;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+
+      cdsSendItemEdit.Close;
+      cdsSendItemEdit.CreateDataSet;
+      cdsSendItemEdit.Insert;
+      for I := 0 to DataSet.FieldCount - 1 do
+        if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
+          cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+      cdsSendItemEdit.Post;
+
+      Result := cdsSendItemEdit.Active;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    FreeAndNil(DataSet);
+  end;
+end;
+
+// Поиск заказа покупателя по штрих коду
+function TDM.GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpGet_Movement_MobilebyOrderClient';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftWideString, ptInput, ABarcode);
+    StoredProc.Params.AddParam('inInvNumber', ftWideString, ptInput, AInvNumber);
+    StoredProc.Params.AddParam('Id', ftInteger, ptOutput, 0);
+    StoredProc.Params.AddParam('InvNumber', ftWideString, ptOutput, '');
+    StoredProc.Params.AddParam('InvNumberFull', ftWideString, ptOutput, '');
+
+    try
+      StoredProc.Execute(false, false, false);
+      outID := StoredProc.ParamByName('Id').Value;
+      outInvNumber := StoredProc.ParamByName('InvNumber').Value;
+      outInvNumberFull := StoredProc.ParamByName('InvNumberFull').Value;
+      Result := outID <> 0;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
   finally
     FreeAndNil(StoredProc);
@@ -2389,6 +2440,9 @@ begin
       for I := 0 to DataSet.FieldCount - 1 do
         if Assigned(cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName)) then
           cdsSendItemEdit.FindField(DataSet.Fields.Fields[I].FieldName).AsVariant := DataSet.Fields.Fields[I].AsVariant;
+
+      cdsSendItemEditMovementId_OrderClient.AsInteger := frmMain.OrderClientId;
+      cdsSendItemEditInvNumber_OrderClient.AsString := frmMain.OrderClientInvNumberFull;
       cdsSendItemEdit.Post;
 
       Result := True;
@@ -2601,6 +2655,7 @@ begin
       StoredProc.Params.AddParam('inPartionCellName', ftWideString, ptInput, cdsSendItemEditPartionCellName.AsWideString);
       StoredProc.Params.AddParam('inFromId', ftInteger, ptInput, cdsSendItemEditFromId.AsInteger);
       StoredProc.Params.AddParam('inToId', ftInteger, ptInput, cdsSendItemEditToId.AsInteger);
+      StoredProc.Params.AddParam('inMovementId_OrderClient', ftInteger, ptInput, cdsSendItemEditMovementId_OrderClient.AsInteger);
 
       StoredProc.Execute(false, false, false, 2);
 
@@ -2619,10 +2674,12 @@ begin
     if not cdsSendList.Active then
     begin
       DM.InsUpdLocalSendGoods(cdsSendItemEditLocalId.AsInteger, nId, cdsSendItemEditGoodsId.AsInteger,
-                                   cdsSendItemEditFromId.AsInteger, cdsSendItemEditToId.AsInteger,
-                                   cdsSendItemEditAmount.AsFloat, cdsSendItemEditAmountRemains.AsFloat,
-                                   cdsSendItemEditTotalCount.AsFloat, cdsSendItemEditPartNumber.AsString,
-                                   cdsSendItemEditPartionCellName.AsString, '', Result);
+                              cdsSendItemEditFromId.AsInteger, cdsSendItemEditToId.AsInteger,
+                              cdsSendItemEditAmount.AsFloat, cdsSendItemEditAmountRemains.AsFloat,
+                              cdsSendItemEditTotalCount.AsFloat, cdsSendItemEditPartNumber.AsString,
+                              cdsSendItemEditPartionCellName.AsString,
+                              cdsSendItemEditMovementId_OrderClient.AsInteger,
+                              cdsSendItemEditInvNumber_OrderClient.AsString, '', Result);
     end else
     begin
       cdsSendList.Edit;
@@ -3279,7 +3336,8 @@ end;
 
 // Добавить/изменить товаркомплектующее для вставки в инвентаризацию
 procedure TDM.InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
-                                        APartNumber, APartionCell, AError : String; AisSend: Boolean);
+                                        APartNumber, APartionCell : String;  AMovementId_OrderClient: Integer;
+                                        AInvNumber_OrderClient, AError: String; AisSend: Boolean);
   var FDQuery: TFDQuery;
 begin
 
@@ -3303,6 +3361,8 @@ begin
     FDQuery.FieldByName('TotalCount').AsFloat := ATotalCount + AAmount;
     FDQuery.FieldByName('FromId').AsInteger := AFromId;
     FDQuery.FieldByName('ToId').AsInteger := AToId;
+    FDQuery.FieldByName('MovementId_OrderClient').AsInteger := AMovementId_OrderClient;
+    FDQuery.FieldByName('InvNumber_OrderClient').AsString := AInvNumber_OrderClient;
     FDQuery.FieldByName('Error').AsString := AError;
     FDQuery.FieldByName('isSend').AsBoolean := AisSend;
     FDQuery.Post;

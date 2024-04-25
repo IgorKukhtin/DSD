@@ -299,7 +299,7 @@ type
     ScanCDS: TClientDataSet;
     spSelectScan: TdsdStoredProc;
     cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableView_Scan: TcxGridDBTableView;
     Scan_Ord: TcxGridDBColumn;
     Scan_GoodsGroupNameFull: TcxGridDBColumn;
     Scan_EAN: TcxGridDBColumn;
@@ -318,6 +318,8 @@ type
     cxGridLevel1: TcxGridLevel;
     DBViewAddOnScan: TdsdDBViewAddOn;
     Color_Scan: TcxGridDBColumn;
+    actSetVisibleScan: TdsdSetVisibleAction;
+    Scan_InvNumberFull_OrderClient: TcxGridDBColumn;
   private
   public
   end;

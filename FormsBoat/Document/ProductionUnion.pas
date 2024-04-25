@@ -329,6 +329,27 @@ type
     actSetVisible_Grid_Child: TBooleanSetVisibleAction;
     cxButton4: TcxButton;
     cxButton5: TcxButton;
+    ScanDS: TDataSource;
+    ScanCDS: TClientDataSet;
+    spSelectScan: TdsdStoredProc;
+    cxTabSheetScan: TcxTabSheet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView_Scan: TcxGridDBTableView;
+    Scan_Ord: TcxGridDBColumn;
+    Scan_GoodsGroupNameFull: TcxGridDBColumn;
+    Scan_EAN: TcxGridDBColumn;
+    Scan_Article: TcxGridDBColumn;
+    Scan_Article_all: TcxGridDBColumn;
+    Scan_GoodsCode: TcxGridDBColumn;
+    Scan_GoodsName: TcxGridDBColumn;
+    Scan_MeasureName: TcxGridDBColumn;
+    Scan_Amount: TcxGridDBColumn;
+    Scan_OperDate_protocol: TcxGridDBColumn;
+    Scan_UserName_protocol: TcxGridDBColumn;
+    Scan_isErased: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    DBViewAddOnScan: TdsdDBViewAddOn;
+    actSetVisibleScan: TdsdSetVisibleAction;
   private
   public
   end;

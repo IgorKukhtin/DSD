@@ -12,10 +12,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , Comment TVarChar
              , isList Boolean 
+             , isScan Boolean
                )
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbisScan Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Inventory());
@@ -36,9 +38,16 @@ BEGIN
 
              , CAST ('' as TVarChar) AS Comment
              , FALSE   ::Boolean     AS isList
+             , False                      AS isScan
            
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
+
+       vbisScan := EXISTS (SELECT MovementItem.Id
+                           FROM MovementItem 
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Scan());
+
        RETURN QUERY 
          SELECT
                Movement.Id
@@ -52,6 +61,7 @@ BEGIN
              
              , MovementString_Comment.ValueData  AS Comment 
              , COALESCE (MovementBoolean_List.ValueData, FALSE) ::Boolean AS isList
+             , vbisScan                       AS isScan
           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

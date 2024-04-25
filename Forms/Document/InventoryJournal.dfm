@@ -855,8 +855,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 775
-    Top = 32
+    Left = 759
+    Top = 8
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
     StoredProcName = 'gpGet_User_JuridicalBasis'
