@@ -86,7 +86,9 @@ END IF;
                                                               AND MovementDate_ServiceDate.DescId     = zc_MIDate_ServiceDate()
                                                               AND MovementDate_ServiceDate.ValueData  = (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate())
                             WHERE Movement.DescId   = zc_Movement_PersonalService()
-                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND (Movement.StatusId = zc_Enum_Status_Complete()
+                                OR vbUserId = 5
+                                  )
                             LIMIT 1
                            );
 
@@ -147,7 +149,7 @@ END IF;
 
 
              -- ограничение мин - 2
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2 AND vbMovementId_avance > 0
                        THEN 3000
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 2
@@ -162,7 +164,7 @@ END IF;
              END AS SummMin_2
 
              -- ограничение мин - 3
-           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
+           , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3 AND vbMovementId_avance > 0
                        THEN 3000
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 3
@@ -260,7 +262,7 @@ END IF;
 
       IF COALESCE (vbBankId_num_1, 0) = 0 AND COALESCE (vbBankId_num_2, 0) = 0 AND COALESCE (vbBankId_num_3, 0) = 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Приморитет по банкам не определен';
+          RAISE EXCEPTION 'Ошибка.Приоритет по банкам не определен';
       END IF;
 
 
@@ -1245,8 +1247,6 @@ END IF;
 
           ;
 
---  RAISE EXCEPTION '<%>', (select count(*) from _tmpMI where _tmpMI.PersonalId = 7412781);
-
 
      IF vbUserId = 5 AND 1=0
      THEN
@@ -1273,7 +1273,7 @@ END IF;
                                                                   END
                                                               THEN NULL
                                                          WHEN _tmpMI.Num_1 = 1 THEN COALESCE (_tmpMI.BankId_1, vbBankId_const_1)
-                                                         WHEN _tmpMI.Num_2 = 1 THEN COALESCE (_tmpMI.BankId_2, vbBankId_const_2)
+                                                         WHEN _tmpMI.Num_2 = 1 THEN COALESCE (_tmpMI.BankId_2, vbBankId_const_1)
                                                          WHEN _tmpMI.Num_3 = 1 THEN _tmpMI.BankId_3
                                                     END
                                                    )
@@ -1284,7 +1284,7 @@ END IF;
                                                                        WHEN _tmpMI.Num_3 = 2 THEN COALESCE (_tmpMI.SummCard_3, 0)
                                                                   END
                                                               THEN NULL
-                                                         WHEN _tmpMI.Num_1 = 2 THEN COALESCE (_tmpMI.BankId_1, vbBankId_const_1)
+                                                         WHEN _tmpMI.Num_1 = 2 THEN COALESCE (_tmpMI.BankId_1, vbBankId_const_2)
                                                          WHEN _tmpMI.Num_2 = 2 THEN COALESCE (_tmpMI.BankId_2, vbBankId_const_2)
                                                          WHEN _tmpMI.Num_3 = 2 THEN _tmpMI.BankId_3
                                                     END
@@ -1296,8 +1296,8 @@ END IF;
                                                                        WHEN _tmpMI.Num_3 = 3 THEN COALESCE (_tmpMI.SummCard_3, 0)
                                                                   END
                                                               THEN NULL
-                                                         WHEN _tmpMI.Num_1 = 3 THEN COALESCE (_tmpMI.BankId_1, vbBankId_const_1)
-                                                         WHEN _tmpMI.Num_2 = 3 THEN COALESCE (_tmpMI.BankId_2, vbBankId_const_2)
+                                                         WHEN _tmpMI.Num_1 = 3 THEN COALESCE (_tmpMI.BankId_1, _tmpMI.BankId_3)
+                                                         WHEN _tmpMI.Num_2 = 3 THEN COALESCE (_tmpMI.BankId_2, _tmpMI.BankId_3)
                                                          WHEN _tmpMI.Num_3 = 3 THEN _tmpMI.BankId_3
                                                     END
                                                    )

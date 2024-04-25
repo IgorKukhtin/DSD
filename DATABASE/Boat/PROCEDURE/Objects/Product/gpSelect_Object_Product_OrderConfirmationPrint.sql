@@ -348,8 +348,10 @@ BEGIN
             --, vbDiscountTax                ::TFloat AS DiscountTax
             , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice
                                                                                     , COALESCE (vbDiscountTax,0))
-                                                            , COALESCE (vbDiscountNextTax,0))
-                                    , COALESCE (tmpProdOptItems.DiscountTax,0) ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
+                                                            , 0 -- COALESCE (vbDiscountNextTax,0)
+                                                             )
+                                    , 0 -- COALESCE (tmpProdOptItems.DiscountTax,0)
+                                     ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
             , tmpProdOptItems.CommentOpt
        FROM tmpProdOptItems
      UNION
@@ -361,7 +363,8 @@ BEGIN
             , vbDiscountTax                ::TFloat AS DiscountTax
             , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice
                                                             , COALESCE (vbDiscountTax,0))
-                                    , COALESCE (vbDiscountNextTax,0) ) ::TFloat AS Sale_summ
+                                    , 0 -- COALESCE (vbDiscountNextTax,0)
+                                     ) ::TFloat AS Sale_summ
             , '' ::TVarChar AS CommentOpt
        FROM tmpOrderClient AS tmp
             LEFT JOIN ObjectString AS ObjectString_Article

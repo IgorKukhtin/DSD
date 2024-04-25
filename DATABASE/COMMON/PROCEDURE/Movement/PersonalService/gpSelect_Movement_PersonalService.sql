@@ -76,8 +76,13 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View
-                         WHERE UserId = vbUserId   -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+        , tmpUserAll AS (-- Документы-меню (управленцы) AND + ЗП просмотр ВСЕ
+                         SELECT Constant_User_LevelMax01_View.UserId
+                         FROM Constant_User_LevelMax01_View
+                              -- Ограниченние - только разрешенные ведомости ЗП
+                              LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 
+                         WHERE Constant_User_LevelMax01_View.UserId = vbUserId
+                           AND ObjectLink_UserRole_View.UserId IS NULL
                          --AND vbUserId <> zfCalc_UserMain()
                         )
         , tmpMemberPersonalServiceList

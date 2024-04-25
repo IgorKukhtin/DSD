@@ -12,6 +12,8 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
     IF EXISTS(Select * from gpSelect_Object_UserRole(inSession) Where UserId = vbUserId AND Id = zc_Enum_Role_Admin())
+       -- Ограниченние - только разрешенные ведомости ЗП
+       AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 AND vbUserId <> 6568684)
     THEN
         RETURN True;
     ELSE
