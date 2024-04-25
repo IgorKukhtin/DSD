@@ -10,8 +10,8 @@ uses
   {$ENDIF}
   {$IFDEF ANDROID}
   , System.SysUtils, Androidapi.Helpers, Androidapi.JNI.GraphicsContentViewText,
-  Androidapi.JNI.JavaTypes, Androidapi.JNI.App, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero,
-  FMX.Platform.Android, Androidapi.JNI.Os
+  Androidapi.JNI.JavaTypes, Androidapi.JNIBridge, Androidapi.JNI.Embarcadero,
+  FMX.Platform.Android, Androidapi.JNI.Os, Androidapi.JNI.App
   {$ENDIF}
   ;
 type
@@ -42,7 +42,7 @@ type
     FOnScanResult: TDataWedgeBarCodeResult;
     FOnScanResultDetails: TDataWedgeBarCodeResultDetails;
     FOnGetConfig: TNotifyEvent;
-    FListParam: TStrings;
+    //FListParam: TStrings;
   {$IFDEF ANDROID}
     FReceiver: JBroadcastReceiver;
     FListener : TCSListener;
@@ -117,7 +117,7 @@ var
 begin
   inherited Create(AOwner);
   FisIllumination := True;
-  FListParam := TStrings.Create;
+  //FListParam := TStrings.Create;
   {$IFDEF ANDROID}
 
   FListener := TCSListener.Create(Self);
@@ -133,7 +133,7 @@ end;
 
 destructor TDataWedgeBarCode.Destroy;
 begin
-  FListParam.Free;
+  //FListParam.Free;
   {$IFDEF ANDROID}
   if FReceiver <> nil then TAndroidHelper.Activity.UnregisterReceiver(FReceiver);
   {$ENDIF}
