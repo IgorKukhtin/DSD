@@ -54,6 +54,13 @@ then
 end if;*/
 
 
+     -- Ограниченние - нет доступа к Баланс
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657331)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету Баланс.';
+     END IF;
+
+
      -- Блокируем ему просмотр
      IF vbUserId = 9457 -- Климентьев К.И.
      THEN
@@ -414,4 +421,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_BalanceNo (inStartDate:= '01.08.2019', inEndDate:= '31.08.2019', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_BalanceNo (inStartDate:= '01.08.2024', inEndDate:= '31.08.2024', inSession:= zfCalc_UserAdmin())

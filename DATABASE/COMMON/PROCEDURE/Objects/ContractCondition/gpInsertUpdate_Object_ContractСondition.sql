@@ -51,6 +51,7 @@ BEGIN
             )
       AND inContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
       AND inValue > 14
+      AND vbUserId <> 6604558 -- Голота К.О.
    THEN
        RAISE EXCEPTION 'Ошибка.%Значение <%> для <%> %не может быть больше 14 дней.'
                      , CHR (13)

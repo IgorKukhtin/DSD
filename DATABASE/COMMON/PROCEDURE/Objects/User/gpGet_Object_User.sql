@@ -24,11 +24,19 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Object_User());
 
+   -- Ковальов Є.І.
+   IF vbUserId <> 6568684
+   THEN
+       -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+       PERFORM lpCheck_UserRole_8813637 (vbUserId);
+   END IF;
 
    IF   vbUserId = 8790175  -- Зенько Н.Ю.
      OR vbUserId = 10033382 -- Яцечко І.В.
      OR vbUserId = 10206255 -- Похвалітов О.О.
      OR vbUserId = 14610    -- Федорец В.А.
+     -- Ограниченние - только разрешенные ведомости ЗП
+     OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 AND vbUserId <> 6568684)
    THEN
        RAISE EXCEPTION 'Ошибка.Нет прав.';
    END IF;

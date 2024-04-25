@@ -57,6 +57,13 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
 
+     -- Ограниченние - нет доступа к Отчету по счету
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 10657333)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету По счету.';
+     END IF;
+
+
      -- Блокируем ему просмотр
      IF inUserId = 9457 -- Климентьев К.И.
      THEN
@@ -676,4 +683,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpReport_AccountMotion_noBalance (inStartDate := ('01.11.2019')::TDateTime , inEndDate := ('01.11.2019')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM lpReport_AccountMotion_noBalance (inStartDate := ('01.11.2024')::TDateTime , inEndDate := ('01.11.2024')::TDateTime , inAccountGroupId := 9015 , inAccountDirectionId := 9034 , inInfoMoneyId := 0 , inAccountId := 0 , inBusinessId := 0 , inProfitLossGroupId := 0 , inProfitLossDirectionId := 0 , inProfitLossId := 0 , inBranchId := 0 , inMovementDescId := 0 , inIsMovement := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsDetail := 'False', inUserId:= zfCalc_UserAdmin() :: Integer);

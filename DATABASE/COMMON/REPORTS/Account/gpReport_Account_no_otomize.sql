@@ -1,4 +1,5 @@
 -- Function: gpReport_Account_no_otomize ()
+-- !!!удалена!!!
 
 DROP FUNCTION IF EXISTS gpReport_Account_no_otomize (TDateTime, TDateTime, Integer, TVarChar);
 
@@ -40,6 +41,13 @@ BEGIN
 
     -- !!!Только просмотр Аудитор!!!
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
+     -- Ограниченние - нет доступа к Движению по счету
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657332)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав к отчету Движению по счету.';
+     END IF;
 
 
     RETURN QUERY
@@ -357,4 +365,4 @@ ALTER FUNCTION gpReport_Account_no_otomize (TDateTime, TDateTime, Integer, TVarC
 */
 
 -- тест
--- SELECT * FROM gpReport_Account_no_otomize (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account_no_otomize (inStartDate:= '01.10.2024', inEndDate:= '31.10.2024', inAccountId:= null, inSession:= zfCalc_UserAdmin());
