@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 14
+        TabIndex = 13
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -21534,6 +21534,7 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 23
+              ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 17.000000000000000000
               Position.Y = 367.000000000000000000
@@ -21594,6 +21595,7 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 21
+              ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 174.000000000000000000
               Position.Y = 367.000000000000000000
@@ -22385,7 +22387,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22394,139 +22396,43 @@
           Text = 'tiProductionUnionEdit'
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
-          object Panel4: TPanel
-            Align = Top
+          object pOrderInternal: TPanel
+            Align = Client
             Size.Width = 336.000000000000000000
-            Size.Height = 65.000000000000000000
+            Size.Height = 484.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            object edOrderInternalBarCode: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Anchors = [akLeft, akTop, akRight]
-              TabOrder = 1
-              KeyboardType = DecimalNumberPad
-              FilterChar = '0123456789'
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 174.000000000000000000
-              Position.Y = 25.000000000000000000
-              Size.Width = 157.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-              object bOrderInternalOkClick: TEditButton
-                Touch.InteractiveGestures = [LongTap]
-                CanFocus = False
-                Cursor = crArrow
-                TextSettings.Trimming = None
-                Size.Width = 28.000000000000000000
-                Size.Height = 28.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 0
-                OnClick = bOrderInternalOkClickClick
-                object Image17: TImage
-                  MultiResBitmap.Height = 32
-                  MultiResBitmap.Width = 32
-                  MultiResBitmap = <
-                    item
-                      Width = 32
-                      Height = 32
-                      PNG = {
-                        89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                        F40000000473424954080808087C08648800000439494441545885ED955B6C14
-                        5518C77F67667666DBDDEE96BDD2A6D01624282817911022D6466C0503091214
-                        A3867821410C890F445F348A91F8A2211109A0A80F2A3E184828280912F18289
-                        3131114940416AB1A588D20BBDEC6E772EE7F8C03619370BB4867D827F727266
-                        BEF9BEEFFF3FFF3939076EE246C1A2F778BE69178DC571A3DCC4B76CC59A591B
-                        DE1F8B57B79E6D3F7706E8F07FD7CA493EEF2D1273EB92C796CD5BD33AA7B699
-                        80A1CD2DCE299B030BB710AB6B4CFCB474CEA3F513ADA9F489F34422F17BE0E2
-                        7FF2CAE2C0C39FA14F6CA83EBA64CE23F5F1C0645CD72368848819F105333661
-                        965D40C6A93CD83A6BE58CB83119D77570A58D86413C998E5627995D5601CDEF
-                        B3B969564B6BCA9A82E33AB8CAC6C54149888553548458583601F3B7D174D78C
-                        F92F3556DF8EE3D8386A0457D978D2414A8F486535A170A8C55F73FD36E126B4
-                        E98D89BDB7D6CCC7B65DA4B2514804028186AB65E9B1BB70F26E6D5904B434EA
-                        DB67D62F482817B27200A92420D034C88B21DABB4F72A2FDE487B99CFDDA7517
-                        B0F01DEE98DA30759D15087129DF034AA200614886477AF9ADFDD7CEB3DDFFAC
-                        FD7103878B6BAF2960D176A6442704376BC8866CAFBDFCAB0DF416E724D3A18F
-                        E3B104FDD98BA0140A05866228D3CBA9D3A7F69FEF761F3BFE029952FDAF28A0
-                        F54D42A4CC97AD58646343CD8480D43CDA4F74BD0DCE13FEBCE6775991AA89CD
-                        CED9C378EE204A294440313C3440477BF78E236B78EE6A0B14A582F7ED627D55
-                        32F44A3C159E180858788E44370497FA06E9EC18A8FB613DDDA3B90FEEA9E8AC
-                        AB8F4D72F39757AE07209FCFD3F97BDF966F9F61E3D5C84B3AD0FA897138DD18
-                        BA5F3334F2F60839270728842B08546944C2FAEBE03D0DB07817ABA309635226
-                        3F8CE75E1689A3F8EB8FCC8EB190438973407AF2FBCE2147BA9E8B121E527948
-                        249EF4509A2414379FBAFB03AA002A63FA1BBA25705D17A14B14928B1DC3078E
-                        3C29AF6ABB1F257F41D34EA65546CDAD136ACD25BAA9E1DAF272B2004DD7B870
-                        6AF0592FCFA1F4F450876E69485761981AFDDD99335FACF2A68D951C402F15FC
-                        F373FACEECF576A79BEC5C20A8B75821032515522AB4800057CE3582ACAC8C59
-                        29CF9198964EB6DFA1A7CBBEB3EB2003E31150D2013FEEDD494BB4C6DA1D4D56
-                        24A504E949842610029454E8868693F7387F7AE8F1EFD6F1E978C8C724006071
-                        1BE92A61B6451391050281E72944A15208B870AE77DFA1D5EAA1F1928F59C028
-                        567D631E88C5A3CBBC41132915BA29C8E62E657BF299D4970F943E68AE8571DD
-                        867B9AEDE5677FE96F0B26C03482E8550E9DC7336BFF2FF995204A0C0DDF865D
-                        B1CFFAF95555A7967E14F8DA57A3F946A91E25DDD68B0802BE51010481101006
-                        22401AA8FEFB98A779E1CC6D475F74B73919060B3901A0B2506301662166147A
-                        EB45E234FF6A479F755F4CF7CDA3022D2009B8C048A1B906F40076A18F0264D1
-                        AC7CEFD267802AE5CA4DDC58F817759D9AB09B54D81F0000000049454E44AE42
-                        6082}
-                      FileName = 'C:\DSD\ProjectBoatMobile\img\Check.png'
-                    end>
-                  Align = Client
-                  HitTest = False
-                  Size.Width = 28.000000000000000000
-                  Size.Height = 28.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
-            end
-            object Label17: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 8.000000000000000000
-              Position.Y = 8.000000000000000000
-              Size.Width = 158.000000000000000000
-              Size.Height = 49.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Trimming = None
-              Text = #1054#1090#1089#1082#1072#1085#1080#1088#1091#1077#1090#1077' '#1080#1083#1080' '#1074#1074#1077#1076#1080#1090#1077' <BarCode> '#1101#1090#1080#1082#1077#1090#1082#1080
-              TabOrder = 2
-            end
-          end
-          object pOrderInternal: TPanel
-            Align = Top
-            Position.Y = 65.000000000000000000
-            Size.Width = 336.000000000000000000
-            Size.Height = 167.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 1
             object Label20: TLabel
               StyledSettings = [Family, Style, FontColor]
-              Position.X = 8.000000000000000000
-              Position.Y = 36.000000000000000000
+              Position.X = 6.000000000000000000
+              Position.Y = 226.000000000000000000
               Size.Width = 81.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1047#1072#1082#1072#1079' '#1087#1088'-'#1074#1072
-              TabOrder = 4
+              TabOrder = 10
             end
-            object edInvNumber_Full: TEdit
+            object edPUInvNumberFull: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 8
+              TabOrder = 16
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
-              Position.Y = 34.000000000000000000
+              Position.Y = 222.000000000000000000
               Size.Width = 208.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
             end
-            object edInvNumberFull_OrderClient: TEdit
+            object edPUInvNumberFull_OrderClient: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 5
+              TabOrder = 11
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
+              Position.Y = 188.000000000000000000
               Size.Width = 208.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
@@ -22534,48 +22440,24 @@
             end
             object Label21: TLabel
               StyledSettings = [Family, Style, FontColor]
-              Position.X = 8.000000000000000000
-              Position.Y = 5.000000000000000000
+              Position.X = 6.000000000000000000
+              Position.Y = 193.000000000000000000
               Size.Width = 81.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1047#1072#1082#1072#1079' '#1082#1083#1080#1077#1085#1090#1072
-              TabOrder = 1
-            end
-            object edOIGoodsName: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 7
-              ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 120.000000000000000000
-              Position.Y = 69.000000000000000000
-              Size.Width = 208.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              StyledSettings = [Family, Style, FontColor]
-            end
-            object Label22: TLabel
-              StyledSettings = [Family, Style, FontColor]
-              Position.X = 8.000000000000000000
-              Position.Y = 71.000000000000000000
-              Size.Width = 81.000000000000000000
-              Size.Height = 23.000000000000000000
-              Size.PlatformDefault = False
-              TextSettings.Font.Size = 11.000000000000000000
-              TextSettings.Trimming = None
-              Text = #1059#1079#1077#1083'/'#1051#1086#1076#1082#1072
               TabOrder = 3
             end
-            object edOIAmount: TEdit
+            object edPUAmount: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 6
+              TabOrder = 15
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
-              Position.X = 120.000000000000000000
-              Position.Y = 101.000000000000000000
-              Size.Width = 52.000000000000000000
+              Position.X = 60.000000000000000000
+              Position.Y = 152.000000000000000000
+              Size.Width = 70.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               StyledSettings = [Family, Style, FontColor]
@@ -22583,47 +22465,22 @@
             object Label23: TLabel
               StyledSettings = [Family, Style, FontColor]
               Position.X = 8.000000000000000000
-              Position.Y = 102.000000000000000000
-              Size.Width = 81.000000000000000000
+              Position.Y = 158.000000000000000000
+              Size.Width = 44.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
               Text = #1050#1086#1083'-'#1074#1086
-              TabOrder = 2
+              TabOrder = 5
             end
-            object bpProductionUnion: TButton
-              Anchors = [akLeft, akTop, akRight]
-              StyledSettings = []
-              Position.X = 188.000000000000000000
-              Position.Y = 105.000000000000000000
-              Size.Width = 140.000000000000000000
-              Size.Height = 48.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'EnterStyle'
-              TabOrder = 0
-              Text = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1091#1079#1083#1072'/'#1083#1086#1076#1082#1080
-              TextSettings.Font.Family = 'Times New Roman'
-              TextSettings.Font.Size = 14.000000000000000000
-              TextSettings.FontColor = xFF005078
-              TextSettings.WordWrap = True
-              TextSettings.Trimming = None
-              OnClick = bpProductionUnionClick
-            end
-          end
-          object pProductionUnion: TPanel
-            Align = Client
-            Size.Width = 336.000000000000000000
-            Size.Height = 252.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 2
-            object edInvNumberFull_ProductionUnion: TEdit
+            object edPUInvNumberFull_ProductionUnion: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              TabOrder = 3
+              TabOrder = 7
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
-              Position.Y = 8.000000000000000000
+              Position.Y = 256.000000000000000000
               Size.Width = 208.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
@@ -22632,14 +22489,225 @@
             object Label24: TLabel
               StyledSettings = [Family, Style, FontColor]
               Position.X = 8.000000000000000000
-              Position.Y = 8.000000000000000000
+              Position.Y = 260.000000000000000000
               Size.Width = 104.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Trimming = None
-              Text = #1044#1086#1082'. '#1089#1073#1086#1088#1082#1080
+              Text = #1057#1073#1086#1088#1082#1072' '#1091#1079#1083#1072'/'#1083#1086#1076#1082#1080
+              TabOrder = 1
+            end
+            object Label17: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 214.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 84.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = 'Interne Nr'
+              TabOrder = 8
+            end
+            object edPUGoodsCode: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 12
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 214.000000000000000000
+              Position.Y = 22.000000000000000000
+              Size.Width = 114.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object edPUGoodsName: TMemo
+              Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+              DataDetectorTypes = []
+              ReadOnly = True
+              ShowScrollBars = False
+              StyledSettings = [Family, Style, FontColor]
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.WordWrap = True
+              EnabledScroll = False
+              Position.X = 60.000000000000000000
+              Position.Y = 62.000000000000000000
+              Size.Width = 268.000000000000000000
+              Size.Height = 53.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'Memo1Style1'
+              TabOrder = 30
+              Viewport.Width = 264.000000000000000000
+              Viewport.Height = 49.000000000000000000
+            end
+            object Label49: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 8.000000000000000000
+              Position.Y = 63.000000000000000000
+              Size.Width = 44.000000000000000000
+              Size.Height = 40.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1059#1079#1077#1083'/ '#1051#1086#1076#1082#1072
+              TabOrder = 13
+            end
+            object edPUArticle: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 9
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 8.000000000000000000
+              Position.Y = 22.000000000000000000
+              Size.Width = 198.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label50: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 8.000000000000000000
+              Position.Y = 1.000000000000000000
+              Size.Width = 94.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = 'Artikel Nr'
+              TabOrder = 6
+            end
+            object edPUGoodsGroupName: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 2
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 60.000000000000000000
+              Position.Y = 117.000000000000000000
+              Size.Width = 268.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label22: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 8.000000000000000000
+              Position.Y = 123.000000000000000000
+              Size.Width = 45.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1043#1088#1091#1087#1087#1072
               TabOrder = 0
+            end
+            object bpProductionUnionCancel: TButton
+              Anchors = [akTop, akRight]
+              Images = ilButton
+              ImageIndex = 10
+              Position.X = 186.000000000000000000
+              Position.Y = 379.000000000000000000
+              Size.Width = 142.000000000000000000
+              Size.Height = 42.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              TabOrder = 27
+              Text = #1054#1090#1084#1077#1085#1080#1090#1100
+              TextSettings.Trimming = None
+              OnClick = bpProductionUnionCancelClick
+            end
+            object bpProductionUnion: TButton
+              StyledSettings = [Family, Style, FontColor]
+              Images = ilButton
+              ImageIndex = 2
+              Position.X = 8.000000000000000000
+              Position.Y = 379.000000000000000000
+              Size.Width = 161.000000000000000000
+              Size.Height = 42.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'EnterStyle'
+              TabOrder = 26
+              Text = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1089#1073#1086#1088#1082#1091' '#1091#1079#1083#1072'/'#1083#1086#1076#1082#1080
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.WordWrap = True
+              TextSettings.Trimming = None
+              OnClick = bpProductionUnionClick
+            end
+            object edPUToName: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 23
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 120.000000000000000000
+              Position.Y = 335.000000000000000000
+              Size.Width = 208.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label51: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 8.000000000000000000
+              Position.Y = 335.000000000000000000
+              Size.Width = 52.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1050#1086#1084#1091
+              TabOrder = 20
+            end
+            object edPUFromName: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              Anchors = [akLeft, akTop, akRight]
+              TabOrder = 25
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 120.000000000000000000
+              Position.Y = 295.000000000000000000
+              Size.Width = 208.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label52: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 8.000000000000000000
+              Position.Y = 300.000000000000000000
+              Size.Width = 61.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1054#1090' '#1082#1086#1075#1086
+              TabOrder = 21
+            end
+            object edPURemains: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
+              TabOrder = 14
+              ReadOnly = True
+              TextSettings.Font.Size = 11.000000000000000000
+              Position.X = 188.000000000000000000
+              Position.Y = 153.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = [Family, Style, FontColor]
+            end
+            object Label53: TLabel
+              StyledSettings = [Family, Style, FontColor]
+              Position.X = 138.000000000000000000
+              Position.Y = 158.000000000000000000
+              Size.Width = 44.000000000000000000
+              Size.Height = 23.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              Text = #1054#1089#1090#1072#1090#1086#1082
+              TabOrder = 4
             end
           end
         end
@@ -22648,7 +22716,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22722,7 +22790,7 @@
           end
           object lwProductionUnionList: TListView
             Touch.InteractiveGestures = [LongTap]
-            OnGesture = lwProductionUnionScanGesture
+            OnGesture = lwProductionUnionListGesture
             ItemAppearanceClassName = 'TDynamicAppearance'
             ItemEditAppearanceClassName = 'TDynamicAppearance'
             HeaderAppearanceClassName = 'TListHeaderObjects'
@@ -22960,9 +23028,10 @@
               end>
             ItemAppearanceObjects.HeaderObjects.Text.Visible = False
             ItemAppearanceObjects.FooterObjects.Text.Visible = False
-            OnDblClick = lwProductionUnionScanDblClick
+            OnDblClick = lwProductionUnionListDblClick
             CanSwipeDelete = False
             AutoTapScroll = True
+            SearchVisible = True
           end
         end
       end
@@ -23486,7 +23555,7 @@
     Interval = 500
     OnTimer = TimerRefreshTimer
     Left = 264
-    Top = 471
+    Top = 143
   end
   object ppInfoView: TPopup
     StyleName = 'EnterAmountStyle'
@@ -25204,11 +25273,6 @@
     Left = 264
     Top = 413
   end
-  object BindSourceDB1: TBindSourceDB
-    ScopeMappings = <>
-    Left = 48
-    Top = 248
-  end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
@@ -25449,41 +25513,6 @@
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
-    end
-    object LinkControlToField6: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB6
-      FieldName = 'InvNumber_Full'
-      Control = edInvNumber_Full
-      Track = False
-    end
-    object LinkControlToField7: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB6
-      FieldName = 'InvNumberFull_OrderClient'
-      Control = edInvNumberFull_OrderClient
-      Track = False
-    end
-    object LinkControlToField8: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB6
-      FieldName = 'GoodsName'
-      Control = edOIGoodsName
-      Track = False
-    end
-    object LinkControlToField9: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB6
-      FieldName = 'Amount'
-      Control = edOIAmount
-      Track = False
-    end
-    object LinkControlToField10: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB6
-      FieldName = 'InvNumberFull_ProductionUnion'
-      Control = edInvNumberFull_ProductionUnion
-      Track = False
     end
     object LinkControlToField11: TLinkControlToField
       Category = 'Quick Bindings'
@@ -26037,6 +26066,83 @@
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
+    object LinkControlToField8: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'Article'
+      Control = edPUArticle
+      Track = False
+    end
+    object LinkControlToField34: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'GoodsCode'
+      Control = edPUGoodsCode
+      Track = False
+    end
+    object LinkControlToField35: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'GoodsName'
+      Control = edPUGoodsName
+      Track = False
+    end
+    object LinkControlToField36: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'GoodsGroupName'
+      Control = edPUGoodsGroupName
+      Track = False
+    end
+    object LinkControlToField37: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'AmountRemains'
+      Control = edPURemains
+      Track = False
+    end
+    object LinkControlToField9: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'Amount'
+      Control = edPUAmount
+      Track = False
+    end
+    object LinkControlToField7: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumber_OrderClient'
+      Control = edPUInvNumberFull_OrderClient
+      Track = False
+    end
+    object LinkControlToField10: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumber'
+      Control = edPUInvNumberFull_ProductionUnion
+      Track = False
+    end
+    object LinkControlToField6: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumber_OrderInternal'
+      Control = edPUInvNumberFull
+      Track = False
+    end
+    object LinkControlToField38: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'FromName'
+      Control = edPUFromName
+      Track = False
+    end
+    object LinkControlToField39: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'ToName'
+      Control = edPUToName
+      Track = False
+    end
   end
   object BindSourceDB2: TBindSourceDB
     DataSet = DM.cdsInventory
@@ -26062,12 +26168,6 @@
     Left = 160
     Top = 196
   end
-  object BindSourceDB6: TBindSourceDB
-    DataSet = DM.cdsOrderInternal
-    ScopeMappings = <>
-    Left = 48
-    Top = 196
-  end
   object BindSourceDB7: TBindSourceDB
     DataSet = DM.cdsInventoryItemEdit
     ScopeMappings = <>
@@ -26089,8 +26189,8 @@
   object BindSourceDB10: TBindSourceDB
     DataSet = DM.cdsSendList
     ScopeMappings = <>
-    Left = 264
-    Top = 144
+    Left = 48
+    Top = 480
   end
   object BindSourceDB11: TBindSourceDB
     DataSet = DM.cdsSendListTop
@@ -26101,13 +26201,19 @@
   object BindSourceDB12: TBindSourceDB
     DataSet = DM.cdsProductionUnionListTop
     ScopeMappings = <>
-    Left = 160
-    Top = 248
+    Left = 48
+    Top = 200
   end
   object BindSourceDB13: TBindSourceDB
     DataSet = DM.cdsProductionUnionList
     ScopeMappings = <>
-    Left = 152
+    Left = 48
     Top = 256
+  end
+  object BindSourceDB14: TBindSourceDB
+    DataSet = DM.cdsProductionUnionItemEdit
+    ScopeMappings = <>
+    Left = 160
+    Top = 248
   end
 end

@@ -220,7 +220,7 @@ BEGIN
                                                      ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
                                                     AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
                                                     AND OH_PriceListItem.StartDate <= inOperDate
-                                                    AND OH_PriceListItem.EndDate  >= inOperDate
+                                                    AND OH_PriceListItem.EndDate  > inOperDate
                             LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
                                                         ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
                                                        AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
