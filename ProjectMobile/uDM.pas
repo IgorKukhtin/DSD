@@ -942,44 +942,11 @@ implementation
 
 uses
   System.IOUtils, FMX.CursorUtils, FMX.CommonData, FMX.Authentication, FMX.Storage, ZLib,
-  System.StrUtils,
-  uMain, uExec, uIntf;
+  System.StrUtils, FMX.UnilWin, uMain, uExec, uIntf;
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 {$R *.dfm}
-
-{ Процедура по символьно переводит строку в набор цифр }
-function ReConvertConvert(S: string): TBytes;
-var
-  i, l, k: integer;
-  InB: TBytes;
-begin
-  i := Low(S);
-  l := High(S);
-  SetLength(InB, Length(S) div 2);
-  k := 0;
-  while i <= l do
-  begin
-    InB[k] := StrToInt('$' + s[i] + s[i+1]);
-    inc(k);
-    i := i + 2;
-  end;
-  ZDecompress(InB, Result);
-end;
-
-{ Процедура по символьно переводит строку в набор цифр }
-function ConvertConvert(S: TBytes): String;
-var
-  i, l: integer;
-  ArcS: TBytes;
-begin
-  ZCompress(S, ArcS);
-  result := '';
-  l := Length(ArcS);
-  for I := 0 to l - 1 do
-    result := result + IntToHex(ArcS[i], 2);
-end;
 
 { обновление бегущего круга }
 procedure TProgressThread.Update;
@@ -1519,7 +1486,6 @@ function TSyncThread.UploadNewJuridicals(var AId: integer): boolean;
 var
   UploadStoredProc : TdsdStoredProc;
 begin
-  Result := false;
 
   UploadStoredProc := TdsdStoredProc.Create(nil);
   try
@@ -1713,7 +1679,6 @@ procedure TSyncThread.UploadPhotos;
 var
   UploadStoredProc: TdsdStoredProc;
   PhotoStream: TStream;
-  PhotoBytes: TBytes;
   MainGUID : string;
 begin
   UploadStoredProc := TdsdStoredProc.Create(nil);
@@ -1787,10 +1752,7 @@ begin
 
           PhotoStream := CreateBlobStream(FieldByName('PHOTO'), bmRead);
           try
-             SetLength(PhotoBytes, PhotoStream.Size);
-             PhotoStream.Position := 0;
-             PhotoStream.Read(PhotoBytes, PhotoStream.Size);
-             UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, ConvertConvert(PhotoBytes));
+             UploadStoredProc.Params.AddParam('inPhoto', ftBlob, ptInput, ConvertConvert(PhotoStream));
           finally
             FreeAndNil(PhotoStream);
           end;
@@ -2276,8 +2238,7 @@ function TWaitThread.UpdateProgram: string;
 var
   GetStoredProc : TdsdStoredProc;
   ApplicationName: string;
-  FileStream : TMemoryStream;
-  FileBytes: TBytes;
+  BytesStream: TBytesStream;
   {$IFDEF ANDROID}
   intent: JIntent;
   uri: Jnet_Uri;
@@ -2290,26 +2251,25 @@ begin
   ApplicationName := DM.tblObject_ConstMobileAPKFileName.AsString;
 
   GetStoredProc := TdsdStoredProc.Create(nil);
-  FileStream := TMemoryStream.Create;
+  BytesStream := TBytesStream.Create;
   try
     GetStoredProc.StoredProcName := 'gpGet_Object_Program';
     GetStoredProc.OutputType := otBlob;
     GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
     try
-      FileBytes := ReConvertConvert(GetStoredProc.Execute(false, false, false));
-      FileStream.Write(FileBytes, Length(FileBytes));
+      ReConvertConvert(GetStoredProc.Execute(false, false, false), BytesStream);
 
-      if FileStream.Size = 0 then
+      if BytesStream.Size = 0 then
       begin
         Result := 'Новая версия программы не загружена из базы данных';
         exit;
       end;
 
-      FileStream.Position := 0;
+      BytesStream.Position := 0;
       {$IFDEF ANDROID}
-      FileStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
+      BytesStream.SaveToFile(TPath.Combine(TPath.GetSharedDownloadsPath, ApplicationName));
       {$ELSE}
-      FileStream.SaveToFile(ApplicationName);
+      BytesStream.SaveToFile(ApplicationName);
       {$ENDIF}
 
     except
@@ -2321,7 +2281,7 @@ begin
     end;
   finally
     FreeAndNil(GetStoredProc);
-    FreeAndNil(FileStream);
+    FreeAndNil(BytesStream);
   end;
 
   // Update programm

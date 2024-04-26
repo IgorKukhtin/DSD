@@ -4,16 +4,17 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_MobileProductionUnion(Integer, T
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_MobileProductionUnion(
     IN inMovementItemId      Integer  ,  -- строка документа заказа
+   OUT outScanId             Integer  ,  -- Созданный скан
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID 
+RETURNS Integer 
 AS 
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId      Integer;
    DECLARE vbOrderClient Integer;
-   DECLARE vbProductionUnionId Integer;
-   DECLARE vbProductionUnionMIId Integer;
+   DECLARE vbMovementId  Integer;
 BEGIN
+    
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion());
     vbUserId := lpGetUserBySession (inSession);
@@ -119,7 +120,7 @@ BEGIN
                                                  , inComment                  := ''
                                                  , inUserId                   := vbUserId)
          , MIFloat_MovementId.ValueData::Integer
-    INTO vbProductionUnionId
+    INTO vbMovementId
        , vbOrderClient
     FROM MovementItem
                   
@@ -297,16 +298,17 @@ BEGIN
                                                          AND ObjectString_Article_basis.DescId   = zc_ObjectString_Article())
 
       
-    SELECT gpInsertUpdate_MovementItem_ProductionUnion(ioId                     := 0
-                                                     , inMovementId             := vbProductionUnionId
-                                                     , inMovementId_OrderClient := MIFloat_MovementId.ValueData::Integer
-                                                     , inObjectId               := MovementItem.ObjectId 
-                                                     , inReceiptProdModelId     := COALESCE(tmpOrderClient.ReceiptGoodsId, ObjectLink_Product_ReceiptProdModel.ChildObjectId)
-                                                     , inAmount                 := MovementItem.Amount
-                                                     , inComment                := ''
-                                                     , inSession                := inSession
-                                                       )      
-    INTO vbProductionUnionMIId
+    SELECT lpInsertUpdate_MovementItem (0, zc_MI_Scan(), MovementItem.ObjectId , NULL, vbMovementId, MovementItem.Amount, 
+             gpInsertUpdate_MovementItem_ProductionUnion(ioId                     := 0
+                                                       , inMovementId             := vbMovementId
+                                                       , inMovementId_OrderClient := MIFloat_MovementId.ValueData::Integer
+                                                       , inObjectId               := MovementItem.ObjectId 
+                                                       , inReceiptProdModelId     := COALESCE(tmpOrderClient.ReceiptGoodsId, ObjectLink_Product_ReceiptProdModel.ChildObjectId)
+                                                       , inAmount                 := MovementItem.Amount
+                                                       , inComment                := ''
+                                                       , inSession                := inSession
+                                                         ), vbUserId)
+    INTO outScanId
     FROM MovementItem
                   
          INNER JOIN Movement AS OI ON OI.Id = MovementItem.MovementId 
@@ -328,7 +330,10 @@ BEGIN
       AND MovementItem.DescId = zc_MI_Master()
       AND MovementItem.isErased = False;
       
-    PERFORM gpComplete_Movement_ProductionUnion  (vbProductionUnionId, inSession);
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (outScanId, vbUserId, True);
+      
+    PERFORM gpComplete_Movement_ProductionUnion  (vbMovementId, inSession);
 
 END;
 $BODY$

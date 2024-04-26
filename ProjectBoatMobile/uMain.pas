@@ -67,7 +67,7 @@ type
     bSendScan: TButton;
     Image2: TImage;
     Label5: TLabel;
-    bProductionUnion: TButton;
+    bProductionUnionScan: TButton;
     Image4: TImage;
     lProductionUnion: TLabel;
     bUpload: TButton;
@@ -120,7 +120,6 @@ type
     imgIlluminationMode: TImage;
     ilPartners: TImageList;
     ilButton: TImageList;
-    BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     tiInventory: TTabItem;
     Panel2: TPanel;
@@ -171,34 +170,19 @@ type
     bClearAmount: TButton;
     lMeasure: TLabel;
     bMinusAmount: TButton;
-    tiProductionUnion: TTabItem;
-    Panel4: TPanel;
-    edOrderInternalBarCode: TEdit;
-    bOrderInternalOkClick: TEditButton;
-    Image17: TImage;
-    Label17: TLabel;
+    tiProductionUnionEdit: TTabItem;
     lGoodsSelect: TLabel;
     pPassword: TPanel;
     Rectangle1: TRectangle;
     pOrderInternal: TPanel;
     Label20: TLabel;
-    edInvNumber_Full: TEdit;
-    BindSourceDB6: TBindSourceDB;
-    LinkControlToField6: TLinkControlToField;
-    edInvNumberFull_OrderClient: TEdit;
+    edPUInvNumberFull: TEdit;
+    edPUInvNumberFull_OrderClient: TEdit;
     Label21: TLabel;
-    LinkControlToField7: TLinkControlToField;
-    edOIGoodsName: TEdit;
-    Label22: TLabel;
-    edOIAmount: TEdit;
+    edPUAmount: TEdit;
     Label23: TLabel;
-    LinkControlToField8: TLinkControlToField;
-    LinkControlToField9: TLinkControlToField;
-    pProductionUnion: TPanel;
-    edInvNumberFull_ProductionUnion: TEdit;
+    edPUInvNumberFull_ProductionUnion: TEdit;
     Label24: TLabel;
-    LinkControlToField10: TLinkControlToField;
-    bpProductionUnion: TButton;
     tiInventoryItemEdit: TTabItem;
     bInventScanAmount: TSpeedButton;
     bInventScanMode: TSpeedButton;
@@ -380,6 +364,53 @@ type
     Panel9: TPanel;
     bSendScanClear: TSpeedButton;
     Image16: TImage;
+    tiProductionUnionScan: TTabItem;
+    tiProductionUnionList: TTabItem;
+    Panel10: TPanel;
+    bProductionUnionScanSearch: TSpeedButton;
+    bProductionUnionScanMode: TSpeedButton;
+    bViewProductionUnion: TSpeedButton;
+    bProductionUnionScanNull: TSpeedButton;
+    SpeedButton7: TSpeedButton;
+    lwProductionUnionScan: TListView;
+    BindSourceDB12: TBindSourceDB;
+    LinkListControlToField7: TLinkListControlToField;
+    Panel11: TPanel;
+    pbPULErased: TPopupBox;
+    pbPULAllUser: TPopupBox;
+    pbPULOrderBy: TPopupBox;
+    llwProductionUnionList: TLabel;
+    lwProductionUnionList: TListView;
+    BindSourceDB13: TBindSourceDB;
+    LinkListControlToField8: TLinkListControlToField;
+    Label17: TLabel;
+    edPUGoodsCode: TEdit;
+    edPUGoodsName: TMemo;
+    Label49: TLabel;
+    edPUArticle: TEdit;
+    Label50: TLabel;
+    edPUGoodsGroupName: TEdit;
+    Label22: TLabel;
+    bpProductionUnionCancel: TButton;
+    bpProductionUnion: TButton;
+    edPUToName: TEdit;
+    Label51: TLabel;
+    edPUFromName: TEdit;
+    Label52: TLabel;
+    edPURemains: TEdit;
+    Label53: TLabel;
+    BindSourceDB14: TBindSourceDB;
+    LinkControlToField8: TLinkControlToField;
+    LinkControlToField34: TLinkControlToField;
+    LinkControlToField35: TLinkControlToField;
+    LinkControlToField36: TLinkControlToField;
+    LinkControlToField37: TLinkControlToField;
+    LinkControlToField9: TLinkControlToField;
+    LinkControlToField7: TLinkControlToField;
+    LinkControlToField10: TLinkControlToField;
+    LinkControlToField6: TLinkControlToField;
+    LinkControlToField38: TLinkControlToField;
+    LinkControlToField39: TLinkControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -395,16 +426,18 @@ type
     procedure ShowGoods;
     procedure ShowDictList(ADictType : TDictType);
     procedure ShowSendScan;
-    procedure ShowProductionUnion;
+    procedure ShowProductionUnionScan;
     procedure ShowInventoryScan;
     procedure ShowInventory;
     procedure ShowInventoryItemEdit;
     procedure ShowSendItemEdit;
+    procedure ShowProductionUnionList;
     procedure ShowSend;
     procedure ShowEditInventoryItemEdit;
     procedure ShowEditInventoryListEdit;
     procedure ShowEditSendItemEdit;
     procedure ShowEditSendListEdit;
+    procedure ShowEditProductionUnionItem(AId: Integer);
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
@@ -449,13 +482,12 @@ type
     procedure bAddAmountClick(Sender: TObject);
     procedure bMinusAmountClick(Sender: TObject);
     procedure bUploadClick(Sender: TObject);
-    procedure bProductionUnionClick(Sender: TObject);
+    procedure bProductionUnionScanClick(Sender: TObject);
     procedure lwDictListSearchChange(Sender: TObject);
     procedure lwGoodsSearchChange(Sender: TObject);
     procedure lwInventorySearchListChange(Sender: TObject);
     procedure cbSearchTypeGoodsChange(Sender: TObject);
     procedure pPasswordClick(Sender: TObject);
-    procedure bOrderInternalOkClickClick(Sender: TObject);
     procedure bpProductionUnionClick(Sender: TObject);
     procedure bInventScanModeClick(Sender: TObject);
     procedure bIIECancelClick(Sender: TObject);
@@ -516,6 +548,15 @@ type
     procedure pbSLOrderByChange(Sender: TObject);
     procedure edSSInvNumber_OrderClientClick(Sender: TObject);
     procedure bSendScanClearClick(Sender: TObject);
+    procedure lwProductionUnionScanDblClick(Sender: TObject);
+    procedure lwProductionUnionScanGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure bProductionUnionScanModeClick(Sender: TObject);
+    procedure bViewProductionUnionClick(Sender: TObject);
+    procedure lwProductionUnionListGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwProductionUnionListDblClick(Sender: TObject);
+    procedure bpProductionUnionCancelClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -590,6 +631,9 @@ type
     FOrderClientInvNumber: String;
     FOrderClientInvNumberFull: String;
 
+    // Заказ производство
+    FOrderInternal: Integer;
+
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
                                     var ContentBounds: TRectF);
@@ -609,6 +653,10 @@ type
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
+    procedure DeleteProductionUnionGoods(const AResult: TModalResult);
+    procedure ErasedProductionUnionList(const AResult: TModalResult);
+    procedure UnErasedProductionUnionList(const AResult: TModalResult);
+
     procedure InputOrderClient(const AResult: TModalResult; const AValues: array of string);
 
     {$IF DEFINED(ANDROID)}
@@ -620,6 +668,7 @@ type
     { Public declarations }
     procedure SetInventScanButton;
     procedure SetSendScanButton;
+    procedure SetProductionUnionScanButton;
     { Поиск комплектующих по штрихкоду }
     function SearchByBarcode(AData_String: String) : Integer;
 
@@ -1104,47 +1153,18 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
-// Открытие Внутреннего заказа
-procedure TfrmMain.bOrderInternalOkClickClick(Sender: TObject);
-  var Code: Integer;
+// Сборка Узла / Лодки
+procedure TfrmMain.bProductionUnionScanClick(Sender: TObject);
 begin
-
-  if Length(edOrderInternalBarCode.Text) > 12 then
-    edOrderInternalBarCode.Text := Copy(edOrderInternalBarCode.Text, 1, Length(edOrderInternalBarCode.Text) - 1);
-
-  if edOrderInternalBarCode.Text = '' then Exit;
-
-  try
-
-    if COPY(edOrderInternalBarCode.Text, 1, Length(FItemBarCodePref)) <> FItemBarCodePref then
-    begin
-      TDialogService.ShowMessage('Штрихкод ' + edOrderInternalBarCode.Text + ' не этекетка заказа покупателя');
-      Exit;
-    end;
-
-    if not TryStrToInt(COPY(edOrderInternalBarCode.Text, Length(FItemBarCodePref) + 1, 9), Code) then
-    begin
-      TDialogService.ShowMessage('Не правельный штрихкод ' + edOrderInternalBarCode.Text);
-      Exit;
-    end;
-
-    if not DM.DownloadOrderInternal(Code) then Exit;
-
-    if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
-      TDialogService.ShowMessage('По заказу уже создана сборку узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
-
-  finally
-    bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
-    pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
-    pProductionUnion.Visible := pOrderInternal.Visible and (DM.cdsOrderInternalMovementPUId.AsInteger <> 0);
-    edOrderInternalBarCode.Text := '';
-  end;
+  FScanType := 0;
+  ShowProductionUnionScan;
 end;
 
-// Сборка Узла / Лодки
-procedure TfrmMain.bProductionUnionClick(Sender: TObject);
+procedure TfrmMain.bProductionUnionScanModeClick(Sender: TObject);
 begin
-  ShowProductionUnion;
+  FScanType := TSpinEditButton(Sender).Tag;
+  SetProductionUnionScanButton;
+  if FisOpenScanChangingMode then sbScanClick(Sender);
 end;
 
 // присвоение количества комплектующих
@@ -1169,11 +1189,11 @@ end;
 
 procedure TfrmMain.ProductionUnionInsert(const AResult: TModalResult);
 begin
-  if (AResult = mrYes) and (DM.cdsOrderInternalMovementItemId.AsInteger <> 0) then
+  if (AResult = mrYes) and (FOrderInternal <> 0) then
   begin
     try
       try
-        DM.InsertProductionUnion(DM.cdsOrderInternalMovementItemId.AsInteger)
+        DM.InsertProductionUnion(FOrderInternal)
       except
         on E : Exception do
         begin
@@ -1186,12 +1206,29 @@ begin
     finally
       bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
       pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
-      pProductionUnion.Visible := pOrderInternal.Visible and (DM.cdsOrderInternalMovementPUId.AsInteger <> 0);
     end;
   end;
 end;
 
+procedure TfrmMain.DeleteProductionUnionGoods(const AResult: TModalResult);
+begin
+end;
+
+procedure TfrmMain.ErasedProductionUnionList(const AResult: TModalResult);
+begin
+end;
+
+procedure TfrmMain.UnErasedProductionUnionList(const AResult: TModalResult);
+begin
+end;
+
 // Формирование документа сборки
+procedure TfrmMain.bpProductionUnionCancelClick(Sender: TObject);
+begin
+  DM.cdsProductionUnionItemEdit.Close;
+  ReturnPriorForm;
+end;
+
 procedure TfrmMain.bpProductionUnionClick(Sender: TObject);
 begin
   TDialogService.MessageDialog('Формировать документ сборки узла/лодки?',
@@ -1408,6 +1445,34 @@ begin
   end;
 end;
 
+procedure TfrmMain.SetProductionUnionScanButton;
+begin
+  bProductionUnionScanMode.ImageIndex := 13;
+  bProductionUnionScanMode.TextSettings.FontColor := bProductionUnionScanSearch.TextSettings.FontColor;
+  bProductionUnionScanMode.TextSettings.Font.Style := bProductionUnionScanSearch.TextSettings.Font.Style;
+  bProductionUnionScanMode.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size;
+  bProductionUnionScanNull.ImageIndex := 13;
+  bProductionUnionScanNull.TextSettings.FontColor := bProductionUnionScanSearch.TextSettings.FontColor;
+  bProductionUnionScanNull.TextSettings.Font.Style := bProductionUnionScanSearch.TextSettings.Font.Style;
+  bProductionUnionScanNull.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size;
+
+
+  case FScanType of
+    0 : begin
+          bProductionUnionScanMode.ImageIndex := 12;
+          bProductionUnionScanMode.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bProductionUnionScanMode.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bProductionUnionScanMode.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size + 1;
+        end;
+    3 : begin
+          bProductionUnionScanNull.ImageIndex := 12;
+          bProductionUnionScanNull.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bProductionUnionScanNull.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bProductionUnionScanNull.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size + 1;
+        end;
+  end;
+end;
+
 procedure TfrmMain.ChangeMainPageUpdate(Sender: TObject);
 begin
 
@@ -1418,7 +1483,7 @@ begin
     bInfo.Enabled := False;
     bInventoryScan.Enabled := False;
     bLogIn.Enabled := False;
-    bProductionUnion.Enabled := False;
+    bProductionUnionScan.Enabled := False;
     bRelogin.Enabled := False;
     bSendScan.Enabled := False;
     bUpload.Enabled := False;
@@ -1435,7 +1500,7 @@ begin
           bInfo.Enabled := True;
           bInventoryScan.Enabled := True;
           bLogIn.Enabled := True;
-          bProductionUnion.Enabled := True;
+          bProductionUnionScan.Enabled := True;
           bRelogin.Enabled := True;
           bSendScan.Enabled := True;
           bUpload.Enabled := True;
@@ -1601,23 +1666,30 @@ begin
       sbRefresh.Visible := True;
     end
     else
-    if tcMain.ActiveTab = tiProductionUnion then
+    if tcMain.ActiveTab = tiProductionUnionScan then
     begin
       lCaption.Text := 'Сборка Узла / Лодки';
-      bGoodsChoice.Visible := False;
+      SetProductionUnionScanButton;
+      sbRefresh.Visible := True;
+      DM.DownloadProductionUnionListTop;
       FDataWedgeBarCode.OnScanResult := OnScanProductionUnion;
-
-      DM.cdsOrderInternal.Close;
-      pOrderInternal.Visible := False;
-      pProductionUnion.Visible := pOrderInternal.Visible;
+    end else
+    if tcMain.ActiveTab = tiProductionUnionList then
+    begin
+      lCaption.Text := 'Просмотр призводства - сбороки';
+      sbRefresh.Visible := True;
+    end  else
+    if tcMain.ActiveTab = tiProductionUnionEdit then
+    begin
+      lCaption.Text := 'Редактирование cборка Узла / Лодки'
     end;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion) or (tcMain.ActiveTab = tiSendScan) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnionScan) or (tcMain.ActiveTab = tiSendScan) then
     begin
       sbScan.Visible := FisZebraScaner and not FisCameraScaner and not FisHideScanButton or not FisZebraScaner or FisCameraScaner;
     end else sbScan.Visible := false;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnion) or (tcMain.ActiveTab = tiScanBarCode) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnionScan) or (tcMain.ActiveTab = tiScanBarCode) then
     begin
       sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash or
                                     (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash);
@@ -2085,9 +2157,6 @@ begin
     SwitchToForm(tiInventoryScan, nil);
   end else TDialogService.MessageDialog('Инвентаризация по "Складу основному" не найдена.'#13#13'Создать ?',
     TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, CreateInventory);
-
-//  if not DM.DownloadInventoryJournal then Exit;
-//  SwitchToForm(tiInventoryJournal, nil);
 end;
 
 // начитка информации строка инвентаризации
@@ -2181,10 +2250,19 @@ begin
 end;
 
 // начитка информации журнала перемещений
+procedure TfrmMain.ShowProductionUnionList;
+begin
+
+  if not DM.DownloadProductionUnionList(pbPULOrderBy.ItemIndex > 0, pbPULAllUser.ItemIndex > 0, pbPULErased.ItemIndex > 0, GetSearshBox(lwProductionUnionList).Text) then Exit;
+
+  if tcMain.ActiveTab <> tiProductionUnionList then SwitchToForm(tiProductionUnionList, nil);
+end;
+
+// начитка информации журнала перемещений
 procedure TfrmMain.ShowSend;
 begin
 
-  if not DM.DownloadSendList(pbSLOrderBy.ItemIndex > 0, pbSLAllUser.ItemIndex > 0, pbSLErased.ItemIndex > 0, GetSearshBox(lwInventoryList).Text) then Exit;
+  if not DM.DownloadSendList(pbSLOrderBy.ItemIndex > 0, pbSLAllUser.ItemIndex > 0, pbSLErased.ItemIndex > 0, GetSearshBox(lwProductionUnionList).Text) then Exit;
 
   if tcMain.ActiveTab <> tiSendList then SwitchToForm(tiSendList, nil);
 end;
@@ -2325,10 +2403,21 @@ begin
   lCaption.Text := 'Редактирование Перемещения';
 end;
 
-// Сборка Узла / Лодки
-procedure TfrmMain.ShowProductionUnion;
+// открытие на редактирование ранее введенной строки Сборка Узла / Лодки
+procedure TfrmMain.ShowEditProductionUnionItem(AId: Integer);
 begin
-  SwitchToForm(tiProductionUnion, nil);
+  if AID = 0 then Exit;
+
+  bpProductionUnion.Visible := False;
+
+  if  DM.GetProductionUnionItem(AId) then
+    SwitchToForm(tiProductionUnionEdit, nil);
+end;
+
+// Сборка Узла / Лодки
+procedure TfrmMain.ShowProductionUnionScan;
+begin
+  SwitchToForm(tiProductionUnionScan, nil);
 end;
 
 // Сканирование инвентаризаций
@@ -2361,6 +2450,7 @@ begin
   FOrderClientInvNumberFull := '';
   edSSInvNumber_OrderClient.Text := '';
   bSendScanClear.Visible := False;
+  FScanType := 0;
   ShowSendScan;
 end;
 
@@ -2497,6 +2587,7 @@ end;
 // переход на форму журнала инвентаризаций
 procedure TfrmMain.bInventoryScanClick(Sender: TObject);
 begin
+  FScanType := 0;
   ShowInventoryScan;
 end;
 
@@ -2679,6 +2770,11 @@ begin
   ShowInventory;
 end;
 
+procedure TfrmMain.bViewProductionUnionClick(Sender: TObject);
+begin
+  ShowProductionUnionList;
+end;
+
 procedure TfrmMain.bViewSendClick(Sender: TObject);
 begin
   ShowSend;
@@ -2752,9 +2848,9 @@ begin
   else if (tcMain.ActiveTab = tiSendList)  then
   begin
     DM.cdsSendList.Close;
-  end else if tcMain.ActiveTab = tiProductionUnion then
+  end else if tcMain.ActiveTab = tiProductionUnionEdit then
   begin
-    DM.cdsOrderInternal.Close;
+    DM.cdsProductionUnionItemEdit.Close;
   end else if tcMain.ActiveTab = tiInformation then
   begin
 
@@ -2850,6 +2946,12 @@ begin
   end else if tcMain.ActiveTab = tiSendList then
   begin
     ShowSend;
+  end else if tcMain.ActiveTab = tiProductionUnionScan then
+  begin
+    DM.DownloadProductionUnionListTop;
+  end else if tcMain.ActiveTab = tiProductionUnionList then
+  begin
+    ShowProductionUnionList;
   end;
 end;
 
@@ -2994,6 +3096,85 @@ begin
     UpdateKBBounds;
   end;
   {$ENDIF}
+end;
+
+procedure TfrmMain.lwProductionUnionListDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwProductionUnionListGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwProductionUnionListGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование в сканированиях перемещения
+  if (tcMain.ActiveTab = tiProductionUnionList) and DM.cdsProductionUnionList.Active and not DM.cdsProductionUnionList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := True;
+    btaEditRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+
+end;
+
+procedure TfrmMain.lwProductionUnionScanDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwProductionUnionScanGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwProductionUnionScanGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Редактирование в сканированиях перемещения
+  if (tcMain.ActiveTab = tiProductionUnionScan) and DM.cdsProductionUnionListTop.Active and not DM.cdsProductionUnionListTop.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := True;
+    btaEditRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -3331,6 +3512,51 @@ begin
                                    'в документе?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedSendList)
     end;
+  end else if (tcMain.ActiveTab = tiProductionUnionScan) then
+  begin
+    // Изменить позицию комплектующих
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditProductionUnionItem(DM.cdsProductionUnionListTopId.AsInteger);
+    end else
+    // Удаление позиции комплектующих
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + IfThen(DM.cdsProductionUnionListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsProductionUnionListTopOrdUser.AsString) + '>'#13#10 +
+                                   'кол-во = <' + DM.cdsProductionUnionListTopAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsProductionUnionListTopGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsProductionUnionListTopArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsProductionUnionListTopGoodsName.AsString + '>'#13#10 +
+                                   'из документа?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteProductionUnionGoods)
+    ;
+  end else if (tcMain.ActiveTab = tiProductionUnionList) then
+  begin
+    // Изменить позицию комплектующих
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditProductionUnionItem(DM.cdsProductionUnionListId.AsInteger);
+    end else
+    // Удаление позиции комплектующего
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '>'#13#10 +
+                                   'из документа?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedProductionUnionList)
+    else
+    // Востановление позиции комплектующего
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+                                   'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
+                                   'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
+                                   'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
+                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '>'#13#10 +
+                                   'в документе?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedProductionUnionList)
+    end;
   end;
 
   if (TButton(Sender).Tag = 7) and sbBack.Visible  then sbBackClick(Sender);
@@ -3472,11 +3698,27 @@ end;
 
 // Обрабатываем отсканированный товар для производства
 procedure TfrmMain.OnScanProductionUnion(Sender: TObject; AData_String: String);
+  var ID: Integer;
 begin
 
-  edOrderInternalBarCode.Text := AData_String;
+  if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
+  begin
 
-  bOrderInternalOkClickClick(Sender);
+    if Length(AData_String) > 12 then AData_String := Copy(AData_String, 1, Length(AData_String) - 1);
+
+    if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
+    begin
+      TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
+      Exit;
+    end;
+
+    if DM.DownloadOrderInternal(Id) then
+    begin
+      FOrderInternal := Id;
+      bpProductionUnion.Visible := (DM.cdsProductionUnionItemEditId.AsInteger = 0) and (DM.cdsProductionUnionItemEdit.RecordCount = 1);
+      SwitchToForm(tiProductionUnionEdit, nil);
+    end;
+  end else TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
 end;
 
 end.

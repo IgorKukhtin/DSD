@@ -193,8 +193,17 @@ BEGIN
 
 
     */
-
-
+       --если установлена скидка на опцию то берем только ее, если не установлена тогда скидки  - zc_MovementFloat_SummTax + zc_MovementFloat_DiscountNextTax
+     , tmpProdOptItems_Tax AS (SELECT SUM (CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) 
+                                                ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (vbDiscountTax,0)), COALESCE (vbDiscountNextTax,0) ) 
+                                           END
+                                           ) AS Sale_summ_OptItems
+                                    , SUM (CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.SaleWVAT_summ, COALESCE (tmpProdOptItems.DiscountTax,0))
+                                                ELSE  zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.SaleWVAT_summ, COALESCE (vbDiscountTax,0)), COALESCE (vbDiscountNextTax,0) )   
+                                           END
+                                           ) AS SaleWVAT_summ_OptItems
+                               FROM tmpProdOptItems
+                               )
 
        -- Результат
        SELECT tmpProduct.*
@@ -268,10 +277,13 @@ BEGIN
                                  ON ObjectString_TaxNumber.ObjectId = tmpProduct.ClientId
                                 AND ObjectString_TaxNumber.DescId = zc_ObjectString_Client_TaxNumber()
 
-          LEFT JOIN (SELECT SUM (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS Sale_summ_OptItems
+          /*LEFT JOIN (SELECT SUM (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS Sale_summ_OptItems
                           , SUM (zfCalc_SummDiscountTax (tmpProdOptItems.SaleWVAT_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ) AS SaleWVAT_summ_OptItems
                      FROM tmpProdOptItems
-                     ) AS tmpProdOptItems ON 1=1
+                     ) AS tmpProdOptItems ON 1=1 
+          */ 
+          
+          LEFT JOIN tmpProdOptItems_Tax AS tmpProdOptItems ON 1=1
 
           LEFT JOIN (SELECT SUM(tmp.Amount * tmp.OperPrice) AS Sale_summ
                      FROM tmpOrderClient AS tmp
@@ -344,15 +356,22 @@ BEGIN
             , tmpProdOptItems.ProdColorName
             , tmpProdOptItems.Amount
             , tmpProdOptItems.SalePrice                       -- Цена продажи без НДС
-            , tmpProdOptItems.DiscountTax                     -- Скидка
+            --, tmpProdOptItems.DiscountTax                     -- Скидка 
+            , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN tmpProdOptItems.DiscountTax ELSE COALESCE (vbDiscountTax,0) END AS DiscountTax
             --, vbDiscountTax                ::TFloat AS DiscountTax
-            , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice
+            /*, zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice
                                                                                     , COALESCE (vbDiscountTax,0))
                                                             , 0 -- COALESCE (vbDiscountNextTax,0)
                                                              )
                                     , 0 -- COALESCE (tmpProdOptItems.DiscountTax,0)
-                                     ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
+                                     ) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой 
+           */
+            , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (tmpProdOptItems.DiscountTax,0)) 
+                   ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (vbDiscountTax,0)), COALESCE (vbDiscountNextTax,0) ) 
+              END  ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой 
+
             , tmpProdOptItems.CommentOpt
+            , tmpProdOptItems.NPP   :: Integer  AS NPP
        FROM tmpProdOptItems
      UNION
        SELECT tmp.GoodsName                  AS GoodsName
@@ -365,7 +384,8 @@ BEGIN
                                                             , COALESCE (vbDiscountTax,0))
                                     , 0 -- COALESCE (vbDiscountNextTax,0)
                                      ) ::TFloat AS Sale_summ
-            , '' ::TVarChar AS CommentOpt
+            , '' ::TVarChar AS CommentOpt 
+            , ROW_NUMBER() OVER (ORDER BY tmp.GoodsName) :: Integer  AS NPP
        FROM tmpOrderClient AS tmp
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmp.GoodsId
@@ -384,7 +404,8 @@ BEGIN
             , 0  :: TFloat   AS SalePrice
             , 0  :: TFloat   AS DiscountTax
             , 0  :: TFloat   AS Sale_summ
-            , '' :: TVarChar AS CommentOpt
+            , '' :: TVarChar AS CommentOpt 
+            , 999 :: Integer AS NPP
        WHERE (SELECT COUNT (*) FROM tmpProdOptItems) = 0
        ;
 

@@ -3532,7 +3532,7 @@ object OrderClientForm: TOrderClientForm
     Width = 1390
     Height = 64
     Align = alBottom
-    TabOrder = 14
+    TabOrder = 13
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
@@ -4864,6 +4864,7 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end
         item
           DataSet = PrintItemsColorCDS
@@ -8073,8 +8074,8 @@ object OrderClientForm: TOrderClientForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 538
-    Top = 152
+    Left = 506
+    Top = 216
   end
   object HeaderExit: THeaderExit
     ExitList = <

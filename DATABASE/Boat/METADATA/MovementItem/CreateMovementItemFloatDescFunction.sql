@@ -129,10 +129,9 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_Amount_calc() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Amount_calc', 'Количество расчет' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Amount_calc');
 
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  12.04.24         * zc_MIFloat_OperPrice_calc
                     zc_MIFloat_SummMVAT_calc
                     zc_MIFloat_SummPVAT_calc

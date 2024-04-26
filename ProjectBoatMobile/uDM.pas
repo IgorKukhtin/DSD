@@ -122,14 +122,6 @@ type
     qryMeta: TFDMetaInfoQuery;
     qryMeta2: TFDMetaInfoQuery;
     fdcUTF16NoCase: TFDSQLiteCollation;
-    cdsOrderInternal: TClientDataSet;
-    cdsOrderInternalMovementItemId: TIntegerField;
-    cdsOrderInternalInvNumber_Full: TWideStringField;
-    cdsOrderInternalInvNumberFull_OrderClient: TWideStringField;
-    cdsOrderInternalGoodsName: TWideStringField;
-    cdsOrderInternalAmount: TFloatField;
-    cdsOrderInternalInvNumberFull_ProductionUnion: TWideStringField;
-    cdsOrderInternalMovementPUId: TIntegerField;
     tbGoods: TFDTable;
     tbGoodsId: TIntegerField;
     tbGoodsCode: TIntegerField;
@@ -369,6 +361,118 @@ type
     tbSendGoodsMovementId_OrderClient: TIntegerField;
     tbSendGoodsInvNumber_OrderClient: TWideStringField;
     cdsSendItemEditMovementId_OrderClient: TIntegerField;
+    cdsProductionUnionListTop: TClientDataSet;
+    cdsProductionUnionListTopId: TIntegerField;
+    cdsProductionUnionListTopGoodsId: TIntegerField;
+    cdsProductionUnionListTopGoodsCode: TIntegerField;
+    cdsProductionUnionListTopGoodsName: TWideStringField;
+    cdsProductionUnionListTopArticle: TWideStringField;
+    cdsProductionUnionListTopEAN: TWideStringField;
+    cdsProductionUnionListTopGoodsGroupId: TIntegerField;
+    cdsProductionUnionListTopGoodsGroupName: TWideStringField;
+    cdsProductionUnionListTopMeasureName: TWideStringField;
+    cdsProductionUnionListTopAmount: TFloatField;
+    cdsProductionUnionListTopTotalCount: TFloatField;
+    cdsProductionUnionListTopAmountRemains: TFloatField;
+    cdsProductionUnionListTopOrdUser: TIntegerField;
+    cdsProductionUnionListTopOperDate_protocol: TDateTimeField;
+    cdsProductionUnionListTopUserName_protocol: TWideStringField;
+    cdsProductionUnionListTopisErased: TBooleanField;
+    cdsProductionUnionListTopAmountLabel: TWideStringField;
+    cdsProductionUnionListTopAmountRemainsLabel: TWideStringField;
+    cdsProductionUnionListTopTotalCountLabel: TWideStringField;
+    cdsProductionUnionListTopOrdUserLabel: TWideStringField;
+    cdsProductionUnionListTopOperDate: TDateTimeField;
+    cdsProductionUnionListTopInvNumber: TWideStringField;
+    cdsProductionUnionListTopFromId: TIntegerField;
+    cdsProductionUnionListTopFromCode: TIntegerField;
+    cdsProductionUnionListTopFromName: TWideStringField;
+    cdsProductionUnionListTopToId: TIntegerField;
+    cdsProductionUnionListTopToCode: TIntegerField;
+    cdsProductionUnionListTopToName: TWideStringField;
+    cdsProductionUnionListTopFromNameLabel: TWideStringField;
+    cdsProductionUnionListTopToNameLabel: TWideStringField;
+    cdsProductionUnionListTopMovementId_OrderClient: TIntegerField;
+    cdsProductionUnionListTopInvNumber_OrderClient: TWideStringField;
+    cdsProductionUnionListTopInvNumber_OrderClientLabel: TWideStringField;
+    cdsProductionUnionListTopStatusCode: TIntegerField;
+    cdsProductionUnionListTopStatusName: TWideStringField;
+    cdsProductionUnionListTopOperDate_OrderInternal: TDateTimeField;
+    cdsProductionUnionListTopInvNumber_OrderInternal: TWideStringField;
+    cdsProductionUnionListTopStatusCode_OrderInternal: TIntegerField;
+    cdsProductionUnionListTopStatusName_OrderInternal: TWideStringField;
+    cdsProductionUnionListTopInvNumber_OrderInternalLabel: TWideStringField;
+    cdsProductionUnionList: TClientDataSet;
+    cdsProductionUnionListId: TIntegerField;
+    cdsProductionUnionListGoodsId: TIntegerField;
+    cdsProductionUnionListGoodsCode: TIntegerField;
+    cdsProductionUnionListGoodsName: TWideStringField;
+    cdsProductionUnionListArticle: TWideStringField;
+    cdsProductionUnionListEAN: TWideStringField;
+    cdsProductionUnionListGoodsGroupId: TIntegerField;
+    cdsProductionUnionListGoodsGroupName: TWideStringField;
+    cdsProductionUnionListMeasureName: TWideStringField;
+    cdsProductionUnionListAmount: TFloatField;
+    cdsProductionUnionListTotalCount: TFloatField;
+    cdsProductionUnionListAmountRemains: TFloatField;
+    cdsProductionUnionListOrdUser: TIntegerField;
+    cdsProductionUnionListOperDate_protocol: TDateTimeField;
+    cdsProductionUnionListUserName_protocol: TWideStringField;
+    cdsProductionUnionListisErased: TBooleanField;
+    cdsProductionUnionListAmountLabel: TWideStringField;
+    cdsProductionUnionListAmountRemainsLabel: TWideStringField;
+    cdsProductionUnionListTotalCountLabel: TWideStringField;
+    cdsProductionUnionListOrdUserLabel: TWideStringField;
+    cdsProductionUnionListOperDate: TDateTimeField;
+    cdsProductionUnionListInvNumber: TWideStringField;
+    cdsProductionUnionListStatusCode: TIntegerField;
+    cdsProductionUnionListStatusName: TWideStringField;
+    cdsProductionUnionListFromId: TIntegerField;
+    cdsProductionUnionListFromCode: TIntegerField;
+    cdsProductionUnionListFromName: TWideStringField;
+    cdsProductionUnionListToId: TIntegerField;
+    cdsProductionUnionListToCode: TIntegerField;
+    cdsProductionUnionListToName: TWideStringField;
+    cdsProductionUnionListFromNameLabel: TWideStringField;
+    cdsProductionUnionListToNameLabel: TWideStringField;
+    cdsProductionUnionListMovementId_OrderClient: TIntegerField;
+    cdsProductionUnionListInvNumber_OrderClient: TWideStringField;
+    cdsProductionUnionListInvNumber_OrderClientLabel: TWideStringField;
+    cdsProductionUnionListOperDate_OrderInternal: TDateTimeField;
+    cdsProductionUnionListInvNumber_OrderInternalLabel: TWideStringField;
+    cdsProductionUnionListInvNumber_OrderInternal: TWideStringField;
+    cdsProductionUnionListStatusCode_OrderInternal: TIntegerField;
+    cdsProductionUnionListStatusName_OrderInternal: TWideStringField;
+    cdsProductionUnionItemEdit: TClientDataSet;
+    cdsProductionUnionItemEditId: TIntegerField;
+    cdsProductionUnionItemEditGoodsId: TIntegerField;
+    cdsProductionUnionItemEditGoodsCode: TIntegerField;
+    cdsProductionUnionItemEditGoodsName: TWideStringField;
+    cdsProductionUnionItemEditArticle: TWideStringField;
+    cdsProductionUnionItemEditEAN: TWideStringField;
+    cdsProductionUnionItemEditGoodsGroupId: TIntegerField;
+    cdsProductionUnionItemEditGoodsGroupName: TWideStringField;
+    cdsProductionUnionItemEditMeasureName: TWideStringField;
+    cdsProductionUnionItemEditAmount: TFloatField;
+    cdsProductionUnionItemEditAmountRemains: TFloatField;
+    cdsProductionUnionItemEditisErased: TBooleanField;
+    cdsProductionUnionItemEditOperDate: TDateTimeField;
+    cdsProductionUnionItemEditInvNumber: TWideStringField;
+    cdsProductionUnionItemEditStatusCode: TIntegerField;
+    cdsProductionUnionItemEditStatusName: TWideStringField;
+    cdsProductionUnionItemEditFromId: TIntegerField;
+    cdsProductionUnionItemEditFromCode: TIntegerField;
+    cdsProductionUnionItemEditFromName: TWideStringField;
+    cdsProductionUnionItemEditToId: TIntegerField;
+    cdsProductionUnionItemEditToCode: TIntegerField;
+    cdsProductionUnionItemEditToName: TWideStringField;
+    cdsProductionUnionItemEditToNameLabel: TWideStringField;
+    cdsProductionUnionItemEditMovementId_OrderClient: TIntegerField;
+    cdsProductionUnionItemEditInvNumber_OrderClient: TWideStringField;
+    cdsProductionUnionItemEditOperDate_OrderInternal: TDateTimeField;
+    cdsProductionUnionItemEditInvNumber_OrderInternal: TWideStringField;
+    cdsProductionUnionItemEditStatusCode_OrderInternal: TIntegerField;
+    cdsProductionUnionItemEditStatusName_OrderInternal: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -392,6 +496,9 @@ type
     procedure cdsSendItemEditCalcFields(DataSet: TDataSet);
     procedure cdsSendListAfterScroll(DataSet: TDataSet);
     procedure cdsSendListCalcFields(DataSet: TDataSet);
+    procedure cdProductionUnionListAfterScroll(DataSet: TDataSet);
+    procedure cdProductionUnionListCalcFields(DataSet: TDataSet);
+    procedure cdsProductionUnionListAfterScroll(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -438,9 +545,11 @@ type
     function DownloadInventoryListTop : Boolean;
     function DownloadSendList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
     function DownloadSendListTop : Boolean;
+    function DownloadProductionUnionListTop : Boolean;
+    function DownloadProductionUnionList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
 
     function DownloadOrderInternal(AId : Integer) : Boolean;
-    function InsertProductionUnion(AId : Integer) : Boolean;
+    function InsertProductionUnion(AId : Integer; var AScanId: Integer) : Boolean;
 
     function GetGoodsBarcode(ABarcode : String; var AId, ACount : Integer) : Boolean;
     function GetOrderClient(ABarCode, AInvNumber : String; var outID: Integer; var outInvNumber, outInvNumberFull: String) : Boolean;
@@ -450,6 +559,7 @@ type
     function GetMIInventory(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetMISend(AGoodsId, APartionCellId : Integer; APartNumber: String; AAmount: Currency) : Boolean;
     function GetInventoryActive(AisCreate : Boolean) : Boolean;
+    function GetProductionUnionItem(AId: Integer): Boolean;
     function UploadMIInventory: Boolean;
     function UploadMISend: Boolean;
 
@@ -508,7 +618,7 @@ implementation
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
 uses System.IOUtils, System.DateUtils, System.ZLib, System.RegularExpressions,
-     FMX.Dialogs, FMX.Storage, FMX.FormStorage, uMain;
+     FMX.Dialogs, FMX.Storage, FMX.UnilWin, uMain;
 
 {$R *.dfm}
 
@@ -572,7 +682,6 @@ var
   GetStoredProc : TdsdStoredProc;
   ApplicationName: string;
   BytesStream : TBytesStream;
-  FileBytes: TBytes;
   {$IFDEF ANDROID}
   OutputDir: JFile;
   intent: JIntent;
@@ -1269,6 +1378,23 @@ begin
   result := conMain.Connected;
 end;
 
+procedure TDM.cdProductionUnionListAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
+end;
+
+procedure TDM.cdProductionUnionListCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
+  DataSet.FieldByName('AmountRemainsLabel').AsString := 'Остаток:';
+  DataSet.FieldByName('TotalCountLabel').AsString := 'Итого кол-во:';
+  DataSet.FieldByName('OrdUserLabel').AsString := '№ п/п';
+  DataSet.FieldByName('FromNameLabel').AsString := 'От кого:';
+  DataSet.FieldByName('ToNameLabel').AsString := 'Кому:';
+  DataSet.FieldByName('InvNumber_OrderInternalLabel').AsString := '№ зак. пр-ва:';
+  DataSet.FieldByName('InvNumber_OrderClientLabel').AsString := '№ зак. клиент:';
+end;
+
 procedure TDM.cdsDictListAfterScroll(DataSet: TDataSet);
 begin
   if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
@@ -1342,6 +1468,11 @@ begin
   if DataSet.FieldByName('isErased').AsBoolean then
   DataSet.FieldByName('ErasedId').AsInteger := 3
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
+end;
+
+procedure TDM.cdsProductionUnionListAfterScroll(DataSet: TDataSet);
+begin
+  if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
 end;
 
 procedure TDM.cdsSendItemEditAfterEdit(DataSet: TDataSet);
@@ -2230,6 +2361,78 @@ begin
   end;
 end;
 
+{ начитка топ Производство - сборка}
+function TDM.DownloadProductionUnionListTop : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsProductionUnionListTop.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileProductionUnionTop';
+    StoredProc.Params.Clear;
+    StoredProc.DataSet := cdsProductionUnionListTop;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      Result := cdsProductionUnionListTop.Active;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsProductionUnionListTop.EnableControls;
+  end;
+end;
+
+{ начитка строк Производство - сборка}
+function TDM.DownloadProductionUnionList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if cdsProductionUnionList.Active and not cdsProductionUnionList.IsEmpty then
+    nID := DM.cdsProductionUnionListId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsProductionUnionList.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_MovementItem_MobileProductionUnion';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
+    StoredProc.DataSet := cdsProductionUnionList;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsProductionUnionList.Active;
+      if Result and (nID <> 0) then cdsProductionUnionList.Locate('Id', nId, []);
+      if cdsProductionUnionList.RecordCount >= FLimitList then
+        frmMain.llwProductionUnionList.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.llwProductionUnionList.Text := 'Найдено ' + IntToStr(cdsProductionUnionList.RecordCount) + ' записей';
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsProductionUnionList.EnableControls;
+  end;
+end;
 
 { начитка внутреннего заказа + производство}
 function TDM.DownloadOrderInternal(AId : Integer) : Boolean;
@@ -2241,24 +2444,24 @@ begin
   if AId = 0 then Exit;
 
   StoredProc := TdsdStoredProc.Create(nil);
-  cdsOrderInternal.DisableControls;
+  cdsProductionUnionItemEdit.DisableControls;
   try
     StoredProc.OutputType := otDataSet;
 
     StoredProc.StoredProcName := 'gpGet_MovementItem_MobileOrderInternal';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
-    StoredProc.DataSet := cdsOrderInternal;
+    StoredProc.DataSet := cdsProductionUnionItemEdit;
 
     try
       StoredProc.Execute(false, false, false);
-      Result := cdsOrderInternal.Active;
+      Result := cdsProductionUnionItemEdit.Active;
     except
       on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
     end;
   finally
     FreeAndNil(StoredProc);
-    cdsOrderInternal.EnableControls;
+    cdsProductionUnionItemEdit.EnableControls;
   end;
 end;
 
@@ -2327,6 +2530,34 @@ begin
   finally
     FreeAndNil(StoredProc);
     FreeAndNil(DataSet);
+  end;
+end;
+
+{ загрузка строки Сборка Узла / Лодки}
+function TDM.GetProductionUnionItem(AId: Integer): Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+  Result := False;
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MI_MobileProductionUnion';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inScanId', ftInteger, ptInput, AId);
+
+    StoredProc.DataSet := cdsProductionUnionItemEdit;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+
+      Result := cdsProductionUnionItemEdit.Active;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
   end;
 end;
 
@@ -2697,7 +2928,7 @@ begin
 end;
 
 { Создание документа производства}
-function TDM.InsertProductionUnion(AId : Integer) : Boolean;
+function TDM.InsertProductionUnion(AId : Integer; var AScanId: Integer) : Boolean;
 var
   StoredProc : TdsdStoredProc;
 begin
@@ -2712,9 +2943,11 @@ begin
     StoredProc.StoredProcName := 'gpInsertUpdate_Movement_MobileProductionUnion';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, AId);
+    StoredProc.Params.AddParam('outScanId', ftInteger, ptOutput, 0);
 
     try
       StoredProc.Execute(false, false, false);
+      AScanId :=  StoredProc.ParamByName('outScanId').Value;
       Result := True;
     except
       on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));

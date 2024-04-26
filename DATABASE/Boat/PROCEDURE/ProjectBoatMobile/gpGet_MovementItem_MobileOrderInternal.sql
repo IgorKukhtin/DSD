@@ -6,34 +6,22 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_MobileOrderInternal(
     IN inMovementItemId      Integer  ,  -- Ключ объекта <Master OrderInternal>
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, InvNumber_Full  TVarChar
-             , BarCode TVarChar
-             , OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
-             , Comment TVarChar
-             , InsertName TVarChar, InsertDate TDateTime
-             , UpdateName TVarChar, UpdateDate TDateTime
-               --
-             , MovementItemId Integer
-             , GoodsId Integer, GoodsCode Integer, Article TVarChar, GoodsName TVarChar, GoodsName_all TVarChar, ItemName_goods TVarChar, Comment_goods TVarChar
-             , Amount TFloat
-             , UnitId Integer
-             , UnitName TVarChar
-             , Comment_mi TVarChar
-             , MovementId_OrderClient Integer
-             , InvNumberFull_OrderClient TVarChar
-             , InvNumber_OrderClient TVarChar
-             , FromId Integer , FromName TVarChar
-             , ProductName TVarChar
-             , CIN TVarChar
-             , ModelId Integer, ModelName TVarChar, ModelName_full TVarChar
-             , InsertName_mi TVarChar
-             , InsertDate_mi TDateTime             
-             , MovementPUId Integer
-             , MovementItemPUId Integer
+RETURNS TABLE (Id Integer, MovementId Integer
+
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Article TVarChar, EAN TVarChar 
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , MeasureName TVarChar
+
+             , Amount TFloat, AmountRemains TFloat
              
-             , InvNumberFull_ProductionUnion TVarChar
+             , OperDate TDateTime, InvNumber TVarChar, StatusCode Integer, StatusName TVarChar
+             , FromId Integer, FromCode Integer, FromName TVarChar
+             , ToId Integer, ToCode Integer, ToName TVarChar
+             
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
+             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
+             , isErased Boolean
 
               )
 AS
@@ -46,241 +34,226 @@ BEGIN
     IF NOT EXISTS(SELECT MovementItem.Id
               FROM MovementItem
               
-                   INNER JOIN Movement AS OI ON OI.Id = MovementItem.MovementId 
-                                            AND OI.descid = zc_Movement_OrderInternal() 
-                                            AND OI.StatusId <> zc_Enum_Status_Erased() 
+                   INNER JOIN Movement ON Movement.Id = MovementItem.MovementId 
+                                      AND Movement.descid = zc_Movement_OrderInternal() 
+                                      AND Movement.StatusId <> zc_Enum_Status_Erased() 
               
               WHERE MovementItem.Id = inMovementItemId 
                 AND MovementItem.DescId = zc_MI_Master()
                 AND MovementItem.isErased = False)
     THEN
-      RAISE EXCEPTION 'Ошибка. По штрихкоду заказ на производство не найден.';
+      RAISE EXCEPTION 'Ошибка. Заказ на производство не найден.';
     END IF;
         
-    -- Результат
-    RETURN QUERY
-     WITH tmpMI_Master AS (SELECT MovementItem.Id
-                                , MovementItem.MovementId
-                                , MovementItem.ObjectId       AS GoodsId
-                                , MovementItem.Amount
-                                , MovementItem.isErased
-                                , MIString_Comment.ValueData  AS Comment
-                                , Object_Insert.ValueData     AS InsertName
-                                , MIDate_Insert.ValueData     AS InsertDate
-                                , MIFloat_MovementId.ValueData :: Integer AS MovementId_OrderClient
-                                , MILinkObject_Unit.ObjectId  AS UnitId
-                           FROM MovementItem
+     -- Результат такой
+     RETURN QUERY
+       WITH tmpMI AS (SELECT MovementItem.Id
+                           , MovementItem.ObjectId                          AS GoodsId
+                           , Movement.Id                                    AS MovementId
+                           , Movement.OperDate
+                           , Movement.InvNumber
+                           , Movement.StatusId
+                           , MovementItem.Amount
+                           , MIFloat_MovementId.ValueData :: Integer        AS MovementId_OrderClient
 
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_Unit.DescId         = zc_MILinkObject_Unit()
+                           , CASE -- Если лодка
+                                   WHEN EXISTS(SELECT FROM Object AS Object_Product WHERE Object_Product.Id = MovementItem.ObjectId AND Object_Product.DescId= zc_Object_Product())
+                                        -- Участок сборки Основной
+                                        THEN 33347
+                                   -- На каком участке происходит сборка Узла
+                                   WHEN COALESCE(Object_ReceiptGoods_find_View.unitid_parent_receipt, 0) <> 0         
+                                        -- На каком участке происходит сборка Узла
+                                        THEN Object_ReceiptGoods_find_View.unitid_parent_receipt          
+                                   -- узел Стеклопластик + Опция
+                                   WHEN Object_ReceiptGoods_find_View.isReceiptGoods_group = TRUE AND Object_ReceiptGoods_find_View.isProdOptions = TRUE
+                                        -- Склад Основной
+                                        THEN 35139
 
-                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                   -- Опция
+                                   WHEN Object_ReceiptGoods_find_View.isProdOptions = TRUE
+                                        -- Склад Основной
+                                        THEN 35139
 
-                               LEFT JOIN MovementItemString AS MIString_Comment
-                                                            ON MIString_Comment.MovementItemId = MovementItem.Id
-                                                           AND MIString_Comment.DescId = zc_MIString_Comment()
+                                   -- узел
+                                   WHEN Object_ReceiptGoods_find_View.isReceiptGoods_group = TRUE
+                                        -- Склад Основной
+                                        THEN 35139
 
-                               LEFT JOIN MovementItemDate AS MIDate_Insert
-                                                          ON MIDate_Insert.MovementItemId = MovementItem.Id
-                                                         AND MIDate_Insert.DescId = zc_MIDate_Insert()
-                               LEFT JOIN MovementItemLinkObject AS MILO_Insert
-                                                                ON MILO_Insert.MovementItemId = MovementItem.Id
-                                                               AND MILO_Insert.DescId = zc_MILinkObject_Insert()
-                               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MILO_Insert.ObjectId
-                               
-                           WHERE MovementItem.Id         = inMovementItemId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = FALSE
-                          ),
-          tmpProductionUnion AS (SELECT MovementItem.Id   AS Id
-                                      , PU.Id             AS MovementId
-                                      , MI_Master.Id      AS MovementItemId
-    
-                                      , zfFormat_BarCode (zc_BarCodePref_Movement(), PU.Id) AS BarCode_ProductionUnion
-                                      , zfCalc_InvNumber_isErased ('', PU.InvNumber, PU.OperDate, PU.StatusId) AS InvNumberFull_ProductionUnion 
-                                      , PU.InvNumber
-                                      , PU.OperDate                         AS OperDate
+                                   -- Деталь + НЕ Узел + есть Unit-ПФ
+                                   WHEN Object_ReceiptGoods_find_View.isReceiptGoods = TRUE AND Object_ReceiptGoods_find_View.isReceiptGoods_group = FALSE AND Object_ReceiptGoods_find_View.UnitName_child_receipt <> ''
+                                        THEN Object_ReceiptGoods_find_View.UnitId_child_receipt
 
-                                      , Object_From.Id                            AS FromId
-                                      , Object_From.ValueData                     AS FromName
-                                      , Object_To.Id                              AS ToId      
-                                      , Object_To.ValueData                       AS ToName
-                                      , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
-                                      , Object_Insert.ValueData                   AS InsertName
-                                      , MovementDate_Insert.ValueData             AS InsertDate
+                                   -- Участок сборки Hypalon
+                                   WHEN Object_ReceiptGoods_find_View.UnitId_receipt = 38875
+                                        THEN Object_ReceiptGoods_find_View.UnitId_receipt
 
-                                 FROM MovementItem 
+                                   -- Участок UPHOLSTERY
+                                   WHEN Object_ReceiptGoods_find_View.UnitId_receipt = 253225
+                                        THEN Object_ReceiptGoods_find_View.UnitId_receipt
 
-                                      INNER JOIN Movement AS OI ON OI.Id = MovementItem.MovementId 
-                                                               AND OI.descid = zc_Movement_OrderInternal() 
-                                                               AND OI.StatusId <> zc_Enum_Status_Erased()
+                                   -- Склад Основной
+                                   ELSE 35139
 
-                                      INNER JOIN MovementItemFloat AS MIFloat_MovementId
-                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                                  AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                                  
-                                      INNER JOIN MovementItem AS MI_Master
-                                                              ON MI_Master.ObjectId   = MovementItem.ObjectId
-                                                             AND MI_Master.DescId = zc_MI_Master() 
-                                                             AND MI_Master.isErased   = FALSE
+                             END AS FromId 
+                           , CASE -- Если лодка
+                                   WHEN EXISTS(SELECT FROM Object AS Object_Product WHERE Object_Product.Id = MovementItem.ObjectId AND Object_Product.DescId= zc_Object_Product())
+                                        -- Склад Основной
+                                        THEN 35139
+                                        -- На каком участке происходит расход Узла/Детали на сборку
+                                   ELSE Object_ReceiptGoods_find_View.UnitId_receipt
+                             END  AS ToId     
 
-                                      INNER JOIN MovementItemFloat AS MIFloat_PU
-                                                                   ON MIFloat_PU.MovementItemId = MI_Master.Id
-                                                                  AND MIFloat_PU.DescId         = zc_MIFloat_MovementId()
-                                                                  AND MIFloat_PU.valuedata      = MIFloat_MovementId.valuedata
 
-                                      INNER JOIN Movement AS PU ON PU.Id = MI_Master.MovementId 
-                                                               AND PU.descid = zc_Movement_ProductionUnion() 
-                                                               AND PU.StatusId <> zc_Enum_Status_Erased()
-                                  
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                   ON MovementLinkObject_To.MovementId = PU.Id
-                                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId 
+                           , MovementItem.isErased
+                      FROM MovementItem 
 
-                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                                   ON MovementLinkObject_From.MovementId = PU.Id
-                                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                      LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                           LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                      
+                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
 
-                                      LEFT JOIN MovementString AS MovementString_Comment
-                                                               ON MovementString_Comment.MovementId = PU.Id
-                                                              AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                           LEFT JOIN Object_ReceiptGoods_find_View ON Object_ReceiptGoods_find_View.GoodsId = MovementItem.ObjectId
+                                                        
+                      WHERE MovementItem.DescId = zc_MI_Master() 
+                        AND MovementItem.Id     = inMovementItemId
+                     )
+         , tmpProductionUnion AS (SELECT inMovementItemId                               AS MovementItemId
+                                       , COALESCE(MI_Scan.id, MI_Master.Id)::Integer    AS ID
+                                       , MI_Master.ObjectId                             AS GoodsId
+                                       , PU.Id                                          AS MovementId
+                                       , PU.OperDate
+                                       , PU.InvNumber
+                                       , PU.StatusId
+                                       , MLO_From.ObjectId                              AS FromId
+                                       , MLO_To.ObjectId                                AS ToId
+                                       , MI_Master.Amount
+                                       , MI_Scan.isErased
+                                  FROM MovementItem 
 
-                                      LEFT JOIN MovementDate AS MovementDate_Insert
-                                                             ON MovementDate_Insert.MovementId = PU.Id
-                                                            AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
-                                      LEFT JOIN MovementLinkObject AS MLO_Insert
-                                                                   ON MLO_Insert.MovementId = PU.Id
-                                                                  AND MLO_Insert.DescId     = zc_MovementLinkObject_Insert()
-                                      LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+                                       INNER JOIN Movement AS OI ON OI.Id = MovementItem.MovementId 
+                                                                AND OI.descid = zc_Movement_OrderInternal() 
+                                                                AND OI.StatusId <> zc_Enum_Status_Erased()
 
-                                 WHERE MovementItem.Id         = inMovementItemId
-                                   AND MovementItem.DescId     = zc_MI_Master()
-                                   AND MovementItem.isErased   = FALSE)
+                                       INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                    ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                   AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                        
+                                       INNER JOIN MovementItem AS MI_Master
+                                                               ON MI_Master.ObjectId   = MovementItem.ObjectId
+                                                              AND MI_Master.DescId = zc_MI_Master() 
+                                                              AND MI_Master.isErased   = FALSE
 
-        -- Результат
-        SELECT Movement_OrderInternal.Id
-             , zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) AS InvNumber
-             , zfCalc_InvNumber_isErased ('', Movement_OrderInternal.InvNumber, Movement_OrderInternal.OperDate, Movement_OrderInternal.StatusId) AS InvNumber_Full
-             , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_OrderInternal.Id) AS BarCode
-             , Movement_OrderInternal.OperDate
-             , Object_Status.ObjectCode                     AS StatusCode
-             , Object_Status.ValueData                      AS StatusName
+                                       LEFT JOIN MovementItem AS MI_Scan
+                                                              ON MI_Scan.ParentId   = MovementItem.Id
+                                                             AND MI_Scan.DescId = zc_MI_Scan() 
+                                                             AND MI_Scan.isErased   = FALSE
 
-             , MovementFloat_TotalCount.ValueData           AS TotalCount
-             , MovementString_Comment.ValueData :: TVarChar AS Comment
+                                       INNER JOIN MovementItemFloat AS MIFloat_PU
+                                                                    ON MIFloat_PU.MovementItemId = MI_Master.Id
+                                                                   AND MIFloat_PU.DescId         = zc_MIFloat_MovementId()
+                                                                   AND MIFloat_PU.valuedata      = MIFloat_MovementId.valuedata
 
-             , Object_Insert.ValueData              AS InsertName
-             , MovementDate_Insert.ValueData        AS InsertDate
-             , Object_Update.ValueData              AS UpdateName
-             , MovementDate_Update.ValueData        AS UpdateDate
+                                       INNER JOIN Movement AS PU ON PU.Id = MI_Master.MovementId 
+                                                                AND PU.descid = zc_Movement_ProductionUnion() 
+                                                                AND PU.StatusId <> zc_Enum_Status_Erased()
+                                                                
+                                       INNER JOIN MovementLinkObject AS MLO_From
+                                                                     ON MLO_From.MovementId = PU.Id
+                                                                    AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                       INNER JOIN MovementLinkObject AS MLO_To
+                                                                     ON MLO_To.MovementId = PU.Id
+                                                                    AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                                      
+                                        
+                                  WHERE MovementItem.Id = inMovementItemId 
+                                    AND MovementItem.DescId = zc_MI_Master()
+                                    AND MovementItem.isErased = False
+                                  )
+         , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
+                               , Container.WhereObjectId       AS UnitId
+                               , Sum(Container.Amount)::TFloat AS Remains
+                          FROM Container
+                          WHERE Container.DescId        = zc_Container_Count()
+                            AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
+                            AND Container.Amount <> 0
+                          GROUP BY Container.WhereObjectId
+                                 , Container.ObjectId
+                          HAVING Sum(Container.Amount) <> 0
+                         )
+                         
+       -- Результат
+       SELECT
+             ProductionUnion.Id
+           , ProductionUnion.MovementId  
+           , Object_Goods.Id                     AS GoodsId
+           , Object_Goods.ObjectCode             AS GoodsCode
+           , CASE WHEN Object_Goods.isErased = TRUE THEN '***удален ' || Object_Goods.ValueData ELSE Object_Goods.ValueData END :: TVarChar AS GoodsName
+           , ObjectString_Article.ValueData      AS Article 
+           , ObjectString_EAN.ValueData          AS EAN
+           , Object_GoodsGroup.Id                AS GoodsGroupId
+           , Object_GoodsGroup.ValueData         AS GoodsGroupName
+           , Object_Measure.ValueData            AS MeasureName
+           
+           , tmpMI.Amount                        AS Amount
+           , COALESCE(tmpRemains.Remains, 0) ::TFloat  AS AmountRemains
 
-               -- строки
-             , MovementItem.Id                      AS MovementItemId
-             , MovementItem.GoodsId                 AS GoodsId
-             , Object_Goods.ObjectCode              AS GoodsCode
-             , ObjectString_Article.ValueData       AS Article
-             , Object_Goods.ValueData               AS GoodsName
-             , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) AS GoodsName_all
-             , CASE WHEN Object_Goods.DescId = zc_Object_Product() THEN 'Лодка' WHEN Object_Goods.DescId = zc_Object_Goods() THEN 'Узел' ELSE ObjectDesc_Goods.ItemName END :: TVarChar AS ItemName_goods
-             , ObjectString_Comment.ValueData       AS Comment_goods
-             , MovementItem.Amount ::TFloat         AS Amount
-             , Object_Unit.Id                       AS UnitId
-             , Object_Unit.ValueData                AS UnitName
-             , MovementItem.Comment ::TVarChar      AS Comment_mi
+           , ProductionUnion.OperDate
+           , ProductionUnion.InvNumber
+           , Object_Status.ObjectCode            AS StatusCode
+           , Object_Status.ValueData             AS StatusName
+           
+           , COALESCE(ProductionUnion.FromId, tmpMI.FromId) AS FromId
+           , Object_From.ObjectCode                      AS FromCode
+           , Object_From.ValueData                       AS FromName
+           , COALESCE(ProductionUnion.ToId, tmpMI.ToId)  AS ToId
+           , Object_ToId.ObjectCode                      AS ToCode
+           , Object_ToId.ValueData                       AS ToName
 
-             , Movement_OrderClient.Id              AS MovementId_OrderClient
-             , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient 
-             , Movement_OrderClient.InvNumber  AS InvNumber_OrderClient
-             , Object_From.Id                       AS FromId
-             , Object_From.ValueData                AS FromName
-             , zfCalc_ValueData_isErased (Object_Product.ValueData, Object_Product.isErased)  AS ProductName
-             , zfCalc_ValueData_isErased (ObjectString_CIN.ValueData,Object_Product.isErased) AS CIN
-             , Object_Model.Id                      AS ModelId
-             , Object_Model.ValueData               AS ModelName
-             , (Object_Brand.ValueData || '-' || Object_Model.ValueData) ::TVarChar AS ModelName_full
+           , Movement_OrderClient.Id                     AS MovementId_OrderClient
+           , Movement_OrderClient.InvNumber              AS InvNumber_OrderClient
 
-             , MovementItem.InsertName AS InsertName_mi
-             , MovementItem.InsertDate AS InsertDate_mi
-             
-             , tmpProductionUnion.MovementId        AS MovementPUId
-             , tmpProductionUnion.MovementItemId    AS MovementItemPUId
-             
-             , tmpProductionUnion.InvNumberFull_ProductionUnion
+           , tmpMI.OperDate                              AS OperDate_OrderInternal
+           , tmpMI.InvNumber                             AS InvNumber_OrderInternal
+           , Object_Status_OrderInternal.ObjectCode      AS StatusCode_OrderInternal
+           , Object_Status_OrderInternal.ValueData       AS StatusName_OrderInternal
 
-        FROM tmpMI_Master AS MovementItem
-        
-             INNER JOIN Movement AS Movement_OrderInternal ON Movement_OrderInternal.Id = MovementItem.MovementId
+           , tmpMI.isErased
 
-             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_OrderInternal.StatusId
+       FROM tmpMI
+       
+            LEFT JOIN tmpProductionUnion AS ProductionUnion ON ProductionUnion.MovementItemId = tmpMI.ID
 
-             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
-                                     ON MovementFloat_TotalCount.MovementId = Movement_OrderInternal.Id
-                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
-             LEFT JOIN MovementString AS MovementString_Comment
-                                      ON MovementString_Comment.MovementId = Movement_OrderInternal.Id
-                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = ProductionUnion.StatusId
+            LEFT JOIN Object AS Object_Status_OrderInternal ON Object_Status_OrderInternal.Id = tmpMI.StatusId
+            
+            LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE(ProductionUnion.FromId, tmpMI.FromId)
+            LEFT JOIN Object AS Object_ToId ON Object_ToId.Id = COALESCE(ProductionUnion.ToId, tmpMI.ToId)
 
-             LEFT JOIN MovementDate AS MovementDate_Insert
-                                    ON MovementDate_Insert.MovementId = Movement_OrderInternal.Id
-                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-             LEFT JOIN MovementLinkObject AS MLO_Insert
-                                          ON MLO_Insert.MovementId = Movement_OrderInternal.Id
-                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-             LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+            LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
+                                 ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id  = OL_Goods_GoodsGroup.ChildObjectId
 
-             LEFT JOIN MovementDate AS MovementDate_Update
-                                    ON MovementDate_Update.MovementId = Movement_OrderInternal.Id
-                                   AND MovementDate_Update.DescId = zc_MovementDate_Update()
-             LEFT JOIN MovementLinkObject AS MLO_Update
-                                          ON MLO_Update.MovementId = Movement_OrderInternal.Id
-                                         AND MLO_Update.DescId = zc_MovementLinkObject_Update()
-             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId
+            LEFT JOIN ObjectLink AS OL_Goods_Measure
+                                 ON OL_Goods_Measure.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = OL_Goods_Measure.ChildObjectId
 
-             ---
-             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.GoodsId
-             LEFT JOIN ObjectDesc AS ObjectDesc_Goods ON ObjectDesc_Goods.Id = Object_Goods.DescId
+            LEFT JOIN ObjectString AS ObjectString_Article
+                                   ON ObjectString_Article.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+            LEFT JOIN ObjectString AS ObjectString_EAN
+                                   ON ObjectString_EAN.ObjectId = tmpMI.GoodsId
+                                  AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
-             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
+            LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
+                                AND tmpRemains.UnitId     = COALESCE(ProductionUnion.FromId, tmpMI.FromId)
 
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = MovementItem.GoodsId
-                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
-             LEFT JOIN ObjectString AS ObjectString_Comment
-                                    ON ObjectString_Comment.ObjectId = MovementItem.GoodsId
-                                   AND ObjectString_Comment.DescId   = zc_ObjectString_Goods_Comment()
-
-             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MovementItem.MovementId_OrderClient
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                          ON MovementLinkObject_From.MovementId = MovementItem.MovementId_OrderClient
-                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
-                                          ON MovementLinkObject_Product.MovementId = MovementItem.MovementId_OrderClient
-                                         AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
-             LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
-
-             LEFT JOIN ObjectString AS ObjectString_CIN
-                                    ON ObjectString_CIN.ObjectId = Object_Product.Id
-                                   AND ObjectString_CIN.DescId = zc_ObjectString_Product_CIN() 
-
-             LEFT JOIN ObjectLink AS ObjectLink_Model
-                                  ON ObjectLink_Model.ObjectId = Object_Product.Id
-                                 AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
-             LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Brand
-                                  ON ObjectLink_Brand.ObjectId = Object_Product.Id
-                                 AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
-             LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-             
-             LEFT JOIN tmpProductionUnion ON tmpProductionUnion.Id = MovementItem.Id
-
+            LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
+ 
        ;
 
 END;
@@ -294,4 +267,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_MovementItem_MobileOrderInternal(559434, zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MovementItem_MobileOrderInternal(566931, zfCalc_UserAdmin());
