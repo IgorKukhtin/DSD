@@ -3,12 +3,17 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProdOptions(Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProdOptions(
-    IN inModelId     Integer,
-    IN inPriceListId Integer,
-    IN inIsErased    Boolean,
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inModelId           Integer,
+    IN inPriceListId       Integer,
+    IN inLanguageId1       Integer,
+    IN inLanguageId2       Integer,
+    IN inLanguageId3       Integer,
+    IN inLanguageId4       Integer,
+    IN inIsErased          Boolean,
+    IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ModelId Integer, ModelCode Integer, ModelName TVarChar
@@ -35,7 +40,11 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MaterialOptionsId Integer, MaterialOptionsName TVarChar
              , Id_Site TVarChar
              , CodeVergl Integer
-             , NPP Integer, NPP_pcp Integer
+             , NPP Integer, NPP_pcp Integer 
+             , Value1 TVarChar
+             , Value2 TVarChar
+             , Value3 TVarChar
+             , Value4 TVarChar
               )
 AS
 $BODY$
@@ -157,6 +166,7 @@ BEGIN
                                   WHERE Object_ProdColorPattern.DescId   = zc_Object_ProdColorPattern()
                                     AND Object_ProdColorPattern.isErased = FALSE
                                  )      
+
        , tmpRes AS (SELECT
                           Object_ProdOptions.Id           AS Id
                         , Object_ProdOptions.ObjectCode   AS Code
@@ -390,6 +400,24 @@ BEGIN
                      AND (Object_ProdOptions.isErased = FALSE OR inIsErased = TRUE)
                    )
 
+       , tmpTranslateObject AS (SELECT Object_TranslateObject.Id          AS Id 
+                                     , Object_TranslateObject.ObjectCode  AS Code
+                                     , Object_TranslateObject.ValueData   AS Name
+                                     , ObjectLink_Language.ChildObjectId  AS LanguageId
+                                     , ObjectLink_Object.ChildObjectId    AS ProdOptionsId
+                                FROM Object AS Object_TranslateObject
+                                   INNER JOIN ObjectLink AS ObjectLink_Language
+                                                         ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
+                                                        AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
+                                   INNER JOIN ObjectLink AS ObjectLink_Object
+                                                         ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
+                                                        AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
+                                   INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId AND Object_Object.DescId = zc_Object_ProdOptions()
+
+                                WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
+                                  AND Object_TranslateObject.isErased = FALSE
+                                )
+
      -- Результат
      SELECT
            tmpRes.Id
@@ -472,13 +500,23 @@ BEGIN
          
          , tmpRes.NPP
 
-         , tmpRes.NPP_pcp
+         , tmpRes.NPP_pcp 
+         
+         , tmpTranslate1.Name ::TVarChar AS Value1
+         , tmpTranslate2.Name ::TVarChar AS Value2
+         , tmpTranslate3.Name ::TVarChar AS Value3
+         , tmpTranslate4.Name ::TVarChar AS Value4
 
      FROM tmpRes
           -- Boat Structure
           LEFT JOIN tmpProdColorPattern ON tmpProdColorPattern.ProdColorPatternId = tmpRes.ProdColorPatternId 
          
           LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpRes.Id --цена из прайса для опции
+          
+          LEFT JOIN tmpTranslateObject AS tmpTranslate1 ON tmpTranslate1.ProdOptionsId = tmpRes.Id AND tmpTranslate1.LanguageId = inLanguageId1
+          LEFT JOIN tmpTranslateObject AS tmpTranslate2 ON tmpTranslate2.ProdOptionsId = tmpRes.Id AND tmpTranslate2.LanguageId = inLanguageId2
+          LEFT JOIN tmpTranslateObject AS tmpTranslate3 ON tmpTranslate3.ProdOptionsId = tmpRes.Id AND tmpTranslate3.LanguageId = inLanguageId3
+          LEFT JOIN tmpTranslateObject AS tmpTranslate4 ON tmpTranslate4.ProdOptionsId = tmpRes.Id AND tmpTranslate4.LanguageId = inLanguageId4
     ;
 
 
@@ -489,6 +527,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.24         * Language
  29.03.24         * inPriceListId
  29.05.23         *
  25.12.20         *

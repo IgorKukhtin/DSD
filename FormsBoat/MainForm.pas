@@ -336,6 +336,8 @@ type
     miMailSend: TMenuItem;
     miMailKind: TMenuItem;
     N6: TMenuItem;
+    actProdOptionsTranslate: TdsdOpenForm;
+    miProdOptionsTranslate: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure actExit_btnExecute(Sender: TObject);
   private

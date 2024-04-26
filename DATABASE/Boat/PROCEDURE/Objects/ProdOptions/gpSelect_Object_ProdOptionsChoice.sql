@@ -48,6 +48,10 @@ BEGIN
           tmpSelect AS (SELECT *
                         FROM gpSelect_Object_ProdOptions (inModelId     := inModelId
                                                         , inPriceListId := zc_PriceList_Basis()
+                                                        , inLanguageId1 := 0
+                                                        , inLanguageId2 := 0
+                                                        , inLanguageId3 := 0
+                                                        , inLanguageId4 := 0
                                                         , inIsErased    := inIsErased
                                                         , inSession     := inSession
                                                          )

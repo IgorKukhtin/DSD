@@ -1,9 +1,9 @@
-﻿object ProdOptionsForm: TProdOptionsForm
+﻿object ProdOptions_TranslateForm: TProdOptions_TranslateForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080' '#1087#1077#1088#1077#1074#1086#1076'>'
   ClientHeight = 411
-  ClientWidth = 854
+  ClientWidth = 881
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,15 @@
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 99
-    Width = 854
-    Height = 273
+    Top = 63
+    Width = 881
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 101
+    ExplicitHeight = 271
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -145,6 +147,7 @@
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object Code: TcxGridDBColumn
@@ -158,6 +161,7 @@
       object CodeVergl: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1079#1072#1084#1077#1085#1099
         DataBinding.FieldName = 'CodeVergl'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1076' '#1074#1079#1072#1080#1084#1086#1079#1072#1084#1077#1085#1099
@@ -184,8 +188,10 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object ProdColorPatternName: TcxGridDBColumn
@@ -199,8 +205,10 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object BrandName: TcxGridDBColumn
@@ -225,6 +233,7 @@
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object ProdEngineName: TcxGridDBColumn
@@ -275,8 +284,10 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object GoodsName: TcxGridDBColumn
@@ -290,8 +301,10 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object MeasureName: TcxGridDBColumn
@@ -309,6 +322,7 @@
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' (Artikel)'
@@ -334,6 +348,7 @@
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Artikel)'
@@ -359,8 +374,10 @@
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object SalePrice: TcxGridDBColumn
@@ -369,9 +386,11 @@
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options) ('#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082')'
+        Options.Editing = False
         Width = 124
       end
       object SalePrice_pr: TcxGridDBColumn
@@ -380,6 +399,7 @@
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1085#1076#1089' (Options)'
@@ -389,6 +409,7 @@
       object StartDate_pr: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1089' ('#1080#1089#1090#1086#1088#1080#1103')'
         DataBinding.FieldName = 'StartDate_pr'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -410,9 +431,11 @@
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 179
       end
       object InsertDate: TcxGridDBColumn
@@ -443,8 +466,10 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 70
       end
       object NPP_pcp: TcxGridDBColumn
@@ -468,37 +493,29 @@
       object Value1: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 1'
         DataBinding.FieldName = 'Value1'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 90
       end
       object Value2: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 2'
         DataBinding.FieldName = 'Value2'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 90
       end
       object Value3: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 3'
         DataBinding.FieldName = 'Value3'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 90
       end
       object Value4: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 4'
         DataBinding.FieldName = 'Value4'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 90
       end
     end
@@ -512,8 +529,8 @@
     Caption = 'Model:'
   end
   object edProdModel: TcxButtonEdit
-    Left = 287
-    Top = 90
+    Left = 192
+    Top = 138
     Properties.Buttons = <
       item
         Default = True
@@ -521,12 +538,12 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 2
-    Width = 245
+    Width = 122
   end
   object Panel_btn: TPanel
     Left = 0
     Top = 372
-    Width = 854
+    Width = 881
     Height = 39
     Align = alBottom
     TabOrder = 3
@@ -596,48 +613,10 @@
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 854
-    Height = 73
+    Width = 881
+    Height = 37
     Align = alTop
     TabOrder = 8
-    object cxLabel3: TcxLabel
-      Left = 376
-      Top = 46
-      Caption = #1044#1072#1090#1072' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1094#1077#1085#1099' :'
-    end
-    object edOperDate: TcxDateEdit
-      Left = 504
-      Top = 45
-      EditValue = 43831d
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-      TabOrder = 1
-      Width = 82
-    end
-    object cbisСhangePrice: TcxCheckBox
-      Left = 592
-      Top = 45
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 2
-      Width = 148
-    end
-    object cxLabel1: TcxLabel
-      Left = 5
-      Top = 46
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
-    end
-    object edPriceList: TcxButtonEdit
-      Left = 76
-      Top = 45
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 4
-      Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
-      Width = 238
-    end
     object cxLabel2: TcxLabel
       Left = 8
       Top = 10
@@ -652,13 +631,18 @@
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 6
+      TabOrder = 3
       Width = 144
     end
-    object cxLabel4: TcxLabel
+    object cxLabel3: TcxLabel
       Left = 230
       Top = 10
       Caption = #1055#1077#1088#1077#1074#1086#1076' 2:'
+    end
+    object cxLabel4: TcxLabel
+      Left = 446
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
     end
     object edLanguage2: TcxButtonEdit
       Left = 293
@@ -669,13 +653,8 @@
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 8
+      TabOrder = 4
       Width = 144
-    end
-    object cxLabel5: TcxLabel
-      Left = 446
-      Top = 10
-      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
     end
     object edLanguage3: TcxButtonEdit
       Left = 510
@@ -686,16 +665,16 @@
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 10
+      TabOrder = 7
       Width = 144
     end
-    object cxLabel7: TcxLabel
+    object cxLabel5: TcxLabel
       Left = 665
       Top = 10
       Caption = #1055#1077#1088#1077#1074#1086#1076' 4:'
     end
     object edLanguage4: TcxButtonEdit
-      Left = 728
+      Left = 731
       Top = 9
       Properties.Buttons = <
         item
@@ -703,9 +682,26 @@
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
-      TabOrder = 12
+      TabOrder = 5
       Width = 144
     end
+  end
+  object cxLabel1: TcxLabel
+    Left = 320
+    Top = 139
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
+  end
+  object edPriceList: TcxButtonEdit
+    Left = 391
+    Top = 138
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Text = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
+    Width = 106
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
@@ -822,6 +818,18 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarControlContainerItem4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarControlContainerItem5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -839,14 +847,6 @@
         item
           Visible = True
           ItemName = 'bbChoice'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPriceListGoods'
         end
         item
           Visible = True
@@ -946,8 +946,25 @@
       Category = 0
     end
     object bbPriceListGoods: TdxBarButton
-      Action = actPriceListGoods
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
       Category = 0
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
+      Visible = ivAlways
+      ImageIndex = 28
+    end
+    object dxBarControlContainerItem4: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel1
+    end
+    object dxBarControlContainerItem5: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = edPriceList
     end
   end
   object ActionList: TActionList
@@ -1026,7 +1043,6 @@
         item
           Name = 'inOperDate'
           Value = Null
-          Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1034,7 +1050,6 @@
         item
           Name = 'inis'#1057'hangePrice'
           Value = Null
-          Component = cbisСhangePrice
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1089,7 +1104,6 @@
         item
           Name = 'inOperDate'
           Value = Null
-          Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1097,7 +1111,6 @@
         item
           Name = 'inis'#1057'hangePrice'
           Value = Null
-          Component = cbisСhangePrice
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1783,58 +1796,6 @@
           Value = ''
         end>
     end
-    object actPriceListGoods: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088'/'#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1080#1089#1090#1086#1088#1080#1080
-      ImageIndex = 28
-      FormName = 'TPriceListGoodsItemForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'PriceListId'
-          Value = '2773'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'PriceListName'
-          Value = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Code'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Article'
-          Value = ' '
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
-    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ProdOptions'
@@ -2063,160 +2024,87 @@
       item
         Component = GuidesPriceList
       end>
-    Left = 568
-    Top = 80
+    Left = 536
+    Top = 128
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ProdOptions'
+    StoredProcName = 'gpInsertUpdate_Object_ProdOptions_Translate'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCode'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'Code'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCodeVergl'
+        Name = 'inLanguageId1'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CodeVergl'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inName'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSalePrice'
-        Value = 0.000000000000000000
-        Component = MasterCDS
-        ComponentItem = 'SalePrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inId_Site'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Id_Site'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inModelId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'ModelId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inTaxKindId'
-        Value = ''
-        Component = MasterCDS
-        ComponentItem = 'TaxKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMaterialOptionsId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'MaterialOptionsId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProdColorPatternId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ProdColorPatternId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceListId'
-        Value = '0'
-        Component = GuidesPriceList
+        Component = GuidesLanguage1
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperDate'
+        Name = 'inLanguageId2'
         Value = Null
-        Component = edOperDate
-        DataType = ftDateTime
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outStartDate_pr'
+        Name = 'inLanguageId3'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'StartDate_pr'
-        DataType = ftDateTime
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outSalePrice_pr'
+        Name = 'inLanguageId4'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SalePrice_pr'
-        DataType = ftFloat
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inis'#1057'hangePrice'
+        Name = 'inValue1'
         Value = Null
-        Component = cbisСhangePrice
-        DataType = ftBoolean
+        Component = MasterCDS
+        ComponentItem = 'Value1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value4'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2226,8 +2114,6 @@
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPriceList
-    Key = '2773'
     TextValue = #1056#1086#1079#1085#1080#1095#1085#1072#1103' '#1094#1077#1085#1072
     FormNameParam.Value = 'TPriceListForm'
     FormNameParam.DataType = ftString
@@ -2252,12 +2138,12 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 40
+    Left = 400
+    Top = 144
   end
-  object GuidesLanguage4: TdsdGuides
+  object GuidesLanguage1: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edLanguage4
+    LookupControl = edLanguage1
     FormNameParam.Value = 'TLanguageForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2267,7 +2153,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesLanguage4
+        Component = GuidesLanguage1
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2275,41 +2161,13 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesLanguage4
+        Component = GuidesLanguage1
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 800
-  end
-  object GuidesLanguage3: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edLanguage3
-    FormNameParam.Value = 'TLanguageForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TLanguageForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesLanguage3
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesLanguage3
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 600
+    Left = 152
   end
   object GuidesLanguage2: TdsdGuides
     KeyField = 'Id'
@@ -2339,9 +2197,9 @@
       end>
     Left = 352
   end
-  object GuidesLanguage1: TdsdGuides
+  object GuidesLanguage3: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edLanguage1
+    LookupControl = edLanguage3
     FormNameParam.Value = 'TLanguageForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -2351,7 +2209,7 @@
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesLanguage1
+        Component = GuidesLanguage3
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2359,12 +2217,40 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesLanguage1
+        Component = GuidesLanguage3
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 152
+    Left = 600
+  end
+  object GuidesLanguage4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage4
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 800
   end
 end

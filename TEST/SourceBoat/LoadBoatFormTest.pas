@@ -815,6 +815,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptions_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProdOptions_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProdOptions_TranslateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProdOptions_TranslateForm');
 end;
 
 procedure TLoadFormTest.LoadProdOptItemsFormTest;

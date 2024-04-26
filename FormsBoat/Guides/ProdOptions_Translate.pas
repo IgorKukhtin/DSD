@@ -1,4 +1,4 @@
-unit ProdOptions;
+unit ProdOptions_Translate;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
-  TProdOptionsForm = class(TParentForm)
+  TProdOptions_TranslateForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -103,26 +103,28 @@ type
     btnClientChoiceForm: TcxButton;
     actModelChoiceForm: TOpenChoiceForm;
     Panel2: TPanel;
-    cxLabel3: TcxLabel;
-    edOperDate: TcxDateEdit;
-    cbis—hangePrice: TcxCheckBox;
-    actPriceListGoods: TdsdOpenForm;
     bbPriceListGoods: TdxBarButton;
-    cxLabel1: TcxLabel;
-    edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
     cxLabel2: TcxLabel;
     edLanguage1: TcxButtonEdit;
+    cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
     edLanguage2: TcxButtonEdit;
-    cxLabel5: TcxLabel;
     edLanguage3: TcxButtonEdit;
-    cxLabel7: TcxLabel;
+    cxLabel5: TcxLabel;
     edLanguage4: TcxButtonEdit;
-    GuidesLanguage4: TdsdGuides;
-    GuidesLanguage3: TdsdGuides;
-    GuidesLanguage2: TdsdGuides;
     GuidesLanguage1: TdsdGuides;
+    GuidesLanguage2: TdsdGuides;
+    GuidesLanguage3: TdsdGuides;
+    GuidesLanguage4: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    dxBarControlContainerItem5: TdxBarControlContainerItem;
+    Value1: TcxGridDBColumn;
+    Value2: TcxGridDBColumn;
+    Value3: TcxGridDBColumn;
+    Value4: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -134,6 +136,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdOptionsForm);
+  RegisterClass(TProdOptions_TranslateForm);
 
 end.
