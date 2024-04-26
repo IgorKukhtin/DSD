@@ -1083,6 +1083,9 @@ object DM: TDM
     object cdsProductionUnionListTopId: TIntegerField
       FieldName = 'Id'
     end
+    object cdsProductionUnionListTopMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
     object cdsProductionUnionListTopGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -1157,6 +1160,10 @@ object DM: TDM
     end
     object cdsProductionUnionListTopInvNumber: TWideStringField
       FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsProductionUnionListTopInvNumberFull: TWideStringField
+      FieldName = 'InvNumberFull'
       Size = 255
     end
     object cdsProductionUnionListTopStatusCode: TIntegerField
@@ -1242,6 +1249,9 @@ object DM: TDM
     object cdsProductionUnionListId: TIntegerField
       FieldName = 'Id'
     end
+    object cdsProductionUnionListMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
     object cdsProductionUnionListGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -1316,6 +1326,10 @@ object DM: TDM
     end
     object cdsProductionUnionListInvNumber: TWideStringField
       FieldName = 'InvNumber'
+      Size = 255
+    end
+    object cdsProductionUnionListInvNumberFull: TWideStringField
+      FieldName = 'InvNumberFull'
       Size = 255
     end
     object cdsProductionUnionListStatusCode: TIntegerField

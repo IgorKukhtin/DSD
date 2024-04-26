@@ -56,7 +56,7 @@ BEGIN
                                                                ON MLO_To.MovementId = Movement.Id
                                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
                             WHERE Movement.DescId   = zc_Movement_ProductionUnion()
-                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inisErased = TRUE)
                               AND Movement.OperDate = CURRENT_DATE) 
        
           , tmpMI AS (SELECT MovementItem.Id
@@ -75,8 +75,7 @@ BEGIN
                       
 
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                  AND MovementItem.DescId     = zc_MI_Scan()
-                                                  AND (MovementItem.isErased  = False OR inisErased = TRUE)
+                                                  AND MovementItem.DescId     = zc_MI_Scan()                                                  
 
                            LEFT JOIN MovementItem AS MI_Master
                                                   ON MI_Master.Id         = MovementItem.ParentId
@@ -129,7 +128,7 @@ BEGIN
                                , Container.WhereObjectId       AS UnitId
                                , Sum(Container.Amount)::TFloat AS Remains
                           FROM Container
-                          WHERE Container.WhereObjectId IN (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement)
+                          WHERE Container.WhereObjectId IN (SELECT DISTINCT tmpMovement.ToId FROM tmpMovement)
                             AND Container.DescId        = zc_Container_Count()
                             AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
                             AND Container.Amount <> 0
@@ -270,7 +269,7 @@ BEGIN
                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
-                                AND tmpRemains.UnitId     = tmpMI.FromId
+                                AND tmpRemains.UnitId     = tmpMI.ToId
 
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
             LEFT JOIN Object AS Object_Status_OrderClient ON Object_Status_OrderClient.Id = Movement_OrderClient.StatusId

@@ -558,6 +558,7 @@ type
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure lwProductionUnionListDblClick(Sender: TObject);
     procedure bpProductionUnionCancelClick(Sender: TObject);
+    procedure pbPULOrderByChange(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1262,6 +1263,7 @@ begin
     try
       if DM.InsertProductionUnion(FOrderInternal, ScanId) then
       begin
+        if tcMain.ActiveTab = tiProductionUnionEdit then ReturnPriorForm;
         if DM.cdsProductionUnionItemEdit.Active then
         begin
           bpProductionUnion.Visible := False;
@@ -1291,14 +1293,27 @@ end;
 
 procedure TfrmMain.DeleteProductionUnionGoods(const AResult: TModalResult);
 begin
+  if AResult = mrYes then
+  begin
+    DM.SetErasedProductionUnion(DM.cdsProductionUnionListTop);
+    DM.DownloadProductionUnionListTop;
+  end;
 end;
 
 procedure TfrmMain.ErasedProductionUnionList(const AResult: TModalResult);
 begin
+  if AResult = mrYes then
+  begin
+    DM.SetErasedProductionUnion(DM.cdsProductionUnionList);
+  end;
 end;
 
 procedure TfrmMain.UnErasedProductionUnionList(const AResult: TModalResult);
 begin
+  if AResult = mrYes then
+  begin
+    DM.CompleteProductionUnion(DM.cdsProductionUnionList);
+  end;
 end;
 
 // Формирование документа сборки
@@ -1421,6 +1436,9 @@ begin
                           'Camera', ScanSymbologyName, ScanDATA);
 
     if Assigned(pOnScanResult) then pOnScanResult(Self, ScanDATA);
+
+    ScanSymbologyName := '';
+    ScanDATA := '';
   end;
 end;
 
@@ -3176,8 +3194,9 @@ begin
   if (tcMain.ActiveTab = tiProductionUnionList) and DM.cdsProductionUnionList.Active and not DM.cdsProductionUnionList.IsEmpty then
   begin
     btaCancel.Visible := True;
-    btaEraseRecord.Visible := True;
-    btaEditRecord.Visible := True;
+    btaEraseRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger <> 3;
+    btaUnEraseRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger = 3;
+    btaEditRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger <> 3;
     ppActions.Height := 2;
     for I := 0 to ComponentCount - 1 do
       if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
@@ -3435,6 +3454,11 @@ begin
   if DM.cdsInventoryList.Active then ShowInventory;
 end;
 
+procedure TfrmMain.pbPULOrderByChange(Sender: TObject);
+begin
+  if DM.cdsProductionUnionList.Active then ShowProductionUnionList;
+end;
+
 procedure TfrmMain.pbSLOrderByChange(Sender: TObject);
 begin
   if DM.cdsSendList.Active then ShowSend;
@@ -3572,12 +3596,12 @@ begin
     end else
     // Удаление позиции комплектующих
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + IfThen(DM.cdsProductionUnionListTopOrdUser.AsString = '', 'Не отправленную', DM.cdsProductionUnionListTopOrdUser.AsString) + '>'#13#10 +
+      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListTopOrdUser.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsProductionUnionListTopInvNumberFull.AsString + '>'#13#10 +
                                    'кол-во = <' + DM.cdsProductionUnionListTopAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsProductionUnionListTopGoodsCode.AsString + '>'#13#10 +
                                    'артикул <' + DM.cdsProductionUnionListTopArticle.AsString + '>'#13#10 +
-                                   '<' + DM.cdsProductionUnionListTopGoodsName.AsString + '>'#13#10 +
-                                   'из документа?',
+                                   '<' + DM.cdsProductionUnionListTopGoodsName.AsString + '> ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteProductionUnionGoods)
     ;
   end else if (tcMain.ActiveTab = tiProductionUnionList) then
@@ -3589,23 +3613,23 @@ begin
     end else
     // Удаление позиции комплектующего
     if TButton(Sender).Tag = 2 then
-      TDialogService.MessageDialog('Удалить'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+                                   'документ = <' + DM.cdsProductionUnionListInvNumberFull.AsString + '>'#13#10 +
                                    'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
                                    'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
-                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '>'#13#10 +
-                                   'из документа?',
+                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '> ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedProductionUnionList)
     else
     // Востановление позиции комплектующего
     if TButton(Sender).Tag = 3  then
     begin
-      TDialogService.MessageDialog('Отменить удаление'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+      TDialogService.MessageDialog('Отменить удаление сборки Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
+                                   'документ = <' + DM.cdsProductionUnionListInvNumberFull.AsString + '>'#13#10 +
                                    'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
                                    'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
                                    'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
-                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '>'#13#10 +
-                                   'в документе?',
+                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '> ?',
            TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedProductionUnionList)
     end;
   end;
