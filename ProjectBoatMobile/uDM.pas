@@ -473,6 +473,11 @@ type
     cdsProductionUnionItemEditInvNumber_OrderInternal: TWideStringField;
     cdsProductionUnionItemEditStatusCode_OrderInternal: TIntegerField;
     cdsProductionUnionItemEditStatusName_OrderInternal: TWideStringField;
+    cdsProductionUnionItemEditInvNumberFull: TWideStringField;
+    cdsProductionUnionItemEditInvNumberFull_OrderClient: TWideStringField;
+    cdsProductionUnionItemEditStatusCode_OrderClient: TIntegerField;
+    cdsProductionUnionItemEditStatusName_OrderClient: TWideStringField;
+    cdsProductionUnionItemEditInvNumberFull_OrderInternal: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);

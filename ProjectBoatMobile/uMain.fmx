@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 13
+        TabIndex = 14
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -22344,6 +22344,7 @@
                 AppearanceObjectName = 'InvNumber_OrderClient'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Trailing
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
@@ -22387,7 +22388,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22480,7 +22481,7 @@
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
-              Position.Y = 256.000000000000000000
+              Position.Y = 255.000000000000000000
               Size.Width = 208.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
@@ -22610,7 +22611,7 @@
               Position.X = 186.000000000000000000
               Position.Y = 379.000000000000000000
               Size.Width = 142.000000000000000000
-              Size.Height = 42.000000000000000000
+              Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               TabOrder = 27
@@ -22625,7 +22626,7 @@
               Position.X = 8.000000000000000000
               Position.Y = 379.000000000000000000
               Size.Width = 161.000000000000000000
-              Size.Height = 42.000000000000000000
+              Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               TabOrder = 26
@@ -22716,7 +22717,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22995,6 +22996,7 @@
                 AppearanceObjectName = 'InvNumber_OrderClient'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Trailing
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
@@ -23595,6 +23597,10 @@
     OnTimer = TimerInfoViewTimer
     Left = 268
     Top = 362
+  end
+  object ScanCamera: TCameraComponent
+    Left = 264
+    Top = 476
   end
   object acMain: TActionList
     Left = 264
@@ -26108,27 +26114,6 @@
       Control = edPUAmount
       Track = False
     end
-    object LinkControlToField7: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber_OrderClient'
-      Control = edPUInvNumberFull_OrderClient
-      Track = False
-    end
-    object LinkControlToField10: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber'
-      Control = edPUInvNumberFull_ProductionUnion
-      Track = False
-    end
-    object LinkControlToField6: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber_OrderInternal'
-      Control = edPUInvNumberFull
-      Track = False
-    end
     object LinkControlToField38: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = BindSourceDB14
@@ -26141,6 +26126,27 @@
       DataSource = BindSourceDB14
       FieldName = 'ToName'
       Control = edPUToName
+      Track = False
+    end
+    object LinkControlToField7: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull_OrderClient'
+      Control = edPUInvNumberFull_OrderClient
+      Track = False
+    end
+    object LinkControlToField6: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull_OrderInternal'
+      Control = edPUInvNumberFull
+      Track = False
+    end
+    object LinkControlToField10: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull'
+      Control = edPUInvNumberFull_ProductionUnion
       Track = False
     end
   end
