@@ -371,7 +371,7 @@ BEGIN
               END  ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой 
 
             , tmpProdOptItems.CommentOpt
-            , tmpProdOptItems.NPP   :: Integer  AS NPP
+            , tmpProdOptItems.NPP   :: Integer  
        FROM tmpProdOptItems
      UNION
        SELECT tmp.GoodsName                  AS GoodsName
@@ -428,6 +428,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.04.24          *
  10.02.21          *
 */
 

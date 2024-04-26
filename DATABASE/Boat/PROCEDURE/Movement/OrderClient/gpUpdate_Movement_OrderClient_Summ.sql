@@ -147,9 +147,28 @@ BEGIN
           vbisVat          := COALESCE( (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_isVat_calc()),FALSE); --какое значение вносилось последним с НДС  Да - нет
      END IF;
 
-         outSummDiscount1 :=  zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0), inDiscountTax);
-         outSummDiscount2 :=  zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0) - zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0), inDiscountTax), inDiscountNextTax);
-         outSummDiscount3 := (zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0), inDiscountTax) +  zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0) - zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0), inDiscountTax), inDiscountNextTax));
+
+    
+      outSummDiscount1 :=  zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0), inDiscountTax);
+      outSummDiscount2 :=  zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0) - zfCalc_SummDiscount(COALESCE (inBasis_summ1_orig, 0), inDiscountTax), inDiscountNextTax);
+      --outSummDiscount3 := (zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0), inDiscountTax) +  zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0) - zfCalc_SummDiscount(COALESCE (inBasis_summ2_orig, 0), inDiscountTax), inDiscountNextTax));
+      outSummDiscount3 := (COALESCE (inBasis_summ2_orig, 0)
+                        - (-- выбор данных по опциям
+                          WITH
+                          tmpProdOptItems AS (SELECT tmp.*
+                                              FROM gpSelect_Object_ProdOptItems (inMovementId_OrderClient:= inId, inIsShowAll:= FALSE, inIsErased:= FALSE, inIsSale:= FALSE, inSession:= inSession) AS tmp
+                                              WHERE tmp.MovementId_OrderClient = inId
+                                             )
+                          SELECT SUM (CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) 
+                                                ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (inDiscountTax,0)), COALESCE (inDiscountNextTax,0) ) 
+                                      END
+                                      ) AS Sale_summ_OptItems
+                          FROM tmpProdOptItems
+                          ) ) ;
+                               
+
+        
+         
 
          outSummDiscount_total := (COALESCE (outSummDiscount1,0) + COALESCE (outSummDiscount2,0) + COALESCE (outSummDiscount3,0));
          outBasis_summ := (COALESCE (inBasis_summ1_orig, 0) + COALESCE (inBasis_summ2_orig, 0) - COALESCE (outSummDiscount_total,0)); 
@@ -282,5 +301,3 @@ select * from gpUpdate_Movement_OrderClient_Summ(inId := 664 , ioSummTax := 0 , 
  , inTransportSumm_load := 1000 , inBasis_summ1_orig := 19950 , inBasis_summ2_orig := 13220
  , ioBasis_summ_transport := 24882.4 , ioBasisWVAT_summ_transport := 29610.04 , inAmountInBankAccountAll := 0, IsBefore := 'True' , inIsEdit := 'True' ,  inSession := '5');
 */
-
-Такого вроде нет, надо или какой-то из существующих доработать или новый написать типи THeaderChange

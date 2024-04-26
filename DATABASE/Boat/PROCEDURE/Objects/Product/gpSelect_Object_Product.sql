@@ -536,6 +536,7 @@ BEGIN
                                   , SUM (COALESCE (lpSelect.EKPrice_summ, 0))  AS EKPrice_summ
 
                                     -- со ВСЕМИ Скидками - без НДС
+                                  /*
                                   , SUM (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order))  AS BasisPrice_summ_disc_1
                                   , SUM (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
                                                                                        , lpSelect.DiscountNextTax_order)
@@ -544,6 +545,19 @@ BEGIN
                                   , SUM (zfCalc_SummWVATDiscountTax (zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
                                                                                            , lpSelect.DiscountNextTax_order)
                                                                    , lpSelect.DiscountTax, lpSelect.VATPercent)) AS BasisPriceWVAT_summ_disc
+                                  */
+                                  , SUM (CASE WHEN COALESCE (lpSelect.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax) 
+                                              ELSE zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
+                                         END)  AS BasisPrice_summ_disc_1
+                                  , SUM (CASE WHEN COALESCE (lpSelect.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax), 0) 
+                                              ELSE zfCalc_SummDiscountTax ( zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order), lpSelect.DiscountNextTax_order)
+                                         END) AS BasisPrice_summ_disc_2
+                                    -- со ВСЕМИ Скидками с НДС
+                                  , SUM (CASE WHEN COALESCE (lpSelect.DiscountTax,0) <> 0 THEN zfCalc_SummWVATDiscountTax ( lpSelect.Sale_summ, lpSelect.DiscountTax, lpSelect.VATPercent) 
+                                              ELSE zfCalc_SummWVATDiscountTax (zfCalc_SummDiscountTax (lpSelect.Sale_summ, lpSelect.DiscountTax_order)
+                                                                        , lpSelect.DiscountNextTax_order
+                                                                        , lpSelect.VATPercent)
+                                         END) AS BasisPriceWVAT_summ_disc                                  
 
                                   , 0 AS DiscountTax
                                   , 0 AS DiscountNextTax
@@ -943,12 +957,14 @@ BEGIN
 
            -- ИТОГО Сумма Скидка № 1 (options) - без НДС
          , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_1, 0)) :: TFloat AS SummDiscount1_opt
+ 
            -- ИТОГО Сумма Скидка № 2 (options) - без НДС
          , (-- скидка № 1 + 2
-            COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)
+          ( COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))
             -- минус скидка № 1
           - (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_1, 0))
            ) :: TFloat AS SummDiscount2_opt
+
 
            -- ИТОГО Сумма Скидка № 1+2 (options) - без НДС
          , (COALESCE (tmpCalc_2.BasisPrice_summ, 0) - COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS SummDiscount3_opt
