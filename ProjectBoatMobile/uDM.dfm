@@ -1442,6 +1442,10 @@ object DM: TDM
       FieldName = 'InvNumber'
       Size = 255
     end
+    object cdsProductionUnionItemEditInvNumberFull: TWideStringField
+      FieldName = 'InvNumberFull'
+      Size = 255
+    end
     object cdsProductionUnionItemEditStatusCode: TIntegerField
       FieldName = 'StatusCode'
     end
@@ -1482,11 +1486,26 @@ object DM: TDM
       FieldName = 'InvNumber_OrderClient'
       Size = 255
     end
+    object cdsProductionUnionItemEditInvNumberFull_OrderClient: TWideStringField
+      FieldName = 'InvNumberFull_OrderClient'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditStatusCode_OrderClient: TIntegerField
+      FieldName = 'StatusCode_OrderClient'
+    end
     object cdsProductionUnionItemEditOperDate_OrderInternal: TDateTimeField
       FieldName = 'OperDate_OrderInternal'
     end
+    object cdsProductionUnionItemEditStatusName_OrderClient: TWideStringField
+      FieldName = 'StatusName_OrderClient'
+      Size = 40
+    end
     object cdsProductionUnionItemEditInvNumber_OrderInternal: TWideStringField
       FieldName = 'InvNumber_OrderInternal'
+      Size = 255
+    end
+    object cdsProductionUnionItemEditInvNumberFull_OrderInternal: TWideStringField
+      FieldName = 'InvNumberFull_OrderInternal'
       Size = 255
     end
     object cdsProductionUnionItemEditStatusCode_OrderInternal: TIntegerField

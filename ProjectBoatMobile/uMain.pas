@@ -406,11 +406,12 @@ type
     LinkControlToField36: TLinkControlToField;
     LinkControlToField37: TLinkControlToField;
     LinkControlToField9: TLinkControlToField;
-    LinkControlToField7: TLinkControlToField;
-    LinkControlToField10: TLinkControlToField;
-    LinkControlToField6: TLinkControlToField;
     LinkControlToField38: TLinkControlToField;
     LinkControlToField39: TLinkControlToField;
+    ScanCamera: TCameraComponent;
+    LinkControlToField7: TLinkControlToField;
+    LinkControlToField6: TLinkControlToField;
+    LinkControlToField10: TLinkControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -565,8 +566,6 @@ type
     {$ENDIF}
     FFormsStack: TStack<TFormStackItem>;
     FDataWedgeBarCode: TDataWedgeBarCode;
-    FCameraScanBarCode: TCameraComponent;
-    FObr: TFObr;
     FisTestWebServer: boolean;
     FPasswordLabelClick: Integer;
     FINIFile: string;
@@ -633,6 +632,7 @@ type
 
     // Заказ производство
     FOrderInternal: Integer;
+    FProductionUnion: Integer;
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
@@ -653,6 +653,7 @@ type
     procedure UploadAllData(const AResult: TModalResult);
     procedure CreateInventory(const AResult: TModalResult);
     procedure ProductionUnionInsert(const AResult: TModalResult);
+    procedure ProductionUnionOpen(const AResult: TModalResult);
     procedure DeleteProductionUnionGoods(const AResult: TModalResult);
     procedure ErasedProductionUnionList(const AResult: TModalResult);
     procedure UnErasedProductionUnionList(const AResult: TModalResult);
@@ -671,6 +672,9 @@ type
     procedure SetProductionUnionScanButton;
     { Поиск комплектующих по штрихкоду }
     function SearchByBarcode(AData_String: String) : Integer;
+    procedure ProcessOrderInternal(ID: Integer);
+
+    procedure NextScan;
 
     property DateDownloadDict: TDateTime read FDateDownloadDict write SetDateDownloadDict;
     property BarCodePref: String read FBarCodePref write SetBarCodePref;
@@ -718,10 +722,75 @@ uses System.IOUtils, System.Math, System.RegularExpressions, FMX.SearchBox, FMX.
 
 {$R *.fmx}
 
+var  ScanThread: TThread;
+     ScanDATA: String;
+     ScanSymbologyName: String;
+
 const
   WebServer : string = 'http://217.92.58.239:11011/projectBoat_utf8/index.php;http://291.168.0.50/projectBoat_utf8/index.php';
   WebServerTest : string = 'http://in.mer-lin.org.ua/projectboat_test/index.php';
   MainWidth = 336;
+
+type
+  { Поток для обработки штрихкода }
+  TScanThread = class(TThread)
+  private
+    { Private declarations }
+    FObr: TFObr;
+    procedure OnObrBarcodeDetected(Sender: TObject);
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+{ TScanThread }
+
+constructor TScanThread.Create(CreateSuspended: Boolean);
+begin
+  inherited Create(CreateSuspended);
+  FObr := TFObr.Create(Nil);
+  FObr.Active := True;
+  FObr.OnBarcodeDetected := OnObrBarcodeDetected;
+end;
+
+destructor TScanThread.Destroy;
+begin
+  FObr.Active := False;
+  FObr.Free;
+  ScanThread := Nil;
+  inherited Destroy;
+end;
+
+procedure TScanThread.Execute;
+begin
+  sleep(200);
+  FObr.Scan;
+end;
+
+procedure TScanThread.OnObrBarcodeDetected(Sender: TObject);
+var
+  Barcode: TObrSymbol;
+begin
+  Barcode := FObr.Barcode[0];
+
+  ScanDATA := Barcode.DataUtf8;
+  ScanSymbologyName := Barcode.SymbologyName;
+
+  if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then ScanDATA := Copy(ScanDATA, 1, Length(ScanDATA) - 1);
+
+  TTask.Run(
+  procedure
+  begin
+    TThread.Synchronize(nil,
+      procedure
+      begin
+        frmMain.OnObrBarcodeDetected(Nil);
+      end);
+  end);
+
+end;
 
 function GetSearshBox(AListView: TListView): TSearchBox;
 var
@@ -891,8 +960,6 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  if Assigned(FObr) then FreeAndNil(FObr);
-  if Assigned(FCameraScanBarCode) then FreeAndNil(FCameraScanBarCode);
   FDataWedgeBarCode.Free;
   FFormsStack.Free;
 end;
@@ -1188,26 +1255,38 @@ end;
 {$ENDIF}
 
 procedure TfrmMain.ProductionUnionInsert(const AResult: TModalResult);
+  var ScanId: Integer;
 begin
   if (AResult = mrYes) and (FOrderInternal <> 0) then
   begin
     try
-      try
-        DM.InsertProductionUnion(FOrderInternal)
-      except
-        on E : Exception do
+      if DM.InsertProductionUnion(FOrderInternal, ScanId) then
+      begin
+        if DM.cdsProductionUnionItemEdit.Active then
         begin
-          TDialogService.ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
-        end;
+          bpProductionUnion.Visible := False;
+          if FisNextScan and FisScanOk and not FisZebraScaner then
+          begin
+            DM.cdsProductionUnionItemEdit.Close;
+            NextScan;
+          end else DM.GetProductionUnionItem(ScanId)
+        end else if FScanType <> 3 then
+          ShowEditProductionUnionItem(ScanId);
       end;
-      DM.DownloadOrderInternal(DM.cdsOrderInternalMovementItemId.AsInteger);
-      if DM.cdsOrderInternalMovementPUId.AsInteger <> 0 then
-        TDialogService.ShowMessage('По заказу создана сборка узла/лодки'#13#10#13#10 + DM.cdsOrderInternalInvNumberFull_ProductionUnion.AsString);
-    finally
-      bpProductionUnion.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty and (DM.cdsOrderInternalMovementPUId.AsInteger = 0);
-      pOrderInternal.Visible := DM.cdsOrderInternal.Active and not DM.cdsOrderInternal.IsEmpty;
+    except
+      on E : Exception do
+      begin
+        TDialogService.ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
+      end;
     end;
   end;
+end;
+
+procedure TfrmMain.ProductionUnionOpen(const AResult: TModalResult);
+begin
+  if (FProductionUnion <> 0) and (FScanType <> 3) then
+    ShowEditProductionUnionItem(FProductionUnion)
+  else NextScan;
 end;
 
 procedure TfrmMain.DeleteProductionUnionGoods(const AResult: TModalResult);
@@ -1306,11 +1385,16 @@ end;
 procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
   const ATime: TMediaTime);
 begin
-  if Assigned(FObr) and FCameraScanBarCode.Active and FObr.Active and FisCameraScanBarCode  then
+  if ScanCamera.Active and FisCameraScanBarCode  then
   begin
-    FCameraScanBarCode.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
-    FObr.Picture.Assign(imgCameraScanBarCode.Bitmap);
-    FObr.Scan;
+    ScanCamera.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
+    if not Assigned(ScanThread) then
+    begin
+      ScanThread := TScanThread.Create(true);
+      ScanThread.FreeOnTerminate := true;
+      TScanThread(ScanThread).FObr.Picture.Assign(imgCameraScanBarCode.Bitmap);
+      ScanThread.Start;
+    end;
   end;
 end;
 
@@ -1321,31 +1405,22 @@ end;
 
 procedure TfrmMain.OnObrBarcodeDetected(Sender: TObject);
 var
-  Barcode: TObrSymbol;
   pOnScanResult: TDataWedgeBarCodeResult;
   pOnScanResultDetails: TDataWedgeBarCodeResultDetails;
-  cDATA_STRING, SymbologyName: String;
 begin
-  if Assigned(FObr) and FisCameraScanBarCode and (FObr.BarcodeCount > 0) and (tcMain.ActiveTab = tiScanBarCode) then
+  if ScanDATA <> '' then
   begin
     FisCameraScanBarCode := False;
-    Barcode := FObr.Barcode[0];
 
     pOnScanResultDetails := FDataWedgeBarCode.OnScanResultDetails;
     pOnScanResult := FDataWedgeBarCode.OnScanResult;
 
-
-    cDATA_STRING := Barcode.DataUtf8;
-    SymbologyName := Barcode.SymbologyName;
-
-    if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then cDATA_STRING := Copy(cDATA_STRING, 1, Length(cDATA_STRING) - 1);
-
     sbBackClick(Sender);
 
     if Assigned(pOnScanResultDetails) then pOnScanResultDetails(Self, 'Scan',
-                          'Camera', SymbologyName, cDATA_STRING);
+                          'Camera', ScanSymbologyName, ScanDATA);
 
-    if Assigned(pOnScanResult) then pOnScanResult(Self, cDATA_STRING);
+    if Assigned(pOnScanResult) then pOnScanResult(Self, ScanDATA);
   end;
 end;
 
@@ -1572,23 +1647,16 @@ begin
     if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
-      imgCameraScanBarCode.Bitmap.Clear(TAlphaColorRec.White);
-
-      //Распознавание штрих кода
-      if not Assigned(FObr) then FObr := TFObr.Create(Self);
-      FObr.OnBarcodeDetected := OnObrBarcodeDetected;
 
       //Настройка камерЫ
-      if not Assigned(FCameraScanBarCode) then FCameraScanBarCode := TCameraComponent.Create(Self);
-      FCameraScanBarCode.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-      FCameraScanBarCode.Kind := FMX.Media.TCameraKind.BackCamera;
-      FCameraScanBarCode.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-      FCameraScanBarCode.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
-      FObr.Active := True;
+      ScanCamera.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+      ScanCamera.Kind := FMX.Media.TCameraKind.BackCamera;
+      ScanCamera.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+      ScanCamera.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
       FisCameraScanBarCode := True;
-      FCameraScanBarCode.Active := True;
-      if FCameraScanBarCode.HasFlash and isIlluminationMode then
-        FCameraScanBarCode.TorchMode := TTorchMode.ModeOn;
+      ScanCamera.Active := True;
+      if ScanCamera.HasFlash and isIlluminationMode then
+        ScanCamera.TorchMode := TTorchMode.ModeOn;
     end else
     if tcMain.ActiveTab = tiInventory then
     begin
@@ -1602,12 +1670,7 @@ begin
       DM.OpenInventoryGoods;
       SetInventScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
-      if FisNextScan and FisScanOk and not FisZebraScaner then
-      begin
-        FisScanOk := False;
-        FGoodsId := 0;
-        sbScanClick(Sender);
-      end;
+      NextScan;
       sbRefresh.Visible := True;
       if FActiveTabPrew = tiMain then DM.DownloadRemains;
     end
@@ -1619,12 +1682,7 @@ begin
       DM.OpenSendGoods;
       SetSendScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultSendScan;
-      if FisNextScan and FisScanOk and not FisZebraScaner then
-      begin
-        FisScanOk := False;
-        FGoodsId := 0;
-        sbScanClick(Sender);
-      end;
+      NextScan;
       sbRefresh.Visible := True;
     end
     else
@@ -1673,6 +1731,7 @@ begin
       sbRefresh.Visible := True;
       DM.DownloadProductionUnionListTop;
       FDataWedgeBarCode.OnScanResult := OnScanProductionUnion;
+      NextScan;
     end else
     if tcMain.ActiveTab = tiProductionUnionList then
     begin
@@ -1681,7 +1740,8 @@ begin
     end  else
     if tcMain.ActiveTab = tiProductionUnionEdit then
     begin
-      lCaption.Text := 'Редактирование cборка Узла / Лодки'
+      lCaption.Text := 'Редактирование cборка Узла / Лодки';
+      sbRefresh.Visible := True;
     end;
 
     if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnionScan) or (tcMain.ActiveTab = tiSendScan) then
@@ -1691,8 +1751,8 @@ begin
 
     if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiInventoryScan) or (tcMain.ActiveTab = tiGoods) or (tcMain.ActiveTab = tiProductionUnionScan) or (tcMain.ActiveTab = tiScanBarCode) then
     begin
-      sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash or
-                                    (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash);
+      sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and ScanCamera.HasFlash or
+                                    (tcMain.ActiveTab = tiScanBarCode) and ScanCamera.HasFlash);
     end else sbIlluminationMode.Visible := False;
 
     if sbIlluminationMode.Visible then
@@ -2191,13 +2251,7 @@ begin
 
     FisScanOk := DM.UploadMIInventory;
     DM.cdsInventoryItemEdit.Close;
-
-    if FisNextScan and FisScanOk and not FisZebraScaner then
-    begin
-      FisScanOk := False;
-      FGoodsId := 0;
-      sbScanClick(Nil);
-    end;
+    NextScan;
 
   end else if DM.cdsInventoryItemEdit.Active then
     SwitchToForm(tiInventoryItemEdit, nil);
@@ -2238,12 +2292,7 @@ begin
     FisScanOk := DM.UploadMISend;
     DM.cdsSendItemEdit.Close;
 
-    if FisNextScan and FisScanOk and not FisZebraScaner then
-    begin
-      FisScanOk := False;
-      FGoodsId := 0;
-      sbScanClick(Nil);
-    end;
+    NextScan;
 
   end else if DM.cdsSendItemEdit.Active then
     SwitchToForm(tiSendItemEdit, nil);
@@ -2534,7 +2583,7 @@ begin
 
 
   DM.cdsSendItemEdit.Close;
-  FisScanOk := not DM.cdsInventoryList.Active;
+  FisScanOk := not DM.cdsSendList.Active;
   ReturnPriorForm;
 
   if tcMain.ActiveTab = tiSendList then DM.DownloadSendList(pbSLOrderBy.ItemIndex > 0, pbSLAllUser.ItemIndex > 0, pbSLErased.ItemIndex > 0, GetSearshBox(lwSendList).Text);
@@ -2789,27 +2838,19 @@ end;
 // обработка нажатия кнопки возврата на предидущую форму
 procedure TfrmMain.sbBackClick(Sender: TObject);
 begin
+  // если кнопкой назад то отменяем повтор
+  if Sender = sbBack then
+  begin
+    FisNextScan := False;
+    FisScanOk := False;
+  end;
+
   if (tcMain.ActiveTab = tiScanBarCode) then
   begin
+    ScanCamera.OnSampleBufferReady := Nil;
+    if ScanCamera.HasFlash then ScanCamera.TorchMode := TTorchMode.ModeOff;
+    ScanCamera.Active := False;
     imgCameraScanBarCode.Bitmap.Clear(TAlphaColorRec.White);
-    if Assigned(FObr) then
-    begin
-      FObr.OnBarcodeDetected := Nil;
-      //FObr.Active := False;
-    end;
-    if Assigned(FCameraScanBarCode) then
-    begin
-      FCameraScanBarCode.OnSampleBufferReady := Nil;
-      if FCameraScanBarCode.HasFlash then FCameraScanBarCode.TorchMode := TTorchMode.ModeOff;
-      {$IF DEFINED(ANDROID)}
-      FCameraScanBarCode.Active := False;
-      {$ENDIF}
-    end;
-    if Sender = sbBack then
-    begin
-      FisNextScan := False;
-      FisScanOk := False;
-    end;
   end else if (tcMain.ActiveTab = tiDictList)  then
   begin
     FDictUpdateId := 0;
@@ -2892,11 +2933,11 @@ begin
     imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_on')].MultiResBitmap)
   else imgIlluminationMode.MultiResBitmap.Assign(ilButton.Source.Items[ilButton.Source.IndexOf('ic_flash_off')].MultiResBitmap);
 
-  if (tcMain.ActiveTab = tiScanBarCode) and Assigned(FCameraScanBarCode) and FCameraScanBarCode.HasFlash then
+  if (tcMain.ActiveTab = tiScanBarCode) and ScanCamera.HasFlash then
   begin
     if isIlluminationMode then
-      FCameraScanBarCode.TorchMode := TTorchMode.ModeOn
-    else FCameraScanBarCode.TorchMode := TTorchMode.Modeoff;
+      ScanCamera.TorchMode := TTorchMode.ModeOn
+    else ScanCamera.TorchMode := TTorchMode.Modeoff;
   end;
 end;
 
@@ -2955,7 +2996,17 @@ begin
   end;
 end;
 
-//
+// Следующее сканирование
+procedure TfrmMain.NextScan;
+begin
+  FGoodsId := 0;
+  FOrderInternal := 0;
+  FProductionUnion := 0;
+  if FisNextScan and FisScanOk and not FisZebraScaner then sbScanClick(Nil);
+  FisScanOk := False;
+end;
+
+// Включить сканер
 procedure TfrmMain.sbScanClick(Sender: TObject);
 begin
   if FisBecomeForeground and FisZebraScaner and not FisCameraScaner then
@@ -3642,6 +3693,34 @@ begin
   end;
 end;
 
+// Создание сборки по Внутреннего заказа
+procedure TfrmMain.ProcessOrderInternal(ID: Integer);
+begin
+  if DM.DownloadOrderInternal(Id) then
+  begin
+    FOrderInternal := Id;
+
+    if DM.cdsProductionUnionItemEditId.AsInteger = 0 then
+    begin
+      if FScanType <> 3 then
+      begin
+        bpProductionUnion.Visible := (DM.cdsProductionUnionItemEditId.AsInteger = 0) and (DM.cdsProductionUnionItemEdit.RecordCount = 1);
+        SwitchToForm(tiProductionUnionEdit, nil);
+      end else
+      begin
+        ProductionUnionInsert(mrYes);
+        NextScan;
+      end;
+    end else
+    begin
+      FOrderInternal := 0;
+      FProductionUnion := DM.cdsProductionUnionItemEditId.AsInteger;
+      TDialogService.MessageDialog('По заказу уже создана сборку узла/лодки'#13#10#13#10 + DM.cdsProductionUnionItemEditInvNumberFull.AsString,
+        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes], TMsgDlgBtn.mbYes, 0, ProductionUnionOpen)
+    end;
+  end;
+end;
+
 // Обрабатываем отсканированное комплектующее для инвентаризации
 procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
 begin
@@ -3701,6 +3780,8 @@ procedure TfrmMain.OnScanProductionUnion(Sender: TObject; AData_String: String);
   var ID: Integer;
 begin
 
+  FisScanOk := True;
+
   if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
   begin
 
@@ -3708,17 +3789,16 @@ begin
 
     if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
     begin
-      TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
+      TDialogService.MessageDialog('Не правельный штрихкод ' + AData_String,
+        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes], TMsgDlgBtn.mbYes, 0, ProductionUnionOpen);
+
       Exit;
     end;
 
-    if DM.DownloadOrderInternal(Id) then
-    begin
-      FOrderInternal := Id;
-      bpProductionUnion.Visible := (DM.cdsProductionUnionItemEditId.AsInteger = 0) and (DM.cdsProductionUnionItemEdit.RecordCount = 1);
-      SwitchToForm(tiProductionUnionEdit, nil);
-    end;
-  end else TDialogService.ShowMessage('Не правельный штрихкод ' + AData_String);
+    ProcessOrderInternal(ID);
+
+  end else TDialogService.MessageDialog('Не правельный штрихкод ' + AData_String,
+             TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes], TMsgDlgBtn.mbYes, 0, ProductionUnionOpen);
 end;
 
 end.

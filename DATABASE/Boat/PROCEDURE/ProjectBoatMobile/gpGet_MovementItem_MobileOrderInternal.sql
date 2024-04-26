@@ -15,12 +15,12 @@ RETURNS TABLE (Id Integer, MovementId Integer
 
              , Amount TFloat, AmountRemains TFloat
              
-             , OperDate TDateTime, InvNumber TVarChar, StatusCode Integer, StatusName TVarChar
+             , OperDate TDateTime, InvNumber TVarChar, InvNumberFull TVarChar, StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              
-             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
-             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, StatusCode_OrderClient Integer, StatusName_OrderClient TVarChar
+             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, InvNumberFull_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
              , isErased Boolean
 
               )
@@ -145,7 +145,7 @@ BEGIN
                                                               AND MI_Master.isErased   = FALSE
 
                                        LEFT JOIN MovementItem AS MI_Scan
-                                                              ON MI_Scan.ParentId   = MovementItem.Id
+                                                              ON MI_Scan.ParentId   = MI_Master.Id
                                                              AND MI_Scan.DescId = zc_MI_Scan() 
                                                              AND MI_Scan.isErased   = FALSE
 
@@ -200,6 +200,7 @@ BEGIN
 
            , ProductionUnion.OperDate
            , ProductionUnion.InvNumber
+           , zfCalc_InvNumber_isErased ('', ProductionUnion.InvNumber, ProductionUnion.OperDate, ProductionUnion.StatusId) AS InvNumberFull
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
            
@@ -212,9 +213,13 @@ BEGIN
 
            , Movement_OrderClient.Id                     AS MovementId_OrderClient
            , Movement_OrderClient.InvNumber              AS InvNumber_OrderClient
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+           , Object_Status_OrderClient.ObjectCode      AS StatusCode_OrderInternal
+           , Object_Status_OrderClient.ValueData       AS StatusName_OrderInternal
 
            , tmpMI.OperDate                              AS OperDate_OrderInternal
            , tmpMI.InvNumber                             AS InvNumber_OrderInternal
+           , zfCalc_InvNumber_isErased ('', tmpMI.InvNumber, tmpMI.OperDate, tmpMI.StatusId) AS InvNumberFull_OrderInternal
            , Object_Status_OrderInternal.ObjectCode      AS StatusCode_OrderInternal
            , Object_Status_OrderInternal.ValueData       AS StatusName_OrderInternal
 
@@ -253,7 +258,8 @@ BEGIN
                                 AND tmpRemains.UnitId     = COALESCE(ProductionUnion.FromId, tmpMI.FromId)
 
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
- 
+            LEFT JOIN Object AS Object_Status_OrderClient ON Object_Status_OrderClient.Id = Movement_OrderClient.StatusId
+
        ;
 
 END;
