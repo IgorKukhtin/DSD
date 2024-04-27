@@ -21,7 +21,9 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls,
+  dsdGuides;
 
 type
   TProdColorForm = class(TParentForm)
@@ -66,6 +68,21 @@ type
     Value: TcxGridDBColumn;
     Colors: TcxGridDBColumn;
     Color_Value: TcxGridDBColumn;
+    Panel2: TPanel;
+    cxLabel2: TcxLabel;
+    edLanguage1: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edLanguage2: TcxButtonEdit;
+    edLanguage3: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edLanguage4: TcxButtonEdit;
+    GuidesLanguage1: TdsdGuides;
+    GuidesLanguage2: TdsdGuides;
+    GuidesLanguage3: TdsdGuides;
+    GuidesLanguage4: TdsdGuides;
+    spInsertUpdate: TdsdStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

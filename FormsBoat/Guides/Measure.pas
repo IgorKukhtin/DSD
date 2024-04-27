@@ -64,16 +64,28 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
-    GuidesLanguage: TdsdGuides;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
-    Name_translate: TcxGridDBColumn;
-    MeasureCodeName_translate: TcxGridDBColumn;
+    Name_translate1: TcxGridDBColumn;
+    MeasureCodeName_translate1: TcxGridDBColumn;
     MeasureCodeName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     Panel: TPanel;
-    cxLabel1: TcxLabel;
-    edLanguage: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    edLanguage1: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    edLanguage2: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edLanguage3: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edLanguage4: TcxButtonEdit;
+    GuidesLanguage1: TdsdGuides;
+    GuidesLanguage2: TdsdGuides;
+    GuidesLanguage3: TdsdGuides;
+    GuidesLanguage4: TdsdGuides;
+    spInsertUpdate: TdsdStoredProc;
+    spInsertUpdateCode: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

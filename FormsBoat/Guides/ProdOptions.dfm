@@ -466,7 +466,7 @@
         Width = 78
       end
       object Value1: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 1'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1'
         DataBinding.FieldName = 'Value1'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -475,7 +475,7 @@
         Width = 90
       end
       object Value2: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 2'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2'
         DataBinding.FieldName = 'Value2'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -484,7 +484,7 @@
         Width = 90
       end
       object Value3: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 3'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3'
         DataBinding.FieldName = 'Value3'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -493,7 +493,7 @@
         Width = 90
       end
       object Value4: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 4'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4'
         DataBinding.FieldName = 'Value4'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -2062,9 +2062,21 @@
       end
       item
         Component = GuidesPriceList
+      end
+      item
+        Component = GuidesLanguage1
+      end
+      item
+        Component = GuidesLanguage2
+      end
+      item
+        Component = GuidesLanguage3
+      end
+      item
+        Component = GuidesLanguage4
       end>
-    Left = 568
-    Top = 80
+    Left = 560
+    Top = 168
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ProdOptions'

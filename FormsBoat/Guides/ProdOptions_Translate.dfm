@@ -26,8 +26,6 @@
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 101
-    ExplicitHeight = 271
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -491,28 +489,28 @@
         Width = 78
       end
       object Value1: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 1'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1'
         DataBinding.FieldName = 'Value1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object Value2: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 2'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2'
         DataBinding.FieldName = 'Value2'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object Value3: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 3'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3'
         DataBinding.FieldName = 'Value3'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object Value4: TcxGridDBColumn
-        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 4'
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4'
         DataBinding.FieldName = 'Value4'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -616,7 +614,7 @@
     Width = 881
     Height = 37
     Align = alTop
-    TabOrder = 8
+    TabOrder = 6
     object cxLabel2: TcxLabel
       Left = 8
       Top = 10
@@ -2023,6 +2021,18 @@
       end
       item
         Component = GuidesPriceList
+      end
+      item
+        Component = GuidesLanguage1
+      end
+      item
+        Component = GuidesLanguage2
+      end
+      item
+        Component = GuidesLanguage3
+      end
+      item
+        Component = GuidesLanguage4
       end>
     Left = 536
     Top = 128

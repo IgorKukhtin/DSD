@@ -3,7 +3,7 @@ object MeasureForm: TMeasureForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 735
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,9 +19,9 @@ object MeasureForm: TMeasureForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 59
-    Width = 735
-    Height = 317
+    Top = 61
+    Width = 894
+    Height = 315
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -37,7 +37,6 @@ object MeasureForm: TMeasureForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -48,6 +47,7 @@ object MeasureForm: TMeasureForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 69
       end
       object clName: TcxGridDBColumn
@@ -55,14 +55,8 @@ object MeasureForm: TMeasureForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 143
-      end
-      object Name_translate: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1074#1086#1076
-        DataBinding.FieldName = 'Name_translate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 140
+        Options.Editing = False
+        Width = 77
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -71,6 +65,7 @@ object MeasureForm: TMeasureForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
       object InternalCode: TcxGridDBColumn
@@ -79,6 +74,7 @@ object MeasureForm: TMeasureForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 70
       end
       object InternalName: TcxGridDBColumn
@@ -87,6 +83,7 @@ object MeasureForm: TMeasureForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 70
       end
       object MeasureCodeName: TcxGridDBColumn
@@ -95,14 +92,64 @@ object MeasureForm: TMeasureForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1086#1082#1088#1072#1097#1077#1085#1085#1099#1081' '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.'
-        Width = 116
+        Options.Editing = False
+        Width = 101
       end
-      object MeasureCodeName_translate: TcxGridDBColumn
-        Caption = #1055#1077#1088#1077#1074#1086#1076' ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
-        DataBinding.FieldName = 'MeasureCodeName_translate'
+      object Name_translate1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1'
+        DataBinding.FieldName = 'Name_translate1'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 122
+        Width = 89
+      end
+      object Name_translate2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2'
+        DataBinding.FieldName = 'Name_translate2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 92
+      end
+      object Name_translate3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3'
+        DataBinding.FieldName = 'Name_translate3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 89
+      end
+      object Name_translate4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4'
+        DataBinding.FieldName = 'Name_translate4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 83
+      end
+      object MeasureCodeName_translate1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1 ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
+        DataBinding.FieldName = 'MeasureCodeName_translate1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 113
+      end
+      object MeasureCodeName_translate2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2 ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
+        DataBinding.FieldName = 'MeasureCodeName_translate2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object MeasureCodeName_translate3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3 ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
+        DataBinding.FieldName = 'MeasureCodeName_translate3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 110
+      end
+      object MeasureCodeName_translate4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4 ('#1057#1086#1082#1088'. '#1082#1086#1076' '#1077#1076'. '#1080#1079#1084'.)'
+        DataBinding.FieldName = 'MeasureCodeName_translate4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 107
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -112,18 +159,18 @@ object MeasureForm: TMeasureForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 735
-    Height = 33
+    Width = 894
+    Height = 35
     Align = alTop
     TabOrder = 5
-    object cxLabel1: TcxLabel
-      Left = 9
-      Top = 7
-      Caption = #1071#1079#1099#1082' '#1087#1077#1088#1077#1074#1086#1076#1072':'
+    object cxLabel2: TcxLabel
+      Left = 8
+      Top = 8
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 1:'
     end
-    object edLanguage: TcxButtonEdit
-      Left = 101
-      Top = 6
+    object edLanguage1: TcxButtonEdit
+      Left = 75
+      Top = 7
       Properties.Buttons = <
         item
           Default = True
@@ -131,6 +178,57 @@ object MeasureForm: TMeasureForm
         end>
       Properties.ReadOnly = True
       TabOrder = 1
+      Width = 144
+    end
+    object cxLabel3: TcxLabel
+      Left = 230
+      Top = 8
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 2:'
+    end
+    object edLanguage2: TcxButtonEdit
+      Left = 293
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 144
+    end
+    object cxLabel4: TcxLabel
+      Left = 446
+      Top = 8
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
+    end
+    object edLanguage3: TcxButtonEdit
+      Left = 510
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 144
+    end
+    object cxLabel5: TcxLabel
+      Left = 665
+      Top = 8
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 4:'
+    end
+    object edLanguage4: TcxButtonEdit
+      Left = 727
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
       Width = 144
     end
   end
@@ -157,8 +255,8 @@ object MeasureForm: TMeasureForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 408
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -500,6 +598,21 @@ object MeasureForm: TMeasureForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spInsertUpdateCode
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Measure'
@@ -510,9 +623,33 @@ object MeasureForm: TMeasureForm
       end>
     Params = <
       item
-        Name = 'inLanguageId'
+        Name = 'inLanguageId1'
         Value = Null
-        Component = GuidesLanguage
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = Null
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = Null
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = Null
+        Component = GuidesLanguage4
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -577,13 +714,35 @@ object MeasureForm: TMeasureForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 136
     Top = 224
   end
-  object GuidesLanguage: TdsdGuides
+  object RefreshDispatcher: TRefreshDispatcher
+    IdParam.Value = ''
+    IdParam.ComponentItem = 'MasterUnitId'
+    IdParam.MultiSelectSeparator = ','
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = GuidesLanguage1
+      end
+      item
+        Component = GuidesLanguage2
+      end
+      item
+        Component = GuidesLanguage3
+      end
+      item
+        Component = GuidesLanguage4
+      end>
+    Left = 433
+    Top = 152
+  end
+  object GuidesLanguage1: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edLanguage
+    LookupControl = edLanguage1
     FormNameParam.Value = 'TLanguageForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -593,7 +752,7 @@ object MeasureForm: TMeasureForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesLanguage
+        Component = GuidesLanguage1
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -601,25 +760,280 @@ object MeasureForm: TMeasureForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesLanguage
+        Component = GuidesLanguage1
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 552
-    Top = 80
+    Left = 152
   end
-  object RefreshDispatcher: TRefreshDispatcher
-    IdParam.Value = ''
-    IdParam.ComponentItem = 'MasterUnitId'
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
+  object GuidesLanguage2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage2
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
       item
-        Component = GuidesLanguage
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 433
-    Top = 152
+    Left = 352
+  end
+  object GuidesLanguage3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage3
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 600
+  end
+  object GuidesLanguage4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage4
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 800
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Translate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId1'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name_translate1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name_translate2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name_translate3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Name_translate4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_Measure'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 144
+  end
+  object spInsertUpdateCode: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Translate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MeasureCodeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId1'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MeasureCodeName_translate1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MeasureCodeName_translate2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MeasureCodeName_translate3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'MeasureCodeName_translate4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_MeasureCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 144
   end
 end
