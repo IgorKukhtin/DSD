@@ -478,6 +478,10 @@ type
     cdsProductionUnionItemEditStatusCode_OrderClient: TIntegerField;
     cdsProductionUnionItemEditStatusName_OrderClient: TWideStringField;
     cdsProductionUnionItemEditInvNumberFull_OrderInternal: TWideStringField;
+    cdsProductionUnionListTopMovementId: TIntegerField;
+    cdsProductionUnionListMovementId: TIntegerField;
+    cdsProductionUnionListTopInvNumberFull: TWideStringField;
+    cdsProductionUnionListInvNumberFull: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -582,6 +586,9 @@ type
     procedure ErasedInventoryList;
     procedure UnErasedInventoryList;
     function isInventoryGoodsSend : Boolean;
+
+    procedure CompleteProductionUnion(ADataSet: TClientDataset);
+    procedure SetErasedProductionUnion(ADataSet: TClientDataset);
 
     procedure OpenSendGoods;
     procedure InsUpdLocalSendGoods(ALocalId, AId, AGoodsId, AFromId, AToId : Integer; AAmount, AAmountRemains, ATotalCount: Currency;
@@ -3438,12 +3445,12 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
-      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);
         cdsInventoryList.Edit;
-        cdsInventoryListisErased.AsBoolean := True; //StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryListisErased.AsBoolean := True; StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
         on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
@@ -3469,12 +3476,12 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileInventory_SetUnErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsInventoryListId.AsInteger);
-      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);
         cdsInventoryList.Edit;
-        cdsInventoryListisErased.AsBoolean := False; //StoredProc.ParamByName('outIsErased').Value;
+        cdsInventoryListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
         cdsInventoryList.Post;
       except
         on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
@@ -3499,6 +3506,70 @@ begin
 
   finally
     FDQuery.Free;
+  end;
+end;
+
+procedure TDM.CompleteProductionUnion(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpComplete_Movement_MobileProductionUnion';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, ADataSet.FieldByName('MovementId').AsInteger);
+      StoredProc.Params.AddParam('outStatusCode', ftInteger, ptOutput, -1);
+      StoredProc.Params.AddParam('outStatusName', ftWideString, ptOutput, '');
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('StatusCode').AsInteger := StoredProc.ParamByName('outStatusCode').Value;
+        ADataSet.FieldByName('StatusName').AsWideString := StoredProc.ParamByName('outStatusName').Value;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
+  end;
+end;
+
+procedure TDM.SetErasedProductionUnion(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpSetErased_Movement_MobileProductionUnion';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementId', ftInteger, ptInput, ADataSet.FieldByName('MovementId').AsInteger);
+      StoredProc.Params.AddParam('outStatusCode', ftInteger, ptOutput, -1);
+      StoredProc.Params.AddParam('outStatusName', ftWideString, ptOutput, '');
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('StatusCode').AsInteger := StoredProc.ParamByName('outStatusCode').Value;
+        ADataSet.FieldByName('StatusName').AsWideString := StoredProc.ParamByName('outStatusName').Value;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
   end;
 end;
 
