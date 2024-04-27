@@ -482,6 +482,28 @@ type
     cdsProductionUnionListMovementId: TIntegerField;
     cdsProductionUnionListTopInvNumberFull: TWideStringField;
     cdsProductionUnionListInvNumberFull: TWideStringField;
+    cdsOrderInternalChoice: TClientDataSet;
+    cdsOrderInternalChoiceId: TIntegerField;
+    cdsOrderInternalChoiceMovementId: TIntegerField;
+    cdsOrderInternalChoiceGoodsId: TIntegerField;
+    cdsOrderInternalChoiceGoodsCode: TIntegerField;
+    cdsOrderInternalChoiceGoodsName: TWideStringField;
+    cdsOrderInternalChoiceArticle: TWideStringField;
+    cdsOrderInternalChoiceEAN: TWideStringField;
+    cdsOrderInternalChoiceGoodsGroupId: TIntegerField;
+    cdsOrderInternalChoiceGoodsGroupName: TWideStringField;
+    cdsOrderInternalChoiceAmount: TFloatField;
+    cdsOrderInternalChoiceAmountLabel: TWideStringField;
+    cdsOrderInternalChoiceOrdUserLabel: TWideStringField;
+    cdsOrderInternalChoiceOperDate: TDateTimeField;
+    cdsOrderInternalChoiceInvNumberFull: TWideStringField;
+    cdsOrderInternalChoiceStatusCode: TIntegerField;
+    cdsOrderInternalChoiceStatusName: TWideStringField;
+    cdsOrderInternalChoiceMovementId_OrderClient: TIntegerField;
+    cdsOrderInternalChoiceInvNumberFull_OrderClient: TWideStringField;
+    cdsOrderInternalChoiceInvNumber_OrderClientLabel: TWideStringField;
+    cdsOrderInternalChoiceInvNumber: TIntegerField;
+    cdsOrderInternalChoiceInvNumberLabel: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure fdfAnsiUpperCaseCalculate(AFunc: TSQLiteFunctionInstance;
       AInputs: TSQLiteInputs; AOutput: TSQLiteOutput; var AUserData: TObject);
@@ -508,6 +530,7 @@ type
     procedure cdProductionUnionListAfterScroll(DataSet: TDataSet);
     procedure cdProductionUnionListCalcFields(DataSet: TDataSet);
     procedure cdsProductionUnionListAfterScroll(DataSet: TDataSet);
+    procedure cdsOrderInternalChoiceCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     FConnected: Boolean;
@@ -549,6 +572,7 @@ type
     function DownloadConfig : Boolean;
     function DownloadDict : Boolean;
     function DownloadRemains : Boolean;
+    function DownloadOrderInternalChoice(AOrderBy: Integer; AFilter: String) : Boolean;
     function DownloadInventory(AId : Integer = 0) : Boolean;
     function DownloadInventoryList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
     function DownloadInventoryListTop : Boolean;
@@ -1482,6 +1506,13 @@ begin
   else DataSet.FieldByName('ErasedId').AsInteger := -1;
 end;
 
+procedure TDM.cdsOrderInternalChoiceCalcFields(DataSet: TDataSet);
+begin
+  DataSet.FieldByName('AmountLabel').AsString := 'Кол-во:';
+  DataSet.FieldByName('InvNumberLabel').AsString := '№ зак. пр-во:';
+  DataSet.FieldByName('InvNumber_OrderClientLabel').AsString := '№ зак. клиент:';
+end;
+
 procedure TDM.cdsProductionUnionListAfterScroll(DataSet: TDataSet);
 begin
   if frmMain.ppActions.IsOpen then frmMain.ppActions.IsOpen := False;
@@ -2147,6 +2178,49 @@ begin
     end;
   finally
     FreeAndNil(StoredProc);
+  end;
+end;
+
+{ начитка строк инвентаризации}
+function TDM.DownloadOrderInternalChoice(AOrderBy: Integer; AFilter: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if cdsOrderInternalChoice.Active and not cdsOrderInternalChoice.IsEmpty then
+    nID := DM.cdsInventoryId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsOrderInternalChoice.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_Movement_MobileOrderInternal';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inOrderBy', ftInteger, ptInput, AOrderBy);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
+    StoredProc.DataSet := cdsOrderInternalChoice;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsOrderInternalChoice.Active;
+      if Result and (nID <> 0) then cdsOrderInternalChoice.Locate('Id', nId, []);
+      if cdsOrderInternalChoice.RecordCount >= FLimitList then
+        frmMain.lOrderInternalChoice.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.lOrderInternalChoice.Text := 'Найдено ' + IntToStr(cdsOrderInternalChoice.RecordCount) + ' записей';
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsOrderInternalChoice.EnableControls;
   end;
 end;
 
@@ -3756,12 +3830,12 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileSend_SetErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsSendListId.AsInteger);
-      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);
         cdsSendList.Edit;
-        cdsSendListisErased.AsBoolean := True; //StoredProc.ParamByName('outIsErased').Value;
+        cdsSendListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
         cdsSendList.Post;
       except
         on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
@@ -3787,12 +3861,12 @@ begin
       StoredProc.StoredProcName := 'gpMovementItem_MobileSend_SetUnErased';
       StoredProc.Params.Clear;
       StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, cdsSendListId.AsInteger);
-      //StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
 
       try
         StoredProc.Execute(false, false, false);
         cdsSendList.Edit;
-        cdsSendListisErased.AsBoolean := False; //StoredProc.ParamByName('outIsErased').Value;
+        cdsSendListisErased.AsBoolean := StoredProc.ParamByName('outIsErased').Value;
         cdsSendList.Post;
       except
         on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));

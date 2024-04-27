@@ -320,7 +320,7 @@ object DM: TDM
     Params = <>
     AfterEdit = cdsInventoryItemEditAfterEdit
     OnCalcFields = cdsInventoryItemEditCalcFields
-    Left = 464
+    Left = 504
     Top = 266
     object cdsInventoryItemEditLocalId: TIntegerField
       FieldName = 'LocalId'
@@ -494,7 +494,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     OnCalcFields = cdsInventoryListTopCalcFields
-    Left = 672
+    Left = 744
     Top = 266
     object cdsInventoryListTopId: TIntegerField
       FieldName = 'Id'
@@ -609,7 +609,7 @@ object DM: TDM
     Params = <>
     AfterEdit = cdsSendItemEditAfterEdit
     OnCalcFields = cdsSendItemEditCalcFields
-    Left = 472
+    Left = 504
     Top = 368
     object cdsSendItemEditLocalId: TIntegerField
       FieldName = 'LocalId'
@@ -721,7 +721,7 @@ object DM: TDM
     Params = <>
     AfterScroll = cdsSendListAfterScroll
     OnCalcFields = cdsSendListCalcFields
-    Left = 272
+    Left = 264
     Top = 368
     object cdsSendListId: TIntegerField
       FieldName = 'Id'
@@ -868,7 +868,7 @@ object DM: TDM
     Aggregates = <>
     Params = <>
     OnCalcFields = cdsSendListCalcFields
-    Left = 680
+    Left = 744
     Top = 367
     object cdsSendListTopId: TIntegerField
       FieldName = 'Id'
@@ -1528,6 +1528,92 @@ object DM: TDM
     object cdsProductionUnionItemEditStatusName_OrderInternal: TWideStringField
       FieldName = 'StatusName_OrderInternal'
       Size = 40
+    end
+  end
+  object cdsOrderInternalChoice: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    OnCalcFields = cdsOrderInternalChoiceCalcFields
+    Left = 600
+    Top = 588
+    object cdsOrderInternalChoiceId: TIntegerField
+      FieldName = 'Id'
+    end
+    object cdsOrderInternalChoiceMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+    object cdsOrderInternalChoiceGoodsId: TIntegerField
+      FieldName = 'GoodsId'
+    end
+    object cdsOrderInternalChoiceGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsOrderInternalChoiceGoodsName: TWideStringField
+      FieldName = 'GoodsName'
+      Size = 255
+    end
+    object cdsOrderInternalChoiceArticle: TWideStringField
+      FieldName = 'Article'
+      Size = 40
+    end
+    object cdsOrderInternalChoiceEAN: TWideStringField
+      FieldName = 'BarCode'
+    end
+    object cdsOrderInternalChoiceGoodsGroupId: TIntegerField
+      FieldName = 'GoodsGroupId'
+    end
+    object cdsOrderInternalChoiceGoodsGroupName: TWideStringField
+      FieldName = 'GoodsGroupName'
+      Size = 255
+    end
+    object cdsOrderInternalChoiceAmount: TFloatField
+      FieldName = 'Amount'
+    end
+    object cdsOrderInternalChoiceAmountLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'AmountLabel'
+      Calculated = True
+    end
+    object cdsOrderInternalChoiceOrdUserLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'OrdUserLabel'
+      Calculated = True
+    end
+    object cdsOrderInternalChoiceOperDate: TDateTimeField
+      FieldName = 'OperDate'
+    end
+    object cdsOrderInternalChoiceInvNumber: TIntegerField
+      FieldName = 'InvNumber'
+    end
+    object cdsOrderInternalChoiceInvNumberFull: TWideStringField
+      FieldName = 'InvNumberFull'
+      Size = 255
+    end
+    object cdsOrderInternalChoiceStatusCode: TIntegerField
+      FieldName = 'StatusCode'
+    end
+    object cdsOrderInternalChoiceStatusName: TWideStringField
+      FieldName = 'StatusName'
+      Size = 40
+    end
+    object cdsOrderInternalChoiceMovementId_OrderClient: TIntegerField
+      FieldName = 'MovementId_OrderClient'
+    end
+    object cdsOrderInternalChoiceInvNumberFull_OrderClient: TWideStringField
+      FieldName = 'InvNumberFull_OrderClient'
+      Size = 255
+    end
+    object cdsOrderInternalChoiceInvNumberLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumberLabel'
+      Size = 40
+      Calculated = True
+    end
+    object cdsOrderInternalChoiceInvNumber_OrderClientLabel: TWideStringField
+      FieldKind = fkCalculated
+      FieldName = 'InvNumber_OrderClientLabel'
+      Size = 40
+      Calculated = True
     end
   end
 end

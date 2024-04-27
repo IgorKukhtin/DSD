@@ -412,6 +412,14 @@ type
     LinkControlToField7: TLinkControlToField;
     LinkControlToField6: TLinkControlToField;
     LinkControlToField10: TLinkControlToField;
+    tiOrderInternalChoice: TTabItem;
+    Panel4: TPanel;
+    bOrderInternalChoice: TSpeedButton;
+    Image17: TImage;
+    lOrderInternalChoice: TLabel;
+    lwOrderInternalChoice: TListView;
+    BindSourceDB1: TBindSourceDB;
+    LinkListControlToField9: TLinkListControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -426,6 +434,7 @@ type
     procedure ShowInformation;
     procedure ShowGoods;
     procedure ShowDictList(ADictType : TDictType);
+    procedure ShowOrderInternalChoice;
     procedure ShowSendScan;
     procedure ShowProductionUnionScan;
     procedure ShowInventoryScan;
@@ -559,6 +568,13 @@ type
     procedure lwProductionUnionListDblClick(Sender: TObject);
     procedure bpProductionUnionCancelClick(Sender: TObject);
     procedure pbPULOrderByChange(Sender: TObject);
+    procedure bProductionUnionScanSearchClick(Sender: TObject);
+    procedure lwOrderInternalChoiceFilter(Sender: TObject; const AFilter,
+      AValue: string; var Accept: Boolean);
+    procedure lwOrderInternalChoiceGesture(Sender: TObject;
+      const EventInfo: TGestureEventInfo; var Handled: Boolean);
+    procedure lwOrderInternalChoiceDblClick(Sender: TObject);
+    procedure bOrderInternalChoiceClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1178,8 +1194,6 @@ begin
       FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Name').AsVariant := DM.qurDictListName.AsVariant;
     FDictUpdateDataSet.Post;
   end;
-
-  sbBackClick(Sender);
 end;
 
 procedure TfrmMain.bDotClick(Sender: TObject);
@@ -1221,6 +1235,15 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
+procedure TfrmMain.bOrderInternalChoiceClick(Sender: TObject);
+  var Id: Integer;
+begin
+  if DM.cdsOrderInternalChoice.IsEmpty then Exit;
+  Id := DM.cdsOrderInternalChoiceID.AsInteger;
+  sbBackClick(Sender);
+  ProcessOrderInternal(Id);
+end;
+
 // Сборка Узла / Лодки
 procedure TfrmMain.bProductionUnionScanClick(Sender: TObject);
 begin
@@ -1233,6 +1256,14 @@ begin
   FScanType := TSpinEditButton(Sender).Tag;
   SetProductionUnionScanButton;
   if FisOpenScanChangingMode then sbScanClick(Sender);
+end;
+
+procedure TfrmMain.bProductionUnionScanSearchClick(Sender: TObject);
+begin
+  FisNextScan := False;
+  FisScanOk := False;
+  ShowOrderInternalChoice;
+  bOrderInternalChoice.Visible := True;
 end;
 
 // присвоение количества комплектующих
@@ -1662,6 +1693,15 @@ begin
       sbRefresh.Visible := True;
     end
     else
+    if tcMain.ActiveTab = tiOrderInternalChoice then
+    begin
+      lCaption.Text := 'Подбор заказа на произв.';
+      bOrderInternalChoice.Visible := False;
+      GetSearshBox(lwOrderInternalChoice).SetFocus;
+      GetSearshBox(lwOrderInternalChoice).SelectAll;
+      sbRefresh.Visible := True;
+    end
+    else
     if tcMain.ActiveTab = tiScanBarCode then
     begin
       lCaption.Text := 'Сканер штрихкода';
@@ -2019,6 +2059,53 @@ begin
   TimerRefresh.Enabled := True;
 end;
 
+procedure TfrmMain.lwOrderInternalChoiceDblClick(Sender: TObject);
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  var Handled: Boolean;
+      GestureEventInfo: TGestureEventInfo;
+  {$ENDIF}
+begin
+  {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
+  Handled := False;
+  lwOrderInternalChoiceGesture(Sender, GestureEventInfo, Handled)
+  {$ENDIF}
+end;
+
+procedure TfrmMain.lwOrderInternalChoiceFilter(Sender: TObject; const AFilter,
+  AValue: string; var Accept: Boolean);
+begin
+  Accept := True;
+end;
+
+procedure TfrmMain.lwOrderInternalChoiceGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+var I: Integer;
+begin
+  if ppActions.IsOpen or Handled then Exit;
+  if not bDictChoice.Visible then Exit;
+
+
+  // Сскроем все
+  for I := 0 to ComponentCount - 1 do
+    if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      TButton(Components[I]).Visible := False;
+
+  // Справочники
+  if (tcMain.ActiveTab = tiOrderInternalChoice) and DM.cdsOrderInternalChoice.Active and not DM.cdsOrderInternalChoice.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    //btaClose.Visible := True;
+    btaOk.Visible := bDictChoice.Visible;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
+end;
+
 procedure TfrmMain.lwSendListDblClick(Sender: TObject);
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
@@ -2197,6 +2284,13 @@ begin
   DM.FilterGoods := GetSearshBox(lwGoods).Text;
   DM.LoadGoodsList;
   if tcMain.ActiveTab <> tiGoods then SwitchToForm(tiGoods, nil);
+end;
+
+// начитка информации справочника комплектующих
+procedure TfrmMain.ShowOrderInternalChoice;
+begin
+  DM.DownloadOrderInternalChoice(0, GetSearshBox(lwOrderInternalChoice).Text);
+  if tcMain.ActiveTab <> tiOrderInternalChoice then SwitchToForm(tiOrderInternalChoice, nil);
 end;
 
 // начитка информации справочника
@@ -2875,6 +2969,9 @@ begin
     FDictUpdateDataSet := Nil;
     FDictUpdateField := '';
     DM.qurDictList.Close;
+  end else if (tcMain.ActiveTab = tiOrderInternalChoice)  then
+  begin
+    DM.cdsOrderInternalChoice.Close;
   end else if (tcMain.ActiveTab = tiGoods)  then
   begin
     DM.FilterGoodsEAN := False;
@@ -3487,6 +3584,9 @@ begin
   end else if (tcMain.ActiveTab = tiDictList) then
   begin
     if TButton(Sender).Tag = 5 then bDictChoiceClick(Sender);
+  end else if (tcMain.ActiveTab = tiOrderInternalChoice) then
+  begin
+    if TButton(Sender).Tag = 5 then bOrderInternalChoiceClick(Sender)
   end else if (tcMain.ActiveTab = tiInventoryScan) then
   begin
     // Изменить позицию комплектующих
