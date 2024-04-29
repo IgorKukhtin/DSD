@@ -56,6 +56,7 @@ BEGIN
                                                       inName        := TRIM (inValue1)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId1             ::Integer,
                                                       inObjectId    := inId                      ::Integer,
+                                                      inComment     := ''                        ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;
@@ -90,6 +91,7 @@ BEGIN
                                                       inName        := TRIM (inValue2)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId2             ::Integer,
                                                       inObjectId    := inId                      ::Integer,
+                                                      inComment     := ''                        ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF; 
@@ -124,7 +126,8 @@ BEGIN
                                                       ioCode        := COALESCE (vbCode_tr,0)    ::Integer,       -- свойство <Код 
                                                       inName        := TRIM (inValue3)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId3             ::Integer,
-                                                      inObjectId    := inId                      ::Integer,
+                                                      inObjectId    := inId                      ::Integer, 
+                                                      inComment     := ''                        ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;
@@ -159,6 +162,7 @@ BEGIN
                                                       inName        := TRIM (inValue4)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId4             ::Integer,
                                                       inObjectId    := inId                      ::Integer,
+                                                      inComment     := ''                        ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;

@@ -397,9 +397,15 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_MailSend_Comment', zc_Object_MailSend(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_MailSend_Comment');
 
 
+  CREATE OR REPLACE FUNCTION zc_ObjectString_TranslateObject_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TranslateObject_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_TranslateObject_Comment', zc_Object_TranslateObject(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_TranslateObject_Comment');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.04.24         * zc_ObjectString_TranslateObject_Comment
  26.03.24         * zc_ObjectString_MailSend_Comment
  20.03.24         * zc_ObjectString_ReceiptService_NumReplace
  19.03.24         * zc_ObjectString_ReceiptServiceGroup_Comment

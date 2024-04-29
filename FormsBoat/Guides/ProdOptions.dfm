@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1054#1087#1094#1080#1080'>'
   ClientHeight = 411
-  ClientWidth = 854
+  ClientWidth = 890
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@
   object cxGrid: TcxGrid
     Left = 0
     Top = 99
-    Width = 854
+    Width = 890
     Height = 273
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 854
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -526,10 +527,11 @@
   object Panel_btn: TPanel
     Left = 0
     Top = 372
-    Width = 854
+    Width = 890
     Height = 39
     Align = alBottom
     TabOrder = 3
+    ExplicitWidth = 854
     object btnInsert: TcxButton
       Left = 546
       Top = 6
@@ -596,10 +598,11 @@
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 854
+    Width = 890
     Height = 73
     Align = alTop
     TabOrder = 8
+    ExplicitWidth = 854
     object cxLabel3: TcxLabel
       Left = 376
       Top = 46
@@ -2233,8 +2236,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 480
-    Top = 168
+    Left = 424
+    Top = 184
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'

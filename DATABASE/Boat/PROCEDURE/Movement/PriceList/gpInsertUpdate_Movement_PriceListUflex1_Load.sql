@@ -148,7 +148,8 @@ BEGIN
                                                                                  ioCode        := lfGet_ObjectCode(0, zc_Object_TranslateObject())   ::Integer,       -- свойство <Код 
                                                                                  inName        := inGoodsName_fra   ::TVarChar,      -- Название 
                                                                                  inLanguageId  := 40529       ::Integer,
-                                                                                 inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inObjectId    := vbGoodsId   ::Integer, 
+                                                                                 inComment     := ''          ::TVarChar,
                                                                                  inSession     := inSession   ::TVarChar
                                                                                  )AS tmp);
               END IF;

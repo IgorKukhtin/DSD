@@ -3,7 +3,7 @@ object TaxKindForm: TTaxKindForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1053#1044#1057'>'
   ClientHeight = 376
-  ClientWidth = 646
+  ClientWidth = 802
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,14 +19,13 @@ object TaxKindForm: TTaxKindForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 646
-    Height = 309
+    Top = 63
+    Width = 802
+    Height = 272
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -97,6 +96,70 @@ object TaxKindForm: TTaxKindForm
         Options.Editing = False
         Width = 100
       end
+      object Value1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1'
+        DataBinding.FieldName = 'Value1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object Value2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2'
+        DataBinding.FieldName = 'Value2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object Value3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3'
+        DataBinding.FieldName = 'Value3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object Value4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4'
+        DataBinding.FieldName = 'Value4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object ValueComment1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object ValueComment2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object ValueComment3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
+      object ValueComment4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -133,11 +196,10 @@ object TaxKindForm: TTaxKindForm
   object Panel_btn: TPanel
     Left = 0
     Top = 335
-    Width = 646
+    Width = 802
     Height = 41
     Align = alBottom
-    TabOrder = 5
-    ExplicitWidth = 633
+    TabOrder = 3
     object btnChoiceGuides: TcxButton
       Left = 195
       Top = 7
@@ -155,6 +217,82 @@ object TaxKindForm: TTaxKindForm
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 802
+    Height = 37
+    Align = alTop
+    TabOrder = 6
+    object cxLabel2: TcxLabel
+      Left = 8
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 1:'
+    end
+    object edLanguage1: TcxButtonEdit
+      Left = 69
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 130
+    end
+    object cxLabel3: TcxLabel
+      Left = 204
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 2:'
+    end
+    object cxLabel4: TcxLabel
+      Left = 402
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
+    end
+    object edLanguage2: TcxButtonEdit
+      Left = 266
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 130
+    end
+    object edLanguage3: TcxButtonEdit
+      Left = 464
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 130
+    end
+    object cxLabel5: TcxLabel
+      Left = 602
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 4:'
+    end
+    object edLanguage4: TcxButtonEdit
+      Left = 664
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 130
     end
   end
   object DataSource: TDataSource
@@ -422,6 +560,8 @@ object TaxKindForm: TTaxKindForm
       StoredProcList = <
         item
           StoredProc = spUpdate_Code
+        end
+        item
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -440,7 +580,39 @@ object TaxKindForm: TTaxKindForm
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inLanguageId1'
+        Value = Null
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = Null
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = Null
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = Null
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 88
     Top = 128
@@ -498,6 +670,7 @@ object TaxKindForm: TTaxKindForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248
@@ -590,5 +763,118 @@ object TaxKindForm: TTaxKindForm
     PackSize = 1
     Left = 274
     Top = 112
+  end
+  object GuidesLanguage1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage1
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+  end
+  object GuidesLanguage2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage2
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 8
+  end
+  object GuidesLanguage3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage3
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+  end
+  object GuidesLanguage4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage4
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 704
   end
 end

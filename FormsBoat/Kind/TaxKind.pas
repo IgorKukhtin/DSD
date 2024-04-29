@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls;
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, cxContainer, dsdGuides,
+  cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel;
 
 type
   TTaxKindForm = class(TParentForm)
@@ -66,6 +67,19 @@ type
     Panel_btn: TPanel;
     btnChoiceGuides: TcxButton;
     btnFormClose: TcxButton;
+    Panel2: TPanel;
+    cxLabel2: TcxLabel;
+    edLanguage1: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    edLanguage2: TcxButtonEdit;
+    edLanguage3: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edLanguage4: TcxButtonEdit;
+    GuidesLanguage1: TdsdGuides;
+    GuidesLanguage2: TdsdGuides;
+    GuidesLanguage3: TdsdGuides;
+    GuidesLanguage4: TdsdGuides;
   private
     { Private declarations }
   public

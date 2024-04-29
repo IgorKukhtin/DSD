@@ -614,7 +614,7 @@
     Width = 881
     Height = 37
     Align = alTop
-    TabOrder = 6
+    TabOrder = 5
     object cxLabel2: TcxLabel
       Left = 8
       Top = 10
@@ -2038,7 +2038,7 @@
     Top = 128
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ProdOptions_Translate'
+    StoredProcName = 'gpUpdate_Object_Translate'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2114,6 +2114,13 @@
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Value4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_ProdOptions'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

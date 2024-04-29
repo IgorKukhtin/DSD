@@ -1,5 +1,6 @@
 --
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TranslateObject (Integer, Integer, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TranslateObject (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TranslateObject(
  INOUT ioId              Integer,       -- ключ объекта <>
@@ -7,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TranslateObject(
     IN inName            TVarChar,      -- Название 
     IN inLanguageId      Integer,
     IN inObjectId        Integer,
+    IN inComment         TVarChar  ,    -- Примечание
     IN inSession         TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -36,6 +38,8 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_TranslateObject_Object(), ioId, inObjectId);
 
+   -- сохранили Примечание
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_TranslateObject_Comment(), ioId, inComment);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
@@ -54,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.24         *
  17.02.22         *
 */
 

@@ -216,6 +216,7 @@ BEGIN
                                                                                  inName        := inGoodsName_ita   ::TVarChar,      -- Название 
                                                                                  inLanguageId  := 40528       ::Integer,
                                                                                  inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inComment     := ''          ::TVarChar,
                                                                                  inSession     := inSession   ::TVarChar
                                                                                  )AS tmp);
               END IF;
@@ -249,6 +250,7 @@ BEGIN
                                                                                  inName        := inGoodsName_fra   ::TVarChar,      -- Название 
                                                                                  inLanguageId  := 40529       ::Integer,
                                                                                  inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inComment     := ''          ::TVarChar,
                                                                                  inSession     := inSession   ::TVarChar
                                                                                  )AS tmp);
               END IF;
@@ -282,6 +284,7 @@ BEGIN
                                                                                  inName        := inGoodsName_eng   ::TVarChar,      -- Название 
                                                                                  inLanguageId  := 179       ::Integer,
                                                                                  inObjectId    := vbGoodsId   ::Integer,
+                                                                                 inComment     := ''          ::TVarChar,
                                                                                  inSession     := inSession   ::TVarChar
                                                                                  )AS tmp);
               END IF;
@@ -315,6 +318,7 @@ BEGIN
                                                                                         inName        := TRIM (inMeasure_ita)   ::TVarChar,      -- Название 
                                                                                         inLanguageId  := 40528       ::Integer,
                                                                                         inObjectId    := vbMeasureParentId   ::Integer,
+                                                                                        inComment     := ''          ::TVarChar,
                                                                                         inSession     := inSession   ::TVarChar
                                                                                         )AS tmp);
               END IF;

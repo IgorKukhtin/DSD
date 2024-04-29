@@ -1,17 +1,22 @@
--- Function: gpInsertUpdate_Object_ProdOptions_Translate
+-- Function: gpUpdate_Object_Translate_Comment
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ProdOptions_Translate (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Translate_Comment (Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProdOptions_Translate(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_Translate_Comment(
     IN inId                       Integer   ,    --  <идентификатор объекта>
     IN inLanguageId1              Integer   ,    --
     IN inLanguageId2              Integer   ,    -- ключ объекта <>
     IN inLanguageId3              Integer   ,    --
-    IN inLanguageId4              Integer   ,    --
+    IN inLanguageId4              Integer   ,    --  
     IN inValue1                   TVarChar  ,
     IN inValue2                   TVarChar  ,
     IN inValue3                   TVarChar  ,
-    IN inValue4                   TVarChar  ,
+    IN inValue4                   TVarChar  ,   
+    IN inValueComment1            TVarChar  ,
+    IN inValueComment2            TVarChar  ,
+    IN inValueComment3            TVarChar  ,
+    IN inValueComment4            TVarChar  ,   
+    IN inDescCode                 TVarChar  ,
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -43,7 +48,8 @@ BEGIN
                                 ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
                                AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
                                AND ObjectLink_Object.ChildObjectId = inId
-          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId AND Object_Object.DescId = zc_Object_ProdOptions()
+          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          INNER JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId AND ObjectDesc.Code = inDescCode
 
        WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
          AND Object_TranslateObject.isErased = FALSE
@@ -53,8 +59,8 @@ BEGIN
                                                       ioCode        := COALESCE (vbCode_tr,0)    ::Integer,       -- свойство <Код 
                                                       inName        := TRIM (inValue1)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId1             ::Integer,
-                                                      inObjectId    := inId                      ::Integer,
-                                                      inComment     := ''                        ::TVarChar,
+                                                      inObjectId    := inId                      ::Integer, 
+                                                      inComment     := TRIM (inValueComment1)    ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;
@@ -77,18 +83,19 @@ BEGIN
                                 ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
                                AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
                                AND ObjectLink_Object.ChildObjectId = inId
-          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId AND Object_Object.DescId = zc_Object_ProdOptions()
+          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          INNER JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId AND ObjectDesc.Code = inDescCode
 
        WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
          AND Object_TranslateObject.isErased = FALSE
        ;
        -- сохраняем перевод
-       PERFORM gpInsertUpdate_Object_TranslateObject( ioId          := COALESCE (vbObjectId_tr,0)::Integer,       -- ключ объекта <>
+       PERFORM gpInsertUpdate_Object_TranslateObject( ioId          := COALESCE (vbId_tr,0)::Integer,       -- ключ объекта <>
                                                       ioCode        := COALESCE (vbCode_tr,0)    ::Integer,       -- свойство <Код 
                                                       inName        := TRIM (inValue2)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId2             ::Integer,
-                                                      inObjectId    := inId                      ::Integer, 
-                                                      inComment     := ''                        ::TVarChar,
+                                                      inObjectId    := inId                      ::Integer,  
+                                                      inComment     := TRIM (inValueComment2)    ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF; 
@@ -112,7 +119,8 @@ BEGIN
                                 ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
                                AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
                                AND ObjectLink_Object.ChildObjectId = inId
-          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId AND Object_Object.DescId = zc_Object_ProdOptions()
+          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId 
+          INNER JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId AND ObjectDesc.Code = inDescCode
 
        WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
          AND Object_TranslateObject.isErased = FALSE
@@ -122,8 +130,8 @@ BEGIN
                                                       ioCode        := COALESCE (vbCode_tr,0)    ::Integer,       -- свойство <Код 
                                                       inName        := TRIM (inValue3)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId3             ::Integer,
-                                                      inObjectId    := inId                      ::Integer,  
-                                                      inComment     := ''                        ::TVarChar,
+                                                      inObjectId    := inId                      ::Integer,
+                                                      inComment     := TRIM (inValueComment3)    ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;
@@ -146,7 +154,8 @@ BEGIN
                                 ON ObjectLink_Object.ObjectId = Object_TranslateObject.Id
                                AND ObjectLink_Object.DescId = zc_ObjectLink_TranslateObject_Object()
                                AND ObjectLink_Object.ChildObjectId = inId
-          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId AND Object_Object.DescId = zc_Object_ProdOptions()
+          INNER JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+          INNER JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId AND ObjectDesc.Code = inDescCode
 
        WHERE Object_TranslateObject.DescId = zc_Object_TranslateObject()
          AND Object_TranslateObject.isErased = FALSE
@@ -156,8 +165,8 @@ BEGIN
                                                       ioCode        := COALESCE (vbCode_tr,0)    ::Integer,       -- свойство <Код 
                                                       inName        := TRIM (inValue4)           ::TVarChar,      -- Название 
                                                       inLanguageId  := inLanguageId4             ::Integer,
-                                                      inObjectId    := inId                      ::Integer, 
-                                                      inComment     := ''                        ::TVarChar,
+                                                      inObjectId    := inId                      ::Integer,
+                                                      inComment     := TRIM (inValueComment4)    ::TVarChar,
                                                       inSession     := inSession                 ::TVarChar
                                                      );
    END IF;
@@ -173,7 +182,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-26.04.20          *
+29.04.20          *
 */
 
 -- тест
