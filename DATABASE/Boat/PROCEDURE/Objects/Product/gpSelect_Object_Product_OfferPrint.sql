@@ -246,10 +246,14 @@ BEGIN
             , tmpProdOptItems.SalePrice                       -- Цена продажи без НДС
             --, tmpProdOptItems.DiscountTax                     -- Скидка 
             , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN tmpProdOptItems.DiscountTax ELSE COALESCE (vbDiscountTax,0) END AS DiscountTax
+            , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN 0 ELSE COALESCE (vbDiscountNextTax,0) END ::TFloat AS DiscountNextTax
             --, zfCalc_SummDiscountTax (tmpProdOptItems.Sale_summ, COALESCE (tmpProdOptItems.DiscountTax,0)) ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой 
             , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (tmpProdOptItems.DiscountTax,0)) 
                    ELSE zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (vbDiscountTax,0) )
               END  ::TFloat AS Sale_summ  -- Сумма продажи без НДС со скидкой
+            , CASE WHEN COALESCE (tmpProdOptItems.DiscountTax,0) <> 0 THEN zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (tmpProdOptItems.DiscountTax,0)) 
+                   ELSE zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmpProdOptItems.Amount * tmpProdOptItems.SalePrice, COALESCE (vbDiscountTax,0) ), vbDiscountNextTax)
+              END  ::TFloat AS Sale_summ_tax  -- Сумма продажи без НДС со скидкой и с доп скидкой
             , tmpProdOptItems.NPP   :: Integer  AS NPP 
        FROM tmpProdOptItems
      UNION
@@ -258,8 +262,10 @@ BEGIN
             , Object_ProdColor.ValueData            AS ProdColorName
             , tmp.Amount                   ::TFloat AS Amount
             , tmp.OperPrice                ::TFloat AS SalePrice
-            , vbDiscountTax                ::TFloat AS DiscountTax
+            , vbDiscountTax                ::TFloat AS DiscountTax 
+            , vbDiscountNextTax            ::TFloat AS DiscountNextTax
             , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice, COALESCE (vbDiscountTax,0)) , vbDiscountNextTax) ::TFloat AS Sale_summ
+            , zfCalc_SummDiscountTax (zfCalc_SummDiscountTax (tmp.Amount * tmp.OperPrice, COALESCE (vbDiscountTax,0)) , vbDiscountNextTax) ::TFloat AS Sale_summ_OptItems
             , ROW_NUMBER() OVER (ORDER BY tmp.GoodsName) :: Integer  AS NPP
        FROM tmpOrderClient AS tmp
             LEFT JOIN ObjectString AS ObjectString_Article
@@ -277,7 +283,9 @@ BEGIN
             , 0  :: TFloat   AS Amount
             , 0  :: TFloat   AS SalePrice
             , 0  :: TFloat   AS DiscountTax
+            , 0  :: TFloat   AS DiscountNextTax
             , 0  :: TFloat   AS Sale_summ
+            , 0  :: TFloat   AS Sale_summ_tax
             , 999 :: Integer AS NPP
        ;
 
