@@ -123,7 +123,35 @@ type
     actBranchChoiceForm: TOpenChoiceForm;
     macUpdateBranch: TMultiAction;
     actUpdate_Branch: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdateBranch: TdxBarButton;
+    cxTabSheet1: TcxTabSheet;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    spSelectDetail: TdsdStoredProc;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ContractCode_ch2: TcxGridDBColumn;
+    ContractName_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    actChoiceFormContract: TOpenChoiceForm;
+    InsertRecord_Det: TInsertRecord;
+    SetErased_Det: TdsdUpdateErased;
+    SetUnErased_Det: TdsdUpdateErased;
+    spUnErasedMI_Det: TdsdStoredProc;
+    spErasedMI_Det: TdsdStoredProc;
+    bbInsertRecord_Det: TdxBarButton;
+    bbSetErased_Det: TdxBarButton;
+    bbSetUnErased_Det: TdxBarButton;
+    actShowErased_Det: TBooleanStoredProcAction;
+    actGridToExcel_Det: TdsdGridToExcel;
+    bbGridToExcel_Det: TdxBarButton;
+    bbShowErased_Det: TdxBarButton;
+    MIDetailProtocolOpenForm: TdsdOpenForm;
+    bbMIDetailProtocolOpenForm: TdxBarButton;
+    actUpdateDetailDS: TdsdUpdateDataSet;
+    spInsertUpdateMIDetail: TdsdStoredProc;
   private
     { Private declarations }
   public

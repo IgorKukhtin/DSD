@@ -3,7 +3,7 @@ inherited TaxForm: TTaxForm
   ClientHeight = 668
   ClientWidth = 1267
   ExplicitWidth = 1283
-  ExplicitHeight = 706
+  ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -177,6 +177,123 @@ inherited TaxForm: TTaxForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1085#1086#1074#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
             Width = 81
           end
+        end
+      end
+    end
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 1
+      object cxGridDetail: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1267
+        Height = 481
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableViewDetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ContractCode_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object ContractName_ch2: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormContract
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 230
+          end
+          object ContractTagName_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object ContractKindName_ch2: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object StartDate_ch2: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object EndDate_ch2: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevelDetail: TcxGridLevel
+          GridView = cxGridDBTableViewDetail
         end
       end
     end
@@ -512,10 +629,83 @@ inherited TaxForm: TTaxForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetail
+        end>
       RefreshOnTabSetChanges = True
     end
-    object actDisableNPP_auto: TdsdExecStoredProc [8]
+    object actGridToExcel_Det: TdsdGridToExcel [1]
       Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridDetail
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    object actShowErased_Det: TBooleanStoredProcAction [6]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelectDetail
+      StoredProcList = <
+        item
+          StoredProc = spSelectDetail
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      TabSheet = tsMain
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      TabSheet = tsMain
+    end
+    object actUpdateDetailDS: TdsdUpdateDataSet [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetail
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateDetailDS'
+      DataSource = DetailDS
+    end
+    object actDisableNPP_auto: TdsdExecStoredProc [11]
+      Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateTax_DisableNPP_auto
@@ -552,7 +742,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Tax: TMultiAction [10]
+    object mactPrint_Tax: TMultiAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -565,7 +755,7 @@ inherited TaxForm: TTaxForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 16
     end
-    object actPrintTax: TdsdPrintAction [11]
+    object actPrintTax: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -616,7 +806,7 @@ inherited TaxForm: TTaxForm
     inherited actMovementItemContainer: TdsdOpenForm
       Enabled = False
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [19]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -643,7 +833,42 @@ inherited TaxForm: TTaxForm
         end>
       isShowModal = True
     end
-    object actPrintTax_Us: TdsdPrintAction [19]
+    object MIDetailProtocolOpenForm: TdsdOpenForm [20]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
+    object actPrintTax_Us: TdsdPrintAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -687,8 +912,9 @@ inherited TaxForm: TTaxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertMaskMulti: TMultiAction [20]
+    object actInsertMaskMulti: TMultiAction [24]
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -700,7 +926,7 @@ inherited TaxForm: TTaxForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 27
     end
-    object actPrintTax_Client: TdsdPrintAction [21]
+    object actPrintTax_Client: TdsdPrintAction [25]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -744,7 +970,7 @@ inherited TaxForm: TTaxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actInsertMaskDoc: TdsdInsertUpdateAction [23]
+    object actInsertMaskDoc: TdsdInsertUpdateAction [27]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
@@ -781,11 +1007,13 @@ inherited TaxForm: TTaxForm
       IdFieldName = 'Id'
     end
     inherited actAddMask: TdsdExecStoredProc
+      TabSheet = tsMain
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spTax
@@ -844,6 +1072,7 @@ inherited TaxForm: TTaxForm
     end
     object macUpdateINN: TMultiAction
       Category = 'INN'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -861,6 +1090,89 @@ inherited TaxForm: TTaxForm
       MoveParams = <>
       HeaderDataSet = PrintHeaderCDS
       ItemsDataSet = PrintItemsCDS
+    end
+    object actChoiceFormContract: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractKindName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object actUpdateINN: TdsdDataSetRefresh
       Category = 'INN'
@@ -881,6 +1193,7 @@ inherited TaxForm: TTaxForm
     end
     object mactMeDoc: TMultiAction
       Category = 'TaxLib'
+      TabSheet = tsMain
       MoveParams = <>
       ActionList = <
         item
@@ -964,6 +1277,7 @@ inherited TaxForm: TTaxForm
     end
     object macUpdateBranch: TMultiAction
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       ActionList = <
@@ -991,6 +1305,53 @@ inherited TaxForm: TTaxForm
         end>
       Caption = 'actUpdate_Branch'
       ImageIndex = 60
+    end
+    object InsertRecord_Det: TInsertRecord
+      Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewDetail
+      Action = actChoiceFormContract
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      ImageIndex = 0
+    end
+    object SetErased_Det: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMI_Det
+      StoredProcList = <
+        item
+          StoredProc = spErasedMI_Det
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS
+    end
+    object SetUnErased_Det: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = cxTabSheet1
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spUnErasedMI_Det
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMI_Det
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1056,6 +1417,10 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased_Det'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowAll'
         end
         item
@@ -1105,7 +1470,7 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateBranch'
         end
         item
           Visible = True
@@ -1122,6 +1487,26 @@ inherited TaxForm: TTaxForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1157,11 +1542,19 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbMIDetailProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_Det'
         end
         item
           Visible = True
@@ -1202,8 +1595,32 @@ inherited TaxForm: TTaxForm
       Action = actDisableNPP_auto
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateBranch: TdxBarButton
       Action = macUpdateBranch
+      Category = 0
+    end
+    object bbInsertRecord_Det: TdxBarButton
+      Action = InsertRecord_Det
+      Category = 0
+    end
+    object bbSetErased_Det: TdxBarButton
+      Action = SetErased_Det
+      Category = 0
+    end
+    object bbSetUnErased_Det: TdxBarButton
+      Action = SetUnErased_Det
+      Category = 0
+    end
+    object bbGridToExcel_Det: TdxBarButton
+      Action = actGridToExcel_Det
+      Category = 0
+    end
+    object bbShowErased_Det: TdxBarButton
+      Action = actShowErased_Det
+      Category = 0
+    end
+    object bbMIDetailProtocolOpenForm: TdxBarButton
+      Action = MIDetailProtocolOpenForm
       Category = 0
     end
   end
@@ -1763,7 +2180,7 @@ inherited TaxForm: TTaxForm
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
     Left = 912
-    Top = 320
+    Top = 264
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Tax_SetErased'
@@ -1950,8 +2367,7 @@ inherited TaxForm: TTaxForm
     Top = 424
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 428
-    Top = 188
+    Top = 236
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -2157,7 +2573,7 @@ inherited TaxForm: TTaxForm
     Aggregates = <>
     Params = <>
     Left = 476
-    Top = 193
+    Top = 257
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Tax_ReportName'
@@ -2595,5 +3011,154 @@ inherited TaxForm: TTaxForm
     PackSize = 1
     Left = 529
     Top = 544
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 912
+    Top = 424
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 960
+    Top = 432
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 2
+      end>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1030
+    Top = 401
+  end
+  object spSelectDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_Tax_Detail'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased_Det
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 376
+  end
+  object spUnErasedMI_Det: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Tax_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1110
+    Top = 392
+  end
+  object spErasedMI_Det: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Tax_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1110
+    Top = 440
+  end
+  object spInsertUpdateMIDetail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Tax_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1040
+    Top = 328
   end
 end
