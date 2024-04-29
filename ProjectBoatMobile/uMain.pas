@@ -509,7 +509,6 @@ type
     procedure FormVirtualKeyboardShown(Sender: TObject;
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure bIIEOpenDictGoodsClick(Sender: TObject);
-    procedure rrInventScanSNClick(Sender: TObject);
     procedure bViewInventoryClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure rbWebServerClick(Sender: TObject);
@@ -612,7 +611,6 @@ type
 
 
     // Обработка штрих кода камерой
-    FisCameraScanBarCode: boolean;
     FisBecomeForeground: Boolean;
     FDateDownloadDict: TDateTime;
 
@@ -674,6 +672,7 @@ type
     procedure DeleteProductionUnionGoods(const AResult: TModalResult);
     procedure ErasedProductionUnionList(const AResult: TModalResult);
     procedure UnErasedProductionUnionList(const AResult: TModalResult);
+    procedure NoBarCodeNextScan(const AResult: TModalResult);
 
     procedure InputOrderClient(const AResult: TModalResult; const AValues: array of string);
 
@@ -767,6 +766,7 @@ type
 constructor TScanThread.Create(CreateSuspended: Boolean);
 begin
   inherited Create(CreateSuspended);
+  FreeOnTerminate := true;
   FObr := TFObr.Create(Nil);
   FObr.Active := True;
   FObr.OnBarcodeDetected := OnObrBarcodeDetected;
@@ -783,6 +783,16 @@ end;
 procedure TScanThread.Execute;
 begin
   sleep(200);
+
+  Synchronize(nil,
+        procedure
+        begin
+          try
+            FObr.Picture.Assign(frmMain.imgCameraScanBarCode.Bitmap);
+          except
+          end;
+        end);
+
   FObr.Scan;
 end;
 
@@ -790,23 +800,25 @@ procedure TScanThread.OnObrBarcodeDetected(Sender: TObject);
 var
   Barcode: TObrSymbol;
 begin
-  Barcode := FObr.Barcode[0];
+  try
+    Barcode := FObr.Barcode[0];
 
-  ScanDATA := Barcode.DataUtf8;
-  ScanSymbologyName := Barcode.SymbologyName;
+    ScanDATA := Barcode.DataUtf8;
+    ScanSymbologyName := Barcode.SymbologyName;
 
-  if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then ScanDATA := Copy(ScanDATA, 1, Length(ScanDATA) - 1);
+    if (POS('EAN', Barcode.SymbologyName) > 0) or (POS('UPCA', Barcode.SymbologyName) > 0) then ScanDATA := Copy(ScanDATA, 1, Length(ScanDATA) - 1);
 
-  TTask.Run(
-  procedure
-  begin
-    TThread.Synchronize(nil,
-      procedure
-      begin
-        frmMain.OnObrBarcodeDetected(Nil);
-      end);
-  end);
-
+    if ScanDATA <> '' then
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          try
+            frmMain.OnObrBarcodeDetected(Nil);
+          except
+          end;
+        end);
+  except
+  end;
 end;
 
 function GetSearshBox(AListView: TListView): TSearchBox;
@@ -1347,6 +1359,11 @@ begin
   end;
 end;
 
+procedure TfrmMain.NoBarCodeNextScan(const AResult: TModalResult);
+begin
+  NextScan;
+end;
+
 // Формирование документа сборки
 procedure TfrmMain.bpProductionUnionCancelClick(Sender: TObject);
 begin
@@ -1422,25 +1439,14 @@ begin
     raise Exception.Create('Forms stack underflow');
 end;
 
-procedure TfrmMain.rrInventScanSNClick(Sender: TObject);
-begin
-
-end;
-
 // обработка изменения закладки (формы)
 procedure TfrmMain.CameraScanBarCodeSampleBufferReady(Sender: TObject;
   const ATime: TMediaTime);
 begin
-  if ScanCamera.Active and FisCameraScanBarCode  then
+  if ScanCamera.Active and not Assigned(ScanThread)  then
   begin
     ScanCamera.SampleBufferToBitmap(imgCameraScanBarCode.Bitmap, True);
-    if not Assigned(ScanThread) then
-    begin
-      ScanThread := TScanThread.Create(true);
-      ScanThread.FreeOnTerminate := true;
-      TScanThread(ScanThread).FObr.Picture.Assign(imgCameraScanBarCode.Bitmap);
-      ScanThread.Start;
-    end;
+    ScanThread := TScanThread.Create(False);
   end;
 end;
 
@@ -1456,8 +1462,6 @@ var
 begin
   if ScanDATA <> '' then
   begin
-    FisCameraScanBarCode := False;
-
     pOnScanResultDetails := FDataWedgeBarCode.OnScanResultDetails;
     pOnScanResult := FDataWedgeBarCode.OnScanResult;
 
@@ -1711,7 +1715,6 @@ begin
       ScanCamera.Kind := FMX.Media.TCameraKind.BackCamera;
       ScanCamera.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
       ScanCamera.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
-      FisCameraScanBarCode := True;
       ScanCamera.Active := True;
       if ScanCamera.HasFlash and isIlluminationMode then
         ScanCamera.TorchMode := TTorchMode.ModeOn;
@@ -1728,9 +1731,9 @@ begin
       DM.OpenInventoryGoods;
       SetInventScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultInventoryScan;
-      NextScan;
       sbRefresh.Visible := True;
       if FActiveTabPrew = tiMain then DM.DownloadRemains;
+      NextScan;
     end
     else
     if tcMain.ActiveTab = tiSendScan then
@@ -1740,8 +1743,8 @@ begin
       DM.OpenSendGoods;
       SetSendScanButton;
       FDataWedgeBarCode.OnScanResult := OnScanResultSendScan;
-      NextScan;
       sbRefresh.Visible := True;
+      NextScan;
     end
     else
     if tcMain.ActiveTab = tiInventoryItemEdit then
@@ -1762,17 +1765,20 @@ begin
     else
     if tcMain.ActiveTab = tiSendItemEdit then
     begin
-      lCaption.Text := 'Добавить в Перемещение';
-      case FScanType of
-        1 : begin
-              edSIEAmount.SetFocus;
-              edSIEAmount.SelectAll;
-            end;
-        2 : begin
-              edSIEPartNumber.SetFocus;
-              edSIEPartNumber.SelectAll;
-            end;
-      end;
+      if DM.cdsSendItemEditId.AsInteger = 0 then
+      begin
+        lCaption.Text := 'Добавить в Перемещение';
+        case FScanType of
+          1 : begin
+                edSIEAmount.SetFocus;
+                edSIEAmount.SelectAll;
+              end;
+          2 : begin
+                edSIEPartNumber.SetFocus;
+                edSIEPartNumber.SelectAll;
+              end;
+        end;
+      end else lCaption.Text := 'Редактирование Перемещения';
       sbRefresh.Visible := True;
     end
      else
@@ -1857,6 +1863,7 @@ end;
 
 procedure TfrmMain.edSSInvNumber_OrderClientClick(Sender: TObject);
 begin
+  edSSInvNumber_OrderClient.SetFocus;
   TDialogService.InputQuery('Ввод № док. заказа', ['№ док. заказа'], [FOrderClientInvNumberFull], InputOrderClient);
 end;
 
@@ -2372,30 +2379,33 @@ end;
 // начитка информации строка перемещения
 procedure TfrmMain.ShowSendItemEdit;
 begin
-  if FGoodsId = 0 then Exit;
-
-  if not DM.GetMISend(FGoodsId, 0, '', 1) then
+  if not DM.cdsSendItemEdit.Active or DM.cdsSendItemEdit.IsEmpty then
   begin
-     if not DM.LoadGoodsListId(FGoodsId) then Exit;
+    if FGoodsId = 0 then Exit;
 
-     DM.cdsSendItemEdit.Close;
-     DM.cdsSendItemEdit.CreateDataSet;
-     DM.cdsSendItemEdit.Insert;
+    if not DM.GetMISend(FGoodsId, 0, '', 1) then
+    begin
+       if not DM.LoadGoodsListId(FGoodsId) then Exit;
 
-     DM.cdsSendItemEditId.AsInteger := 0;
-     DM.cdsSendItemEditGoodsId.AsInteger := FGoodsId;
-     DM.cdsSendItemEditGoodsCode.AsInteger := DM.qurGoodsListCode.AsInteger;
-     DM.cdsSendItemEditGoodsName.AsString := DM.qurGoodsListName.AsString;
-     DM.cdsSendItemEditArticle.AsString := DM.qurGoodsListArticle.AsString;
-     DM.cdsSendItemEditPartNumber.AsString := '';
-     DM.cdsSendItemEditGoodsGroupName.AsString := DM.qurGoodsListGoodsGroupName.AsString;
-     DM.cdsSendItemEditAmount.AsFloat := 1;
-     DM.cdsSendItemEditMovementId_OrderClient.AsInteger := FOrderClientId;
-     DM.cdsSendItemEditInvNumber_OrderClient.AsString := FOrderClientInvNumberFull;
+       DM.cdsSendItemEdit.Close;
+       DM.cdsSendItemEdit.CreateDataSet;
+       DM.cdsSendItemEdit.Insert;
 
-     DM.GetMISendGoods(DM.cdsSendItemEdit);
+       DM.cdsSendItemEditId.AsInteger := 0;
+       DM.cdsSendItemEditGoodsId.AsInteger := FGoodsId;
+       DM.cdsSendItemEditGoodsCode.AsInteger := DM.qurGoodsListCode.AsInteger;
+       DM.cdsSendItemEditGoodsName.AsString := DM.qurGoodsListName.AsString;
+       DM.cdsSendItemEditArticle.AsString := DM.qurGoodsListArticle.AsString;
+       DM.cdsSendItemEditPartNumber.AsString := '';
+       DM.cdsSendItemEditGoodsGroupName.AsString := DM.qurGoodsListGoodsGroupName.AsString;
+       DM.cdsSendItemEditAmount.AsFloat := 1;
+       DM.cdsSendItemEditMovementId_OrderClient.AsInteger := FOrderClientId;
+       DM.cdsSendItemEditInvNumber_OrderClient.AsString := FOrderClientInvNumberFull;
 
-     DM.cdsSendItemEdit.Post;
+       DM.GetMISendGoods(DM.cdsSendItemEdit);
+
+       DM.cdsSendItemEdit.Post;
+    end;
   end;
 
   if FScanType = 3 then
@@ -2631,8 +2641,6 @@ end;
 
 procedure TfrmMain.bSIECancelClick(Sender: TObject);
 begin
-  FisNextScan := False;
-  FisScanOk := False;
   DM.cdsSendItemEdit.Close;
   ReturnPriorForm;
 end;
@@ -2832,8 +2840,6 @@ end;
 // Отмена добавление в инвентаризацию
 procedure TfrmMain.bIIECancelClick(Sender: TObject);
 begin
-  FisNextScan := False;
-  FisScanOk := False;
   DM.cdsInventoryItemEdit.Close;
   ReturnPriorForm;
 end;
@@ -3794,9 +3800,12 @@ begin
       GetSearshBox(lwGoods).Text := Data_String;
       DM.FilterGoodsEAN := True;
       Result := 2;
-      Exit;
-    end else TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
-    exit;
+    end else
+    begin
+      Result := 3;
+      TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.', NoBarCodeNextScan)
+    end;
+    Exit;
   end;
 
   // Если с сервером не вышло ищем локально
@@ -3813,7 +3822,11 @@ begin
       GetSearshBox(lwGoods).Text := Data_String;
       DM.FilterGoodsEAN := True;
       Result := 2;
-    end else TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.');
+    end else
+    begin
+      Result := 3;
+      TDialogService.ShowMessage('Значение Ш/К <' + AData_String + '> не надено.', NoBarCodeNextScan);
+    end;
   end;
 end;
 
@@ -3848,9 +3861,13 @@ end;
 // Обрабатываем отсканированное комплектующее для инвентаризации
 procedure TfrmMain.OnScanResultInventoryScan(Sender: TObject; AData_String: String);
 begin
+  FisScanOk := True;
+
   case SearchByBarcode(AData_String) of
     1 : ShowInventoryItemEdit;
     2 : bInventScanSearchClick(Sender);
+    3 : ;
+    else NextScan;
   end;
 end;
 
@@ -3877,6 +3894,8 @@ begin
   end else if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
   begin
 
+    FisScanOk := True;
+
     if Length(AData_String) > 12 then AData_String := Copy(AData_String, 1, Length(AData_String) - 1);
 
     if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
@@ -3885,16 +3904,15 @@ begin
       Exit;
     end;
 
-    if DM.GetBarcodeSendOrderInternal(Id) then
-    begin
-      SwitchToForm(tiSendItemEdit, nil);
-      lCaption.Text := 'Редактирование Перемещения';
-    end;
+    if DM.GetBarcodeSendOrderInternal(Id) then ShowSendItemEdit;
   end else
   begin
+    FisScanOk := True;
     case SearchByBarcode(AData_String) of
       1 : ShowSendItemEdit;
       2 : bSendScanSearchClick(Sender);
+      3 : ;
+      else NextScan;
     end;
   end;
 end;

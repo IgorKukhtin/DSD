@@ -36,10 +36,13 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbFilterArt TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
+
+     vbFilterArt := REPLACE(REPLACE(REPLACE(inFilter, ' ', ''), '.', ''), '-', '');
 
      -- Результат
      RETURN QUERY
@@ -102,6 +105,11 @@ BEGIN
                                                                AND PU.StatusId <> zc_Enum_Status_Erased()                                                                      
                                        
                                  )
+         , tmpObjectString_Article AS (SELECT ObjectString_Article.*
+                                            , REPLACE(REPLACE(REPLACE(ObjectString_Article.ValueData, ' ', ''), '.', ''), '-', '')::TVarChar AS ArticleFilter
+                                       FROM ObjectString AS ObjectString_Article
+                                       WHERE ObjectString_Article.DescId   = zc_ObjectString_Article()
+                                         AND COALESCE(ObjectString_Article.ValueData, '') <> '')
 
         -- Результат
         SELECT Movement_OrderInternal.Id
@@ -168,9 +176,9 @@ BEGIN
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementItem.UnitId
 
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = MovementItem.GoodsId
-                                   AND ObjectString_Article.DescId   = zc_ObjectString_Article()
+             LEFT JOIN tmpObjectString_Article AS ObjectString_Article
+                                               ON ObjectString_Article.ObjectId = MovementItem.GoodsId
+                                              AND ObjectString_Article.DescId   = zc_ObjectString_Article()
              LEFT JOIN ObjectString AS ObjectString_Comment
                                     ON ObjectString_Comment.ObjectId = MovementItem.GoodsId
                                    AND ObjectString_Comment.DescId   = zc_ObjectString_Goods_Comment()
@@ -200,6 +208,11 @@ BEGIN
              LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
              
         WHERE COALESCE (tmpProductionUnion.Id, 0) = 0 AND COALESCE (MovementItem.Id, 0) <> 0
+          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
+                                           OR ObjectString_Article.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
+                                           OR ObjectString_Article.ArticleFilter ILIKE '%'||COALESCE(vbFilterArt, '')||'%'
+                                           OR Object_Goods.ObjectCode::TVarChar ILIKE '%'||COALESCE(inFilter, '')||'%'  )        
+        ORDER BY zfConvert_StringToNumber (Movement_OrderInternal.InvNumber) 
 
        ;
 
@@ -210,8 +223,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 27.04.24                                                       *
+ 23.04.24                                                       *
 */
 
 -- тест
--- select * from gpSelect_Movement_MobileOrderInternal(inOrderBy := 0, inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
+-- 
+select * from gpSelect_Movement_MobileOrderInternal(inOrderBy := 0, inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
