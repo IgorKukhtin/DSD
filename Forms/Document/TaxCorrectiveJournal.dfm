@@ -4,8 +4,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   ClientWidth = 1097
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog1
-  ExplicitLeft = -220
-  ExplicitTop = -47
   ExplicitWidth = 1113
   ExplicitHeight = 574
   PixelsPerInch = 96
@@ -367,6 +365,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object ContractName_detail: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+            DataBinding.FieldName = 'ContractName_detail'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 138
           end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
