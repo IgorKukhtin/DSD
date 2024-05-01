@@ -2,14 +2,14 @@ unit FMX.Defaults;
 
 interface
 
-uses Classes, FMX.dsdDB;
+uses Classes, FMX.Types, FMX.dsdCommon, FMX.dsdDB;
 
 type
 
   TDefaultType = (dtGuides, dtText, dtDate);
 
   // Возвращает ключ для дефолтных значений
-  TDefaultKey = class(TComponent)
+  TDefaultKey = class(TFmxObject)
   private
     FParams: TdsdParams;
   protected
@@ -99,6 +99,6 @@ begin
 end;
 
 initialization
-  RegisterClass(TDefaultKey)
+  //RegisterClass(TDefaultKey)
 
 end.

@@ -25,9 +25,12 @@ package ProjectDesignComponent_D29;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'DSD ProjectDesignComponent'}
 {$IMPLICITBUILD ON}
 
 requires
+  VCL,
+  vclx,
   rtl,
   ProjectComponent_D29,
   DesignIde;

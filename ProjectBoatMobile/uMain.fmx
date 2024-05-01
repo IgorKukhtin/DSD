@@ -26488,12 +26488,12 @@
     DataSet = DM.cdsProductionUnionItemEdit
     ScopeMappings = <>
     Left = 160
-    Top = 248
+    Top = 472
   end
   object BindSourceDB1: TBindSourceDB
     DataSet = DM.cdsOrderInternalChoice
     ScopeMappings = <>
-    Left = 152
-    Top = 256
+    Left = 160
+    Top = 248
   end
 end

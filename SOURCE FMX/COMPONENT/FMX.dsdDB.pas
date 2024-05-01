@@ -2,7 +2,7 @@ unit FMX.dsdDB;
 
 interface
 
-uses Classes, DBClient, DB, FMX.Dialogs;
+uses Classes, FMX.Types, DBClient, DB, FMX.dsdCommon, FMX.Dialogs;
 
 type
   TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob, otMultiExecute);
@@ -64,7 +64,7 @@ type
     property Items[Index: Integer]: TdsdParam read GetItem write SetItem; default;
   end;
 
-  TdsdFormParams = class (TComponent)
+  TdsdFormParams = class (TFmxObject)
   private
     FParams: TdsdParams;
   protected
@@ -98,7 +98,7 @@ type
     property Items[Index: Integer]: TdsdDataSetLink read GetItem write SetItem; default;
   end;
 
-  TdsdStoredProc = class (TComponent)
+  TdsdStoredProc = class (TFmxObject)
   private
     FDataSets: TdsdDataSets;
     FParams: TdsdParams;
@@ -1109,7 +1109,7 @@ end;
 initialization
 
   VerifyBoolStrArray;
-  Classes.RegisterClass(TdsdDataSets);
+  //RegisterClass(TdsdDataSets);
 
 end.
 

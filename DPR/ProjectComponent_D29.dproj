@@ -7,8 +7,9 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <TargetedPlatforms>3</TargetedPlatforms>
+        <TargetedPlatforms>1048579</TargetedPlatforms>
         <AppType>Package</AppType>
+        <ProjectName Condition="'$(ProjectName)'==''">ProjectComponent_D29</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -20,6 +21,11 @@
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
         <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64x' and '$(Base)'=='true') or '$(Base_Win64x)'!=''">
+        <Base_Win64x>true</Base_Win64x>
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
@@ -79,11 +85,18 @@
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_BplOutput>..\BIN64\Bpl\$(ProductVersion)</DCC_BplOutput>
         <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
-        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;vcl;dxSkinsCoreRS16;adortl;vclx;dxmdsRS16;dxLayoutControlRS16;cxExportRS16;vclie;GMLib_DXE2;GMLib_DXE2_VCL;dxCoreRS29;cxLibraryRS29;dxGDIPlusRS29;dxThemeRS29;cxDataRS29;cxEditorsRS29;dxmdsRS29;cxPageControlRS29;dxLayoutControlRS29;dxComnRS29;cxTreeListRS29;cxExportRS29;dxBarRS29;dxBarExtItemsRS29;cxGridRS29;cxPivotGridRS29;cxVerticalGridRS29;dxSkinsCoreRS29;GMLib_D29_VCL;GMLib_D29;cxSchedulerRS29;GMLib_D_Sydney10_VCL;GMLib_D_Sydney10;$(DCC_UsePackage)</DCC_UsePackage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64x)'!=''">
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -119,11 +132,11 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="VCL.dcp"/>
+        <DCCReference Include="vclx.dcp"/>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vclimg.dcp"/>
-        <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="xmlrtl.dcp"/>
-        <DCCReference Include="vclx.dcp"/>
         <DCCReference Include="soaprtl.dcp"/>
         <DCCReference Include="inet.dcp"/>
         <DCCReference Include="dsnap.dcp"/>
@@ -270,6 +283,11 @@
         <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas"/>
         <DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
+        <DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
+        <DCCReference Include="..\SOURCE\Pdfium\PdfiumCore.pas"/>
+        <DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
+        <DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
         <None Include="ModelSupport_ProjectComponent_D29\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -319,7 +337,8 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\GMLib_D29.bpl">GoogleMaps Library v1.5.5 (Copyright © Xavier Martнnez - cadetill)</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
@@ -924,6 +943,9 @@
                     <Platform Name="Win64">
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="Win64x">
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectiOSDeviceDebug">
                     <Platform Name="iOSDevice32">
@@ -1185,10 +1207,12 @@
                 <ProjectRoot Platform="OSXARM64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win64x" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
+                <Platform value="Win64x">True</Platform>
             </Platforms>
             <ModelSupport>True</ModelSupport>
         </BorlandProject>

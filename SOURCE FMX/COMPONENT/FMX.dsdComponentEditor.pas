@@ -2,7 +2,7 @@ unit FMX.dsdComponentEditor;
 
 interface
 
-uses Classes, DesignEditors, DesignIntf, FMX.dsdAddOn;
+uses Classes, DesignEditors, DesignIntf, FMX.Types, FMX.dsdCommon, FMX.dsdAddOn;
 
 type
   // ¬˚·Ë‡ÂÏ ÚÓÎ¸ÍÓ „Ë‰˚
@@ -47,19 +47,19 @@ type
 
 implementation
 
-uses FMX.dsdDB, TypInfo, Db, ParentForm {, FMX.dsdGuides};
+uses FMX.dsdDB, TypInfo, Db, FMX.ParentForm {, FMX.dsdGuides};
 
 procedure Register;
 begin
    RegisterCustomModule(TParentForm, TCustomModule);
 //   RegisterPropertyEditor(TypeInfo(boolean),    TExecuteDialog,       'isShowModal',   nil);
 //   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,      'Grid',          TExcelGridProperty);
-   RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,            'Component',     TdsdParamComponentProperty);
-//   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem,   'Component',     TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TFmxObject), TdsdParam,            'Component',     TdsdParamComponentProperty);
+//   RegisterPropertyEditor(TypeInfo(TFmxObject), TComponentListItem,   'Component',     TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam,            'DataType',      TDataTypeProperty);
    RegisterPropertyEditor(TypeInfo(String),     TdsdParam,            'ComponentItem', TComponentItemTextProperty);
 
-//   RegisterPropertyEditor(TypeInfo(TComponent), TdsdProperties—hange, 'Component',     TdsdProperties—hangeComponentProperty);
+//   RegisterPropertyEditor(TypeInfo(TFmxObject), TdsdProperties—hange, 'Component',     TdsdProperties—hangeComponentProperty);
 //
 //   RegisterPropertyEditor(TypeInfo(TShortCut),  TShortCutActionItem,  'ShortCut',      TShortCutProperty);
 //   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdPairParamsItem,   'DataType',      TDataTypeProperty);
