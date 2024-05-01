@@ -151,6 +151,7 @@ contains
   EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
   PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
-  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas';
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
 
 end.

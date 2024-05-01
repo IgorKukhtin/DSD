@@ -9,7 +9,7 @@ type
   TDefaultType = (dtGuides, dtText, dtDate);
 
   // Возвращает ключ для дефолтных значений
-  TDefaultKey = class(TFmxObject)
+  TDefaultKey = class(TdsdComponent)
   private
     FParams: TdsdParams;
   protected

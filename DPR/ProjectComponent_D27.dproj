@@ -252,6 +252,7 @@
         <DCCReference Include="..\SOURCE\Pdfium\PdfiumCore.pas"/>
         <DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
         <DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
+        <DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
         <None Include="ModelSupport_ProjectComponent_D27\default.txaPackage"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
