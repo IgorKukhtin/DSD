@@ -121,16 +121,29 @@ BEGIN
                              AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                            ) 
 
-        --договора
-        , tmpMIDetail_tax AS (SELECT MovementItem.MovementId
-                                   , STRING_AGG (DISTINCT Object_Contract.ValueData, ';') AS ContractName_detail  
-                              FROM MovementItem
-                                   INNER JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId
-                              WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child) 
-                                AND MovementItem.DescId = zc_MI_Detail()
-                                AND MovementItem.isErased = FALSE 
-                                AND COALESCE (MovementItem.ObjectId,0) > 0
-                              GROUP BY MovementItem.MovementId
+        --договора  
+        , tmpMLO_Contract_Child AS (SELECT MovementLinkObject_Contract.*
+                                    FROM MovementLinkObject AS MovementLinkObject_Contract
+                                    WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child)
+                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract() 
+                                      AND COALESCE (MovementLinkObject_Contract.ObjectId,0) > 0
+                                    )
+        , tmpMIDetail_tax AS (SELECT tmp.MovementId
+                                   , STRING_AGG (DISTINCT Object_Contract.ValueData, ';') AS ContractName_detail 
+                              FROM (SELECT MovementItem.MovementId
+                                         , MovementItem.ObjectId
+                                    FROM MovementItem
+                                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child) 
+                                      AND MovementItem.DescId = zc_MI_Detail()
+                                      AND MovementItem.isErased = FALSE 
+                                      AND COALESCE (MovementItem.ObjectId,0) > 0 
+                                  UNION ALL
+                                    SELECT tmpMLO_Contract_Child.MovementId
+                                         , tmpMLO_Contract_Child.ObjectId
+                                    FROM tmpMLO_Contract_Child
+                              ) AS tmp
+                                 INNER JOIN Object AS Object_Contract ON Object_Contract.Id = tmp.ObjectId
+                              GROUP BY tmp.MovementId
                               )
 
      SELECT
@@ -429,9 +442,9 @@ BEGIN
                                      AND MovementBoolean_isUKTZ_new.DescId     = zc_MovementBoolean_UKTZ_new()
 
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Child
-                                         ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
-                                        AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN tmpMLO_Contract_Child AS MovementLinkObject_To_Child
+                                            ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                           AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Child
                                          ON MovementLinkObject_Contract_Child.MovementId = MovementLinkMovement_Child.MovementId
                                         AND MovementLinkObject_Contract_Child.DescId = zc_MovementLinkObject_Contract()

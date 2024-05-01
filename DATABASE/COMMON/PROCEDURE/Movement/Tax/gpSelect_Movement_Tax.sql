@@ -112,18 +112,38 @@ BEGIN
                                  OR MovementLinkObject_Branch.ObjectId IS NULL
                                 )
                             -- AND (vbUserId <> 5 OR COALESCE (Movement.AccessKeyId, 0) = 0)
-                         )
-        --договора
-        , tmpMIDetail AS (
-                          SELECT MovementItem.MovementId
-                               , STRING_AGG (DISTINCT Object_Contract.ValueData, ';') AS ContractName_detail  
-                          FROM MovementItem
-                               INNER JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId
-                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
-                            AND MovementItem.DescId = zc_MI_Detail()
-                            AND MovementItem.isErased = FALSE 
-                            AND COALESCE (MovementItem.ObjectId,0) > 0
-                          GROUP BY MovementItem.MovementId
+                         ) 
+         --
+        , tmpMLO_Contract AS (SELECT MovementLinkObject_Contract.*
+                              FROM MovementLinkObject AS MovementLinkObject_Contract
+                              WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract() 
+                                AND COALESCE (MovementLinkObject_Contract.ObjectId,0) > 0
+                              )   
+
+        --договора  zc_MI_Detail
+        , tmpMIDetail AS (SELECT tmp.MovementId
+                               , STRING_AGG (DISTINCT Object_Contract.ValueData, ';')    AS ContractName_detail
+                               , STRING_AGG (DISTINCT Object_ContractTag.ValueData, ';') AS ContractTagName_detail 
+                          FROM (SELECT MovementItem.MovementId
+                                     , MovementItem.ObjectId
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
+                                  AND MovementItem.DescId = zc_MI_Detail()
+                                  AND MovementItem.isErased = FALSE 
+                                  AND COALESCE (MovementItem.ObjectId,0) > 0 
+                              UNION
+                                SELECT tmpMLO_Contract.MovementId
+                                     , tmpMLO_Contract.ObjectId
+                                FROM tmpMLO_Contract
+                          ) AS tmp
+                             INNER JOIN Object AS Object_Contract ON Object_Contract.Id = tmp.ObjectId
+                             
+                             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                                  ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                                 AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                             LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+                          GROUP BY tmp.MovementId
                           )
 
 
@@ -180,8 +200,10 @@ BEGIN
 
            , View_Contract_InvNumber.ContractId        	AS ContractId
            , View_Contract_InvNumber.ContractCode     	AS ContractCode
-           , View_Contract_InvNumber.InvNumber         	AS ContractName
-           , View_Contract_InvNumber.ContractTagName
+           --, View_Contract_InvNumber.InvNumber         	AS ContractName
+           --, View_Contract_InvNumber.ContractTagName
+           , tmpMIDetail.ContractName_detail     ::TVarChar AS ContractName
+           , tmpMIDetail.ContractTagName_detail  ::TVarChar AS ContractTagName
            , tmpMIDetail.ContractName_detail ::TVarChar AS ContractName_detail
            , Object_TaxKind.Id                	        AS TaxKindId
            , Object_TaxKind.ValueData         	        AS TaxKindName
