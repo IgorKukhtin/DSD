@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_TranslateObject(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LanguageId Integer, LanguageName TVarChar
              , ObjectId Integer, ObjectName TVarChar
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -26,7 +27,8 @@ BEGIN
            , 0 :: Integer             AS LanguageId
            , '' :: TVarChar           AS LanguageName
            , 0 :: Integer             AS ObjectId
-           , '' :: TVarChar           AS ObjectName
+           , '' :: TVarChar           AS ObjectName 
+           , '' :: TVarChar           AS Comment
        ;
    ELSE
        RETURN QUERY
@@ -38,7 +40,12 @@ BEGIN
            , Object_Language.ValueData          AS LanguageName
            , Object_Object.Id                   AS ObjectId
            , Object_Object.ValueData            AS ObjectName
+           , ObjectString_Comment.ValueData  :: TVarChar    AS Comment
        FROM Object AS Object_TranslateObject
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_TranslateObject.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_TranslateObject_Comment()
+
           LEFT JOIN ObjectLink AS ObjectLink_Language
                                ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
                               AND ObjectLink_Language.DescId = zc_ObjectLink_TranslateObject_Language()
@@ -59,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.29         *
  17.02.22         *
 */
 

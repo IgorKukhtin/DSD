@@ -2,7 +2,7 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1077#1088#1077#1074#1086#1076' '#1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074'>'
-  ClientHeight = 259
+  ClientHeight = 301
   ClientWidth = 299
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 43
-    Top = 219
+    Left = 35
+    Top = 267
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 187
-    Top = 219
+    Left = 179
+    Top = 267
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -91,6 +91,17 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 8
+    Top = 204
+    Caption = #1055#1077#1088#1077#1074#1086#1076' "'#1087#1088#1080#1084#1077#1095#1072#1085#1080#1103'" '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+  end
+  object edComment: TcxTextEdit
+    Left = 8
+    Top = 222
+    TabOrder = 11
     Width = 273
   end
   object ActionList: TActionList
@@ -168,6 +179,14 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 186
@@ -239,6 +258,13 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -256,8 +282,8 @@ object TranslateObjectEditForm: TTranslateObjectEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 146
-    Top = 216
+    Left = 130
+    Top = 256
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 96

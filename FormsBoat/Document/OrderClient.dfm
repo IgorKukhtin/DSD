@@ -4966,6 +4966,7 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end>
       Params = <
         item
@@ -5130,6 +5131,7 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end
         item
           DataSet = PrintItemsColorCDS
@@ -5181,6 +5183,7 @@ object OrderClientForm: TOrderClientForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end>
       Params = <
         item

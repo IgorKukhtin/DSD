@@ -665,11 +665,13 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 13
+        TabIndex = 10
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
         Sizes = (
+          336s
+          484s
           336s
           484s
           336s
@@ -19495,6 +19497,227 @@
             SearchVisible = True
           end
         end
+        object tiOrderInternalChoice: TTabItem
+          CustomIcon = <
+            item
+            end>
+          TextSettings.Trimming = None
+          IsSelected = False
+          Size.Width = 8.000000000000000000
+          Size.Height = 8.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = ''
+          TabOrder = 0
+          Text = 'tiOrderInternalChoice'
+          ExplicitSize.cx = 8.000000000000000000
+          ExplicitSize.cy = 8.000000000000000000
+          object Panel4: TPanel
+            Align = Top
+            Size.Width = 336.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object bOrderInternalChoice: TSpeedButton
+              Align = Left
+              Size.Width = 33.000000000000000000
+              Size.Height = 33.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'transparentcirclebuttonstyle'
+              TextSettings.Trimming = None
+              OnClick = bOrderInternalChoiceClick
+              object Image17: TImage
+                MultiResBitmap.Height = 32
+                MultiResBitmap.Width = 32
+                MultiResBitmap = <
+                  item
+                    Width = 32
+                    Height = 32
+                    PNG = {
+                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+                      F40000000473424954080808087C08648800000439494441545885ED955B6C14
+                      5518C77F67667666DBDDEE96BDD2A6D01624282817911022D6466C0503091214
+                      A3867821410C890F445F348A91F8A2211109A0A80F2A3E184828280912F18289
+                      3131114940416AB1A588D20BBDEC6E772EE7F8C03619370BB4867D827F727266
+                      BEF9BEEFFF3FFF3939076EE246C1A2F778BE69178DC571A3DCC4B76CC59A591B
+                      DE1F8B57B79E6D3F7706E8F07FD7CA493EEF2D1273EB92C796CD5BD33AA7B699
+                      80A1CD2DCE299B030BB710AB6B4CFCB474CEA3F513ADA9F489F34422F17BE0E2
+                      7FF2CAE2C0C39FA14F6CA83EBA64CE23F5F1C0645CD72368848819F105333661
+                      965D40C6A93CD83A6BE58CB83119D77570A58D86413C998E5627995D5601CDEF
+                      B3B969564B6BCA9A82E33AB8CAC6C54149888553548458583601F3B7D174D78C
+                      F92F3556DF8EE3D8386A0457D978D2414A8F486535A170A8C55F73FD36E126B4
+                      E98D89BDB7D6CCC7B65DA4B2514804028186AB65E9B1BB70F26E6D5904B434EA
+                      DB67D62F482817B27200A92420D034C88B21DABB4F72A2FDE487B99CFDDA7517
+                      B0F01DEE98DA30759D15087129DF034AA200614886477AF9ADFDD7CEB3DDFFAC
+                      FD7103878B6BAF2960D176A6442704376BC8866CAFBDFCAB0DF416E724D3A18F
+                      E3B104FDD98BA0140A05866228D3CBA9D3A7F69FEF761F3BFE029952FDAF28A0
+                      F54D42A4CC97AD58646343CD8480D43CDA4F74BD0DCE13FEBCE6775991AA89CD
+                      CED9C378EE204A294440313C3440477BF78E236B78EE6A0B14A582F7ED627D55
+                      32F44A3C159E180858788E44370497FA06E9EC18A8FB613DDDA3B90FEEA9E8AC
+                      AB8F4D72F39757AE07209FCFD3F97BDF966F9F61E3D5C84B3AD0FA897138DD18
+                      BA5F3334F2F60839270728842B08546944C2FAEBE03D0DB07817ABA309635226
+                      3F8CE75E1689A3F8EB8FCC8EB190438973407AF2FBCE2147BA9E8B121E527948
+                      249EF4509A2414379FBAFB03AA002A63FA1BBA25705D17A14B14928B1DC3078E
+                      3C29AF6ABB1F257F41D34EA65546CDAD136ACD25BAA9E1DAF272B2004DD7B870
+                      6AF0592FCFA1F4F450876E69485761981AFDDD99335FACF2A68D951C402F15FC
+                      F373FACEECF576A79BEC5C20A8B75821032515522AB4800057CE3582ACAC8C59
+                      29CF9198964EB6DFA1A7CBBEB3EB2003E31150D2013FEEDD494BB4C6DA1D4D56
+                      24A504E949842610029454E8868693F7387F7AE8F1EFD6F1E978C8C724006071
+                      1BE92A61B6451391050281E72944A15208B870AE77DFA1D5EAA1F1928F59C028
+                      567D631E88C5A3CBBC41132915BA29C8E62E657BF299D4970F943E68AE8571DD
+                      867B9AEDE5677FE96F0B26C03482E8550E9DC7336BFF2FF995204A0C0DDF865D
+                      B1CFFAF95555A7967E14F8DA57A3F946A91E25DDD68B0802BE51010481101006
+                      22401AA8FEFB98A779E1CC6D475F74B73919060B3901A0B2506301662166147A
+                      EB45E234FF6A479F755F4CF7CDA3022D2009B8C048A1B906F40076A18F0264D1
+                      AC7CEFD267802AE5CA4DDC58F817759D9AB09B54D81F0000000049454E44AE42
+                      6082}
+                    FileName = 'C:\DSD\ProjectMobile\img\Check.png'
+                  end>
+                Align = Client
+                HitTest = False
+                Size.Width = 33.000000000000000000
+                Size.Height = 33.000000000000000000
+                Size.PlatformDefault = False
+              end
+            end
+            object lOrderInternalChoice: TLabel
+              Align = Client
+              StyledSettings = [Family, Style, FontColor]
+              Margins.Left = 20.000000000000000000
+              Margins.Right = 20.000000000000000000
+              Size.Width = 263.000000000000000000
+              Size.Height = 33.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Trimming = None
+              TabOrder = 0
+            end
+          end
+          object lwOrderInternalChoice: TListView
+            Touch.InteractiveGestures = [LongTap]
+            OnGesture = lwOrderInternalChoiceGesture
+            ItemAppearanceClassName = 'TDynamicAppearance'
+            ItemEditAppearanceClassName = 'TDynamicAppearance'
+            HeaderAppearanceClassName = 'TListHeaderObjects'
+            FooterAppearanceClassName = 'TListHeaderObjects'
+            Align = Client
+            Size.Width = 336.000000000000000000
+            Size.Height = 451.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            ItemAppearance.ItemHeight = 83
+            ItemAppearance.ItemEditHeight = 45
+            ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+              item
+                AppearanceObjectName = 'Code'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 45.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 41.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Name'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.WordWrap = True
+                Appearance.Width = 200.000000000000000000
+                Appearance.Height = 40.000000000000000000
+                Appearance.PlaceOffset.X = 115.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Article'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.WordWrap = True
+                Appearance.Width = 115.000000000000000000
+                Appearance.Height = 40.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'InvNumberFullLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 85.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 115.000000000000000000
+                Appearance.PlaceOffset.Y = 41.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'InvNumberFull'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 111.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 203.000000000000000000
+                Appearance.PlaceOffset.Y = 41.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'InvNumberFull_OrderClientLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 85.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 114.000000000000000000
+                Appearance.PlaceOffset.Y = 62.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'InvNumberFull_OrderClient'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 111.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 203.000000000000000000
+                Appearance.PlaceOffset.Y = 62.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'AmountLabel'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 40.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 62.000000000000000000
+              end
+              item
+                AppearanceObjectName = 'Amount'
+                AppearanceClassName = 'TTextObjectAppearance'
+                Appearance.Font.Size = 11.000000000000000000
+                Appearance.TextAlign = Leading
+                Appearance.TextVertAlign = Leading
+                Appearance.Width = 40.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 43.000000000000000000
+                Appearance.PlaceOffset.Y = 62.000000000000000000
+              end>
+            ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+              item
+                AppearanceObjectName = 'Text1'
+                AppearanceClassName = 'TTextObjectAppearance'
+              end>
+            ItemAppearanceObjects.HeaderObjects.Text.Visible = False
+            ItemAppearanceObjects.FooterObjects.Text.Visible = False
+            OnDblClick = lwOrderInternalChoiceDblClick
+            CanSwipeDelete = False
+            OnFilter = lwOrderInternalChoiceFilter
+            AutoTapScroll = True
+            SearchVisible = True
+          end
+        end
         object tiInventoryScan: TTabItem
           CustomIcon = <
             item
@@ -20655,7 +20878,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22020,7 +22243,7 @@
                 #1055#1086' '#1072#1083#1092#1086#1074#1080#1090#1091)
               ItemIndex = 0
               Position.X = 8.000000000000000000
-              Position.Y = 4.000000000000000000
+              Position.Y = 5.000000000000000000
               Size.Width = 116.000000000000000000
               Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
@@ -22077,6 +22300,7 @@
               TextSettings.FontColor = xFF005078
               TextSettings.WordWrap = True
               TextSettings.Trimming = None
+              OnClick = bProductionUnionScanSearchClick
             end
             object bProductionUnionScanMode: TSpeedButton
               Anchors = [akLeft, akTop, akRight]
@@ -22344,6 +22568,7 @@
                 AppearanceObjectName = 'InvNumber_OrderClient'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Trailing
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
@@ -22387,7 +22612,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22480,7 +22705,7 @@
               ReadOnly = True
               TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
-              Position.Y = 256.000000000000000000
+              Position.Y = 255.000000000000000000
               Size.Width = 208.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
@@ -22610,7 +22835,7 @@
               Position.X = 186.000000000000000000
               Position.Y = 379.000000000000000000
               Size.Width = 142.000000000000000000
-              Size.Height = 42.000000000000000000
+              Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               TabOrder = 27
@@ -22625,7 +22850,7 @@
               Position.X = 8.000000000000000000
               Position.Y = 379.000000000000000000
               Size.Width = 161.000000000000000000
-              Size.Height = 42.000000000000000000
+              Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'EnterStyle'
               TabOrder = 26
@@ -22743,7 +22968,7 @@
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 2
-              OnChange = pbSLOrderByChange
+              OnChange = pbPULOrderByChange
             end
             object pbPULAllUser: TPopupBox
               Items.Strings = (
@@ -22757,7 +22982,7 @@
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 1
-              OnChange = pbSLOrderByChange
+              OnChange = pbPULOrderByChange
             end
             object pbPULOrderBy: TPopupBox
               Items.Strings = (
@@ -22771,7 +22996,7 @@
               Size.PlatformDefault = False
               StyleLookup = 'PopupBox1Style1'
               TabOrder = 3
-              OnChange = pbSLOrderByChange
+              OnChange = pbPULOrderByChange
             end
             object llwProductionUnionList: TLabel
               Align = Bottom
@@ -22995,6 +23220,7 @@
                 AppearanceObjectName = 'InvNumber_OrderClient'
                 AppearanceClassName = 'TTextObjectAppearance'
                 Appearance.Font.Size = 11.000000000000000000
+                Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Trailing
                 Appearance.TextVertAlign = Leading
                 Appearance.Width = 50.000000000000000000
@@ -23595,6 +23821,10 @@
     OnTimer = TimerInfoViewTimer
     Left = 268
     Top = 362
+  end
+  object ScanCamera: TCameraComponent
+    Left = 264
+    Top = 476
   end
   object acMain: TActionList
     Left = 264
@@ -26108,27 +26338,6 @@
       Control = edPUAmount
       Track = False
     end
-    object LinkControlToField7: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber_OrderClient'
-      Control = edPUInvNumberFull_OrderClient
-      Track = False
-    end
-    object LinkControlToField10: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber'
-      Control = edPUInvNumberFull_ProductionUnion
-      Track = False
-    end
-    object LinkControlToField6: TLinkControlToField
-      Category = 'Quick Bindings'
-      DataSource = BindSourceDB14
-      FieldName = 'InvNumber_OrderInternal'
-      Control = edPUInvNumberFull
-      Track = False
-    end
     object LinkControlToField38: TLinkControlToField
       Category = 'Quick Bindings'
       DataSource = BindSourceDB14
@@ -26142,6 +26351,71 @@
       FieldName = 'ToName'
       Control = edPUToName
       Track = False
+    end
+    object LinkControlToField7: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull_OrderClient'
+      Control = edPUInvNumberFull_OrderClient
+      Track = False
+    end
+    object LinkControlToField6: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull_OrderInternal'
+      Control = edPUInvNumberFull
+      Track = False
+    end
+    object LinkControlToField10: TLinkControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB14
+      FieldName = 'InvNumberFull'
+      Control = edPUInvNumberFull_ProductionUnion
+      Track = False
+    end
+    object LinkListControlToField9: TLinkListControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB1
+      Control = lwOrderInternalChoice
+      FillExpressions = <
+        item
+          SourceMemberName = 'GoodsCode'
+          ControlMemberName = 'Code'
+        end
+        item
+          SourceMemberName = 'GoodsName'
+          ControlMemberName = 'Name'
+        end
+        item
+          SourceMemberName = 'Article'
+          ControlMemberName = 'Article'
+        end
+        item
+          SourceMemberName = 'InvNumberFull'
+          ControlMemberName = 'InvNumberFull'
+        end
+        item
+          SourceMemberName = 'InvNumberLabel'
+          ControlMemberName = 'InvNumberFullLabel'
+        end
+        item
+          SourceMemberName = 'InvNumber_OrderClientLabel'
+          ControlMemberName = 'InvNumberFull_OrderClientLabel'
+        end
+        item
+          SourceMemberName = 'InvNumberFull_OrderClient'
+          ControlMemberName = 'InvNumberFull_OrderClient'
+        end
+        item
+          SourceMemberName = 'AmountLabel'
+          ControlMemberName = 'AmountLabel'
+        end
+        item
+          SourceMemberName = 'Amount'
+          ControlMemberName = 'Amount'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
     end
   end
   object BindSourceDB2: TBindSourceDB
@@ -26212,6 +26486,12 @@
   end
   object BindSourceDB14: TBindSourceDB
     DataSet = DM.cdsProductionUnionItemEdit
+    ScopeMappings = <>
+    Left = 160
+    Top = 472
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DM.cdsOrderInternalChoice
     ScopeMappings = <>
     Left = 160
     Top = 248

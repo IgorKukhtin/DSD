@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_TranslateObject(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LanguageId Integer, LanguageName TVarChar
              , ObjectId Integer, ObjectName TVarChar, ObjectDescName TVarChar
+             , Comment TVarChar
              , InsertName TVarChar
              , InsertDate TDateTime
              , isErased Boolean)
@@ -38,12 +39,17 @@ BEGIN
 
            , Object_Object.Id                   AS ObjectId
            , Object_Object.ValueData            AS ObjectName
-           , ObjectDesc.ItemName                AS ObjectDescName
+           , ObjectDesc.ItemName                AS ObjectDescName 
+           
+           , ObjectString_Comment.ValueData     AS Comment
 
            , Object_Insert.ValueData            AS InsertName
            , ObjectDate_Insert.ValueData        AS InsertDate
            , Object_TranslateObject.isErased    AS isErased
        FROM Object AS Object_TranslateObject
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_TranslateObject.Id
+                                AND ObjectString_Comment.DescId = zc_ObjectString_TranslateObject_Comment()
 
           LEFT JOIN ObjectLink AS ObjectLink_Language
                                ON ObjectLink_Language.ObjectId = Object_TranslateObject.Id
@@ -79,8 +85,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.29         *
  17.02.22         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_TranslateObject (inLanguageId:=178, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_TranslateObject (inLanguageId:=178, inObjectDescId:=0, inIsShowAll:= TRUE, inSession:= zfCalc_UserAdmin())

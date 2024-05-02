@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbId         Integer;
    DECLARE vbStatusId   Integer;
+   DECLARE vbDescId     Integer;
    DECLARE vbInvNumber  TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -24,23 +25,80 @@ BEGIN
      IF SUBSTRING(inBarCode, 1, 4) = zc_BarCodePref_Movement()
      THEN
 
-       SELECT Movement.Id, Movement.StatusId, Movement.InvNumber
-       INTO vbId, vbStatusId, vbInvNumber
+       SELECT Movement.Id, Movement.StatusId, Movement.InvNumber, Movement.DescId
+       INTO vbId, vbStatusId, vbInvNumber, vbDescId
        FROM Movement
-       WHERE Movement.DescId  = zc_Movement_OrderClient()
+       WHERE Movement.DescId  IN (zc_Movement_OrderClient(), zc_Movement_OrderInternal())
          AND Movement.Id = SUBSTRING(inBarCode, 5, 8)::Integer;     
 
      ELSEIF COALESCE(inBarCode, '') = '' AND COALESCE(inInvNumber, '') <> ''
      THEN
 
-       SELECT Movement.Id, Movement.StatusId, Movement.InvNumber
-       INTO vbId, vbStatusId, vbInvNumber
+       SELECT Movement.Id, Movement.StatusId, Movement.InvNumber, Movement.DescId
+       INTO vbId, vbStatusId, vbInvNumber, vbDescId
        FROM Movement
-       WHERE Movement.DescId  = zc_Movement_OrderClient()
-         AND Movement.InvNumber = TRIM(inInvNumber);     
+       WHERE Movement.DescId IN (zc_Movement_OrderClient(), zc_Movement_OrderInternal())
+         AND Movement.InvNumber = TRIM(inInvNumber)
+       ORDER BY CASE WHEN Movement.DescId = zc_Movement_OrderClient() THEN 0 ELSE 1 END
+       LIMIT 1;     
 
      ELSE
        vbId := 0;
+     END IF;
+     
+     IF COALESCE (vbId, 0) <> 0 AND vbDescId = zc_Movement_OrderInternal()
+     THEN
+     
+       IF COALESCE((SELECT COUNT(DISTINCT MIFloat_MovementId.ValueData)
+                    FROM MovementItem 
+                    
+                         INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                      ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                     AND COALESCE (MIFloat_MovementId.ValueData, 0) <> 0
+                                     
+                    WHERE MovementItem.MovementId = vbId
+                      AND MovementItem.DescId     = zc_MI_Master()), 0)  = 1     
+       THEN
+       
+         SELECT MIFloat_MovementId.ValueData::Integer
+         INTO vbId
+         FROM MovementItem 
+                        
+              INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                          AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                          AND COALESCE (MIFloat_MovementId.ValueData, 0) <> 0
+                                         
+         WHERE MovementItem.MovementId = vbId
+           AND MovementItem.DescId     = zc_MI_Master()
+         LIMIT 1;
+       
+       ELSEIF COALESCE((SELECT COUNT(DISTINCT MIFloat_MovementId.ValueData)
+                        FROM MovementItem 
+                        
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                          ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                                         AND COALESCE (MIFloat_MovementId.ValueData, 0) <> 0
+                                         
+                        WHERE MovementItem.MovementId = vbId
+                          AND MovementItem.DescId     = zc_MI_Master()), 0)  > 1     
+       THEN
+         IF COALESCE(inBarCode, '') = ''
+         THEN
+           RAISE EXCEPTION 'Ошибка. В заказе на производство c номером <%> более одной связи на заказ покупателя.', inInvNumber;
+         ELSE
+           RAISE EXCEPTION 'Ошибка. В заказе на производство по Ш/К <%> более одной связи на заказ покупателя.', inBarCode;       
+         END IF;              
+       ELSE
+         IF COALESCE(inBarCode, '') = ''
+         THEN
+           RAISE EXCEPTION 'Ошибка. В заказе на производство c номером <%> нет связей на заказ покупателя.', inInvNumber;
+         ELSE
+           RAISE EXCEPTION 'Ошибка. В заказе на производство по Ш/К <%> нет связей на заказ покупателя.', inBarCode;       
+         END IF;       
+       END IF;                                                  
      END IF;
      
      IF COALESCE (vbId, 0) = 0
@@ -79,4 +137,4 @@ $BODY$
 -- тест
 -- 
 
-select * from gpGet_Movement_MobilebyOrderClient(inBarCode := '223000000908' , inInvNumber := '' ,  inSession := '5');
+select * from gpGet_Movement_MobilebyOrderClient(inBarCode := '223000000813' , inInvNumber := '' ,  inSession := '5');

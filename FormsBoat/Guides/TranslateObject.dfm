@@ -26,9 +26,6 @@ object TranslateObjectForm: TTranslateObjectForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 26
-    ExplicitWidth = 627
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -85,6 +82,15 @@ object TranslateObjectForm: TTranslateObjectForm
         Options.Editing = False
         Width = 103
       end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' "'#1087#1088#1080#1084#1077#1095#1072#1085#1080#1103'" '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 207
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -124,7 +130,7 @@ object TranslateObjectForm: TTranslateObjectForm
     Width = 740
     Height = 33
     Align = alTop
-    TabOrder = 5
+    TabOrder = 3
     object cxLabel1: TcxLabel
       Left = 9
       Top = 7
@@ -622,6 +628,7 @@ object TranslateObjectForm: TTranslateObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

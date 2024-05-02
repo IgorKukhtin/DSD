@@ -10,7 +10,7 @@ RETURNS TFloat
 AS
 $BODY$
 BEGIN
-     IF inDiscountTax <> 0
+     IF inDiscountTax <> 0 AND <> 
      THEN
          -- округлили до 2-х знаков
          RETURN CAST (COALESCE (inSumm, 0.0) * (1 - COALESCE (inDiscountTax, 0.0) / 100) AS NUMERIC (16, 2));

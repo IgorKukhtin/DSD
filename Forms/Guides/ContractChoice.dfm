@@ -418,6 +418,19 @@ inherited ContractChoiceForm: TContractChoiceForm
           ComponentItem = 'EndDate'
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end
+        item
+          Value = Null
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContractKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
     end
     object actShowAll: TBooleanStoredProcAction

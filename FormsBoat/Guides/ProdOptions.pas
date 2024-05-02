@@ -111,6 +111,18 @@ type
     cxLabel1: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPriceList: TdsdGuides;
+    cxLabel2: TcxLabel;
+    edLanguage1: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edLanguage2: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edLanguage3: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    edLanguage4: TcxButtonEdit;
+    GuidesLanguage4: TdsdGuides;
+    GuidesLanguage3: TdsdGuides;
+    GuidesLanguage2: TdsdGuides;
+    GuidesLanguage1: TdsdGuides;
   private
     { Private declarations }
   public

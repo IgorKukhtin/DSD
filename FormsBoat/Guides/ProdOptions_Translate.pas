@@ -1,4 +1,4 @@
-unit ProdColor;
+unit ProdOptions_Translate;
 
 interface
 
@@ -22,11 +22,12 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ExtCtrls,
-  dsdGuides;
+  cxCurrencyEdit, cxContainer, dsdGuides, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, Vcl.Menus, Vcl.StdCtrls, cxButtons, Vcl.ExtCtrls, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
-  TProdColorForm = class(TParentForm)
+  TProdOptions_TranslateForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -60,15 +61,50 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     actProtocol: TdsdOpenForm;
     bbProtocolOpenForm: TdxBarButton;
-    actShowAll: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Comment: TcxGridDBColumn;
     spUnErased: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    Value: TcxGridDBColumn;
-    Colors: TcxGridDBColumn;
-    Color_Value: TcxGridDBColumn;
+    cxLabel6: TcxLabel;
+    edProdModel: TcxButtonEdit;
+    GuidesProdModel: TdsdGuides;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    bbModel: TdxBarControlContainerItem;
+    FormParams: TdsdFormParams;
+    RefreshDispatcher: TRefreshDispatcher;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    dxBarControlContainerItem3: TdxBarControlContainerItem;
+    actChoiceFormGoods: TOpenChoiceForm;
+    actChoiceFormModel: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
+    SalePrice: TcxGridDBColumn;
+    SalePriceWVAT: TcxGridDBColumn;
+    MaterialOptionsName: TcxGridDBColumn;
+    Id_Site: TcxGridDBColumn;
+    CodeVergl: TcxGridDBColumn;
+    ProdColorPatternName: TcxGridDBColumn;
+    actChoiceFormProdColorPattern: TOpenChoiceForm;
+    NPP: TcxGridDBColumn;
+    NPP_pcp: TcxGridDBColumn;
+    actChoiceFormProdColor_goods: TOpenChoiceForm;
+    actChoiceFormProdOptions_ñomment: TOpenChoiceForm;
+    actInsertMask: TdsdInsertUpdateAction;
+    bbInsertMask: TdxBarButton;
+    Panel_btn: TPanel;
+    btnInsert: TcxButton;
+    btnUpdate: TcxButton;
+    btnChoiceGuides: TcxButton;
+    btnSetErased: TcxButton;
+    btnFormClose: TcxButton;
+    actFormClose: TdsdFormClose;
+    actSetNull_GuidesModel: TdsdSetDefaultParams;
+    btnSetNull_GuidesClient: TcxButton;
+    btnClientChoiceForm: TcxButton;
+    actModelChoiceForm: TOpenChoiceForm;
     Panel2: TPanel;
+    bbPriceListGoods: TdxBarButton;
+    GuidesPriceList: TdsdGuides;
     cxLabel2: TcxLabel;
     edLanguage1: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -81,8 +117,14 @@ type
     GuidesLanguage2: TdsdGuides;
     GuidesLanguage3: TdsdGuides;
     GuidesLanguage4: TdsdGuides;
-    spInsertUpdate: TdsdStoredProc;
-    RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    edPriceList: TcxButtonEdit;
+    dxBarControlContainerItem4: TdxBarControlContainerItem;
+    dxBarControlContainerItem5: TdxBarControlContainerItem;
+    Value1: TcxGridDBColumn;
+    Value2: TcxGridDBColumn;
+    Value3: TcxGridDBColumn;
+    Value4: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -94,6 +136,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProdColorForm);
+  RegisterClass(TProdOptions_TranslateForm);
 
 end.

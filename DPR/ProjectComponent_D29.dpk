@@ -28,11 +28,11 @@ package ProjectComponent_D29;
 {$IMPLICITBUILD ON}
 
 requires
+  VCL,
+  vclx,
   rtl,
   vclimg,
-  vcl,
   xmlrtl,
-  vclx,
   soaprtl,
   inet,
   dsnap,
@@ -157,6 +157,11 @@ contains
   PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
   DOCUMENTINVOICE_PRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_PRN_XML.pas',
   DOCUMENTINVOICE_TN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_TN_XML.pas',
-  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas';
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
+  PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
 
 end.

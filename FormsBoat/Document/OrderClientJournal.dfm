@@ -1641,6 +1641,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end>
       Params = <
         item
@@ -1819,6 +1820,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end
         item
           DataSet = PrintItemsColorCDS
@@ -1870,6 +1872,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end>
       Params = <
         item
@@ -2020,6 +2023,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
         end
         item
           DataSet = PrintItemsColorCDS

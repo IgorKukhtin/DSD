@@ -96,8 +96,8 @@ object MailSendEditForm: TMailSendEditForm
     Width = 273
   end
   object cxLabel6: TcxLabel
-    Left = 10
-    Top = 192
+    Left = 8
+    Top = 188
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edComment: TcxTextEdit

@@ -14,13 +14,13 @@ RETURNS TABLE (Id Integer, MovementId Integer
 
              , Amount TFloat, TotalCount TFloat, AmountRemains TFloat
              
-             , OperDate TDateTime, InvNumber TVarChar, StatusCode Integer, StatusName TVarChar
+             , OperDate TDateTime, InvNumber TVarChar, InvNumberFull TVarChar, StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              
              , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
-             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
-             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, StatusCode_OrderClient Integer, StatusName_OrderClient TVarChar
+             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, InvNumberFull_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
              , isErased Boolean
               )
 AS
@@ -50,6 +50,7 @@ BEGIN
            
            , tmpMI.OperDate
            , tmpMI.InvNumber
+           , tmpMI.InvNumberFull
            , tmpMI.StatusCode
            , tmpMI.StatusName
            
@@ -66,9 +67,13 @@ BEGIN
 
            , tmpMI.MovementId_OrderClient
            , tmpMI.InvNumber_OrderClient
+           , tmpMI.InvNumberFull_OrderClient
+           , tmpMI.StatusCode_OrderClient
+           , tmpMI.StatusName_OrderClient
 
            , tmpMI.OperDate_OrderInternal
            , tmpMI.InvNumber_OrderInternal
+           , tmpMI.InvNumberFull_OrderInternal
            , tmpMI.StatusCode_OrderInternal
            , tmpMI.StatusName_OrderInternal
 

@@ -19,9 +19,9 @@ object TaxKindEditForm: TTaxKindEditForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 63
     Width = 830
-    Height = 350
+    Height = 313
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -94,6 +94,62 @@ object TaxKindEditForm: TTaxKindEditForm
         HeaderAlignmentVert = vaCenter
         Width = 156
       end
+      object Value1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1'
+        DataBinding.FieldName = 'Value1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object Value2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2'
+        DataBinding.FieldName = 'Value2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object Value3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3'
+        DataBinding.FieldName = 'Value3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object Value4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4'
+        DataBinding.FieldName = 'Value4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object ValueComment1: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 1 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment1'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object ValueComment2: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 2 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment2'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object ValueComment3: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 3 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object ValueComment4: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1074#1086#1076' 4 ('#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+        DataBinding.FieldName = 'ValueComment4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
       object InsertDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertDate'
@@ -132,6 +188,82 @@ object TaxKindEditForm: TTaxKindEditForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 830
+    Height = 37
+    Align = alTop
+    TabOrder = 5
+    object cxLabel2: TcxLabel
+      Left = 8
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 1:'
+    end
+    object edLanguage1: TcxButtonEdit
+      Left = 69
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 3
+      Width = 130
+    end
+    object cxLabel3: TcxLabel
+      Left = 204
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 2:'
+    end
+    object cxLabel4: TcxLabel
+      Left = 402
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 3:'
+    end
+    object edLanguage2: TcxButtonEdit
+      Left = 266
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Width = 130
+    end
+    object edLanguage3: TcxButtonEdit
+      Left = 464
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 130
+    end
+    object cxLabel5: TcxLabel
+      Left = 602
+      Top = 10
+      Caption = #1055#1077#1088#1077#1074#1086#1076' 4:'
+    end
+    object edLanguage4: TcxButtonEdit
+      Left = 664
+      Top = 9
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 130
     end
   end
   object DataSource: TDataSource
@@ -391,6 +523,9 @@ object TaxKindEditForm: TTaxKindEditForm
       StoredProcList = <
         item
           StoredProc = spUpdate
+        end
+        item
+          StoredProc = spInsertUpdate_translate
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -403,7 +538,39 @@ object TaxKindEditForm: TTaxKindEditForm
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inLanguageId1'
+        Value = Null
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = Null
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = Null
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = Null
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 88
     Top = 128
@@ -461,6 +628,7 @@ object TaxKindEditForm: TTaxKindEditForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 104
     Top = 248
@@ -563,5 +731,246 @@ object TaxKindEditForm: TTaxKindEditForm
     PackSize = 1
     Left = 304
     Top = 104
+  end
+  object GuidesLanguage1: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage1
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 120
+  end
+  object GuidesLanguage2: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage2
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 312
+    Top = 8
+  end
+  object GuidesLanguage3: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage3
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 536
+  end
+  object GuidesLanguage4: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edLanguage4
+    FormNameParam.Value = 'TLanguageForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TLanguageForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 704
+  end
+  object spInsertUpdate_translate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Translate_Comment'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId1'
+        Value = ''
+        Component = GuidesLanguage1
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId2'
+        Value = ''
+        Component = GuidesLanguage2
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId3'
+        Value = ''
+        Component = GuidesLanguage3
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLanguageId4'
+        Value = ''
+        Component = GuidesLanguage4
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Value4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueComment1'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ValueComment1'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueComment2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ValueComment2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueComment3'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ValueComment3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValueComment4'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ValueComment4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = 'zc_Object_TaxKind'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 536
+    Top = 144
   end
 end

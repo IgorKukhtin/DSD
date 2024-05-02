@@ -19,13 +19,13 @@ RETURNS TABLE (Id Integer, MovementId Integer
 
              , Amount TFloat, TotalCount TFloat, AmountRemains TFloat
              
-             , OperDate TDateTime, InvNumber TVarChar, StatusCode Integer, StatusName TVarChar
+             , OperDate TDateTime, InvNumber TVarChar, InvNumberFull TVarChar, StatusCode Integer, StatusName TVarChar
              , FromId Integer, FromCode Integer, FromName TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              
              , OrdUser Integer, OperDate_protocol TDateTime, UserName_protocol TVarChar
-             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar
-             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
+             , MovementId_OrderClient Integer, InvNumber_OrderClient TVarChar, InvNumberFull_OrderClient TVarChar, StatusCode_OrderClient Integer, StatusName_OrderClient TVarChar
+             , OperDate_OrderInternal TDateTime, InvNumber_OrderInternal TVarChar, InvNumberFull_OrderInternal TVarChar, StatusCode_OrderInternal Integer, StatusName_OrderInternal TVarChar
              , isErased Boolean
               )
 AS
@@ -56,10 +56,11 @@ BEGIN
                                                                ON MLO_To.MovementId = Movement.Id
                                                               AND MLO_To.DescId     = zc_MovementLinkObject_To()
                             WHERE Movement.DescId   = zc_Movement_ProductionUnion()
-                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                              AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inisErased = TRUE)
                               AND Movement.OperDate = CURRENT_DATE) 
        
           , tmpMI AS (SELECT MovementItem.Id
+                           , MovementItem.ParentId
                            , MovementItem.ObjectId                          AS GoodsId
                            , Movement.Id                                    AS MovementId
                            , Movement.OperDate
@@ -69,41 +70,65 @@ BEGIN
                            , Movement.ToId
                            , MovementItem.Amount
                            , MIFloat_MovementId.ValueData :: Integer        AS MovementId_OrderClient
-                           , MIFloat_MovementItemId.ValueData::Integer      AS MovementItemId_OrderInternal
-                           , M_OrderInternal.Id                             AS MovementId_OrderInternal
-                           , M_OrderInternal.OperDate                       AS OperDate_OrderInternal
-                           , M_OrderInternal.InvNumber                      AS InvNumber_OrderInternal
-                           , M_OrderInternal.StatusId                       AS StatusId_OrderInternal
                            , MovementItem.isErased
                       FROM tmpMovement AS Movement
                       
+
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                  AND MovementItem.DescId     = zc_MI_Scan()
-                                                  AND (MovementItem.isErased  = False OR inisErased = TRUE)
+                                                  AND MovementItem.DescId     = zc_MI_Scan()                                                  
+
+                           LEFT JOIN MovementItem AS MI_Master
+                                                  ON MI_Master.Id         = MovementItem.ParentId
+                                                 AND MI_Master.MovementId = MovementItem.MovementId
+                                                 AND MI_Master.DescId     = zc_MI_Master() 
 
                            LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                                       ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                       ON MIFloat_MovementId.MovementItemId = MI_Master.Id
                                                       AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-                                                      
-                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                       ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_MovementItemId.DescId         = zc_MIFloat_MovementItemId()
-                            
-                           LEFT JOIN MovementItem AS MI_OrderInternal
-                                                  ON MI_OrderInternal.Id     = MIFloat_MovementItemId.ValueData::Integer
-                                                 AND MI_OrderInternal.DescId = zc_MI_Master() 
-
-                           LEFT JOIN Movement AS M_OrderInternal 
-                                              ON M_OrderInternal.Id = MI_OrderInternal.MovementId 
-                                             AND M_OrderInternal.descid = zc_Movement_ProductionUnion() 
-                                                      
+                                                                                                            
                      )
+
+         , tmpOrderInternal AS (SELECT MovementItem.Id 
+                                     , MI_Master.ObjectId                             AS GoodsId
+                                     , OI.Id                                          AS MovementId
+                                     , OI.OperDate
+                                     , OI.InvNumber
+                                     , OI.StatusId
+                                     , MI_Master.Amount
+                                     , MovementItem.isErased
+                                FROM tmpMI AS MovementItem 
+
+                                     INNER JOIN MovementItem AS MI_Master
+                                                             ON MI_Master.Id         = MovementItem.ParentId
+                                                            AND MI_Master.MovementId = MovementItem.MovementId
+                                                            AND MI_Master.DescId     = zc_MI_Master() 
+                                                            AND MI_Master.isErased   = FALSE
+
+                                     INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                  ON MIFloat_MovementId.MovementItemId = MI_Master.Id
+                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+                                        
+                                     INNER JOIN MovementItem AS MI_Master_OI
+                                                             ON MI_Master_OI.ObjectId   = MI_Master.ObjectId
+                                                            AND MI_Master_OI.DescId = zc_MI_Master() 
+                                                            AND MI_Master_OI.isErased   = FALSE
+
+                                     INNER JOIN MovementItemFloat AS MIFloat_OI
+                                                                  ON MIFloat_OI.MovementItemId = MI_Master_OI.Id
+                                                                 AND MIFloat_OI.DescId         = zc_MIFloat_MovementId()
+                                                                 AND MIFloat_OI.valuedata      = MIFloat_MovementId.valuedata
+
+                                     INNER JOIN Movement AS OI ON OI.Id = MI_Master_OI.MovementId 
+                                                              AND OI.descid = zc_Movement_OrderInternal() 
+                                                              AND OI.StatusId <> zc_Enum_Status_Erased()
+                                                                                                        
+                                )
 
          , tmpRemains AS (SELECT Container.ObjectId            AS GoodsId
                                , Container.WhereObjectId       AS UnitId
                                , Sum(Container.Amount)::TFloat AS Remains
                           FROM Container
-                          WHERE Container.WhereObjectId IN (SELECT DISTINCT tmpMovement.FromId FROM tmpMovement)
+                          WHERE Container.WhereObjectId IN (SELECT DISTINCT tmpMovement.ToId FROM tmpMovement)
                             AND Container.DescId        = zc_Container_Count()
                             AND Container.ObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
                             AND Container.Amount <> 0
@@ -181,6 +206,7 @@ BEGIN
 
            , tmpMI.OperDate
            , tmpMI.InvNumber
+           , zfCalc_InvNumber_isErased ('', tmpMI.InvNumber, tmpMI.OperDate, tmpMI.StatusId) AS InvNumberFull
            , Object_Status.ObjectCode            AS StatusCode
            , Object_Status.ValueData             AS StatusName
            
@@ -197,9 +223,13 @@ BEGIN
 
            , Movement_OrderClient.Id                     AS MovementId_OrderClient
            , Movement_OrderClient.InvNumber              AS InvNumber_OrderClient
+           , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
+           , Object_Status_OrderClient.ObjectCode      AS StatusCode_OrderInternal
+           , Object_Status_OrderClient.ValueData       AS StatusName_OrderInternal
 
-           , tmpMI.OperDate_OrderInternal
-           , tmpMI.InvNumber_OrderInternal
+           , OrderInternal.OperDate                      AS OperDate_OrderInternal
+           , OrderInternal.InvNumber                     AS InvNumber_OrderInternal
+           , zfCalc_InvNumber_isErased ('', OrderInternal.InvNumber, OrderInternal.OperDate, OrderInternal.StatusId) AS InvNumberFull_OrderInternal
            , Object_Status_OrderInternal.ObjectCode      AS StatusCode_OrderInternal
            , Object_Status_OrderInternal.ValueData       AS StatusName_OrderInternal
 
@@ -207,10 +237,12 @@ BEGIN
 
        FROM tmpMI
 
+            LEFT JOIN tmpOrderInternal AS OrderInternal ON OrderInternal.Id = tmpMI.Id
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpMI.StatusId
-            LEFT JOIN Object AS Object_Status_OrderInternal ON Object_Status_OrderInternal.Id = tmpMI.StatusId_OrderInternal
+            LEFT JOIN Object AS Object_Status_OrderInternal ON Object_Status_OrderInternal.Id = OrderInternal.StatusId
             
             LEFT JOIN tmpData ON tmpData.Id = tmpMI.Id
                               
@@ -237,10 +269,11 @@ BEGIN
                                   AND ObjectString_EAN.DescId   = zc_ObjectString_EAN()
 
             LEFT JOIN tmpRemains ON tmpRemains.GoodsId    = tmpMI.GoodsId
-                                AND tmpRemains.UnitId     = tmpMI.FromId
+                                AND tmpRemains.UnitId     = tmpMI.ToId
 
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
- 
+            LEFT JOIN Object AS Object_Status_OrderClient ON Object_Status_OrderClient.Id = Movement_OrderClient.StatusId
+
        WHERE (tmpData.UserId_protocol = vbUserId OR inIsAllUser = TRUE)
          AND (COALESCE(inFilter, '') = '' OR Object_Goods.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
                                           OR ObjectString_Article.ValueData ILIKE '%'||COALESCE(inFilter, '')||'%' 
@@ -262,5 +295,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_MovementItem_MobileProductionUnion (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MovementItem_MobileProductionUnion (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin());
