@@ -318,10 +318,12 @@ begin
     with spSelectPrint do
     begin
        ParamByName('inObjectId').Value:=CDS.FieldByName('Id').asInteger;
+       ParamByName('inRetailId').Value:=0;
 
        ParamByName('inIsJPG').Value   := FALSE;
        //ParamByName('inIsJPG').Value   := TRUE;
        ParamByName('inIsLength').Value:= FALSE;
+       ParamByName('inIs70_70').Value:= cb_70_70.Checked;
 
        //1 - печатать дату нач/конечн произв-ва на этикетке
        ParamByName('inIsStartEnd').Value     := ParamsMI.ParamByName('isStartEnd_Sticker').AsBoolean;

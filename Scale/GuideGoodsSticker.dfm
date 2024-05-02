@@ -673,6 +673,7 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 408
     Top = 392
@@ -906,6 +907,12 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRetailId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsJPG'
         Value = False
         DataType = ftBoolean
@@ -915,6 +922,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
       item
         Name = 'inIsLength'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIs70_70'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
