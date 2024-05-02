@@ -48,6 +48,8 @@ type
     spUpdateMISummAdd: TdsdStoredProc;
     actUpdateMISummAdd: TdsdExecStoredProc;
     bbUpdateMISummAdd: TdxBarButton;
+    mactUpdateMISummAdd_list: TMultiAction;
+    mactUpdateMISummAdd: TMultiAction;
   private
     { Private declarations }
   public

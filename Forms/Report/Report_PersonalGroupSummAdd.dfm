@@ -350,6 +350,31 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
           StoredProc = spUpdateMISummAdd
         end>
       Caption = #1055#1077#1088#1077#1085#1077#1089#1090#1080
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080' '#1074' '#1042#1077#1076#1086#1084#1086#1089#1090#1100
+      ImageIndex = 30
+    end
+    object mactUpdateMISummAdd_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMISummAdd
+        end>
+      View = cxGridDBTableView
+      Caption = 'mactUpdateMISummAdd_list'
+      ImageIndex = 30
+    end
+    object mactUpdateMISummAdd: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdateMISummAdd_list
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1089#1090#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080' '#1074' '#1042#1077#1076#1086#1084#1086#1089#1090#1100'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
+      Caption = 'mactUpdateMISummAdd_list'
+      Hint = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1080' '#1074' '#1042#1077#1076#1086#1084#1086#1089#1090#1100
       ImageIndex = 30
     end
   end
@@ -451,7 +476,7 @@ inherited Report_PersonalGroupSummAddForm: TReport_PersonalGroupSummAddForm
       Category = 0
     end
     object bbUpdateMISummAdd: TdxBarButton
-      Action = actUpdateMISummAdd
+      Action = mactUpdateMISummAdd
       Category = 0
     end
   end
