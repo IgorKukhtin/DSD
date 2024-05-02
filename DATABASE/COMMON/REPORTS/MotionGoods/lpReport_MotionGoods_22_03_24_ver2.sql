@@ -661,14 +661,14 @@ end if;
             LEFT JOIN Container ON Container.Id = _tmpListContainer.ContainerId_count
             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = _tmpListContainer.ContainerId_begin
                                                           AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpListContainer.ContainerId_begin
-                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
             LEFT JOIN ContainerLinkObject AS CLO_AssetTo ON CLO_AssetTo.ContainerId = _tmpListContainer.ContainerId_begin
                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
             LEFT JOIN ContainerLinkObject AS CLO_Car ON CLO_Car.ContainerId = _tmpListContainer.ContainerId_begin
                                                     AND CLO_Car.DescId = zc_ContainerLinkObject_Car()
             LEFT JOIN ContainerLinkObject AS CLO_Unit ON CLO_Unit.ContainerId = _tmpListContainer.ContainerId_begin
                                                      AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = _tmpListContainer.ContainerId_begin
+                                                             AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
        ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!

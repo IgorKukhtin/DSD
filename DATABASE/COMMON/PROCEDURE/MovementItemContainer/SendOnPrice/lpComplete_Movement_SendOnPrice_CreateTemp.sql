@@ -17,6 +17,7 @@ BEGIN
      ELSE
          -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
          CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, isLossMaterials Boolean, isRestoreAccount_60000 Boolean, isAccount_60000 Boolean, MIContainerId_To BigInt
+                                       , ContainerId_GoodsFrom Integer
                                        , ContainerId_Transit Integer
                                        , ContainerId_Transit_01 Integer, ContainerId_Transit_02 Integer
                                        , ContainerId_Transit_51 Integer, ContainerId_Transit_52 Integer, ContainerId_Transit_53 Integer
@@ -39,6 +40,7 @@ BEGIN
                                    , PartionGoodsId_From Integer, PartionGoodsId_To Integer
                                    , UnitId_To Integer, MemberId_To Integer, BranchId_To Integer, AccountDirectionId_To Integer, IsPartionDate_UnitTo Boolean, JuridicalId_Basis_To Integer
                                    , WhereObjectId_Analyzer_To Integer, isTo_10900 Boolean
+                                   , OperCount_start TFloat, OperCount_ChangePercent_start TFloat, OperCount_Partner_start TFloat
                                     ) ON COMMIT DROP;
      END IF;
 

@@ -466,7 +466,8 @@ BEGIN
                                        , tmpMIContainer_all.GoodsKindId
                                        , tmpMIContainer_all.AssetToId
 
-                                       , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer) ELSE NULL END ::Integer  AS PartionGoodsId
+                                       , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE NULL END ::Integer AS PartionGoodsId
+
                                        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
                                                    THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                      || Object_PartionCell.ValueData || ' '
@@ -491,16 +492,32 @@ BEGIN
                                                                                          , inStorageName     := Object_Storage.ValueData                  -- Место хранения
                                                                                          , inGoodsName       := ''                                        -- Товар
                                                                                           )
+                                              -- для РК
+                                              WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK() 
+                                                   THEN ''
+ 
                                               ELSE COALESCE (Object_PartionGoods.ValueData, '')
                                          END :: TVarChar AS PartionGoodsName
  
-                                       , Object_PartionGoods.ValueData            :: TVarChar  AS InvNumber_Partion
+
+  
+                                       , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionGoods.ValueData ELSE NULL END :: TVarChar  AS InvNumber_Partion
+
                                        , CASE WHEN inIsOperDate_Partion = TRUE THEN ObjectDate_PartionGoods_Value.ValueData ELSE NULL END :: TDateTime AS OperDate_Partion
                                        , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
                                        , Object_Storage.ValueData                 :: TVarChar  AS Storage_Partion
-                                       , (COALESCE (Object_Unit.ValueData, '') 
-                                          || CASE WHEN tmpMIContainer_all.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = '' THEN ' ' || COALESCE (tmpMIContainer_all.PartionGoodsId, 0) :: TVarChar ELSE '' END
+
+                                       , (COALESCE (Object_Unit.ValueData, '')
+                                          || CASE -- для РК
+                                                  WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK()
+                                                       THEN ''
+                                                  --
+                                                  WHEN tmpMIContainer_all.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = ''
+                                                       THEN ' id=' || COALESCE (tmpMIContainer_all.PartionGoodsId, 0)
+                                                  ELSE ''
+                                             END
                                          ) :: TVarChar AS Unit_Partion
+
                                        , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
                                        , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
          
@@ -829,7 +846,8 @@ BEGIN
                                         , tmpMIContainer_all.GoodsKindId
                                         , tmpMIContainer_all.AssetToId
  
-                                        , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN CAST (COALESCE(Object_PartionGoods.Id, 0) AS Integer) ELSE NULL END
+                                        , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE NULL END
+
                                         , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
                                                     THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                       || Object_PartionCell.ValueData || ' '
@@ -854,15 +872,28 @@ BEGIN
                                                                                           , inStorageName     := Object_Storage.ValueData                  -- Место хранения
                                                                                           , inGoodsName       := ''                                        -- Товар
                                                                                            )
+
+                                               -- для РК
+                                               WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK() 
+                                                    THEN ''
+
                                                ELSE COALESCE (Object_PartionGoods.ValueData, '')
                                           END 
   
-                                        , Object_PartionGoods.ValueData
+                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionGoods.ValueData ELSE NULL END
                                         , CASE WHEN inIsOperDate_Partion = TRUE THEN ObjectDate_PartionGoods_Value.ValueData ELSE NULL END
+
                                         , ObjectFloat_PartionGoods_Price.ValueData
                                         , Object_Storage.ValueData
-                                        , (COALESCE (Object_Unit.ValueData, '') 
-                                           || CASE WHEN tmpMIContainer_all.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = '' THEN ' ' || COALESCE (tmpMIContainer_all.PartionGoodsId, 0) :: TVarChar ELSE '' END
+                                        , (COALESCE (Object_Unit.ValueData, '')
+                                           || CASE -- для РК
+                                                   WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK()
+                                                        THEN ''
+                                                   --
+                                                   WHEN tmpMIContainer_all.PartionGoodsId > 0 AND COALESCE (Object_Unit.ValueData, '') = ''
+                                                        THEN ' id=' || COALESCE (tmpMIContainer_all.PartionGoodsId, 0)
+                                                   ELSE ''
+                                              END
                                           ) 
                                         , ObjectString_PartNumber.ValueData
                                         , Object_PartionModel.ValueData

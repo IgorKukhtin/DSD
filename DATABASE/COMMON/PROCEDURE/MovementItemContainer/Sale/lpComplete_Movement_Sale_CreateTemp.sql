@@ -36,6 +36,8 @@ BEGIN
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean, isPromo Boolean
                                , PartionGoodsId Integer, PartionGoodsId_Item Integer
                                , PriceListPrice TFloat, PriceListJurPrice TFloat, Price TFloat, Price_Currency TFloat, Price_original TFloat, CountForPrice TFloat
+                               , isPartion_container Boolean
+                               , OperCount_start TFloat, OperCountCount_start TFloat, OperCount_ChangePercent_start TFloat, OperCount_Partner_start TFloat
                                 ) ON COMMIT DROP;
 
      -- таблица - 
@@ -47,7 +49,8 @@ BEGIN
      END IF;
 
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------

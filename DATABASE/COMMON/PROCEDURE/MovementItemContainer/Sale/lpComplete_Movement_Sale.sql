@@ -554,7 +554,9 @@ END IF;*/
 
      -- Если учет по ячейкам - РАСХОД - Учет будет для От КОГО
      vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
-                         OR inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
+                         OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
+                         AND vbUnitId_From = zc_Unit_RK()
+                            )
                            ;
 
 
@@ -1131,35 +1133,8 @@ end if;
 
                   GROUP BY tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.InfoMoneyDestinationId, tmpMI.InfoMoneyId
                  )
-
-  -- будет подбор партий
-, tmpContainer_all AS (SELECT tmpMI.GoodsId
-                            , tmpMI.GoodsKindId
-                            , Container.ContainerId  AS ContainerId
-                              -- Кол-во
-                            , tmpMI.OperCount  AS Amount
-                              -- Остаток
-                          --, Container.Amount AS Amount_container
-                            , CASE WHEN Container.Amount < 0 THEN 0.01 ELSE Container.Amount END AS Amount_container
-                              -- накопительно
-                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
-                                                           ORDER BY CASE WHEN Container.Amount > 0 THEN 0 ELSE 1 END
-                                                                  , CASE WHEN Container.Amount < 0 THEN 0 ELSE 1 END
-                                                                  , COALESCE (Container.PartionGoodsDate, zc_DateStart())
-                                                                  , Container.ContainerId
-                                                          ) AS AmountSUM
-                              -- !!!Надо отловить ПОСЛЕДНИЙ!!!
-                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
-                                                 ORDER BY CASE WHEN Container.Amount > 0 THEN 0 ELSE 1 END
-                                                        , CASE WHEN Container.Amount < 0 THEN 0 ELSE 1 END
-                                                        , COALESCE (Container.PartionGoodsDate, zc_DateStart()) DESC
-                                                        , Container.ContainerId DESC
-                                                ) AS Ord
-                              -- партия
-                            , Container.PartionGoodsId
-
-                       FROM tmpMI_summ AS tmpMI
-                            INNER JOIN (SELECT Container.Id                                          AS ContainerId
+                             -- !!! - 01
+                           , tmp_01 AS (SELECT Container.Id                                          AS ContainerId
                                              , tmpMI.GoodsId                                         AS GoodsId
                                              , 0                                                     AS GoodsKindId
                                              , Container.Amount                                      AS Amount
@@ -1187,11 +1162,11 @@ end if;
                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                                               )
                                          -- !!! временно, неправильно работает для РК!!!
-                                         AND vbIsPartionCell_from = FALSE
+                                         -- AND vbIsPartionCell_from = FALSE
+                                        )
 
-                                       UNION ALL
-                                        -- учет - партии по датам + ячейки
-                                        SELECT Container.Id                                          AS ContainerId
+                             -- !!! - 02 - учет - партии по датам + ячейки
+                           , tmp_02 AS (SELECT Container.Id                                          AS ContainerId
                                              , tmpMI.GoodsId                                         AS GoodsId
                                              , tmpMI.GoodsKindId                                     AS GoodsKindId
                                              , Container.Amount                                      AS Amount
@@ -1200,7 +1175,7 @@ end if;
                                         FROM tmpMI_summ AS tmpMI
                                              INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                                  AND Container.DescId   = zc_Container_Count()
-                                                               --AND Container.Amount   > 0
+                                                                 AND Container.Amount   > 0
                                              INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                             ON CLO_Unit.ContainerId = Container.Id
                                                                            AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
@@ -1223,6 +1198,104 @@ end if;
                                           AND COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI.GoodsKindId
                                           --!!!
                                           AND vbIsPartionCell_from = TRUE
+                                       )                      
+
+                             -- !!! - 03 - учет - партии по датам + ячейки
+                           , tmp_03 AS (SELECT Container.Id                                          AS ContainerId
+                                             , tmpMI.GoodsId                                         AS GoodsId
+                                             , tmpMI.GoodsKindId                                     AS GoodsKindId
+                                             , Container.Amount                                      AS Amount
+                                             , COALESCE (CLO_PartionGoods.ObjectId, 0)               AS PartionGoodsId
+                                             , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+                                               -- !!!Надо отловить ОДИН!!!
+                                             , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY Container.Id) AS Ord
+                                        FROM tmpMI_summ AS tmpMI
+                                             -- !!!
+                                             LEFT JOIN tmp_02 ON tmp_02.GoodsId     = tmpMI.GoodsId
+                                                             AND tmp_02.GoodsKindId = tmpMI.GoodsKindId
+
+                                             INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                                 AND Container.DescId   = zc_Container_Count()
+                                                                 AND Container.Amount   <= 0
+                                             INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                            ON CLO_Unit.ContainerId = Container.Id
+                                                                           AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                           AND CLO_Unit.ObjectId    = vbUnitId_From
+                                             -- !!!
+                                             LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                           ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                          AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                             -- !!!
+                                             LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                           ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                          AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                             LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                                     AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+
+                                        -- учет - партии по датам + ячейки
+                                        WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                             , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                              )
+                                          AND COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI.GoodsKindId
+                                          --!!!
+                                          AND vbIsPartionCell_from = TRUE
+                                          --!!!
+                                          AND tmp_02.GoodsId IS NULL
+                                       )                      
+  -- будет подбор партий
+, tmpContainer_all AS (SELECT tmpMI.GoodsId
+                            , tmpMI.GoodsKindId
+                            , Container.ContainerId  AS ContainerId
+                              -- Кол-во
+                            , tmpMI.OperCount  AS Amount
+                              -- Остаток
+                            , Container.Amount AS Amount_container
+                              -- накопительно
+                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
+                                                           ORDER BY CASE WHEN Container.Amount > 0 THEN 0 ELSE 1 END
+                                                                  , CASE WHEN Container.Amount < 0 THEN 0 ELSE 1 END
+                                                                  , COALESCE (Container.PartionGoodsDate, zc_DateStart())
+                                                                  , Container.ContainerId
+                                                          ) AS AmountSUM
+                              -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId
+                                                 ORDER BY CASE WHEN Container.Amount > 0 THEN 0 ELSE 1 END
+                                                        , CASE WHEN Container.Amount < 0 THEN 0 ELSE 1 END
+                                                        , COALESCE (Container.PartionGoodsDate, zc_DateStart()) DESC
+                                                        , Container.ContainerId DESC
+                                                ) AS Ord
+                              -- партия
+                            , Container.PartionGoodsId
+
+                       FROM tmpMI_summ AS tmpMI
+                            INNER JOIN (SELECT tmp_01.ContainerId
+                                             , tmp_01.GoodsId
+                                             , tmp_01.GoodsKindId
+                                             , tmp_01.Amount
+                                             , tmp_01.PartionGoodsId
+                                             , tmp_01.PartionGoodsDate
+                                        FROM tmp_01
+
+                                       UNION ALL
+                                        -- учет - партии по датам + ячейки
+                                        SELECT tmp_02.ContainerId
+                                             , tmp_02.GoodsId
+                                             , tmp_02.GoodsKindId
+                                             , tmp_02.Amount
+                                             , tmp_02.PartionGoodsId
+                                             , tmp_02.PartionGoodsDate
+                                        FROM tmp_02
+
+                                       UNION ALL
+                                        -- учет - партии по датам + ячейки
+                                        SELECT tmp_03.ContainerId
+                                             , tmp_03.GoodsId
+                                             , tmp_03.GoodsKindId
+                                             , 0.01 AS Amount
+                                             , tmp_03.PartionGoodsId
+                                             , tmp_03.PartionGoodsDate
+                                        FROM tmp_03
+                                        WHERE tmp_03.Ord = 1
 
                                        ) AS Container ON Container.GoodsId     = tmpMI.GoodsId
                                                      AND Container.GoodsKindId = tmpMI.GoodsKindId
@@ -1232,7 +1305,7 @@ end if;
                                     , DD.GoodsId
                                     , DD.GoodsKindId
                                     , DD.PartionGoodsId
-                                    , CASE WHEN DD.Amount - DD.AmountSUM > 0 -- !!!! AND DD.Ord <> 1 - изменилась сортировка НАОБОРОТ!!!
+                                    , CASE WHEN DD.Amount - DD.AmountSUM > 0 AND DD.Ord <> 1 --!!!- изменилась сортировка НАОБОРОТ!!!
                                                 THEN DD.Amount_container
                                            ELSE DD.Amount - DD.AmountSUM + DD.Amount_container
                                       END AS Amount
@@ -1465,6 +1538,9 @@ end if;
                         THEN _tmp.OperCount
                    ELSE _tmp.OperCount_Partner
               END AS OperCount_Partner
+
+-- , (select sum (tmpContainer.Amount) from tmpContainer where tmpContainer.GoodsId = 3807   ) AS tmpOperSumm_PriceList
+-- , (select count(*) from tmpContainer where tmpContainer.GoodsId = 3807) AS OperSumm_PriceList
 
               -- промежуточная (в ценах док-та) сумма прайс-листа по Контрагенту !!!без скидки!!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_PriceList
@@ -1876,9 +1952,10 @@ end if;
 
 /*
  -- тест
- RAISE EXCEPTION 'Ошибка. <%>  <%>' , (select _tmpItem .PartionGoodsId from _tmpItem where _tmpItem.MovementItemId = 286219971)
- , (select _tmpItem .ContainerId_Goods from _tmpItem where _tmpItem.MovementItemId = 286219971 )
- -- 27839812 
+  RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  ' , (select sum (_tmpItem.OperCount) from _tmpItem where _tmpItem.GoodsId = 3807   )
+, (select count(*) from _tmpItem where _tmpItem.GoodsId = 3807   )
+, (select count(*) from _tmpItem where _tmpItem.GoodsId = 3807   and _tmpItem.OperCount > 0)
+;
   ;
 */
      -- Проверка - 1 - Подбор партий
@@ -1935,23 +2012,31 @@ end if;
      -- Проверка - 2 - Подбор партий
      IF vbIsPartionCell_from = TRUE
         AND EXISTS (SELECT 1
-                    FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                        , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                          FROM _tmpItem
-                          WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                  , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                   )
+                    FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                               , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                               , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                               , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                               , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                FROM _tmpItem
+                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                         )
+                               ) AS tmpItem_start
+                          GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                          ) AS tmpItem_start
-                         FULL JOIN (SELECT _tmpItem.MovementItemId
+                         FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          , SUM (_tmpItem.OperCount)               AS OperCount
                                          , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                          , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                          , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                     FROM _tmpItem
                                     WHERE _tmpItem.ContainerId_Goods > 0
-                                    GROUP BY _tmpItem.MovementItemId
+                                    GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                    ) AS tmpItem
-                                     ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                     ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                    AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                     WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                        OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                        OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
@@ -1968,136 +2053,186 @@ end if;
                        , CHR (13)
                          -- GoodsId
                        , (SELECT lfGet_Object_ValueData (tmpItem_start.GoodsId)
-                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                                FROM _tmpItem
-                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                         )
+                          FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                                     , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                                     , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                                     , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                                     , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+
+                                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                                    , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                      FROM _tmpItem
+                                      WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                               )
+                                     ) AS tmpItem_start
+                                GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                ) AS tmpItem_start
-                               FULL JOIN (SELECT _tmpItem.MovementItemId
+                               FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                , SUM (_tmpItem.OperCount)               AS OperCount
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
-                                          GROUP BY _tmpItem.MovementItemId
+                                          GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          ) AS tmpItem
-                                           ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                           ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                          AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                           WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                              OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                              OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
                              OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
-                          ORDER BY COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
+                          ORDER BY COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId)
+                                 , COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId)
                           LIMIT 1
                          )
                        , CHR (13)
                          -- GoodsKindId
                        , (SELECT lfGet_Object_ValueData_sh (tmpItem_start.GoodsKindId)
-                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                                FROM _tmpItem
-                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                         )
+                          FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                                     , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                                     , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                                     , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                                     , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+
+                                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                                    , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                      FROM _tmpItem
+                                      WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                               )
+                                     ) AS tmpItem_start
+                                GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                ) AS tmpItem_start
-                               FULL JOIN (SELECT _tmpItem.MovementItemId
+                               FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                , SUM (_tmpItem.OperCount)               AS OperCount
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
-                                          GROUP BY _tmpItem.MovementItemId
+                                          GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          ) AS tmpItem
-                                           ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                           ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                          AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                           WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                              OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                              OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
                              OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
-                          ORDER BY COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
+                          ORDER BY COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId)
+                                 , COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId)
                           LIMIT 1
                          )
                        , CHR (13)
                          -- 1.1. OperCount_start
                        , (SELECT zfConvert_FloatToString (tmpItem_start.OperCount_start)
-                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                                FROM _tmpItem
-                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                         )
+                          FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                                     , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                                     , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                                     , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                                     , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+
+                                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                                    , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                      FROM _tmpItem
+                                      WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                               )
+                                     ) AS tmpItem_start
+                                GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                ) AS tmpItem_start
-                               FULL JOIN (SELECT _tmpItem.MovementItemId
+                               FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                , SUM (_tmpItem.OperCount)               AS OperCount
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
-                                          GROUP BY _tmpItem.MovementItemId
+                                          GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          ) AS tmpItem
-                                           ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                           ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                          AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                           WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                              OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                              OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
                              OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
-                          ORDER BY COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
+                          ORDER BY COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId)
+                                 , COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId)
                           LIMIT 1
                          )
                        , CHR (13)
                          -- 1.2. OperCount - calc
                        , (SELECT zfConvert_FloatToString (tmpItem.OperCount)
-                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                                FROM _tmpItem
-                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                         )
+                          FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                                     , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                                     , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                                     , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                                     , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+
+                                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                                    , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                      FROM _tmpItem
+                                      WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                               )
+                                     ) AS tmpItem_start
+                                GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                ) AS tmpItem_start
-                               FULL JOIN (SELECT _tmpItem.MovementItemId
+                               FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                , SUM (_tmpItem.OperCount)               AS OperCount
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
-                                          GROUP BY _tmpItem.MovementItemId
+                                          GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          ) AS tmpItem
-                                           ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                           ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                          AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                           WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                              OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                              OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
                              OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
-                          ORDER BY COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
+                          ORDER BY COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId)
+                                 , COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId)
                           LIMIT 1
                          )
                        , CHR (13)
                          -- MovementItemId
-                       , (SELECT COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
-                          FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
-                                              , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
-                                FROM _tmpItem
-                                WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                        , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
-                                                                         )
+                       , (SELECT COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId) :: TVarChar || ' - ' || COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId) :: TVarChar
+                          FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
+                                     , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
+                                     , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
+                                     , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
+                                     , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+
+                                FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
+                                                    , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
+                                      FROM _tmpItem
+                                      WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                              , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
+                                                                               )
+                                     ) AS tmpItem_start
+                                GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                ) AS tmpItem_start
-                               FULL JOIN (SELECT _tmpItem.MovementItemId
+                               FULL JOIN (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                , SUM (_tmpItem.OperCount)               AS OperCount
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
-                                          GROUP BY _tmpItem.MovementItemId
+                                          GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                          ) AS tmpItem
-                                           ON tmpItem.MovementItemId = tmpItem_start.MovementItemId
+                                           ON tmpItem.GoodsId     = tmpItem_start.GoodsId
+                                          AND tmpItem.GoodsKindId = tmpItem_start.GoodsKindId
                           WHERE COALESCE (tmpItem_start.OperCount_start, 0)                <> COALESCE (tmpItem.OperCount, 0)
                              OR COALESCE (tmpItem_start.OperCountCount_start, 0)           <> COALESCE (tmpItem.OperCountCount, 0)
                              OR COALESCE (tmpItem_start.OperCount_ChangePercent_start, 0)  <> COALESCE (tmpItem.OperCount_ChangePercent, 0)
                              OR COALESCE (tmpItem_start.OperCount_Partner_start, 0)        <> COALESCE (tmpItem.OperCount_Partner, 0)
-                          ORDER BY COALESCE (tmpItem_start.MovementItemId, tmpItem.MovementItemId)
+                          ORDER BY COALESCE (tmpItem_start.GoodsId, tmpItem.GoodsId)
+                                 , COALESCE (tmpItem_start.GoodsKindId, tmpItem.GoodsKindId)
                           LIMIT 1
                          )
                         ;
@@ -3323,7 +3458,8 @@ end if;
 
             FROM (WITH tmpList AS (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                    FROM _tmpItem
-                                        JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+                                        JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId    = _tmpItem.MovementItemId
+                                                         AND _tmpItemSumm.ContainerId_Goods = _tmpItem.ContainerId_Goods
                                                          -- !!!только для НОВЫХ!!!
                                                          AND _tmpItemSumm.AccountId      = 0
                                   )
@@ -3362,6 +3498,7 @@ end if;
                                   )
                   --
                   SELECT _tmpItem.MovementItemId
+                       , _tmpItem.ContainerId_Goods
                        , CASE WHEN tmpPrice.Price > 0 THEN tmpPrice.Price WHEN tmpPrice.Price_old > 0 THEN tmpPrice.Price_old ELSE 0 END AS Price
                        , _tmpItem.OperCount
                        , _tmpItem.OperCount_ChangePercent
@@ -3373,8 +3510,9 @@ end if;
                  ) AS tmpList
 
             -- !!!только для НОВЫХ!!!
-            WHERE _tmpItemSumm.AccountId      = 0
-              AND _tmpItemSumm.MovementItemId = tmpList.MovementItemId
+            WHERE _tmpItemSumm.AccountId         = 0
+              AND _tmpItemSumm.MovementItemId    = tmpList.MovementItemId
+              AND _tmpItemSumm.ContainerId_Goods = tmpList.ContainerId_Goods
            ;
 
 

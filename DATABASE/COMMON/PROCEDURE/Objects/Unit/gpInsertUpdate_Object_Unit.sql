@@ -158,6 +158,7 @@ BEGIN
                    FROM lfSelect_Object_UnitParent_byUnit (ioId) AS tmpUnitList
                         INNER JOIN ObjectString AS ObjectString_Unit_Address
                                 ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
+                               AND ObjectString_Unit_Address.DescId   = zc_ObjectString_Unit_Address()
                                AND COALESCE(ObjectString_Unit_Address.ValueData,'') <>''
                    ORDER BY tmpUnitList.Level
                    LIMIT 1);
@@ -170,6 +171,7 @@ BEGIN
    FROM lfSelect_Object_Unit_byGroup (ioId) AS tmpUnitList
          LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                 ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
+                               AND ObjectString_Unit_Address.DescId   = zc_ObjectString_Unit_Address()
    WHERE (COALESCE(ObjectString_Unit_Address.ValueData,'') = vbOldValue_Address OR COALESCE(ObjectString_Unit_Address.ValueData,'') = '');
 
 

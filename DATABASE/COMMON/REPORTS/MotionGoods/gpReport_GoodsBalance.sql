@@ -843,7 +843,13 @@ BEGIN
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END AS PartionCellId
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END AS PartionCellCode 
                               , STRING_AGG (DISTINCT Object_PartionCell.ValueData, ';') ::TVarChar AS PartionCellName
-                              , tmpAll.PartionGoodsName
+
+                                -- для РК
+                              , CASE WHEN inIsOperDate_Partion = FALSE AND tmpAll.LocationId = zc_Unit_RK() 
+                                          THEN ''
+                                     ELSE tmpAll.PartionGoodsName
+                                END AS PartionGoodsName
+
                               --, tmpAll.PartionGoodsDate
                               , CASE WHEN inIsOperDate_Partion = TRUE THEN tmpAll.PartionGoodsDate ELSE NULL END ::TDateTime AS PartionGoodsDate
 
@@ -1347,7 +1353,10 @@ BEGIN
                                , tmpAll.GoodsKindId
                                , tmpAll.GoodsKindId_complete
                                --, tmpAll.PartionCellId
-                               , tmpAll.PartionGoodsName
+                               , CASE WHEN inIsOperDate_Partion = FALSE AND tmpAll.LocationId = zc_Unit_RK() 
+                                           THEN ''
+                                      ELSE tmpAll.PartionGoodsName
+                                 END
                                --, tmpAll.PartionGoodsDate
                                , tmpAll.StorageId
                                , tmpAll.StorageName
@@ -1823,5 +1832,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
-
 --  select * from gpReport_GoodsBalance(inStartDate := ('03.03.2024')::TDateTime , inEndDate := ('23.03.2024')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' , inIsOperDate_Partion:= TRUE, inIsPartionCell := TRUE,  inSession := '5');

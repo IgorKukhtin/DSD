@@ -863,7 +863,13 @@ BEGIN
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END AS PartionCellId
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END AS PartionCellCode 
                               , STRING_AGG (DISTINCT Object_PartionCell.ValueData, ';') ::TVarChar AS PartionCellName
-                              , tmpAll.PartionGoodsName
+
+                                -- для РК
+                              , CASE WHEN inIsOperDate_Partion = FALSE AND tmpAll.LocationId = zc_Unit_RK() 
+                                          THEN ''
+                                     ELSE tmpAll.PartionGoodsName
+                                END AS PartionGoodsName
+
                               , CASE WHEN inIsOperDate_Partion = TRUE THEN tmpAll.PartionGoodsDate ELSE NULL END ::TDateTime AS PartionGoodsDate
 
                                --cвойства из партий
@@ -1380,7 +1386,10 @@ BEGIN
                                --, tmpAll.PartionCellId 
                                , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END
                                , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END
-                               , tmpAll.PartionGoodsName
+                               , CASE WHEN inIsOperDate_Partion = FALSE AND tmpAll.LocationId = zc_Unit_RK() 
+                                           THEN ''
+                                      ELSE tmpAll.PartionGoodsName
+                                 END
                                --, tmpAll.PartionGoodsDate
                                , CASE WHEN inIsOperDate_Partion = TRUE THEN tmpAll.PartionGoodsDate ELSE NULL END
                                , tmpAll.StorageId
