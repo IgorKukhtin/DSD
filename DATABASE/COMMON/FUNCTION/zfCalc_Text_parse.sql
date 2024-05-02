@@ -82,17 +82,17 @@ BEGIN
                                                                                                                               
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width7_70_70.ValueData > 0 THEN ObjectFloat_Width7_70_70.ValueData   :: Integer
                    WHEN ObjectFloat_Width7.ValueData > 0  THEN ObjectFloat_Width7.ValueData  :: Integer                       
-                   ELSE 1000                                                                                                  
+                   ELSE 50
               END AS Width7                                                                                                   
                                                                                                                               
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width8_70_70.ValueData > 0 THEN ObjectFloat_Width8_70_70.ValueData   :: Integer
                    WHEN ObjectFloat_Width8.ValueData > 0  THEN ObjectFloat_Width8.ValueData  :: Integer                       
-                   ELSE 1000                                                                                                  
+                   ELSE 50
               END AS Width8                                                                                                   
                                                                                                                               
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width9_70_70.ValueData > 0 THEN ObjectFloat_Width9_70_70.ValueData   :: Integer
                    WHEN ObjectFloat_Width9.ValueData > 0  THEN ObjectFloat_Width9.ValueData  :: Integer 
-                   ELSE 1000
+                   ELSE 50
               END AS Width9
 
               -- 10
@@ -103,28 +103,28 @@ BEGIN
               -- 11
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData :: Integer
                    WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
-                   ELSE 1000
+                   ELSE 50
               END AS Width11
               -- 12
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData :: Integer
                    WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
-                   ELSE 1000
+                   ELSE 50
               END AS Width12
 
               -- 13
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
                    WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
-                   ELSE 1000
+                   ELSE 50
               END AS Width13
               -- 14
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
                    WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
-                   ELSE 1000
+                   ELSE 50
               END AS Width14
               -- 15
             , CASE WHEN inIs70_70 = TRUE AND ObjectFloat_Width10_70_70.ValueData > 0 THEN ObjectFloat_Width10_70_70.ValueData  :: Integer
                    WHEN ObjectFloat_Width10.ValueData > 0 THEN ObjectFloat_Width10.ValueData :: Integer - 1 
-                   ELSE 1000
+                   ELSE 50
               END AS Width15
 
 
