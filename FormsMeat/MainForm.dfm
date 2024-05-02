@@ -10884,9 +10884,6 @@ inherited MainForm: TMainForm
         object miReport_SheetWorkTime_Graph: TMenuItem
           Action = actReport_SheetWorkTime_Graph
         end
-        object miReport_PersonalGroupSummAdd: TMenuItem
-          Action = actReport_PersonalGroupSummAdd
-        end
       end
       object miSheetWorkTimeClose: TMenuItem
         Action = actSheetWorkTimeClose
@@ -10933,6 +10930,9 @@ inherited MainForm: TMainForm
       end
       object miPersonalGroupSummAdd: TMenuItem
         Action = actPersonalGroupSummAdd
+      end
+      object miReport_PersonalGroupSummAdd: TMenuItem
+        Action = actReport_PersonalGroupSummAdd
       end
       object miBankSecondNum: TMenuItem
         Action = actBankSecondNum
