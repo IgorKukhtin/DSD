@@ -885,7 +885,7 @@ BEGIN
      -- заполняем таблицу - количественный расчетный остаток на конец vbOperDate, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим), т.к. один и тот же товар может быть введен несколько раз то привязываемся к MAX (_tmpItem.MovementItemId)
      INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, ContainerId_count, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCountCount, OperCount_find, OperCountCount_find)
         WITH tmpContainer_count_all_0 AS (SELECT tmpContainer_all_0.* FROM tmpContainer_all_0 WHERE tmpContainer_all_0.DescId = zc_Container_Count())
-           , tmpContainerList AS (SELECT Container.*
+           , tmpContainerList AS (SELECT DISTINCT Container.*
                                   FROM tmpContainer_count_all_0 AS Container
                                        LEFT JOIN ContainerLinkObject AS CLO_Account
                                                                      ON CLO_Account.ContainerId = Container.Id
@@ -902,13 +902,22 @@ BEGIN
                                                                      ON CLO_GoodsKind.ContainerId = Container.Id
                                                                     AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
 
-                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = Container.ObjectId
-                                                                             AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
-                                                                               OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
-                                                                                 )
+                                       -- !!!ОШИБКА!!! могут дублироваться
+                                       --LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = Container.ObjectId
+                                       --                                      AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+                                       --                                        OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
+                                       --                                          )
+
+                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId     = Container.ObjectId
+                                                                             AND _tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+
+                                       LEFT JOIN _tmpGoods_Complete_Inventory AS _tmpGoods_Complete_Inventory_two
+                                                                              ON _tmpGoods_Complete_Inventory_two.GoodsId     = Container.ObjectId
+                                                                             AND _tmpGoods_Complete_Inventory_two.GoodsKindId = 0
+                                                                             AND _tmpGoods_Complete_Inventory.GoodsId     IS NULL
                                   WHERE CLO_Account.ContainerId IS NULL                  -- !!!т.е. без счета Транзит!!!
                                     AND COALESCE (Object_PartionGoods.ObjectCode, 0) = 0 -- !!!т.е. без ОС!!!
-                                    AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
+                                    AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR _tmpGoods_Complete_Inventory_two.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
        -- список, батоны
      , tmpContainerList_count AS (SELECT Container.*
@@ -1010,8 +1019,10 @@ BEGIN
     --ANALYZE _tmpRemainsCount;
     --RAISE EXCEPTION 'ok - _tmpRemainsCount - % ', (SELECT COUNT(*) FROM _tmpRemainsCount);
 
-
     --RAISE EXCEPTION 'ok - _tmpRemainsSumm - % ', (SELECT COUNT(*) FROM _tmpRemainsSumm);
+
+--    RAISE EXCEPTION 'ok - _tmpRemainsCount - % ', (SELECT _tmpRemainsCount.OperCount FROM _tmpRemainsCount where _tmpRemainsCount.ContainerId = 5630242);
+-- select *  from Container where Id = 5630242
 
      -- заполняем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
      INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperSumm, InfoMoneyId, InfoMoneyId_Detail)
@@ -1022,7 +1033,7 @@ BEGIN
                                          WHERE tmpContainer_all_0.DescId   = zc_Container_Summ()
                                            AND tmpContainer_all_0.ParentId IS NOT NULL
                                         )
-           , tmpContainerList AS (SELECT Container.*
+           , tmpContainerList AS (SELECT DISTINCT Container.*
                                   FROM tmpContainer_summ_all_0 AS Container
                                        JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                                        INNER JOIN ContainerLinkObject AS CLO_Goods
@@ -1031,11 +1042,19 @@ BEGIN
                                        LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                                      ON CLO_GoodsKind.ContainerId = Container.Id
                                                                     AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = CLO_Goods.ObjectId
-                                                                             AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
-                                                                               OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
-                                                                                 )
-                                  WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
+                                       -- !!!ОШИБКА!!! могут дублироваться
+                                       --LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId      = CLO_Goods.ObjectId
+                                       --                                      AND (_tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+                                       --                                        OR _tmpGoods_Complete_Inventory.GoodsKindId = 0
+                                       --                                          )
+                                       LEFT JOIN _tmpGoods_Complete_Inventory ON _tmpGoods_Complete_Inventory.GoodsId     = CLO_Goods.ObjectId
+                                                                             AND _tmpGoods_Complete_Inventory.GoodsKindId = CLO_GoodsKind.ObjectId
+
+                                       LEFT JOIN _tmpGoods_Complete_Inventory AS _tmpGoods_Complete_Inventory_two
+                                                                              ON _tmpGoods_Complete_Inventory_two.GoodsId     = CLO_Goods.ObjectId
+                                                                             AND _tmpGoods_Complete_Inventory_two.GoodsKindId = 0
+                                                                             AND _tmpGoods_Complete_Inventory.GoodsId     IS NULL
+                                  WHERE (_tmpGoods_Complete_Inventory.GoodsId > 0 OR _tmpGoods_Complete_Inventory_two.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
                , tmpContainer AS (SELECT tmpContainerList.Id        AS ContainerId
                                        , tmpContainerList.ObjectId  AS AccountId
@@ -2465,4 +2484,4 @@ where amount1 <> amount2
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 14590084, inSession:= '5')
 -- select gpComplete_All_Sybase (24458833, false, '')
--- select gpComplete_All_Sybase (25003577, false, '')               
+-- select gpComplete_All_Sybase (28097060 , false, '')               
