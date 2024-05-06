@@ -473,8 +473,21 @@ BEGIN
             , ObjectFloat_Value10.ValueData      AS Value10
             , ObjectFloat_Value11.ValueData      AS Value11
 
-            , CASE WHEN ObjectString_BarCode.ValueData <> '' THEN ObjectString_BarCode.ValueData
-                   ELSE tmpObject_GoodsPropertyValue_calc.BarCode
+            , CASE WHEN ObjectString_BarCode.ValueData <> ''
+                    AND ObjectString_BarCode.ValueData <> '0'
+                    AND ObjectString_BarCode.ValueData <> '00000000000'
+                    AND ObjectString_BarCode.ValueData <> '000000000000'
+                    AND ObjectString_BarCode.ValueData <> '0000000000000'
+                    AND ObjectString_BarCode.ValueData <> '2200000000002'
+                        THEN ObjectString_BarCode.ValueData
+                   WHEN tmpObject_GoodsPropertyValue_calc.BarCode <> ''
+                    AND tmpObject_GoodsPropertyValue_calc.BarCode <> '0'
+                    AND tmpObject_GoodsPropertyValue_calc.BarCode <> '00000000000'
+                    AND tmpObject_GoodsPropertyValue_calc.BarCode <> '000000000000'
+                    AND tmpObject_GoodsPropertyValue_calc.BarCode <> '0000000000000'
+                    AND tmpObject_GoodsPropertyValue_calc.BarCode <> '2200000000002'
+                        THEN tmpObject_GoodsPropertyValue_calc.BarCode
+                   ELSE ''
               END :: TVarChar  AS BarCode
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
