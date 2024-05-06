@@ -420,6 +420,7 @@ type
     lwOrderInternalChoice: TListView;
     BindSourceDB1: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
+    TimerTorchMode: TTimer;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -574,6 +575,7 @@ type
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
     procedure lwOrderInternalChoiceDblClick(Sender: TObject);
     procedure bOrderInternalChoiceClick(Sender: TObject);
+    procedure TimerTorchModeTimer(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -1414,6 +1416,13 @@ begin
   FDataSetRefresh := dsrNone;
 end;
 
+procedure TfrmMain.TimerTorchModeTimer(Sender: TObject);
+begin
+  TimerTorchMode.Enabled := False;
+  if ScanCamera.HasFlash and isIlluminationMode then
+    ScanCamera.TorchMode := TTorchMode.ModeOn;
+end;
+
 // возврат на предидущую форму из стэка открываемых форм, с удалением её из стэка
 procedure TfrmMain.ReturnPriorForm(const OmitOnChange: Boolean);
 var
@@ -1716,8 +1725,8 @@ begin
       ScanCamera.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
       ScanCamera.OnSampleBufferReady := CameraScanBarCodeSampleBufferReady;
       ScanCamera.Active := True;
-      if ScanCamera.HasFlash and isIlluminationMode then
-        ScanCamera.TorchMode := TTorchMode.ModeOn;
+      //Зажгем подсветку с задержкой
+      if ScanCamera.HasFlash and isIlluminationMode then TimerTorchMode.Enabled := True;
     end else
     if tcMain.ActiveTab = tiInventory then
     begin
