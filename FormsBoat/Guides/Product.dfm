@@ -151,6 +151,11 @@
             Format = ',0.####'
             Kind = skSum
             Column = Amount_Debt
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TransportSumm
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -272,6 +277,11 @@
             Format = ',0.####'
             Kind = skSum
             Column = Amount_Debt
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = TransportSumm
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -817,6 +827,18 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1057#1091#1084#1084#1072' Transport Preparation, '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+          Options.Editing = False
+          Width = 70
+        end
+        object TransportSumm: TcxGridDBColumn
+          Caption = 'Transport'
+          DataBinding.FieldName = 'TransportSumm'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' Transport, '#1073#1077#1079' '#1053#1044#1057' '
           Options.Editing = False
           Width = 70
         end
