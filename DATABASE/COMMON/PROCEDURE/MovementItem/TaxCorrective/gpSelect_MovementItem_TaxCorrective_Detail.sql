@@ -1,8 +1,8 @@
--- Function: gpSelect_MovementItem_Tax_Detail()
+-- Function: gpSelect_MovementItem_TaxCorrective_Detail()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_Tax_Detail (Integer, Boolean,  TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_TaxCorrective_Detail (Integer, Boolean,  TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Tax_Detail(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TaxCorrective_Detail(
     IN inMovementId  Integer      , -- ключ Документа
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
@@ -18,55 +18,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Tax());
-
-     -- inShowAll:= TRUE;
-  
-/*     IF inShowAll = TRUE THEN
-
-     RETURN QUERY
-       WITH
-       tmpContract AS ( SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
-                                     FROM ObjectLink AS ObjectLink_Contract_Juridical
-                                          
-                                          INNER JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract_Juridical.ObjectId
-                                                           AND Object_Contract.isErased = FALSE
-                                                               
-                                     WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId --3931441 --
-                                       AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-                       )
-     , tmpMI AS (SELECT MovementItem.*
-                 FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                      JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                       AND MovementItem.DescId     = zc_MI_Detail()
-                                       AND MovementItem.isErased   = tmpIsErased.isErased) 
-                )
-
-
-       SELECT
-             0                             AS Id
-           , Object_Contract.Id            AS ContractId
-           , Object_Contract.ObjectCode    AS ContractCode
-           , Object_Contract.ValueData     AS ContractName
-           , FALSE                         AS isErased
-
-       FROM tmpContract
-            LEFT JOIN tmpMI ON tmpMI.ObjectId = tmpContract.ContractId
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpContract.ContractId
-       WHERE tmpMI.ObjectId IS NULL
-      UNION ALL
-       SELECT
-             MovementItem.Id               AS Id
-           , Object_Contract.Id            AS ContractId
-           , Object_Contract.ObjectCode    AS ContractCode
-           , Object_Contract.ValueData     AS ContractName
-           , MovementItem.isErased         AS isErased
-
-       FROM tmpMI AS MovementItem ON MovementItem.MovementId = inMovementId
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementItem.ObjectId
-            ;
-     ELSE
-*/
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
 
      RETURN QUERY
        SELECT
@@ -108,8 +60,6 @@ BEGIN
             LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
        ;
 
-   --  END IF;
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -117,8 +67,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.04.24         *
+ 07.05.24         *
 */
 
 -- тест
---  SELECT * FROM gpSelect_MovementItem_Tax_Detail (inMovementId:= 4229, inisErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItem_TaxCorrective_Detail (inMovementId:= 4229, inisErased:= FALSE, inSession:= zfCalc_UserAdmin())

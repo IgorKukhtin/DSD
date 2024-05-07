@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , FromId Integer, FromName_inf TVarChar, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar
              , ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar, ContractName_detail TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
+             , ContractName_detail TVarChar, ContractName_detail_Child TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar, isPartner Boolean
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
@@ -121,7 +122,8 @@ BEGIN
                              AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                            ) 
 
-        --договора  
+        --договора 
+        --договор из шапки док. налоговая 
         , tmpMLO_Contract_Child AS (SELECT MovementLinkObject_Contract.*
                                     FROM MovementLinkObject AS MovementLinkObject_Contract
                                     WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpMLM_Child.MovementChildId FROM tmpMLM_Child)
@@ -145,6 +147,31 @@ BEGIN
                                  INNER JOIN Object AS Object_Contract ON Object_Contract.Id = tmp.ObjectId
                               GROUP BY tmp.MovementId
                               )
+         --договор из шапки док. корректировка
+        , tmpMLO_Contract AS (SELECT MovementLinkObject_Contract.*
+                              FROM MovementLinkObject AS MovementLinkObject_Contract
+                              WHERE MovementLinkObject_Contract.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract() 
+                                AND COALESCE (MovementLinkObject_Contract.ObjectId,0) > 0
+                              )   
+
+        , tmpMIDetail_TaxCorrective AS (SELECT tmp.MovementId
+                                             , STRING_AGG (DISTINCT Object_Contract.ValueData, ';') AS ContractName_detail 
+                                        FROM (SELECT MovementItem.MovementId
+                                                   , MovementItem.ObjectId
+                                              FROM MovementItem
+                                              WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                                AND MovementItem.DescId = zc_MI_Detail()
+                                                AND MovementItem.isErased = FALSE 
+                                                AND COALESCE (MovementItem.ObjectId,0) > 0 
+                                           /* UNION ALL
+                                              SELECT tmpMLO_Contract.MovementId
+                                                   , tmpMLO_Contract.ObjectId
+                                              FROM tmpMLO_Contract  */
+                                        ) AS tmp
+                                           INNER JOIN Object AS Object_Contract ON Object_Contract.Id = tmp.ObjectId
+                                        GROUP BY tmp.MovementId
+                                        )
 
      SELECT
              Movement.Id                                AS Id
@@ -198,7 +225,8 @@ BEGIN
            , View_Contract_InvNumber.ContractCode     	AS ContractCode
            , View_Contract_InvNumber.InvNumber         	AS ContractName
            , View_Contract_InvNumber.ContractTagName     
-           , tmpMIDetail_tax.ContractName_detail ::TVarChar AS ContractName_detail
+           , tmpMIDetail_TaxCorrective.ContractName_detail ::TVarChar AS ContractName_detail
+           , tmpMIDetail_tax.ContractName_detail           ::TVarChar AS ContractName_detail_Child
            , Object_TaxKind.Id                		    AS TaxKindId
            , Object_TaxKind.ValueData         		    AS TaxKindName
            , Movement_DocumentMaster.Id                 AS DocumentMasterId
@@ -365,9 +393,9 @@ BEGIN
             LEFT JOIN Object AS Object_Branch  ON Object_Branch.Id  = tmpMovement.BranchId
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = tmpMovement.DocumentTaxKindId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
@@ -442,12 +470,12 @@ BEGIN
                                      AND MovementBoolean_isUKTZ_new.DescId     = zc_MovementBoolean_UKTZ_new()
 
 
-            LEFT JOIN tmpMLO_Contract_Child AS MovementLinkObject_To_Child
-                                            ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
-                                           AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Child
-                                         ON MovementLinkObject_Contract_Child.MovementId = MovementLinkMovement_Child.MovementId
-                                        AND MovementLinkObject_Contract_Child.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Child
+                                         ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                        AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN tmpMLO_Contract_Child AS MovementLinkObject_Contract_Child
+                                            ON MovementLinkObject_Contract_Child.MovementId = MovementLinkMovement_Child.MovementId
+                                           AND MovementLinkObject_Contract_Child.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -471,13 +499,14 @@ BEGIN
                                    ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO() 
 
+            LEFT JOIN tmpMIDetail_TaxCorrective ON tmpMIDetail_TaxCorrective.MovementId = Movement.Id
             LEFT JOIN tmpMIDetail_tax ON tmpMIDetail_tax.MovementId = MovementLinkMovement_Child.MovementChildId 
            ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

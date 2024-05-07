@@ -645,7 +645,7 @@ inherited TaxForm: TTaxForm
       RefreshOnTabSetChanges = True
     end
     object actGridToExcel_Det: TdsdGridToExcel [1]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
@@ -662,7 +662,7 @@ inherited TaxForm: TTaxForm
       TabSheet = tsMain
     end
     object actShowErased_Det: TBooleanStoredProcAction [6]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
@@ -689,7 +689,7 @@ inherited TaxForm: TTaxForm
       TabSheet = tsMain
     end
     object actUpdateDetailDS: TdsdUpdateDataSet [9]
-      Category = 'DSDLib'
+      Category = 'Detail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIDetail
@@ -834,7 +834,7 @@ inherited TaxForm: TTaxForm
       isShowModal = True
     end
     object MIDetailProtocolOpenForm: TdsdOpenForm [20]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
       Enabled = False
@@ -1310,6 +1310,7 @@ inherited TaxForm: TTaxForm
       Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewDetail
       Action = actChoiceFormContract

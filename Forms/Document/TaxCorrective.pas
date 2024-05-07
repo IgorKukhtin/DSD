@@ -163,6 +163,38 @@ type
     actUpdate_Branch: TdsdExecStoredProc;
     macUpdateBranch: TMultiAction;
     bbUpdateBranch: TdxBarButton;
+    tsContract: TcxTabSheet;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    cxGridDetail: TcxGrid;
+    cxGridDBTableViewDetail: TcxGridDBTableView;
+    ContractCode_ch2: TcxGridDBColumn;
+    ContractName_ch2: TcxGridDBColumn;
+    ContractTagName_ch2: TcxGridDBColumn;
+    ContractKindName_ch2: TcxGridDBColumn;
+    StartDate_ch2: TcxGridDBColumn;
+    EndDate_ch2: TcxGridDBColumn;
+    isErased_ch2: TcxGridDBColumn;
+    cxGridLevelDetail: TcxGridLevel;
+    actChoiceFormContract: TOpenChoiceForm;
+    InsertRecord_Det: TInsertRecord;
+    spUnErasedMI_Det: TdsdStoredProc;
+    spErasedMI_Det: TdsdStoredProc;
+    spInsertUpdateMIDetail: TdsdStoredProc;
+    spSelectDetail: TdsdStoredProc;
+    SetErased_Det: TdsdUpdateErased;
+    SetUnErased_Det: TdsdUpdateErased;
+    actGridToExcel_Det: TdsdGridToExcel;
+    actShowErased_Det: TBooleanStoredProcAction;
+    actUpdateDetailDS: TdsdUpdateDataSet;
+    bbShowErased_Det: TdxBarButton;
+    bbGridToExcel_Det: TdxBarButton;
+    bbInsertRecord_Det: TdxBarButton;
+    bbSetErased_Det: TdxBarButton;
+    bbSetUnErased_Det: TdxBarButton;
+    MIDetailProtocolOpenForm: TdsdOpenForm;
+    bbMIDetailProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public
