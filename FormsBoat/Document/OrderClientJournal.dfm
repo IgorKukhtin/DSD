@@ -623,14 +623,14 @@ object OrderClientJournalForm: TOrderClientJournalForm
         Width = 75
       end
       object TransportSumm_load: TcxGridDBColumn
-        Caption = 'Transport Preparation'
+        Caption = 'Transport Pre.(site)'
         DataBinding.FieldName = 'TransportSumm_load'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+        HeaderHint = #1057#1091#1084#1084#1072' Transport Preparation, '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
         Width = 70
       end
       object TransportSumm: TcxGridDBColumn
