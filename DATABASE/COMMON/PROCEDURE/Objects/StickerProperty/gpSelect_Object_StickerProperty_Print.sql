@@ -106,23 +106,47 @@ BEGIN
      --    RAISE EXCEPTION 'Ошибка.Переданы некорректные параметры печати.';
      --END IF;
 
-     -- поиск
-     vbGoodsPropertyId:= COALESCE ((SELECT MAX (OL_Juridical_GoodsProperty.ChildObjectId)
-                                    FROM ObjectLink AS OL_Juridical_Retail
-                                         INNER JOIN ObjectLink AS OL_Juridical_GoodsProperty
-                                                               ON OL_Juridical_GoodsProperty.ObjectId      = OL_Juridical_Retail.ObjectId
-                                                              AND OL_Juridical_GoodsProperty.DescId        = zc_ObjectLink_Juridical_GoodsProperty()
-                                                              AND OL_Juridical_GoodsProperty.ChildObjectId > 0
-                                    WHERE OL_Juridical_Retail.ChildObjectId = inRetailId
-                                      AND OL_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
-                                   )
-                                 , (SELECT OL_Retail_GoodsProperty.ChildObjectId
-                                    FROM ObjectLink AS OL_Retail_GoodsProperty
-                                    WHERE OL_Retail_GoodsProperty.ObjectId = inRetailId
-                                      AND OL_Retail_GoodsProperty.DescId   = zc_ObjectLink_Retail_GoodsProperty()
-                                   )
-                                 , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)
-                                  );
+     IF zc_Measure_Sh() = (SELECT ObjectLink_Goods_Measure.ChildObjectId
+                           FROM Object AS Object_StickerProperty
+                                -- индивидуальный - Свойства этикетки
+                                LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_StickerFile
+                                                     ON ObjectLink_StickerProperty_StickerFile.ObjectId = Object_StickerProperty.Id
+                                                    AND ObjectLink_StickerProperty_StickerFile.DescId   = zc_ObjectLink_StickerProperty_StickerFile()
+
+                                LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                                     ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                                    AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                                LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                                     ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                                    AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                     ON ObjectLink_Goods_Measure.ObjectId = ObjectLink_Sticker_Goods.ChildObjectId
+                                                    AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                           WHERE Object_StickerProperty.Id = inObjectId
+                          )
+     THEN
+         -- поиск
+         vbGoodsPropertyId:= COALESCE ((SELECT MAX (OL_Juridical_GoodsProperty.ChildObjectId)
+                                        FROM ObjectLink AS OL_Juridical_Retail
+                                             INNER JOIN ObjectLink AS OL_Juridical_GoodsProperty
+                                                                   ON OL_Juridical_GoodsProperty.ObjectId      = OL_Juridical_Retail.ObjectId
+                                                                  AND OL_Juridical_GoodsProperty.DescId        = zc_ObjectLink_Juridical_GoodsProperty()
+                                                                  AND OL_Juridical_GoodsProperty.ChildObjectId > 0
+                                        WHERE OL_Juridical_Retail.ChildObjectId = inRetailId
+                                          AND OL_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                       )
+                                     , (SELECT OL_Retail_GoodsProperty.ChildObjectId
+                                        FROM ObjectLink AS OL_Retail_GoodsProperty
+                                        WHERE OL_Retail_GoodsProperty.ObjectId = inRetailId
+                                          AND OL_Retail_GoodsProperty.DescId   = zc_ObjectLink_Retail_GoodsProperty()
+                                       )
+                                     , zfCalc_GoodsPropertyId (0, zc_Juridical_Basis(), 0)
+                                      );
+
+     ELSE
+         vbGoodsPropertyId:= 0;
+     END IF;
+
 
       /*IF vbUserId = 5
       THEN
@@ -781,7 +805,7 @@ BEGIN
                                   ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_StickerProperty_GoodsKind.ChildObjectId
-             
+
              LEFT JOIN tmpObject_GoodsPropertyValue_calc ON tmpObject_GoodsPropertyValue_calc.GoodsId     = Object_Goods.Id
                                                         AND tmpObject_GoodsPropertyValue_calc.GoodsKindId = Object_GoodsKind.Id
 
