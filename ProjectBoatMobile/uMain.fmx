@@ -665,7 +665,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 10
+        TabIndex = 1
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -17578,7 +17578,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -20878,7 +20878,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -26494,6 +26494,13 @@
     DataSet = DM.cdsOrderInternalChoice
     ScopeMappings = <>
     Left = 160
-    Top = 248
+    Top = 256
+  end
+  object TimerTorchMode: TTimer
+    Enabled = False
+    Interval = 400
+    OnTimer = TimerTorchModeTimer
+    Left = 264
+    Top = 96
   end
 end
