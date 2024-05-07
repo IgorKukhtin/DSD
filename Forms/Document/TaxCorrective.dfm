@@ -1,27 +1,28 @@
 inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
-  ClientWidth = 1116
-  ExplicitWidth = 1132
+  ClientWidth = 1142
+  ExplicitTop = -58
+  ExplicitWidth = 1158
   ExplicitHeight = 707
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
-    Width = 1116
+    Width = 1142
     Height = 505
     ExplicitTop = 163
-    ExplicitWidth = 1116
+    ExplicitWidth = 1142
     ExplicitHeight = 505
     ClientRectBottom = 505
-    ClientRectRight = 1116
+    ClientRectRight = 1142
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1116
+      ExplicitWidth = 1142
       ExplicitHeight = 481
       inherited cxGrid: TcxGrid
-        Width = 1116
+        Width = 1142
         Height = 481
-        ExplicitWidth = 1116
+        ExplicitWidth = 1142
         ExplicitHeight = 481
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -288,7 +289,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1116
+        Width = 1142
         Height = 481
         Align = alClient
         PopupMenu = PopupMenu
@@ -562,12 +563,129 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
       end
     end
+    object tsContract: TcxTabSheet
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 2
+      object cxGridDetail: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1142
+        Height = 481
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        object cxGridDBTableViewDetail: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ContractCode_ch2: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object ContractName_ch2: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceFormContract
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 230
+          end
+          object ContractTagName_ch2: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object ContractKindName_ch2: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object StartDate_ch2: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object EndDate_ch2: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isErased_ch2: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Options.Editing = False
+            Width = 50
+          end
+        end
+        object cxGridLevelDetail: TcxGridLevel
+          GridView = cxGridDBTableViewDetail
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
-    Width = 1116
+    Width = 1142
     Height = 137
     TabOrder = 3
-    ExplicitWidth = 1116
+    ExplicitWidth = 1142
     ExplicitHeight = 137
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -937,8 +1055,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           StoredProc = spSelectChild
+        end
+        item
+          StoredProc = spSelectDetail
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actMISetErased: TdsdUpdateErased
+      TabSheet = tsMain
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      TabSheet = tsMain
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
@@ -948,6 +1075,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           StoredProc = spInsertUpdateMovement_DocChild
         end>
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      TabSheet = tsMain
+    end
+    inherited actShowAll: TBooleanStoredProcAction
+      TabSheet = tsMain
     end
     object actUpdateChildDS: TdsdUpdateDataSet [7]
       Category = 'DSDLib'
@@ -1026,7 +1159,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       isShowModal = True
     end
+    inherited MovementItemProtocolOpenForm: TdsdOpenForm
+      TabSheet = tsMain
+    end
     inherited actAddMask: TdsdExecStoredProc
+      TabSheet = tsMain
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
     end
@@ -1229,6 +1366,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object actChangeSignAmount: TdsdExecStoredProc
       Category = 'DSDLib'
+      TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateMIAmountSign
@@ -1413,6 +1551,216 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1060#1080#1083#1080#1072#1083
       ImageIndex = 60
     end
+    object actChoiceFormContract: TOpenChoiceForm
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ContractChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractTagName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractTagName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContractKindName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'EndDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InsertRecord_Det: TInsertRecord
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableViewDetail
+      Action = actChoiceFormContract
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      ImageIndex = 0
+    end
+    object SetErased_Det: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMI_Det
+      StoredProcList = <
+        item
+          StoredProc = spErasedMI_Det
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS
+    end
+    object SetUnErased_Det: TdsdUpdateErased
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spUnErasedMI_Det
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMI_Det
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
+    end
+    object actGridToExcel_Det: TdsdGridToExcel
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      Grid = cxGridDetail
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actShowErased_Det: TBooleanStoredProcAction
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spSelectDetail
+      StoredProcList = <
+        item
+          StoredProc = spSelectDetail
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actUpdateDetailDS: TdsdUpdateDataSet
+      Category = 'Detail'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdateMIDetail
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIDetail
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+      Caption = 'actUpdateDetailDS'
+      DataSource = DetailDS
+    end
+    object MIDetailProtocolOpenForm: TdsdOpenForm
+      Category = 'Detail'
+      TabSheet = tsContract
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1474,6 +1822,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased_Det'
         end
         item
           Visible = True
@@ -1546,6 +1898,22 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertRecord_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased_Det'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1586,11 +1954,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbMIDetailProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_Det'
         end
         item
           Visible = True
@@ -1637,6 +2013,30 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     object bbUpdateBranch: TdxBarButton
       Action = macUpdateBranch
+      Category = 0
+    end
+    object bbShowErased_Det: TdxBarButton
+      Action = actShowErased_Det
+      Category = 0
+    end
+    object bbGridToExcel_Det: TdxBarButton
+      Action = actGridToExcel_Det
+      Category = 0
+    end
+    object bbInsertRecord_Det: TdxBarButton
+      Action = InsertRecord_Det
+      Category = 0
+    end
+    object bbSetErased_Det: TdxBarButton
+      Action = SetErased_Det
+      Category = 0
+    end
+    object bbSetUnErased_Det: TdxBarButton
+      Action = SetUnErased_Det
+      Category = 0
+    end
+    object bbMIDetailProtocolOpenForm: TdxBarButton
+      Action = MIDetailProtocolOpenForm
       Category = 0
     end
   end
@@ -3088,6 +3488,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataSummaryItemIndex = 2
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 982
     Top = 401
@@ -3276,5 +3677,154 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     PackSize = 1
     Left = 593
     Top = 576
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 944
+    Top = 232
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 992
+    Top = 240
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewDetail
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ChartList = <>
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 2
+      end>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
+    Left = 1062
+    Top = 209
+  end
+  object spUnErasedMI_Det: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TaxCorrective_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1102
+    Top = 280
+  end
+  object spErasedMI_Det: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_TaxCorrective_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1110
+    Top = 336
+  end
+  object spInsertUpdateMIDetail: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_TaxCorrective_Detail'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1040
+    Top = 288
+  end
+  object spSelectDetail: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_TaxCorrective_Detail'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased_Det
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1040
+    Top = 328
   end
 end

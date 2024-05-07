@@ -10,6 +10,7 @@ inherited TaxForm: TTaxForm
     Top = 163
     Width = 1267
     Height = 505
+    Properties.ActivePage = cxTabSheet1
     ExplicitTop = 163
     ExplicitWidth = 1267
     ExplicitHeight = 505
@@ -645,27 +646,30 @@ inherited TaxForm: TTaxForm
       RefreshOnTabSetChanges = True
     end
     object actGridToExcel_Det: TdsdGridToExcel [1]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       Grid = cxGridDetail
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     object actShowErased_Det: TBooleanStoredProcAction [6]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelectDetail
       StoredProcList = <
         item
@@ -684,12 +688,14 @@ inherited TaxForm: TTaxForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actUpdateDetailDS: TdsdUpdateDataSet [9]
-      Category = 'DSDLib'
+      Category = 'Detail'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       StoredProc = spInsertUpdateMIDetail
@@ -707,6 +713,7 @@ inherited TaxForm: TTaxForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateTax_DisableNPP_auto
       StoredProcList = <
@@ -834,10 +841,9 @@ inherited TaxForm: TTaxForm
       isShowModal = True
     end
     object MIDetailProtocolOpenForm: TdsdOpenForm [20]
-      Category = 'DSDLib'
+      Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -867,6 +873,7 @@ inherited TaxForm: TTaxForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actPrintTax_Us: TdsdPrintAction [23]
       Category = 'DSDLib'
@@ -916,6 +923,7 @@ inherited TaxForm: TTaxForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertMaskDoc
@@ -1008,6 +1016,7 @@ inherited TaxForm: TTaxForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1101#1083#1077#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
     end
@@ -1015,6 +1024,7 @@ inherited TaxForm: TTaxForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spTax
       StoredProcList = <
@@ -1074,6 +1084,7 @@ inherited TaxForm: TTaxForm
       Category = 'INN'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogINN
@@ -1195,6 +1206,7 @@ inherited TaxForm: TTaxForm
       Category = 'TaxLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actMedocProcedure
@@ -1279,6 +1291,7 @@ inherited TaxForm: TTaxForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       ActionList = <
         item
@@ -1322,7 +1335,6 @@ inherited TaxForm: TTaxForm
       Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMI_Det
       StoredProcList = <
         item
@@ -1339,7 +1351,6 @@ inherited TaxForm: TTaxForm
       Category = 'Detail'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMI_Det
       StoredProcList = <
         item
