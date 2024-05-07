@@ -395,10 +395,10 @@ object OrderClientForm: TOrderClientForm
       ShowHint = True
     end
     object cxLabel27: TcxLabel
-      Left = 866
+      Left = 868
       Top = 98
-      Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-      Caption = 'Tr. Preparation:'
+      Hint = #1057#1091#1084#1084#1072' Transport Preparation, '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+      Caption = 'Transport Pre. :'
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -410,7 +410,7 @@ object OrderClientForm: TOrderClientForm
       Style.IsFontAssigned = True
     end
     object cxLabel28: TcxLabel
-      Left = 909
+      Left = 910
       Top = 146
       Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' '#1074#1089#1077#1093' '#1089#1082#1080#1076#1086#1082' '#1080' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1086#1084', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
       Caption = 'Total LP :'
@@ -636,10 +636,10 @@ object OrderClientForm: TOrderClientForm
       Width = 133
     end
     object cxLabel7: TcxLabel
-      Left = 886
+      Left = 893
       Top = 121
       Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
-      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090' :'
+      Caption = 'Transport :'
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
@@ -3491,7 +3491,7 @@ object OrderClientForm: TOrderClientForm
   object edTransportSumm_load: TcxCurrencyEdit
     Left = 963
     Top = 93
-    Hint = #1057#1091#1084#1084#1072' '#1058#1088#1072#1085#1089#1087#1086#1088#1090', '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
+    Hint = #1057#1091#1084#1084#1072' Transport Preparation, '#1073#1077#1079' '#1053#1044#1057' ('#1076#1072#1085#1085#1099#1077' '#1089#1072#1081#1090#1072')'
     ParentShowHint = False
     Properties.Alignment.Horz = taRightJustify
     Properties.DecimalPlaces = 4
@@ -3532,7 +3532,7 @@ object OrderClientForm: TOrderClientForm
     Width = 1390
     Height = 64
     Align = alBottom
-    TabOrder = 13
+    TabOrder = 12
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6

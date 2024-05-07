@@ -53,16 +53,12 @@ object ProductEditForm: TProductEditForm
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     Properties.Options = [pcoAlwaysShowGoDialogButton, pcoGradient, pcoGradientClientArea]
-    ExplicitWidth = 736
     ClientRectBottom = 537
     ClientRectRight = 695
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = 'Main'
       ImageIndex = 0
-      ExplicitLeft = 24
-      ExplicitTop = 104
-      ExplicitWidth = 872
       object edName: TcxTextEdit
         Left = 10
         Top = 393
@@ -289,7 +285,7 @@ object ProductEditForm: TProductEditForm
         Properties.DisplayFormat = ',0.00'
         ShowHint = True
         TabOrder = 29
-        Width = 94
+        Width = 105
       end
       object cxLabel15: TcxLabel
         Left = 542
@@ -353,7 +349,7 @@ object ProductEditForm: TProductEditForm
         Top = 29
         Properties.ReadOnly = True
         TabOrder = 37
-        Width = 94
+        Width = 105
       end
       object cxLabel18: TcxLabel
         Left = 542
@@ -368,7 +364,7 @@ object ProductEditForm: TProductEditForm
         Properties.SaveTime = False
         Properties.ShowTime = False
         TabOrder = 38
-        Width = 94
+        Width = 105
       end
       object ceStatus: TcxButtonEdit
         Left = 332
@@ -410,7 +406,7 @@ object ProductEditForm: TProductEditForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 42
-        Width = 114
+        Width = 123
       end
       object cxLabel20: TcxLabel
         Left = 332
@@ -426,12 +422,12 @@ object ProductEditForm: TProductEditForm
         Width = 114
       end
       object cxLabel21: TcxLabel
-        Left = 579
+        Left = 591
         Top = 285
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
       end
       object edTotalSummVAT: TcxCurrencyEdit
-        Left = 579
+        Left = 591
         Top = 305
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
@@ -461,7 +457,7 @@ object ProductEditForm: TProductEditForm
         Properties.ReadOnly = True
         ShowHint = True
         TabOrder = 49
-        Width = 114
+        Width = 123
       end
       object cxLabel26: TcxLabel
         Left = 459
@@ -501,7 +497,7 @@ object ProductEditForm: TProductEditForm
         Properties.ReadOnly = True
         ShowHint = True
         TabOrder = 53
-        Width = 114
+        Width = 123
       end
       object cxLabel28: TcxLabel
         Left = 459
@@ -525,7 +521,7 @@ object ProductEditForm: TProductEditForm
         Properties.DisplayFormat = ',0.'
         Properties.ReadOnly = True
         TabOrder = 55
-        Width = 94
+        Width = 105
       end
       object cxLabel30: TcxLabel
         Left = 332
@@ -571,7 +567,7 @@ object ProductEditForm: TProductEditForm
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         TabOrder = 58
-        Width = 114
+        Width = 123
       end
       object cxLabel31: TcxLabel
         Left = 459
@@ -612,7 +608,7 @@ object ProductEditForm: TProductEditForm
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
         TabOrder = 71
-        Width = 114
+        Width = 123
       end
       object edTransportSumm_load: TcxCurrencyEdit
         Left = 505
@@ -620,12 +616,12 @@ object ProductEditForm: TProductEditForm
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
         TabOrder = 59
-        Width = 68
+        Width = 77
       end
       object cxLabel34: TcxLabel
         Left = 505
         Top = 241
-        Caption = 'Tr. Preparat.'
+        Caption = 'Transport Pre.'
       end
       object cxLabel35: TcxLabel
         Left = 71
@@ -791,7 +787,7 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
       end
       object edBasis_summ: TcxCurrencyEdit
-        Left = 499
+        Left = 500
         Top = 215
         Hint = #1048#1058#1054#1043#1054' '#1089' '#1091#1095#1077#1090#1086#1084' % '#1089#1082#1080#1076#1086#1082', '#1073#1077#1079' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1072', '#1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1077#1079' '#1053#1044#1057
         ParentShowHint = False
@@ -802,15 +798,15 @@ object ProductEditForm: TProductEditForm
         ShowHint = True
         Style.Color = clGradientInactiveCaption
         TabOrder = 81
-        Width = 137
+        Width = 148
       end
       object cxLabel49: TcxLabel
-        Left = 579
+        Left = 591
         Top = 241
         Caption = 'Transport'
       end
       object edTransportSumm: TcxCurrencyEdit
-        Left = 579
+        Left = 591
         Top = 261
         Properties.DecimalPlaces = 2
         Properties.DisplayFormat = ',0.00'
@@ -821,7 +817,6 @@ object ProductEditForm: TProductEditForm
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
       ImageIndex = 1
-      ExplicitWidth = 736
       object cxLabel22: TcxLabel
         Left = 611
         Top = 59
@@ -1074,7 +1069,6 @@ object ProductEditForm: TProductEditForm
         Align = alClient
         Caption = 'Panel1'
         TabOrder = 22
-        ExplicitWidth = 736
         object dxBarDockControl1: TdxBarDockControl
           Left = 1
           Top = 1
@@ -1082,7 +1076,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 734
         end
         object cxGrid1: TcxGrid
           Left = 1
@@ -1091,7 +1084,6 @@ object ProductEditForm: TProductEditForm
           Height = 268
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 734
           object cxGridDBTableView1: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = BankDS
@@ -1340,7 +1332,6 @@ object ProductEditForm: TProductEditForm
         Align = alTop
         Caption = 'Panel1'
         TabOrder = 23
-        ExplicitWidth = 736
         object dxBarDockControl3: TdxBarDockControl
           Left = 1
           Top = 1
@@ -1348,7 +1339,6 @@ object ProductEditForm: TProductEditForm
           Height = 26
           Align = dalTop
           BarManager = BarManager
-          ExplicitWidth = 734
         end
         object cxGrid: TcxGrid
           Left = 1
@@ -1357,7 +1347,6 @@ object ProductEditForm: TProductEditForm
           Height = 189
           Align = alClient
           TabOrder = 1
-          ExplicitWidth = 734
           object cxGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = InvoiceDS
