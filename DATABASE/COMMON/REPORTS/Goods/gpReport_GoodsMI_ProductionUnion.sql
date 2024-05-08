@@ -30,7 +30,8 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, DescName TVarChar
              , MeasureName TVarChar
              , MeasureName_child TVarChar
              , Amount_weight TFloat
-             , ChildAmount_weight TFloat
+             , ChildAmount_weight TFloat  
+             , Comment TVarChar, ChildComment TVarChar
              )   
 AS
 $BODY$
@@ -110,7 +111,8 @@ BEGIN
                              , MIContainer.ContainerId            AS ContainerId
                              , MIContainer.ObjectId_Analyzer      AS GoodsId
                              , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END AS GoodsKindId
-                             , SUM (MIContainer.Amount)           AS Amount
+                             , SUM (MIContainer.Amount)           AS Amount 
+                             , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
                         FROM MovementItemContainer AS MIContainer
                              INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.ObjectExtId_Analyzer
                              INNER JOIN _tmpToGroup   ON _tmpToGroup.ToId     = MIContainer.WhereObjectId_Analyzer
@@ -132,6 +134,9 @@ BEGIN
                                                          AND MLO_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
                              LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MLO_SubjectDoc.ObjectId
 
+                             LEFT JOIN MovementItemString AS MIString_Comment
+                                                          ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.isActive = TRUE
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
@@ -167,6 +172,7 @@ BEGIN
                              , MIContainer.ObjectId_Analyzer     AS GoodsId       
                              , CASE WHEN inIsPartion = FALSE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
                              , -1 * SUM (MIContainer.Amount)     AS Amount
+                             , STRING_AGG (DISTINCT MIString_Comment.ValueData, ';') ::TVarChar AS Comment
                         FROM tmpContainer_in
                              INNER JOIN MovementItemContainer AS MIContainer
                                                               ON MIContainer.ContainerId_Analyzer = tmpContainer_in.ContainerId
@@ -185,6 +191,10 @@ BEGIN
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+
+                             LEFT JOIN MovementItemString AS MIString_Comment
+                                                          ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                         AND MIString_Comment.DescId = zc_MIString_Comment()
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MIContainer.DescId
                                , MovementBoolean_Peresort.ValueData
@@ -255,7 +265,11 @@ BEGIN
             * CASE WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight_child.ValueData
                    WHEN ObjectLink_Goods_Measure_child.ChildObjectId = zc_Measure_kg() THEN 1
                    ELSE 0
-              END) ::TFloat AS ChildAmount_weight
+              END) ::TFloat AS ChildAmount_weight 
+           
+           , tmpOperationGroup.Comment     ::TVarChar
+           , tmpOperationGroup.Comment_out ::TVarChar AS ChildComment
+
       FROM (SELECT tmpMI_in.MovementId
                  , tmpMI_in.isPeresort
                  , tmpMI_in.isClosed
@@ -265,13 +279,15 @@ BEGIN
                  , tmpMI_in.GoodsKindId 
                  , tmpMI_in.OperCount
                  , tmpMI_in.OperSumm
-                 , tmpMI_in.SubjectDocName
+                 , tmpMI_in.SubjectDocName 
+                 , tmpMI_in.Comment
 
                  , tmpMI_out.PartionGoodsId AS PartionGoodsId_out
                  , tmpMI_out.GoodsId        AS GoodsId_out
                  , tmpMI_out.GoodsKindId    AS GoodsKindId_out
                  , tmpMI_out.OperCount      AS OperCount_out
-                 , tmpMI_out.OperSumm       AS OperSumm_out
+                 , tmpMI_out.OperSumm       AS OperSumm_out 
+                 , tmpMI_out.Comment        AS Comment_out
 
             FROM (SELECT tmpMI_ContainerIn.MovementId
                        , tmpMI_ContainerIn.isPeresort
@@ -280,6 +296,7 @@ BEGIN
                        , COALESCE (tmpContainer_in.PartionGoodsId, 0) AS PartionGoodsId
                        , tmpMI_ContainerIn.GoodsId       
                        , tmpMI_ContainerIn.GoodsKindId 
+                       , STRING_AGG (DISTINCT tmpMI_ContainerIn.Comment, ';') AS Comment
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
                        , STRING_AGG (DISTINCT tmpMI_ContainerIn.SubjectDocName, '; ') AS SubjectDocName
@@ -303,6 +320,7 @@ BEGIN
                                  , tmpMI_ContainerOut.GoodsId       
                                  , tmpMI_ContainerOut.GoodsKindId 
                                  , CASE WHEN inIsPartion = FALSE THEN 0 ELSE COALESCE (ContainerLO_PartionGoods.ObjectId, 0) END AS PartionGoodsId
+                                 , STRING_AGG (DISTINCT tmpMI_ContainerOut.Comment, ';') AS Comment
                                  , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperCount
                                  , SUM (CASE WHEN tmpMI_ContainerOut.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerOut.Amount ELSE 0 END) AS OperSumm
                             FROM tmpMI_ContainerOut
@@ -406,3 +424,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_ProductionUnion (inStartDate:= '03.06.2016', inEndDate:= '03.06.2016', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
+
+--   SELECT * FROM gpReport_GoodsMI_ProductionUnion(inStartDate:= '03.05.2024', inEndDate:= '03.05.2024', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inChildGoodsGroupId:= 0, inChildGoodsId:=0, inFromId:= 0, inToId:= 0, inSession:= zfCalc_UserAdmin());
