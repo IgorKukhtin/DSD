@@ -76,6 +76,8 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     DescName: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
+    ChildComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
