@@ -668,7 +668,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 0
+        TabIndex = 3
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -710,7 +710,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 11.000000000000000000
           Size.Height = 11.000000000000000000
           Size.PlatformDefault = False
@@ -17908,7 +17908,7 @@
           Text = 'tiMain'
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
-          object Panel12: TPanel
+          object PanelMain: TPanel
             Align = Client
             Size.Width = 336.000000000000000000
             Size.Height = 484.000000000000000000
@@ -17989,9 +17989,6 @@
                   end
                   item
                     Value = 25.000000270336050000
-                  end
-                  item
-                    SizeStyle = Auto
                   end>
                 object bInventoryScan: TButton
                   Align = Client
@@ -19433,7 +19430,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 11.000000000000000000
           Size.Height = 11.000000000000000000
           Size.PlatformDefault = False
@@ -19442,21 +19439,29 @@
           Text = 'tiScanBarCode'
           ExplicitSize.cx = 8.000000000000000000
           ExplicitSize.cy = 8.000000000000000000
-          object imgCameraScanBarCode: TImage
-            MultiResBitmap.Height = 117
-            MultiResBitmap.Width = 117
-            MultiResBitmap.LoadSize = 1
-            MultiResBitmap = <
-              item
-              end
-              item
-                Scale = 1.500000000000000000
-              end>
+          object iScanBarCodePanel: TPanel
             Align = Client
-            MarginWrapMode = Center
             Size.Width = 336.000000000000000000
             Size.Height = 484.000000000000000000
             Size.PlatformDefault = False
+            StyleLookup = 'pMapButtonsStyle1'
+            TabOrder = 0
+            object imgCameraScanBarCode: TImage
+              MultiResBitmap.Height = 117
+              MultiResBitmap.Width = 117
+              MultiResBitmap.LoadSize = 1
+              MultiResBitmap = <
+                item
+                end
+                item
+                  Scale = 1.500000000000000000
+                end>
+              Align = Client
+              MarginWrapMode = Center
+              Size.Width = 336.000000000000000000
+              Size.Height = 484.000000000000000000
+              Size.PlatformDefault = False
+            end
           end
         end
         object tiGoods: TTabItem
