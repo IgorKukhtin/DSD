@@ -853,7 +853,10 @@ BEGIN
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price2 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ2 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price2
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price3 WHEN ObjectFloatReceipt_Value.ValueData > 0 THEN tmpChild_calc.Summ3 / ObjectFloatReceipt_Value.ValueData ELSE 0 END AS Price3
 
-            , CASE /*WHEN vbUserId = 5 THEN tmpReceiptChild.Amount_in_calc*/ WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Amount_out_calc ELSE 0 END AS Amount_calc
+            , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 AND tmpReceiptChild.GroupNumber = 8 THEN CAST (tmpReceiptChild.Amount_out_calc AS NUMERIC(16,3))
+                   WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Amount_out_calc
+                   ELSE 0
+              END :: TFloat AS Amount_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price1_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ1_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price1_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price2_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ2_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price2_calc
             , CASE WHEN tmpReceiptChild.ReceiptId_from = 0 THEN tmpReceiptChild.Price3_calc WHEN tmpReceiptChild.Amount_in_calc > 0 THEN tmpChild_calc.Summ3_calc / tmpReceiptChild.Amount_in_calc ELSE 0 END AS Price3_calc
