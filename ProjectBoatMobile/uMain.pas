@@ -421,6 +421,7 @@ type
     BindSourceDB1: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
     TimerTorchMode: TTimer;
+    Panel12: TPanel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
