@@ -10,7 +10,7 @@ $BODY$
 BEGIN
   RAISE EXCEPTION 'Ошибка.<%>', 'lpDelete_ObjectForTest';
   -- Серьезный скрипт !!!НЕ ДЛЯ РАБОЧЕЙ БАЗЫ!!!
-/*  DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
+  /*DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistoryString WHERE ObjectHistoryString.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
@@ -18,16 +18,30 @@ BEGIN
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistory  WHERE ObjectId = inId;
   DELETE FROM DefaultValue  WHERE UserKeyId = inId;
-  DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
-  DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+ -- DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  --DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId); 
+  
+  --DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);                      
+  --DELETE FROM MovementItem WHERE Id = inId  --in (SELECT Id FROM MovementItem WHERE ObjectId = inId); ---!
+  --DELETE FROM MovementItem WHERE ObjectId = inId;  
+  PERFORM lpDelete_MovementItem (MovementItem.Id, Session) FROM MovementItem WHERE ObjectId = inId;
+  DELETE FROM MovementItemContainer WHERE ObjectId_analyzer = inId;
   DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
+  DELETE FROM ContainerLinkObject WHERE containerId IN (SELECT Id FROM Container WHERE ParentId IN (SELECT Id FROM Container WHERE ObjectId = inId));
+  DELETE FROM ContainerLinkObject WHERE containerId IN (SELECT Id FROM Container WHERE ObjectId = inId);
+  DELETE FROM Container WHERE Id IN (SELECT Id FROM Container WHERE ParentId IN (SELECT Id FROM Container WHERE ObjectId = inId));
+  DELETE FROM Container WHERE ObjectId = inId;
+  
   DELETE FROM MovementItemString WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemFloat WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  DELETE FROM MovementItemFloat WHERE ValueData in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemDate WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemBoolean WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemLinkObject WHERE ObjectId = inId;
   DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
-  DELETE FROM MovementLinkObject WHERE ObjectId = inId;
+  DELETE FROM MovementLinkObject WHERE ObjectId = inId;  
+ --DELETE FROM MovementItem WHERE ParentId in (SELECT Id FROM MovementItem WHERE ObjectId = inId); ---!
   DELETE FROM MovementItem WHERE ObjectId = inId;
   DELETE FROM Container WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
