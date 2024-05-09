@@ -1200,6 +1200,7 @@ begin
 
   if Assigned(FDictUpdateDataSet) and (FDictUpdateField <> '') then
   begin
+
     FDictUpdateDataSet.Edit;
     if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Id')) then
       FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Id').AsVariant := DM.qurDictListId.AsVariant;
@@ -1208,6 +1209,8 @@ begin
     if Assigned(FDictUpdateDataSet.Fields.FindField(FDictUpdateField + 'Name')) then
       FDictUpdateDataSet.FieldByName(FDictUpdateField + 'Name').AsVariant := DM.qurDictListName.AsVariant;
     FDictUpdateDataSet.Post;
+    sbBackClick(Sender);
+
   end;
 end;
 
@@ -2797,14 +2800,14 @@ procedure TfrmMain.bGoodsChoiceClick(Sender: TObject);
 begin
   if lwGoods.ItemCount = 0 then Exit;
 
-  sbBackClick(Sender);
-
-  if (tcMain.ActiveTab = tiInventoryScan)  then
+  if (FActiveTabPrew = tiInventoryScan)  then
   begin
+    sbBackClick(Sender);
     FGoodsId := DM.qurGoodsListId.AsInteger;
     ShowInventoryItemEdit;
-  end else if (tcMain.ActiveTab = tiSendScan)  then
+  end else if (FActiveTabPrew = tiSendScan)  then
   begin
+    sbBackClick(Sender);
     FGoodsId := DM.qurGoodsListId.AsInteger;
     ShowSendItemEdit;
   end else if Assigned(FDictUpdateDataSet) and (FDictUpdateField <> '') then
@@ -2823,8 +2826,8 @@ begin
     if (tcMain.ActiveTab = tiSendItemEdit) then DM.GetMISendGoods(FDictUpdateDataSet);
 
     FDictUpdateDataSet.Post;
+    sbBackClick(Sender);
   end;
-
 
 end;
 
