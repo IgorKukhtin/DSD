@@ -239,7 +239,7 @@ object DM: TDM
     Connection = conMain
     TableName = 'Goods'
     Left = 116
-    Top = 159
+    Top = 160
     object tbGoodsId: TIntegerField
       FieldName = 'Id'
     end
@@ -293,7 +293,7 @@ object DM: TDM
     Connection = conMain
     TableName = 'PartionCell'
     Left = 244
-    Top = 159
+    Top = 160
     object tbPartionCellId: TIntegerField
       FieldName = 'Id'
     end
@@ -388,7 +388,7 @@ object DM: TDM
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'Remains'
     Left = 468
-    Top = 159
+    Top = 160
     object tbRemainsGoodsId: TIntegerField
       FieldName = 'GoodsId'
     end
@@ -406,6 +406,8 @@ object DM: TDM
     AfterScroll = cdsDictListAfterScroll
     OnCalcFields = qurGoodsListCalcFields
     Connection = conMain
+    FetchOptions.AssignedValues = [evRowsetSize]
+    FetchOptions.RowsetSize = 1000
     SQL.Strings = (
       '')
     Left = 108
@@ -458,6 +460,8 @@ object DM: TDM
   object qurDictList: TFDQuery
     AfterScroll = cdsDictListAfterScroll
     Connection = conMain
+    FetchOptions.AssignedValues = [evRowsetSize]
+    FetchOptions.RowsetSize = 1000
     SQL.Strings = (
       '')
     Left = 268
@@ -476,6 +480,8 @@ object DM: TDM
   object qurGoodsEAN: TFDQuery
     AfterScroll = cdsDictListAfterScroll
     Connection = conMain
+    FetchOptions.AssignedValues = [evRowsetSize]
+    FetchOptions.RowsetSize = 1000
     SQL.Strings = (
       '')
     Left = 420
@@ -698,7 +704,7 @@ object DM: TDM
     Connection = conMain
     TableName = 'Unit'
     Left = 372
-    Top = 159
+    Top = 160
     object tbUnitId: TIntegerField
       FieldName = 'Id'
     end
@@ -1022,7 +1028,7 @@ object DM: TDM
     Connection = conMain
     ResourceOptions.AssignedValues = [rvEscapeExpand]
     TableName = 'SendGoods'
-    Left = 795
+    Left = 796
     Top = 158
     object tbSendGoodsLocalId: TAutoIncField
       FieldName = 'LocalId'
@@ -1408,7 +1414,7 @@ object DM: TDM
   object cdsProductionUnionItemEdit: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 501
+    Left = 502
     Top = 476
     object cdsProductionUnionItemEditId: TIntegerField
       FieldName = 'Id'

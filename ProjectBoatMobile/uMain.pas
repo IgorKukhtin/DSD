@@ -418,7 +418,6 @@ type
     Image17: TImage;
     lOrderInternalChoice: TLabel;
     lwOrderInternalChoice: TListView;
-    BindSourceDB1: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
     TimerTorchMode: TTimer;
     PanelMain: TPanel;
