@@ -188,7 +188,7 @@ BEGIN
                                   AND MovementString_InvNumberRegistered_tax.DescId = zc_MovementString_InvNumberRegistered()
      ;
      
--- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>', vbOperDate_Tax; end if;
+--  IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка.<%>  <%>', vbOperDate_Tax, vbOperDate_begin; end if;
 
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка
@@ -1433,6 +1433,7 @@ BEGIN
                                            AND tmpMITax1.GoodsId     IS NULL
 
             LEFT JOIN tmpReturnIn ON 1 = 1
+-- where (vbUserId <> 5 or tmpGoods.GoodsCode = 2281)
      )
 
     , tmpData AS (SELECT tmpData_all.InvNumberPartner

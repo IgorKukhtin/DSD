@@ -421,6 +421,8 @@ type
     BindSourceDB1: TBindSourceDB;
     LinkListControlToField9: TLinkListControlToField;
     TimerTorchMode: TTimer;
+    PanelMain: TPanel;
+    iScanBarCodePanel: TPanel;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
