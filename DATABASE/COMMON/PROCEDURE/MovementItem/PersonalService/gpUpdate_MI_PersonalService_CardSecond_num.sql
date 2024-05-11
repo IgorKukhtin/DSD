@@ -616,7 +616,7 @@ END IF;
                                   AND ObjectBoolean_BankNot.ObjectId IS NULL
                                   -- если это не Аванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
--- AND CLO_ServiceDate.ContainerId In ( 5822660, 5822652)
+ AND CLO_ServiceDate.ContainerId In ( 5822660, 5822652)
                                )
 
              , tmpPersonal AS (SELECT DISTINCT
@@ -1151,7 +1151,7 @@ END IF;
                 , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject
 
                   -- пересчитали
-                , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMI_res.SummCardSecondRecalc_orig
+                , CASE WHEN vbUserId = 5 AND 1=1 THEN tmpMI_res.SummCardSecondRecalc_orig
                   ELSE
                   -- 1
                   CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
