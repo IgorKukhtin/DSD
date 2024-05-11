@@ -616,7 +616,7 @@ END IF;
                                   AND ObjectBoolean_BankNot.ObjectId IS NULL
                                   -- если это не јванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
- AND CLO_ServiceDate.ContainerId In ( 5822660, 5822652)
+-- AND CLO_ServiceDate.ContainerId In ( 5822660, 5822652)
                                )
 
              , tmpPersonal AS (SELECT DISTINCT
@@ -840,98 +840,9 @@ END IF;
 
                                 GROUP BY ObjectLink_Personal_Member.ChildObjectId
                                )
-       -- результат
-     , tmpMI_res AS (SELECT tmpData.MovementItemId
-                          , tmpData.MemberId
-                          , tmpData.PersonalId
-                          , tmpData.UnitId
-                          , tmpData.PositionId
-                          , tmpData.InfoMoneyId
-                          , tmpData.PersonalServiceListId
-                          , tmpData.FineSubjectId
-                          , tmpData.UnitId_FineSubject
-                          , tmpData.SummCardSecondRecalc
-                          , tmpData.SummCardSecondRecalc_orig
-
-                            -- банк на первом месте + вернули пусто
-                          , CASE WHEN tmpData.BankId_1 > 1 THEN tmpData.BankId_1 ELSE NULL END AS BankId_1
-                            -- банк на втором месте + вернули пусто
-                          , CASE WHEN tmpData.BankId_2 > 1 THEN tmpData.BankId_2 ELSE NULL END AS BankId_2
-                            -- банк на третьем месте + вернули пусто
-                          , CASE WHEN tmpData.BankId_3 > 1 THEN tmpData.BankId_3 ELSE NULL END AS BankId_3
-
-                            -- кто из 1,2,3 на первом месте
-                          , tmpData.Num_1
-                            -- кто из 1,2,3 на втором месте
-                          , tmpData.Num_2
-                            -- кто из 1,2,3 на третьем месте
-                          , tmpData.Num_3
-
-                            -- лимит мин - дл€ 1,2,3
-                          , tmpData.Sum_min_1, tmpData.Sum_min_2, tmpData.Sum_min_3
-                            -- лимит - дл€ 1
-                          , tmpData.Sum_max_1
-                            -- лимит - дл€ 2
-                          , tmpData.Sum_max_2
-                            -- лимит - дл€ 3
-                          , tmpData.Sum_max_3
-
-                            -- сумма дл€ первого места
-                          , tmpData.SummCard_1
-                            -- сумма дл€ второго места
-                          , tmpData.SummCard_2
-                            -- сумма дл€ третьего места
-                          , CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
-
-                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                 ELSE 0
-                            END AS SummCard_3
-
-                            -- накопительно - 1
-                          , SUM (tmpData.SummCard_1) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_1_sum
-                            -- накопительно - 2
-                          , SUM (tmpData.SummCard_2) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_2_sum
-                            -- накопительно - 3
-                          , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
-
-                                      WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
-                                      ELSE 0
-                                 END) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_3_sum
-
-
-                     FROM
-                    (SELECT tmpData.*
-
-                            -- сумма дл€ второго места
-                          , CASE WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
-                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
-
-                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
-                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
-                                 ELSE 0
-                            END AS SummCard_2
-
-
-                     FROM
-                    (SELECT tmpData.*
-                          , tmpData.SummCardSecondRecalc AS SummCardSecondRecalc_orig
-
-                            -- сумма дл€ первого места
-                          , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData.SummCardSecondRecalc, 1)
-                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1 THEN tmpData.Sum_max_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
-
-                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData.SummCardSecondRecalc, 1)
-                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1)
-                                 ELSE 0
-                            END AS SummCard_1
-
-
-                     FROM
-                    (SELECT tmpListPersonal.MovementItemId
+       -- результат - SummCardSecondRecalc
+     , tmpData_SummCardSecondRecalc
+                 AS (SELECT tmpListPersonal.MovementItemId
                           , tmpListPersonal.MemberId
                           , tmpListPersonal.PersonalId
                           , tmpListPersonal.UnitId
@@ -1093,7 +1004,113 @@ END IF;
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MIF_SummAvanceRecalc.ValueData > 0
          
-                    ) AS tmpData
+                    )
+       -- результат
+     , tmpMI_res AS (SELECT tmpData.MovementItemId
+                          , tmpData.MemberId
+                          , tmpData.PersonalId
+                          , tmpData.UnitId
+                          , tmpData.PositionId
+                          , tmpData.InfoMoneyId
+                          , tmpData.PersonalServiceListId
+                          , tmpData.FineSubjectId
+                          , tmpData.UnitId_FineSubject
+                          , tmpData.SummCardSecondRecalc
+                          , tmpData.SummCardSecondRecalc_orig
+
+                            -- банк на первом месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_1 > 1 THEN tmpData.BankId_1 ELSE NULL END AS BankId_1
+                            -- банк на втором месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_2 > 1 THEN tmpData.BankId_2 ELSE NULL END AS BankId_2
+                            -- банк на третьем месте + вернули пусто
+                          , CASE WHEN tmpData.BankId_3 > 1 THEN tmpData.BankId_3 ELSE NULL END AS BankId_3
+
+                            -- кто из 1,2,3 на первом месте
+                          , tmpData.Num_1
+                            -- кто из 1,2,3 на втором месте
+                          , tmpData.Num_2
+                            -- кто из 1,2,3 на третьем месте
+                          , tmpData.Num_3
+
+                            -- лимит мин - дл€ 1,2,3
+                          , tmpData.Sum_min_1, tmpData.Sum_min_2, tmpData.Sum_min_3
+                            -- лимит - дл€ 1
+                          , tmpData.Sum_max_1
+                            -- лимит - дл€ 2
+                          , tmpData.Sum_max_2
+                            -- лимит - дл€ 3
+                          , tmpData.Sum_max_3
+
+                            -- сумма дл€ первого места
+                          , tmpData.SummCard_1
+                            -- сумма дл€ второго места
+                          , tmpData.SummCard_2
+                            -- сумма дл€ третьего места
+                          , CASE -- есть условие и ћин и ћакс
+                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
+
+                                 -- есть только ћин
+                                 WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                 ELSE 0
+                            END AS SummCard_3
+
+                            -- накопительно - 1
+                          , SUM (tmpData.SummCard_1) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_1_sum
+                            -- накопительно - 2
+                          , SUM (tmpData.SummCard_2) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_2_sum
+                            -- накопительно - 3
+                          , SUM (CASE WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_max_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 > tmpData.Sum_max_3 THEN tmpData.Sum_max_3 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2 END
+
+                                      WHEN tmpData.BankId_3 > 0 AND tmpData.Sum_min_3 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 - tmpData.SummCard_2
+                                      ELSE 0
+                                 END) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MovementItemId ASC) AS SummCard_3_sum
+
+
+                     FROM
+                    (SELECT tmpData.*
+
+                            -- сумма дл€ второго места
+                          , CASE -- есть условие и ћин и ћакс
+                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_max_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 > tmpData.Sum_max_2 THEN tmpData.Sum_max_2 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1 END
+
+                                 -- есть только ћин
+                                 WHEN tmpData.BankId_2 > 0 AND tmpData.Sum_min_2 <= ROUND (tmpData.SummCardSecondRecalc_check, 1) - tmpData.SummCard_1
+                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1) - tmpData.SummCard_1
+                                 ELSE 0
+                            END AS SummCard_2
+
+
+                     FROM
+                    (SELECT tmpData.*
+                            -- итого сумма по физ лицу - именно ее провер€ем на минимум
+                          , tmpData.SummCardSecondRecalc AS SummCardSecondRecalc_orig
+                            -- итого сумма по физ лицу - именно ее провер€ем на минимум
+                          , tmpData_check.SummCardSecondRecalc_check
+
+                            -- сумма дл€ первого места
+                          , CASE -- есть условие и ћин и ћакс
+                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
+                                 THEN CASE WHEN ROUND (tmpData.SummCardSecondRecalc, 1) > tmpData.Sum_max_1 THEN tmpData.Sum_max_1 ELSE ROUND (tmpData.SummCardSecondRecalc, 1) END
+
+                                 -- есть только ћин
+                                 WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData_check.SummCardSecondRecalc_check, 1)
+                                 THEN ROUND (tmpData.SummCardSecondRecalc, 1)
+                                 ELSE 0
+                            END AS SummCard_1
+
+
+                     FROM tmpData_SummCardSecondRecalc AS tmpData
+                          -- итого сумма по физ лицу - именно ее провер€ем на минимум
+                          LEFT JOIN (SELECT tmpData_SummCardSecondRecalc.MemberId, SUM (tmpData_SummCardSecondRecalc.SummCardSecondRecalc) AS SummCardSecondRecalc_check
+                                     FROM tmpData_SummCardSecondRecalc
+                                     GROUP BY tmpData_SummCardSecondRecalc.MemberId
+                                    ) AS tmpData_check
+                                      ON tmpData_check.MemberId = tmpData.MemberId
                     ) AS tmpData
                     ) AS tmpData
                     )
@@ -1151,7 +1168,7 @@ END IF;
                 , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject
 
                   -- пересчитали
-                , CASE WHEN vbUserId = 5 AND 1=1 THEN tmpMI_res.SummCardSecondRecalc_orig
+                , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMI_res.SummCardSecondRecalc_orig
                   ELSE
                   -- 1
                   CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
@@ -1251,18 +1268,16 @@ END IF;
                                    AND tmpList_limit_res.PersonalServiceListId = tmpMI_res.PersonalServiceListId
                                    AND tmpList_limit_res.FineSubjectId         = tmpMI_res.FineSubjectId
                                    AND tmpList_limit_res.UnitId_FineSubject    = tmpMI_res.UnitId_FineSubject
-
-
           ;
 
 
      IF vbUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION '<%>   <%>   <%>   <%>'
-       , (select sum (_tmpMI.SummCard_1) from _tmpMI)
-       , (select sum (_tmpMI.SummCard_2) from _tmpMI)
-       , (select sum (_tmpMI.SummCard_3) from _tmpMI)
-       , (select sum (_tmpMI.SummCard_1 + _tmpMI.SummCard_2) from _tmpMI)
+       , (select sum (_tmpMI.SummCard_1) from _tmpMI where MemberId = 13063)
+       , (select sum (_tmpMI.SummCard_2) from _tmpMI where MemberId = 13063)
+       , (select sum (_tmpMI.SummCard_3) from _tmpMI where MemberId = 13063)
+       , (select sum (_tmpMI.SummCardSecondRecalc) from _tmpMI where MemberId = 13063)
        ;
          /*RAISE EXCEPTION 'ќшибка.Admin <%>  <%>  <%>  <%>.'
                        , (SELECT SUM (_tmpMI.SummCardSecondRecalc) FROM _tmpMI)

@@ -169,6 +169,7 @@ BEGIN
                            , COALESCE (MIContainer.ObjectIntId_Analyzer, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
                            , SUM (MIContainer.Amount)             AS Amount
                            , SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END) AS AmountReceipt
+                           , MAX (MIContainer.ContainerId) AS ContainerId_test
                       FROM tmpMI_WorkProgress_out
                            INNER JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.Id = tmpMI_WorkProgress_out.ParentId

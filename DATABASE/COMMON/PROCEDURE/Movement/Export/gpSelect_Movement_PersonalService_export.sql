@@ -244,7 +244,13 @@ BEGIN
 		   -- OR (char_length(r.inn)<>10)
 		   OR (char_length(r.personalname)=0) THEN
 		   BEGIN
-			e := 'Неверные/неполные данные: Карта - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardRecalc || CHR(13) || CHR(10);
+			IF char_length (r.card) < 14
+			THEN
+                            e := 'В Номере Карты должно быть не менее 14 символов - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardRecalc || CHR(13) || CHR(10);
+                        ELSE
+                            e := 'Неверные/неполные данные: Карта - ' || r.card || ', ФИО - ' || r.personalname || ', ИНН - ' || r.inn || ', Сумма - ' || r.SummCardRecalc || CHR(13) || CHR(10);
+                        END IF;
+                        --
 			IF COALESCE (er, '') = ''
 			THEN
 			    er := concat(er, e);

@@ -120,8 +120,8 @@ END IF;
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
       -- AND Movement.DescId IN (zc_Movement_SendOnPrice())
-        AND Movement.DescId IN (zc_Movement_Sale())
-      -- AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+      --  AND Movement.DescId IN (zc_Movement_Sale())
+       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND MLO_From.ObjectId = zc_Unit_RK()
 

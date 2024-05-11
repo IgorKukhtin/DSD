@@ -58,10 +58,14 @@ BEGIN
                                   LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                        ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
                                                       AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                  LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                       ON ObjectLink_PartionCell.ObjectId      = Object.Id
+                                                      AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
                              WHERE Object.ValueData = ''
                                AND Object.DescId = zc_Object_PartionGoods()
                                AND ObjectLink_Unit.ObjectId IS NULL
                                AND ObjectLink_GoodsKindComplete.ObjectId IS NULL
+                               AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
                             ); -- 80132
 
      --

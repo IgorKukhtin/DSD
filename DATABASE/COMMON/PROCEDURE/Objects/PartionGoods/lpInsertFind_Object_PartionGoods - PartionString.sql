@@ -18,6 +18,29 @@ BEGIN
      -- Находим по св-вам: Полное значение партии + НЕТ Подразделения(для цены)
      IF inValue = ''
      THEN
+     
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object 
+                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                           ON ObjectLink_Unit.ObjectId = Object.Id
+                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                           ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                          AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                      LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                           ON ObjectLink_PartionCell.ObjectId      = Object.Id
+                                          AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
+                 WHERE Object.ValueData  = inValue
+                   AND Object.DescId     = zc_Object_PartionGoods()
+                   AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
+                   AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                   AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
+                )
+         THEN
+             RAISE EXCEPTION 'ERROR.PartionGoods = <%>', inValue;
+         END IF;
+                        
+
      -- !!!это надо убрать после исправления ошибки!!!
      vbPartionGoodsId:= (SELECT Object.Id
                          -- SELECT MIN (Object.Id)
@@ -28,12 +51,37 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                    ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
                                                   AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                              LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                   ON ObjectLink_PartionCell.ObjectId      = Object.Id
+                                                  AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
                          WHERE Object.ValueData  = inValue
                            AND Object.DescId     = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
                            AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                           AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
                         ); -- 80132
      ELSE
+         IF 1 < (SELECT COUNT(*)
+                 FROM Object 
+                      LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                           ON ObjectLink_Unit.ObjectId = Object.Id
+                                          AND ObjectLink_Unit.DescId = zc_ObjectLink_PartionGoods_Unit()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                           ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
+                                          AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                      LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                           ON ObjectLink_PartionCell.ObjectId      = Object.Id
+                                          AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
+                 WHERE Object.ValueData  = inValue
+                   AND Object.DescId     = zc_Object_PartionGoods()
+                   AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
+                   AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                   AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
+                )
+         THEN
+             RAISE EXCEPTION 'ERROR.PartionGoods = <%>', inValue;
+         END IF;
+
      vbPartionGoodsId:= (SELECT Object.Id
                          FROM Object 
                               LEFT JOIN ObjectLink AS ObjectLink_Unit
@@ -42,10 +90,14 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                    ON ObjectLink_GoodsKindComplete.ObjectId = Object.Id
                                                   AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                              LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                                   ON ObjectLink_PartionCell.ObjectId      = Object.Id
+                                                  AND ObjectLink_PartionCell.DescId        = zc_ObjectLink_PartionGoods_PartionCell()
                          WHERE Object.ValueData  = inValue
                            AND Object.DescId     = zc_Object_PartionGoods()
                            AND ObjectLink_Unit.ObjectId              IS NULL -- т.е. вообще нет этого св-ва
                            AND ObjectLink_GoodsKindComplete.ObjectId IS NULL -- т.е. вообще нет этого св-ва
+                           AND ObjectLink_PartionCell.ObjectId       IS NULL -- т.е. вообще нет этого св-ва
                         );
      END IF;
 
