@@ -15,6 +15,9 @@ uses
   {$IFDEF MSWINDOWS}
   , Winapi.ActiveX
   {$ENDIF}
+  {$IFDEF IOS}
+  , Macapi.Helpers, iOSapi.Foundation
+  {$ENDIF}
   {$IFDEF ANDROID}
   , Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers,
   Androidapi.JNI.Net, Androidapi.JNI.JavaTypes, Androidapi.JNI.App,
@@ -1924,16 +1927,23 @@ end;
 
 { получение текущей версии программы }
 function TDM.GetCurrentVersion: string;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID)}
 var
   PackageManager: JPackageManager;
   PackageInfo : JPackageInfo;
+{$ELSEIF DEFINED(IOS)}
+var
+  LValueObject: Pointer;
 {$ENDIF}
 begin
-  {$IFDEF ANDROID}
+  {$IF DEFINED(ANDROID)}
   PackageManager := TAndroidHelper.Activity.getPackageManager;
   PackageInfo := PackageManager.getPackageInfo(TAndroidHelper.Context.getPackageName(), TJPackageManager.JavaClass.GET_ACTIVITIES);
   Result := JStringToString(PackageInfo.versionName);
+  {$ELSEIF DEFINED(IOS)}
+  LValueObject := TNSBundle.Wrap(TNSBundle.OCClass.mainBundle).infoDictionary.objectForKey(StringToID('CFBundleVersion'));
+  if LValueObject <> nil then
+    Result := NSStrToStr(TNSString.Wrap(LValueObject));
   {$ELSE}
   Result := '1.0.0.0';
   {$ENDIF}

@@ -1,4 +1,4 @@
--- Function: lpDelete_MovementItem(integer, tvarchar)
+     -- Function: lpDelete_MovementItem(integer, tvarchar)
 
 -- DROP FUNCTION lpDelete_MovementItem(integer, tvarchar);
 
@@ -12,7 +12,8 @@ $BODY$BEGIN
   DELETE FROM MovementItemFloat WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId);
   DELETE FROM MovementItemBoolean WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId);
   DELETE FROM MovementItemString WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId);
-  DELETE FROM MovementItemLinkObject WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId);
+  DELETE FROM MovementItemLinkObject WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId); 
+  DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM  MovementItem WHERE ParentId = inId);
   DELETE FROM MovementItem WHERE ParentId = inId;
   --DELETE FROM MovementItemReport WHERE MovementItemId = inId;
   DELETE FROM MovementItemContainer WHERE MovementItemId = inId;
@@ -20,9 +21,11 @@ $BODY$BEGIN
   DELETE FROM MovementItemString WHERE MovementItemId = inId;
   DELETE FROM MovementItemDate WHERE MovementItemId = inId;
   DELETE FROM MovementItemFloat WHERE MovementItemId = inId;
+  DELETE FROM MovementItemFloat WHERE ValueData = inId;
   DELETE FROM MovementItemProtocol WHERE MovementItemId = inId;
   DELETE FROM MovementItemBoolean WHERE MovementItemId = inId;
-  DELETE FROM MovementItemProtocol WHERE MovementItemId = inId;
+  DELETE FROM MovementItemProtocol WHERE MovementItemId IN (SELECT Id FROM  MovementItem WHERE ParentId = inId);
+  DELETE FROM ObjectFloat WHERE ValueData = inId;
   DELETE FROM MovementItem WHERE Id = inId;
 
 END;$BODY$
