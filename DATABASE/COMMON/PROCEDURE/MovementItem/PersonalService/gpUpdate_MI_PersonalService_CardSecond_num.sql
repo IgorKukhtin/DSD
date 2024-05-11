@@ -616,7 +616,9 @@ END IF;
                                   AND ObjectBoolean_BankNot.ObjectId IS NULL
                                   -- если это не Аванс
                                   AND COALESCE (vbPersonalServiceListId_avance, 0) = 0
+-- AND CLO_ServiceDate.ContainerId In ( 5822660, 5822652)
                                )
+
              , tmpPersonal AS (SELECT DISTINCT
                                       tmpContainer_all.PersonalId
                                     , tmpContainer_all.UnitId
@@ -742,6 +744,7 @@ END IF;
                                INNER JOIN MovementItemContainer AS MIContainer
                                                                 ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                AND MIContainer.DescId      = zc_MIContainer_Summ()
+                                                             --AND (vbUserId <> 5 OR MIContainer.MovementDescId <> zc_Movement_Cash())
                          )
        -- только Карта БН - вычитаем начисления, а не выплаты
      , tmpSummCard AS (SELECT SUM (COALESCE (MIFloat_SummCard.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0))  AS Amount
@@ -848,6 +851,7 @@ END IF;
                           , tmpData.FineSubjectId
                           , tmpData.UnitId_FineSubject
                           , tmpData.SummCardSecondRecalc
+                          , tmpData.SummCardSecondRecalc_orig
 
                             -- банк на первом месте + вернули пусто
                           , CASE WHEN tmpData.BankId_1 > 1 THEN tmpData.BankId_1 ELSE NULL END AS BankId_1
@@ -914,6 +918,7 @@ END IF;
 
                      FROM
                     (SELECT tmpData.*
+                          , tmpData.SummCardSecondRecalc AS SummCardSecondRecalc_orig
 
                             -- сумма для первого места
                           , CASE WHEN tmpData.BankId_1 > 0 AND tmpData.Sum_max_1 > 0 AND tmpData.Sum_min_1 <= ROUND (tmpData.SummCardSecondRecalc, 1)
@@ -1146,8 +1151,10 @@ END IF;
                 , tmpMI_res.PersonalServiceListId, tmpMI_res.FineSubjectId, tmpMI_res.UnitId_FineSubject
 
                   -- пересчитали
+                , CASE WHEN vbUserId = 5 AND 1=0 THEN tmpMI_res.SummCardSecondRecalc_orig
+                  ELSE
                   -- 1
-                , CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
+                  CASE WHEN COALESCE (tmpList_limit_res.num, 0) = 1
                        -- новая сумма
                        THEN tmpList_limit_res.SummCard_new
                        -- оригинал
@@ -1185,6 +1192,7 @@ END IF;
                                       THEN tmpMI_res.SummCard_2 - tmpList_limit_res.SummCard_new
                                  ELSE 0
                             END
+                  END
                   END AS SummCardSecondRecalc
 
                   --
