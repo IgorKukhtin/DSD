@@ -1826,8 +1826,10 @@ begin
 
     if NeedSync then
       DM.SynchronizeWithMainDatabase
+    {$IFDEF ANDROID}
     else
       DM.CheckUpdate; // проверка небходимости обновления
+    {$ENDIF}
   end;
 
   // сохранение логина в ini файле

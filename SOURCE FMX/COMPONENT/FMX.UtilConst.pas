@@ -6,9 +6,13 @@ Type
 
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
   TdsdProject = (prProject, prFarmacy, prBoutique, prBoat);
+  TdsdHTTPCharSet = (cswindows_1251, csUTF_8);
 
 var
-  dsdProject: TdsdProject;
+  dsdProject: TdsdProject = prProject;
+  dsdHTTPCharSet: TdsdHTTPCharSet = cswindows_1251;
+  dsdXML_Version: String = '1.1';
+
   MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
   {$IFDEF MSWINDOWS}
