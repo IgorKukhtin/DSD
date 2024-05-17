@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_Cash (Integer, Boolean)
+ -- Function: lpComplete_Movement_Cash (Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Cash (Integer, Integer);
 
@@ -337,6 +337,11 @@ BEGIN
              , COALESCE (MILinkObject_Position.ObjectId, 0) AS PositionId
              , CASE /*WHEN inMovementId = 27161581 
                          THEN MILinkObject_MoneyPlace.ObjectId*/
+
+                    -- замена - ѕремии производство (добавочна€)
+                    WHEN MI_Child.Id > 0 AND MILinkObject_MoneyPlace.ObjectId = 445325 
+                        THEN MILinkObject_MoneyPlace.ObjectId
+
                     WHEN MI_Child.Id > 0
                          THEN COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, ObjectLink_PersonalServiceList_two.ChildObjectId, MILinkObject_MoneyPlace.ObjectId, 0)
                     ELSE COALESCE (MLO_PersonalServiceList.ObjectId, 0)

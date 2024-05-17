@@ -58,7 +58,8 @@ BEGIN
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
-             , tmpUser AS (SELECT DISTINCT ObjectLink_User_Member_trade.ObjectId AS UserId
+             , tmpUser AS (-- PersonalTrade - Сотрудник (торговый)
+                           SELECT DISTINCT ObjectLink_User_Member_trade.ObjectId AS UserId
                            FROM ObjectLink AS ObjectLink_User_Member
                                 INNER JOIN ObjectLink AS ObjectLink_Personal_Member
                                                       ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -77,6 +78,29 @@ BEGIN
                                                      AND ObjectLink_User_Member_trade.DescId        = zc_ObjectLink_User_Member()
                            WHERE ObjectLink_User_Member.ObjectId = vbUserId_Mobile
                              AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+
+                          UNION
+                           -- PersonalMerch - Сотрудник (мерчандайзер)
+                           SELECT DISTINCT ObjectLink_User_Member_merch.ObjectId AS UserId
+                           FROM ObjectLink AS ObjectLink_User_Member
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                      ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                     AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS OL
+                                                      ON OL.ChildObjectId = ObjectLink_Personal_Member.ObjectId
+                                                     AND OL.DescId        = zc_ObjectLink_Partner_Personal()
+                                INNER JOIN ObjectLink AS OL_Partner_PersonalMerch
+                                                      ON OL_Partner_PersonalMerch.ObjectId = OL.ObjectId
+                                                     AND OL_Partner_PersonalMerch.DescId   = zc_ObjectLink_Partner_PersonalMerch()
+                                INNER JOIN ObjectLink AS ObjectLink_Personal_Member_merch
+                                                      ON ObjectLink_Personal_Member_merch.ObjectId = OL_Partner_PersonalMerch.ChildObjectId
+                                                     AND ObjectLink_Personal_Member_merch.DescId   = zc_ObjectLink_Personal_Member()
+                                INNER JOIN ObjectLink AS ObjectLink_User_Member_merch
+                                                      ON ObjectLink_User_Member_merch.ChildObjectId = ObjectLink_Personal_Member_merch.ChildObjectId
+                                                     AND ObjectLink_User_Member_merch.DescId        = zc_ObjectLink_User_Member()
+                           WHERE ObjectLink_User_Member.ObjectId = vbUserId_Mobile
+                             AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+
                           UNION
                            SELECT DISTINCT ObjectLink_User_Member_trade.ObjectId AS UserId
                            FROM ObjectLink AS ObjectLink_User_Member

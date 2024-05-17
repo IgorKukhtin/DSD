@@ -310,9 +310,17 @@ BEGIN
                                    , MILinkObject_Unit.ObjectId                             AS UnitId
                                    , MILinkObject_Position.ObjectId                         AS PositionId
                                    , MILinkObject_InfoMoney.ObjectId                        AS InfoMoneyId
-                                     -- замена
-                                   , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)) AS PersonalServiceListId
-                                   , COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId) AS PersonalServiceListId_calc
+
+                                     -- замена - Премии производство (добавочная)
+                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                               THEN MLO_PersonalServiceList.ObjectId
+                                          ELSE COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
+                                     END AS PersonalServiceListId
+                                   , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                               THEN 0
+                                          ELSE COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
+                                     END AS PersonalServiceListId_calc
+
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                           AND MovementItem.DescId = zc_MI_Master()
@@ -484,9 +492,16 @@ BEGIN
                                      , MILinkObject_Unit.ObjectId
                                      , MILinkObject_Position.ObjectId
                                      , MILinkObject_InfoMoney.ObjectId
-                                     , COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId))
-                                   --, MLO_PersonalServiceList.ObjectId
-                                     , COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
+                                       -- замена - Премии производство (добавочная)
+                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                                 THEN MLO_PersonalServiceList.ObjectId
+                                            ELSE COALESCE (ObjectLink_Personal_PersonalServiceList.ChildObjectId, MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
+                                       END
+                                     , CASE WHEN MLO_PersonalServiceList.ObjectId = 445325 
+                                                 THEN 0
+                                            ELSE COALESCE (MILO_PersonalServiceList.ObjectId, MLO_PersonalServiceList.ObjectId)
+                                       END
+
                                      , ObjectLink_Personal_Member.ChildObjectId
                              )
      , tmpMI_card_b2 AS (SELECT tmpParent_all.MemberId_Personal
@@ -649,6 +664,7 @@ BEGIN
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                               -- !!! НЕ схема премии!!!
                               WHERE vbIsOnly = FALSE
+                                --AND (vbPersonalServiceListId <> 445325 OR vbUserId <> 5)
 
                              UNION
                               SELECT CLO_ServiceDate.ContainerId
@@ -683,6 +699,7 @@ BEGIN
                                                                  AND CLO_PersonalServiceList.ContainerId = CLO_ServiceDate.ContainerId
                               -- !!! НЕ схема премии!!!
                               WHERE vbIsOnly = FALSE
+                                --AND (vbPersonalServiceListId <> 445325 OR vbUserId <> 5)
                              )
           /*tmpCash*/
          , tmpMIContainer AS (SELECT SUM (CASE WHEN MIContainer.MovementId = inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() THEN MIContainer.Amount ELSE 0 END) AS Amount_current
