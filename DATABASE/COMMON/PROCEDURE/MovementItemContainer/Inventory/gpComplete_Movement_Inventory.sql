@@ -1329,12 +1329,26 @@ BEGIN
        (SELECT _tmp.MovementItemId
              , _tmp.ContainerId
              , _tmp.AccountId
-             , SUM (_tmp.OperSumm) AS OperSumm
+             , SUM (CASE WHEN (vbUnitId = 8451 -- ЦЕХ пакування
+                            OR vbUnitId = vbUnitId)
+                           AND _tmp.OperSumm_item <> 0
+                           AND _tmp.ord = 1
+                               THEN _tmp.OperSumm -- !!!теперь 1 раз!!!
+                         WHEN (vbUnitId = 8451 -- ЦЕХ пакування
+                            OR vbUnitId = vbUnitId)
+                           AND _tmp.OperSumm_item <> 0
+                           AND _tmp.ord <> 1
+                               THEN 0 -- !!!теперь 1 раз!!!
+                         ELSE _tmp.OperSumm
+                    END) AS OperSumm
+
         FROM  -- 1.0. для филиала
              (SELECT _tmpItem.MovementItemId
                    , COALESCE (Container_Summ.Id, 0)       AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
                    , CAST ((_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4)) AS OperSumm
+                   , 0 AS ord
+                   , 0 AS OperSumm_item
               FROM _tmpItem
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpItem.ContainerId_Goods
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
@@ -1382,7 +1396,6 @@ BEGIN
                            AND _tmpItem.OperSumm <> 0
                                THEN _tmpItem.OperSumm -- !!!тоже НЕ 1 раз!!!
                                 
-
                           -- WHEN vbPriceListId <> 0 AND View_Account.AccountDirectionId = zc_Enum_AccountDirection_60200() -- Прибыль будущих периодов + на филиалах
                           --      THEN 0 -- !!!этот счет по филиалам всегда выравниваем в 0!!!
 
@@ -1392,6 +1405,9 @@ BEGIN
                           -- ELSE COALESCE (_tmpRemainsSumm.OperSumm, 0)
 
                      END AS OperSumm
+
+                   , ROW_NUMBER() OVER (PARTITION BY _tmpItem.ContainerId_Goods ORDER BY Container_Summ.Id ASC) AS Ord
+                   , _tmpItem.OperSumm AS OperSumm_item
 
               FROM _tmpItem
                    LEFT JOIN tmpPriceList AS lfSelect_PriceListItem ON lfSelect_PriceListItem.GoodsId = _tmpItem.GoodsId
@@ -1472,6 +1488,9 @@ BEGIN
 --                               -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
                      END AS OperSumm
 
+                   , 0 AS ord
+                   , 0 AS OperSumm_item
+
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
                                                          AND Container_Summ.DescId   = zc_Container_Summ()
@@ -1493,6 +1512,9 @@ BEGIN
                    , _tmpRemainsSumm.ContainerId
                    , _tmpRemainsSumm.AccountId
                    , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
+                   , 0 AS ord
+                   , 0 AS OperSumm_item
+
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
                    LEFT JOIN (SELECT _tmpItem.ContainerId_Goods, SUM (_tmpItem.OperCount) AS OperCount FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
@@ -1530,6 +1552,8 @@ BEGIN
                                -1 * COALESCE (_tmpRemainsSumm.OperSumm, 0)
 --                               -1 * CAST (_tmpRemainsCount.OperCount * COALESCE (HistoryCost.Price, 0) AS NUMERIC (16,4))
                      END AS OperSumm
+                   , 0 AS ord
+                   , 0 AS OperSumm_item
 
               FROM _tmpRemainsCount
                    INNER JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpRemainsCount.ContainerId_Goods
@@ -1593,7 +1617,7 @@ BEGIN
        ;
 
 /*/
-if vbUserId = 5
+if vbUserId IN (5, zc_Enum_Process_Auto_PrimeCost())
 then
     RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth
  , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItem.GoodsId =  2066 )
