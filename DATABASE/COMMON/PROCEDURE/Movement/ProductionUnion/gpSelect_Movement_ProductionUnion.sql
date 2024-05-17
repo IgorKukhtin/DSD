@@ -152,7 +152,7 @@ BEGIN
           INNER JOIN MovementBoolean AS MovementBoolean_Peresort
                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                                    AND MovementBoolean_Peresort.ValueData = inIsPeresort
+                                    AND (MovementBoolean_Peresort.ValueData = inIsPeresort OR vbUserId = 5)
 
           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
