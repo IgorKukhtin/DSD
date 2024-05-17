@@ -57,7 +57,7 @@ BEGIN
       vbId:= lpInsertUpdate_Movement_StoreReal (ioId        := vbId
                                               , inInvNumber := (zfConvert_StringToNumber (inInvNumber) + lfGet_User_BillNumberMobile (vbUserId)) :: TVarChar
                                               , inOperDate  := inOperDate
-                                              , inPartnerId := inPartnerId
+                                              , inPartnerId := CASE WHEN COALESCE (inPartnerId, 0) <= 0 THEN 273855 ELSE inPartnerId END -- ÒÎÂ "ÀËÀÍ"(ïîêóïàò)
                                               , inComment   := inComment 
                                               , inUserId    := vbUserId
                                                );

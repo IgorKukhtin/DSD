@@ -454,7 +454,7 @@ BEGIN
 
      -- !!!если по заявке, тогда берется из неё OperDatePartner, вообще - надо только для филиалов!!!
      inOperDate:= CASE WHEN vbBranchId   = zc_Branch_Basis()
-                         -- AND inSession <> '5'
+                         AND vbUserId <> 5
                          AND EXISTS (SELECT 1
                                      FROM MovementLinkMovement
                                           INNER JOIN MovementLinkMovement AS MovementLinkMovement_Order
@@ -823,6 +823,15 @@ BEGIN
 
      -- !!!перенесли!!!
      vbMovementId_begin:= vbMovementId_find;
+
+
+     IF vbUserId = 5
+     THEN
+         vbMovementId_begin:= 0;
+         vbMovementId_find := 0;
+         inOperDate:= '07.05.2024';
+         inOperDatePartner:= '08.05.2024';
+     END IF;
 
 
     -- сохранили <Документ>
@@ -2138,17 +2147,28 @@ end if;*/
 -- !!! ВРЕМЕННО !!!
  IF vbUserId = 5 AND 1=1 THEN
 -- IF inSession = '1162887' AND 1=1 THEN
-    RAISE EXCEPTION 'Admin - Test = OK : %  %  %  %  % % % % %  % %'
+    RAISE EXCEPTION 'Admin - Test = OK  %vbIsDocMany = % %MovementId_begin = %  %OperDate = % %OperDatePartner = % %InvNumber = % %TotalCount = % %TotalCountPartner = % %Amount = % %AmountPartner = % %OperDate_scale = % %ContractGoods = %'
+  , CHR (13)
   , vbIsDocMany -- vbIsSendOnPriceIn -- inBranchCode -- 'Повторите действие через 3 мин.'
+  , CHR (13)
   , vbMovementId_begin
+  , CHR (13)
   , zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_begin))
-  , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_begin)
+  , CHR (13)
   , zfConvert_DateToString ((SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId_begin AND MD.DescId = zc_MovementDate_OperDatePartner()))
+  , CHR (13)
+  , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_begin)
+  , CHR (13)
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCount())
+  , CHR (13)
   , (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = vbMovementId_begin AND MF.DescId = zc_MovementFloat_TotalCountPartner())
+  , CHR (13)
   , (SELECT MI.Amount FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
+  , CHR (13)
   , (SELECT MIF.ValueData FROM MovementItem AS MI LEFT JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_AmountPartner() WHERE MI.MovementId = vbMovementId_begin AND MI.DescId = zc_MI_Master() LIMIT 1)
+  , CHR (13)
   , zfConvert_DateToString (vbOperDate_scale)
+  , CHR (13)
 --  , zfConvert_DateToString (inOperDate)
   , (select CASE WHEN inBranchCode BETWEEN 1 AND 310
                                                                                          THEN COALESCE ((SELECT tmp.isPriceWithVAT
