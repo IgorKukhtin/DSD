@@ -556,6 +556,10 @@ END IF;*/
      vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
                          OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_From = zc_Unit_RK()
+                         AND vbOperDate >= '01.05.2024'
+                            )
+                         OR (vbOperDate >= '01.05.2024'
+                         AND vbUnitId_From = zc_Unit_RK()
                             )
                            ;
 
@@ -1156,7 +1160,7 @@ end if;
                                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                              LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                      AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                                          -- учет - по партиям
+                                        -- учет - по партиям
                                         WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                                              , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
@@ -1165,6 +1169,31 @@ end if;
                                          -- AND vbIsPartionCell_from = FALSE
                                         )
 
+                      -- !!!
+                    , tmp_list_1 AS (SELECT DISTINCT MIContainer.ContainerId
+                                     FROM MovementItemContainer AS MIContainer
+                                          INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                                        AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                          INNER JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                                                   AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                                                                   AND ObjectDate_Value.ValueData < '01.05.2024'
+                                        
+                                     WHERE MIContainer.MovementId = 28123737 -- '02.05.2024'
+                                       AND MIContainer.DescId = 1
+                                       AND vbOperDate < '01.05.2024'
+                                       --!!!
+                                       AND vbIsPartionCell_from = TRUE
+                                    )
+                      -- !!!
+                    , tmp_list_2 AS (SELECT DISTINCT tmp_list_1.ContainerId
+                                     FROM tmp_list_1
+                                          LEFT JOIN MovementItemContainer AS MIContainer
+                                                                          ON MIContainer.ContainerId = tmp_list_1.ContainerId
+                                                                         AND MIContainer.OperDate BETWEEN '01.04.2024' AND '30.04.2024'
+                                                                         AND MIContainer.Amount > 0
+                                     WHERE MIContainer.ContainerId IS NULL
+                                    )
                              -- !!! - 02 - учет - партии по датам + ячейки
                            , tmp_02 AS (SELECT Container.Id                                          AS ContainerId
                                              , tmpMI.GoodsId                                         AS GoodsId
@@ -1190,6 +1219,8 @@ end if;
                                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                              LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                      AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                             -- !!!
+                                             LEFT JOIN tmp_list_2 ON tmp_list_2.ContainerId = Container.Id
 
                                         -- учет - партии по датам + ячейки
                                         WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
@@ -1198,6 +1229,12 @@ end if;
                                           AND COALESCE (CLO_GoodsKind.ObjectId, 0) = tmpMI.GoodsKindId
                                           --!!!
                                           AND vbIsPartionCell_from = TRUE
+                                          --!!! не должны попадать партии из следующего периода
+                                          AND (ObjectDate_Value.ValueData < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                            OR CLO_PartionGoods.ContainerId IS NULL
+                                              )
+                                          --!!!
+                                          AND tmp_list_2.ContainerId IS NULL
                                        )                      
 
                              -- !!! - 03 - учет - партии по датам + ячейки
@@ -1231,6 +1268,8 @@ end if;
                                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                              LEFT JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                      AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+                                             -- !!!
+                                             LEFT JOIN tmp_list_2 ON tmp_list_2.ContainerId = Container.Id
 
                                         -- учет - партии по датам + ячейки
                                         WHERE tmpMI.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
@@ -1241,6 +1280,12 @@ end if;
                                           AND vbIsPartionCell_from = TRUE
                                           --!!!
                                           AND tmp_02.GoodsId IS NULL
+                                          --!!! не должны попадать партии из следующего периода
+                                          AND (ObjectDate_Value.ValueData < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
+                                            OR CLO_PartionGoods.ContainerId IS NULL
+                                              )
+                                          --!!!
+                                          AND tmp_list_2.ContainerId IS NULL
                                        )                      
   -- будет подбор партий
 , tmpContainer_all AS (SELECT tmpMI.GoodsId
@@ -1952,10 +1997,9 @@ end if;
 
 /*
  -- тест
-  RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  ' , (select sum (_tmpItem.OperCount) from _tmpItem where _tmpItem.GoodsId = 3807   )
-, (select count(*) from _tmpItem where _tmpItem.GoodsId = 3807   )
-, (select count(*) from _tmpItem where _tmpItem.GoodsId = 3807   and _tmpItem.OperCount > 0)
-;
+  RAISE EXCEPTION 'Ошибка. <%>  <%>  <%>  ' , (select sum (_tmpItem.OperCount) from _tmpItem where _tmpItem.ContainerId_Goods = 5826125 )
+, (select _tmpItem.ContainerId_Goods from _tmpItem where _tmpItem.MovementItemId = 287612890  )
+, (select count(*) from _tmpItem where _tmpItem.GoodsId = 3807   and _tmpItem.MovementItemId = 287612890 )
   ;
 */
      -- Проверка - 1 - Подбор партий
@@ -2312,7 +2356,7 @@ end if;
      END IF;
 
      -- кроме Админа
-     IF inUserId <> zfCalc_UserAdmin() :: Integer OR 1=1
+     IF inUserId <> zfCalc_UserAdmin() :: Integer OR 1=0
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Реализация" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Sale_Recalc (inMovementId := inMovementId
@@ -2983,7 +3027,8 @@ end if;
      FROM _tmpItem
      WHERE _tmpItem.MovementItemId = _tmpItemPartnerFrom.MovementItemId
     ;
-     -- 1.2.1. определяется ContainerId_Goods для количественного учета
+
+   -- 1.2.1. определяется ContainerId_Goods для количественного учета
      UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN _tmpItem.ContainerId_Goods > 0 THEN _tmpItem.ContainerId_Goods
                                              ELSE
                                              lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate -- по "Дате склад"
