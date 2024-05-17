@@ -546,9 +546,30 @@ end if;
       AND _tmpListContainer_summ.AccountGroupId <> zc_Enum_AccountGroup_110000() -- Транзит
       AND _tmpListContainer_summ.Ord = 1 -- !!!последний!!!
    ;
+    -- 2.3. пытаемся найти <Счет> для zc_Container_Count
+    UPDATE _tmpListContainer SET AccountId      = _tmpListContainer_find.AccountId
+                               , AccountGroupId = _tmpListContainer_find.AccountGroupId
+    FROM (SELECT _tmpListContainer.GoodsId, _tmpListContainer.AccountId, _tmpListContainer.AccountGroupId
+                 -- № п/п
+               , ROW_NUMBER() OVER (PARTITION BY _tmpListContainer.GoodsId ORDER BY _tmpListContainer.AccountId ASC) AS Ord
+          FROM _tmpListContainer
+               INNER JOIN _tmpListContainer AS _tmpListContainer_check
+                                            ON _tmpListContainer_check.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                           AND _tmpListContainer_check.AccountId = 0
+                                           AND _tmpListContainer_check.GoodsId   = _tmpListContainer.GoodsId
+          WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+            AND _tmpListContainer.AccountId > 0
+          
+         ) AS _tmpListContainer_find
+    WHERE _tmpListContainer.ContainerId_count = _tmpListContainer_summ.ContainerId_count
+      AND _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+      -- AND _tmpListContainer_summ.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_find.Ord = 1 -- !!!последний!!!
+   ;
 
 
-    -- 2.3. убрали
+    -- 2.4. убрали
     DELETE FROM _tmpListContainer
     WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
       AND COALESCE (_tmpListContainer.AccountId, 0) = 0

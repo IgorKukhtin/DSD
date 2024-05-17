@@ -18,6 +18,9 @@ RETURNS TABLE (AccountId Integer
              , ContainerDescId_count Integer
              , ContainerId_count Integer
              , ContainerId Integer
+             , ContainerId_count_max Integer
+             , ContainerId_begin_max Integer
+
              , LocationId Integer
              , CarId Integer
              , GoodsId Integer, GoodsKindId Integer
@@ -631,8 +634,29 @@ end if;
       AND _tmpListContainer_summ.Ord = 1 -- !!!последний!!!
    ;
 
+    -- 2.3. пытаемся найти <Счет> для zc_Container_Count
+    UPDATE _tmpListContainer SET AccountId      = _tmpListContainer_find.AccountId
+                               , AccountGroupId = _tmpListContainer_find.AccountGroupId
+    FROM (SELECT _tmpListContainer.GoodsId, _tmpListContainer.AccountId, _tmpListContainer.AccountGroupId
+                 -- № п/п
+               , ROW_NUMBER() OVER (PARTITION BY _tmpListContainer.GoodsId ORDER BY _tmpListContainer.AccountId ASC) AS Ord
+          FROM _tmpListContainer
+               INNER JOIN _tmpListContainer AS _tmpListContainer_check
+                                            ON _tmpListContainer_check.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                           AND _tmpListContainer_check.AccountId = 0
+                                           AND _tmpListContainer_check.GoodsId   = _tmpListContainer.GoodsId
+          WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+            AND _tmpListContainer.AccountId > 0
+          
+         ) AS _tmpListContainer_find
+    WHERE _tmpListContainer.GoodsId = _tmpListContainer_find.GoodsId
+      AND _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+      -- AND _tmpListContainer_summ.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
+      AND _tmpListContainer.AccountId = 0
+      AND _tmpListContainer_find.Ord = 1 -- !!!последний!!!
+   ;
 
-    -- 2.3. убрали
+    -- 2.4. убрали
     DELETE FROM _tmpListContainer
     WHERE _tmpListContainer.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
       AND COALESCE (_tmpListContainer.AccountId, 0) = 0
@@ -710,6 +734,10 @@ end if;
                                        , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
+--                                       , MAX (_tmpContainer.ContainerId_count)AS ContainerId_count_max
+                                       , MAX (case when MIContainer.MovementDescId = zc_Movement_Sale() then MIContainer.MovementId else 0 end)AS ContainerId_count_max
+                                       , MAX (_tmpContainer.ContainerId_begin) AS ContainerId_begin_max
+
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
                                        , _tmpContainer.GoodsId
@@ -1173,8 +1201,9 @@ end if;
                                   FROM _tmpContainer
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
                                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
--- and (MIContainer.ContainerId = 2092731
--- or inUserId <> 5)
+-- and (MIContainer.MovementId not IN (28085802, 28086493  ) -- , 28086493
+-- or inUserId <> 5
+-- )
                                        LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                                                  ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                                                 AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
@@ -1628,6 +1657,9 @@ end if;
                                        , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
+                                       , MAX (_tmpContainer.ContainerId_count) AS ContainerId_count_max
+                                       , MAX (_tmpContainer.ContainerId_begin) AS ContainerId_begin_max
+
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
                                        , _tmpContainer.GoodsId
@@ -1747,6 +1779,9 @@ end if;
                                        , _tmpContainer.ContainerDescId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_count ELSE 0 END AS ContainerId_count
                                        , CASE WHEN inIsInfoMoney = TRUE THEN _tmpContainer.ContainerId_begin ELSE 0 END AS ContainerId_begin
+                                       , MAX (_tmpContainer.ContainerId_count) AS ContainerId_count_max
+                                       , MAX (_tmpContainer.ContainerId_begin) AS ContainerId_begin_max
+
                                        , _tmpContainer.LocationId
                                        , _tmpContainer.CarId
                                        , _tmpContainer.GoodsId
@@ -1874,8 +1909,11 @@ end if;
          -- Результат
          SELECT (tmpMIContainer_all.AccountId)       AS AccountId
               , tmpMIContainer_all.ContainerDescId_count :: Integer AS ContainerDescId_count
-              , tmpMIContainer_all.ContainerId_count AS ContainerId_count
-              , tmpMIContainer_all.ContainerId_begin AS ContainerId
+              , tmpMIContainer_all.ContainerId_count           :: Integer AS ContainerId_count
+              , tmpMIContainer_all.ContainerId_begin           :: Integer AS ContainerId
+              , MAX (tmpMIContainer_all.ContainerId_count_max) :: Integer AS ContainerId_count_max
+              , MAX (tmpMIContainer_all.ContainerId_begin_max) :: Integer AS ContainerId_begin_max
+
               , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.CarId
               , tmpMIContainer_all.GoodsId

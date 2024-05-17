@@ -1,7 +1,7 @@
 -- Function: gpReport_MotionGoods_NEW()
 
 --DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate          TDateTime , --
@@ -193,6 +193,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , InfoMoneyId_Detail Integer, InfoMoneyCode_Detail Integer, InfoMoneyGroupName_Detail TVarChar, InfoMoneyDestinationName_Detail TVarChar, InfoMoneyName_Detail TVarChar, InfoMoneyName_all_Detail TVarChar
 
              , ContainerId_Summ Integer, ContainerId_count Integer
+             , ContainerId_count_max Integer, ContainerId_begin_max Integer
              , LineNum Integer
              , LocationName_inf TVarChar
 
@@ -362,6 +363,10 @@ BEGIN
        , tmpReport AS (SELECT COALESCE (tmpReport_summ.AccountId,         tmpReport_count.AccountId)         AS AccountId
                             , COALESCE (tmpReport_summ.ContainerId_count, tmpReport_count.ContainerId_count) AS ContainerId_count
                             , COALESCE (tmpReport_summ.ContainerId,       tmpReport_count.ContainerId)       AS ContainerId
+
+                            , COALESCE (tmpReport_summ.ContainerId_count_max,       tmpReport_count.ContainerId_count_max)       AS ContainerId_count_max
+                            , COALESCE (tmpReport_summ.ContainerId_begin_max,       tmpReport_count.ContainerId_begin_max)       AS ContainerId_begin_max
+
                             , COALESCE (tmpReport_summ.LocationId,        tmpReport_count.LocationId)        AS LocationId
                             , COALESCE (tmpReport_summ.CarId,             tmpReport_count.CarId)             AS CarId
                             , COALESCE (tmpReport_summ.GoodsId,           tmpReport_count.GoodsId)           AS GoodsId
@@ -460,13 +465,16 @@ BEGIN
        , tmpMIContainer_group AS (SELECT tmpMIContainer_all.AccountId
                                        , tmpMIContainer_all.ContainerId
                                        , tmpMIContainer_all.ContainerId_count
+                                       , MAX (tmpMIContainer_all.ContainerId_count_max) AS ContainerId_count_max
+                                       , MAX (tmpMIContainer_all.ContainerId_begin_max) AS ContainerId_begin_max
+
                                        , tmpMIContainer_all.LocationId
                                        , tmpMIContainer_all.CarId
                                        , tmpMIContainer_all.GoodsId
                                        , tmpMIContainer_all.GoodsKindId
                                        , tmpMIContainer_all.AssetToId
 
-                                       , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE NULL END ::Integer AS PartionGoodsId
+                                       , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE 0 END ::Integer AS PartionGoodsId
 
                                        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
                                                    THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
@@ -504,8 +512,8 @@ BEGIN
                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionGoods.ValueData ELSE NULL END :: TVarChar  AS InvNumber_Partion
 
                                        , CASE WHEN inIsOperDate_Partion = TRUE THEN ObjectDate_PartionGoods_Value.ValueData ELSE NULL END :: TDateTime AS OperDate_Partion
-                                       , ObjectFloat_PartionGoods_Price.ValueData :: TFloat    AS Price_Partion
-                                       , Object_Storage.ValueData                 :: TVarChar  AS Storage_Partion
+                                       , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN ObjectFloat_PartionGoods_Price.ValueData ELSE 0  END :: TFloat    AS Price_Partion
+                                       , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_Storage.ValueData                 ELSE '' END :: TVarChar  AS Storage_Partion
 
                                        , (COALESCE (Object_Unit.ValueData, '')
                                           || CASE -- ไ๋ÿ ะส
@@ -518,8 +526,8 @@ BEGIN
                                              END
                                          ) :: TVarChar AS Unit_Partion
 
-                                       , ObjectString_PartNumber.ValueData        :: TVarChar  AS PartNumber_Partion
-                                       , Object_PartionModel.ValueData            :: TVarChar  AS Model_Partion
+                                       , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN ObjectString_PartNumber.ValueData ELSE '' END :: TVarChar  AS PartNumber_Partion
+                                       , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionModel.ValueData     ELSE '' END :: TVarChar  AS Model_Partion
          
                                        , Object_GoodsKind_complete.ValueData                                            AS GoodsKindName_complete
                                        , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END         AS PartionCellId
@@ -617,6 +625,8 @@ BEGIN
                                   FROM (SELECT tmpMIContainer_all.AccountId                 AS AccountId
                                              , tmpMIContainer_all.ContainerId
                                              , tmpMIContainer_all.ContainerId_count
+                                             , MAX (tmpMIContainer_all.ContainerId_count_max) AS ContainerId_count_max
+                                             , MAX (tmpMIContainer_all.ContainerId_begin_max) AS ContainerId_begin_max
                                              , tmpMIContainer_all.LocationId
                                              , tmpMIContainer_all.CarId
                                              , tmpMIContainer_all.GoodsId
@@ -846,7 +856,7 @@ BEGIN
                                         , tmpMIContainer_all.GoodsKindId
                                         , tmpMIContainer_all.AssetToId
  
-                                        , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE NULL END
+                                        , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE 0 END
 
                                         , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
                                                     THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
@@ -883,8 +893,8 @@ BEGIN
                                         , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionGoods.ValueData ELSE NULL END
                                         , CASE WHEN inIsOperDate_Partion = TRUE THEN ObjectDate_PartionGoods_Value.ValueData ELSE NULL END
 
-                                        , ObjectFloat_PartionGoods_Price.ValueData
-                                        , Object_Storage.ValueData
+                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN ObjectFloat_PartionGoods_Price.ValueData ELSE 0 END
+                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_Storage.ValueData ELSE '' END
                                         , (COALESCE (Object_Unit.ValueData, '')
                                            || CASE -- ไ๋ÿ ะส
                                                    WHEN inIsOperDate_Partion = FALSE AND tmpMIContainer_all.LocationId = zc_Unit_RK()
@@ -895,8 +905,8 @@ BEGIN
                                                    ELSE ''
                                               END
                                           ) 
-                                        , ObjectString_PartNumber.ValueData
-                                        , Object_PartionModel.ValueData
+                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN ObjectString_PartNumber.ValueData ELSE '' END
+                                        , CASE WHEN inIsOperDate_Partion = TRUE OR tmpMIContainer_all.LocationId <> zc_Unit_RK() THEN Object_PartionModel.ValueData    ELSE '' END
           
                                         , Object_GoodsKind_complete.ValueData
                                         , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END
@@ -1201,6 +1211,9 @@ BEGIN
 
         , tmpMIContainer_group.ContainerId              AS ContainerId_Summ
         , tmpMIContainer_group.ContainerId_count        AS ContainerId_count
+
+        , tmpMIContainer_group.ContainerId_count_max :: Integer
+        , tmpMIContainer_group.ContainerId_begin_max :: Integer
 
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
