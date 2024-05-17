@@ -1484,7 +1484,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                               AND CLO_InfoMoneyDetail.DescId      = zc_ContainerLinkObject_InfoMoneyDetail()
             -- Розподільчий комплекс
             WHERE _tmpMaster.UnitId = zc_Unit_RK()
-              AND inStartDate       >= lfGet_Object_Unit_PartionDate_isPartionCell()
+            --AND inStartDate       >= lfGet_Object_Unit_PartionDate_isPartionCell()
+              AND inStartDate       >= '01.05.2024'
             GROUP BY CLO_Goods.ObjectId
                    , COALESCE (CLO_GoodsKind.ObjectId, 0)
                    , COALESCE (CLO_InfoMoney.ObjectId, 0)
@@ -1524,7 +1525,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
             FROM _tmpMaster
                  -- LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
             WHERE (_tmpMaster.UnitId <> zc_Unit_RK()
-                OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
+              --OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
+                OR inStartDate       < '01.05.2024'
                   )
 /*(((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
@@ -1578,8 +1580,13 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  , 0 AS MovementItemId_diff, 0 AS Summ_diff
 
             FROM _tmpHistoryCost_PartionCell AS _tmpMaster
+
                  JOIN Container ON Container.ObjectId = _tmpMaster.AccountId
                                AND Container.DescId   = zc_Container_Summ()
+                 JOIN (SELECT DISTINCT _tmpMaster.ContainerId FROM _tmpMaster
+                      ) AS _tmpMaster_find
+                        ON _tmpMaster_find.ContainerId = Container.Id
+
                  INNER JOIN ContainerLinkObject AS CLO_Goods
                                                 ON CLO_Goods.ContainerId = Container.Id
                                                AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
@@ -1603,7 +1610,8 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
               AND _tmpMaster.InfoMoneyId        = COALESCE (CLO_InfoMoney.ObjectId, 0)
               AND _tmpMaster.InfoMoneyId_Detail = COALESCE (CLO_InfoMoneyDetail.ObjectId, 0)
               -- !!!
-              AND inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
+              -- AND inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
+              AND inStartDate    >= '01.05.2024'
              ;
 
      END IF;
@@ -1924,4 +1932,4 @@ SELECT * FROM HistoryCost WHERE ('01.03.2017' BETWEEN StartDate AND EndDate) and
 -- тест
 -- SELECT * FROM  ObjectProtocol WHERE ObjectId = zfCalc_UserAdmin() :: Integer ORDER BY ID DESC LIMIT 100
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2022', inEndDate:= '28.02.2022', inBranchId:= 0, inItearationCount:= 200, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (3705946, 2459377) -- ORDER BY ABS (Price) DESC -- Price <> PriceNext-- WHERE CalcSummCurrent <> CalcSummNext
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2024', inEndDate:= '23.02.2024', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4504111)
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.04.2024', inEndDate:= '30.04.2024', inBranchId:= 0, inItearationCount:= 100, inInsert:= 1, inDiffSumm:= 1, inSession:= '2') WHERE ContainerId in (4504111)

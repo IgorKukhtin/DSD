@@ -44,7 +44,14 @@ BEGIN
                              , ROW_NUMBER() OVER (PARTITION BY Object_Personal.MemberId ORDER BY Object_Personal.PersonalId DESC) AS Ord
                         FROM Object_Personal_View AS Object_Personal
                         WHERE vbAll = FALSE
-                          AND Object_Personal.PositionId IN (SELECT inPositionId UNION SELECT 81178 /*экспедитор*/  WHERE inPositionId = 8466 /*водитель*/ UNION SELECT 8466 WHERE inPositionId = 81178)
+                          AND Object_Personal.PositionId IN (SELECT inPositionId
+                                                       --  экспедитор <-> водитель
+                                                       UNION SELECT 81178 WHERE inPositionId = 8466
+                                                       UNION SELECT 8466  WHERE inPositionId = 81178
+                                                       -- Представник торговельний  <-> мерчендайзер
+                                                       --UNION SELECT 149828 WHERE inPositionId = 149831
+                                                       --UNION SELECT 149831 WHERE inPositionId = 149828
+                                                            )
                           AND Object_Personal.isErased = FALSE
                        UNION ALL
                         SELECT lfSelect.PersonalId
