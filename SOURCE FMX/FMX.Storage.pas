@@ -2,7 +2,7 @@ unit FMX.Storage;
 
 interface
 
-uses SysUtils;
+uses System.SysUtils;
 
 type
 
@@ -49,11 +49,12 @@ type
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, idGlobal, Variants, ZLib,
-     StrUtils, IDComponent, FMX.SimpleGauge, FMX.CommonData,
-     FMX.Forms, FMX.Dialogs,
-     FMX.LogUtils, IdStack, IdExceptionCore, SyncObjS, FMX.UtilConst, System.IOUtils,
-     Xml.xmldom, XML.OmniXMLDom;
+uses System.StrUtils, System.Classes, System.Variants, System.SyncObjs,
+     System.IOUtils, System.ZLib,
+     IdHTTP, IDComponent, idGlobal, IdStack, IdExceptionCore,
+     Xml.XMLDoc, XMLIntf, Xml.xmldom, XML.OmniXMLDom,
+     FMX.SimpleGauge, FMX.CommonData, FMX.Forms, FMX.Dialogs,
+     FMX.LogUtils, FMX.UtilConst;
 
 const
 
@@ -145,7 +146,7 @@ begin
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
 //    Instance.IdHTTP.ConnectTimeout := 5000;
-    if dsdProject = prBoat then Instance.IdHTTP.Response.CharSet := 'utf-8'
+    if dsdHTTPCharSet = csUTF_8 then Instance.IdHTTP.Response.CharSet := 'utf-8'
     else Instance.IdHTTP.Response.CharSet := 'windows-1251';
     with Instance.IdHTTP.Request do
     begin
@@ -311,13 +312,10 @@ begin
   FCriticalSection.Enter;
   try
     FSendList.Clear;
-    if dsdProject = prBoat then
-      FSendList.Add('XML=' + '<?xml version="1.0" encoding="utf-8"?>' + pData)
-    else FSendList.Add('XML=' + '<?xml version="1.1" encoding="UTF-8"?>' + pData);
+    FSendList.Add('XML=' + '<?xml version="' + dsdXML_Version + '" encoding="utf-8"?>' + pData);
     //FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
 
-    if dsdProject = prBoat then
-      FSendList.Add('ENC=UTF8');
+    if dsdHTTPCharSet = csUTF_8 then FSendList.Add('ENC=UTF8');
     Logger.AddToLog(pData);
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;

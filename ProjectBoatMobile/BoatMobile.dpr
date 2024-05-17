@@ -11,6 +11,9 @@ uses
 
 begin
   dsdProject := prBoat;
+  dsdHTTPCharSet := csUTF_8;
+  dsdXML_Version := '1.0';
+
   Application.Initialize;
   Application.CreateForm(TDM, DM);
   Application.CreateForm(TfrmMain, frmMain);

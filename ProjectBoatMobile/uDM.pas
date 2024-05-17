@@ -656,7 +656,7 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses System.IOUtils, System.DateUtils, System.ZLib, System.RegularExpressions,
+uses System.IOUtils, System.DateUtils, System.RegularExpressions,
      FMX.Dialogs, FMX.Storage, FMX.UnilWin, uMain;
 
 {$R *.dfm}
