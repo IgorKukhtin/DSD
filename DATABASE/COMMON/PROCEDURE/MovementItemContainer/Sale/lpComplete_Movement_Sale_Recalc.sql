@@ -106,7 +106,7 @@ BEGIN
              , tmpRemains AS (SELECT _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
                                    , RemainsOLAPTable.AmountStart AS Amount
-                              FROM _tmpItem
+                              FROM (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem) AS _tmpItem
                                    INNER JOIN RemainsOLAPTable ON RemainsOLAPTable.GoodsId     = _tmpItem.GoodsId
                                                               AND RemainsOLAPTable.GoodsKindId = _tmpItem.GoodsKindId
                                                               AND RemainsOLAPTable.UnitId      = inUnitId
@@ -119,7 +119,7 @@ BEGIN
        , tmpContainer_all AS (SELECT _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
                                    , Container.Id AS ContainerId
-                              FROM _tmpItem
+                              FROM (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem) AS _tmpItem
                                    INNER JOIN Container ON Container.ObjectId = _tmpItem.GoodsId
                                                        AND Container.DescId   = zc_Container_Count()
                                    INNER JOIN ContainerLinkObject AS CLO_Unit
@@ -151,6 +151,7 @@ BEGIN
                                                                     AND (MIContainer.MovementDescId <> zc_Movement_Inventory()
                                                                       OR MIContainer.OperDate <> vbOperDate
                                                                         )
+                                                                  --AND (MIContainer.OperDate < vbOperDate OR tmpContainer_all.GoodsId <> 2383)
                                 GROUP BY tmpContainer_all.ContainerId
                                        , tmpContainer_all.GoodsId
                                        , tmpContainer_all.GoodsKindId
@@ -216,7 +217,8 @@ END IF;
                END AS Amount_to
                -- для сохранения этого параметра
              , COALESCE (_tmpRemains.Amount,0) AS Amount_Remains
-        FROM _tmpItem
+        FROM (SELECT _tmpItem.GoodsId, _tmpItem.GoodsKindId, SUM (_tmpItem.OperCount) AS OperCount FROM _tmpItem GROUP BY _tmpItem.GoodsId, _tmpItem.GoodsKindId
+             ) AS _tmpItem
              INNER JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                    ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = _tmpItem.GoodsId
                                   AND ObjectLink_GoodsByGoodsKind_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
@@ -564,6 +566,32 @@ END IF;
          WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
            AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
           ;
+
+         -- Паштет ПЕЧІНКОВИЙ вар в/ґ 120 г/шт ТМ Алан
+         IF EXISTS (SELECT 1
+                    FROM _tmpItemPeresort_new
+                    WHERE _tmpItemPeresort_new.Amount_Remains <> 0
+                      AND _tmpItemPeresort_new.GoodsId_to = 2383
+                   )
+            AND inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
+            AND inUnitId = zc_Unit_RK()
+            AND 1=0
+         THEN
+             RAISE EXCEPTION 'Ошибка. _tmpItemPeresort_new <%> + Remains = <%> %  % <%> % <%> % <%> <%>'
+                           , lfGet_Object_ValueData (2383)
+                           , (SELECT _tmpItemPeresort_new.Amount_Remains FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.Amount_Remains <> 0 AND _tmpItemPeresort_new.GoodsId_to = 2383 LIMIT 1)
+                           , (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE _tmpItemPeresort_new.GoodsId_to = 2383)
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO .DescId = zc_MovementLinkObject_From())
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO .DescId = zc_MovementLinkObject_To())
+                           , CHR (13)
+                           , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                           , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
+                            ;
+         END IF;
+
+       
 
          -- отдельно для информации сохраняем обязательно факт остатка Amount_Remains
          PERFORM lpInsert_MovementItemProtocol (tmpMI.MovementItemId_to, inUserId, FALSE)
