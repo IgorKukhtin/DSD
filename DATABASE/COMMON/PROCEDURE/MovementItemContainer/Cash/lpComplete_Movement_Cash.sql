@@ -1,4 +1,4 @@
- -- Function: lpComplete_Movement_Cash (Integer, Boolean)
+-- Function: lpComplete_Movement_Cash (Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Cash (Integer, Integer);
 
