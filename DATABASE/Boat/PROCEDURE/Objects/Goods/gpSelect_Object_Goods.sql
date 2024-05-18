@@ -653,6 +653,8 @@ BEGIN
             -- это
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = Object_Goods.Id
 
+        --WHERE ObjectString_Article.ValueData ILIKE 'AGL%'
+
         ORDER BY Object_Goods.Id  desc
         --LIMIT 197022
             ;

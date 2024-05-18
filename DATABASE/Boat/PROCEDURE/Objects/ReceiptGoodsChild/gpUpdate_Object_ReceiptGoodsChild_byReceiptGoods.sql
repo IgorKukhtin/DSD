@@ -29,62 +29,110 @@ BEGIN
                                                , ForCount TFloat
                                                 ) ON COMMIT DROP;
     INSERT INTO _tmpReceiptGoodsChild_mask (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_service, ForCount)
-          SELECT Object_ReceiptGoodsChild.Id
-               , ObjectFloat_NPP.ValueData :: Integer      AS NPP
-               , Object_ReceiptGoodsChild.ValueData        AS Comment
-               , ObjectLink_Object.ChildObjectId           AS ObjectId
-               , ObjectLink_ReceiptLevel.ChildObjectId     AS ReceiptLevelId
-               , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
-               , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
-               , CASE WHEN ObjectLink_GoodsChild.ChildObjectId > 0 THEN inGoodsChildId_mask ELSE 0 END AS GoodsChildId
-               , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
-               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
-               , ObjectFloat_ForCount.ValueData AS ForCount
-          FROM Object AS Object_ReceiptGoodsChild
-               INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                     ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                                    AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId_mask
-
-               LEFT JOIN ObjectLink AS ObjectLink_Object
-                                    ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-               LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-
-               LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                                    ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
-
-               -- NPP
-               INNER JOIN ObjectFloat AS ObjectFloat_NPP
-                                      ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
-                                     AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
-                                     AND ObjectFloat_NPP.ValueData > 0
-
-               -- значение в сборке
-               LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
-               LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
-                                     ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
-
-               -- эту структуру отбросим позже
-               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                    ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
-
-               LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
-                                    ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
-
-               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
-                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
-
-          WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
-            AND Object_ReceiptGoodsChild.isErased = FALSE
+      WITH tmpData_all AS (SELECT Object_ReceiptGoodsChild.Id               AS Id
+                                , COALESCE (ObjectFloat_NPP.ValueData, 0)   AS NPP
+                                , Object_ReceiptGoodsChild.ValueData        AS Comment
+                                , ObjectLink_Object.ChildObjectId           AS ObjectId
+                                , ObjectLink_ReceiptLevel.ChildObjectId     AS ReceiptLevelId
+                                , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
+                                , COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) AS ProdColorPatternId
+                                , CASE WHEN ObjectLink_GoodsChild.ChildObjectId > 0 THEN inGoodsChildId_mask ELSE 0 END AS GoodsChildId
+                                , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
+                                , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
+                                , ObjectFloat_ForCount.ValueData AS ForCount
+                           FROM Object AS Object_ReceiptGoodsChild
+                                INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                      ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                                     -- Откуда переносим
+                                                     AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId_mask
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                     ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+                                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                     ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+                 
+                                -- NPP из Excel
+                                LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                                      ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+                                                     AND ObjectFloat_NPP.ValueData > 0
+                 
+                                -- значение в сборке
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                      ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                 
+                                -- эту структуру отбросим позже
+                                LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                     ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                     ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                     ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                 
+                           WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                             AND Object_ReceiptGoodsChild.isErased = FALSE
+                          )
+      , tmpData_sum AS (SELECT MAX (tmpData_all.Id)              AS Id
+                             , MAX (tmpData_all.NPP)             AS NPP
+                             , MAX (tmpData_all.Comment)         AS Comment
+                             , tmpData_all.ObjectId              AS ObjectId
+                             , MAX (tmpData_all.ReceiptLevelId)  AS ReceiptLevelId
+                             , tmpData_all.MaterialOptionsId     AS MaterialOptionsId
+                             , tmpData_all.ProdColorPatternId    AS ProdColorPatternId
+                             , tmpData_all.GoodsChildId          AS GoodsChildId
+                             , SUM (tmpData_all.Value)           AS Value
+                             , SUM (tmpData_all.Value_service)   AS Value_service
+                             , MAX (tmpData_all.ForCount)        AS ForCount
+                        FROM tmpData_all
+                        GROUP BY tmpData_all.ObjectId
+                               , tmpData_all.MaterialOptionsId
+                               , tmpData_all.ProdColorPatternId
+                               , tmpData_all.GoodsChildId
+                       )
+          --
+          SELECT tmpData_sum.Id
+               , tmpData_sum.NPP
+               , tmpData_sum.Comment
+               , tmpData_sum.ObjectId
+               , tmpData_sum.ReceiptLevelId
+               , tmpData_sum.MaterialOptionsId
+               , tmpData_sum.ProdColorPatternId
+               , tmpData_sum.GoodsChildId
+               , tmpData_sum.Value
+               , tmpData_sum.Value_service
+               , tmpData_sum.ForCount
+          FROM tmpData_sum
+          WHERE tmpData_sum.NPP > 0
+         UNION ALL
+          SELECT tmpData_sum.Id
+                 -- сквозная для всех, перенумеруем с последнего + 1
+               , ROW_NUMBER() OVER (ORDER BY tmpData_sum.Id ASC) + COALESCE ((SELECT MAX (tmpData_sum.NPP) FROM tmpData_sum), 0) AS NPP
+               , tmpData_sum.Comment
+               , tmpData_sum.ObjectId
+               , tmpData_sum.ReceiptLevelId
+               , tmpData_sum.MaterialOptionsId
+               , tmpData_sum.ProdColorPatternId
+               , tmpData_sum.GoodsChildId
+               , tmpData_sum.Value
+               , tmpData_sum.Value_service
+               , tmpData_sum.ForCount
+          FROM tmpData_sum
+          WHERE tmpData_sum.NPP = 0
          ;
 
    -- Куда переносим
@@ -94,62 +142,112 @@ BEGIN
                                           , ForCount TFloat
                                            ) ON COMMIT DROP;
     INSERT INTO _tmpReceiptGoodsChild (Id, NPP, Comment, ObjectId, ReceiptLevelId, MaterialOptionsId, ProdColorPatternId, GoodsChildId, Value, Value_service, ForCount)
-          SELECT Object_ReceiptGoodsChild.Id
-               , ObjectFloat_NPP.ValueData      :: Integer AS NPP
-               , Object_ReceiptGoodsChild.ValueData        AS Comment
-               , ObjectLink_Object.ChildObjectId           AS ObjectId
-               , ObjectLink_ReceiptLevel.ChildObjectId     AS ReceiptLevelId
-               , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
-               , ObjectLink_ProdColorPattern.ChildObjectId AS ProdColorPatternId
-               , ObjectLink_GoodsChild.ChildObjectId       AS GoodsChildId
-               , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
-               , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
-               , ObjectFloat_ForCount.ValueData AS ForCount
-          FROM Object AS Object_ReceiptGoodsChild
-               INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
-                                     ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
-                                    AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId
-
-               -- NPP
-               INNER JOIN ObjectFloat AS ObjectFloat_NPP
-                                      ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
-                                     AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
-                                     AND ObjectFloat_NPP.ValueData > 0
-
-               LEFT JOIN ObjectLink AS ObjectLink_Object
-                                    ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
-               LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
-               LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
-
-               LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
-                                    ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
-
-               -- значение в сборке
-               LEFT JOIN ObjectFloat AS ObjectFloat_Value
-                                     ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
-               LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
-                                     ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
-                                    AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
-
-               -- эту структуру отбросим позже
-               LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
-                                    ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
-
-               LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
-                                    ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
-
-               LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
-                                    ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
-                                   AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
-
-          WHERE Object_ReceiptGoodsChild.DescId  = zc_Object_ReceiptGoodsChild()
-            AND Object_ReceiptGoodsChild.isErased = FALSE
+      WITH tmpData_all AS (SELECT Object_ReceiptGoodsChild.Id               AS Id
+                                , COALESCE (ObjectFloat_NPP.ValueData, 0)   AS NPP
+                                , Object_ReceiptGoodsChild.ValueData        AS Comment
+                                , ObjectLink_Object.ChildObjectId           AS ObjectId
+                                , ObjectLink_ReceiptLevel.ChildObjectId     AS ReceiptLevelId
+                                , ObjectLink_MaterialOptions.ChildObjectId  AS MaterialOptionsId
+                                , COALESCE (ObjectLink_ProdColorPattern.ChildObjectId, 0) AS ProdColorPatternId
+                                  -- замена на новый GoodsChildId
+                                , CASE WHEN ObjectLink_GoodsChild.ChildObjectId > 0 THEN inGoodsChildId_mask ELSE 0 END AS GoodsChildId
+                                  --
+                                , CASE WHEN ObjectDesc.Id <> zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value
+                                , CASE WHEN ObjectDesc.Id =  zc_Object_ReceiptService() THEN ObjectFloat_Value.ValueData ELSE 0 END AS Value_service
+                                , ObjectFloat_ForCount.ValueData AS ForCount
+                           FROM Object AS Object_ReceiptGoodsChild
+                                INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods
+                                                      ON ObjectLink_ReceiptGoods.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectLink_ReceiptGoods.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                                     -- Куда переносим
+                                                     AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                     ON ObjectLink_Object.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_Object.DescId = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                LEFT JOIN Object AS Object_Object ON Object_Object.Id = ObjectLink_Object.ChildObjectId
+                                LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Object.DescId
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_MaterialOptions
+                                                     ON ObjectLink_MaterialOptions.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_MaterialOptions.DescId   = zc_ObjectLink_ReceiptGoodsChild_MaterialOptions()
+                 
+                                -- NPP из Excel
+                                LEFT JOIN ObjectFloat AS ObjectFloat_NPP
+                                                      ON ObjectFloat_NPP.ObjectId  = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_NPP.DescId    = zc_ObjectFloat_ReceiptGoodsChild_NPP()
+                                                     AND ObjectFloat_NPP.ValueData > 0
+                 
+                                -- значение в сборке
+                                LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                      ON ObjectFloat_ForCount.ObjectId = Object_ReceiptGoodsChild.Id
+                                                     AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                 
+                                -- эту структуру отбросим позже
+                                LEFT JOIN ObjectLink AS ObjectLink_ProdColorPattern
+                                                     ON ObjectLink_ProdColorPattern.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_ProdColorPattern.DescId = zc_ObjectLink_ReceiptGoodsChild_ProdColorPattern()
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
+                                                     ON ObjectLink_ReceiptLevel.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_ReceiptLevel.DescId   = zc_ObjectLink_ReceiptGoodsChild_ReceiptLevel()
+                 
+                                LEFT JOIN ObjectLink AS ObjectLink_GoodsChild
+                                                     ON ObjectLink_GoodsChild.ObjectId = Object_ReceiptGoodsChild.Id
+                                                    AND ObjectLink_GoodsChild.DescId   = zc_ObjectLink_ReceiptGoodsChild_GoodsChild()
+                 
+                           WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
+                             AND Object_ReceiptGoodsChild.isErased = FALSE
+                          )
+      , tmpData_sum AS (SELECT MAX (tmpData_all.Id)              AS Id
+                             , MAX (tmpData_all.NPP)             AS NPP
+                             , MAX (tmpData_all.Comment)         AS Comment
+                             , tmpData_all.ObjectId              AS ObjectId
+                             , MAX (tmpData_all.ReceiptLevelId)  AS ReceiptLevelId
+                             , tmpData_all.MaterialOptionsId     AS MaterialOptionsId
+                             , tmpData_all.ProdColorPatternId    AS ProdColorPatternId
+                             , tmpData_all.GoodsChildId          AS GoodsChildId
+                             , SUM (tmpData_all.Value)           AS Value
+                             , SUM (tmpData_all.Value_service)   AS Value_service
+                             , MAX (tmpData_all.ForCount)        AS ForCount
+                        FROM tmpData_all
+                        GROUP BY tmpData_all.ObjectId
+                               , tmpData_all.MaterialOptionsId
+                               , tmpData_all.ProdColorPatternId
+                               , tmpData_all.GoodsChildId
+                       )
+          --
+          SELECT tmpData_sum.Id
+               , tmpData_sum.NPP
+               , tmpData_sum.Comment
+               , tmpData_sum.ObjectId
+               , tmpData_sum.ReceiptLevelId
+               , tmpData_sum.MaterialOptionsId
+               , tmpData_sum.ProdColorPatternId
+               , tmpData_sum.GoodsChildId
+               , tmpData_sum.Value
+               , tmpData_sum.Value_service
+               , tmpData_sum.ForCount
+          FROM tmpData_sum
+          WHERE tmpData_sum.NPP > 0
+         UNION ALL
+          SELECT tmpData_sum.Id
+                 -- сквозная для всех, перенумеруем с последнего + 1
+               , ROW_NUMBER() OVER (ORDER BY tmpData_sum.Id ASC) + COALESCE ((SELECT MAX (tmpData_sum.NPP) FROM tmpData_sum), 0) AS NPP
+               , tmpData_sum.Comment
+               , tmpData_sum.ObjectId
+               , tmpData_sum.ReceiptLevelId
+               , tmpData_sum.MaterialOptionsId
+               , tmpData_sum.ProdColorPatternId
+               , tmpData_sum.GoodsChildId
+               , tmpData_sum.Value
+               , tmpData_sum.Value_service
+               , tmpData_sum.ForCount
+          FROM tmpData_sum
+          WHERE tmpData_sum.NPP = 0
        ;
 
         -- удаляем те NPP которых нет
@@ -159,7 +257,7 @@ BEGIN
                                  LEFT JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.NPP = _tmpReceiptGoodsChild.NPP
                             WHERE _tmpReceiptGoodsChild_mask.ObjectId IS NULL
                               -- без этой структуры
-                              AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                              AND _tmpReceiptGoodsChild.ProdColorPatternId = 0
                            UNION
                             SELECT _tmpReceiptGoodsChild.Id
                             FROM _tmpReceiptGoodsChild
@@ -168,7 +266,7 @@ BEGIN
                                                                       -- с такой структурой
                                                                       AND _tmpReceiptGoodsChild_mask.ProdColorPatternId > 0
                             -- без этой структуры
-                            WHERE _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                            WHERE _tmpReceiptGoodsChild.ProdColorPatternId = 0
                            )
           AND Object.DescId = zc_Object_ReceiptGoodsChild()
        ;
@@ -181,13 +279,17 @@ BEGIN
                 --
               , lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptGoodsChild_GoodsChild(), _tmpReceiptGoodsChild.Id, _tmpReceiptGoodsChild_mask.GoodsChildId)
         FROM _tmpReceiptGoodsChild
+             -- одинаковый товар
              JOIN _tmpReceiptGoodsChild_mask ON _tmpReceiptGoodsChild_mask.ObjectId = _tmpReceiptGoodsChild.ObjectId
+             -- нашли ProdColorGroup
              INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup_mask
                                    ON ObjectLink_ProdColorGroup_mask.ObjectId = _tmpReceiptGoodsChild_mask.ProdColorPatternId
                                   AND ObjectLink_ProdColorGroup_mask.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+             -- нашли ProdColorGroup
              INNER JOIN ObjectLink AS ObjectLink_ProdColorGroup
                                    ON ObjectLink_ProdColorGroup.ObjectId = _tmpReceiptGoodsChild.ProdColorPatternId
                                   AND ObjectLink_ProdColorGroup.DescId   = zc_ObjectLink_ProdColorPattern_ProdColorGroup()
+        -- одинаковая структура - ProdColorGroup
         WHERE ObjectLink_ProdColorGroup_mask.ChildObjectId = ObjectLink_ProdColorGroup.ChildObjectId
        ;
 
@@ -197,7 +299,7 @@ BEGIN
                    FROM _tmpReceiptGoodsChild_mask
                         JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.ObjectId = _tmpReceiptGoodsChild_mask.ObjectId
                    WHERE COALESCE (_tmpReceiptGoodsChild_mask.GoodsChildId, 0) <> COALESCE (_tmpReceiptGoodsChild.GoodsChildId, 0)
-                     AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                     AND _tmpReceiptGoodsChild.ProdColorPatternId = 0
                   )
         THEN
             RAISE EXCEPTION 'Ошибка.Для <%> %было значение для сборка Узел-1 = <%>.%Новое значение = <%>.(%)'
@@ -255,9 +357,10 @@ BEGIN
                                                         ) AS Id
         FROM _tmpReceiptGoodsChild_mask
              LEFT JOIN _tmpReceiptGoodsChild ON _tmpReceiptGoodsChild.NPP                = _tmpReceiptGoodsChild_mask.NPP
-                                            AND _tmpReceiptGoodsChild.ProdColorPatternId IS NULL
+                                            -- без этой структуры
+                                            AND _tmpReceiptGoodsChild.ProdColorPatternId = 0
         -- без этой структуры
-        WHERE _tmpReceiptGoodsChild_mask.ProdColorPatternId IS NULL
+        WHERE _tmpReceiptGoodsChild_mask.ProdColorPatternId = 0
        ;
 
 
