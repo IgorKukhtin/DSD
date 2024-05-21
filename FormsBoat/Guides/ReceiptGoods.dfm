@@ -20,7 +20,7 @@
   TextHeight = 13
   object PanelMaster: TPanel
     Left = 0
-    Top = 88
+    Top = 117
     Width = 1332
     Height = 225
     Align = alTop
@@ -154,6 +154,12 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 80
+        end
+        object Article_all: TcxGridDBColumn
+          Caption = '***Artikel Nr'
+          DataBinding.FieldName = 'Article_all'
+          Visible = False
+          Width = 70
         end
         object GoodsGroupName: TcxGridDBColumn
           Caption = #1043#1088#1091#1087#1087#1072
@@ -404,9 +410,9 @@
   end
   object PanelGoods: TPanel
     Left = 0
-    Top = 318
+    Top = 347
     Width = 635
-    Height = 176
+    Height = 147
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
@@ -415,7 +421,7 @@
       Left = 0
       Top = 17
       Width = 635
-      Height = 159
+      Height = 130
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -873,7 +879,7 @@
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
-    Top = 313
+    Top = 342
     Width = 1332
     Height = 5
     AlignSplitter = salTop
@@ -881,9 +887,9 @@
   end
   object PanelProdColorPattern: TPanel
     Left = 643
-    Top = 318
+    Top = 347
     Width = 689
-    Height = 176
+    Height = 147
     Align = alRight
     Caption = 'PanelProdColorPattern'
     TabOrder = 4
@@ -891,7 +897,7 @@
       Left = 1
       Top = 18
       Width = 687
-      Height = 157
+      Height = 128
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
@@ -1350,9 +1356,9 @@
   end
   object cxSplitterRight: TcxSplitter
     Left = 635
-    Top = 318
+    Top = 347
     Width = 8
-    Height = 176
+    Height = 147
     AlignSplitter = salRight
     Control = PanelProdColorPattern
   end
@@ -1360,12 +1366,12 @@
     Left = 0
     Top = 0
     Width = 1332
-    Height = 62
+    Height = 91
     Align = alTop
     TabOrder = 5
     object lbSearchArticle: TcxLabel
-      Left = 4
-      Top = 36
+      Left = 0
+      Top = 63
       Caption = #1055#1086#1080#1089#1082' Artikel Nr: '
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -1376,8 +1382,8 @@
       Style.IsFontAssigned = True
     end
     object edSearchArticle: TcxTextEdit
-      Left = 120
-      Top = 37
+      Left = 119
+      Top = 64
       TabOrder = 1
       DesignSize = (
         110
@@ -1439,6 +1445,48 @@
       Properties.ReadOnly = True
       TabOrder = 7
       Width = 220
+    end
+    object lbSearchName: TcxLabel
+      Left = 542
+      Top = 63
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1096#1072#1073#1083#1086#1085'): '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 684
+      Top = 64
+      TabOrder = 9
+      DesignSize = (
+        140
+        21)
+      Width = 140
+    end
+    object edSearchArticle_master: TcxTextEdit
+      Left = 426
+      Top = 64
+      TabOrder = 10
+      DesignSize = (
+        110
+        21)
+      Width = 110
+    end
+    object cxLabel2: TcxLabel
+      Left = 239
+      Top = 63
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr ('#1096#1072#1073#1083#1086#1085'): '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   object Panel_btn: TPanel
@@ -1624,8 +1672,8 @@
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 144
-    Top = 128
+    Left = 152
+    Top = 200
     DockControlHeights = (
       0
       0
@@ -1956,6 +2004,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbBarSeparetor'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Child_union'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -2113,6 +2169,10 @@
       Action = macInsertUpdate_UnitChild
       Category = 0
       ImageIndex = 80
+    end
+    object bbUpdate_Child_union: TdxBarButton
+      Action = mactUpdate_Child_union
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -3469,6 +3529,46 @@
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1077#1089#1090#1086' '#1089#1073#1086#1088#1082#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074
     end
+    object actUpdate_Child_union: TdsdExecStoredProc
+      Category = 'Update_all'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Child_union
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Child_union
+        end>
+      Caption = 'actUpdate_Child_union'
+      ImageIndex = 38
+    end
+    object mactUpdate_Child_union_List: TMultiAction
+      Category = 'Update_all'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Child_union
+        end>
+      View = cxGridDBTableView
+      Caption = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1077' '#1076#1077#1090#1072#1083#1080
+      Hint = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1077' '#1076#1077#1090#1072#1083#1080
+      ImageIndex = 38
+    end
+    object mactUpdate_Child_union: TMultiAction
+      Category = 'Update_all'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdate_Child_union_List
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1077' '#1076#1077#1090#1072#1083#1080' '#1076#1083#1103' '#1042#1089#1077#1093' '#1096#1072#1073#1083#1086#1085#1086#1074'?'
+      InfoAfterExecute = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1077' '#1076#1077#1090#1072#1083#1080
+      Hint = 'C'#1091#1084#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1086#1074#1090#1086#1088#1103#1102#1097#1080#1077' '#1076#1077#1090#1072#1083#1080
+      ImageIndex = 38
+    end
     object actspInsertUpdate_ReceiptGoods: TdsdExecStoredProc
       Category = 'Insert_all'
       MoveParams = <>
@@ -3613,7 +3713,7 @@
       end>
     PackSize = 1
     Left = 104
-    Top = 160
+    Top = 208
   end
   object spErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_ReceiptGoods'
@@ -3999,8 +4099,8 @@
         Value = Null
         MultiSelectSeparator = ','
       end>
-    Left = 768
-    Top = 144
+    Left = 736
+    Top = 200
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -4176,7 +4276,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
+    Left = 144
     Top = 368
   end
   object spInsertUpdate_Child2: TdsdStoredProc
@@ -4392,8 +4492,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 952
-    Top = 152
+    Left = 896
+    Top = 144
   end
   object spSelectPrintStructureGoods: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptGoods_Print'
@@ -4453,24 +4553,24 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
+    Left = 824
     Top = 136
   end
   object FieldFilter_Article: TdsdFieldFilter
     TextEdit = edSearchArticle
     DataSet = Child1CDS
-    Column = Article_ch1
+    Column = Article_all_ch1
     ColumnList = <
       item
-        Column = Article_ch1
+        Column = Article_all_ch1
       end
       item
-        Column = Article_all_ch1
+        Column = Article_ch1
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 256
-    Top = 152
+    Left = 32
+    Top = 8
   end
   object GuidesReceiptLevel: TdsdGuides
     KeyField = 'Id'
@@ -4560,8 +4660,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 892
-    Top = 120
+    Left = 916
+    Top = 104
   end
   object GuidesReceiptGoods: TdsdGuides
     KeyField = 'Id'
@@ -4713,8 +4813,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 447
-    Top = 35
+    Left = 487
+    Top = 19
   end
   object spInsUpd_UnitChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ReceiptGoods_UnitChild'
@@ -4738,7 +4838,41 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 852
-    Top = 104
+    Left = 828
+    Top = 184
+  end
+  object spUpdate_Child_union: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ReceiptGoodsChild_union'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inReceiptGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 188
+    Top = 432
+  end
+  object FieldFilter_Master: TdsdFieldFilter
+    TextEdit = edSearchArticle_master
+    DataSet = MasterCDS
+    Column = Article_all
+    ColumnList = <
+      item
+        Column = Article_all
+        TextEdit = edSearchArticle_master
+      end
+      item
+        Column = Name
+        TextEdit = edSearchName
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 144
   end
 end

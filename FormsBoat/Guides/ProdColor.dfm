@@ -18,14 +18,15 @@ object ProdColorForm: TProdColorForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 63
+    Top = 95
     Width = 874
-    Height = 313
+    Height = 281
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitLeft = -8
+    ExplicitTop = 63
+    ExplicitHeight = 313
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -161,7 +162,7 @@ object ProdColorForm: TProdColorForm
     Left = 0
     Top = 0
     Width = 874
-    Height = 37
+    Height = 69
     Align = alTop
     TabOrder = 5
     object cxLabel2: TcxLabel
@@ -231,6 +232,27 @@ object ProdColorForm: TProdColorForm
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 138
+    end
+    object lbSearchName: TcxLabel
+      Left = 3
+      Top = 39
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 83
+      Top = 40
+      TabOrder = 9
+      DesignSize = (
+        140
+        21)
+      Width = 140
     end
   end
   object DataSource: TDataSource
@@ -964,5 +986,18 @@ object ProdColorForm: TProdColorForm
       end>
     Left = 672
     Top = 88
+  end
+  object FieldFilter_Article: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = Name
+    ColumnList = <
+      item
+        Column = Name
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 264
+    Top = 272
   end
 end

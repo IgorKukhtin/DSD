@@ -279,6 +279,17 @@ type
     macInsertUpdate_UnitChild_list: TMultiAction;
     macInsertUpdate_UnitChild: TMultiAction;
     bbb: TdxBarButton;
+    spUpdate_Child_union: TdsdStoredProc;
+    actUpdate_Child_union: TdsdExecStoredProc;
+    mactUpdate_Child_union_List: TMultiAction;
+    mactUpdate_Child_union: TMultiAction;
+    bbUpdate_Child_union: TdxBarButton;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    edSearchArticle_master: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    Article_all: TcxGridDBColumn;
+    FieldFilter_Master: TdsdFieldFilter;
   private
     { Private declarations }
   public
