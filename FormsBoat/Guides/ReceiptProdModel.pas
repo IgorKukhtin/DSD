@@ -228,6 +228,10 @@ type
     cxButton1: TcxButton;
     bbChoiceFormGoods: TdxBarButton;
     ArticleVergl_ch1: TcxGridDBColumn;
+    actPrintStructureSum: TdsdPrintAction;
+    actPrintStructureGoodsSum: TdsdPrintAction;
+    bbPrintStructureSum: TdxBarButton;
+    bbPrintStructureGoodsSum: TdxBarButton;
   private
     { Private declarations }
   public

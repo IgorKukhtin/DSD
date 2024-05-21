@@ -173,8 +173,68 @@ BEGIN
 
              -- !!!с этой структурой!!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
-
                                  )                     
+
+
+    -- раскладываем ReceiptProdModelChild                                                                                Article_all
+     , tmpReceiptGoodsChild AS
+                              (SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
+                                      -- Сумма вх. без НДС
+                                    , SUM (zfCalc_SummIn (tmpReceiptProdModelChild.Value * COALESCE (ObjectFloat_Value.ValueData, 0) / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                                                   , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                                                   , 1)
+                                          ) :: TFloat AS EKPrice_summ
+
+                               FROM tmpReceiptProdModelChild
+                                    -- нашли его в сборке узлов
+                                    INNER JOIN ObjectLink AS ObjectLink_ReceiptGoods_Object
+                                                          ON ObjectLink_ReceiptGoods_Object.ChildObjectId = tmpReceiptProdModelChild.ObjectId
+                                                         AND ObjectLink_ReceiptGoods_Object.DescId        = zc_ObjectLink_ReceiptGoods_Object()
+                                    -- не удален
+                                    INNER JOIN Object AS Object_ReceiptGoods ON Object_ReceiptGoods.Id       = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                                            AND Object_ReceiptGoods.isErased = FALSE
+                                    -- это главный шаблон
+                                    INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                             ON ObjectBoolean_Main.ObjectId  = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                            AND ObjectBoolean_Main.DescId    = zc_ObjectBoolean_ReceiptGoods_Main()
+                                                            AND ObjectBoolean_Main.ValueData = TRUE
+                                    -- из чего состоит
+                                    INNER JOIN ObjectLink AS ObjectLink_ReceiptGoodsChild_ReceiptGoods
+                                                          ON ObjectLink_ReceiptGoodsChild_ReceiptGoods.ChildObjectId = ObjectLink_ReceiptGoods_Object.ObjectId
+                                                         AND ObjectLink_ReceiptGoodsChild_ReceiptGoods.DescId        = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods()
+                                    -- не удален
+                                    INNER JOIN Object AS Object_ReceiptGoodsChild ON Object_ReceiptGoodsChild.Id       = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                                                 AND Object_ReceiptGoodsChild.isErased = FALSE
+                                    -- Комплектующие / Работы/Услуги
+                                    LEFT JOIN ObjectLink AS ObjectLink_Object
+                                                         ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                        AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                       
+                                    -- значение в сборке
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_Value
+                                                          ON ObjectFloat_Value.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                         AND ObjectFloat_Value.DescId   = zc_ObjectFloat_ReceiptGoodsChild_Value()
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_ForCount
+                                                          ON ObjectFloat_ForCount.ObjectId = ObjectLink_ReceiptGoodsChild_ReceiptGoods.ObjectId
+                                                         AND ObjectFloat_ForCount.DescId   = zc_ObjectFloat_ReceiptGoodsChild_ForCount()
+                                                         
+                                    -- !!!с этой структурой!!!
+                                    LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Object.ChildObjectId
+                       
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                          ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                                         AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+                       
+                                       -- цены для Работы/Услуги вход. без НДС
+                                    LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                                          ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Goods.Id
+                                                         AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
+                       
+                               WHERE Object_Goods.Id > 0
+                          --        OR ObjectLink_ProdColorPattern.ChildObjectId > 0 
+                               GROUP BY tmpReceiptProdModelChild.ReceiptProdModelChildId
+                              )     
+                              
 
     , tmpResult AS
       (SELECT
@@ -203,7 +263,12 @@ BEGIN
          , Object_ProdColor.ValueData                 AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
          , ObjectString_Goods_Comment.ValueData       AS GoodsComment
-
+          -- Цена вх. без НДС
+         , COALESCE (tmpReceiptGoodsChild.EKPrice_summ , ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+          -- Сумма вх. без НДС
+         , zfCalc_SummIn (tmpReceiptProdModelChild.Value
+                        , COALESCE (tmpReceiptGoodsChild.EKPrice_summ, ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0)
+                        , 1) :: TFloat AS EKPrice_summ
      FROM tmpReceiptProdModelChild
 
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptLevel
@@ -241,6 +306,18 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Object.Id
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+          -- цены для компл. вх. без НДС                     
+          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
+
+          -- цены для Работы/Услуги вх. без НДС
+          LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice() 
+ 
+          LEFT JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId --and 1=0
        )
        
        , tmpPhoto AS (SELECT ObjectLink_GoodsPhoto_Goods.ChildObjectId AS GoodsId
@@ -281,7 +358,9 @@ BEGIN
          , ObjectBlob_GoodsPhoto_Data1.ValueData AS Photo1
          , tmpPhoto1.FileName AS FileName1
          , tmpResult.GoodsComment AS GoodsComment
-            
+
+         , tmpResult.EKPrice
+         , tmpResult.EKPrice_summ            
      FROM tmpResult
           LEFT JOIN ObjectString AS ObjectString_EAN
                                  ON ObjectString_EAN.ObjectId = tmpResult.ObjectId
@@ -387,6 +466,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.05.24          *
  14.05.22          *
 */
 
