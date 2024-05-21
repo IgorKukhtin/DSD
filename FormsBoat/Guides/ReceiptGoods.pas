@@ -290,6 +290,8 @@ type
     cxLabel2: TcxLabel;
     Article_all: TcxGridDBColumn;
     FieldFilter_Master: TdsdFieldFilter;
+    actPrintStructureSum: TdsdPrintAction;
+    bbPrintStructureSum: TdxBarButton;
   private
     { Private declarations }
   public

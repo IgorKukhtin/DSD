@@ -427,6 +427,8 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -6
+      ExplicitTop = 15
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -1797,6 +1799,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintStructureSum'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2172,6 +2178,10 @@
     end
     object bbUpdate_Child_union: TdxBarButton
       Action = mactUpdate_Child_union
+      Category = 0
+    end
+    object bbPrintStructureSum: TdxBarButton
+      Action = actPrintStructureSum
       Category = 0
     end
   end
@@ -3271,6 +3281,68 @@
           Value = '0'
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptGoods_Structure'
+      ReportNameParam.Value = 'PrintReceiptGoods_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
+    object actPrintStructureSum: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructure
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructure
+        end>
+      Caption = 'Print Structure with Price'
+      Hint = 'Print Structure with Price'
+      ImageIndex = 16
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'TitleGroup;NPP_3;ObjectCode'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = True
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintReceiptGoods_Structure'

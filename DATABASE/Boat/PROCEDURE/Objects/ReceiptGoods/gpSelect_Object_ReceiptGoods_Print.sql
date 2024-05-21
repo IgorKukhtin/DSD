@@ -289,6 +289,13 @@ BEGIN
                                       CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
                                       COALESCE(Object_GoodsChildGroup.ValueData, '')
                                  END:: TVarChar AS TitleGroup
+
+                            -- Цена вх. без НДС - Товар/Услуги
+                          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+                            -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
+                          , zfCalc_SummIn (tmpProdColorPattern.Value
+                                         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData)
+                                         , 1) AS EKPrice_summ
                       FROM tmpProdColorPattern
                            LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
                  
@@ -359,7 +366,17 @@ BEGIN
                  
                            LEFT JOIN ObjectString AS ObjectString_EAN
                                                   ON ObjectString_EAN.ObjectId = Object_Goods.Id
-                                                 AND ObjectString_EAN.DescId = zc_ObjectString_EAN() 
+                                                 AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+
+                           -- Цена вх. без НДС - Товар
+                           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                 ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                                AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
+                           -- Цена вх. без НДС - Услуги
+                           LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                                 ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Goods.Id
+                                                AND ObjectFloat_ReceiptService_EKPrice.DescId   = zc_ObjectFloat_ReceiptService_EKPrice()
+
                      /* ORDER BY CASE WHEN COALESCE(Object_ReceiptLevel.ValueData, '') = '' THEN 1 ELSE 0 END
                              , Object_ReceiptLevel.ValueData
                              , Object_ProdColorPattern.ObjectCode ASC */   
@@ -408,6 +425,13 @@ BEGIN
                                       CASE WHEN COALESCE(ObjectString_ArticleChild.ValueData, '') <> '' AND COALESCE(Object_GoodsChildGroup.ValueData, '') <> '' THEN ' - ' ELSE '' END||
                                       COALESCE(Object_GoodsChildGroup.ValueData, '')*/
                                  :: TVarChar AS TitleGroup
+
+                            -- Цена вх. без НДС - Товар/Услуги
+                          , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+                            -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
+                          , zfCalc_SummIn (1
+                                         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData)
+                                         , 1) AS EKPrice_summ
                       FROM (SELECT  tmpProdColorPattern.* FROM tmpProdColorPattern WHERE tmpProdColorPattern.GoodsChildId > 0) AS tmpProdColorPattern
                                                       
                            LEFT JOIN Object AS Object_ProdColorPattern ON Object_ProdColorPattern.Id = tmpProdColorPattern.ProdColorPatternId
@@ -480,6 +504,15 @@ BEGIN
                            LEFT JOIN ObjectString AS ObjectString_EAN
                                                   ON ObjectString_EAN.ObjectId = Object_Goods.Id
                                                  AND ObjectString_EAN.DescId = zc_ObjectString_EAN()
+
+                           -- Цена вх. без НДС - Товар
+                           LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                                 ON ObjectFloat_EKPrice.ObjectId = Object_Goods.Id
+                                                AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
+                           -- Цена вх. без НДС - Услуги
+                           LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                                 ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Goods.Id
+                                                AND ObjectFloat_ReceiptService_EKPrice.DescId   = zc_ObjectFloat_ReceiptService_EKPrice() 
                 ) 
 
      ---
@@ -519,6 +552,8 @@ BEGIN
                                        END
                                      , tmpResult.ObjectName
                              ) :: Integer AS NPP_3
+          , tmpResult.EKPrice         ::TFloat
+          , tmpResult.EKPrice_summ    ::NUMERIC (16, 2)
      FROM tmpResult    
      ;        
 
@@ -541,7 +576,14 @@ BEGIN
          --, Object_ProdColor.ValueData            :: TVarChar AS ProdColorName
          , CASE WHEN ObjectLink_Goods.ChildObjectId IS NULL THEN ObjectString_Comment.ValueData ELSE Object_ProdColor.ValueData END :: TVarChar AS ProdColorName
          , Object_Measure.ValueData              ::TVarChar  AS MeasureName
-         , Object_ProdColorGroup.ValueData       AS  ProdColorGroupName
+         , Object_ProdColorGroup.ValueData       AS  ProdColorGroupName     
+         
+           -- Цена вх. без НДС - Товар/Услуги
+         , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData, 0) :: TFloat AS EKPrice
+           -- Сумма вх. без НДС, до 2-х знаков - Товар/Услуги
+         , zfCalc_SummIn (ObjectFloat_Value.ValueData / CASE WHEN ObjectFloat_ForCount.ValueData > 1 THEN ObjectFloat_ForCount.ValueData ELSE 1 END
+                        , COALESCE (ObjectFloat_EKPrice.ValueData, ObjectFloat_ReceiptService_EKPrice.ValueData)
+                        , 1) AS EKPrice_summ
 
      FROM Object AS Object_ReceiptGoodsChild
 
@@ -610,6 +652,15 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = ObjectLink_ProdColorPattern.ObjectId
                                 AND ObjectString_Comment.DescId = zc_ObjectString_ProdColorPattern_Comment()
 
+          -- Цена вх. без НДС - Товар
+          LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                ON ObjectFloat_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_EKPrice.DescId   = zc_ObjectFloat_Goods_EKPrice()
+          -- Цена вх. без НДС - Услуги
+          LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
+                                ON ObjectFloat_ReceiptService_EKPrice.ObjectId = Object_Object.Id
+                               AND ObjectFloat_ReceiptService_EKPrice.DescId   = zc_ObjectFloat_ReceiptService_EKPrice()
+                               
      WHERE Object_ReceiptGoodsChild.DescId = zc_Object_ReceiptGoodsChild()
        AND Object_ReceiptGoodsChild.isErased = FALSE
        AND ObjectLink_ReceiptGoods.ChildObjectId = inReceiptGoodsId
