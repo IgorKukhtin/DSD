@@ -83,6 +83,9 @@ type
     GuidesLanguage4: TdsdGuides;
     spInsertUpdate: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Article: TdsdFieldFilter;
   private
     { Private declarations }
   public

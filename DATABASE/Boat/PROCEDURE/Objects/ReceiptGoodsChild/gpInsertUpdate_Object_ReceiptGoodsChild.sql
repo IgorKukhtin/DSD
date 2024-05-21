@@ -43,7 +43,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 
    DECLARE vbValue         NUMERIC (16, 8); 
-   DECLARE vbValue_service NUMERIC (16, 8);
+   DECLARE vbValue_service NUMERIC (16, 8); 
+   DECLARE vbId            Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptGoodsChild());
@@ -90,6 +91,31 @@ BEGIN
                                              , inUserId        := vbUserId
                                               );
    END IF;
+
+   --проверка уникальности
+   vbId := (SELECT MIN (ObjectLink_Object.ObjectId) 
+            FROM ObjectLink AS ObjectLink_ReceiptGoodsChild
+               INNER JOIN Object AS Object_ReceiptGoodsChild
+                                 ON Object_ReceiptGoodsChild.Id = ObjectLink_ReceiptGoodsChild.ObjectId
+                                AND Object_ReceiptGoodsChild.IsErased = FALSE   
+               INNER JOIN ObjectLink AS ObjectLink_Object
+                                     ON ObjectLink_Object.ObjectId = ObjectLink_ReceiptGoodsChild.ObjectId
+                                    AND ObjectLink_Object.DescId   = zc_ObjectLink_ReceiptGoodsChild_Object()
+                                    AND ObjectLink_Object.ChildObjectId = inObjectId
+            WHERE ObjectLink_ReceiptGoodsChild.ChildObjectId = inReceiptGoodsId
+              AND ObjectLink_ReceiptGoodsChild.DescId = zc_ObjectLink_ReceiptGoodsChild_ReceiptGoods() 
+              AND ObjectLink_ReceiptGoodsChild.ObjectId <> ioId
+
+            );
+   IF COALESCE (vbId,0) <> 0
+   THEN
+        --
+         RAISE EXCEPTION '%', lfMessageTraslate (inMessage       := 'Ошибка.Такая деталь уже внесена.'
+                                               , inProcedureName := 'gpInsertUpdate_Object_ReceiptGoodsChild'
+                                               , inUserId        := vbUserId
+                                                );
+   END IF;
+   --
 
    -- замена
    IF COALESCE (inReceiptLevelId, 0) = 0 AND inReceiptLevelId_top > 0

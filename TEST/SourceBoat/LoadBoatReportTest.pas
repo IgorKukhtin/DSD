@@ -122,10 +122,10 @@ begin
     LoadReportFromFile('PrintMovement_OrderClientBarcode', ReportPath + '\PrintMovement_OrderClientBarcode.fr3');
 
     LoadReportFromFile('PrintMovement_ProductionPersonal', ReportPath + '\PrintMovement_ProductionPersonal.fr3');
-
+     }
     LoadReportFromFile('PrintReceiptGoods_Structure', ReportPath + '\PrintReceiptGoods_Structure.fr3');
     exit;
-
+    {
     //LoadReportFromFile('PrintReceiptProdModel_StructureGoods', ReportPath + '\PrintReceiptProdModel_StructureGoods.fr3');
     LoadReportFromFile('PrintReceiptProdModelGoods_Structure', ReportPath + '\PrintReceiptProdModelGoods_Structure.fr3');
     LoadReportFromFile('PrintReceiptProdModel_Structure', ReportPath + '\PrintReceiptProdModel_Structure.fr3');

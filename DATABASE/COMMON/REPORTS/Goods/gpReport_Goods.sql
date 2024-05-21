@@ -37,7 +37,8 @@ RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Oper
               , GoodsCode_parent Integer, GoodsName_parent TVarChar, GoodsKindName_parent TVarChar
               , Price TFloat, Price_branch TFloat, Price_end TFloat, Price_branch_end TFloat, Price_partner TFloat
               , SummPartnerIn TFloat, SummPartnerOut TFloat
-              , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat
+              , AmountStart TFloat, AmountIn TFloat, AmountOut TFloat, AmountEnd TFloat, Amount TFloat 
+              , AmountStart_weight TFloat, AmountIn_weight TFloat, AmountOut_weight TFloat, AmountEnd_weight TFloat
               , SummStart TFloat, SummStart_branch TFloat, SummIn TFloat, SummIn_branch TFloat, SummOut TFloat, SummOut_branch TFloat, SummEnd TFloat, SummEnd_branch TFloat, Summ TFloat, Summ_branch TFloat
               , Amount_Change TFloat, Summ_Change_branch TFloat, Summ_Change_zavod TFloat
               , Amount_40200 TFloat, Summ_40200_branch TFloat, Summ_40200_zavod TFloat
@@ -223,7 +224,8 @@ BEGIN
 
         , gpReport.GoodsCode
         , gpReport.GoodsName
-        , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
+        --, COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
+        , '' :: TVarChar AS Name_Scale
         , gpReport.GoodsKindName
         , gpReport.GoodsKindName_complete
         , gpReport.PartionGoods ::TVarChar
@@ -237,7 +239,7 @@ BEGIN
         , gpReport.PartNumber_partion  ::TVarChar 
         , ''  ::TVarChar   AS PartionCellName
         , FALSE ::Boolean  AS isPartionCell_Close
-        */                                       
+       */                                       
         , 0    ::Integer AS StorageId           
         , ''  ::TVarChar AS StorageName       
         , 0   ::Integer  AS PartionModelId    
@@ -246,7 +248,9 @@ BEGIN
         , ''  ::TVarChar AS UnitName_partion  
         , ''  ::TVarChar AS BranchName_partion
         , ''  ::TVarChar AS PartNumber_partion
-        
+        , ''  ::TVarChar   AS PartionCellName
+        , FALSE ::Boolean  AS isPartionCell_Close
+
         , gpReport.GoodsCode_parent
         , gpReport.GoodsName_parent
         , gpReport.GoodsKindName_parent
@@ -262,7 +266,13 @@ BEGIN
         , gpReport.AmountIn         ::TFloat  AS AmountIn         
         , gpReport.AmountOut        ::TFloat  AS AmountOut        
         , gpReport.AmountEnd        ::TFloat  AS AmountEnd        
-        , gpReport.Amount           ::TFloat  AS Amount 
+        , gpReport.Amount           ::TFloat  AS Amount   
+        --â ýòîì  îò÷åòå âñå â âåñå
+        , 0      ::TFloat  AS AmountStart_weight      
+        , 0      ::TFloat  AS AmountIn_weight         
+        , 0      ::TFloat  AS AmountOut_weight        
+        , 0      ::TFloat  AS AmountEnd_weight
+
         , gpReport.SummStart        ::TFloat  AS SummStart        
         , gpReport.SummStart_branch ::TFloat  AS SummStart_branch 
         , gpReport.SummIn           ::TFloat  AS SummIn           
@@ -309,8 +319,8 @@ BEGIN
           LEFT JOIN tmpProtocol ON tmpProtocol.MovementId = gpReport.MovementId 
           
           LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId = gpReport.MovementId
-         
-         ;
+
+          ;
  
  
    ELSE
@@ -1005,11 +1015,13 @@ BEGIN
                 
                         , Object_PaidKind.ValueData AS PaidKindName
                 
+                        , Object_Goods.Id         AS GoodsId
                         , Object_Goods.ObjectCode AS GoodsCode
                         , Object_Goods.ValueData  AS GoodsName
                         , Object_GoodsKind.ValueData AS GoodsKindName
                         , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
                         , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
+                        , Object_Goods_parent.Id         AS GoodsId_parent
                         , Object_Goods_parent.ObjectCode AS GoodsCode_parent
                         , Object_Goods_parent.ValueData  AS GoodsName_parent
                         , Object_GoodsKind_parent.ValueData AS GoodsKindName_parent
@@ -1319,7 +1331,13 @@ BEGIN
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountIn)         ELSE 0 END ::TFloat  AS AmountIn         
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountOut)        ELSE 0 END ::TFloat  AS AmountOut        
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountEnd)        ELSE 0 END ::TFloat  AS AmountEnd        
-        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.Amount)           ELSE 0 END ::TFloat  AS Amount 
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.Amount)           ELSE 0 END ::TFloat  AS Amount    
+        --âåñ
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountStart * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ELSE 0 END  ::TFloat  AS AmountStart_weight      
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountIn    * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ELSE 0 END  ::TFloat  AS AmountIn_weight         
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountOut   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ELSE 0 END  ::TFloat  AS AmountOut_weight        
+        , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.AmountEnd   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ELSE 0 END  ::TFloat  AS AmountEnd_weight        
+        
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummStart)        ELSE 0 END ::TFloat  AS SummStart        
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummStart_branch) ELSE 0 END ::TFloat  AS SummStart_branch 
         , CASE WHEN vbIsSummIn = TRUE THEN SUM (tmpDataAll.SummIn)           ELSE 0 END ::TFloat  AS SummIn           
@@ -1364,6 +1382,12 @@ BEGIN
         , tmpDataAll.UserName_Insert ::TVarChar  AS UserName_Insert
 
    FROM tmpDataAll
+        LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                              ON ObjectFloat_Weight.ObjectId = tmpDataAll.GoodsId
+                             AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight() 
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                             ON ObjectLink_Goods_Measure.ObjectId = tmpDataAll.GoodsId
+                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
    GROUP BY tmpDataAll.MovementId
         , tmpDataAll.InvNumber
         , tmpDataAll.OperDate
@@ -1437,6 +1461,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.05.24         * 
  30.01.24         *
  22.01.24         *
  03.12.21         *

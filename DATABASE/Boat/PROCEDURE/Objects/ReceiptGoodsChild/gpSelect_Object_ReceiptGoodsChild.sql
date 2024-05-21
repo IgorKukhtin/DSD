@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ReceiptGoodsChild (Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION (
+CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoodsChild(
     IN inIsErased    Boolean,       -- признак показать удаленные да / нет
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, NPP Integer, NPP_service Integer, Comment TVarChar
              , GoodsGroupNameFull TVarChar
              , GoodsGroupName TVarChar
              , Article TVarChar
-             , ProdColorName TVarChar                                   gpSelect_Object_ReceiptGoodsChild
+             , ProdColorName TVarChar                                   
              , MeasureName TVarChar
                -- Цена вх. без НДС - Товар/Услуги
              , EKPrice TFloat
