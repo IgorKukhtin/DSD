@@ -103,7 +103,7 @@ BEGIN
          vbAmount:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_Amount());
 
          -- сумма заказа клиента
-         vbSum_OrderClient := (SELECT tmp.Basis_summ_transport
+         vbSum_OrderClient := (SELECT tmp.BasisWVAT_summ_transport
                                FROM gpSelect_Object_Product (inMovementId_OrderClient:= vbMovementId_OrderClient, inIsShowAll:= TRUE, inIsSale:= FALSE, inSession:= inUserId::TVarChar) AS tmp
                               );
 
@@ -128,6 +128,8 @@ BEGIN
          END IF;
 
     END IF;
+
+RAISE EXCEPTION 'Ошибка. <%>.', vbSum_OrderClient;
 
 
      -- Параметр из документа
