@@ -255,7 +255,7 @@ BEGIN
                             WHERE _tmpItem.DescId_mi = zc_MI_Detail()
                             ORDER BY _tmpItem.GoodsId, Object_ProdColorPattern.ObjectCode
                            )
-       -- цвета без повтороі для Узла
+       -- цвета без повторов для Узла
      , tmpProdColor_all AS (SELECT _tmpItem.GoodsId
                                  , STRING_AGG (DISTINCT CASE WHEN Object_MaterialOptions.ValueData <> '' THEN Object_MaterialOptions.ValueData || ' - ' ELSE '' END || _tmpProdColorItems.ProdColorName, '; ') AS ProdColorName
                             FROM _tmpItem
@@ -274,6 +274,7 @@ BEGIN
            , Object_Object.Id                         AS ObjectId
            , Object_Object.ObjectCode                 AS ObjectCode
            , ObjectString_Article_Object.ValueData    AS Article_Object
+           , ObjectString_ArticleVergl.ValueData      AS ArticleVergl_Object
            , Object_Object.ValueData                  AS ObjectName
            , CASE WHEN _tmpItem_child.GoodsId > 0 THEN 'Узел'
                   WHEN ObjectDesc_Object.Id = zc_Object_ProdOptions() THEN 'Опция'
@@ -361,6 +362,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article_object
                                    ON ObjectString_Article_object.ObjectId = Object_Object.Id
                                   AND ObjectString_Article_object.DescId   = zc_ObjectString_Article()
+            LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                   ON ObjectString_ArticleVergl.ObjectId = Object_Object.Id
+                                  AND ObjectString_ArticleVergl.DescId = zc_ObjectString_ArticleVergl()
             LEFT JOIN ObjectDesc AS ObjectDesc_Object ON ObjectDesc_Object.Id = Object_Object.DescId
 
             LEFT JOIN Object AS Object_Object_basis ON Object_Object_basis.Id = _tmpItem.ObjectId_basis

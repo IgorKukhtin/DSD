@@ -1785,8 +1785,8 @@ object OrderClientForm: TOrderClientForm
         end
       end
     end
-    object cxTabSheet1: TcxTabSheet
-      Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+    object cxTabSheet_Child: TcxTabSheet
+      Caption = #1059#1079#1083#1099'/'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
       ImageIndex = 1
       object cxGridChild: TcxGrid
         Left = 0
@@ -2016,6 +2016,21 @@ object OrderClientForm: TOrderClientForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object ArticleVergl_Object: TcxGridDBColumn
+            Caption = 'Vergl. Nr'
+            DataBinding.FieldName = 'ArticleVergl_Object'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
             Width = 70
           end
           object ObjectName_ch3: TcxGridDBColumn
@@ -2798,7 +2813,7 @@ object OrderClientForm: TOrderClientForm
         end
       end
     end
-    object cxTabSheet2: TcxTabSheet
+    object cxTabSheet_Info: TcxTabSheet
       Caption = 'Info'
       ImageIndex = 2
       object cxGridInfo: TcxGrid
@@ -3532,7 +3547,7 @@ object OrderClientForm: TOrderClientForm
     Width = 1390
     Height = 64
     Align = alBottom
-    TabOrder = 12
+    TabOrder = 11
     object btnInsertUpdateMovement: TcxButton
       Left = 24
       Top = 6
@@ -3783,6 +3798,7 @@ object OrderClientForm: TOrderClientForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbsProtocol'
         end
@@ -3986,11 +4002,11 @@ object OrderClientForm: TOrderClientForm
       Category = 0
     end
     object bbProtocol2: TdxBarButton
-      Action = actProtocol2
+      Action = actProtocol_Conf
       Category = 0
     end
     object bbProtocol3: TdxBarButton
-      Action = actProtocol3
+      Action = actProtocol_ProdOptions
       Category = 0
     end
     object bbProtoco_Invoice: TdxBarButton
@@ -4147,6 +4163,10 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbProtoco_Child'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolInfoOpen'
         end
         item
@@ -4179,6 +4199,10 @@ object OrderClientForm: TOrderClientForm
     end
     object bbPrintOrderConfirmation_TD: TdxBarButton
       Action = actPrintOrderConfirmation_TD
+      Category = 0
+    end
+    object bbProtoco_Child: TdxBarButton
+      Action = actProtoco_Child
       Category = 0
     end
   end
@@ -4714,7 +4738,7 @@ object OrderClientForm: TOrderClientForm
     end
     object actMovementProtocolInfoOpenForm: TdsdOpenForm
       Category = 'DSDLib'
-      TabSheet = cxTabSheet2
+      TabSheet = cxTabSheet_Info
       MoveParams = <>
       Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1048#1085#1092#1086#1088#1084#1072#1094#1080#1080'>'
@@ -5204,7 +5228,7 @@ object OrderClientForm: TOrderClientForm
     end
     object actInsertRecordInfo: TInsertRecord
       Category = 'DSDLib'
-      TabSheet = cxTabSheet2
+      TabSheet = cxTabSheet_Info
       MoveParams = <>
       Enabled = False
       PostDataSetBeforeExecute = False
@@ -5214,7 +5238,7 @@ object OrderClientForm: TOrderClientForm
       Hint = 'Add Info'
       ImageIndex = 0
     end
-    object actProtocol3: TdsdOpenForm
+    object actProtocol_ProdOptions: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>
@@ -5253,8 +5277,8 @@ object OrderClientForm: TOrderClientForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1057#1095#1077#1090
       ImageIndex = 34
-      FormName = 'TProtocolForm'
-      FormNameParam.Value = 'TProtocolForm'
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -5267,10 +5291,42 @@ object OrderClientForm: TOrderClientForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'TextValue'
+          Name = 'InvNumber'
           Value = Null
           Component = InvoiceCDS
           ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actProtoco_Child: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet_Child
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1059#1079#1083#1099
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1059#1079#1083#1099
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ChildCDS
+          ComponentItem = 'ObjectName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -5500,7 +5556,7 @@ object OrderClientForm: TOrderClientForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actProtocol2: TdsdOpenForm
+    object actProtocol_Conf: TdsdOpenForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       MoveParams = <>

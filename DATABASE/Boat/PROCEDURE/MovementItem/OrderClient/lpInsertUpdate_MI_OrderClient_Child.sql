@@ -89,6 +89,9 @@ BEGIN
    
      END IF;
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -242,7 +242,7 @@ type
     actPrintOrderConfirmation: TdsdPrintAction;
     bbPrintStructure: TdxBarButton;
     bbPrintTender: TdxBarButton;
-    cxTabSheet1: TcxTabSheet;
+    cxTabSheet_Child: TcxTabSheet;
     cxGridChild: TcxGrid;
     cxGridDBTableViewChild: TcxGridDBTableView;
     GoodsGroupNameFull_ch3: TcxGridDBColumn;
@@ -261,7 +261,7 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     DBViewAddOnChild: TdsdDBViewAddOn;
-    cxTabSheet2: TcxTabSheet;
+    cxTabSheet_Info: TcxTabSheet;
     cxGridInfo: TcxGrid;
     cxGridDBTableViewInfo: TcxGridDBTableView;
     Text_Info: TcxGridDBColumn;
@@ -451,8 +451,8 @@ type
     spSelectPrint_Invoice: TdsdStoredProc;
     actPrint_Invoice: TdsdPrintAction;
     bbPrint_Invoice: TdxBarButton;
-    actProtocol2: TdsdOpenForm;
-    actProtocol3: TdsdOpenForm;
+    actProtocol_Conf: TdsdOpenForm;
+    actProtocol_ProdOptions: TdsdOpenForm;
     actProtoco_Invoice: TdsdOpenForm;
     bbProtocol2: TdxBarButton;
     bbProtocol3: TdxBarButton;
@@ -492,6 +492,9 @@ type
     bbPrintOrderConfirmation_TD: TdxBarButton;
     edTransportSumm: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
+    ArticleVergl_Object: TcxGridDBColumn;
+    actProtoco_Child: TdsdOpenForm;
+    bbProtoco_Child: TdxBarButton;
   private
   public
   end;
