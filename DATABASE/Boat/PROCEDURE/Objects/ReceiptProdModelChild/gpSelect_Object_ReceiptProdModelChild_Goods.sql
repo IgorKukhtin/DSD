@@ -83,11 +83,11 @@ BEGIN
                                    ON ObjectFloat_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
 
-                -- цены для Работы/Услуги вход. без НДС
+             -- цены для Работы/Услуги вд. без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_EKPrice
                                    ON ObjectFloat_ReceiptService_EKPrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_ReceiptService_EKPrice.DescId = zc_ObjectFloat_ReceiptService_EKPrice()
-                -- цены для Работы/Услуги продажи без НДС
+             -- цены для Работы/Услуги продажи без НДС
              LEFT JOIN ObjectFloat AS ObjectFloat_ReceiptService_SalePrice
                                    ON ObjectFloat_ReceiptService_SalePrice.ObjectId = ObjectLink_Object.ChildObjectId
                                   AND ObjectFloat_ReceiptService_SalePrice.DescId = zc_ObjectFloat_ReceiptService_SalePrice()
@@ -267,7 +267,8 @@ BEGIN
 
 
      CREATE TEMP TABLE tmpChild ON COMMIT DROP AS
-       (SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
+       (-- нет в сборке узла
+        SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
              , 0 AS ProdColorPatternId
                -- Цена без НДС
              , tmpReceiptProdModelChild.EKPrice
@@ -284,22 +285,46 @@ BEGIN
         WHERE tmpReceiptGoodsChild.ReceiptProdModelChildId IS NULL
 
        UNION ALL
+        -- узлы
         SELECT tmpReceiptProdModelChild.ReceiptProdModelChildId
              , MAX (tmpReceiptGoodsChild.ProdColorPatternId) AS ProdColorPatternId
                -- Цена без НДС
-             , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.EKPrice_summ)     / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS EKPrice
+             , CASE WHEN tmpReceiptGoodsChild_find.ReceiptProdModelChildId IS NULL
+                         THEN tmpReceiptProdModelChild.EKPrice
+                    WHEN tmpReceiptProdModelChild.Value > 0
+                         THEN SUM (tmpReceiptGoodsChild.EKPrice_summ)     / tmpReceiptProdModelChild.Value
+                    ELSE 0
+               END :: TFloat AS EKPrice
 
                -- Цена вх. с НДС
-             , CASE WHEN tmpReceiptProdModelChild.Value > 0 THEN SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ) / tmpReceiptProdModelChild.Value ELSE 0 END :: TFloat AS EKPriceWVAT
+             , CASE WHEN tmpReceiptGoodsChild_find.ReceiptProdModelChildId IS NULL
+                         THEN tmpReceiptProdModelChild.EKPriceWVAT
+                    WHEN tmpReceiptProdModelChild.Value > 0
+                         THEN SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ) / tmpReceiptProdModelChild.Value
+                    ELSE 0
+               END :: TFloat AS EKPriceWVAT
                --
-             , SUM (tmpReceiptGoodsChild.EKPrice_summ)     :: TFloat AS EKPrice_summ
-             , SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ) :: TFloat AS EKPriceWVAT_summ
+             , CASE WHEN tmpReceiptGoodsChild_find.ReceiptProdModelChildId IS NULL
+                         THEN zfCalc_SummIn (tmpReceiptProdModelChild.Value , tmpReceiptProdModelChild.EKPrice, 1)
+                    ELSE SUM (tmpReceiptGoodsChild.EKPrice_summ)
+               END :: TFloat AS EKPrice_summ
+             , CASE WHEN tmpReceiptGoodsChild_find.ReceiptProdModelChildId IS NULL
+                         THEN zfCalc_SummIn (tmpReceiptProdModelChild.Value , tmpReceiptProdModelChild.EKPriceWVAT, 1)
+                    ELSE SUM (tmpReceiptGoodsChild.EKPriceWVAT_summ)
+               END :: TFloat AS EKPriceWVAT_summ
              --
              , TRUE AS isReceiptGoods
         FROM tmpReceiptProdModelChild
              INNER JOIN tmpReceiptGoodsChild ON tmpReceiptGoodsChild.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
+             -- если это реальная сборка, не Teak
+             LEFT JOIN (SELECT DISTINCT tmpReceiptGoodsChild.ReceiptProdModelChildId FROM tmpReceiptGoodsChild WHERE tmpReceiptGoodsChild.GoodsId > 0
+                       ) AS tmpReceiptGoodsChild_find
+                         ON tmpReceiptGoodsChild_find.ReceiptProdModelChildId = tmpReceiptProdModelChild.ReceiptProdModelChildId
         GROUP BY tmpReceiptProdModelChild.ReceiptProdModelChildId
                , tmpReceiptProdModelChild.Value
+               , tmpReceiptProdModelChild.EKPrice
+               , tmpReceiptProdModelChild.EKPriceWVAT
+               , tmpReceiptGoodsChild_find.ReceiptProdModelChildId
        );
 
      CREATE TEMP TABLE tmpResult ON COMMIT DROP AS
