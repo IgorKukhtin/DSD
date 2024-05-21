@@ -68,12 +68,12 @@
           DataBinding.FieldName = 'isMain'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1043#1083#1072#1074#1085#1099#1081' ('#1076#1072'/'#1085#1077#1090')'
+          HeaderHint = #1043#1083#1072#1074#1085#1099#1081' '#1096#1072#1073#1083#1086#1085' ('#1076#1072'/'#1085#1077#1090')'
           Options.Editing = False
           Width = 72
         end
         object Code: TcxGridDBColumn
-          Caption = #1050#1086#1076
+          Caption = #1050#1086#1076' ('#1096#1072#1073#1083#1086#1085')'
           DataBinding.FieldName = 'Code'
           Visible = False
           HeaderAlignmentHorz = taCenter
@@ -82,16 +82,16 @@
           Width = 43
         end
         object UserCode: TcxGridDBColumn
-          Caption = #1055#1086#1083#1100#1079'. '#1050#1086#1076
+          Caption = #1055#1086#1083#1100#1079'. '#1050#1086#1076' ('#1096#1072#1073#1083#1086#1085')'
           DataBinding.FieldName = 'UserCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1080#1081' '#1050#1086#1076
+          HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100#1089#1082#1080#1081' '#1050#1086#1076' ('#1096#1072#1073#1083#1086#1085')'
           Options.Editing = False
           Width = 92
         end
         object Name: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1096#1072#1073#1083#1086#1085')'
           DataBinding.FieldName = 'Name'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
@@ -153,7 +153,23 @@
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = 'Artikel Nr ('#1059#1079#1077#1083')'
           Width = 80
+        end
+        object ArticleVergl: TcxGridDBColumn
+          Caption = 'Vergl. Nr'
+          DataBinding.FieldName = 'ArticleVergl'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1040#1088#1090#1080#1082#1091#1083' '#1059#1079#1077#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+          Width = 55
         end
         object Article_all: TcxGridDBColumn
           Caption = '***Artikel Nr'
@@ -189,11 +205,11 @@
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076
+          HeaderHint = #1042#1085#1091#1090#1088#1077#1085#1085#1080#1081' '#1082#1086#1076' ('#1059#1079#1077#1083')'
           Width = 60
         end
         object GoodsName: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          Caption = #1059#1079#1077#1083
           DataBinding.FieldName = 'GoodsName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -207,16 +223,16 @@
           Width = 164
         end
         object Comment_goods: TcxGridDBColumn
-          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1050#1086#1084#1087#1083'.)'
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1059#1079#1077#1083
           DataBinding.FieldName = 'Comment_goods'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          HeaderHint = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1059#1079#1077#1083
           Options.Editing = False
           Width = 80
         end
         object ProdColorName: TcxGridDBColumn
-          Caption = 'Farbe ('#1050#1086#1084#1087#1083'.)'
+          Caption = 'Farbe '#1059#1079#1077#1083
           DataBinding.FieldName = 'ProdColorName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -227,7 +243,7 @@
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          HeaderHint = 'Farbe '#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
+          HeaderHint = 'Farbe '#1059#1079#1077#1083
           Width = 70
         end
         object Article_group: TcxGridDBColumn
@@ -427,8 +443,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -6
-      ExplicitTop = 15
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -1372,9 +1386,9 @@
     Align = alTop
     TabOrder = 5
     object lbSearchArticle: TcxLabel
-      Left = 0
-      Top = 63
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr: '
+      Left = 522
+      Top = 65
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr:'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -1384,8 +1398,8 @@
       Style.IsFontAssigned = True
     end
     object edSearchArticle: TcxTextEdit
-      Left = 119
-      Top = 64
+      Left = 638
+      Top = 65
       TabOrder = 1
       DesignSize = (
         110
@@ -1449,9 +1463,9 @@
       Width = 220
     end
     object lbSearchName: TcxLabel
-      Left = 542
-      Top = 63
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1096#1072#1073#1083#1086#1085'): '
+      Left = 298
+      Top = 65
+      Caption = #1059#1079#1077#1083':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -1461,8 +1475,8 @@
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 684
-      Top = 64
+      Left = 342
+      Top = 65
       TabOrder = 9
       DesignSize = (
         140
@@ -1470,8 +1484,8 @@
       Width = 140
     end
     object edSearchArticle_master: TcxTextEdit
-      Left = 426
-      Top = 64
+      Left = 173
+      Top = 65
       TabOrder = 10
       DesignSize = (
         110
@@ -1479,9 +1493,9 @@
       Width = 110
     end
     object cxLabel2: TcxLabel
-      Left = 239
-      Top = 63
-      Caption = #1055#1086#1080#1089#1082' Artikel Nr ('#1096#1072#1073#1083#1086#1085'): '
+      Left = 7
+      Top = 65
+      Caption = #1055#1086#1080#1089#1082' Artikel Nr ('#1059#1079#1077#1083'):'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -4940,7 +4954,7 @@
         TextEdit = edSearchArticle_master
       end
       item
-        Column = Name
+        Column = GoodsName
         TextEdit = edSearchName
       end>
     ActionNumber1 = actChoiceGuides

@@ -221,7 +221,7 @@ BEGIN
          , Object_Goods.Id         ::Integer  AS GoodsId
          , Object_Goods.ObjectCode ::Integer  AS GoodsCode
          , Object_Goods.ValueData  ::TVarChar AS GoodsName
-         , zfCalc_GoodsName_all (ObjectString_Article.ValueData, Object_Goods.ValueData) ::TVarChar AS GoodsName_all
+         , zfCalc_GoodsName_all (COALESCE (ObjectString_Article.ValueData, '') || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, ''), Object_Goods.ValueData) ::TVarChar AS GoodsName_all
 
          , tmpReceiptProdModel.GoodsId          AS GoodsId_group
          , tmpReceiptProdModel.GoodsCode        AS GoodsCode_group

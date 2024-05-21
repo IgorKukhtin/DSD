@@ -292,6 +292,7 @@ type
     FieldFilter_Master: TdsdFieldFilter;
     actPrintStructureSum: TdsdPrintAction;
     bbPrintStructureSum: TdxBarButton;
+    ArticleVergl: TcxGridDBColumn;
   private
     { Private declarations }
   public

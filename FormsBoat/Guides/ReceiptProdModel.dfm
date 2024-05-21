@@ -829,6 +829,21 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           HeaderAlignmentVert = vaCenter
           Width = 55
         end
+        object ArticleVergl_ch1: TcxGridDBColumn
+          Caption = 'Vergl. Nr'
+          DataBinding.FieldName = 'ArticleVergl'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+          Width = 70
+        end
         object Article_all_ch1: TcxGridDBColumn
           Caption = '***Artikel Nr'
           DataBinding.FieldName = 'Article_all'
@@ -866,7 +881,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Width = 80
         end
         object ObjectName_ch1: TcxGridDBColumn
-          Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
+          Caption = #1059#1079#1083#1099' /'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' /'#1056#1072#1073#1086#1090#1099' /'#1059#1089#1083#1091#1075#1080
           DataBinding.FieldName = 'ObjectName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <

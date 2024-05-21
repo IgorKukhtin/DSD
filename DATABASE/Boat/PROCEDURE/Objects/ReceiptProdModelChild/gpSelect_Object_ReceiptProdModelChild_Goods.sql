@@ -363,7 +363,8 @@ BEGIN
          , ObjectString_GoodsGroupFull.ValueData      AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Article.ValueData             AS Article
-         , zfCalc_Article_all (ObjectString_Article.ValueData) AS Article_all
+         , ObjectString_ArticleVergl.ValueData        AS ArticleVergl
+         , zfCalc_Article_all (ObjectString_Article.ValueData) || '_' || COALESCE (ObjectString_ArticleVergl.ValueData, '') AS Article_all
          , Object_ProdColor.ValueData                 AS ProdColorName
          , Object_Measure.ValueData                   AS MeasureName
 
@@ -428,6 +429,9 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Article
                                  ON ObjectString_Article.ObjectId = Object_Object.Id
                                 AND ObjectString_Article.DescId = zc_ObjectString_Article()
+          LEFT JOIN ObjectString AS ObjectString_ArticleVergl
+                                 ON ObjectString_ArticleVergl.ObjectId = Object_Object.Id
+                                AND ObjectString_ArticleVergl.DescId   = zc_ObjectString_ArticleVergl()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Object.Id

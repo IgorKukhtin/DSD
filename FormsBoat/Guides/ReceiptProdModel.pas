@@ -227,6 +227,7 @@ type
     btnSetErased: TcxButton;
     cxButton1: TcxButton;
     bbChoiceFormGoods: TdxBarButton;
+    ArticleVergl_ch1: TcxGridDBColumn;
   private
     { Private declarations }
   public
