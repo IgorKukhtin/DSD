@@ -4131,8 +4131,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1144
-    Top = 104
+    Left = 1104
+    Top = 120
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
