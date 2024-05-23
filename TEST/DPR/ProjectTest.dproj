@@ -5254,6 +5254,10 @@
 				<Form>Report_ReceiptProductionOutAnalyzeLineForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas">
+				<Form>GoodsByGoodsKindPeresortForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
