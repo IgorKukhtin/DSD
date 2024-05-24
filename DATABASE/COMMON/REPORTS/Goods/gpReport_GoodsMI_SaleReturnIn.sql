@@ -98,7 +98,7 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
-    IF vbUserId = 5
+    IF vbUserId = 5 AND 1=0
     THEN
         RAISE EXCEPTION 'Ошибка.vbUserId = 5.';
     END IF;
