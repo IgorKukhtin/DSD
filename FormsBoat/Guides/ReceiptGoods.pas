@@ -293,6 +293,7 @@ type
     actPrintStructureSum: TdsdPrintAction;
     bbPrintStructureSum: TdxBarButton;
     ArticleVergl: TcxGridDBColumn;
+    isMany_pf: TcxGridDBColumn;
   private
     { Private declarations }
   public

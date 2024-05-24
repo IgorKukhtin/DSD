@@ -27,7 +27,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1174
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
@@ -38,7 +37,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1174
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
@@ -389,6 +387,15 @@
           Options.Editing = False
           Width = 100
         end
+        object isMany_pf: TcxGridDBColumn
+          Caption = #1054#1096#1080#1073#1082#1072' '#1055#1060
+          DataBinding.FieldName = 'isMany_pf'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1059#1082#1072#1079#1072#1085#1086' '#1085#1077#1089#1082#1086#1083#1100#1082#1086' '#1091#1079#1083#1086#1074' '#1055#1060
+          Options.Editing = False
+          Width = 55
+        end
         object InsertDate: TcxGridDBColumn
           Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
           DataBinding.FieldName = 'InsertDate'
@@ -450,7 +457,6 @@
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1174
     end
     object clReceiptGoods: TcxLabel
       Left = 259
@@ -482,7 +488,6 @@
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 477
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
@@ -493,7 +498,6 @@
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 477
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -671,10 +675,16 @@
         object ArticleVergl_ch1: TcxGridDBColumn
           Caption = 'Vergl. Nr'
           DataBinding.FieldName = 'ArticleVergl'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
           Visible = False
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Options.Editing = False
           Width = 70
         end
         object Article_all_ch1: TcxGridDBColumn
@@ -942,7 +952,6 @@
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 477
     end
   end
   object cxTopSplitter: TcxSplitter
@@ -952,7 +961,6 @@
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 1174
   end
   object PanelProdColorPattern: TPanel
     Left = 480
@@ -962,7 +970,6 @@
     Align = alRight
     Caption = 'PanelProdColorPattern'
     TabOrder = 4
-    ExplicitLeft = 485
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -1431,7 +1438,6 @@
     Height = 147
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitLeft = 477
   end
   object Panel5: TPanel
     Left = 0
@@ -1440,7 +1446,6 @@
     Height = 91
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1174
     object lbSearchArticle: TcxLabel
       Left = 522
       Top = 65
@@ -1568,7 +1573,6 @@
     Height = 64
     Align = alBottom
     TabOrder = 7
-    ExplicitWidth = 1174
     object btnInsert: TcxButton
       Left = 17
       Top = 4

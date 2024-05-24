@@ -46,6 +46,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BasisPrice TFloat
                -- Цена продажи с НДС, до 2-х знаков
              , BasisPriceWVAT TFloat
+               --
+             , isMany_pf Boolean
               )
 AS
 $BODY$
@@ -88,6 +90,7 @@ BEGIN
                                                          , gpSelect.ProdColorPatternName_all
                                                          , gpSelect.ProdColorName
                                                          , gpSelect.MaterialOptionsName
+                                                         , gpSelect.GoodsChildId
                                                            -- Сумма вх. с НДС, до 2-х знаков
                                                          , gpSelect.EKPrice_summ
                                                            -- Сумма вх. с НДС, до 2-х знаков
@@ -99,6 +102,8 @@ BEGIN
           -- ВСЕ Элементы сборки Узлов
         , tmpReceiptGoodsChild_all AS (-- Элементы сборки Узлов - Товар
                                        SELECT gpSelect.ReceiptGoodsId
+                                            , MIN (CASE WHEN COALESCE (gpSelect.GoodsChildId, 0) = 0 THEN 100100100100100 ELSE gpSelect.GoodsChildId END) AS GoodsChildId_min
+                                            , MAX (COALESCE (gpSelect.GoodsChildId, 0)) AS GoodsChildId_max
                                               -- Сумма вх. без НДС, до 2-х знаков
                                             , SUM (gpSelect.EKPrice_summ)     AS EKPrice_summ_goods
                                               -- Сумма вх. с НДС, до 2-х знаков
@@ -113,6 +118,8 @@ BEGIN
                                       UNION ALL
                                        -- Элементы сборки Узлов - Boat Structure
                                        SELECT gpSelect.ReceiptGoodsId
+                                            , MIN (CASE WHEN COALESCE (gpSelect.GoodsChildId, 0) = 0 THEN 100100100100100 ELSE gpSelect.GoodsChildId END) AS GoodsChildId_min
+                                            , MAX (COALESCE (gpSelect.GoodsChildId, 0)) AS GoodsChildId_max
                                               -- Товар
                                             , 0 AS EKPrice_summ_goods
                                             , 0 AS EKPriceWVAT_summ_goods
@@ -126,6 +133,8 @@ BEGIN
                                    )
           -- собрали в 1 строку
         , tmpReceiptGoodsChild AS (SELECT tmpReceiptGoodsChild_all.ReceiptGoodsId
+                                        , MIN (tmpReceiptGoodsChild_all.GoodsChildId_min) AS GoodsChildId_min
+                                        , MAX (tmpReceiptGoodsChild_all.GoodsChildId_max) AS GoodsChildId_max
                                           -- Сумма вх. без НДС, до 2-х знаков
                                         , SUM (tmpReceiptGoodsChild_all.EKPrice_summ_goods)       :: TFloat AS EKPrice_summ_goods
                                           -- Сумма вх. с НДС, до 2-х знаков
@@ -272,6 +281,9 @@ BEGIN
          , COALESCE (tmpPriceBasis.ValuePrice, 0)     ::TFloat AS BasisPrice
            -- Цена продажи с ндс
          , COALESCE (tmpPriceBasis.ValuePriceWVAT, 0) ::TFloat AS BasisPriceWVAT
+
+           -- Указано несколько узлов ПФ
+         , CASE WHEN tmpReceiptGoodsChild.GoodsChildId_min < tmpReceiptGoodsChild.GoodsChildId_max THEN TRUE ELSE FALSE END :: Boolean AS isMany_pf
 
      FROM tmpReceiptGoods AS Object_ReceiptGoods
           LEFT JOIN ObjectString AS ObjectString_Code
