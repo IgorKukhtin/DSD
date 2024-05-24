@@ -1201,7 +1201,7 @@ end if;
                                   FROM _tmpContainer
                                        INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = _tmpContainer.ContainerId_begin
                                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
--- and (MIContainer.MovementId not IN (28085802, 28086493  ) -- , 28086493
+-- and (MIContainer.MovementId not IN (28101616  ) -- , 28086493
 -- or inUserId <> 5
 -- )
                                        LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
