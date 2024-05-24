@@ -226,7 +226,7 @@ BEGIN
                             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
                                                                           AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
                                                                             OR ObjectBoolean.ValueData          = TRUE)
-                       WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                       WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 10352030 THEN 6561986 ELSE vbUserId END -- Брикова В.В.
                          AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                       UNION
                        SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
@@ -234,7 +234,7 @@ BEGIN
                             INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
                                                   ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
                                                  AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
-                       WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                       WHERE ObjectLink_User_Member.ObjectId = CASE WHEN vbUserId = 10352030 THEN 6561986 ELSE vbUserId END
                          AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                       )
    , tmpContainer AS (SELECT CLO_Personal.ContainerId         AS ContainerId
