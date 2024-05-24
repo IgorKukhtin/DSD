@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1059#1079#1083#1086#1074'>'
   ClientHeight = 558
-  ClientWidth = 1174
+  ClientWidth = 1169
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,34 +21,54 @@
   object PanelMaster: TPanel
     Left = 0
     Top = 117
-    Width = 1174
+    Width = 1169
     Height = 225
     Align = alTop
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1332
+    ExplicitWidth = 1174
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1174
+      Width = 1169
       Height = 208
       Align = alClient
       PopupMenu = PopupMenu
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 1332
+      ExplicitWidth = 1174
       object cxGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.DefaultGroupSummaryItems = <
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ
+          end>
         DataController.Summary.FooterSummaryItems = <
           item
             Format = 'C'#1090#1088#1086#1082': ,0'
             Kind = skCount
             Column = Name
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPrice_summ
+          end
+          item
+            Format = ',0.00##'
+            Kind = skSum
+            Column = EKPriceWVAT_summ
           end>
         DataController.Summary.SummaryGroups = <>
         Images = dmMain.SortImageList
@@ -333,6 +353,32 @@
           Options.Editing = False
           Width = 70
         end
+        object EKPrice_summ: TcxGridDBColumn
+          Caption = 'Total EK'
+          DataBinding.FieldName = 'EKPrice_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
+        object EKPriceWVAT_summ: TcxGridDBColumn
+          Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+          DataBinding.FieldName = 'EKPriceWVAT_summ'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1057#1091#1084#1084#1072' '#1074#1093'. '#1089' '#1053#1044#1057
+          Options.Editing = False
+          Width = 70
+        end
         object Comment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
           DataBinding.FieldName = 'Comment'
@@ -397,14 +443,14 @@
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1174
+      Width = 1169
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1091#1079#1083#1086#1074
       Color = clSkyBlue
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 1332
+      ExplicitWidth = 1174
     end
     object clReceiptGoods: TcxLabel
       Left = 259
@@ -430,24 +476,24 @@
   object PanelGoods: TPanel
     Left = 0
     Top = 347
-    Width = 477
+    Width = 472
     Height = 147
     Align = alClient
     BevelEdges = [beLeft]
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 635
+    ExplicitWidth = 477
     object cxGridCh1: TcxGrid
       Left = 0
       Top = 17
-      Width = 477
+      Width = 472
       Height = 130
       Align = alClient
       PopupMenu = PopupMenuColor
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 635
+      ExplicitWidth = 477
       object cxGridDBTableViewCh1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = Child1DS
@@ -889,34 +935,34 @@
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 477
+      Width = 472
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
       Color = clAqua
       ParentBackground = False
       TabOrder = 1
-      ExplicitWidth = 635
+      ExplicitWidth = 477
     end
   end
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 342
-    Width = 1174
+    Width = 1169
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
-    ExplicitWidth = 1332
+    ExplicitWidth = 1174
   end
   object PanelProdColorPattern: TPanel
-    Left = 485
+    Left = 480
     Top = 347
     Width = 689
     Height = 147
     Align = alRight
     Caption = 'PanelProdColorPattern'
     TabOrder = 4
-    ExplicitLeft = 643
+    ExplicitLeft = 485
     object cxGridCh2: TcxGrid
       Left = 1
       Top = 18
@@ -1379,22 +1425,22 @@
     end
   end
   object cxSplitterRight: TcxSplitter
-    Left = 477
+    Left = 472
     Top = 347
     Width = 8
     Height = 147
     AlignSplitter = salRight
     Control = PanelProdColorPattern
-    ExplicitLeft = 635
+    ExplicitLeft = 477
   end
   object Panel5: TPanel
     Left = 0
     Top = 0
-    Width = 1174
+    Width = 1169
     Height = 91
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1332
+    ExplicitWidth = 1174
     object lbSearchArticle: TcxLabel
       Left = 522
       Top = 65
@@ -1518,11 +1564,11 @@
   object Panel_btn: TPanel
     Left = 0
     Top = 494
-    Width = 1174
+    Width = 1169
     Height = 64
     Align = alBottom
     TabOrder = 7
-    ExplicitWidth = 1332
+    ExplicitWidth = 1174
     object btnInsert: TcxButton
       Left = 17
       Top = 4
@@ -4620,8 +4666,8 @@
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1044
-    Top = 113
+    Left = 1076
+    Top = 177
   end
   object PrintItemsColorCDS: TClientDataSet
     Aggregates = <>

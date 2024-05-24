@@ -1502,7 +1502,8 @@ uses
   Report_Send_PartionCellRemains in '..\..\Forms\Report\Report_Send_PartionCellRemains.pas' {Report_Send_PartionCellRemainsForm: TParentForm},
   Report_Send_PartionCellRemainsDialog in '..\..\Forms\Report\Report_Send_PartionCellRemainsDialog.pas' {Report_Send_PartionCellRemainsDialogForm: TParentForm},
   PartionCellChoiceAll in '..\..\Forms\Guides\PartionCellChoiceAll.pas' {PartionCellChoiceAllForm: TParentForm},
-  Report_ReceiptProductionOutAnalyzeLine in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeLine.pas' {Report_ReceiptProductionOutAnalyzeLineForm: TParentForm};
+  Report_ReceiptProductionOutAnalyzeLine in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeLine.pas' {Report_ReceiptProductionOutAnalyzeLineForm: TParentForm},
+  GoodsByGoodsKindPeresort in '..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas' {GoodsByGoodsKindPeresortForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

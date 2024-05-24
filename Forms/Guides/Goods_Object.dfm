@@ -492,6 +492,7 @@ object Goods_ObjectForm: TGoods_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 160
     Top = 184

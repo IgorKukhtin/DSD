@@ -615,6 +615,9 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindPeresortForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindPeresortForm');
+  exit;
    {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ScaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ScaleDialogForm');

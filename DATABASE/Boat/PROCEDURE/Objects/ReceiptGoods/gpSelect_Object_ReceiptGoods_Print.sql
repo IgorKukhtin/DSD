@@ -245,6 +245,7 @@ BEGIN
                           --, CASE WHEN Object_Goods.DescId <> zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value
                           --, CASE WHEN Object_Goods.DescId =  zc_Object_ReceiptService() THEN tmpProdColorPattern.Value ELSE 0 END ::TFloat   AS Value_service
                  
+                           , Object_Goods.Id                    ::Integer  AS ObjectId
                            , Object_Goods.ObjectCode            ::Integer  AS ObjectCode
                            , CASE WHEN COALESCE (Object_Goods.ValueData,'') <> '' THEN Object_Goods.ValueData ELSE Object_ProdColorGroup.ValueData END ::TVarChar AS ObjectName
                         -- ,  Object_Goods.ValueData  ::TVarChar AS ObjectName
@@ -386,7 +387,8 @@ BEGIN
                          1  :: Integer AS NPP
                  
                           , 1 :: NUMERIC (16, 8) AS Value
-                          , Object_Goods.ObjectCode            ::Integer  AS ObjectCode
+                          , Object_Goods.Id                    ::Integer  AS ObjectId 
+                          , Object_Goods.ObjectCode            ::Integer  AS ObjectCode 
                            , Object_Goods.ValueData  ::TVarChar AS ObjectName
                                        
                           , ObjectString_EAN.ValueData                AS EAN
@@ -552,9 +554,13 @@ BEGIN
                                        END
                                      , tmpResult.ObjectName
                              ) :: Integer AS NPP_3
-          , tmpResult.EKPrice         ::TFloat
-          , tmpResult.EKPrice_summ    ::NUMERIC (16, 2)
-     FROM tmpResult    
+          , COALESCE (tmp.EKPrice, tmpResult.EKPrice)                            ::TFloat  AS EKPrice
+          , COALESCE ((tmp.EKPrice * tmpResult.Value), tmpResult.EKPrice_summ)   ::NUMERIC (16, 2)  AS EKPrice_summ
+     FROM tmpResult
+         LEFT JOIN (SELECT tmpResult.GoodsChildId, SUM (COALESCE (tmpResult.EKPrice_summ,0)) AS EKPrice
+                    FROM tmpResult WHERE COALESCE (tmpResult.GoodsChildId,0) <> 0
+                    GROUP BY tmpResult.GoodsChildId
+                    ) AS tmp ON tmp.GoodsChildId = tmpResult.ObjectId    
      ;        
 
      /*

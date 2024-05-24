@@ -3,7 +3,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1072#1073#1083#1086#1085' '#1089#1073#1086#1088#1082#1072' '#1052#1086#1076#1077#1083#1080'>'
   ClientHeight = 584
-  ClientWidth = 1207
+  ClientWidth = 1565
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelMaster: TPanel
     Left = 0
     Top = 59
-    Width = 1207
+    Width = 1565
     Height = 209
     Align = alTop
     BevelEdges = [beLeft]
@@ -30,7 +30,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxGrid: TcxGrid
       Left = 0
       Top = 17
-      Width = 1207
+      Width = 1565
       Height = 192
       Align = alClient
       PopupMenu = PopupMenu
@@ -304,7 +304,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel3: TPanel
       Left = 0
       Top = 0
-      Width = 1207
+      Width = 1565
       Height = 17
       Align = alTop
       Caption = #1057#1073#1086#1088#1082#1072' '#1084#1086#1076#1077#1083#1080
@@ -352,7 +352,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     end
   end
   object PanelProdColorPattern: TPanel
-    Left = 695
+    Left = 1053
     Top = 273
     Width = 512
     Height = 247
@@ -688,7 +688,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object PanelGoods: TPanel
     Left = 0
     Top = 273
-    Width = 687
+    Width = 1045
     Height = 247
     Align = alClient
     BevelEdges = [beLeft]
@@ -698,7 +698,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object cxGridGoods: TcxGrid
       Left = 0
       Top = 17
-      Width = 687
+      Width = 1045
       Height = 230
       Align = alClient
       PopupMenu = PopupMenuColor
@@ -1334,7 +1334,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
     object Panel1: TPanel
       Left = 0
       Top = 0
-      Width = 687
+      Width = 1045
       Height = 17
       Align = alTop
       Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077' / '#1056#1072#1073#1086#1090#1099'/'#1059#1089#1083#1091#1075#1080
@@ -1347,14 +1347,14 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 268
-    Width = 1207
+    Width = 1565
     Height = 5
     AlignSplitter = salTop
     Control = PanelMaster
     ExplicitWidth = 1221
   end
   object cxSplitterRight: TcxSplitter
-    Left = 687
+    Left = 1045
     Top = 273
     Width = 8
     Height = 247
@@ -1365,7 +1365,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object Panel4: TPanel
     Left = 0
     Top = 0
-    Width = 1207
+    Width = 1565
     Height = 33
     Align = alTop
     TabOrder = 6
@@ -1415,7 +1415,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
   object Panel_btn: TPanel
     Left = 0
     Top = 520
-    Width = 1207
+    Width = 1565
     Height = 64
     Align = alBottom
     TabOrder = 12
@@ -2010,7 +2010,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       Category = 0
     end
     object bbPrintStructureGoodsSum: TdxBarButton
-      Action = actPrintStructureGoodsSum
+      Action = actPrintStructureGoodsSumAll
       Category = 0
     end
   end
@@ -2074,6 +2074,67 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       PictureFields.Strings = (
         'photo1')
     end
+    object actPrintStructureGoodsSumAll: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureGoodsAll
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureGoodsAll
+        end>
+      Caption = 'Print Structure and unit with Price'
+      Hint = 'Print Structure and unit with Price'
+      ImageIndex = 23
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'ReceiptLevelName;GoodsGroupNameFull;NPP;ObjectName'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDMasterGoods'
+          IndexFieldNames = 'TitleReceipt;TitleGroup;ObjectCode'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintReceiptProdModelGoods_Structure'
+      ReportNameParam.Value = 'PrintReceiptProdModelGoods_Structure'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2093,62 +2154,6 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ImageIndex = 90
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actPrintStructureGoodsSum: TdsdPrintAction
-      Category = 'Print'
-      MoveParams = <
-        item
-          FromParam.Name = 'id'
-          FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
-          FromParam.MultiSelectSeparator = ','
-          ToParam.Value = Null
-          ToParam.ComponentItem = 'Id'
-          ToParam.ParamType = ptInputOutput
-          ToParam.MultiSelectSeparator = ','
-        end>
-      StoredProc = spSelectPrintStructureGoods
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrintStructureGoods
-        end>
-      Caption = 'Print Structure Goods with Price'
-      Hint = 'PrintStructure Goods with Price'
-      ImageIndex = 23
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'NPP;GoodsGroupNameFull;GoodsName'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isPrice'
-          Value = True
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = 'PrintReceiptProdModel_StructureGoods'
-      ReportNameParam.Value = 'PrintReceiptProdModel_StructureGoods'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-      PictureFields.Strings = (
-        'photo1')
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2791,7 +2796,7 @@ object ReceiptProdModelForm: TReceiptProdModelForm
       ShortCut = 16472
     end
     object actPrintStructureGoodsAll: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2832,6 +2837,12 @@ object ReceiptProdModelForm: TReceiptProdModelForm
           Value = '0'
           Component = FormParams
           ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPrice'
+          Value = False
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintReceiptProdModelGoods_Structure'
@@ -3838,8 +3849,8 @@ object ReceiptProdModelForm: TReceiptProdModelForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1104
-    Top = 88
+    Left = 1248
+    Top = 112
   end
   object spSelectPrintStructure: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ReceiptProdModel_Print'

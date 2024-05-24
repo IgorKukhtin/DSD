@@ -229,9 +229,9 @@ type
     bbChoiceFormGoods: TdxBarButton;
     ArticleVergl_ch1: TcxGridDBColumn;
     actPrintStructureSum: TdsdPrintAction;
-    actPrintStructureGoodsSum: TdsdPrintAction;
     bbPrintStructureSum: TdxBarButton;
     bbPrintStructureGoodsSum: TdxBarButton;
+    actPrintStructureGoodsSumAll: TdsdPrintAction;
   private
     { Private declarations }
   public
