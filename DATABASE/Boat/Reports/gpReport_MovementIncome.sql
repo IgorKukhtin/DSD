@@ -63,7 +63,8 @@ RETURNS TABLE (PartionId            Integer
              , DiscountTax_in   TFloat
              , TotalDiscountTax_in TFloat
              , VATPercent_in    TFloat
-           
+             , EKPrice          TFloat
+             , EKPrice_discount TFloat
               ) 
 AS
 $BODY$
@@ -154,6 +155,8 @@ BEGIN
                               
                               --цена БЕЗ скидки
                              , COALESCE (MIFloat_OperPrice_orig.ValueData, 0) AS OperPrice_orig 
+                              -- Вх. цена с учетом скидки в элементе
+                             , COALESCE (MIFloat_OperPrice.ValueData, 0)      AS OperPrice
                              -- % скидки
                              , COALESCE (MIFloat_DiscountTax.ValueData, 0)    AS DiscountTax
                         FROM MovementItemContainer AS MIContainer
@@ -164,6 +167,11 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPrice_orig
                                                          ON MIFloat_OperPrice_orig.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_OperPrice_orig.DescId = zc_MIFloat_OperPrice_orig()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                         ON MIFloat_OperPrice.MovementItemId = MIContainer.MovementItemId
+                                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                                                            
                              LEFT JOIN MovementItemFloat AS MIFloat_DiscountTax
                                                          ON MIFloat_DiscountTax.MovementItemId = MIContainer.MovementItemId
                                                         AND MIFloat_DiscountTax.DescId = zc_MIFloat_DiscountTax()
@@ -180,7 +188,8 @@ BEGIN
                                , MIContainer.MovementId
                                , MIContainer.PartionId
                                , COALESCE (MIFloat_OperPrice_orig.ValueData, 0)
-                               , COALESCE (MIFloat_DiscountTax.ValueData, 0)
+                               , COALESCE (MIFloat_DiscountTax.ValueData, 0)  
+                               , COALESCE (MIFloat_OperPrice.ValueData, 0)
                        )
  
    --остатки
@@ -220,7 +229,8 @@ BEGIN
                      , COALESCE (tmpMIContainer.Amount, 0) AS Amount  -- из проводок
                      , COALESCE (tmpRemains.Amount, 0)     AS Remains
                      , COALESCE (tmpMIContainer.Summ, 0)   AS Summ    -- из проводок 
-                     , COALESCE (tmpMIContainer.OperPrice_orig, 0) AS OperPrice_orig
+                     , COALESCE (tmpMIContainer.OperPrice_orig, 0) AS OperPrice_orig  
+                     , COALESCE (tmpMIContainer.OperPrice, 0)      AS OperPrice
                      , COALESCE (tmpMIContainer.DiscountTax, 0)    AS DiscountTax
                      , COALESCE (tmpMIContainer.SummIn, 0)         AS SummIn
 
@@ -232,14 +242,17 @@ BEGIN
                        -- Цена без НДС затраты
                      , Object_PartionGoods.CostPrice     ::TFloat
                        -- Цена вх. с затратами без НДС
-                     , (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+                     --, (Object_PartionGoods.EKPrice / Object_PartionGoods.CountForPrice + COALESCE (Object_PartionGoods.CostPrice,0) ) ::TFloat AS OperPrice_cost
+                     , Object_PartionGoods.EKPrice  ::TFloat AS OperPrice_cost 
+                       -- ***Цена вх. без НДС, с учетом ВСЕХ скидок (затрат здесь нет)
+                     , Object_PartionGoods.EKPrice_discount  ::TFloat AS EKPrice_discount
         
                      , Object_PartionGoods.Amount     AS Amount_in
                      , Object_PartionGoods.UnitId     AS UnitId_in
                      
                        --  № п/п - только для = 1 возьмем Amount_in
                      , ROW_NUMBER() OVER (PARTITION BY tmpMIContainer.PartionId ORDER BY CASE WHEN tmpMIContainer.UnitId = Object_PartionGoods.UnitId THEN 0 ELSE 1 END ASC) AS Ord
- 
+                
                 FROM tmpMIContainer
                      LEFT JOIN tmpRemains ON tmpRemains.PartionId = tmpMIContainer.PartionId
                                          AND tmpRemains.ObjectId  = tmpMIContainer.GoodsId
@@ -251,7 +264,7 @@ BEGIN
                                                   AND Object_PartionGoods.isErased       = FALSE
 
                       -- цена из Прайс-листа
-                     LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpMIContainer.GoodsId
+                     LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = tmpMIContainer.GoodsId     
                 )
  --
        , tmpMovementString AS (SELECT MovementString.*
@@ -299,6 +312,8 @@ BEGIN
                               , tmpData.CountForPrice
                               , tmpData.UnitId_in
 
+                              , tmpData.OperPrice 
+                              , tmpData.EKPrice_discount
                               , tmpData.OperPrice_orig
                               , tmpData.DiscountTax
                               , SUM (COALESCE (tmpData.SummIn, 0))  AS SummIn
@@ -337,9 +352,9 @@ BEGIN
                                                         AND inisPartion            = TRUE 
 
                               LEFT JOIN tmpMovementFloat AS MovementFloat_TotalDiscountTax
-                                                      ON MovementFloat_TotalDiscountTax.MovementId = tmpData.MovementId
-                                                     AND MovementFloat_TotalDiscountTax.DescId = zc_MovementFloat_TotalDiscountTax()
-                                                     AND inisPartion            = TRUE
+                                                         ON MovementFloat_TotalDiscountTax.MovementId = tmpData.MovementId
+                                                        AND MovementFloat_TotalDiscountTax.DescId = zc_MovementFloat_TotalDiscountTax()
+                                                        AND inisPartion            = TRUE
                               
                               LEFT JOIN MovementString AS MovementString_InvNumberPack
                                                        ON MovementString_InvNumberPack.MovementId = tmpData.MovementId
@@ -374,7 +389,8 @@ BEGIN
                                 , tmpData.ProdColorId
                                 , tmpData.TaxKindId
                                 , tmpData.TaxKindValue
-                                , tmpData.EKPrice
+                                , tmpData.EKPrice 
+                                , tmpData.EKPrice_discount 
                                 , tmpData.OperPriceList
                                 , tmpData.UnitId_in
                                 , MS_Comment.ValueData
@@ -388,8 +404,9 @@ BEGIN
                                 , MovementString_InvNumberPartner.ValueData
                                 , MovementDate_OperDatePartner.ValueData
                                 , COALESCE (MovementFloat_TotalDiscountTax.ValueData, 0) 
+                                , tmpData.OperPrice
                                 , tmpData.OperPrice_orig
-                               , tmpData.DiscountTax
+                                , tmpData.DiscountTax
                          )
 
        , tmpData_Rez AS (SELECT tmpData_All.UnitId
@@ -415,6 +432,7 @@ BEGIN
                           , tmpData_All.TaxKindId
                           
                           , tmpData_All.EKPrice
+                          , tmpData_All.EKPrice_discount
                           , tmpData_All.OperPriceList
                           , tmpData_All.OperPrice_cost
                           , tmpData_All.CostPrice
@@ -426,6 +444,7 @@ BEGIN
                           , tmpData_All.VATPercent_in
                           , tmpData_All.TotalDiscountTax_in
 
+                          , tmpData_All.OperPrice
                           , tmpData_All.OperPrice_orig
                           , tmpData_All.DiscountTax
                           , SUM (COALESCE (tmpData_All.SummIn, 0))  AS SummIn
@@ -435,7 +454,7 @@ BEGIN
 
                           , SUM (tmpData_All.Amount_in)          AS Amount_in
                           , SUM (tmpData_All.Remains)            AS Remains
-                          , SUM (tmpData_All.TotalSummEKPrice) AS TotalSummEKPrice
+                          , SUM (tmpData_All.TotalSummEKPrice)   AS TotalSummEKPrice
                           , SUM (tmpData_All.TotalSummPriceList) AS TotalSummPriceList
                      FROM tmpData_All
                           LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmpData_All.GoodsSizeId
@@ -463,7 +482,8 @@ BEGIN
                             , tmpData_All.DiscountTax_in 
                             , tmpData_All.TotalDiscountTax_in
                             , tmpData_All.VATPercent_in
-                            , tmpData_All.EKPrice
+                            , tmpData_All.EKPrice     
+                            , tmpData_All.EKPrice_discount
                             , tmpData_All.CountForPrice
                             , tmpData_All.OperPrice_cost
                             , tmpData_All.CostPrice
@@ -471,7 +491,8 @@ BEGIN
                             , tmpData_All.InvNumberPack_Partion
                             , tmpData_All.InvNumberPartner_Partion
                             , tmpData_All.OperDatePartner_Partion
-                            , tmpData_All.OperPrice_orig
+                            , tmpData_All.OperPrice_orig  
+                            , tmpData_All.OperPrice
                             , tmpData_All.DiscountTax
               )
 
@@ -519,13 +540,12 @@ BEGIN
              -- Итого кол-во Приход от поставщика
            , tmpData.Amount_in    :: TFloat AS Amount_in
 
-           , CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in
-                  ELSE 0
-             END :: TFloat AS OperPrice
+           --, CASE WHEN tmpData.Amount_in  <> 0 THEN tmpData.TotalSummEKPrice / tmpData.Amount_in   ELSE 0    END :: TFloat AS OperPrice 
+           , COALESCE (tmpData.OperPrice, 0)      :: TFloat AS OperPrice
            , COALESCE (tmpData.CountForPrice,1)   :: TFloat AS CountForPrice
 
              -- Цена по прайсу
-           , tmpData.OperPriceList :: TFloat
+           , tmpData.OperPriceList    :: TFloat
 
            , tmpData.OperPrice_cost   :: TFloat
            , tmpData.CostPrice        :: TFloat
@@ -554,7 +574,11 @@ BEGIN
            , tmpData.Comment_in       :: TVarChar
            , tmpData.DiscountTax_in   :: TFloat
            , tmpData.TotalDiscountTax_in ::TFloat
-           , tmpData.VATPercent_in    :: TFloat
+           , tmpData.VATPercent_in    :: TFloat  
+
+           -- Цена вх. без НДС   из свойства товара
+           , ObjectFloat_EKPrice.ValueData   ::TFloat   AS EKPrice 
+           , tmpData.EKPrice_discount        ::TFloat   AS EKPrice_discount
 
         FROM tmpData_Rez AS tmpData
             LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = tmpData.UnitId
@@ -575,6 +599,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Article
                                    ON ObjectString_Article.ObjectId = tmpData.GoodsId
                                   AND ObjectString_Article.DescId = zc_ObjectString_Article()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_EKPrice
+                                  ON ObjectFloat_EKPrice.ObjectId = tmpData.GoodsId
+                                 AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice()
            ;
 
 
@@ -585,6 +613,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.05.24         *
  29.06.23         *
  24.03.21         *
 */

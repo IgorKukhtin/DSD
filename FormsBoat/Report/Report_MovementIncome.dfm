@@ -6,7 +6,6 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -273
   ExplicitWidth = 1147
   ExplicitHeight = 602
   PixelsPerInch = 96
@@ -388,6 +387,29 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 55
           end
+          object OperPrice_orig: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'OperPrice_orig'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1089#1082#1080#1076#1082#1080
+            Width = 70
+          end
+          object EKPrice: TcxGridDBColumn
+            Caption = '***Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' '#1080#1079' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
+            Options.Editing = False
+            Width = 70
+          end
           object Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
             DataBinding.FieldName = 'Summ'
@@ -425,6 +447,18 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Options.Editing = False
             Width = 40
           end
+          object EKPrice_discount: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1074#1093'. '#1074#1089#1077' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'EKPrice_discount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' '#1089' '#1091#1095#1077#1090#1086#1084' '#1058#1054#1051#1068#1050#1054' '#1089#1082#1080#1076#1086#1082' ('#1087#1072#1088#1090#1080#1086#1085#1085#1099#1081' '#1091#1095#1077#1090')'
+            Options.Editing = False
+            Width = 80
+          end
           object CostPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1079#1072#1090#1088#1072#1090#1099
             DataBinding.FieldName = 'CostPrice'
@@ -456,8 +490,9 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1079#1072#1090#1088#1072#1090#1072#1084#1080' '#1073#1077#1079' '#1053#1044#1057
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057' '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1072#1090#1088#1072#1090#1099'+'#1088#1072#1089#1093#1086#1076#1099
             Options.Editing = False
+            Width = 70
           end
           object TotalSumm_cost: TcxGridDBColumn
             Caption = 'Total EK cost'
@@ -495,16 +530,17 @@ inherited Report_MovementIncomeForm: TReport_MovementIncomeForm
             Width = 80
           end
           object OperPrice: TcxGridDBColumn
-            Caption = 'Netto EK'
+            Caption = 'Buchungs EK'
             DataBinding.FieldName = 'OperPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Properties.DisplayFormat = ',0.####'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1073#1077#1079' '#1053#1044#1057
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1089#1090#1088#1086#1082#1077
             Options.Editing = False
-            Width = 70
+            Width = 80
           end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
