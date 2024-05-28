@@ -83,6 +83,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
               Format = ',0.####'
               Kind = skSum
               Column = WeightPackage_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_Send_out_rk
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Send_out_rk
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -144,6 +154,16 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Weight_Send_out_rk
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_Send_out_rk
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -322,6 +342,27 @@ inherited Report_GoodsMI_PackageForm: TReport_GoodsMI_PackageForm
           object Weight_Send_out: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089')'
             DataBinding.FieldName = 'Weight_Send_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_Send_out_rk: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1096#1090') '#1076#1083#1103' '#1056#1050
+            DataBinding.FieldName = 'Amount_Send_out_rk'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object Weight_Send_out_rk: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076' '#1089' '#1091#1087#1072#1082'. ('#1074#1077#1089') '#1076#1083#1103' '#1056#1050
+            DataBinding.FieldName = 'Weight_Send_out_rk'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
