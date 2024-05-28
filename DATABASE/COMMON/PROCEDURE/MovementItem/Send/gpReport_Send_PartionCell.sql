@@ -663,8 +663,9 @@ BEGIN
                          , 0 ::TFloat AS AmountRemains_Weight
                     
                            -- № п/п
-                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpData_MI.PartionGoodsDate, zc_DateStart()) ASC
-                                                                                                       , CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END) :: Integer AS Ord  
+                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END
+                                                                                                       , COALESCE (tmpData_MI.PartionGoodsDate, tmpData_MI.PartionGoodsDate, zc_DateStart()) ASC
+                                                                                                        ) :: Integer AS Ord  
              
                   FROM tmpData_MI -- расчет кол-во - мастер
              
@@ -1388,8 +1389,9 @@ BEGIN
          
                       -- № п/п
                     --, ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC) :: Integer AS Ord
-                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
-                                                                                                  , CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END) :: Integer AS Ord  
+                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END
+                                                                                                            , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
+                                                                                                            ) :: Integer AS Ord  
              FROM tmpData_MI -- расчет кол-во - мастер
                   FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
                                       AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
