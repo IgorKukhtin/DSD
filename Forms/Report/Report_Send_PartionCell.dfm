@@ -9,21 +9,21 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 56
+    Top = 97
     Width = 1071
-    Height = 326
+    Height = 285
     TabOrder = 3
     ExplicitTop = 56
     ExplicitWidth = 1071
     ExplicitHeight = 326
-    ClientRectBottom = 326
+    ClientRectBottom = 285
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 326
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 326
+        Height = 285
         ExplicitWidth = 1071
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -632,14 +632,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     inherited deStart: TcxDateEdit
       Left = 100
       Top = 3
-      EditValue = 43101d
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitLeft = 100
       ExplicitTop = 3
     end
     inherited deEnd: TcxDateEdit
       Top = 3
-      EditValue = 43101d
+      EditValue = 45292d
       Properties.SaveTime = False
       ExplicitTop = 3
     end
@@ -679,6 +679,58 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Properties.ReadOnly = False
       TabOrder = 6
       Width = 108
+    end
+  end
+  object PanelSearch: TPanel [2]
+    Left = 0
+    Top = 30
+    Width = 1071
+    Height = 41
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = -8
+    ExplicitTop = 27
+    object lbSearchCode: TcxLabel
+      Left = 21
+      Top = 10
+      Caption = #1055#1086#1080#1089#1082' '#1050#1086#1076': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCode: TcxTextEdit
+      Left = 106
+      Top = 10
+      TabOrder = 1
+      DesignSize = (
+        79
+        21)
+      Width = 79
+    end
+    object lbSearchName: TcxLabel
+      Left = 208
+      Top = 10
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 290
+      Top = 10
+      TabOrder = 3
+      DesignSize = (
+        337
+        21)
+      Width = 337
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1847,5 +1899,21 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     PackSize = 1
     Left = 890
     Top = 144
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchCode
+    DataSet = MasterCDS
+    Column = GoodsCode
+    ColumnList = <
+      item
+        Column = GoodsCode
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchName
+      end>
+    CheckBoxList = <>
+    Left = 728
+    Top = 40
   end
 end

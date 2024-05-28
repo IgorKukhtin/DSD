@@ -78,6 +78,12 @@ type
     actOpenFormPartionCell: TdsdOpenForm;
     bbOpenFormPartionCell: TdxBarButton;
     AmountRemains: TcxGridDBColumn;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchCode: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Search: TdsdFieldFilter;
   private
     { Private declarations }
   public
