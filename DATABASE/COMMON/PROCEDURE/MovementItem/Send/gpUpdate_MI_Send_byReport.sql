@@ -73,7 +73,8 @@ $BODY$
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
 if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0  THEN 2 ELSE 1 END); end if;
@@ -785,7 +786,7 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
                  -- сохранили оригинал
                  PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), inMovementItemId, vbPartionCellId_old_1 :: TFloat);
              ELSE
-                 -- попробуем найти
+                 -- попробуем найти, если сохраняли оригинал
                  vbPartionCellId_old_1:= (SELECT MIF.ValueData :: Integer
                                           FROM MovementItemFloat AS MIF
                                           WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_1() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
