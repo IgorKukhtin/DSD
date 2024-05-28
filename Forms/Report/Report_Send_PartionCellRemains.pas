@@ -85,6 +85,7 @@ type
     edSearchName: TcxTextEdit;
     FieldFilter_Search: TdsdFieldFilter;
     Ord: TcxGridDBColumn;
+    ColorFon_ord: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -114,17 +114,18 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              , Amount TFloat, Amount_Weight TFloat
 
-            , NormInDays      Integer
-            , NormInDays_real Integer
-            , NormInDays_tax  TFloat
-            , NormInDays_date TDateTime
+             , NormInDays      Integer
+             , NormInDays_real Integer
+             , NormInDays_tax  TFloat
+             , NormInDays_date TDateTime
 
              , Color_PartionGoodsDate Integer 
              
              , AmountRemains TFloat
              , AmountRemains_Weight TFloat
 
-            , Ord Integer
+             , Ord Integer
+             , ColorFon_ord Integer
               )
 AS
 $BODY$
@@ -518,193 +519,319 @@ BEGIN
                          , tmpData_All.GoodsKindId
                          , tmpData_All.PartionGoodsDate
                   )
+    , tmpResult AS (
+                    -- Результат
+                    SELECT tmpData_MI.MovementId
+                         , tmpData_MI.InvNumber    :: TVarChar
+                         , tmpData_MI.OperDate     :: TDateTime
+                         , tmpData_MI.OperDate_min :: TDateTime
+                         , tmpData_MI.OperDate_max :: TDateTime
+                         , MovementDate_Insert.ValueData AS InsertDate
+                         , Object_Insert.ValueData       AS InsertName
+                         , Object_From.Id                AS FromId
+                         , Object_From.ValueData         AS FromName
+                         , Object_To.Id                  AS ToId
+                         , Object_To.ValueData           AS ToName
+                         , tmpData_MI.MovementItemId
+                         , Object_Goods.Id                            AS GoodsId
+                         , Object_Goods.ObjectCode                    AS GoodsCode
+                         , Object_Goods.ValueData                     AS GoodsName
+                         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                         , Object_Measure.ValueData                   AS MeasureName
+                         , Object_GoodsKind.Id                        AS GoodsKindId
+                         , Object_GoodsKind.ValueData                 AS GoodsKindName
+                         , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
+                           --
+                         , tmpData.PartionCellId_1  :: Integer
+                         , tmpData.PartionCellId_2  :: Integer
+                         , tmpData.PartionCellId_3  :: Integer
+                         , tmpData.PartionCellId_4  :: Integer
+                         , tmpData.PartionCellId_5  :: Integer
+                         , tmpData.PartionCellId_6  :: Integer
+                         , tmpData.PartionCellId_7  :: Integer
+                         , tmpData.PartionCellId_8  :: Integer
+                         , tmpData.PartionCellId_9  :: Integer
+                         , tmpData.PartionCellId_10 :: Integer
+                         , tmpData.PartionCellId_11 :: Integer
+                         , tmpData.PartionCellId_12 :: Integer
+                         , tmpData.PartionCellId_13 :: Integer
+                         , tmpData.PartionCellId_14 :: Integer
+                         , tmpData.PartionCellId_15 :: Integer
+                         , tmpData.PartionCellId_16 :: Integer
+                         , tmpData.PartionCellId_17 :: Integer
+                         , tmpData.PartionCellId_18 :: Integer
+                         , tmpData.PartionCellId_19 :: Integer
+                         , tmpData.PartionCellId_20 :: Integer
+             
+                         , tmpData.PartionCellName_1        :: TVarChar
+                         , tmpData.PartionCellName_2        :: TVarChar
+                         , tmpData.PartionCellName_3        :: TVarChar
+                         , tmpData.PartionCellName_4        :: TVarChar
+                         , tmpData.PartionCellName_5        :: TVarChar
+                         , tmpData.PartionCellName_6        :: TVarChar
+                         , tmpData.PartionCellName_7        :: TVarChar
+                         , tmpData.PartionCellName_8        :: TVarChar
+                         , tmpData.PartionCellName_9        :: TVarChar
+                         , tmpData.PartionCellName_10       :: TVarChar
+                         , tmpData.PartionCellName_11       :: TVarChar
+                         , tmpData.PartionCellName_12       :: TVarChar
+                         , tmpData.PartionCellName_13       :: TVarChar
+                         , tmpData.PartionCellName_14       :: TVarChar
+                         , tmpData.PartionCellName_15       :: TVarChar
+                         , tmpData.PartionCellName_16       :: TVarChar
+                         , tmpData.PartionCellName_17       :: TVarChar
+                         , tmpData.PartionCellName_18       :: TVarChar
+                         , tmpData.PartionCellName_19       :: TVarChar
+                         , tmpData.PartionCellName_20       :: TVarChar
+                         , tmpData.PartionCellName_21       :: TVarChar
+             
+                         , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer   AS  ColorFon_1 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer   AS  ColorFon_2 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer   AS  ColorFon_3 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer   AS  ColorFon_4 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer   AS  ColorFon_5 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer   AS  ColorFon_6 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer   AS  ColorFon_7 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer   AS  ColorFon_8 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer   AS  ColorFon_9 
+                         , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer   AS  ColorFon_10
+                         , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer  AS  ColorFon_11
+                         , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer  AS  ColorFon_12
+                         , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer  AS  ColorFon_13
+                         , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer  AS  ColorFon_14
+                         , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer  AS  ColorFon_15
+                         , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer  AS  ColorFon_16
+                         , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer  AS  ColorFon_17
+                         , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer  AS  ColorFon_18
+                         , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer  AS  ColorFon_19
+                         , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer   AS  ColorFon_20
+             
+                         , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer   AS Color_1 
+                         , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer   AS Color_2 
+                         , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer   AS Color_3 
+                         , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer   AS Color_4 
+                         , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer   AS Color_5 
+                         , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer   AS Color_6 
+                         , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer   AS Color_7 
+                         , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer   AS Color_8 
+                         , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer   AS Color_9 
+                         , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer   AS Color_10
+                         , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer   AS Color_11
+                         , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer   AS Color_12
+                         , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer   AS Color_13
+                         , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer   AS Color_14
+                         , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer   AS Color_15
+                         , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer   AS Color_16
+                         , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer   AS Color_17
+                         , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer   AS Color_18
+                         , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer   AS Color_19
+                         , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer   AS Color_20
+             
+                           -- есть хоть одна закрытая ячейка
+                         , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
+                           -- Сформированы данные по ячейкам (да/нет)
+                         , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean AS isPartionCell
+             
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
+                         , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+             
+                           -- Срок хранения в днях
+                         , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+             
+                           -- Расчет остатка в днях для Срока хранения
+                         , CASE WHEN CURRENT_DATE < (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL)
+                                     THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                                ELSE 0
+                           END :: Integer AS NormInDays_real
+             
+                           -- Расчет остатка дней в % для Срока хранения
+                         , CASE WHEN tmpNormInDays.NormInDays > 0 
+                                THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                                           THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                                                      ELSE 0
+                                                 END
+                                         / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
+                                ELSE 0
+                           END :: TFloat AS NormInDays_tax
+             
+                           -- Срок хранения, дата
+                         , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
+             
+                         , tmpData_MI.Color_PartionGoodsDate ::Integer
+                         
+                         , 0 ::TFloat AS AmountRemains
+                         , 0 ::TFloat AS AmountRemains_Weight
+                    
+                           -- № п/п
+                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpData_MI.PartionGoodsDate, zc_DateStart()) ASC
+                                                                                                       , CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END) :: Integer AS Ord  
+             
+                  FROM tmpData_MI -- расчет кол-во - мастер
+             
+                       LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
+                       LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData_MI.ToId
+             
+                       LEFT JOIN tmpMovementDate_Insert AS MovementDate_Insert
+                                                        ON MovementDate_Insert.MovementId = tmpData_MI.MovementId
+                                                       AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                       LEFT JOIN tmpMLO_Insert AS MLO_Insert
+                                               ON MLO_Insert.MovementId = tmpData_MI.MovementId
+                                              AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                       LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+             
+                       LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = tmpData_MI.GoodsId
+                       LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = tmpData_MI.GoodsKindId
+                       LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
+                                              AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
+             
+                       LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                            ON ObjectLink_Goods_Measure.ObjectId = tmpData_MI.GoodsId
+                                           AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                       LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+             
+                       LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                              ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                             AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                             ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                            AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+             
+                       -- Данные по ячейкам - горизонтально
+                       LEFT JOIN tmpData ON tmpData.MovementId       = tmpData_MI.MovementId       -- ***
+                                        AND tmpData.ToId             = tmpData_MI.ToId             -- ***
+                                        AND tmpData.MovementItemId   = tmpData_MI.MovementItemId   -- ***
+                                        AND tmpData.GoodsId          = tmpData_MI.GoodsId          -- ***
+                                        AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
+                                        AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
+                                        -- !!!Сформированы данные по ячейкам!!!
+                                        AND tmpData_MI.isPartionCell = TRUE
+                 )
+                 
+    ---
+   SELECT tmpResult.MovementId
+        , tmpResult.InvNumber
+        , tmpResult.OperDate
+        , tmpResult.OperDate_min
+        , tmpResult.OperDate_max
+        , tmpResult.InsertDate 
+        , tmpResult.InsertName 
+        , tmpResult.FromId 
+        , tmpResult.FromName 
+        , tmpResult.ToId 
+        , tmpResult.ToName 
 
+        , tmpResult.MovementItemId 
+        , tmpResult.GoodsId , tmpResult.GoodsCode , tmpResult.GoodsName 
+        , tmpResult.GoodsGroupNameFull, tmpResult.MeasureName 
+        , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
+        , tmpResult.PartionGoodsDate 
 
-       -- Результат
-       SELECT tmpData_MI.MovementId
-            , tmpData_MI.InvNumber    :: TVarChar
-            , tmpData_MI.OperDate     :: TDateTime
-            , tmpData_MI.OperDate_min :: TDateTime
-            , tmpData_MI.OperDate_max :: TDateTime
-            , MovementDate_Insert.ValueData AS InsertDate
-            , Object_Insert.ValueData       AS InsertName
-            , Object_From.Id                AS FromId
-            , Object_From.ValueData         AS FromName
-            , Object_To.Id                  AS ToId
-            , Object_To.ValueData           AS ToName
-            , tmpData_MI.MovementItemId
-            , Object_Goods.Id                            AS GoodsId
-            , Object_Goods.ObjectCode                    AS GoodsCode
-            , Object_Goods.ValueData                     AS GoodsName
-            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-            , Object_Measure.ValueData                   AS MeasureName
-            , Object_GoodsKind.Id                        AS GoodsKindId
-            , Object_GoodsKind.ValueData                 AS GoodsKindName
-            , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
-              --
-            , tmpData.PartionCellId_1  :: Integer
-            , tmpData.PartionCellId_2  :: Integer
-            , tmpData.PartionCellId_3  :: Integer
-            , tmpData.PartionCellId_4  :: Integer
-            , tmpData.PartionCellId_5  :: Integer
-            , tmpData.PartionCellId_6  :: Integer
-            , tmpData.PartionCellId_7  :: Integer
-            , tmpData.PartionCellId_8  :: Integer
-            , tmpData.PartionCellId_9  :: Integer
-            , tmpData.PartionCellId_10 :: Integer
-            , tmpData.PartionCellId_11 :: Integer
-            , tmpData.PartionCellId_12 :: Integer
-            , tmpData.PartionCellId_13 :: Integer
-            , tmpData.PartionCellId_14 :: Integer
-            , tmpData.PartionCellId_15 :: Integer
-            , tmpData.PartionCellId_16 :: Integer
-            , tmpData.PartionCellId_17 :: Integer
-            , tmpData.PartionCellId_18 :: Integer
-            , tmpData.PartionCellId_19 :: Integer
-            , tmpData.PartionCellId_20 :: Integer
+        , tmpResult.PartionCellId_1  
+        , tmpResult.PartionCellId_2  
+        , tmpResult.PartionCellId_3  
+        , tmpResult.PartionCellId_4  
+        , tmpResult.PartionCellId_5  
+        , tmpResult.PartionCellId_6  
+        , tmpResult.PartionCellId_7  
+        , tmpResult.PartionCellId_8  
+        , tmpResult.PartionCellId_9  
+        , tmpResult.PartionCellId_10 
+        , tmpResult.PartionCellId_11 
+        , tmpResult.PartionCellId_12 
+        , tmpResult.PartionCellId_13 
+        , tmpResult.PartionCellId_14 
+        , tmpResult.PartionCellId_15 
+        , tmpResult.PartionCellId_16 
+        , tmpResult.PartionCellId_17 
+        , tmpResult.PartionCellId_18 
+        , tmpResult.PartionCellId_19 
+        , tmpResult.PartionCellId_20 
 
-            , tmpData.PartionCellName_1        :: TVarChar
-            , tmpData.PartionCellName_2        :: TVarChar
-            , tmpData.PartionCellName_3        :: TVarChar
-            , tmpData.PartionCellName_4        :: TVarChar
-            , tmpData.PartionCellName_5        :: TVarChar
-            , tmpData.PartionCellName_6        :: TVarChar
-            , tmpData.PartionCellName_7        :: TVarChar
-            , tmpData.PartionCellName_8        :: TVarChar
-            , tmpData.PartionCellName_9        :: TVarChar
-            , tmpData.PartionCellName_10       :: TVarChar
-            , tmpData.PartionCellName_11       :: TVarChar
-            , tmpData.PartionCellName_12       :: TVarChar
-            , tmpData.PartionCellName_13       :: TVarChar
-            , tmpData.PartionCellName_14       :: TVarChar
-            , tmpData.PartionCellName_15       :: TVarChar
-            , tmpData.PartionCellName_16       :: TVarChar
-            , tmpData.PartionCellName_17       :: TVarChar
-            , tmpData.PartionCellName_18       :: TVarChar
-            , tmpData.PartionCellName_19       :: TVarChar
-            , tmpData.PartionCellName_20       :: TVarChar
-            , tmpData.PartionCellName_21       :: TVarChar
+        , tmpResult.PartionCellName_1
+        , tmpResult.PartionCellName_2
+        , tmpResult.PartionCellName_3
+        , tmpResult.PartionCellName_4
+        , tmpResult.PartionCellName_5
+        , tmpResult.PartionCellName_6
+        , tmpResult.PartionCellName_7
+        , tmpResult.PartionCellName_8
+        , tmpResult.PartionCellName_9
+        , tmpResult.PartionCellName_10  
+        , tmpResult.PartionCellName_11  
+        , tmpResult.PartionCellName_12  
+        , tmpResult.PartionCellName_13  
+        , tmpResult.PartionCellName_14  
+        , tmpResult.PartionCellName_15  
+        , tmpResult.PartionCellName_16  
+        , tmpResult.PartionCellName_17  
+        , tmpResult.PartionCellName_18  
+        , tmpResult.PartionCellName_19  
+        , tmpResult.PartionCellName_20  
+        , tmpResult.PartionCellName_21  
 
-            , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer
+        , tmpResult.ColorFon_1  
+        , tmpResult.ColorFon_2  
+        , tmpResult.ColorFon_3  
+        , tmpResult.ColorFon_4  
+        , tmpResult.ColorFon_5  
+        , tmpResult.ColorFon_6  
+        , tmpResult.ColorFon_7  
+        , tmpResult.ColorFon_8  
+        , tmpResult.ColorFon_9  
+        , tmpResult.ColorFon_10 
+        , tmpResult.ColorFon_11 
+        , tmpResult.ColorFon_12 
+        , tmpResult.ColorFon_13 
+        , tmpResult.ColorFon_14 
+        , tmpResult.ColorFon_15 
+        , tmpResult.ColorFon_16 
+        , tmpResult.ColorFon_17 
+        , tmpResult.ColorFon_18 
+        , tmpResult.ColorFon_19 
+        , tmpResult.ColorFon_20 
 
-            , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer
+        , tmpResult.Color_1  
+        , tmpResult.Color_2  
+        , tmpResult.Color_3  
+        , tmpResult.Color_4  
+        , tmpResult.Color_5  
+        , tmpResult.Color_6  
+        , tmpResult.Color_7  
+        , tmpResult.Color_8  
+        , tmpResult.Color_9  
+        , tmpResult.Color_10 
+        , tmpResult.Color_11 
+        , tmpResult.Color_12 
+        , tmpResult.Color_13 
+        , tmpResult.Color_14 
+        , tmpResult.Color_15 
+        , tmpResult.Color_16 
+        , tmpResult.Color_17 
+        , tmpResult.Color_18 
+        , tmpResult.Color_19 
+        , tmpResult.Color_20 
 
-              -- есть хоть одна закрытая ячейка
-            , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
-              -- Сформированы данные по ячейкам (да/нет)
-            , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean
+        , tmpResult.isClose_value_min 
+        , tmpResult.isPartionCell 
 
-            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
-            , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+        , tmpResult.Amount , tmpResult.Amount_Weight 
 
-              -- Срок хранения в днях
-            , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+        , tmpResult.NormInDays      
+        , tmpResult.NormInDays_real 
+        , tmpResult.NormInDays_tax  
+        , tmpResult.NormInDays_date 
 
-              -- Расчет остатка в днях для Срока хранения
-            , CASE WHEN CURRENT_DATE < (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL)
-                        THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
-                   ELSE 0
-              END :: Integer AS NormInDays_real
+        , tmpResult.Color_PartionGoodsDate  
+        
+        , tmpResult.AmountRemains 
+        , tmpResult.AmountRemains_Weight 
 
-              -- Расчет остатка дней в % для Срока хранения
-            , CASE WHEN tmpNormInDays.NormInDays > 0 
-                   THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-                                              THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
-                                         ELSE 0
-                                    END
-                            / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
-                   ELSE 0
-              END :: TFloat AS NormInDays_tax
-
-              -- Срок хранения, дата
-            , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
-
-            , tmpData_MI.Color_PartionGoodsDate ::Integer
-            
-            , 0 ::TFloat AS AmountRemains
-            , 0 ::TFloat AS AmountRemains_Weight
-       
-              -- № п/п
-            , 0 AS Ord
-
-     FROM tmpData_MI -- расчет кол-во - мастер
-
-          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
-          LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData_MI.ToId
-
-          LEFT JOIN tmpMovementDate_Insert AS MovementDate_Insert
-                                           ON MovementDate_Insert.MovementId = tmpData_MI.MovementId
-                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-          LEFT JOIN tmpMLO_Insert AS MLO_Insert
-                                  ON MLO_Insert.MovementId = tmpData_MI.MovementId
-                                 AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-
-          LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = tmpData_MI.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = tmpData_MI.GoodsKindId
-          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
-                                 AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = tmpData_MI.GoodsId
-                              AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-          -- Данные по ячейкам - горизонтально
-          LEFT JOIN tmpData ON tmpData.MovementId       = tmpData_MI.MovementId       -- ***
-                           AND tmpData.ToId             = tmpData_MI.ToId             -- ***
-                           AND tmpData.MovementItemId   = tmpData_MI.MovementItemId   -- ***
-                           AND tmpData.GoodsId          = tmpData_MI.GoodsId          -- ***
-                           AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
-                           AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
-                           -- !!!Сформированы данные по ячейкам!!!
-                           AND tmpData_MI.isPartionCell = TRUE
+        , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord 
+        
+        , CASE WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord 
+   FROM tmpResult 
         ; 
+
     ELSE
      -- Результат
      RETURN QUERY
@@ -1111,200 +1238,325 @@ BEGIN
                          , tmpData_All.GoodsKindId
                          , tmpData_All.PartionGoodsDate
                   )
+    -- Результат
+    , tmpResult AS (
+               SELECT tmpData_MI.MovementId
+                    , tmpData_MI.InvNumber    :: TVarChar
+                    , tmpData_MI.OperDate     :: TDateTime
+                    , tmpData_MI.OperDate_min :: TDateTime
+                    , tmpData_MI.OperDate_max :: TDateTime
+                    , MovementDate_Insert.ValueData AS InsertDate
+                    , Object_Insert.ValueData       AS InsertName
+                    , Object_From.Id                AS FromId
+                    , Object_From.ValueData         AS FromName
+                    , Object_To.Id                  AS ToId
+                    , Object_To.ValueData           AS ToName
+                    , tmpData_MI.MovementItemId
+                    , Object_Goods.Id                            AS GoodsId
+                    , Object_Goods.ObjectCode                    AS GoodsCode
+                    , Object_Goods.ValueData                     AS GoodsName
+                    , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                    , Object_Measure.ValueData                   AS MeasureName
+                    , Object_GoodsKind.Id                        AS GoodsKindId
+                    , Object_GoodsKind.ValueData                 AS GoodsKindName
+                    , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) = zc_DateStart()
+                                THEN NULL
+                           ELSE COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate)
+                      END :: TDateTime AS PartionGoodsDate
+                      --
+                    , tmpData.PartionCellId_1  :: Integer
+                    , tmpData.PartionCellId_2  :: Integer
+                    , tmpData.PartionCellId_3  :: Integer
+                    , tmpData.PartionCellId_4  :: Integer
+                    , tmpData.PartionCellId_5  :: Integer
+                    , tmpData.PartionCellId_6  :: Integer
+                    , tmpData.PartionCellId_7  :: Integer
+                    , tmpData.PartionCellId_8  :: Integer
+                    , tmpData.PartionCellId_9  :: Integer
+                    , tmpData.PartionCellId_10 :: Integer
+                    , tmpData.PartionCellId_11 :: Integer
+                    , tmpData.PartionCellId_12 :: Integer
+                    , tmpData.PartionCellId_13 :: Integer
+                    , tmpData.PartionCellId_14 :: Integer
+                    , tmpData.PartionCellId_15 :: Integer
+                    , tmpData.PartionCellId_16 :: Integer
+                    , tmpData.PartionCellId_17 :: Integer
+                    , tmpData.PartionCellId_18 :: Integer
+                    , tmpData.PartionCellId_19 :: Integer
+                    , tmpData.PartionCellId_20 :: Integer
+        
+                    , tmpData.PartionCellName_1        :: TVarChar
+                    , tmpData.PartionCellName_2        :: TVarChar
+                    , tmpData.PartionCellName_3        :: TVarChar
+                    , tmpData.PartionCellName_4        :: TVarChar
+                    , tmpData.PartionCellName_5        :: TVarChar
+                    , tmpData.PartionCellName_6        :: TVarChar
+                    , tmpData.PartionCellName_7        :: TVarChar
+                    , tmpData.PartionCellName_8        :: TVarChar
+                    , tmpData.PartionCellName_9        :: TVarChar
+                    , tmpData.PartionCellName_10       :: TVarChar
+                    , tmpData.PartionCellName_11       :: TVarChar
+                    , tmpData.PartionCellName_12       :: TVarChar
+                    , tmpData.PartionCellName_13       :: TVarChar
+                    , tmpData.PartionCellName_14       :: TVarChar
+                    , tmpData.PartionCellName_15       :: TVarChar
+                    , tmpData.PartionCellName_16       :: TVarChar
+                    , tmpData.PartionCellName_17       :: TVarChar
+                    , tmpData.PartionCellName_18       :: TVarChar
+                    , tmpData.PartionCellName_19       :: TVarChar
+                    , tmpData.PartionCellName_20       :: TVarChar
+                    , tmpData.PartionCellName_21       :: TVarChar
+        
+                    , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer
+        
+                    , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer
+        
+                      -- есть хоть одна закрытая ячейка
+                    , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
+                      -- Сформированы данные по ячейкам (да/нет)
+                    , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean  AS isPartionCell
+        
+                    , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
+                    , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+        
+                      -- Срок хранения в днях
+                    , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+        
+                      -- Расчет остатка в днях для Срока хранения
+                    , CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                           ELSE 0
+                      END :: Integer AS NormInDays_real
+        
+                      -- Расчет остатка дней в % для Срока хранения
+                    , CASE WHEN tmpNormInDays.NormInDays > 0 
+                           THEN CAST (100 * CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                                      THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                                                 ELSE 0
+                                            END
+                                    / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
+                           ELSE 0
+                      END :: TFloat AS NormInDays_tax
+        
+                      -- Срок хранения, дата
+                    , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) > zc_DateStart()
+                               THEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                      END :: TDateTime AS NormInDays_date
+        
+                    , COALESCE (tmpData_MI.Color_PartionGoodsDate, zc_Color_White()) ::Integer AS Color_PartionGoodsDate
+                    
+                    , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (tmpRemains.Amount,0) ELSE 0 END ::TFloat AS AmountRemains
+                    , (COALESCE (tmpRemains.Amount,0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRemains_Weight
+         
+                      -- № п/п
+                    --, ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC) :: Integer AS Ord
+                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
+                                                                                                  , CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END) :: Integer AS Ord  
+             FROM tmpData_MI -- расчет кол-во - мастер
+                  FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
+                                      AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
+                                      AND tmpRemains.PartionGoodsDate = tmpData_MI.PartionGoodsDate
+        
+                  LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
+                  LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData_MI.ToId
+        
+                  LEFT JOIN tmpMovementDate_Insert AS MovementDate_Insert
+                                                   ON MovementDate_Insert.MovementId = tmpData_MI.MovementId
+                                                  AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+                  LEFT JOIN tmpMLO_Insert AS MLO_Insert
+                                          ON MLO_Insert.MovementId = tmpData_MI.MovementId
+                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                  LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
+        
+                  LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
+                  LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
+                  LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
+                                         AND tmpNormInDays.GoodsKindId = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
+        
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                       ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                  LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+        
+                  LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                         ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                        AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                  LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                        ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
+                                       AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+        
+                  -- Данные по ячейкам - горизонтально
+                  LEFT JOIN tmpData ON tmpData.MovementId       = tmpData_MI.MovementId       -- ***
+                                   AND tmpData.ToId             = tmpData_MI.ToId             -- ***
+                                   AND tmpData.MovementItemId   = tmpData_MI.MovementItemId   -- ***
+                                   AND tmpData.GoodsId          = tmpData_MI.GoodsId          -- ***
+                                   AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
+                                   AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
+                                   -- !!!Сформированы данные по ячейкам!!!
+                                   AND tmpData_MI.isPartionCell = TRUE
+           )
+   
+   -- 
+   SELECT tmpResult.MovementId
+        , tmpResult.InvNumber
+        , tmpResult.OperDate
+        , tmpResult.OperDate_min
+        , tmpResult.OperDate_max
+        , tmpResult.InsertDate 
+        , tmpResult.InsertName 
+        , tmpResult.FromId 
+        , tmpResult.FromName 
+        , tmpResult.ToId 
+        , tmpResult.ToName 
 
+        , tmpResult.MovementItemId 
+        , tmpResult.GoodsId , tmpResult.GoodsCode , tmpResult.GoodsName 
+        , tmpResult.GoodsGroupNameFull, tmpResult.MeasureName 
+        , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
+        , tmpResult.PartionGoodsDate 
 
-       -- Результат
-       SELECT tmpData_MI.MovementId
-            , tmpData_MI.InvNumber    :: TVarChar
-            , tmpData_MI.OperDate     :: TDateTime
-            , tmpData_MI.OperDate_min :: TDateTime
-            , tmpData_MI.OperDate_max :: TDateTime
-            , MovementDate_Insert.ValueData AS InsertDate
-            , Object_Insert.ValueData       AS InsertName
-            , Object_From.Id                AS FromId
-            , Object_From.ValueData         AS FromName
-            , Object_To.Id                  AS ToId
-            , Object_To.ValueData           AS ToName
-            , tmpData_MI.MovementItemId
-            , Object_Goods.Id                            AS GoodsId
-            , Object_Goods.ObjectCode                    AS GoodsCode
-            , Object_Goods.ValueData                     AS GoodsName
-            , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-            , Object_Measure.ValueData                   AS MeasureName
-            , Object_GoodsKind.Id                        AS GoodsKindId
-            , Object_GoodsKind.ValueData                 AS GoodsKindName
-            , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) = zc_DateStart()
-                        THEN NULL
-                   ELSE COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate)
-              END :: TDateTime AS PartionGoodsDate
-              --
-            , tmpData.PartionCellId_1  :: Integer
-            , tmpData.PartionCellId_2  :: Integer
-            , tmpData.PartionCellId_3  :: Integer
-            , tmpData.PartionCellId_4  :: Integer
-            , tmpData.PartionCellId_5  :: Integer
-            , tmpData.PartionCellId_6  :: Integer
-            , tmpData.PartionCellId_7  :: Integer
-            , tmpData.PartionCellId_8  :: Integer
-            , tmpData.PartionCellId_9  :: Integer
-            , tmpData.PartionCellId_10 :: Integer
-            , tmpData.PartionCellId_11 :: Integer
-            , tmpData.PartionCellId_12 :: Integer
-            , tmpData.PartionCellId_13 :: Integer
-            , tmpData.PartionCellId_14 :: Integer
-            , tmpData.PartionCellId_15 :: Integer
-            , tmpData.PartionCellId_16 :: Integer
-            , tmpData.PartionCellId_17 :: Integer
-            , tmpData.PartionCellId_18 :: Integer
-            , tmpData.PartionCellId_19 :: Integer
-            , tmpData.PartionCellId_20 :: Integer
+        , tmpResult.PartionCellId_1  
+        , tmpResult.PartionCellId_2  
+        , tmpResult.PartionCellId_3  
+        , tmpResult.PartionCellId_4  
+        , tmpResult.PartionCellId_5  
+        , tmpResult.PartionCellId_6  
+        , tmpResult.PartionCellId_7  
+        , tmpResult.PartionCellId_8  
+        , tmpResult.PartionCellId_9  
+        , tmpResult.PartionCellId_10 
+        , tmpResult.PartionCellId_11 
+        , tmpResult.PartionCellId_12 
+        , tmpResult.PartionCellId_13 
+        , tmpResult.PartionCellId_14 
+        , tmpResult.PartionCellId_15 
+        , tmpResult.PartionCellId_16 
+        , tmpResult.PartionCellId_17 
+        , tmpResult.PartionCellId_18 
+        , tmpResult.PartionCellId_19 
+        , tmpResult.PartionCellId_20 
 
-            , tmpData.PartionCellName_1        :: TVarChar
-            , tmpData.PartionCellName_2        :: TVarChar
-            , tmpData.PartionCellName_3        :: TVarChar
-            , tmpData.PartionCellName_4        :: TVarChar
-            , tmpData.PartionCellName_5        :: TVarChar
-            , tmpData.PartionCellName_6        :: TVarChar
-            , tmpData.PartionCellName_7        :: TVarChar
-            , tmpData.PartionCellName_8        :: TVarChar
-            , tmpData.PartionCellName_9        :: TVarChar
-            , tmpData.PartionCellName_10       :: TVarChar
-            , tmpData.PartionCellName_11       :: TVarChar
-            , tmpData.PartionCellName_12       :: TVarChar
-            , tmpData.PartionCellName_13       :: TVarChar
-            , tmpData.PartionCellName_14       :: TVarChar
-            , tmpData.PartionCellName_15       :: TVarChar
-            , tmpData.PartionCellName_16       :: TVarChar
-            , tmpData.PartionCellName_17       :: TVarChar
-            , tmpData.PartionCellName_18       :: TVarChar
-            , tmpData.PartionCellName_19       :: TVarChar
-            , tmpData.PartionCellName_20       :: TVarChar
-            , tmpData.PartionCellName_21       :: TVarChar
+        , tmpResult.PartionCellName_1
+        , tmpResult.PartionCellName_2
+        , tmpResult.PartionCellName_3
+        , tmpResult.PartionCellName_4
+        , tmpResult.PartionCellName_5
+        , tmpResult.PartionCellName_6
+        , tmpResult.PartionCellName_7
+        , tmpResult.PartionCellName_8
+        , tmpResult.PartionCellName_9
+        , tmpResult.PartionCellName_10  
+        , tmpResult.PartionCellName_11  
+        , tmpResult.PartionCellName_12  
+        , tmpResult.PartionCellName_13  
+        , tmpResult.PartionCellName_14  
+        , tmpResult.PartionCellName_15  
+        , tmpResult.PartionCellName_16  
+        , tmpResult.PartionCellName_17  
+        , tmpResult.PartionCellName_18  
+        , tmpResult.PartionCellName_19  
+        , tmpResult.PartionCellName_20  
+        , tmpResult.PartionCellName_21  
 
-            , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer
-            , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer
+        , tmpResult.ColorFon_1  
+        , tmpResult.ColorFon_2  
+        , tmpResult.ColorFon_3  
+        , tmpResult.ColorFon_4  
+        , tmpResult.ColorFon_5  
+        , tmpResult.ColorFon_6  
+        , tmpResult.ColorFon_7  
+        , tmpResult.ColorFon_8  
+        , tmpResult.ColorFon_9  
+        , tmpResult.ColorFon_10 
+        , tmpResult.ColorFon_11 
+        , tmpResult.ColorFon_12 
+        , tmpResult.ColorFon_13 
+        , tmpResult.ColorFon_14 
+        , tmpResult.ColorFon_15 
+        , tmpResult.ColorFon_16 
+        , tmpResult.ColorFon_17 
+        , tmpResult.ColorFon_18 
+        , tmpResult.ColorFon_19 
+        , tmpResult.ColorFon_20 
 
-            , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer
-            , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer
+        , tmpResult.Color_1  
+        , tmpResult.Color_2  
+        , tmpResult.Color_3  
+        , tmpResult.Color_4  
+        , tmpResult.Color_5  
+        , tmpResult.Color_6  
+        , tmpResult.Color_7  
+        , tmpResult.Color_8  
+        , tmpResult.Color_9  
+        , tmpResult.Color_10 
+        , tmpResult.Color_11 
+        , tmpResult.Color_12 
+        , tmpResult.Color_13 
+        , tmpResult.Color_14 
+        , tmpResult.Color_15 
+        , tmpResult.Color_16 
+        , tmpResult.Color_17 
+        , tmpResult.Color_18 
+        , tmpResult.Color_19 
+        , tmpResult.Color_20 
 
-              -- есть хоть одна закрытая ячейка
-            , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
-              -- Сформированы данные по ячейкам (да/нет)
-            , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean
+        , tmpResult.isClose_value_min 
+        , tmpResult.isPartionCell 
 
-            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
-            , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+        , tmpResult.Amount , tmpResult.Amount_Weight 
 
-              -- Срок хранения в днях
-            , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+        , tmpResult.NormInDays      
+        , tmpResult.NormInDays_real 
+        , tmpResult.NormInDays_tax  
+        , tmpResult.NormInDays_date 
 
-              -- Расчет остатка в днях для Срока хранения
-            , CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-                        THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
-                   ELSE 0
-              END :: Integer AS NormInDays_real
+        , tmpResult.Color_PartionGoodsDate  
+        
+        , tmpResult.AmountRemains 
+        , tmpResult.AmountRemains_Weight 
 
-              -- Расчет остатка дней в % для Срока хранения
-            , CASE WHEN tmpNormInDays.NormInDays > 0 
-                   THEN CAST (100 * CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-                                              THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
-                                         ELSE 0
-                                    END
-                            / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
-                   ELSE 0
-              END :: TFloat AS NormInDays_tax
-
-              -- Срок хранения, дата
-            , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) > zc_DateStart()
-                       THEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-              END :: TDateTime AS NormInDays_date
-
-            , COALESCE (tmpData_MI.Color_PartionGoodsDate, zc_Color_White()) ::Integer AS Color_PartionGoodsDate
-            
-            , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (tmpRemains.Amount,0) ELSE 0 END ::TFloat AS AmountRemains
-            , (COALESCE (tmpRemains.Amount,0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRemains_Weight
- 
-              -- № п/п
-            , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC) :: Integer AS Ord
-
-     FROM tmpData_MI -- расчет кол-во - мастер
-          FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
-                              AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
-                              AND tmpRemains.PartionGoodsDate = tmpData_MI.PartionGoodsDate
-
-          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
-          LEFT JOIN Object AS Object_To   ON Object_To.Id   = tmpData_MI.ToId
-
-          LEFT JOIN tmpMovementDate_Insert AS MovementDate_Insert
-                                           ON MovementDate_Insert.MovementId = tmpData_MI.MovementId
-                                          AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-          LEFT JOIN tmpMLO_Insert AS MLO_Insert
-                                  ON MLO_Insert.MovementId = tmpData_MI.MovementId
-                                 AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
-          LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
-
-          LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
-          LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
-          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
-                                 AND tmpNormInDays.GoodsKindId = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-          -- Данные по ячейкам - горизонтально
-          LEFT JOIN tmpData ON tmpData.MovementId       = tmpData_MI.MovementId       -- ***
-                           AND tmpData.ToId             = tmpData_MI.ToId             -- ***
-                           AND tmpData.MovementItemId   = tmpData_MI.MovementItemId   -- ***
-                           AND tmpData.GoodsId          = tmpData_MI.GoodsId          -- ***
-                           AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
-                           AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
-                           -- !!!Сформированы данные по ячейкам!!!
-                           AND tmpData_MI.isPartionCell = TRUE   
+        , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord 
+        
+        , CASE WHEN tmpResult.isPartionCell = FALSE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord 
+   FROM tmpResult
 
         ; 
     
@@ -1332,3 +1584,5 @@ zc_ObjectFloat_GoodsByGoodsKind_NormInDays -  срок годности в днях
 zc_ObjectFloat_OrderType_TermProduction
 
 */
+
+--select * from gpReport_Send_PartionCell (inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inUnitId := 0 , inIsMovement := 'False' , inIsShowAll := 'false' ,  inSession := '9457');

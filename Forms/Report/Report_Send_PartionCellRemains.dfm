@@ -14,19 +14,19 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     Width = 1071
     Height = 285
     TabOrder = 3
-    ExplicitTop = 56
+    ExplicitTop = 97
     ExplicitWidth = 1071
-    ExplicitHeight = 326
+    ExplicitHeight = 285
     ClientRectBottom = 285
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
-      ExplicitHeight = 326
+      ExplicitHeight = 285
       inherited cxGrid: TcxGrid
         Width = 1071
         Height = 285
         ExplicitWidth = 1071
-        ExplicitHeight = 326
+        ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -679,6 +679,12 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Options.Editing = False
             Width = 55
           end
+          object ColorFon_ord: TcxGridDBColumn
+            DataBinding.FieldName = 'ColorFon_ord'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 50
+          end
         end
       end
     end
@@ -753,7 +759,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     Height = 41
     Align = alTop
     TabOrder = 6
-    ExplicitLeft = -8
     object lbSearchCode: TcxLabel
       Left = 21
       Top = 10
@@ -1549,6 +1554,26 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         ColorColumn = PartionCellName_10
         ValueColumn = Color_10
         BackGroundValueColumn = ColorFon_10
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsCode
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountRemains
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountRemains_Weight
+        BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
       end>
     Left = 368
