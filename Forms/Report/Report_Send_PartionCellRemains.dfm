@@ -2,6 +2,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
   Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')>'
   ClientHeight = 382
   ClientWidth = 1071
+  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
@@ -9,21 +10,21 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 56
+    Top = 97
     Width = 1071
-    Height = 326
+    Height = 285
     TabOrder = 3
     ExplicitTop = 56
     ExplicitWidth = 1071
     ExplicitHeight = 326
-    ClientRectBottom = 326
+    ClientRectBottom = 285
     ClientRectRight = 1071
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 326
       inherited cxGrid: TcxGrid
         Width = 1071
-        Height = 326
+        Height = 285
         ExplicitWidth = 1071
         ExplicitHeight = 326
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -91,6 +92,15 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object Ord: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1076#1083#1103' '#1089#1085#1103#1090#1080#1103' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1074
+            Options.Editing = False
+            Width = 55
+          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -193,6 +203,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           object NormInDays: TcxGridDBColumn
             Caption = #1057#1088#1086#1082' '#1074' '#1076#1085#1103#1093
             DataBinding.FieldName = 'NormInDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1076#1085#1103#1093
@@ -202,6 +214,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           object NormInDays_real: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093
             DataBinding.FieldName = 'NormInDays_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1076#1085#1103#1093' '#1076#1083#1103' '#1057#1088#1086#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -211,6 +225,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           object NormInDays_tax: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074' %'
             DataBinding.FieldName = 'NormInDays_tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1086#1089#1090#1072#1090#1082#1072' '#1076#1085#1077#1081' '#1074' % '#1076#1083#1103' '#1057#1088#1086#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -728,6 +744,57 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       Properties.ReadOnly = False
       TabOrder = 6
       Width = 108
+    end
+  end
+  object PanelSearch: TPanel [2]
+    Left = 0
+    Top = 30
+    Width = 1071
+    Height = 41
+    Align = alTop
+    TabOrder = 6
+    ExplicitLeft = -8
+    object lbSearchCode: TcxLabel
+      Left = 21
+      Top = 10
+      Caption = #1055#1086#1080#1089#1082' '#1050#1086#1076': '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchCode: TcxTextEdit
+      Left = 106
+      Top = 10
+      TabOrder = 1
+      DesignSize = (
+        79
+        21)
+      Width = 79
+    end
+    object lbSearchName: TcxLabel
+      Left = 208
+      Top = 10
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 290
+      Top = 10
+      TabOrder = 3
+      DesignSize = (
+        337
+        21)
+      Width = 337
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -1896,5 +1963,21 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     PackSize = 1
     Left = 890
     Top = 144
+  end
+  object FieldFilter_Search: TdsdFieldFilter
+    TextEdit = edSearchCode
+    DataSet = MasterCDS
+    Column = GoodsCode
+    ColumnList = <
+      item
+        Column = GoodsCode
+      end
+      item
+        Column = GoodsName
+        TextEdit = edSearchName
+      end>
+    CheckBoxList = <>
+    Left = 728
+    Top = 40
   end
 end

@@ -77,6 +77,13 @@ type
     NormInDays_date: TcxGridDBColumn;
     actOpenFormPartionCell: TdsdOpenForm;
     bbOpenFormPartionCell: TdxBarButton;
+    PanelSearch: TPanel;
+    lbSearchCode: TcxLabel;
+    edSearchCode: TcxTextEdit;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Search: TdsdFieldFilter;
+    Ord: TcxGridDBColumn;
   private
     { Private declarations }
   public
