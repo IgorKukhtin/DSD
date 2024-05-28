@@ -84,6 +84,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Search: TdsdFieldFilter;
+    Ord: TcxGridDBColumn;
   private
     { Private declarations }
   public
