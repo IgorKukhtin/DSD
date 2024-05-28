@@ -25,7 +25,8 @@ $BODY$
    DECLARE vbUserId   Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inId,0) = 0
      THEN

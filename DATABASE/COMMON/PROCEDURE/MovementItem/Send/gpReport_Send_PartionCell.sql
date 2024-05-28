@@ -123,6 +123,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              
              , AmountRemains TFloat
              , AmountRemains_Weight TFloat
+
+            , Ord Integer
               )
 AS
 $BODY$
@@ -138,6 +140,10 @@ BEGIN
      THEN
          inUnitId := zc_Unit_RK();
      END IF;
+
+
+     inUnitId := zc_Unit_RK();
+
 
    IF inIsShowAll = FALSE THEN
      -- Результат
@@ -629,11 +635,16 @@ BEGIN
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
             , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
 
+              -- Срок хранения в днях
             , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
+
+              -- Расчет остатка в днях для Срока хранения
             , CASE WHEN CURRENT_DATE < (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL)
                         THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
                    ELSE 0
               END :: Integer AS NormInDays_real
+
+              -- Расчет остатка дней в % для Срока хранения
             , CASE WHEN tmpNormInDays.NormInDays > 0 
                    THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
                                               THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
@@ -643,6 +654,7 @@ BEGIN
                    ELSE 0
               END :: TFloat AS NormInDays_tax
 
+              -- Срок хранения, дата
             , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
 
             , tmpData_MI.Color_PartionGoodsDate ::Integer
@@ -650,6 +662,9 @@ BEGIN
             , 0 ::TFloat AS AmountRemains
             , 0 ::TFloat AS AmountRemains_Weight
        
+              -- № п/п
+            , 0 AS Ord
+
      FROM tmpData_MI -- расчет кол-во - мастер
 
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData_MI.FromId
@@ -1216,30 +1231,38 @@ BEGIN
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
             , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
 
+              -- Срок хранения в днях
             , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
-            , CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-                        THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+
+              -- Расчет остатка в днях для Срока хранения
+            , CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                        THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
                    ELSE 0
               END :: Integer AS NormInDays_real
+
+              -- Расчет остатка дней в % для Срока хранения
             , CASE WHEN tmpNormInDays.NormInDays > 0 
-                   THEN CAST (100 * CASE WHEN CURRENT_DATE < tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
-                                              THEN EXTRACT (DAY FROM (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
+                   THEN CAST (100 * CASE WHEN CURRENT_DATE < COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+                                              THEN EXTRACT (DAY FROM (COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) - CURRENT_DATE)
                                          ELSE 0
                                     END
                             / tmpNormInDays.NormInDays AS NUMERIC (16, 1))
                    ELSE 0
               END :: TFloat AS NormInDays_tax
 
-            , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
+              -- Срок хранения, дата
+            , CASE WHEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) > zc_DateStart()
+                       THEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
+              END :: TDateTime AS NormInDays_date
 
             , COALESCE (tmpData_MI.Color_PartionGoodsDate, zc_Color_White()) ::Integer AS Color_PartionGoodsDate
             
-            --, COALESCE (tmpRemains.Amount,0) ::TFloat AS AmountRemains
-
             , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (tmpRemains.Amount,0) ELSE 0 END ::TFloat AS AmountRemains
             , (COALESCE (tmpRemains.Amount,0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRemains_Weight
  
-       
+              -- № п/п
+            , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC) :: Integer AS Ord
+
      FROM tmpData_MI -- расчет кол-во - мастер
           FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
                               AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
@@ -1258,8 +1281,8 @@ BEGIN
 
           LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
           LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
-          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = tmpData_MI.GoodsId
-                                 AND tmpNormInDays.GoodsKindId = tmpData_MI.GoodsKindId
+          LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
+                                 AND tmpNormInDays.GoodsKindId = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
