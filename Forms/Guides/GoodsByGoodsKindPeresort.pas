@@ -44,6 +44,13 @@ type
     bbStartLoadPK: TdxBarButton;
     bbStartLoadGoodsKindNew: TdxBarButton;
     bbUpdate_PackOrder: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    actShowAll: TBooleanStoredProcAction;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

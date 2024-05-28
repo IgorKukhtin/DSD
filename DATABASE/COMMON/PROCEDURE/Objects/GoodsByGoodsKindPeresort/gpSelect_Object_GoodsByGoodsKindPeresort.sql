@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_GoodsByGoodsKindPeresort(TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKindPeresort (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKindPeresort (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKindPeresort(
+    IN inShowAll     Boolean,  
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -18,7 +20,8 @@ RETURNS TABLE (Id Integer
              , GoodsGroupNameFull_out TVarChar
              , MeasureName_out TVarChar
              , Weight_out TFloat
-             , InfoMoneyCode_out Integer, InfoMoneyGroupName_out TVarChar, InfoMoneyDestinationName_out TVarChar, InfoMoneyName_out TVarChar
+             , InfoMoneyCode_out Integer, InfoMoneyGroupName_out TVarChar, InfoMoneyDestinationName_out TVarChar, InfoMoneyName_out TVarChar 
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -48,6 +51,7 @@ BEGIN
                                                   , Object_GoodsByGoodsKindPeresort.isErased                     AS isErased
                                               FROM ObjectLink AS ObjectLink_GoodsByGoodsKindPeresort_Goods_in
                                                    LEFT JOIN Object AS Object_GoodsByGoodsKindPeresort ON Object_GoodsByGoodsKindPeresort.Id = ObjectLink_GoodsByGoodsKindPeresort_Goods_in.ObjectId
+                                                   
                                                    LEFT JOIN Object AS Object_Goods_in ON Object_Goods_in.Id = ObjectLink_GoodsByGoodsKindPeresort_Goods_in.ChildObjectId
         
                                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_in
@@ -65,6 +69,7 @@ BEGIN
                                                                        AND ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_out.DescId = zc_ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_out()
                                                    LEFT JOIN Object AS Object_GoodsKind_out ON Object_GoodsKind_out.Id = ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_out.ChildObjectId                    
                                               WHERE ObjectLink_GoodsByGoodsKindPeresort_Goods_in.DescId = zc_ObjectLink_GoodsByGoodsKindPeresort_Goods_in()
+                                                AND (Object_GoodsByGoodsKindPeresort.isErased = inShowAll OR inShowAll = TRUE)
                                               )
 
        --
@@ -98,7 +103,7 @@ BEGIN
            , Object_InfoMoney_View_out.InfoMoneyDestinationName AS InfoMoneyDestinationName_out
            , Object_InfoMoney_View_out.InfoMoneyName            AS InfoMoneyName_out
 
-          
+           , Object_GoodsByGoodsKindPeresort.isErased 
 
        FROM tmpGoodsByGoodsKindPeresort AS Object_GoodsByGoodsKindPeresort
             
