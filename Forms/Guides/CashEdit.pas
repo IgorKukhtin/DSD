@@ -55,6 +55,7 @@ type
     cxLabel2: TcxLabel;
     cePaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    cbNotCurrencyDiff: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -10,7 +10,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                BranchId Integer, BranchName TVarChar,
                JuridicalName TVarChar, 
                BusinessName TVarChar, 
-               PaidKindName TVarChar)
+               PaidKindName TVarChar,
+               isNotCurrencyDiff Boolean
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -24,17 +26,18 @@ BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id          AS Id 
-   , Object.ObjectCode  AS Code
-   , Object.ValueData   AS Name
-   , Object.isErased    AS isErased
-   , Currency.Id        AS CurrencyId
-   , Currency.ValueData AS CurrencyName
-   , Branch.Id          AS BranchId
-   , Branch.ValueData   AS BranchName
-   , JuridicalBasis.ValueData  AS JuridicalName
-   , Business.ValueData AS BusinessName
-   , PaidKind.ValueData AS PaidKindName   
+          Object.Id          AS Id 
+        , Object.ObjectCode  AS Code
+        , Object.ValueData   AS Name
+        , Object.isErased    AS isErased
+        , Currency.Id        AS CurrencyId
+        , Currency.ValueData AS CurrencyName
+        , Branch.Id          AS BranchId
+        , Branch.ValueData   AS BranchName
+        , JuridicalBasis.ValueData  AS JuridicalName
+        , Business.ValueData AS BusinessName
+        , PaidKind.ValueData AS PaidKindName
+        , COALESCE (ObjectBoolean_notCurrencyDiff.ValueData, FALSE) ::Boolean AS isNotCurrencyDiff    
 
    FROM Object
         LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object.AccessKeyId
@@ -62,24 +65,28 @@ BEGIN
                              ON Cash_PaidKind.ObjectId = Object.Id
                             AND Cash_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
         LEFT JOIN Object AS PaidKind ON PaidKind.Id = Cash_PaidKind.ChildObjectId
-                      
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_notCurrencyDiff
+                                ON ObjectBoolean_notCurrencyDiff.ObjectId = Object.Id
+                               AND ObjectBoolean_notCurrencyDiff.DescId = zc_ObjectBoolean_Cash_notCurrencyDiff()                      
    WHERE Object.DescId = zc_Object_Cash()
      AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
   ;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Cash (TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_Cash (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.05.24         *
  25.11.14         * add PaidKind               
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
  24.12.13                                        * Cyr1251
- 10.05.13          *
+ 10.05.13         *
 */
 
 -- ÚÂÒÚ

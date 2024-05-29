@@ -25,6 +25,7 @@ uses
 type
   TCashForm = class(TAncestorGuidesForm)
     PaidKindName: TcxGridDBColumn;
+    isNotCurrencyDiff: TcxGridDBColumn;
   private
     { Private declarations }
   public
