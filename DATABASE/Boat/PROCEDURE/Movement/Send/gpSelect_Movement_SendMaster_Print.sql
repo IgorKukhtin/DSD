@@ -20,22 +20,22 @@ BEGIN
 
 OPEN Cursor1 FOR
 
-        SELECT 
+        SELECT
             Movement_Send.Id
           , Movement_Send.InvNumber
           , Movement_Send.OperDate             AS OperDate
 
           , Object_From.Id                            AS FromId
           , Object_From.ValueData                     AS FromName
-          , Object_To.Id                              AS ToId      
+          , Object_To.Id                              AS ToId
           , Object_To.ValueData                       AS ToName
           , COALESCE (MovementString_Comment.ValueData,'') :: TVarChar AS Comment
 
-        FROM Movement AS Movement_Send 
+        FROM Movement AS Movement_Send
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Send.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId 
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Send.Id
@@ -59,17 +59,21 @@ OPEN Cursor1 FOR
                     , MIFloat_OperPrice.ValueData                     AS OperPrice
                     , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                     , zfCalc_SummIn (COALESCE (MovementItem.Amount, 0), MIFloat_OperPrice.ValueData, COALESCE (MIFloat_CountForPrice.ValueData, 1)) ::TFloat AS Summ
+                    , COALESCE (MIString_PartNumber.ValueData, '') :: TVarChar AS PartNumber
                     , MovementItem.Id
                FROM MovementItem
-                  LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
-                                              ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
-                                             AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
-                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                  LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                              ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                    LEFT JOIN MovementItemString AS MIString_PartNumber
+                                                 ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                                AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+                    LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
+                                                ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
+                                               AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
+                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                    LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                WHERE MovementItem.MovementId = inMovementId
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
@@ -98,12 +102,12 @@ OPEN Cursor1 FOR
                                                           AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = MIFloat_MovementId.ValueData :: Integer
                                LEFT JOIN MovementDesc AS MovementDesc_OrderClient ON MovementDesc_OrderClient.Id = Movement_OrderClient.DescId
-   
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Product
                                                             ON MovementLinkObject_Product.MovementId = Movement_OrderClient.Id
                                                            AND MovementLinkObject_Product.DescId = zc_MovementLinkObject_Product()
                                LEFT JOIN Object AS Object_Product ON Object_Product.Id = MovementLinkObject_Product.ObjectId
-   
+
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                             ON MovementLinkObject_From.MovementId = Movement_OrderClient.Id
                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -123,16 +127,16 @@ OPEN Cursor1 FOR
                                                     ON ObjectLink_Brand.ObjectId = Object_Product.Id
                                                    AND ObjectLink_Brand.DescId = zc_ObjectLink_Product_Brand()
                                LEFT JOIN Object AS Object_Brand ON Object_Brand.Id = ObjectLink_Brand.ChildObjectId
-   
+
                                LEFT JOIN ObjectLink AS ObjectLink_Model
                                                     ON ObjectLink_Model.ObjectId = Object_Product.Id
                                                    AND ObjectLink_Model.DescId = zc_ObjectLink_Product_Model()
                                LEFT JOIN Object AS Object_Model ON Object_Model.Id = ObjectLink_Model.ChildObjectId
-   
+
                                LEFT JOIN ObjectLink AS ObjectLink_Product_ReceiptProdModel
                                                     ON ObjectLink_Product_ReceiptProdModel.ObjectId = Object_Product.Id
                                                    AND ObjectLink_Product_ReceiptProdModel.DescId = zc_ObjectLink_Product_ReceiptProdModel()
-   
+
                           GROUP BY MovementItem.Id
                                , MIFloat_MovementId.ValueData
                                , zfCalc_InvNumber_isErased (MovementDesc_OrderClient.ItemName, Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId)
@@ -152,13 +156,15 @@ OPEN Cursor1 FOR
                          )
 
 
-       SELECT MovementItem.Id          
+       SELECT MovementItem.Id
             , MovementItem.GoodsId      AS GoodsId
             , Object_Goods.ObjectCode   AS GoodsCode
             , Object_Goods.ValueData    AS GoodsName
             , Object_GoodsGroup.ValueData               AS GoodsGroupName
             , ObjectString_Article.ValueData            AS Article
             --, Object_ReceiptLevel.ValueData :: TVarChar AS ReceiptLevelName
+            , MovementItem.PartNumber
+
             , tmpOrderClient.MovementId_order
             , tmpOrderClient.OperDate
             , tmpOrderClient.InvNumber_order
@@ -171,7 +177,7 @@ OPEN Cursor1 FOR
             , tmpOrderClient.EngineNum
             , tmpOrderClient.FromCode
             , tmpOrderClient.FromName
-            
+
             , MovementItem.Amount           ::TFloat
             , MovementItem.AmountSecond     ::TFloat
             , tmpOrderClient.Amount            ::TFloat AS Amount_unit
@@ -214,7 +220,7 @@ OPEN Cursor1 FOR
             --  , Object_ReceiptLevel.ValueData
               , Object_GoodsGroup.ValueData
               , Object_Goods.ValueData
-       
+
 ;
 
     RETURN NEXT Cursor2;
