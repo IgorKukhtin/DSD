@@ -297,25 +297,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_INN() RETURNS Integer AS $BODY
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_INN', zc_object_Member(), 'ИНН Физ.лица ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_INN');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Card() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Card'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_Card', zc_object_Member(), 'П№ карточного счета ЗП' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Card');
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardSecond', zc_object_Member(), '№ карточного счета ЗП - вторая форма' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecond');
-
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_CardChild', zc_object_Member(), '№ карточного счета ЗП - алименты (удержание)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardChild');
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBAN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardIBAN', zc_object_Member(), '№ карточного счета IBAN ЗП - первая форма' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN');
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardIBANSecond', zc_object_Member(), '№ карточного IBANсчета ЗП - вторая форма' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond');
 
 --
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Street() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Street'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -370,41 +354,61 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Member_PSP_D() RETURNS Integer AS $BO
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_PSP_D', zc_object_Member(), 'Паспорт, дата выдачи' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_PSP_D');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardBank', zc_object_Member(), 'Номер банковской карточки ЗП Ф1' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank');
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardBankSecond', zc_object_Member(), 'Номер банковской карточки ЗП Ф2' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond');
-
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_GLN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_GLN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Member_GLN', zc_object_Member(), 'GLN' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_GLN');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Ф1
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_Card() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Card'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardBankSecondTwo', zc_object_Member(), 'Номер банковской карточки ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo');
+  SELECT 'zc_ObjectString_Member_Card', zc_object_Member(), '№ карточного счета ЗП (Ф1)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_Card');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBAN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBAN', zc_object_Member(), '№ карточного счета IBAN ЗП (Ф1)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBAN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBank() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBank', zc_object_Member(), '№ банковской карточки ЗП (Ф1)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBank');
+
+-- Ф2 - Восток
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardSecond', zc_object_Member(), '№ карточного счета ЗП (Ф2 - Восток)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecond');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardIBANSecond', zc_object_Member(), '№ карточного счета IBAN ЗП (Ф2 - Восток)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecond');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecond() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardBankSecond', zc_object_Member(), '№ банковской карточки ЗП (Ф2 - Восток)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecond');
+
+-- Ф2 - ОТП
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Member_CardSecondTwo', zc_object_Member(), '№ карточного счета ЗП (Ф2 - ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo');
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardIBANSecondTwo', zc_object_Member(), '№ карточного IBANсчета ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondTwo');
+  SELECT 'zc_ObjectString_Member_CardIBANSecondTwo', zc_object_Member(), '№ карточного счета IBAN ЗП (Ф2 - ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondTwo');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondTwo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardSecondTwo', zc_object_Member(), '№ карточного счета ЗП - Ф2(ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondTwo');
+  SELECT 'zc_ObjectString_Member_CardBankSecondTwo', zc_object_Member(), '№ банковской карточки ЗП (Ф2 - ОТП)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondTwo');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- Ф2 - личный
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardBankSecondDiff', zc_object_Member(), 'Номер банковской карточки ЗП - Ф2(личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff');
+  SELECT 'zc_ObjectString_Member_CardSecondDiff', zc_object_Member(), '№ карточного счета ЗП (Ф2 - личный) ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff');
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardIBANSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardIBANSecondDiff', zc_object_Member(), '№ карточного IBANсчета ЗП - Ф2(личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondDiff');
+  SELECT 'zc_ObjectString_Member_CardIBANSecondDiff', zc_object_Member(), '№ карточного счета IBAN ЗП (Ф2 - личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardIBANSecondDiff');
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectString_Member_CardBankSecondDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectString_Member_CardSecondDiff', zc_object_Member(), '№ карточного счета ЗП - Ф2(личный) ' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardSecondDiff');
+  SELECT 'zc_ObjectString_Member_CardBankSecondDiff', zc_object_Member(), '№ банковской карточки ЗП (Ф2 - личный)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Member_CardBankSecondDiff');
 
 
 
