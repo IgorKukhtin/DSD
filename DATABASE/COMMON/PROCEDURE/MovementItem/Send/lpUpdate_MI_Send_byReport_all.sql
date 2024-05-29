@@ -121,6 +121,8 @@ BEGIN
                                                                                                  , zc_MILinkObject_PartionCell_4()
                                                                                                  , zc_MILinkObject_PartionCell_5()
                                                                                                   )
+                                                           -- !!!
+                                                           AND 1=0
                            LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
                                                        ON MIF_PartionCell_real.MovementItemId = MovementItem.Id
                                                       AND MIF_PartionCell_real.DescId         = CASE WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
@@ -134,6 +136,8 @@ BEGIN
                                                                                                      WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_5()
                                                                                                           THEN zc_MIFloat_PartionCell_real_5()
                                                                                                 END
+                                                           -- !!!
+                                                           AND 1=0
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItem.DescId   = zc_MI_Master()
                         AND MovementItem.isErased = FALSE

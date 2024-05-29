@@ -1060,16 +1060,16 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ioPartionCellId_10:= CASE WHEN vbPartionCellId_old_10 > 0 THEN vbPartionCellId_old_10 ELSE vbPartionCellId_10 END;
 
      -- вернули Name
-     ioPartionCellName_1  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_1, vbPartionCellId_1)), vbIsClose_1);
-     ioPartionCellName_2  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_2, vbPartionCellId_2)), vbIsClose_2);
-     ioPartionCellName_3  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_3, vbPartionCellId_3)), vbIsClose_3);
-     ioPartionCellName_4  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_4, vbPartionCellId_4)), vbIsClose_4);
-     ioPartionCellName_5  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_5, vbPartionCellId_5)), vbIsClose_5);
-     ioPartionCellName_6  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_6, vbPartionCellId_6)), vbIsClose_6);
-     ioPartionCellName_7  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_7, vbPartionCellId_7)), vbIsClose_7);
-     ioPartionCellName_8  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_8, vbPartionCellId_8)), vbIsClose_8);
-     ioPartionCellName_9  := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_9, vbPartionCellId_9)), vbIsClose_9);
-     ioPartionCellName_10 := zfCalc_PartionCell_IsClose ((SELECT Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_10,vbPartionCellId_10)),vbIsClose_10);
+     ioPartionCellName_1  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_1, vbPartionCellId_1)), vbIsClose_1);
+     ioPartionCellName_2  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_2, vbPartionCellId_2)), vbIsClose_2);
+     ioPartionCellName_3  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_3, vbPartionCellId_3)), vbIsClose_3);
+     ioPartionCellName_4  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_4, vbPartionCellId_4)), vbIsClose_4);
+     ioPartionCellName_5  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_5, vbPartionCellId_5)), vbIsClose_5);
+     ioPartionCellName_6  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_6, vbPartionCellId_6)), vbIsClose_6);
+     ioPartionCellName_7  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_7, vbPartionCellId_7)), vbIsClose_7);
+     ioPartionCellName_8  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_8, vbPartionCellId_8)), vbIsClose_8);
+     ioPartionCellName_9  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_9, vbPartionCellId_9)), vbIsClose_9);
+     ioPartionCellName_10 := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_10,vbPartionCellId_10)),vbIsClose_10);
 
 END;
 $BODY$
