@@ -26,6 +26,7 @@ RETURNS TABLE (OperDate TDateTime
 
              , Amount_Send_out TFloat, Weight_Send_out TFloat
              , Amount_Send_out_rk TFloat, Weight_Send_out_rk TFloat
+             , Amount_Send_out_oth TFloat, Weight_Send_out_oth TFloat
              
              , Amount_Send_in TFloat, Weight_Send_in TFloat
 
@@ -76,6 +77,7 @@ BEGIN
                            , tmpMI.Amount_Send_in
                            , tmpMI.Amount_Send_out
                            , tmpMI.Amount_Send_out_rk
+                           , tmpMI.Amount_Send_out_oth
                            , tmpMI.Amount_Production
                            , tmpMI.CountPack
                            
@@ -102,8 +104,9 @@ BEGIN
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS Amount_Send_in
-                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE AND MIContainer.ObjectExtId_Analyzer <> zc_Unit_RK() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_Send_out
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE AND MIContainer.ObjectExtId_Analyzer  = zc_Unit_RK() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_Send_out_rk
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE AND MIContainer.ObjectExtId_Analyzer <> zc_Unit_RK() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS Amount_Send_out_oth
                                  
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
                                               AND MIContainer.IsActive       = FALSE
@@ -204,8 +207,9 @@ BEGIN
                                  , CASE WHEN inIsDate = TRUE OR inisMovement = TRUE THEN Movement.OperDate ELSE NULL END :: TDatetime AS OperDate
                           
                                  , SUM (CASE WHEN MovementLinkObject_To.ObjectId = inUnitId   THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_in
-                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId AND inUnitId <> zc_Unit_RK() THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_out
                                  , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId AND inUnitId  = zc_Unit_RK() THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_out_rk
+                                 , SUM (CASE WHEN MovementLinkObject_From.ObjectId = inUnitId AND inUnitId <> zc_Unit_RK() THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_Send_out_oth
                                  , 0 AS Amount_Production
                                  , 0 AS CountPack
 
@@ -390,6 +394,9 @@ BEGIN
          
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_out_rk  ELSE 0 END                                 :: TFloat AS Amount_Send_out_rk
          , (tmpMI_Union.Amount_Send_out_rk * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Weight_Send_out_rk
+
+         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_out_oth  ELSE 0 END                                 :: TFloat AS Amount_Send_out_oth
+         , (tmpMI_Union.Amount_Send_out_oth * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Weight_Send_out_oth
 
          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpMI_Union.Amount_Send_in  ELSE 0 END                                     :: TFloat AS Amount_Send_in
          , (tmpMI_Union.Amount_Send_in * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)     :: TFloat AS Weight_Send_in
