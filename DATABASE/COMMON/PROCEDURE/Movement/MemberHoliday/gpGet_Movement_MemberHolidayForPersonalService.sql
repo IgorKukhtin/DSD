@@ -219,7 +219,7 @@ BEGIN
                                                     AND tmpSummHoliday2.PersonalId = tmpMember.PersonalId
 
                              LEFT JOIN gpReport_HolidayCompensation(DATE_TRUNC ('Month', MovementDate_BeginDateStart.ValueData) - INTERVAL '1 Day'
-                                                                  , tmpMember.UnitId
+                                                                  , 0 -- tmpMember.UnitId
                                                                   , Object_Member.Id
                                                                   , 0
                                                                   , inSession) AS spReport_HolidayCompensation ON 1 = 1
