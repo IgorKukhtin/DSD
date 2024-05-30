@@ -1697,6 +1697,38 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_5() RETURNS Integer AS 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PartionCell_Amount_5', 'Расчетное значение Количество для Ячейка-5' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_5');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_6() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_6'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_6', 'Расчетное значение Количество для Ячейка-6' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_6');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_7() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_7'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_7', 'Расчетное значение Количество для Ячейка-7' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_7');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_8() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_8'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_8', 'Расчетное значение Количество для Ячейка-8' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_8');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_9() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_9'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_9', 'Расчетное значение Количество для Ячейка-9' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_9');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_10() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_10'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_10', 'Расчетное значение Количество для Ячейка-10' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_10');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_11() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_11'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_11', 'Расчетное значение Количество для Ячейка-11' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_11');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Amount_12() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_12'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_PartionCell_Amount_12', 'Расчетное значение Количество для Ячейка-12' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Amount_12');
+
+
+
+
+
 CREATE OR REPLACE FUNCTION zc_MIFloat_PartionCell_Last() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Last'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PartionCell_Last', 'Номер ячейки которая закончилась в последний раз' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartionCell_Last');
@@ -1736,6 +1768,7 @@ INSERT INTO MovementItemFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 29.05.24         * zc_MIFloat_PartionCell_Amount_6...12
  11.03.24         * zc_MIFloat_Summ_BankSecond_num
                     zc_MIFloat_Summ_BankSecondTwo_num
                     zc_MIFloat_Summ_BankSecondDiff_num

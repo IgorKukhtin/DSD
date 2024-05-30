@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +17,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
  INOUT ioPartionCellName_3     TVarChar   ,
  INOUT ioPartionCellName_4     TVarChar   ,
  INOUT ioPartionCellName_5     TVarChar   ,
+ INOUT ioPartionCellName_6     TVarChar   ,
+ INOUT ioPartionCellName_7     TVarChar   ,
+ INOUT ioPartionCellName_8     TVarChar   ,
+ INOUT ioPartionCellName_9     TVarChar   ,
+ INOUT ioPartionCellName_10     TVarChar   ,
+ INOUT ioPartionCellName_11     TVarChar   ,
+ INOUT ioPartionCellName_12     TVarChar   ,
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -269,6 +277,250 @@ BEGIN
          -- сохранили связь с <>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), inId, Null);
      END IF;
+
+     --  6  
+     IF COALESCE (ioPartionCellName_6, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_6) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_6)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_6))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_6;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inId, vbPartionCellId);
+         
+         ioPartionCellName_6 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inId, Null);
+     END IF;
+
+     --  7  
+     IF COALESCE (ioPartionCellName_7, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_7) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_7)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_7))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_7;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inId, vbPartionCellId);
+         
+         ioPartionCellName_7 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inId, Null);
+     END IF;
+
+
+     --  8  
+     IF COALESCE (ioPartionCellName_8, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_8) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_8)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_8))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_8;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inId, vbPartionCellId);
+         
+         ioPartionCellName_8 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inId, Null);
+     END IF;
+
+
+     --  9  
+     IF COALESCE (ioPartionCellName_9, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_9) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_9)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_9))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_9;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inId, vbPartionCellId);
+         
+         ioPartionCellName_9 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inId, Null);
+     END IF;
+
+
+     --  10  
+     IF COALESCE (ioPartionCellName_10, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_10) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_10)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_10))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_10;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inId, vbPartionCellId);
+         
+         ioPartionCellName_10 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inId, Null);
+     END IF;
+
+
+     --  11  
+     IF COALESCE (ioPartionCellName_11, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_11) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_11)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_11))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_11;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inId, vbPartionCellId);
+         
+         ioPartionCellName_11 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inId, Null);
+     END IF;
+
+
+     --  12  
+     IF COALESCE (ioPartionCellName_12, '') <> '' THEN
+         -- !!!поиск ИД !!! 
+         --если ввели код ищем по коду, иначе по названию
+         IF zfConvert_StringToNumber (ioPartionCellName_12) <> 0
+         THEN
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_12)
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         ELSE
+             vbPartionCellId:= (SELECT Object.Id
+                                FROM Object
+                                WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_12))
+                                  AND Object.DescId     = zc_Object_PartionCell()
+                               );
+         END IF;
+         
+         --если не нашли ошибка
+         IF COALESCE (vbPartionCellId,0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_12;
+         END IF;
+
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inId, vbPartionCellId);
+         
+         ioPartionCellName_12 := (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPartionCellId);
+     ELSE
+         -- сохранили связь с <>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inId, Null);
+     END IF;
+
 
 
 
