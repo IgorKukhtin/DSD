@@ -99,7 +99,7 @@ END IF;
           , MovementDesc.ItemName
      FROM (
        -- 1.1. From: Sale + !!!SendOnPrice!!!
-     SELECT Movement.Id AS MovementId
+     SELECT distinct Movement.Id AS MovementId
           , Movement.OperDate
           , Movement.InvNumber
           , MovementDesc.Code
@@ -118,10 +118,18 @@ END IF;
           LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
 
+  /*     join  MovementLinkMovement
+                    on MovementLinkMovement.MovementChildId = Movement.Id
+                      AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Production()
+                      and MovementLinkMovement.MovementId > 0 */
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-      -- AND Movement.DescId IN (zc_Movement_SendOnPrice())
+--      AND Movement.DescId IN (zc_Movement_Loss())
+      AND Movement.DescId IN (zc_Movement_Send())
+--        AND Movement.DescId IN (zc_Movement_SendOnPrice())
       --  AND Movement.DescId IN (zc_Movement_Sale())
-       AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+     --  AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
+       -- AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND MLO_From.ObjectId = zc_Unit_RK()
 
