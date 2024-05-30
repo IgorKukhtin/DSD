@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                BranchId Integer, BranchName TVarChar, 
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                BusinessId Integer, BusinessName TVarChar,
-               PaidKindId Integer, PaidKindName TVarChar
+               PaidKindId Integer, PaidKindName TVarChar,
+               isNotCurrencyDiff Boolean
                ) AS
 $BODY$
 BEGIN
@@ -36,6 +37,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS BusinessName
            , CAST (0 as Integer)    AS PaidKindId
            , CAST ('' as TVarChar)  AS PaidKindName
+           , CAST (NULL AS Boolean) AS isNotCurrencyDiff
            ;
    ELSE
        RETURN QUERY 
@@ -53,7 +55,8 @@ BEGIN
            , Business.Id        AS BusinessId
            , Business.ValueData AS BusinessName
            , PaidKind.Id        AS PaidKindId
-           , PaidKind.ValueData AS PaidKindName           
+           , PaidKind.ValueData AS PaidKindName 
+           , COALESCE (ObjectBoolean_notCurrencyDiff.ValueData, FALSE) ::Boolean AS isNotCurrencyDiff          
        FROM Object
            LEFT JOIN ObjectLink AS Cash_Currency
                            ON Cash_Currency.ObjectId = Object.Id
@@ -79,7 +82,10 @@ BEGIN
                                 ON Cash_PaidKind.ObjectId = Object.Id
                                AND Cash_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
            LEFT JOIN Object AS PaidKind ON PaidKind.Id = Cash_PaidKind.ChildObjectId
-                      
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_notCurrencyDiff
+                                   ON ObjectBoolean_notCurrencyDiff.ObjectId = Object.Id
+                                  AND ObjectBoolean_notCurrencyDiff.DescId = zc_ObjectBoolean_Cash_notCurrencyDiff()                      
        WHERE Object.Id = inId;
    END IF;  
   

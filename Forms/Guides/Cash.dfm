@@ -74,6 +74,14 @@ inherited CashForm: TCashForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object isNotCurrencyDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083' '#1092#1086#1088#1084#1080#1088'. '#1082#1091#1088#1089'. '#1088#1072#1079#1085#1080#1094#1099
+            DataBinding.FieldName = 'isNotCurrencyDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1082#1091#1088#1089#1086#1074#1086#1081' '#1088#1072#1079#1085#1080#1094#1099
+            Width = 70
+          end
           object isErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'

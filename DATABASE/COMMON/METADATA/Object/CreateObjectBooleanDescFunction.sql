@@ -1476,10 +1476,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Contract_ForRealize() RETURNS Intege
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectBoolean_Contract_ForRealize', 'Под реализацию' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Contract_ForRealize');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Cash_notCurrencyDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Cash_notCurrencyDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Cash(), 'zc_ObjectBoolean_Cash_notCurrencyDiff', 'Отключить формирование курсовой разницы' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Cash_notCurrencyDiff');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 29.05.24         * zc_ObjectBoolean_Cash_notCurrencyDiff
  16.02.24         * zc_ObjectBoolean_GoodsByGoodsKind_PackLimit
  12.02.24         * zc_ObjectBoolean_PersonalServiceList_BankNot
  31.01.24                                                                                                          * zc_ObjectBoolean_Contract_ForRealize
