@@ -201,6 +201,13 @@ BEGIN
                                                             , zc_MILinkObject_PartionCell_3()
                                                             , zc_MILinkObject_PartionCell_4()
                                                             , zc_MILinkObject_PartionCell_5()
+                                                            , zc_MILinkObject_PartionCell_6()
+                                                            , zc_MILinkObject_PartionCell_7()
+                                                            , zc_MILinkObject_PartionCell_8()
+                                                            , zc_MILinkObject_PartionCell_9()
+                                                            , zc_MILinkObject_PartionCell_10()
+                                                            , zc_MILinkObject_PartionCell_11()
+                                                            , zc_MILinkObject_PartionCell_12()
                                                              )
                         -- Только заполненные ячейки
                         AND MovementItemLinkObject.ObjectId > 0
@@ -225,12 +232,19 @@ BEGIN
                                                            , zc_MIBoolean_PartionCell_Close_3()
                                                            , zc_MIBoolean_PartionCell_Close_4()
                                                            , zc_MIBoolean_PartionCell_Close_5()
+                                                           , zc_MIBoolean_PartionCell_Close_6()
+                                                           , zc_MIBoolean_PartionCell_Close_7()
+                                                           , zc_MIBoolean_PartionCell_Close_8()
+                                                           , zc_MIBoolean_PartionCell_Close_9()
+                                                           , zc_MIBoolean_PartionCell_Close_10()
+                                                           , zc_MIBoolean_PartionCell_Close_11()
+                                                           , zc_MIBoolean_PartionCell_Close_12()
                                                             )
                        )
 
      , tmpMILO_PartionCell AS (SELECT MovementItemLinkObject.*
                                       -- оригинал
-                                    , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
+                                    , CASE WHEN MILO_PartionCell_real.ObjectId > 0 THEN MILO_PartionCell_real.ObjectId ELSE NULL END :: Integer AS PartionCellId_real
                                       -- если хоть одна партия в ячейке НЕ закрыта - все НЕ закрыты
                                     , CASE WHEN tmpMI_Boolean.ValueData = TRUE THEN 0 ELSE 1 END AS isClose_value
                                FROM tmpMILO_PC AS MovementItemLinkObject
@@ -245,20 +259,48 @@ BEGIN
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_4()
                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_5()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_6()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_7()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_8()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_9()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_10()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_11()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_12()
                                                                                               END
-                                    LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
-                                                                ON MIF_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
-                                                               AND MIF_PartionCell_real.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_1()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_2()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_3()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_4()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_5()
-                                                                                                         END
+                                    LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_real
+                                                                     ON MILO_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
+                                                                    AND MILO_PartionCell_real.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_1()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_2()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_3()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_4()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_5()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_6()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_7()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_8()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_9()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_10()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_11()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_12()
+                                                                                                              END
                               )
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                              FROM MovementItemLinkObject
@@ -277,7 +319,7 @@ BEGIN
                            , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END              AS OperDate
                            , MIN (Movement.OperDate)                                                         AS OperDate_min
                            , MAX (Movement.OperDate)                                                         AS OperDate_max
-                           , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END                    AS FromId
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END     AS FromId
                            , Movement.ToId                                                                   AS ToId              -- ***
                            , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId    -- ***
                            , MovementItem.GoodsId                                                            AS GoodsId           -- ***
@@ -891,6 +933,13 @@ BEGIN
                                                             , zc_MILinkObject_PartionCell_3()
                                                             , zc_MILinkObject_PartionCell_4()
                                                             , zc_MILinkObject_PartionCell_5()
+                                                            , zc_MILinkObject_PartionCell_6()
+                                                            , zc_MILinkObject_PartionCell_7()
+                                                            , zc_MILinkObject_PartionCell_8()
+                                                            , zc_MILinkObject_PartionCell_9()
+                                                            , zc_MILinkObject_PartionCell_10()
+                                                            , zc_MILinkObject_PartionCell_11()
+                                                            , zc_MILinkObject_PartionCell_12()
                                                              )
                         -- Только заполненные ячейки
                         AND COALESCE (MovementItemLinkObject.ObjectId,0) > 0
@@ -945,12 +994,19 @@ BEGIN
                                                            , zc_MIBoolean_PartionCell_Close_3()
                                                            , zc_MIBoolean_PartionCell_Close_4()
                                                            , zc_MIBoolean_PartionCell_Close_5()
+                                                           , zc_MIBoolean_PartionCell_Close_6()
+                                                           , zc_MIBoolean_PartionCell_Close_7()
+                                                           , zc_MIBoolean_PartionCell_Close_8()
+                                                           , zc_MIBoolean_PartionCell_Close_9()
+                                                           , zc_MIBoolean_PartionCell_Close_10()
+                                                           , zc_MIBoolean_PartionCell_Close_11()
+                                                           , zc_MIBoolean_PartionCell_Close_12()
                                                             )
                        )
 
      , tmpMILO_PartionCell AS (SELECT MovementItemLinkObject.*
                                       -- оригинал
-                                    , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
+                                    , CASE WHEN MILO_PartionCell_real.ObjectId > 0 THEN MILO_PartionCell_real.ObjectId ELSE NULL END :: Integer AS PartionCellId_real
                                       -- если хоть одна партия в ячейке НЕ закрыта - все НЕ закрыты
                                     , CASE WHEN tmpMI_Boolean.ValueData = TRUE THEN 0 ELSE 1 END AS isClose_value
                                FROM tmpMILO_PC AS MovementItemLinkObject
@@ -965,20 +1021,48 @@ BEGIN
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_4()
                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_5()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_6()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_7()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_8()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_9()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_10()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_11()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_12()
                                                                                               END
-                                    LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
-                                                                ON MIF_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
-                                                               AND MIF_PartionCell_real.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_1()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_2()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_3()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_4()
-                                                                                                              WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
-                                                                                                                   THEN zc_MIFloat_PartionCell_real_5()
-                                                                                                         END
+                                    LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_real
+                                                                     ON MILO_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
+                                                                    AND MILO_PartionCell_real.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_1()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_2()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_3()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_3()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_4()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_4()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_5()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_5()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_6()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_7()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_8()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_9()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_10()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_11()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_12()
+                                                                                                              END
                               )
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
                              FROM MovementItemLinkObject
