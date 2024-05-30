@@ -141,6 +141,9 @@ BEGIN
                                      FROM ContainerLinkObject AS ContainerLinkObject_Currency
                                           INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
                                                               AND Container.DescId  = zc_Container_SummCurrency()
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                                                        ON ContainerLinkObject_PaidKind.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_PaidKind.DescId       = zc_ContainerLinkObject_PaidKind()
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                                                         ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
@@ -171,6 +174,14 @@ BEGIN
                                      WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
                                        AND ContainerLinkObject_Currency.DescId   = zc_ContainerLinkObject_Currency()
                                        AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
+                                       --
+                                       AND (((ContainerLinkObject_Juridical.ObjectId <> 0 OR ContainerLinkObject_Partner.ObjectId <> 0)
+                                         AND ContainerLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                            )
+                                        OR (COALESCE (ContainerLinkObject_Juridical.ObjectId, 0) = 0
+                                        AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0)   = 0
+                                           ))
+
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                        AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
@@ -198,6 +209,9 @@ BEGIN
                                                               AND Container.DescId  = zc_Container_Summ()
                                                               -- !!!без виртуальной курсовой разницы!!!
                                                               AND Container.ObjectId <> zc_Enum_Account_40801() -- Курсовая разница
+                                          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                                                        ON ContainerLinkObject_PaidKind.ContainerId  = ContainerLinkObject_Currency.ContainerId
+                                                                       AND ContainerLinkObject_PaidKind.DescId       = zc_ContainerLinkObject_PaidKind()
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
                                                                         ON ContainerLinkObject_Cash.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
@@ -228,6 +242,14 @@ BEGIN
                                      WHERE ContainerLinkObject_Currency.ObjectId = vbCurrencyId
                                        AND ContainerLinkObject_Currency.DescId  = zc_ContainerLinkObject_Currency()
                                        AND 0 <> COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0))))
+                                       --
+                                       AND (((ContainerLinkObject_Juridical.ObjectId <> 0 OR ContainerLinkObject_Partner.ObjectId <> 0)
+                                         AND ContainerLinkObject_PaidKind.ObjectId = vbPaidKindId
+                                            )
+                                        OR (COALESCE (ContainerLinkObject_Juridical.ObjectId, 0) = 0
+                                        AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0)   = 0
+                                           ))
+
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                        AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
