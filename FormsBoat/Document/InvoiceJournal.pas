@@ -70,7 +70,6 @@ type
     Panel_btn: TPanel;
     btnUpdate: TcxButton;
     btnComplete: TcxButton;
-    btnUnComplete: TcxButton;
     btnSetErased: TcxButton;
     btnFormClose: TcxButton;
     cxLabel4: TcxLabel;
@@ -82,7 +81,6 @@ type
     FieldFilter_InvNumber_parent: TdsdFieldFilter;
     actChoiceGuides: TdsdChoiceGuides;
     cxButton1: TcxButton;
-    cxButton2: TcxButton;
     actOpenIncomeByInvoice: TdsdOpenForm;
     bbOpenIncomeByInvoice: TdxBarButton;
     InvoiceKindName: TcxGridDBColumn;
@@ -105,8 +103,8 @@ type
     cxButton5: TcxButton;
     actInsertAction: TdsdInsertUpdateAction;
     actUpdateAction: TdsdInsertUpdateAction;
-    mactUpdateAction: TMultiAction;
-    mactInsertAction: TMultiAction;
+    mactUpdateItem: TMultiAction;
+    mactInsertItem: TMultiAction;
     bbDetail: TdxBarSubItem;
     bbInsertAction: TdxBarButton;
     bbUpdateAction: TdxBarButton;
@@ -180,6 +178,9 @@ type
     cxLabel5: TcxLabel;
     edLanguage: TcxButtonEdit;
     GuidesLanguage: TdsdGuides;
+    btnInsertAction: TcxButton;
+    cxButton2: TcxButton;
+    btnSetErasedItem: TcxButton;
   private
     { Private declarations }
   public

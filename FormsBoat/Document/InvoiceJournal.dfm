@@ -12,18 +12,19 @@
     Width = 1279
     Height = 282
     TabOrder = 3
+    ExplicitTop = 91
     ExplicitWidth = 1279
-    ExplicitHeight = 316
+    ExplicitHeight = 282
     ClientRectBottom = 282
     ClientRectRight = 1279
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1279
-      ExplicitHeight = 316
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 1279
         Height = 282
         ExplicitWidth = 1279
-        ExplicitHeight = 316
+        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -793,28 +794,20 @@
       TabOrder = 0
     end
     object btnComplete: TcxButton
-      Left = 477
+      Left = 805
       Top = 8
-      Width = 150
+      Width = 160
       Height = 25
       Action = actComplete
       TabOrder = 1
     end
-    object btnUnComplete: TcxButton
-      Left = 633
-      Top = 8
-      Width = 150
-      Height = 25
-      Action = actUnComplete
-      TabOrder = 2
-    end
     object btnSetErased: TcxButton
-      Left = 789
-      Top = 8
-      Width = 162
+      Left = 805
+      Top = 42
+      Width = 160
       Height = 25
       Action = actSetErased
-      TabOrder = 3
+      TabOrder = 2
     end
     object btnFormClose: TcxButton
       Left = 989
@@ -824,23 +817,16 @@
       Action = actFormClose
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 4
+      TabOrder = 3
     end
     object cxButton1: TcxButton
-      Left = 477
+      Left = 633
       Top = 42
-      Width = 218
+      Width = 145
       Height = 25
       Action = actOpenBankAccountJournalByInvoice
-      TabOrder = 5
-    end
-    object cxButton2: TcxButton
-      Left = 710
-      Top = 42
-      Width = 241
-      Height = 25
-      Action = actOpenIncomeByInvoice
-      TabOrder = 6
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' - <'#1054#1087#1083#1072#1090#1099'>'
+      TabOrder = 4
     end
     object cxButton5: TcxButton
       Left = 989
@@ -850,7 +836,7 @@
       Action = actSetVisible_Grid_Item
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 7
+      TabOrder = 5
     end
     object cxButton3: TcxButton
       Left = 10
@@ -858,7 +844,7 @@
       Width = 95
       Height = 25
       Action = actInsert
-      TabOrder = 8
+      TabOrder = 6
     end
     object cxButton4: TcxButton
       Left = 111
@@ -866,7 +852,7 @@
       Width = 95
       Height = 25
       Action = actInsert_Pay
-      TabOrder = 9
+      TabOrder = 7
     end
     object cxButton7: TcxButton
       Left = 10
@@ -874,7 +860,7 @@
       Width = 95
       Height = 25
       Action = actInsert_Proforma
-      TabOrder = 10
+      TabOrder = 8
     end
     object cxButton8: TcxButton
       Left = 111
@@ -882,7 +868,7 @@
       Width = 95
       Height = 25
       Action = actInsert_Service
-      TabOrder = 11
+      TabOrder = 9
     end
     object btnOpenFormPdfEdit: TcxButton
       Left = 218
@@ -890,7 +876,7 @@
       Width = 111
       Height = 25
       Action = actOpenFormPdfEdit
-      TabOrder = 12
+      TabOrder = 10
     end
     object cxButton6: TcxButton
       Left = 334
@@ -900,7 +886,7 @@
       Action = actFilesNotUploaded
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 13
+      TabOrder = 11
     end
     object btnUpdate_PostedToDropBox: TcxButton
       Left = 334
@@ -910,7 +896,31 @@
       Action = actUpdate_PostedToDropBox
       ParentShowHint = False
       ShowHint = True
+      TabOrder = 12
+    end
+    object btnInsertAction: TcxButton
+      Left = 481
+      Top = 8
+      Width = 145
+      Height = 25
+      Action = mactInsertItem
+      TabOrder = 13
+    end
+    object cxButton2: TcxButton
+      Left = 633
+      Top = 8
+      Width = 145
+      Height = 25
+      Action = mactUpdateItem
       TabOrder = 14
+    end
+    object btnSetErasedItem: TcxButton
+      Left = 481
+      Top = 42
+      Width = 145
+      Height = 25
+      Action = mactSetErasedItem
+      TabOrder = 15
     end
   end
   object cxGrid_Item: TcxGrid [3]
@@ -1983,7 +1993,7 @@
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
       ImageIndex = 80
     end
-    object mactInsertAction: TMultiAction
+    object mactInsertItem: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1993,10 +2003,25 @@
         item
           Action = actRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1089#1095#1077#1090#1072
+      Caption = '***'#1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> '#1080#1083#1080' <'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 0
       ShortCut = 16437
+    end
+    object mactSetUnErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetUnErasedItem
+        end
+        item
+          Action = actRefreshMov
+        end>
+      Caption = '***'#1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> '#1080#1083#1080' <'#1059#1089#1083#1091#1075#1080'>'
+      ImageIndex = 8
+      ShortCut = 49220
     end
     object actSetUnErasedItem: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2008,8 +2033,6 @@
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ItemDS
@@ -2069,21 +2092,6 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = False
-    end
-    object mactSetUnErasedItem: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSetUnErasedItem
-        end
-        item
-          Action = actRefreshMov
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 49220
     end
     object actInsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2172,7 +2180,7 @@
       ImageIndexTrue = 31
       ImageIndexFalse = 32
     end
-    object mactUpdateAction: TMultiAction
+    object mactUpdateItem: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -2182,10 +2190,25 @@
         item
           Action = actRefresh
         end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090' '#1089#1095#1077#1090#1072'>'
+      Caption = '***'#1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> '#1080#1083#1080' <'#1059#1089#1083#1091#1075#1080'>'
       ImageIndex = 1
       ShortCut = 16438
+    end
+    object mactSetErasedItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSetErasedItem
+        end
+        item
+          Action = actRefreshMov
+        end>
+      Caption = '***'#1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077'> '#1080#1083#1080' <'#1059#1089#1083#1091#1075#1080'>'
+      ImageIndex = 2
+      ShortCut = 49220
     end
     object actSetErasedItem: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2197,8 +2220,6 @@
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ItemDS
     end
@@ -2206,7 +2227,7 @@
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actGoodsKindChoice'
+      Caption = 'actChoiceFormGoods_item'
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
@@ -2251,21 +2272,6 @@
           MultiSelectSeparator = ','
         end>
       isShowModal = True
-    end
-    object mactSetErasedItem: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSetErasedItem
-        end
-        item
-          Action = actRefreshMov
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
-      ImageIndex = 2
-      ShortCut = 49220
     end
     object actOpenFormPdfEdit: TdsdOpenForm
       Category = 'OpenForm'
@@ -2779,11 +2785,11 @@
         end>
     end
     object bbInsertAction: TdxBarButton
-      Action = mactInsertAction
+      Action = mactInsertItem
       Category = 0
     end
     object bbUpdateAction: TdxBarButton
-      Action = mactUpdateAction
+      Action = mactUpdateItem
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
