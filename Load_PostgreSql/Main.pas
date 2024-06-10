@@ -3189,7 +3189,7 @@ begin
                   +         ' AND OL.ChildObjectId <> zc_Branch_Basis()'
                   +         ' AND OL.ChildObjectId > 0'
                   +      ' UNION'
-                  +       ' SELECT 8459 AS ObjectId'
+                  +       ' SELECT zc_Unit_RK() AS ObjectId'
                   +       ') AS tmp'
                    );
      //
