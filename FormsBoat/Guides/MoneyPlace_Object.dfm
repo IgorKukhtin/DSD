@@ -325,6 +325,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -349,6 +350,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
         end>
       isShowModal = False
       ActionType = acUpdate
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -373,6 +375,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
         end>
       isShowModal = False
       ActionType = acUpdate
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -394,6 +397,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
