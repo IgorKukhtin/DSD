@@ -104,7 +104,7 @@ BEGIN
       WITH tmpMI_ContainerIn AS
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
-                             , COALESCE (MovementBoolean_Closed.ValueData, False)   AS isClosed
+                             , CASE WHEN inIsMovement = TRUE THEN COALESCE (MovementBoolean_Closed.ValueData, FALSE) ELSE FALSE END AS isClosed
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
                              , Object_SubjectDoc.ValueData                          AS SubjectDocName
                              , MIContainer.DescId                 AS MIContainerDescId
@@ -142,7 +142,7 @@ BEGIN
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         GROUP BY CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END
                                , MovementBoolean_Peresort.ValueData
-                               , COALESCE (MovementBoolean_Closed.ValueData, False)
+                               , CASE WHEN inIsMovement = TRUE THEN COALESCE (MovementBoolean_Closed.ValueData, FALSE) ELSE FALSE END
                                , MLO_DocumentKind.ObjectId
                                , MIContainer.DescId
                                , MIContainer.ContainerId
