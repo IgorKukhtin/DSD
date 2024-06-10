@@ -93,6 +93,9 @@ type
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
     isList: TcxGridDBColumn;
+    spSelectPrintAll: TdsdStoredProc;
+    actPrintAll: TdsdPrintAction;
+    bbPrintAll: TdxBarButton;
   private
   public
   end;
