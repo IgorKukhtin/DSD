@@ -58,7 +58,7 @@ BEGIN
                            , MovementItem.ObjectId   AS GoodsId
                       FROM MovementItem
                       WHERE MovementItem.MovementId = inMovementId
-                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.DescId     IN (zc_MI_Master(), 5)
                         AND MovementItem.isErased   = FALSE
                         AND MovementItem.Amount     <> 0
                         AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
