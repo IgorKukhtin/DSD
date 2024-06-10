@@ -51,10 +51,10 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-       WITH tmpMIScan AS (SELECT MovementItem.ObjectId AS GoodsId
+       WITH tmpMIScan AS (SELECT MAX (MovementItem.Id) AS MovementItemId_max
+                               , MovementItem.ObjectId AS GoodsId
                                , SUM(MovementItem.Amount)::TFloat             AS Amount
                                , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                               , MAX(MovementItem.Id)                         AS MaxID  
                           FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                                JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                 AND MovementItem.DescId     = zc_MI_Scan()
@@ -105,7 +105,7 @@ BEGIN
                                                                 AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                            )
                            
-          , tmpMI AS (SELECT tmpMIMaster.Id
+          , tmpMI AS (SELECT COALESCE (tmpMIMaster.Id, tmpMIScan.MovementItemId_max)      AS Id
                            , COALESCE(tmpMIMaster.GoodsId, tmpMIScan.GoodsId)             AS GoodsId
                            , tmpMIMaster.PartionId
                            , COALESCE(tmpMIMaster.Amount, tmpMIScan.Amount)               AS Amount
@@ -119,11 +119,11 @@ BEGIN
                            , tmpMIMaster.MovementId_OrderClient
                       FROM tmpMIMaster
                       
-                           FULL JOIN tmpMIScan ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
+                           FULL JOIN tmpMIScan ON tmpMIScan.GoodsId    = tmpMIMaster.GoodsId
                                               AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
 
                            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                            ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId
+                                                            ON MILO_PartionCell.MovementItemId = tmpMIScan.MovementItemId_max
                                                            AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
                       )
                      
