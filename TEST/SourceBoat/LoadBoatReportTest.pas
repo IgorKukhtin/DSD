@@ -59,6 +59,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+   LoadReportFromFile('PrintMovement_Inventory', ReportPath + '\PrintMovement_Inventory.fr3');
+   exit;
+   LoadReportFromFile('PrintProduct_OrderClientSumm', ReportPath + '\PrintProduct_OrderClientSumm.fr3');
    {
     LoadReportFromFile('PrintMovement_Invoice_Pay', ReportPath + '\PrintMovement_Invoice_Pay.fr3');
     LoadReportFromFile('PrintMovement_Invoice_PrePay', ReportPath + '\PrintMovement_Invoice_PrePay.fr3');

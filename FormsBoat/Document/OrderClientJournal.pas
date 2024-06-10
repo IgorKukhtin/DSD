@@ -164,6 +164,12 @@ type
     bbPrintOffer_TD: TdxBarButton;
     bbPrintOrderConfirmation_TD: TdxBarButton;
     bbSeparator: TdxBarSeparator;
+    spPrintStructureSum: TdsdStoredProc;
+    spPrintStructureGoodsSum: TdsdStoredProc;
+    actPrintStructureSum: TdsdPrintAction;
+    actPrintStructureGoodsSum: TdsdPrintAction;
+    bbPrintStructureSum: TdxBarButton;
+    bbPrintStructureGoodsSum: TdxBarButton;
   private
   public
   end;

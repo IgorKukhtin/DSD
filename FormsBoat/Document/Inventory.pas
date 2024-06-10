@@ -220,6 +220,9 @@ type
     Color_Scan: TcxGridDBColumn;
     AmountScan: TcxGridDBColumn;
     actSetVisibleScan: TdsdSetVisibleAction;
+    spSelectPrintAll: TdsdStoredProc;
+    actPrintAll: TdsdPrintAction;
+    bbPrintAll: TdxBarButton;
   private
   public
   end;

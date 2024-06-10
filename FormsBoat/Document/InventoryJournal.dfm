@@ -386,8 +386,13 @@ object InventoryJournalForm: TInventoryJournalForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintAll'
         end
         item
           Visible = True
@@ -466,6 +471,10 @@ object InventoryJournalForm: TInventoryJournalForm
       Action = actShowErased
       Category = 0
     end
+    object bbPrintAll: TdxBarButton
+      Action = actPrintAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -524,6 +533,7 @@ object InventoryJournalForm: TInventoryJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -533,8 +543,8 @@ object InventoryJournalForm: TInventoryJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Loss'
-      ReportNameParam.Value = 'PrintMovement_Loss'
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -924,6 +934,54 @@ object InventoryJournalForm: TInventoryJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintAll: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintAll
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintAll
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Inventory'
@@ -1125,6 +1183,13 @@ object InventoryJournalForm: TInventoryJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 336
@@ -1176,5 +1241,36 @@ object InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 233
     Top = 346
+  end
+  object spSelectPrintAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 336
+    Top = 328
   end
 end

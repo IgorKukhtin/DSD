@@ -1127,6 +1127,18 @@ object OrderClientJournalForm: TOrderClientJournalForm
         item
           Visible = True
           ItemName = 'bbtPrintMovement_Invoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructureSum'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStructureGoodsSum'
         end>
     end
     object bbPrintOffer_TD: TdxBarButton
@@ -1144,11 +1156,72 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbPrintStructureSum: TdxBarButton
+      Action = actPrintStructureSum
+      Category = 0
+    end
+    object bbPrintStructureGoodsSum: TdxBarButton
+      Action = actPrintStructureGoodsSum
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 120
     Top = 136
+    object actPrintStructureGoodsSum: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureHeader
+        end
+        item
+          StoredProc = spPrintStructureGoodsSum
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1083#1086#1076#1082#1080' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1083#1086#1076#1082#1080' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupId;NPP_1;NPP_2'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderClientSumm'
+      ReportNameParam.Value = 'PrintProduct_OrderClientSumm'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
+    end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1283,6 +1356,59 @@ object OrderClientJournalForm: TOrderClientJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actPrintStructureSum: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintStructureHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintStructureHeader
+        end
+        item
+          StoredProc = spPrintStructureSum
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1083#1086#1076#1082#1080' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1086#1080#1084#1086#1089#1090#1100' '#1083#1086#1076#1082#1080' '#1087#1086' '#1074#1093#1086#1076#1085#1099#1084' '#1094#1077#1085#1072#1084
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GroupId;NPP_1;NPP_2'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderClientSumm'
+      ReportNameParam.Value = 'PrintProduct_OrderClientSumm'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PictureFields.Strings = (
+        'photo1')
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -1565,7 +1691,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       Caption = 'spErased'
     end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1613,7 +1739,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintOffer_TD: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1661,7 +1787,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintStickerTermo: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProcList = <
         item
@@ -1705,7 +1831,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProcList = <
         item
@@ -1749,7 +1875,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintBarcode: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1792,7 +1918,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintOrderConfirmation_TD: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1844,7 +1970,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintOffer: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1892,7 +2018,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintStructureGoods: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1945,7 +2071,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         'photo1')
     end
     object actPrintStructure: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -1995,7 +2121,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
         'photo1')
     end
     object actPrintOrderConfirmation: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2150,7 +2276,7 @@ object OrderClientJournalForm: TOrderClientJournalForm
       ImageIndex = 43
     end
     object actPrintMovement_Invoice: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2961,8 +3087,8 @@ object OrderClientJournalForm: TOrderClientJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 935
-    Top = 160
+    Left = 599
+    Top = 184
   end
   object FieldFilter_InvNumber: TdsdFieldFilter
     TextEdit = edInvNumber_OrderClient
@@ -2983,5 +3109,59 @@ object OrderClientJournalForm: TOrderClientJournalForm
     CheckBoxList = <>
     Left = 688
     Top = 80
+  end
+  object spPrintStructureSum: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructureGoodsSumPrint'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 160
+  end
+  object spPrintStructureGoodsSum: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Product_StructureGoodsSumPrint'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 200
   end
 end

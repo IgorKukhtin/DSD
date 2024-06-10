@@ -26,6 +26,8 @@ object InventoryForm: TInventoryForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitLeft = 272
+    ExplicitTop = 310
     ClientRectBottom = 373
     ClientRectRight = 808
     ClientRectTop = 24
@@ -1083,7 +1085,7 @@ object InventoryForm: TInventoryForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -18
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -1214,8 +1216,21 @@ object InventoryForm: TInventoryForm
           ItemName = 'bbStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbPrintStickerOne'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintAll'
         end
         item
           Visible = True
@@ -1337,6 +1352,10 @@ object InventoryForm: TInventoryForm
     end
     object bbReport_Price: TdxBarButton
       Action = actReport_Price
+      Category = 0
+    end
+    object bbPrintAll: TdxBarButton
+      Action = actPrintAll
       Category = 0
     end
   end
@@ -1474,18 +1493,17 @@ object InventoryForm: TInventoryForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint: TdsdPrintAction
+    object actPrintAll: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintAll
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintAll
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1090#1086#1074#1072#1088#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1042#1089#1077#1084' '#1090#1086#1074#1072#1088#1072#1084
+      ImageIndex = 15
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -1494,6 +1512,7 @@ object InventoryForm: TInventoryForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -1517,8 +1536,60 @@ object InventoryForm: TInventoryForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Loss'
-      ReportNameParam.Value = 'PrintMovement_Loss'
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'From'
+          Value = ''
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 0d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Inventory'
+      ReportNameParam.Value = 'PrintMovement_Inventory'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -3006,8 +3077,8 @@ object InventoryForm: TInventoryForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 654
-    Top = 264
+    Left = 558
+    Top = 304
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Inventory_SetUnErased'
@@ -3104,10 +3175,17 @@ object InventoryForm: TInventoryForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 575
-    Top = 208
+    Left = 479
+    Top = 328
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     DataSets = <>
@@ -3492,8 +3570,8 @@ object InventoryForm: TInventoryForm
       end>
     ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
-    Left = 280
-    Top = 208
+    Left = 224
+    Top = 224
   end
   object spSelectPrintStickerOne: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
@@ -3691,5 +3769,36 @@ object InventoryForm: TInventoryForm
     Params = <>
     Left = 224
     Top = 495
+  end
+  object spSelectPrintAll: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAll'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 479
+    Top = 368
   end
 end
