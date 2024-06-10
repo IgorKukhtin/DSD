@@ -495,6 +495,12 @@ type
     ArticleVergl_Object: TcxGridDBColumn;
     actProtoco_Child: TdsdOpenForm;
     bbProtoco_Child: TdxBarButton;
+    spPrintStructureSum: TdsdStoredProc;
+    actPrintStructureSum: TdsdPrintAction;
+    bbPrintStructureSum: TdxBarButton;
+    spPrintStructureGoodsSum: TdsdStoredProc;
+    actPrintStructureGoodsSum: TdsdPrintAction;
+    bbPrintStructureGoodsSum: TdxBarButton;
   private
   public
   end;
