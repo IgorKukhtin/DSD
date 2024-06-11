@@ -3,7 +3,8 @@ unit ChoicePeriod;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, dsdCommon,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxGroupBox, cxRadioGroup, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
@@ -13,7 +14,7 @@ uses
 type
 
   // Компонент выбора периода
-  TPeriodChoice = class(TComponent)
+  TPeriodChoice = class(TdsdComponent)
   private
     FDateStart: TcxDateEdit;
     FDateEnd: TcxDateEdit;

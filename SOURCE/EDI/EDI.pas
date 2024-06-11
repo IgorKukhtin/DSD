@@ -4,7 +4,7 @@ unit EDI;
 
 interface
 
-uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML, UtilConst
+uses DBClient, Classes, DB, dsdAction, IdFTP, ComDocXML, dsdCommon, dsdDb, OrderXML, UtilConst
      {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF};
 
 type
@@ -30,7 +30,7 @@ type
 
   // Компонент работы с EDI. Пока все засунем в него
   // Ну не совсем все, конечно, но много
-  TEDI = class(TComponent)
+  TEDI = class(TdsdComponent)
   private
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
@@ -223,7 +223,7 @@ type
   end;
 
 
-  TEDINActionsType = (edinSendETTN, edinSignConsignor, edinSignCarrier, edinSendSingETTN);
+  TEDINActionsType = (edinSendETTN, edinSignConsignor, edinSignCarrier, edinSendSingETTN, edinLoadInvoiceNR);
 
   TdsdEDINAction = class(TdsdCustomAction)
   private
@@ -235,6 +235,9 @@ type
     FKeyFileNameParam: TdsdParam;
     FKeyUserNameParam: TdsdParam;
     FErrorParam: TdsdParam;
+
+    FGLNParam: TdsdParam;
+    FGLN_SenderParam: TdsdParam;
 
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
@@ -253,12 +256,17 @@ type
     function GetIdentifiers(AGLN, AQuery : String): Boolean;
     function SignDcuETTN(AGLN, AUuId : String): Boolean;
 
+    function LoadInvoiceNRСontent(AUUID : String; var AjsonItem: TJSONObject): Boolean;
+    function LoadInvoiceNRHeader(AOffset, ACount: Integer; var AJsonArray: TJSONArray): Boolean;
+    function LoadInvoiceNR: Boolean;
+
     procedure UAECMREDI(var AXML: String);
     function SignData(UserSign : String): Boolean;
 
     function DoSendETTN: Boolean;
     function DoSignDcuETTN: Boolean;
     function DoSendSingETTN: Boolean;
+    function DoLoadInvoiceNR: Boolean;
     function LocalExecute: Boolean; override;
     function ShowError(AError : String): Boolean;
   public
@@ -278,6 +286,9 @@ type
     property Token: TdsdParam read FTokenParam write FTokenParam;
     property Result: TdsdParam read FResultParam write FResultParam;
     property Error: TdsdParam read FErrorParam write FErrorParam;
+
+    property GLN: TdsdParam read FGLNParam write FGLNParam;
+    property GLN_Sender: TdsdParam read FGLN_SenderParam write FGLN_SenderParam;
 
     property KeyFileName: TdsdParam read FKeyFileNameParam write FKeyFileNameParam;
     property KeyUserName: TdsdParam read FKeyUserNameParam write FKeyUserNameParam;
@@ -5835,6 +5846,14 @@ begin
   FErrorParam.DataType := ftString;
   FErrorParam.Value := '';
 
+  FGLNParam := TdsdParam.Create(nil);
+  FGLNParam.DataType := ftString;
+  FGLNParam.Value := '';
+
+  FGLN_SenderParam := TdsdParam.Create(nil);
+  FGLN_SenderParam.DataType := ftString;
+  FGLN_SenderParam.Value := '';
+
   FEDINActions:= edinSendETTN;
 end;
 
@@ -5848,6 +5867,8 @@ begin
   FreeAndNil(FKeyFileNameParam);
   FreeAndNil(FKeyUserNameParam);
   FreeAndNil(FErrorParam);
+  FreeAndNil(FGLNParam);
+  FreeAndNil(FGLN_SenderParam);
   inherited;
 end;
 
@@ -6471,7 +6492,6 @@ function TdsdEDINAction.GetToken: Boolean;
       SL: TStringList;
       jsonObj: TJSONObject;
 begin
-  inherited;
   Result := False;
   FTokenParam.Value := '';
 
@@ -6531,7 +6551,6 @@ function TdsdEDINAction.SendETTN(AGLN, AUuId, AXML : String): Boolean;
       Steam: TStringStream;
       jsonObj: TJSONObject;
 begin
-  inherited;
   Result := False;
 
   if FTokenParam.Value = '' then
@@ -6589,7 +6608,6 @@ function TdsdEDINAction.GetDocETTN(AGLN, AUuId : String): Boolean;
       Params: String;
       Steam: TMemoryStream;
 begin
-  inherited;
   Result := False;
 
   if FTokenParam.Value = '' then
@@ -6640,7 +6658,6 @@ function TdsdEDINAction.GetIdentifiers(AGLN, AQuery : String): Boolean;
       jsonArray: TJSONArray;
       List : TStringList;
 begin
-  inherited;
   Result := False;
 
   if FTokenParam.Value = '' then
@@ -6712,7 +6729,6 @@ function TdsdEDINAction.SignDcuETTN(AGLN, AUuId : String): Boolean;
       base64Stream: TStringStream;
       Stream: TStringStream;
 begin
-  inherited;
   Result := False;
 
   if FTokenParam.Value = '' then
@@ -6772,6 +6788,188 @@ begin
   finally
     IdHTTP.Free;
   end;
+end;
+
+function TdsdEDINAction.LoadInvoiceNRСontent(AUUID : String; var AjsonItem: TJSONObject): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params: String;
+      Body: String;
+      S: String;
+      Steam: TStringStream;
+      jsonItem : TJSONObject;
+begin
+  Result := False;
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + FGLNParam.Value;
+    Body := '[' + AUUID + ']';
+
+    Steam := TStringStream.Create(Body, TEncoding.UTF8);
+    try
+      try
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/v2/eds/doc/content' + Params), Steam);
+      except on E:EIdHTTPProtocolException  do
+                  ShowError('Ошибка получение накладных на повернення": ' + e.ErrorMessage);
+      end;
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+
+        jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
+        AjsonItem := TJSONObject.ParseJSONValue(jsonItem.Get(AUUID).JsonValue.Value) AS TJSONObject;
+
+        Result := True;
+      end;
+    finally
+      Steam.Free;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+
+end;
+
+function TdsdEDINAction.LoadInvoiceNRHeader(AOffset, ACount: Integer; var AJsonArray: TJSONArray): Boolean;
+  var IdHTTP: TCustomIdHTTP;
+      Params: String;
+      Body: String;
+      S: String;
+      Steam: TStringStream;
+      JsonArray: TJSONArray;
+      jsonItem : TJSONObject;
+
+begin
+  Result := False;
+
+  IdHTTP := TCustomIdHTTP.Create(Nil);
+  try
+
+    IdHTTP.Request.Clear;
+    IdHTTP.Request.ContentType := 'application/json';
+    IdHTTP.Request.ContentEncoding := 'utf-8';
+    IdHTTP.Request.CustomHeaders.FoldLines := False;
+    IdHTTP.Request.CustomHeaders.AddValue('Authorization', FTokenParam.Value);
+    IdHTTP.Request.UserAgent:='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.13014 YaBrowser/13.12.1599.13014 Safari/537.36';
+
+    Params := '?gln=' + FGLNParam.Value + '&status_id=2';
+    Body := '{'#13 +
+            '  "direction": {'#13 +
+            '     "sender": ["' + FGLN_SenderParam.Value +  '"],'#13 +
+            '     "receiver": [],'#13 +
+            '     "type": "EQ"'#13 +
+            '  },'#13 +
+            '  "exchangeStatus": [],'#13 +
+            '  "families": [1,7],'#13 +
+            '  "statuses": ["1","2","3","4","5","6","7"],'#13 +
+            '  "extraParams": ['#13 +
+            '    {'#13 +
+            '      "operator": "AND",'#13 +
+            '      "type": "EQUALS",'#13 +
+            '      "value": "7",'#13 +
+            '      "fieldName": "sub_doc_type_id"'#13 +
+            '    }'#13 +
+            '  ],'#13 +
+            '  "limit": {'#13 +
+            '    "offset": "' + IntToStr(AOffset) + '",'#13 +
+            '    "count": ' + IntToStr(ACount) + #13 +
+            '  },'#13 +
+            '  "orderBy":{'#13 +
+            '    "fieldName": "doc_id",'#13 +
+            '    "orderType": "desc"'#13 +
+            '  },'#13 +
+            '  "type": ['#13 +
+            '    {'#13 +
+            '       "type": "0"'#13 +
+            '    }'#13 +
+            '  ]'#13 +
+            '}';
+
+    Steam := TStringStream.Create(Body, TEncoding.UTF8);
+    try
+      try
+        S := IdHTTP.Post(TIdURI.URLEncode(FHostParam.Value + '/api/eds/docs/search' + Params), Steam);
+      except on E:EIdHTTPProtocolException  do
+                  ShowError('Ошибка получение накладных на повернення": ' + e.ErrorMessage);
+      end;
+
+      if IdHTTP.ResponseCode = 200 then
+      begin
+
+        jsonItem := TJSONObject.ParseJSONValue(S) as TJSONObject;
+        AJsonArray := TJSONArray(jsonItem.Get('items').JsonValue);
+
+        Result := True;
+      end;
+    finally
+      Steam.Free;
+    end;
+  finally
+    IdHTTP.Free;
+  end;
+end;
+
+function TdsdEDINAction.LoadInvoiceNR: Boolean;
+  var JsonArray: TJSONArray;
+      jsonItem, jsonСontent : TJSONObject;
+      Offset, Count, CountDuble, i: Integer;
+
+begin
+  Result := False;
+
+  if FTokenParam.Value = '' then
+  begin
+    ShowError('Не получен токе. Загрузка накладных на повернення невозможна.');
+    Exit;
+  end;
+
+  if not Assigned(FUpdateUuid) then
+  begin
+    ShowError('Не указана процедура загрузки.');
+    Exit;
+  end;
+
+  // Непосредственно загрузка файла для подписи
+
+  Offset := 0;
+  Count := 10;
+  CountDuble := 0;
+  while (CountDuble < 10) and LoadInvoiceNRHeader(Offset, Count, JsonArray) and (jsonArray.Size > 0) do
+  begin
+    for i := 0 to jsonArray.Size - 1 do
+    begin
+      jsonItem := TJSONObject(jsonArray.Get(i));
+
+      if LoadInvoiceNRСontent(jsonItem.Get('doc_uuid').JsonValue.Value, jsonСontent) then
+      begin
+
+        UpdateUuid.ParamByName('inDoc_UUID').Value := jsonItem.Get('doc_uuid').JsonValue.Value;
+        UpdateUuid.ParamByName('indocNumber').Value := jsonItem.Get('docNumber').JsonValue.Value;
+        UpdateUuid.ParamByName('indocDate').Value := DateOf(IncHour(UnixToDateTime(TJSONNumber(jsonItem.Get('docDate').JsonValue).AsInt64), 10));
+        UpdateUuid.ParamByName('inJuridicalName').Value := TJSONObject(TJSONObject(jsonСontent.Get('InvoiceParties').JsonValue).Get('Buyer').JsonValue).Get('Name').JsonValue.Value;
+        UpdateUuid.ParamByName('inGLNSender').Value := jsonItem.Get('uuidSender').JsonValue.Value;
+        UpdateUuid.ParamByName('inGLNReceiver').Value := jsonItem.Get('uuidReceiver').JsonValue.Value;
+        UpdateUuid.ParamByName('inDelivery_place_GLN').Value := TJSONObject(jsonItem.Get('extraFields').JsonValue).Get('delivery_place_uuid').JsonValue.Value;
+        UpdateUuid.ParamByName('inDeliveryNoteNumber').Value := TJSONObject(TJSONObject(jsonСontent.Get('InvoiceReference').JsonValue).Get('DeliveryNote').JsonValue).Get('DeliveryNoteNumber').JsonValue.Value;
+        UpdateUuid.ParamByName('inContractNumber').Value := TJSONObject(jsonСontent.Get('InvoiceHeader').JsonValue).Get('ContractNumber').JsonValue.Value;
+        UpdateUuid.ParamByName('inInvoiceLines').Value := TJSONObject(jsonСontent.Get('InvoiceLines').JsonValue).Get('Line').JsonValue.ToString;
+        UpdateUuid.ParamByName('IsInsert').Value := False;
+        UpdateUuid.Execute;
+
+        if not UpdateUuid.ParamByName('IsInsert').Value then Inc(CountDuble);
+      end;
+    end;
+    Offset := Offset + Count;
+  end;
+  Result := True;
 end;
 
 function TdsdEDINAction.DoSendETTN: Boolean;
@@ -6896,6 +7094,17 @@ begin
   end;
 end;
 
+function TdsdEDINAction.DoLoadInvoiceNR: Boolean;
+begin
+  Result := False;
+  FErrorParam.Value := '';
+  if not GetToken then Exit;
+
+  // Загрузим DOCUMENTINVOICE_NP
+  Result := LoadInvoiceNR;
+
+end;
+
 function TdsdEDINAction.LocalExecute: Boolean;
 begin
 
@@ -6903,6 +7112,8 @@ begin
     edinSendETTN : Result := DoSendETTN;
     edinSignConsignor, edinSignCarrier  : Result := DoSignDcuETTN;
     edinSendSingETTN : Result := DoSendSingETTN;
+
+    edinLoadInvoiceNR : Result := DoLoadInvoiceNR;
 
   else ShowError('Не описано метод обработки типа документов.');
   end;

@@ -668,7 +668,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 15
+        TabIndex = 11
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -20996,7 +20996,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 12
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = claRed
               Position.X = 177.000000000000000000
@@ -21010,7 +21009,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 11
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = claBlue
               Position.X = 16.000000000000000000
@@ -21024,7 +21022,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 6
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 16.000000000000000000
               Position.Y = 96.000000000000000000
               Size.Width = 151.000000000000000000
@@ -21038,7 +21035,6 @@
               StyleLookup = 'edIIEGoodsCodeStyle1'
               TabOrder = 7
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 188.000000000000000000
               Position.Y = 96.000000000000000000
               Size.Width = 140.000000000000000000
@@ -21051,7 +21047,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 1
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 88.000000000000000000
               Position.Y = 3.000000000000000000
               Size.Width = 241.000000000000000000
@@ -21063,7 +21058,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 15
               KeyboardType = DecimalNumberPad
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               Position.X = 16.000000000000000000
               Position.Y = 268.000000000000000000
@@ -21077,7 +21071,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 20
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 177.000000000000000000
               Position.Y = 326.000000000000000000
               Size.Width = 151.000000000000000000
@@ -21126,7 +21119,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 3
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 87.000000000000000000
               Position.Y = 43.000000000000000000
               Size.Width = 241.000000000000000000
@@ -21137,7 +21129,6 @@
             object edIIEPartNumber: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 19
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 15.000000000000000000
               Position.Y = 326.000000000000000000
               Size.Width = 151.000000000000000000
@@ -21150,7 +21141,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 16
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               Position.X = 177.000000000000000000
               Position.Y = 268.000000000000000000
@@ -21256,15 +21246,17 @@
               TabOrder = 14
             end
             object Label30: TLabel
-              StyledSettings = [Style]
+              StyledSettings = []
               Position.X = 16.000000000000000000
               Position.Y = 247.000000000000000000
               Size.Width = 150.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claMediumblue
               TextSettings.Trimming = None
-              Text = #1050#1086#1083'-'#1074#1086
+              Text = #1042#1042#1054#1044' '#1082#1086#1083'-'#1074#1086
               TabOrder = 13
             end
             object Label32: TLabel
@@ -21326,7 +21318,6 @@
               ReadOnly = True
               ShowScrollBars = False
               StyledSettings = [Style]
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.WordWrap = True
               EnabledScroll = False
               Position.X = 68.000000000000000000
@@ -22297,7 +22288,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -22316,7 +22307,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 12
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = claBlue
               Position.X = 16.000000000000000000
@@ -22330,7 +22320,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 7
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 16.000000000000000000
               Position.Y = 96.000000000000000000
               Size.Width = 151.000000000000000000
@@ -22343,7 +22332,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 9
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 188.000000000000000000
               Position.Y = 96.000000000000000000
               Size.Width = 140.000000000000000000
@@ -22356,7 +22344,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 1
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 88.000000000000000000
               Position.Y = 3.000000000000000000
               Size.Width = 241.000000000000000000
@@ -22368,7 +22355,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 15
               KeyboardType = DecimalNumberPad
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               Position.X = 16.000000000000000000
               Position.Y = 263.000000000000000000
@@ -22382,7 +22368,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 24
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 175.000000000000000000
               Position.Y = 316.000000000000000000
               Size.Width = 151.000000000000000000
@@ -22431,7 +22416,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 3
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 88.000000000000000000
               Position.Y = 40.000000000000000000
               Size.Width = 241.000000000000000000
@@ -22442,7 +22426,6 @@
             object edSIEPartNumber: TEdit
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 22
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 16.000000000000000000
               Position.Y = 316.000000000000000000
               Size.Width = 151.000000000000000000
@@ -22455,7 +22438,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 16
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               Position.X = 176.000000000000000000
               Position.Y = 263.000000000000000000
@@ -22549,15 +22531,17 @@
               TabOrder = 14
             end
             object Label42: TLabel
-              StyledSettings = [Style]
+              StyledSettings = []
               Position.X = 16.000000000000000000
               Position.Y = 242.000000000000000000
               Size.Width = 150.000000000000000000
               Size.Height = 23.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claMediumblue
               TextSettings.Trimming = None
-              Text = #1050#1086#1083'-'#1074#1086
+              Text = #1042#1042#1054#1044' '#1082#1086#1083'-'#1074#1086
               TabOrder = 13
             end
             object Label43: TLabel
@@ -22619,7 +22603,6 @@
               ReadOnly = True
               ShowScrollBars = False
               StyledSettings = [Style]
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.WordWrap = True
               EnabledScroll = False
               Position.X = 68.000000000000000000
@@ -22684,7 +22667,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 23
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 17.000000000000000000
               Position.Y = 367.000000000000000000
               Size.Width = 151.000000000000000000
@@ -22745,7 +22727,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 21
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 174.000000000000000000
               Position.Y = 367.000000000000000000
               Size.Width = 151.000000000000000000
@@ -22806,7 +22787,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 8
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 175.000000000000000000
               Position.Y = 202.000000000000000000
               Size.Width = 153.000000000000000000
@@ -23566,7 +23546,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 16
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
               Position.Y = 222.000000000000000000
               Size.Width = 208.000000000000000000
@@ -23578,7 +23557,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 11
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
               Position.Y = 188.000000000000000000
               Size.Width = 208.000000000000000000
@@ -23602,7 +23580,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 15
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 60.000000000000000000
               Position.Y = 152.000000000000000000
               Size.Width = 70.000000000000000000
@@ -23626,7 +23603,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 7
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
               Position.Y = 256.000000000000000000
               Size.Width = 208.000000000000000000
@@ -23663,7 +23639,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 12
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 214.000000000000000000
               Position.Y = 22.000000000000000000
               Size.Width = 114.000000000000000000
@@ -23677,7 +23652,6 @@
               ReadOnly = True
               ShowScrollBars = False
               StyledSettings = [Style]
-              TextSettings.Font.Size = 11.000000000000000000
               TextSettings.WordWrap = True
               EnabledScroll = False
               Position.X = 60.000000000000000000
@@ -23705,7 +23679,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 9
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 8.000000000000000000
               Position.Y = 22.000000000000000000
               Size.Width = 198.000000000000000000
@@ -23730,7 +23703,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 2
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 60.000000000000000000
               Position.Y = 117.000000000000000000
               Size.Width = 268.000000000000000000
@@ -23787,7 +23759,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 23
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
               Position.Y = 335.000000000000000000
               Size.Width = 208.000000000000000000
@@ -23812,7 +23783,6 @@
               Anchors = [akLeft, akTop, akRight]
               TabOrder = 25
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 120.000000000000000000
               Position.Y = 295.000000000000000000
               Size.Width = 208.000000000000000000
@@ -23836,7 +23806,6 @@
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               TabOrder = 14
               ReadOnly = True
-              TextSettings.Font.Size = 11.000000000000000000
               Position.X = 190.000000000000000000
               Position.Y = 152.000000000000000000
               Size.Width = 70.000000000000000000
@@ -23863,7 +23832,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False

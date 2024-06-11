@@ -3,13 +3,13 @@ unit dsdXMLTransform;
 interface
 
 uses
-  Classes, XMLIntf, DB, DBClient, dsdDataSetDataLink;
+  Classes, Vcl.Controls, XMLIntf, DB, DBClient, dsdCommon, dsdDataSetDataLink;
 
 type
 
   TdsdXMLTransform = class;
 
-  TdsdXMLTransform = class(TComponent, IDataSetAction)
+  TdsdXMLTransform = class(TdsdComponent, IDataSetAction)
   private
     FActionDataLink: TDataSetDataLink;
     FXMLDocument: IXMLDocument;

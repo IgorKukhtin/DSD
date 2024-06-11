@@ -2,14 +2,14 @@ unit Defaults;
 
 interface
 
-uses Classes, dsdDB;
+uses Classes, Vcl.Controls, dsdCommon, dsdDB;
 
 type
 
   TDefaultType = (dtGuides, dtText, dtDate);
 
   // Возвращает ключ для дефолтных значений
-  TDefaultKey = class(TComponent)
+  TDefaultKey = class(TdsdComponent)
   private
     FParams: TdsdParams;
   protected

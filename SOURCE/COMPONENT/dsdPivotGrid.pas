@@ -2,7 +2,7 @@ unit dsdPivotGrid;
 
 interface
 
-uses Classes, cxCustomPivotGrid, cxDBPivotGrid;
+uses Classes, Vcl.Controls, dsdCommon, cxCustomPivotGrid, cxDBPivotGrid;
 
 type
   TCalcFieldsType = (cfSumma, cfMultiplication, cfDivision, cfPercent, cfMulDiv);
@@ -28,7 +28,7 @@ type
     property Items[Index: Integer]: TdsdPivotGridField read GetItem write SetItem; default;
   end;
 
-  TdsdPivotGridCalcFields = class (TComponent)
+  TdsdPivotGridCalcFields = class (TdsdComponent)
   private
     FDBPivotGrid: TcxDBPivotGrid;
     FCalcField: TcxDBPivotGridField;

@@ -4,12 +4,12 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipbrd,
+uses VCL.ActnList, VCL.Forms, Classes, dsdDB, DB, DBClient, UtilConst, ComObj, Clipbrd,
   cxControls, dsdGuides, ImgList, cxPC, cxGrid, cxGridTableView, cxDBPivotGrid, Math,
   cxGridDBTableView, frxClass, frxExportPDF, frxExportXLS, cxGridCustomView, Dialogs, Controls,
   dsdDataSetDataLink, ExtCtrls, GMMap, GMMapVCL, cxDateNavigator, IdFTP, IdFTPCommon,
   System.IOUtils, IdHTTP, IdSSLOpenSSL, IdURI, IdAuthentication, {IdMultipartFormData,}
-  Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils
+  Winapi.ActiveX, ZConnection, ZDataset, dxBar, DateUtils, dsdCommon
   {$IFDEF DELPHI103RIO}, System.JSON, Actions {$ELSE} , Data.DBXJSON {$ENDIF}, Vcl.Graphics;
 
 type
@@ -647,7 +647,7 @@ type
   end;
 
   //Генерация / предпросмотр / дизайн распечаток
-  TfrxReportExt = Class(TComponent)
+  TfrxReportExt = Class(TdsdComponent)
     FReport : TfrxReport;
   private
     procedure ClosePreview(Sender: TObject);
@@ -9364,9 +9364,11 @@ begin
   end;
 
 end;
+
 initialization
 
   XML := TXMLDocument.Create(nil);
+
 
 end.
 

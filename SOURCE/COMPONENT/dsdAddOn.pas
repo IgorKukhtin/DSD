@@ -12,7 +12,7 @@ uses Windows, Winapi.Messages, Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTable
      GMClasses, GMMap, GMMapVCL, GMGeoCode, GMConstants, GMMarkerVCL, SHDocVw, ExtCtrls,
      Winapi.ShellAPI, System.StrUtils, GMDirection, GMDirectionVCL, cxCheckBox, cxImage,
      cxGridChartView, cxGridDBChartView, cxDropDownEdit, cxCheckListBox, cxCurrencyEdit,
-     PdfiumCtrl, dxBar, dxBarExtItems, cxBarEditItem, cxSpinEdit, cxRadioGroup
+     PdfiumCtrl, dxBar, dxBarExtItems, cxBarEditItem, cxSpinEdit, cxRadioGroup, dsdCommon
      {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
 
 const
@@ -28,7 +28,7 @@ type
 
 
   // 1. Обработка признака isErased
-  TCustomDBControlAddOn = class(TComponent)
+  TCustomDBControlAddOn = class(TdsdComponent)
   private
     FImages: TImageList;
     FOnDblClickActionList: TActionItemList;
@@ -788,7 +788,7 @@ type
     property CrossDBViewAddOn : TCrossDBViewAddOn read FCrossDBViewAddOn write FCrossDBViewAddOn;
   end;
 
-  TdsdUserSettingsStorageAddOn = class(TComponent)
+  TdsdUserSettingsStorageAddOn = class(TdsdComponent)
   private
     FOnDestroy: TNotifyEvent;
     FActive: boolean;
@@ -828,7 +828,7 @@ type
   end;
 
   // Вызывает процедуру сохранения для СОХРАНЕННОГО документа в случае изменения значений
-  THeaderSaver = class(TComponent)
+  THeaderSaver = class(TdsdComponent)
   private
     { field to store the window handle }
     FHWnd: HWND;
@@ -884,7 +884,7 @@ type
     property Items[Index: Integer]: TChangerListItem read GetChangerListItem write SetChangerListItem; default;
   end;
 
-  THeaderChanger = class(TComponent)
+  THeaderChanger = class(TdsdComponent)
   private
     FParam: TdsdParam;
     FChangerList: TChangerList;
@@ -929,7 +929,7 @@ type
   end;
 
   // Вызывает Акшин при уходе с компонента если изменилось значение
-  THeaderExit = class(TComponent)
+  THeaderExit = class(TdsdComponent)
   private
     FExitList: TExitList;
     FAction: TCustomAction;
@@ -970,7 +970,7 @@ type
   end;
 
   // Реакция на Enter и переход на следующий контрол
-  TEnterMoveNext = class(TComponent)
+  TEnterMoveNext = class(TdsdComponent)
   private
     FEnterMoveNextList: TEnterMoveNextList;
     FOnFormKeyDown : TKeyEvent;
@@ -984,7 +984,7 @@ type
     property EnterMoveNextList: TEnterMoveNextList read FEnterMoveNextList write FEnterMoveNextList;
   end;
 
-  TRefreshAddOn = class(TComponent)
+  TRefreshAddOn = class(TdsdComponent)
   private
     FFormName: string;
     FDataSet: string;
@@ -1020,7 +1020,7 @@ type
 
   TExecuteDialog = class;
 
-  TRefreshDispatcher = class(TComponent)
+  TRefreshDispatcher = class(TdsdComponent)
   private
     { field to store the window handle }
     FHWnd: HWND;
@@ -1225,7 +1225,7 @@ type
     property Control: TWinControl read FControl write FControl;
   end;
 
-  TdsdEnterManager = class(TComponent)
+  TdsdEnterManager = class(TdsdComponent)
   private
     FControlList: TCollection;
     FTabSheetList: TCollection;
@@ -1245,7 +1245,7 @@ type
     property PageControl: TcxPageControl read FPageControl write SetPageControl;
   end;
 
-  TdsdFileToBase64 = class(TComponent)
+  TdsdFileToBase64 = class(TdsdComponent)
   private
     FLookupControl: TWinControl;
     FFileOpenDialog: TFileOpenDialog;
@@ -1308,7 +1308,7 @@ type
   end;
 
   // Установка фильтра на поле
-  TdsdFieldFilter = class(TComponent)
+  TdsdFieldFilter = class(TdsdComponent)
   private
     FTextEdit: TcxTextEdit;
     FDataSet: TDataSet;
@@ -1364,7 +1364,7 @@ type
   end;
 
   // Установка проперти на едит
-  TdsdPropertiesСhange = class(TComponent)
+  TdsdPropertiesСhange = class(TdsdComponent)
   private
     FComponent: TComponent;
     FEditRepository: TcxEditRepository;
@@ -1386,7 +1386,7 @@ type
   end;
 
   // Формирование графика
-  TChartAddOn = class(TComponent)
+  TChartAddOn = class(TdsdComponent)
   private
     FChartView: TcxGridDBChartView;
 
@@ -1472,7 +1472,7 @@ type
     property FieldTextColorParam: TdsdParam  read FFieldTextColorParam write FFieldTextColorParam;
   end;
 
-  TCheckerboardAddOn = class(TComponent)
+  TCheckerboardAddOn = class(TdsdComponent)
   private
     FControl: TWinControl;
 
@@ -1580,7 +1580,7 @@ type
     property PriorAction: TCustomAction read FPriorAction write FPriorAction;
   end;
 
-  TCheckListBoxAddOn = class(TComponent)
+  TCheckListBoxAddOn = class(TdsdComponent)
   private
     FCheckListBox: TcxCheckListBox;
 
@@ -3366,9 +3366,9 @@ end;
 
 destructor THeaderSaver.Destroy;
 begin
-  FParam.Free;
-  FControlList.Free;
-  FEnterValue.Free;
+  FreeAndNil(FParam);
+  FreeAndNil(FControlList);
+  FreeAndNil(FEnterValue);
   DeallocateHWnd(FHWnd);
   if Self.Owner is TParentForm then
      TParentForm(Owner).onAfterShow := FOnAfterShow;
@@ -3390,7 +3390,8 @@ begin
   inherited;
 
   if (Operation = opRemove) then begin
-    if AComponent is TControl then begin
+    if AComponent is TControl and Assigned(ControlList) then
+    begin
        for i := 0 to ControlList.Count - 1 do
           if ControlList[i].Control = AComponent then
              ControlList[i].Control := nil;
@@ -3658,14 +3659,18 @@ var i: integer;
 begin
   inherited;
 
-  if (Operation = opRemove) then begin
-    if AComponent is TCustomAction then begin
-       for i := 0 to ActionItemList.Count - 1 do
-          if ActionItemList[i].Action = AComponent then
-             ActionItemList[i].Action := nil;
-       for i := 0 to OnDblClickActionList.Count - 1 do
-          if OnDblClickActionList[i].Action = AComponent then
-             OnDblClickActionList[i].Action := nil;
+  if (Operation = opRemove) then
+  begin
+    if AComponent is TCustomAction then
+    begin
+      if Assigned(ActionItemList) then
+        for i := 0 to ActionItemList.Count - 1 do
+           if ActionItemList[i].Action = AComponent then
+              ActionItemList[i].Action := nil;
+      if Assigned(OnDblClickActionList) then
+        for i := 0 to OnDblClickActionList.Count - 1 do
+           if OnDblClickActionList[i].Action = AComponent then
+              OnDblClickActionList[i].Action := nil;
     end;
     if AComponent = SortImages then
        SortImages := nil
@@ -3751,9 +3756,10 @@ begin
        FRefreshAction := nil;
     if AComponent = FShowDialogAction then
        FShowDialogAction := nil;
-    for i := 0 to ComponentList.Count - 1 do
-       if TComponentListItem(ComponentList.Items[i]).Component = AComponent then
-          TComponentListItem(ComponentList.Items[i]).Component := nil;
+    if Assigned(ComponentList) then
+      for i := 0 to ComponentList.Count - 1 do
+         if TComponentListItem(ComponentList.Items[i]).Component = AComponent then
+            TComponentListItem(ComponentList.Items[i]).Component := nil;
   end;
 end;
 
@@ -4321,8 +4327,8 @@ end;
 
 destructor TPivotAddOn.Destroy;
 begin
-  FSummaryFieldList.Free;
-  FColorRuleList.Free;
+  FreeAndNil(FSummaryFieldList);
+  FreeAndNil(FColorRuleList);
   inherited;
 end;
 
@@ -5350,7 +5356,7 @@ end;
 destructor THeaderChanger.Destroy;
 begin
   FParam.Free;
-  FChangerList.Free;
+  FreeAndNil(FChangerList);
   inherited;
 end;
 
@@ -5362,7 +5368,7 @@ begin
 
   if Operation = opRemove then
   begin
-    if AComponent is TControl then
+    if (AComponent is TControl) and Assigned(ChangerList) then
     begin
       for I := 0 to Pred(ChangerList.Count) do
         if ChangerList[I].Control = AComponent then
@@ -5581,7 +5587,7 @@ end;
 
 destructor THeaderExit.Destroy;
 begin
-  FExitList.Free;
+  FreeAndNil(FExitList);
   inherited;
 end;
 
@@ -5593,7 +5599,7 @@ begin
 
   if Operation = opRemove then
   begin
-    if AComponent is TControl then
+    if (AComponent is TControl) and Assigned(ExitList) then
     begin
       for I := 0 to Pred(ExitList.Count) do
         if ExitList[I].Control = AComponent then
@@ -5663,7 +5669,7 @@ end;
 
 destructor TEnterMoveNext.Destroy;
 begin
-  FEnterMoveNextList.Free;
+  FreeAndNil(FEnterMoveNextList);
 
   if Owner is TForm then
   begin
@@ -5681,7 +5687,7 @@ begin
 
   if Operation = opRemove then
   begin
-    if AComponent is TControl then
+    if (AComponent is TControl) and Assigned(EnterMoveNextList) then
     begin
       for I := 0 to Pred(EnterMoveNextList.Count) do
       begin
@@ -5989,24 +5995,27 @@ var i: integer;
 begin
   inherited;
 
-  if (Operation = opRemove) then begin
+  if (Operation = opRemove) then
+  begin
     if AComponent = FPageControl then PageControl := nil;
-    for i := 0 to ControlList.Count - 1 do
-    begin
-       if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
-          TWinControlListItem(ControlList.Items[i]).Control := nil;
-       if TWinControlListItem(ControlList.Items[i]).GotoControl = AComponent then
-          TWinControlListItem(ControlList.Items[i]).GotoControl := nil;
-       if TWinControlListItem(ControlList.Items[i]).Action = AComponent then
-          TWinControlListItem(ControlList.Items[i]).Action := nil;
-    end;
-    for i := 0 to TabSheetList.Count - 1 do
-    begin
-       if TTabSheetListItem(TabSheetList.Items[i]).Control = AComponent then
-          TTabSheetListItem(TabSheetList.Items[i]).Control := nil;
-       if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = AComponent then
-          TTabSheetListItem(TabSheetList.Items[i]).TabSheet := nil;
-    end;
+    if Assigned(ControlList) then
+      for i := 0 to ControlList.Count - 1 do
+      begin
+         if TWinControlListItem(ControlList.Items[i]).Control = AComponent then
+            TWinControlListItem(ControlList.Items[i]).Control := nil;
+         if TWinControlListItem(ControlList.Items[i]).GotoControl = AComponent then
+            TWinControlListItem(ControlList.Items[i]).GotoControl := nil;
+         if TWinControlListItem(ControlList.Items[i]).Action = AComponent then
+            TWinControlListItem(ControlList.Items[i]).Action := nil;
+      end;
+    if Assigned(TabSheetList) then
+      for i := 0 to TabSheetList.Count - 1 do
+      begin
+         if TTabSheetListItem(TabSheetList.Items[i]).Control = AComponent then
+            TTabSheetListItem(TabSheetList.Items[i]).Control := nil;
+         if TTabSheetListItem(TabSheetList.Items[i]).TabSheet = AComponent then
+            TTabSheetListItem(TabSheetList.Items[i]).TabSheet := nil;
+      end;
   end;
 end;
 
@@ -6286,18 +6295,20 @@ procedure TdsdFieldFilter.Notification(AComponent: TComponent;
 begin
   inherited;
 
-  if (Operation = opRemove) then begin
+  if (Operation = opRemove) then
+  begin
       if (AComponent = FTextEdit) then
          FTextEdit := nil;
       if (AComponent = FDataSet) then
          FDataSet := nil;
       if (AComponent = FActionNumber1) then
          FActionNumber1 := nil;
-      if AComponent is TcxGridColumn then begin
+      if (AComponent is TcxGridColumn) and Assigned(ColumnList) then
+      begin
          for i := 0 to ColumnList.Count - 1 do
             if TColumnFieldFilterItem(ColumnList.Items[i]).Column = AComponent then
                TColumnFieldFilterItem(ColumnList.Items[i]).Column := nil;
-    end;
+      end;
   end;
 end;
 
@@ -8675,6 +8686,5 @@ function TcxCurrencyEdit_check.GetImages: TCustomImageList;
 begin
   Result := Properties.Images;
 end;
-
 
 end.

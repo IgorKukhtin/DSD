@@ -2,7 +2,7 @@ unit dsdGuides;
 
 interface
 
-uses Classes, Controls, dsdDB, VCL.Menus, VCL.ActnList, Forms;
+uses Classes, Controls, dsdDB, VCL.Menus, VCL.ActnList, Forms, dsdCommon;
 
 type
 
@@ -56,7 +56,7 @@ type
     property Owner: TObject write SetOwner;
   end;
 
-  TCustomGuides = class(TComponent, IChoiceCaller)
+  TCustomGuides = class(TdsdComponent, IChoiceCaller)
   private
     FParams: TdsdParams;
     FKey: String;
@@ -189,7 +189,7 @@ type
   end;
 
   // Вызывает заполнение справочников при создании документа
-  TGuidesFiller = class(TComponent)
+  TGuidesFiller = class(TdsdComponent)
   private
     FGuidesList: TGuidesList;
     FParam: TdsdParam;
