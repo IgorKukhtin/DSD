@@ -13,18 +13,18 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     Width = 1368
     Height = 387
     ExplicitTop = 66
-    ExplicitWidth = 1372
+    ExplicitWidth = 1368
     ExplicitHeight = 387
     ClientRectBottom = 387
     ClientRectRight = 1368
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1372
+      ExplicitWidth = 1368
       ExplicitHeight = 387
       inherited cxGrid: TcxGrid
         Width = 1368
         Height = 209
         Align = alTop
-        ExplicitWidth = 1372
+        ExplicitWidth = 1368
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -474,7 +474,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Height = 5
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 1372
       end
       object BottomPanel: TPanel
         Left = 0
@@ -484,7 +483,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 1372
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -773,7 +771,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitWidth = 415
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -845,7 +842,6 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1372
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -1938,6 +1934,91 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       HeaderDataSet = PrintHeaderCDS
       ListDataSet = PrintItemsCDS
     end
+    object actGet_DefaultEDIN: TdsdExecStoredProc
+      Category = 'ETTN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_DefaultEDIN
+      StoredProcList = <
+        item
+          StoredProc = spGet_DefaultEDIN
+        end>
+      Caption = 'actGet_DefaultEDIN'
+    end
+    object actLoadInvoiceNR: TdsdEDINAction
+      Category = 'ETTN'
+      MoveParams = <>
+      Caption = 'actLoadInvoiceNR'
+      Host.Value = ''
+      Host.Component = FormParams
+      Host.ComponentItem = 'HostEDIN'
+      Host.DataType = ftString
+      Host.MultiSelectSeparator = ','
+      Login.Value = ''
+      Login.Component = FormParams
+      Login.ComponentItem = 'UserNameEDIN'
+      Login.DataType = ftString
+      Login.MultiSelectSeparator = ','
+      Password.Value = ''
+      Password.Component = FormParams
+      Password.ComponentItem = 'PasswordEDIN'
+      Password.DataType = ftString
+      Password.MultiSelectSeparator = ','
+      Token.Value = ''
+      Token.DataType = ftString
+      Token.MultiSelectSeparator = ','
+      Result.Value = ''
+      Result.Component = FormParams
+      Result.ComponentItem = 'Uuid'
+      Result.DataType = ftString
+      Result.MultiSelectSeparator = ','
+      Error.Value = ''
+      Error.Component = FormParams
+      Error.ComponentItem = 'CommentError'
+      Error.DataType = ftString
+      Error.MultiSelectSeparator = ','
+      GLN.Value = Null
+      GLN.Component = FormParams
+      GLN.ComponentItem = 'GLN'
+      GLN.DataType = ftString
+      GLN.MultiSelectSeparator = ','
+      GLN_Sender.Value = Null
+      GLN_Sender.Component = FormParams
+      GLN_Sender.ComponentItem = 'GLN_Epicentr'
+      GLN_Sender.DataType = ftString
+      GLN_Sender.MultiSelectSeparator = ','
+      KeyFileName.Value = ''
+      KeyFileName.Component = FormParams
+      KeyFileName.ComponentItem = 'FileNameKey'
+      KeyFileName.DataType = ftString
+      KeyFileName.MultiSelectSeparator = ','
+      KeyUserName.Value = ''
+      KeyUserName.Component = FormParams
+      KeyUserName.ComponentItem = 'UserNameKey'
+      KeyUserName.DataType = ftString
+      KeyUserName.MultiSelectSeparator = ','
+      UpdateUuid = spInsertUpdate_EDIINVOICE_NP
+      EDINActions = edinLoadInvoiceNR
+    end
+    object mactLoadInvoiceNR: TMultiAction
+      Category = 'ETTN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_DefaultEDIN
+        end
+        item
+          Action = actLoadInvoiceNR
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1074#1075#1088#1091#1079#1080#1090#1100' "'#1053#1072#1082#1083#1072#1076#1085#1080#1077' '#1085#1072' '#1087#1086#1074#1077#1088#1085#1077#1085#1085#1103'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1047#1074#1075#1088#1091#1079#1082#1072' "'#1053#1072#1082#1083#1072#1076#1085#1080#1093' '#1085#1072' '#1087#1086#1074#1077#1088#1085#1077#1085#1085#1103'"'
+      Hint = #1047#1074#1075#1088#1091#1079#1082#1072' "'#1053#1072#1082#1083#1072#1076#1085#1080#1093' '#1085#1072' '#1087#1086#1074#1077#1088#1085#1077#1085#1085#1103'"'
+      ImageIndex = 85
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -2255,6 +2336,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         item
           Visible = True
           ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -2281,6 +2366,10 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
       Category = 0
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' '#1045#1087#1080#1094#1077#1085#1090#1088'> '#1074' EXITE'
       Visible = ivAlways
+    end
+    object dxBarButton3: TdxBarButton
+      Action = mactLoadInvoiceNR
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2691,6 +2780,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 168
     Top = 344
@@ -2744,6 +2834,7 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 808
     Top = 328
@@ -2813,6 +2904,18 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
         Name = 'gIsDelete'
         Value = Null
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN_Epicentr'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 520
@@ -3534,5 +3637,139 @@ inherited EDIJournalLoadForm: TEDIJournalLoadForm
     PackSize = 1
     Left = 856
     Top = 200
+  end
+  object spInsertUpdate_EDIINVOICE_NP: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDIINVOICE_NP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDoc_UUID'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'indocNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'indocDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNReceiver'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGLNSender'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDelivery_place_GLN'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDeliveryNoteNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvoiceLines'
+        Value = Null
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IsInsert'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1056
+    Top = 152
+  end
+  object spGet_DefaultEDIN: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultEDIN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'HostEDIN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserNameEDIN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PasswordEDIN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GLN'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GLN_Epicentr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GLN_Epicentr'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1056
+    Top = 72
   end
 end

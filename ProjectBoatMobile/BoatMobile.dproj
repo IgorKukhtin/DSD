@@ -5,11 +5,10 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>38033</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>BoatMobile.dpr</MainSource>
-        <ProjectName Condition="'$(ProjectName)'==''">BoatMobile</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -179,7 +178,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;ZCoreD28;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;ZDbcD28;ZComponentD28;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;ZPlainD28;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;fmxase;dbrtl;ZParseSqlD28;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;DclTKRBarCodeSannerPkgD28;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.5;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.6;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Android_LauncherIcon36>img\Android\BoatMobile_36.png</Android_LauncherIcon36>
@@ -208,7 +207,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;dbrtl;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.5;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.6;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Android_LauncherIcon36>img\Android\BoatMobile_36.png</Android_LauncherIcon36>
