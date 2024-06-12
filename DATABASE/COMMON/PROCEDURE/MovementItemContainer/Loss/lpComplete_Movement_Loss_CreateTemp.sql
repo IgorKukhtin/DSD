@@ -20,6 +20,7 @@ BEGIN
                                , BusinessId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionGoodsId Integer, isAsset Boolean
+                               , OperCount_start TFloat
                                 ) ON COMMIT DROP;
 
 
