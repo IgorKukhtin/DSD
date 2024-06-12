@@ -34,7 +34,30 @@ BEGIN
 
      -- Результат такой
      RETURN QUERY
-       SELECT
+        WITH tmpMI_all AS (SELECT MovementItem.*
+                           FROM MovementItem
+                           WHERE MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   IN (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE)
+                          )
+           , tmpMILO_all AS (SELECT MovementItemLinkObject.*
+                           FROM MovementItemLinkObject
+                           WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                          )
+          , tmpMIF_all AS (SELECT MovementItemFloat.*
+                           FROM MovementItemFloat
+                           WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                          )
+          , tmpMIB_all AS (SELECT MovementItemBoolean.*
+                           FROM MovementItemBoolean
+                           WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                          )
+          , tmpMID_all AS (SELECT MovementItemDate.*
+                           FROM MovementItemDate
+                           WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_all.Id FROM tmpMI_all)
+                          )
+     -- Результат
+     SELECT
              MovementItem.Id                      AS Id
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
@@ -54,17 +77,14 @@ BEGIN
 
            , MovementItem.isErased                 AS isErased
 
-       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-            JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                             AND MovementItem.DescId     = zc_MI_Master()
-                             AND MovementItem.isErased   = tmpIsErased.isErased
+       FROM tmpMI_all AS MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+            LEFT JOIN tmpMID_all AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
+            LEFT JOIN tmpMILO_all AS MILinkObject_PartionGoods
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
@@ -74,17 +94,17 @@ BEGIN
                                 AND ObjectDate_Value.DescId = zc_ObjectDate_PartionGoods_Value()
 
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+            LEFT JOIN tmpMILO_all AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
+            LEFT JOIN tmpMIF_all AS MIFloat_PartionCell
                                         ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
                                        AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
             LEFT JOIN Object AS Object_PartionCell_1 ON Object_PartionCell_1.Id = MIFloat_PartionCell.ValueData :: Integer
 
-            LEFT JOIN MovementItemBoolean AS MIBoolean_PartionCell_Close_1
+            LEFT JOIN tmpMIB_all AS MIBoolean_PartionCell_Close_1
                                           ON MIBoolean_PartionCell_Close_1.MovementItemId = MovementItem.Id
                                          AND MIBoolean_PartionCell_Close_1.DescId         = zc_MIBoolean_PartionCell_Close_1()
 
