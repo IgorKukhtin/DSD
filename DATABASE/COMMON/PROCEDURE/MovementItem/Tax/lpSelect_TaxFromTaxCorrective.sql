@@ -13,6 +13,7 @@ RETURNS TABLE (MovementId         Integer
              , Amount_Tax_find    TFloat
              , Price              TFloat
              , LineNum            Integer
+             , GoodsName_its      TVarChar
               )
 AS
 $BODY$
@@ -26,6 +27,7 @@ BEGIN
                        , COALESCE (MIFloat_NPP.ValueData, 0)                 :: Integer AS LineNum
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), MIFloat_Price.ValueData) AS LineCount1
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, MIFloat_Price.ValueData)                                                AS LineCount2
+                       , MIString_GoodsName.ValueData                        ::TVarChar AS GoodsName_its
                   FROM MovementItem
                        LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -37,6 +39,10 @@ BEGIN
                        LEFT JOIN MovementItemFloat AS MIFloat_NPP
                                                    ON MIFloat_NPP.MovementItemId = MovementItem.Id
                                                   AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+
+                       LEFT JOIN MovementItemString AS MIString_GoodsName
+                                                    ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                                   AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
                   WHERE MovementItem.MovementId  = inMovementId
                     AND MovementItem.DescId      = zc_MI_Master()
                     AND MovementItem.isErased    = FALSE
@@ -47,6 +53,7 @@ BEGIN
                        , 1 :: Integer AS Kind
                        , tmp.GoodsId, tmp.GoodsKindId, tmp.GoodsKindId, tmp.Amount_Tax_find, tmp.Price
                        , (CASE WHEN tmp.LineCount1 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
+                       , tmp.GoodsName_its ::TVarChar
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.GoodsKindId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord
                         FROM tmpMITax
@@ -57,6 +64,7 @@ BEGIN
                        , 2 :: Integer AS Kind
                        , tmp.GoodsId, 0 AS GoodsKindId, tmp.GoodsKindId, tmp.Amount_Tax_find, tmp.Price
                        , (CASE WHEN tmp.LineCount2 <> 1 THEN -1 ELSE 1 END * tmp.LineNum) :: Integer AS LineNum
+                       , tmp.GoodsName_its ::TVarChar
                   FROM (SELECT tmpMITax.*
                              , ROW_NUMBER() OVER (PARTITION BY tmpMITax.GoodsId, tmpMITax.Price ORDER BY tmpMITax.LineNum ASC) AS Ord
                         FROM tmpMITax
@@ -72,6 +80,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+12.06.24          * GoodsName_its
 28.03.16                                         * ALL
 26.03.16          *
 */
