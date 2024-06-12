@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTaxCorrective (
 )
 RETURNS TABLE (InvNumber_ReturnIn TVarChar, InvNumberPartner_ReturnIn TVarChar
              , InvNumber_TaxCorrective TVarChar, InvNumberPartner_TaxCorrective TVarChar
-             , OperDate_TaxCorrective TDateTime, OperDate_Tax TDateTime
+             , OperDate_TaxCorrective TDateTime
+             , InvNumber_Tax TVarChar, InvNumberPartner_Tax TVarChar
+             , OperDate_Tax TDateTime
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
              , ContractName TVarChar, ContractTagName TVarChar
@@ -136,6 +138,7 @@ BEGIN
                                         AND Movement.StatusId = zc_Enum_Status_Complete()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                        AND vbUserId NOT IN (5, 6604558)
                      ) AS Movement
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -173,12 +176,17 @@ BEGIN
                )
 
     -- Результат
-    SELECT Movement_ReturnIn.InvNumber                     AS InvNumber_ReturnIn
-         , MovementString_InvNumberPartner_ReturnIn.ValueData      AS InvNumberPartner_ReturnIn
+    SELECT Movement_ReturnIn.InvNumber                        AS InvNumber_ReturnIn
+         , MovementString_InvNumberPartner_ReturnIn.ValueData AS InvNumberPartner_ReturnIn
+
          , Movement_TaxCorrective.InvNumber                AS InvNumber_TaxCorrective
          , MovementString_InvNumberPartner_TaxCorrective.ValueData AS InvNumberPartner_TaxCorrective
          , Movement_TaxCorrective.OperDate                 AS OperDate_TaxCorrective
+
+         , Movement_DocumentChild.InvNumber                AS InvNumber_Tax
+         , MovementString_InvNumberPartner_Tax.ValueData   AS InvNumberPartner_Tax
          , Movement_DocumentChild.OperDate                 AS OperDate_Tax
+
          , Object_From.ObjectCode                          AS FromCode
          , Object_From.ValueData                           AS FromName
          , Object_To.ObjectCode                            AS ToCode
@@ -298,6 +306,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , -1 * SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
+                     , 0 AS MovementId_Tax
                 FROM (SELECT Movement.Id
                            , Movement.DescId AS MovementDescId
                            , MovementFloat_ChangePercent.ValueData  AS ChangePercent
@@ -311,6 +320,7 @@ BEGIN
                                                   AND MovementFloat_ChangePercent.DescId     = zc_MovementFloat_ChangePercent()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                        AND vbUserId NOT IN (5, 6604558)
                      ) AS Movement
                      INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
@@ -437,6 +447,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
+                     , 0 AS MovementId_Tax
              -- FROM tmpReturnIn_Movement AS Movement
                 FROM (SELECT Movement.Id                            AS Id
                            , Movement.DescId                        AS MovementDescId
@@ -455,6 +466,7 @@ BEGIN
                                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                       WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                        AND vbUserId NOT IN (5, 6604558)
                      ) AS Movement
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -575,6 +587,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , -1 * SUM (MovementItem.Amount)      AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
+                     , 0 AS MovementId_Tax
                 FROM Movement 
                      INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
@@ -625,6 +638,7 @@ BEGIN
                 WHERE Movement.DescId = zc_Movement_TransferDebtOut()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                  AND vbUserId NOT IN (5, 6604558)
                 GROUP BY MovementLinkObject_To.ObjectId
                        , ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , MovementBoolean_PriceWithVAT.ValueData
@@ -662,6 +676,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , SUM (MovementItem.Amount)           AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
+                     , 0 AS MovementId_Tax
                 FROM Movement 
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -714,6 +729,7 @@ BEGIN
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
                   AND (tmpPartner_Corrective.PartnerId > 0 OR tmpJuridical_Corrective.JuridicalId > 0 OR MovementLO_DocumentTaxKind.ObjectId > 0)
+                  AND vbUserId NOT IN (5, 6604558)
 
                 GROUP BY MovementLinkObject_From.ObjectId
                        , ObjectLink_Contract_JuridicalBasis.ChildObjectId
@@ -750,6 +766,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , SUM (MovementItem.Amount) AS Amount_ReturnIn
                      , 0 AS Amount_TaxCorrective
+                     , 0 AS MovementId_Tax
                 FROM Movement
                      /*INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                                     AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
@@ -807,6 +824,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
+                  AND vbUserId NOT IN (5, 6604558)
                   
                 GROUP BY MovementLinkObject_From.ObjectId
                        , MovementLinkObject_To.ObjectId
@@ -843,6 +861,7 @@ BEGIN
                      , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , 0 AS Amount_ReturnIn
                      , SUM (MovementItem.Amount) AS Amount_TaxCorrective
+                     , CASE WHEN vbUserId = 5 THEN MovementLinkMovement_Child.MovementChildId ELSE 0 END AS MovementId_Tax
                 FROM Movement
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -850,11 +869,13 @@ BEGIN
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId     = zc_MI_Master()
                                             AND MovementItem.isErased   = FALSE
+                                            AND (vbUserId <> 5 OR MovementItem.ObjectId = 331529) -- 2201 Консерви м`ясні М`ЯСО КУРЕЙ У ВЛАСНОМУ СОКУ 525 г/шт ТМ Алан
 
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
+                     -- Возврат
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId  = Movement.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                                                                         
@@ -889,7 +910,7 @@ BEGIN
                                                   ON MovementLinkObject_Branch.MovementId = Movement.Id
                                                  AND MovementLinkObject_Branch.DescId = zc_MovementLinkObject_Branch()
 
-                     -- налоговая Накладная
+                     -- Налоговая
                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                                     ON MovementLinkMovement_Child.MovementId = Movement.Id
                                                    AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
@@ -919,6 +940,7 @@ BEGIN
                        , MIFloat_Price.ValueData
                        , MIFloat_CountForPrice.ValueData
                        , COALESCE (MovementLinkObject_Branch.ObjectId,0)
+                       , CASE WHEN vbUserId = 5 THEN MovementLinkMovement_Child.MovementChildId ELSE 0 END
           ) AS tmpMovement 
           GROUP BY tmpMovement.FromId
                  , tmpMovement.ToId
@@ -932,6 +954,7 @@ BEGIN
                  , tmpMovement.GoodsId
                  , tmpMovement.GoodsKindId
                  , tmpMovement.Price
+                 , tmpMovement.MovementId_tax
        ) AS tmpGroupMovement
        
          LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = tmpGroupMovement.MovementId_ReturnIn
@@ -947,6 +970,9 @@ BEGIN
                                         ON MovementLinkMovement_Child.MovementId = Movement_TaxCorrective.Id
                                        AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
          LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+         LEFT JOIN MovementString AS MovementString_InvNumberPartner_Tax
+                                  ON MovementString_InvNumberPartner_Tax.MovementId = Movement_DocumentChild.Id
+                                 AND MovementString_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
                      
          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpGroupMovement.FromId
          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpGroupMovement.ToId
@@ -985,6 +1011,8 @@ BEGIN
           )
 
        OR (Movement_TaxCorrective.OperDate < Movement_DocumentChild.OperDate)
+       OR vbUserId IN (5, 6604558)
+
    ;
 
 
