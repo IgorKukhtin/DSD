@@ -17,10 +17,51 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
               )
 AS
 $BODY$
+ DECLARE vbUserId Integer;
+ DECLARE curPartionCell refcursor;
+ DECLARE vbPartionCellId Integer;
 BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PartionCell());
+     vbUserId:= lpGetUserBySession (inSession);
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PartionCell());
+
+     CREATE TEMP TABLE _tmpPartionCell_mi (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+
+     --
+     OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() ORDER BY Object.Id;
+     -- начало цикла по курсору
+     LOOP
+          -- данные
+          FETCH curPartionCell INTO vbPartionCellId;
+          -- если данных нет, то мы выходим
+          IF NOT FOUND THEN
+             EXIT;
+          END IF;
+
+          --
+          INSERT INTO _tmpPartionCell_mi (MovementItemId, DescId, ObjectId)
+             WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
+             SELECT tmpMILO.MovementItemId, tmpMILO.DescId, tmpMILO.ObjectId
+             FROM tmpMILO
+             WHERE tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
+                                    , zc_MILinkObject_PartionCell_2()
+                                    , zc_MILinkObject_PartionCell_3()
+                                    , zc_MILinkObject_PartionCell_4()
+                                    , zc_MILinkObject_PartionCell_5()
+                                    , zc_MILinkObject_PartionCell_6()
+                                    , zc_MILinkObject_PartionCell_7()
+                                    , zc_MILinkObject_PartionCell_8()
+                                    , zc_MILinkObject_PartionCell_9()
+                                    , zc_MILinkObject_PartionCell_10()
+                                    , zc_MILinkObject_PartionCell_11()
+                                    , zc_MILinkObject_PartionCell_12()
+                                     )
+            ;
+          --
+     END LOOP; -- финиш цикла по курсору
+     CLOSE curPartionCell; -- закрыли курсор
+
 
       RETURN QUERY
       WITH
@@ -34,21 +75,15 @@ BEGIN
                            AND Object.isErased = FALSE
                          )
       -- занятые ячейки
-     , tmpMILO_PartionCell_all_1 AS (SELECT DISTINCT MovementItemLinkObject.ObjectId AS PartionCellId
+     , tmpMILO_PartionCell_all_1 AS (SELECT DISTINCT _tmpPartionCell_mi.ObjectId AS PartionCellId
                                      FROM tmpPartionCell
-                                          INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.ObjectId = tmpPartionCell.Id
+                                          INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                      WHERE inIsShowFree = FALSE
                                     )
       -- занятые ячейки
-     , tmpMILO_PartionCell_all_2 AS (SELECT MovementItemLinkObject.*
+     , tmpMILO_PartionCell_all_2 AS (SELECT _tmpPartionCell_mi.*
                                      FROM tmpPartionCell
-                                          INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.ObjectId = tmpPartionCell.Id
-                                                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                                                                               , zc_MILinkObject_PartionCell_2()
-                                                                                                               , zc_MILinkObject_PartionCell_3()
-                                                                                                               , zc_MILinkObject_PartionCell_4()
-                                                                                                               , zc_MILinkObject_PartionCell_5()
-                                                                                                                )
+                                          INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                      WHERE inIsShowFree = TRUE
                                     )
 
