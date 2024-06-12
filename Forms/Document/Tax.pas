@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TTaxForm = class(TAncestorDocumentForm)
@@ -152,6 +152,30 @@ type
     bbMIDetailProtocolOpenForm: TdxBarButton;
     actUpdateDetailDS: TdsdUpdateDataSet;
     spInsertUpdateMIDetail: TdsdStoredProc;
+    cxTabSheetPrior: TcxTabSheet;
+    GoodsName_its: TcxGridDBColumn;
+    cxGridGoodsName: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    LineNum_ch3: TcxGridDBColumn;
+    GoodsGroupNameFull_ch3: TcxGridDBColumn;
+    GoodsCode_ch3: TcxGridDBColumn;
+    GoodsCodeUKTZED_ch3: TcxGridDBColumn;
+    GoodsName_ch3: TcxGridDBColumn;
+    GoodsName_its_ch3: TcxGridDBColumn;
+    GoodsKindName_ch3: TcxGridDBColumn;
+    MeasureName_ch3: TcxGridDBColumn;
+    Amount_ch3: TcxGridDBColumn;
+    Price_ch3: TcxGridDBColumn;
+    CountForPrice_ch3: TcxGridDBColumn;
+    AmountSumm_ch3: TcxGridDBColumn;
+    isErased_ch3: TcxGridDBColumn;
+    isName_new_ch3: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    spUpdate_MI_GoodsName_its: TdsdStoredProc;
+    actUpdateNameDS: TdsdUpdateDataSet;
+    DBViewAddOnGoodsName: TdsdDBViewAddOn;
+    MovementItemProtocolOpenFormName: TdsdOpenForm;
+    bbProtocolOpenFormName: TdxBarButton;
   private
     { Private declarations }
   public

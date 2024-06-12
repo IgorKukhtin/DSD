@@ -5258,6 +5258,7 @@
 				<Form>GoodsByGoodsKindPeresortForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdCommon.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

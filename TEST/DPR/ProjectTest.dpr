@@ -1503,7 +1503,8 @@ uses
   Report_Send_PartionCellRemainsDialog in '..\..\Forms\Report\Report_Send_PartionCellRemainsDialog.pas' {Report_Send_PartionCellRemainsDialogForm: TParentForm},
   PartionCellChoiceAll in '..\..\Forms\Guides\PartionCellChoiceAll.pas' {PartionCellChoiceAllForm: TParentForm},
   Report_ReceiptProductionOutAnalyzeLine in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeLine.pas' {Report_ReceiptProductionOutAnalyzeLineForm: TParentForm},
-  GoodsByGoodsKindPeresort in '..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas' {GoodsByGoodsKindPeresortForm: TParentForm};
+  GoodsByGoodsKindPeresort in '..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas' {GoodsByGoodsKindPeresortForm: TParentForm},
+  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas';
 
 {$R *.RES}
 {$R DevExpressRus.res}

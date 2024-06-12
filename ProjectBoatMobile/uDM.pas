@@ -734,30 +734,33 @@ begin
   ApplicationName := DM.GetAPKFileName;
 
   GetStoredProc := TdsdStoredProc.Create(nil);
-  BytesStream := TBytesStream.Create;
   try
     GetStoredProc.StoredProcName := 'gpGet_Object_Program';
     GetStoredProc.OutputType := otBlob;
     GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
     try
-      ReConvertConvert(GetStoredProc.Execute(false, false, false), BytesStream);
+      BytesStream := TBytesStream.Create(ReConvertConvertBute(GetStoredProc.Execute(false, false, false)));
+      try
 
-      if BytesStream.Size = 0 then
-      begin
-        Result := 'Новая версия программы не загружена из базы данных';
-        exit;
+        if BytesStream.Size = 0 then
+        begin
+          Result := 'Новая версия программы не загружена из базы данных';
+          exit;
+        end;
+
+        BytesStream.Position := 0;
+        {$IFDEF ANDROID}
+        OutputDir := TAndroidHelper.Context.getExternalCacheDir();
+        Path := JStringToString(OutputDir.getAbsolutePath);
+        FileName := path + '/' + ApplicationName;
+        BytesStream.SaveToFile(filename);
+        {$ELSE}
+        BytesStream.SaveToFile(ApplicationName);
+        {$ENDIF}
+
+      finally
+        FreeAndNil(BytesStream);
       end;
-
-      BytesStream.Position := 0;
-      {$IFDEF ANDROID}
-      OutputDir := TAndroidHelper.Context.getExternalCacheDir();
-      Path := JStringToString(OutputDir.getAbsolutePath);
-      FileName := path + '/' + ApplicationName;
-      BytesStream.SaveToFile(filename);
-      {$ELSE}
-      BytesStream.SaveToFile(ApplicationName);
-      {$ENDIF}
-
     except
       on E : Exception do
       begin
@@ -767,7 +770,6 @@ begin
     end;
   finally
     FreeAndNil(GetStoredProc);
-    FreeAndNil(BytesStream);
   end;
 
   // Update programm

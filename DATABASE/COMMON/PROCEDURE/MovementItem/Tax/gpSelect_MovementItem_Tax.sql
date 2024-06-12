@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Tax(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, GoodsCodeUKTZED TVarChar, GoodsName TVarChar
+             , GoodsName_its TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -68,6 +69,7 @@ BEGIN
              END :: TVarChar AS GoodsCodeUKTZED
 
            , tmpGoods.GoodsName                     AS GoodsName
+           , CAST (NULL AS TVarChar)                AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -170,6 +172,7 @@ BEGIN
                             ELSE Object_Goods.ValueData
                        END
              END :: TVarChar                             AS GoodsName
+           , MIString_GoodsName.ValueData                AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -238,6 +241,9 @@ BEGIN
                                           ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
 
+            LEFT JOIN MovementItemString AS MIString_GoodsName
+                                         ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
             ;
      ELSE
 
@@ -277,7 +283,9 @@ BEGIN
                               WHEN COALESCE (MIBoolean_Goods_Name_new.ValueData, FALSE) = TRUE THEN Object_Goods.ValueData
                               WHEN ObjectString_Goods_BUH.ValueData <> '' THEN ObjectString_Goods_BUH.ValueData
                               ELSE Object_Goods.ValueData END
-             END :: TVarChar                             AS GoodsName
+             END :: TVarChar                             AS GoodsName 
+
+           , MIString_GoodsName.ValueData                AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -348,6 +356,10 @@ BEGIN
             LEFT JOIN MovementItemBoolean AS MIBoolean_Goods_Name_new
                                           ON MIBoolean_Goods_Name_new.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Goods_Name_new.DescId = zc_MIBoolean_Goods_Name_new()
+
+            LEFT JOIN MovementItemString AS MIString_GoodsName
+                                         ON MIString_GoodsName.MovementItemId = MovementItem.Id
+                                        AND MIString_GoodsName.DescId = zc_MIString_GoodsName()
             ;
 
      END IF;
@@ -355,11 +367,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_MovementItem_Tax (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.06.24         * GoodsName_its
  08.08.21         * isName_new
  06.12.19         *
  06.01.17         *

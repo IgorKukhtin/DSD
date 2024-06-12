@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TaxCorrective(
 RETURNS TABLE (Id Integer, LineNum Integer, LineNumTaxOld Integer, LineNumTax Integer, isAuto Boolean
              , LineNumTaxCorr_calc Integer, LineNumTaxCorr Integer, LineNumTaxNew Integer, AmountTax_calc TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsCodeUKTZED TVarChar, GoodsName TVarChar
+             , GoodsName_its TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
              , Price TFloat, CountForPrice TFloat
@@ -68,7 +69,7 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH
-     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
+     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum, tmp.GoodsName_its
                   FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
                                                        FROM MovementLinkMovement AS MLM
                                                        WHERE MLM.MovementId = inMovementId 
@@ -127,7 +128,8 @@ BEGIN
                   ELSE COALESCE (ObjectString_Goods_UKTZED.ValueData,'')
              END :: TVarChar AS GoodsCodeUKTZED
 
-           , tmpGoods.GoodsName                     AS GoodsName
+           , tmpGoods.GoodsName                     AS GoodsName 
+           , CAST (NULL AS TVarChar)                AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -243,6 +245,7 @@ BEGIN
                             ELSE Object_Goods.ValueData
                        END
              END :: TVarChar                             AS GoodsName
+           , COALESCE (tmpMITax1.GoodsName_its, tmpMITax2.GoodsName_its) :: TVarChar AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 
@@ -359,7 +362,7 @@ BEGIN
 
      RETURN QUERY
      WITH 
-     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum
+     tmpMITax AS (SELECT tmp.Kind, tmp.GoodsId, tmp.GoodsKindId, tmp.Price, tmp.LineNum, tmp.GoodsName_its
                   FROM lpSelect_TaxFromTaxCorrective ((SELECT MLM.MovementChildId
                                                        FROM MovementLinkMovement AS MLM
                                                        WHERE MLM.MovementId = inMovementId 
@@ -432,6 +435,7 @@ BEGIN
                             ELSE Object_Goods.ValueData
                        END
              END :: TVarChar                             AS GoodsName
+           , COALESCE (tmpMITax1.GoodsName_its, tmpMITax2.GoodsName_its) :: TVarChar AS GoodsName_its
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData                    AS MeasureName
 

@@ -3,13 +3,13 @@ unit dsdTranslator;
 interface
 
 uses
-  Windows, Messages, Forms, ActnList, Controls, Classes, DB, DBClient, dsdDataSetDataLink;
+  Windows, Messages, Forms, ActnList, Controls, Classes, dsdCommon, DB, DBClient, dsdDataSetDataLink;
 
 type
 
   TdsdTranslator  = class;
 
-  TdsdTranslator  = class(TComponent)
+  TdsdTranslator  = class(TdsdComponent)
   private
   protected
     FOnFormKeyDown : TKeyEvent;

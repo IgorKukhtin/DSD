@@ -4,10 +4,11 @@ unit Document;
 
 interface
 
-uses Classes, dsdDB, dsdAction {$IFDEF DELPHI103RIO}, Actions {$ENDIF};
+uses VCL.Forms, VCL.Controls, System.Classes, dsdCommon, dsdDB, dsdAction
+     {$IFDEF DELPHI103RIO}, System.Actions {$ENDIF};
 
 type
-  TDocument = class(TComponent)
+  TDocument = class(TdsdComponent)
   private
     FFileName: string;
     FisOpen: boolean;
@@ -64,8 +65,8 @@ type
 
 implementation
 
-uses Dialogs, UnilWin, ZLibEx, FormStorage, VCL.ActnList, SysUtils, ShellApi,
-     Forms, Windows;
+uses VCL.Dialogs, UnilWin, ZLibEx, FormStorage, VCL.ActnList, System.SysUtils,
+     Winapi.Windows, Winapi.ShellApi;
 
 
 procedure Register;
@@ -74,9 +75,6 @@ begin
    RegisterActions('DSDLib', [TDocumentOpenAction], TDocumentOpenAction);
    RegisterActions('DSDLib', [TDocumentSaveAction], TDocumentSaveAction);
 end;
-
-
-
 
 procedure GetEnvironmentStrings(ss: TStrings);
 {Переменные среды}
@@ -88,7 +86,7 @@ begin
   ss.Clear;
   s:='';
   Done:=FALSE;
-  ptr:=windows.GetEnvironmentStrings;
+  ptr:=Winapi.windows.GetEnvironmentStrings;
   while Done=false do begin
     if ptr^=#0 then begin
       inc(ptr);
@@ -270,9 +268,7 @@ begin
 end;
 
 initialization
-  Classes.RegisterClass(TDocument);
-  Classes.RegisterClass(TDocumentOpenAction);
-  Classes.RegisterClass(TDocumentSaveAction);
+  RegisterClasses([TDocument, TDocumentOpenAction, TDocumentSaveAction]);
   EnvironmentStrings := TStringList.Create;
   GetEnvironmentStrings(EnvironmentStrings);
 

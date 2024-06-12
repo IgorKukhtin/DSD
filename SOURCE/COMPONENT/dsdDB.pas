@@ -2,7 +2,7 @@ unit dsdDB;
 
 interface
 
-uses Classes, DBClient, DB;
+uses Classes, Vcl.Controls, dsdCommon, DBClient, DB;
 
 type
   TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob, otMultiExecute);
@@ -61,7 +61,7 @@ type
     property Items[Index: Integer]: TdsdParam read GetItem write SetItem; default;
   end;
 
-  TdsdFormParams = class (TComponent)
+  TdsdFormParams = class (TdsdComponent)
   private
     FParams: TdsdParams;
   protected
@@ -95,7 +95,7 @@ type
     property Items[Index: Integer]: TdsdDataSetLink read GetItem write SetItem; default;
   end;
 
-  TdsdStoredProc = class (TComponent)
+  TdsdStoredProc = class (TdsdComponent)
   private
     FDataSets: TdsdDataSets;
     FParams: TdsdParams;
@@ -213,7 +213,7 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, System.SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
+     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document,
      cxButtonEdit, EDI, ExternalSave, Medoc, UnilWin, FormStorage, cxDateNavigator,
      cxMemo, cxImage, cxDropDownEdit, cxMaskEdit, dsdInternetAction, ParentForm,
      Vcl.ActnList, System.Rtti, Log, StorageSQLite, cxDBEdit;
