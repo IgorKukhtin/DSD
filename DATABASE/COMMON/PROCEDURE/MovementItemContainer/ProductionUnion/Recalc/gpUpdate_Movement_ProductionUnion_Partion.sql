@@ -22,6 +22,7 @@ BEGIN
 
     --
     IF 1=1 -- EXTRACT (MONTH FROM inStartDate) IN (2)
+       AND inFromId = 8447
     THEN
         -- пересчет Рецептур, временно захардкодил
         PERFORM lpUpdate_Object_Receipt_Total (Object.Id, zfCalc_UserAdmin() :: Integer) FROM Object WHERE DescId = zc_Object_Receipt();
