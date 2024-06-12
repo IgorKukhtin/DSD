@@ -105,7 +105,8 @@ BEGIN
             PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
             FROM (-- поменяли признак
                   SELECT MovementItem.Id AS MovementItemId
-                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                     -- теперь не надо???
+                     --, lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
                   FROM MovementItem
                   WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
                  ) AS tmp
@@ -127,7 +128,8 @@ BEGIN
             PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
             FROM (-- поменяли признак
                   SELECT MovementItem.Id AS MovementItemId
-                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                     -- теперь не надо???
+                     --, lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
                   FROM MovementItem
                   WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
                  ) AS tmp
@@ -149,7 +151,8 @@ BEGIN
             PERFORM lpInsert_MovementItemProtocol (tmp.MovementItemId, vbUserId, FALSE)
             FROM (-- поменяли признак
                   SELECT MovementItem.Id AS MovementItemId
-                       , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
+                     -- теперь не надо???
+                     --, lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), MovementItem.Id, TRUE) 
                   FROM MovementItem
                   WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
                  ) AS tmp
@@ -202,6 +205,9 @@ BEGIN
                 THEN
                     -- сохранили - AmountNext
                     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext(), inId, inAmount - COALESCE (inAmountTwo, 0));
+                    -- сохранили - будет расчет
+                    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), inId, TRUE) ;
+
                 END IF;
 
             ELSEIF inNumber = 4
@@ -210,6 +216,9 @@ BEGIN
                 THEN
                     -- сохранили - AmountNextSecond
                     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNextSecond(), inId, inAmount - COALESCE (inAmountTwo, 0));
+                    -- сохранили - будет расчет
+                    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), inId, TRUE) ;
+
                 END IF;
 
             ELSE
