@@ -25,7 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 81
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -386,7 +385,6 @@ object StickerForm: TStickerForm
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitTop = 384
   end
   object cxRightSplitter: TcxSplitter
     Left = 930
@@ -394,8 +392,6 @@ object StickerForm: TStickerForm
     Width = 4
     Height = 170
     AlignSplitter = salRight
-    ExplicitTop = 389
-    ExplicitHeight = 194
   end
   object Panel: TPanel
     Left = 0
@@ -405,8 +401,6 @@ object StickerForm: TStickerForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitTop = 389
-    ExplicitHeight = 194
     object cxGridProperty: TcxGrid
       Left = 5
       Top = 0
@@ -417,7 +411,6 @@ object StickerForm: TStickerForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitHeight = 194
       object cxGridDBTableViewProperty: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DSProperty
@@ -618,6 +611,22 @@ object StickerForm: TStickerForm
           HeaderAlignmentVert = vaCenter
           Width = 70
         end
+        object Value5_orig: TcxGridDBColumn
+          Caption = '***'#1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
+          DataBinding.FieldName = 'Value5_orig'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object NormInDays_gk: TcxGridDBColumn
+          Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093
+          DataBinding.FieldName = 'NormInDays_gk'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 55
+        end
         object colValue6: TcxGridDBColumn
           Caption = #1042#1077#1089
           DataBinding.FieldName = 'Value6'
@@ -708,7 +717,6 @@ object StickerForm: TStickerForm
       Width = 5
       Height = 170
       Control = cxGridProperty
-      ExplicitHeight = 194
     end
   end
   object Panel1: TPanel
@@ -718,7 +726,6 @@ object StickerForm: TStickerForm
     Height = 79
     Align = alTop
     TabOrder = 5
-    ExplicitTop = -2
     object deDateStart: TcxDateEdit
       Left = 68
       Top = 30
@@ -2498,6 +2505,7 @@ object StickerForm: TStickerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 648
     Top = 256
@@ -2972,6 +2980,7 @@ object StickerForm: TStickerForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 432
     Top = 392

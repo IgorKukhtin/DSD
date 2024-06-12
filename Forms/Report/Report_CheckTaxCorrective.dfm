@@ -4,7 +4,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1006
-  ExplicitHeight = 357
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,6 +124,22 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object InvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object InvNumberPartner_Tax: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
           object OperDate_Tax: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
@@ -357,11 +373,11 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
     Width = 990
     ExplicitWidth = 990
     inherited deStart: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 45292d
       Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41640d
+      EditValue = 45292d
       Properties.SaveTime = False
     end
     object cxLabel3: TcxLabel
