@@ -35,6 +35,7 @@ BEGIN
                                     , PartionGoodsId Integer
                                     , isAsset_master Boolean
                                     , ObjectDescId Integer
+                                    , OperCount_start TFloat
                                      ) ON COMMIT DROP;
      -- таблица - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;

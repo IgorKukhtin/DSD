@@ -53,6 +53,8 @@ type
     isDate_Err: TcxGridDBColumn;
     OperDate_TaxCorrective: TcxGridDBColumn;
     OperDate_Tax: TcxGridDBColumn;
+    InvNumber_Tax: TcxGridDBColumn;
+    InvNumberPartner_Tax: TcxGridDBColumn;
   private
     { Private declarations }
   public

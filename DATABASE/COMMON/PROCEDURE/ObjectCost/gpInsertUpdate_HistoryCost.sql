@@ -1485,7 +1485,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
             -- Розподільчий комплекс
             WHERE _tmpMaster.UnitId = zc_Unit_RK()
             --AND inStartDate       >= lfGet_Object_Unit_PartionDate_isPartionCell()
-              AND inStartDate       >= '01.05.2024'
+              AND inStartDate       >= '01.06.2024'
             GROUP BY CLO_Goods.ObjectId
                    , COALESCE (CLO_GoodsKind.ObjectId, 0)
                    , COALESCE (CLO_InfoMoney.ObjectId, 0)
@@ -1497,6 +1497,38 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
          -- Сохраняем что насчитали - !!!кроме всех Филиалов!!!
          INSERT INTO HistoryCost (ContainerId, StartDate, EndDate, Price, Price_external, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm, CalcCount_external, CalcSumm_external, OutCount, OutSumm, MovementItemId_diff, Summ_diff)
+            WITH tmpChild_find AS (SELECT DISTINCT tmpContainer_count.ContainerId
+                                   FROM tmpContainer_count
+                                        INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                       ON CLO_Unit.ContainerId = tmpContainer_count.ContainerId
+                                                                      AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                      AND CLO_Unit.ObjectId    = zc_Unit_RK()
+                                        INNER JOIN MovementItemContainer AS MIContainer_Count
+                                                                         ON MIContainer_Count.OperDate BETWEEN inStartDate AND inEndDate
+                                                                        AND MIContainer_Count.ContainerId  = tmpContainer_count.ContainerId
+                                                                        AND MIContainer_Count.DescId       = zc_MIContainer_Count()
+                                                                      --AND MIContainer_Count.isActive     = TRUE
+                                  )
+
+          , tmpMaster_find AS (SELECT DISTINCT _tmpMaster.ContainerId FROM _tmpMaster
+                                   UNION
+                                    SELECT DISTINCT _tmpChild.ContainerId FROM _tmpChild
+                                   UNION
+                                    SELECT DISTINCT Container.Id
+                                    FROM _tmpChild
+                                         JOIN Container ON Container.ParentId = _tmpChild.ContainerId_Count
+                                                       AND Container.DescId   = zc_Container_Summ()
+                                   UNION
+                                    SELECT DISTINCT Container.Id
+                                    FROM _tmpChild
+                                         JOIN Container ON Container.ParentId = _tmpChild.MasterContainerId_Count
+                                                       AND Container.DescId   = zc_Container_Summ()
+                                   UNION
+                                    SELECT DISTINCT Container.Id
+                                    FROM tmpChild_find
+                                         JOIN Container ON Container.ParentId = tmpChild_find.ContainerId
+                                                       AND Container.DescId   = zc_Container_Summ()
+                                   )
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate
                  , DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
                  , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
@@ -1526,7 +1558,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  -- LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
             WHERE (_tmpMaster.UnitId <> zc_Unit_RK()
               --OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
-                OR inStartDate       < '01.05.2024'
+                OR inStartDate       < '01.06.2024'
                   )
 /*(((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm)          <> 0)
                 OR ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm_external) <> 0)
@@ -1583,9 +1615,9 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
                  JOIN Container ON Container.ObjectId = _tmpMaster.AccountId
                                AND Container.DescId   = zc_Container_Summ()
-                 JOIN (SELECT DISTINCT _tmpMaster.ContainerId FROM _tmpMaster
-                      ) AS _tmpMaster_find
-                        ON _tmpMaster_find.ContainerId = Container.Id
+
+                 -- !!!ограничение!!!
+                 JOIN tmpMaster_find ON tmpMaster_find.ContainerId = Container.Id
 
                  INNER JOIN ContainerLinkObject AS CLO_Goods
                                                 ON CLO_Goods.ContainerId = Container.Id
@@ -1611,7 +1643,7 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
               AND _tmpMaster.InfoMoneyId_Detail = COALESCE (CLO_InfoMoneyDetail.ObjectId, 0)
               -- !!!
               -- AND inStartDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
-              AND inStartDate    >= '01.05.2024'
+              AND inStartDate    >= '01.06.2024'
              ;
 
      END IF;

@@ -156,6 +156,9 @@ type
     InsertProperty: TdsdInsertUpdateAction;
     spSelectPrintJPG: TdsdStoredProc;
     spSelectPrintJPGLen: TdsdStoredProc;
+    Value5_SP_orig: TcxGridDBColumn;
+    NormInDays_gk: TcxGridDBColumn;
+    isDiff_NormInDays_gk: TcxGridDBColumn;
 
   private
     { Private declarations }

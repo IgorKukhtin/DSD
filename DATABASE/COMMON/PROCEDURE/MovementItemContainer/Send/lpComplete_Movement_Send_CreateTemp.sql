@@ -28,6 +28,7 @@ BEGIN
                                , PartionGoodsId_From Integer, PartionGoodsId_To Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, BusinessId_ProfitLoss Integer
                                , PartNumber TVarChar, PartionModelId Integer, isAsset Boolean
+                               , OperCount_start TFloat
                                 ) ON COMMIT DROP;
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem_PartionCell'))

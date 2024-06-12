@@ -14,7 +14,7 @@ $BODY$
 BEGIN
      vbAccountDirectionId :=
        (SELECT
-              ObjectLink_Unit_AccountDirection.ChildObjectId
+              COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, ObjectLink_Unit_AccountDirection_two.ChildObjectId)
         FROM Object AS Object_Unit
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent8
                                   ON ObjectLink_Unit_Parent8.ObjectId = Object_Unit.Id
@@ -72,11 +72,18 @@ BEGIN
                                                                                         WHEN ObjectLink_Unit_Parent0.ChildObjectId IS NULL
                                                                                             THEN ObjectLink_Unit_Parent1.ChildObjectId
 
+                                                                                        ELSE Object_Unit.Id
+
                                                                                    END
                                 AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection_two
+                                 ON ObjectLink_Unit_AccountDirection_two.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_AccountDirection_two.DescId = zc_ObjectLink_Unit_AccountDirection()
+
         WHERE Object_Unit.DescId = zc_Object_Unit()
-          AND Object_Unit.Id = inUnitId);
+          AND Object_Unit.Id     = inUnitId
+       );
 
      RETURN QUERY 
         SELECT inUnitId AS UnitId

@@ -130,6 +130,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 AS
 $BODY$
  DECLARE vbUserId Integer;
+ DECLARE curPartionCell refcursor;
+ DECLARE vbPartionCellId Integer;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
@@ -876,6 +878,45 @@ BEGIN
         ; 
 
     ELSE
+
+     --
+     CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+
+     --
+     OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() ORDER BY Object.Id;
+     -- начало цикла по курсору
+     LOOP
+          -- данные
+          FETCH curPartionCell INTO vbPartionCellId;
+          -- если данных нет, то мы выходим
+          IF NOT FOUND THEN
+             EXIT;
+          END IF;
+
+          --
+          INSERT INTO _tmpPartionCell (MovementItemId, DescId, ObjectId)
+             WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
+             SELECT tmpMILO.MovementItemId, tmpMILO.DescId, tmpMILO.ObjectId
+             FROM tmpMILO
+             WHERE tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
+                                    , zc_MILinkObject_PartionCell_2()
+                                    , zc_MILinkObject_PartionCell_3()
+                                    , zc_MILinkObject_PartionCell_4()
+                                    , zc_MILinkObject_PartionCell_5()
+                                    , zc_MILinkObject_PartionCell_6()
+                                    , zc_MILinkObject_PartionCell_7()
+                                    , zc_MILinkObject_PartionCell_8()
+                                    , zc_MILinkObject_PartionCell_9()
+                                    , zc_MILinkObject_PartionCell_10()
+                                    , zc_MILinkObject_PartionCell_11()
+                                    , zc_MILinkObject_PartionCell_12()
+                                     )
+            ;
+          --
+     END LOOP; -- финиш цикла по курсору
+     CLOSE curPartionCell; -- закрыли курсор
+
+
      -- –езультат
      RETURN QUERY
      WITH
@@ -925,24 +966,10 @@ BEGIN
                              JOIN tmpGoods ON tmpGoods.GoodsId = Object_GoodsByGoodsKind_View.GoodsId
                         WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
                        )
-      --выбираем все не пустые дески
-     , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
-                      FROM MovementItemLinkObject
-                      WHERE MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                            , zc_MILinkObject_PartionCell_2()
-                                                            , zc_MILinkObject_PartionCell_3()
-                                                            , zc_MILinkObject_PartionCell_4()
-                                                            , zc_MILinkObject_PartionCell_5()
-                                                            , zc_MILinkObject_PartionCell_6()
-                                                            , zc_MILinkObject_PartionCell_7()
-                                                            , zc_MILinkObject_PartionCell_8()
-                                                            , zc_MILinkObject_PartionCell_9()
-                                                            , zc_MILinkObject_PartionCell_10()
-                                                            , zc_MILinkObject_PartionCell_11()
-                                                            , zc_MILinkObject_PartionCell_12()
-                                                             )
-                        -- “олько заполненные €чейки
-                        AND COALESCE (MovementItemLinkObject.ObjectId,0) > 0
+      -- выбираем заполненные €чейки
+     , tmpMILO_PC AS (SELECT _tmpPartionCell.*
+                      FROM _tmpPartionCell
+                      WHERE _tmpPartionCell.ObjectId > 0
                      )
     , tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
                      , MovementItem.MovementId AS MovementId

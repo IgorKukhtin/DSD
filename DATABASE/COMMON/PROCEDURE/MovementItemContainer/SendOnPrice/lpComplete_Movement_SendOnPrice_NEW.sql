@@ -179,9 +179,9 @@ BEGIN
      vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
                          OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_From = zc_Unit_RK()
-                         AND vbOperDate >= '01.05.2024'
+                         AND vbOperDate >= '01.06.2024'
                             )
-                         OR (vbOperDate >= '01.05.2024'
+                         OR (vbOperDate >= '01.06.2024'
                          AND vbUnitId_From = zc_Unit_RK()
                             )
                            ;
@@ -471,6 +471,8 @@ BEGIN
                                               )
                                           --!!!
                                           AND tmp_list_2.ContainerId IS NULL
+                                          --!!!не пустая пратия!!!
+                                          AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
                                        )                      
 
                              -- !!! - 03 - учет - партии по датам + ячейки
@@ -522,6 +524,8 @@ BEGIN
                                               )
                                           --!!!
                                           AND tmp_list_2.ContainerId IS NULL
+                                          --!!!не пустая пратия!!!
+                                          AND COALESCE (CLO_PartionGoods.ObjectId, -1) NOT IN (80132, 0)
                                        )                      
   -- будет подбор партий
 , tmpContainer_all AS (SELECT tmpMI.GoodsId
@@ -673,6 +677,7 @@ BEGIN
                             FROM tmpMI_group
                                  LEFT JOIN tmpContainer_group ON tmpContainer_group.GoodsId     = tmpMI_group.GoodsId
                                                              AND tmpContainer_group.GoodsKindId = tmpMI_group.GoodsKindId
+                                                           -- !!!убрал, будет пропорция!!!
                                                            --AND tmpMI_group.AmountSUM > tmpContainer_group.Amount_min AND tmpMI_group.AmountSUM <= tmpContainer_group.Amount_max
                                  LEFT JOIN tmpMI_summ ON tmpMI_summ.GoodsId     = tmpMI_group.GoodsId
                                                      AND tmpMI_summ.GoodsKindId = tmpMI_group.GoodsKindId

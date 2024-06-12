@@ -557,6 +557,29 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object Value5_SP_orig: TcxGridDBColumn
+        DataBinding.FieldName = 'Value5_SP_orig'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object NormInDays_gk: TcxGridDBColumn
+        Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093
+        DataBinding.FieldName = 'NormInDays_gk'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object isDiff_NormInDays_gk: TcxGridDBColumn
+        Caption = '***'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093' ('#1088#1072#1079#1085#1080#1094#1072')'
+        DataBinding.FieldName = 'isDiff_NormInDays_gk'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object prValue6_SP: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Value6_SP'
@@ -2308,6 +2331,7 @@ object Sticker_ListForm: TSticker_ListForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 648
     Top = 256

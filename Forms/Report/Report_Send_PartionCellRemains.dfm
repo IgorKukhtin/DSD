@@ -985,7 +985,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     object actOpenFormPartionCell: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1055#1086#1089#1084#1086#1090#1088#1077#1090#1100' '#1089#1074#1086#1073#1086#1076#1085#1099#1077' '#1103#1095#1077#1081#1082#1080
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1086' '#1103#1095#1077#1081#1082#1072#1084
       ImageIndex = 25
       FormName = 'TPartionCellChoiceAllForm'
       FormNameParam.Value = 'TPartionCellChoiceAllForm'

@@ -195,6 +195,8 @@ type
     cxLabel7: TcxLabel;
     spGet_Params: TdsdStoredProc;
     actGet_Params: TdsdExecStoredProc;
+    Value5_orig: TcxGridDBColumn;
+    NormInDays_gk: TcxGridDBColumn;
 
   private
     { Private declarations }
