@@ -20,12 +20,33 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS GoodsByGoodsKindId
+                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                         , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                         , ObjectFloat_GK_NormInDays.ValueData                 AS NormInDays_gk
+                                    FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                                 ON ObjectBoolean_Order.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                              --AND ObjectBoolean_Order.ValueData = TRUE
+                                         INNER JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                                ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                                               AND ObjectFloat_GK_NormInDays.ValueData <> 0
+                                    WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                      AND 1=0
+                                   )
        SELECT DISTINCT
               ObjectFloat_Value1.ValueData       AS Value1
             , ObjectFloat_Value2.ValueData       AS Value2
             , ObjectFloat_Value3.ValueData       AS Value3
             , ObjectFloat_Value4.ValueData       AS Value4
-            , ObjectFloat_Value5.ValueData       AS Value5
+              -- Кількість діб -> ***срок в днях
+            , CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE ObjectFloat_Value5.ValueData END :: TFloat AS Value5
+              -- 
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
             , ObjectFloat_Value8.ValueData       AS Value8
@@ -80,6 +101,19 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value11
                                    ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id 
                                   AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
+
+              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                  AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+             LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                  ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                 AND ObjectLink_Sticker_Goods.DescId = zc_ObjectLink_Sticker_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
+                                  ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
+                                 AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
+
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = ObjectLink_Sticker_Goods.ChildObjectId
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = ObjectLink_StickerProperty_GoodsKind.ChildObjectId
 
        WHERE Object_StickerProperty.DescId = zc_Object_StickerProperty()
          AND Object_StickerProperty.isErased = FALSE

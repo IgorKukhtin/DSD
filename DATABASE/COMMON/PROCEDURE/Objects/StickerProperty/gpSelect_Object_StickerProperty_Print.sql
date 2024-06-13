@@ -7,6 +7,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Boolean,
 --DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_StickerProperty_Print (Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TVarChar);
 
+-- DROP FUNCTION gpselect_object_stickerproperty_print(integer, integer, boolean, boolean, boolean, boolean, boolean, boolean, boolean, tdatetime, tdatetime, tdatetime, tdatetime, tfloat, tfloat, tvarchar);
+-- DROP FUNCTION gpselect_object_stickerproperty_print(integer, boolean, boolean, boolean, boolean, boolean, boolean, tdatetime, tdatetime, tdatetime, tdatetime, tfloat, tfloat, tvarchar);
+-- DROP FUNCTION gpselect_object_stickerproperty_print(integer, integer, boolean, boolean, boolean, boolean, boolean, boolean, boolean, tdatetime, tdatetime, tdatetime, tdatetime, tfloat, tfloat, tvarchar);
+
 CREATE OR REPLACE FUNCTION gpSelect_Object_StickerProperty_Print(
     IN inObjectId          Integer  , -- ключ Этикетки
     IN inRetailId          Integer  , -- ключ
@@ -447,6 +451,25 @@ BEGIN
                             WHERE ObjectLink_StickerFile_Language.ObjectId = vbStickerFileId
                               AND ObjectLink_StickerFile_Language.DescId = zc_ObjectLink_StickerFile_Language()
                            )
+          , tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS GoodsByGoodsKindId
+                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                         , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                         , ObjectFloat_GK_NormInDays.ValueData                 AS NormInDays_gk
+                                    FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                                 ON ObjectBoolean_Order.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                              --AND ObjectBoolean_Order.ValueData = TRUE
+                                         INNER JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                                ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                                               AND ObjectFloat_GK_NormInDays.ValueData <> 0
+                                    WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                      AND 1=0
+                                   )
 
        SELECT Object_StickerProperty.Id          AS Id
             , Object_StickerProperty.ObjectCode  AS Code
@@ -484,7 +507,9 @@ BEGIN
             , ObjectFloat_Value2.ValueData       AS Value2
             , ObjectFloat_Value3.ValueData       AS Value3
             , ObjectFloat_Value4.ValueData       AS Value4
-            , ObjectFloat_Value5.ValueData       AS Value5
+            --, ObjectFloat_Value5.ValueData       AS Value5
+              -- Кількість діб -> ***срок в днях
+            , CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END ::TFloat AS Value5
               -- вес
             , CASE WHEN inIs70_70 = TRUE AND tmpObject_GoodsPropertyValue_calc.MeasureId <> zc_Measure_Sh()
                         THEN inWeight
@@ -667,19 +692,21 @@ BEGIN
 
                               || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
                               || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
-                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END
+                                                                                          ) || tmpLanguageParam.Value14 ||'. '
 
                                  ELSE
 
                                  tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
                               || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
                                 'та відносної вологості повітря не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% '
-                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END
+                                                                                          ) || tmpLanguageParam.Value14 ||'. '
 
                                  END
 --                            || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
 --                            || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
---                            || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+--                            || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END) || tmpLanguageParam.Value14 ||'. '
 
                               -- 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
                               -- білки не менше + жири не більше + кКал + кДж
@@ -768,7 +795,8 @@ BEGIN
             , (inIsGoodsName AND inIsTare = TRUE)  :: Boolean   AS isGoodsName
 
             , inDateStart                                                          :: TDateTime AS DateStart
-            , (inDateStart + (ObjectFloat_Value5.ValueData ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
+            , (inDateStart + (CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE COALESCE (ObjectFloat_Value5.ValueData, 0) END :: TVarChar
+                           ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
              -- вложенность
             , CASE WHEN ObjectFloat_Value11.ValueData <> 0 THEN 'Кількість в упаковці ' || zfConvert_FloatToString (ObjectFloat_Value11.ValueData) || ' штук' ELSE '' END :: TVarChar AS StickerProperty_Value11
 
@@ -942,6 +970,9 @@ BEGIN
              LEFT JOIN ObjectFloat AS Sticker_Value8
                                    ON Sticker_Value8.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                   AND Sticker_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
+
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = Object_Goods.Id
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id
 
           WHERE Object_StickerProperty.Id = inObjectId
             AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
