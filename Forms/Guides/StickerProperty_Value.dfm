@@ -25,6 +25,8 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -4
+    ExplicitTop = 37
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -271,6 +273,14 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_NormInDays_not'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -377,6 +387,10 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     end
     object bbUpdate_CK: TdxBarButton
       Action = actUpdate_CK
+      Category = 0
+    end
+    object bbUpdate_NormInDays_not: TdxBarButton
+      Action = actUpdate_NormInDays_not
       Category = 0
     end
   end
@@ -571,6 +585,19 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdate_NormInDays_not: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NormInDays_not
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NormInDays_not
+        end>
+      Caption = 'actUpdateDataSet'
+      ImageIndex = 77
+      DataSource = DataSource
+    end
     object actUpdate_CK: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -643,6 +670,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 400
     Top = 248
@@ -717,5 +745,39 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
     PackSize = 1
     Left = 619
     Top = 158
+  end
+  object spUpdate_NormInDays_not: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_StickerProperty_NormInDays_not'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNormInDays_not'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNormInDays_not'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNormInDays_not'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isNormInDays_not'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 483
+    Top = 174
   end
 end

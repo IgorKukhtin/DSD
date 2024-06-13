@@ -9,6 +9,7 @@ RETURNS TABLE (Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat
              , Value5 TFloat, Value6 TFloat, Value7 TFloat
              , Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , Id Integer, Name TVarChar
+             , isCK Boolean, isNormInDays_not Boolean
               )
 AS
 $BODY$
@@ -57,6 +58,8 @@ BEGIN
             , 0               AS Id
             , '' :: TVarChar  AS Name
 
+            , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+            , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
        FROM Object AS Object_StickerProperty
             LEFT JOIN ObjectFloat AS ObjectFloat_Value1
                                   ON ObjectFloat_Value1.ObjectId = Object_StickerProperty.Id 
@@ -115,6 +118,14 @@ BEGIN
              LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = ObjectLink_Sticker_Goods.ChildObjectId
                                           AND tmpGoodsByGoodsKind.GoodsKindId = ObjectLink_StickerProperty_GoodsKind.ChildObjectId
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_CK
+                                     ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
+                                    AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                     ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                    AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+
        WHERE Object_StickerProperty.DescId = zc_Object_StickerProperty()
          AND Object_StickerProperty.isErased = FALSE
       ;
@@ -127,6 +138,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.06.24         *
  25.10.17         *
 */
 
