@@ -39,12 +39,19 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , StickerSkinName_SP    TVarChar
              , BarCode_SP            TVarChar
              , isFix_SP              Boolean
-             , isCK_SP               Boolean
+             , isCK_SP               Boolean  
+             , isNormInDays_not_SP      Boolean
+             
              , Value1_SP             TFloat
              , Value2_SP             TFloat
              , Value3_SP             TFloat
              , Value4_SP             TFloat
+               -- Кількість діб -> ***срок в днях
              , Value5_SP             TFloat
+             , Value5_SP_orig        TFloat
+             , NormInDays_gk         TFloat
+             , isDiff_NormInDays_gk  Boolean
+               --
              , Value6_SP             TFloat
              , Value7_SP             TFloat
              , Value8_SP             TFloat
@@ -265,6 +272,7 @@ BEGIN
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
                                         , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+                                        , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -273,7 +281,11 @@ BEGIN
                                         , ObjectFloat_Value5.ValueData       AS Value5
                                         , ObjectFloat_Value6.ValueData       AS Value6
                                         , ObjectFloat_Value7.ValueData       AS Value7
-                            
+                                        , ObjectFloat_Value8.ValueData       AS Value8
+                                        , ObjectFloat_Value9.ValueData       AS Value9
+                                        , ObjectFloat_Value10.ValueData      AS Value10
+                                        , ObjectFloat_Value11.ValueData      AS Value11
+
                                         , Object_StickerProperty.isErased    AS isErased
                             
                                    FROM (SELECT Object_StickerProperty.*
@@ -366,6 +378,10 @@ BEGIN
                                                                  ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                                                 ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -380,7 +396,26 @@ BEGIN
                                                              AND ObjectLink_StickerFile_TradeMark_70_70.DescId = zc_ObjectLink_StickerFile_TradeMark()
                                          LEFT JOIN Object AS Object_TradeMark_StickerFile_70_70 ON Object_TradeMark_StickerFile_70_70.Id = ObjectLink_StickerFile_TradeMark_70_70.ChildObjectId
                                    ) 
-                                   
+          , tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS GoodsByGoodsKindId
+                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                         , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                         , ObjectFloat_GK_NormInDays.ValueData                 AS NormInDays_gk
+                                    FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                                 ON ObjectBoolean_Order.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                              --AND ObjectBoolean_Order.ValueData = TRUE
+                                         INNER JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                                ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                                               AND ObjectFloat_GK_NormInDays.ValueData <> 0
+                                    WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                   )
+
+
        -- Результат
        SELECT COALESCE (Object_Sticker.Id, 0)       :: Integer   AS Id
             , COALESCE (Object_Sticker.Code, 0)     :: Integer   AS Code
@@ -453,12 +488,18 @@ BEGIN
             , Object_StickerProperty.StickerSkinName
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
-            , Object_StickerProperty.isCK
+            , Object_StickerProperty.isCK 
+            , Object_StickerProperty.isNormInDays_not 
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
             , Object_StickerProperty.Value4   AS Value4_SP
-            , Object_StickerProperty.Value5   AS Value5_SP
+              -- Кількість діб -> ***срок в днях
+            , CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE Object_StickerProperty.Value5 END :: TFloat AS Value5_SP
+            , Object_StickerProperty.Value5               AS Value5_SP_orig
+            , tmpGoodsByGoodsKind.NormInDays_gk :: TFloat AS NormInDays_gk
+            , CASE WHEN COALESCE (tmpGoodsByGoodsKind.NormInDays_gk, 0) <> COALESCE (Object_StickerProperty.Value5, 0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff_NormInDays_gk
+              --
             , Object_StickerProperty.Value6   AS Value6_SP
             , Object_StickerProperty.Value7   AS Value7_SP
             , Object_StickerProperty.Value8   AS Value8_SP
@@ -482,6 +523,9 @@ BEGIN
              LEFT JOIN tmpStickerFile ON tmpStickerFile.TradeMarkId = ObjectLink_Goods_TradeMark.ChildObjectId
              -- свойства этикетки
              LEFT JOIN tmpStickerProperty AS Object_StickerProperty ON Object_StickerProperty.StickerId = Object_Sticker.Id
+
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = Object_Goods.Id
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = Object_StickerProperty.GoodsKindId
              
       ;
     ELSE
@@ -691,6 +735,7 @@ BEGIN
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
                                         , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+                                        , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -797,6 +842,10 @@ BEGIN
                                                                  ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                                                 ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -812,7 +861,25 @@ BEGIN
                                          LEFT JOIN Object AS Object_TradeMark_StickerFile_70_70 ON Object_TradeMark_StickerFile_70_70.Id = ObjectLink_StickerFile_TradeMark_70_70.ChildObjectId
 
                                    )                    
-                           
+          , tmpGoodsByGoodsKind AS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId          AS GoodsByGoodsKindId
+                                         , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId     AS GoodsId
+                                         , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId
+                                         , ObjectFloat_GK_NormInDays.ValueData                 AS NormInDays_gk
+                                    FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                         JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                                 ON ObjectBoolean_Order.ObjectId  = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                              --AND ObjectBoolean_Order.ValueData = TRUE
+                                         INNER JOIN ObjectFloat AS ObjectFloat_GK_NormInDays
+                                                                ON ObjectFloat_GK_NormInDays.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectFloat_GK_NormInDays.DescId   = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+                                                               AND ObjectFloat_GK_NormInDays.ValueData <> 0
+                                    WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                   )
+       -- Результат
        SELECT Object_Sticker.Id
             , Object_Sticker.Code
             , Object_Sticker.Comment
@@ -873,11 +940,17 @@ BEGIN
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
             , Object_StickerProperty.isCK
+            , Object_StickerProperty.isNormInDays_not
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
             , Object_StickerProperty.Value4   AS Value4_SP
-            , Object_StickerProperty.Value5   AS Value5_SP
+              -- Кількість діб -> ***срок в днях
+            , CASE WHEN tmpGoodsByGoodsKind.NormInDays_gk > 0 THEN tmpGoodsByGoodsKind.NormInDays_gk ELSE Object_StickerProperty.Value5 END :: TFloat AS Value5_SP
+            , Object_StickerProperty.Value5               AS Value5_SP_orig
+            , tmpGoodsByGoodsKind.NormInDays_gk :: TFloat AS NormInDays_gk
+            , CASE WHEN COALESCE (tmpGoodsByGoodsKind.NormInDays_gk, 0) <> COALESCE (Object_StickerProperty.Value5, 0) THEN TRUE ELSE FALSE END :: Boolean AS isDiff_NormInDays_gk
+              --
             , Object_StickerProperty.Value6   AS Value6_SP
             , Object_StickerProperty.Value7   AS Value7_SP
             , Object_StickerProperty.Value8   AS Value8_SP
@@ -890,10 +963,13 @@ BEGIN
 
        FROM tmpSticker AS Object_Sticker
            LEFT JOIN tmpStickerProperty AS Object_StickerProperty ON Object_StickerProperty.StickerId = Object_Sticker.Id
+           LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId     = Object_Sticker.GoodsId
+                                        AND tmpGoodsByGoodsKind.GoodsKindId = Object_StickerProperty.GoodsKindId
      ;
     END IF;
   
 END;
+
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
@@ -901,6 +977,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.06.24         * isNormInDays_not
  01.09.23         *
  26.04.21         * isCK
  14.02.20         *

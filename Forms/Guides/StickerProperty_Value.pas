@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TStickerProperty_ValueForm = class(TParentForm)
@@ -68,6 +68,9 @@ type
     actUpdate_CK: TdsdUpdateDataSet;
     bbUpdate_CK: TdxBarButton;
     isCK: TcxGridDBColumn;
+    spUpdate_NormInDays_not: TdsdStoredProc;
+    actUpdate_NormInDays_not: TdsdUpdateDataSet;
+    bbUpdate_NormInDays_not: TdxBarButton;
 
   private
     { Private declarations }

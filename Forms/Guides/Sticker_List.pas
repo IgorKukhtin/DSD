@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue, ExternalLoad, dsdCommon;
 
 type
   TSticker_ListForm = class(TParentForm)
@@ -159,6 +159,7 @@ type
     Value5_SP_orig: TcxGridDBColumn;
     NormInDays_gk: TcxGridDBColumn;
     isDiff_NormInDays_gk: TcxGridDBColumn;
+    priisNormInDays_not_SP: TcxGridDBColumn;
 
   private
     { Private declarations }

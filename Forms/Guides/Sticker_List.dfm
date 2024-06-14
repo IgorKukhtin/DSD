@@ -468,6 +468,12 @@ object Sticker_ListForm: TSticker_ListForm
         Options.Editing = False
         Width = 62
       end
+      object priisNormInDays_not_SP: TcxGridDBColumn
+        Caption = #1053#1077' '#1080#1089#1087'. "'#1089#1088#1086#1082' '#1074' '#1076#1085'."'
+        DataBinding.FieldName = 'isNormInDays_not_SP'
+        HeaderHint = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1074'-'#1074#1086' "'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093'"'
+        Options.Editing = False
+      end
       object prStickerPackName_SP: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
         DataBinding.FieldName = 'StickerPackName_SP'
