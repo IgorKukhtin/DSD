@@ -357,6 +357,22 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 35
           end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object ReasonName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReasonName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
             DataBinding.FieldName = 'WeightTotal'
