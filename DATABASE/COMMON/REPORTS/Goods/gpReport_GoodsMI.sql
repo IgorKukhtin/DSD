@@ -659,6 +659,11 @@ BEGIN
                       LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                         AND inIsDate = TRUE
 
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                   ON MovementLinkObject_SubjectDoc.MovementId = MIContainer.MovementId
+                                                  AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                                  AND inDescId = zc_Movement_ReturnIn()
+
                       LEFT JOIN MovementItem ON MovementItem.ParentId = MIContainer.MovementItemId
                                             AND MovementItem.DescId   = zc_MI_Detail()
                                             AND MovementItem.isErased = FALSE  
@@ -671,7 +676,7 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
                                                        ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
                                                       AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
-                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
                  GROUP BY MIContainer.WhereObjectId_analyzer
                         -- , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
                         , MIContainer.ObjectId_analyzer

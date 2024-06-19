@@ -282,7 +282,12 @@ BEGIN
        , tmpMI_Reason AS (SELECT MovementItem.ParentId AS MovementItemId      --, STRING_AGG (DISTINCT Object_Reason.ValueData, '; ') ::TVarChar AS ReasonName
                                , STRING_AGG (DISTINCT Object_Reason.ValueData, '; ')     ::TVarChar AS ReasonName
                                , STRING_AGG (DISTINCT Object_SubjectDoc.ValueData, '; ') ::TVarChar AS SubjectDocName
-                          FROM MovementItem
+                          FROM MovementItem 
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                            ON MovementLinkObject_SubjectDoc.MovementId = MovementItem.MovementId
+                                                           AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                                           AND inDescId = zc_Movement_ReturnIn()
+
                                LEFT JOIN MovementItemLinkObject AS MILO_Reason
                                                                 ON MILO_Reason.MovementItemId = MovementItem.Id
                                                                AND MILO_Reason.DescId = zc_MILinkObject_Reason()
@@ -291,7 +296,8 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
                                                                 ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
                                                                AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
-                               LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MILO_SubjectDoc.ObjectId
+                               LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
+
                           WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
                             AND MovementItem.DescId   = zc_MI_Detail()
                             AND MovementItem.isErased = FALSE  
