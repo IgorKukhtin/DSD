@@ -659,6 +659,14 @@
             Options.Editing = False
             Width = 45
           end
+          object VATPercent: TcxGridDBColumn
+            Caption = '% '#1053#1044#1057
+            DataBinding.FieldName = 'VATPercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object Sale_Amount_Weight: TcxGridDBColumn
             Caption = #1055#1088#1086#1076', '#1074#1077#1089' ('#1089#1082#1083#1072#1076', '#1073#1077#1079' %'#1089#1082'.)'
             DataBinding.FieldName = 'Sale_Amount_Weight'
