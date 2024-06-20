@@ -522,6 +522,15 @@ object StickerForm: TStickerForm
           Options.Editing = False
           Width = 62
         end
+        object isNormInDays_not: TcxGridDBColumn
+          Caption = #1053#1077' '#1080#1089#1087'. "'#1089#1088#1086#1082' '#1074' '#1076#1085'."'
+          DataBinding.FieldName = 'isNormInDays_not'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1074'-'#1074#1086' "'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093'"'
+          Options.Editing = False
+          Width = 85
+        end
         object colStickerPackName: TcxGridDBColumn
           Caption = #1042#1080#1076' '#1087#1072#1082#1091#1074#1072#1085#1085#1103
           DataBinding.FieldName = 'StickerPackName'
@@ -1138,6 +1147,10 @@ object StickerForm: TStickerForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_SP_NormInDays_not'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1284,6 +1297,10 @@ object StickerForm: TStickerForm
     end
     object bbUpdate_StickerProperty_CK: TdxBarButton
       Action = actUpdate_StickerProperty_CK
+      Category = 0
+    end
+    object bbUpdate_SP_NormInDays_not: TdxBarButton
+      Action = actUpdate_SP_NormInDays_not
       Category = 0
     end
   end
@@ -2428,6 +2445,22 @@ object StickerForm: TStickerForm
       Hint = #1042#1099#1074#1086#1076#1080#1090#1100' '#1092#1088#1072#1079#1091' '#1076#1083#1103' '#1057'/'#1050'+'#1057'/'#1042' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 76
     end
+    object actUpdate_SP_NormInDays_not: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SP_NormInDays_not
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SP_NormInDays_not
+        end
+        item
+          StoredProc = spSelectProperty
+        end>
+      Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1074'-'#1074#1086' "'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093'"('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1074'-'#1074#1086' "'#1089#1088#1086#1082' '#1074' '#1076#1085#1103#1093'" ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 77
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Sticker'
@@ -2982,8 +3015,8 @@ object StickerForm: TStickerForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 432
-    Top = 392
+    Left = 360
+    Top = 376
   end
   object spErasedUnErasedProperty: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_StickerProperty'
@@ -3758,5 +3791,31 @@ object StickerForm: TStickerForm
     PackSize = 1
     Left = 776
     Top = 224
+  end
+  object spUpdate_SP_NormInDays_not: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_StickerProperty_NormInDays_not'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNormInDays_not'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'isNormInDays_not'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 315
+    Top = 526
   end
 end

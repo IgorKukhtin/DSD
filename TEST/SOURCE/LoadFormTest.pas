@@ -2907,11 +2907,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_TransferDebtDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtDialogForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DialogForm');
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
@@ -2921,13 +2922,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementAllForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDialogForm');
-  //exit;
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifDialogForm'));
@@ -4011,23 +4012,23 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerHeaderEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerHeaderEditForm');
    exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ListForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerForm');
-  exit;
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerEditForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
-   }
+  exit;
   //Property
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));

@@ -39,16 +39,18 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , StickerSkinName_SP    TVarChar
              , BarCode_SP            TVarChar
              , isFix_SP              Boolean
-             , isCK_SP               Boolean
+             , isCK_SP               Boolean  
+             , isNormInDays_not_SP      Boolean
+             
              , Value1_SP             TFloat
              , Value2_SP             TFloat
              , Value3_SP             TFloat
              , Value4_SP             TFloat
                --  ≥Î¸Í≥ÒÚ¸ ‰≥· -> ***ÒÓÍ ‚ ‰Ìˇı
              , Value5_SP             TFloat
-             , Value5_SP_orig
-             , NormInDays_gk
-             , isDiff_NormInDays_gk
+             , Value5_SP_orig        TFloat
+             , NormInDays_gk         TFloat
+             , isDiff_NormInDays_gk  Boolean
                --
              , Value6_SP             TFloat
              , Value7_SP             TFloat
@@ -270,6 +272,7 @@ BEGIN
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
                                         , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+                                        , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -375,6 +378,10 @@ BEGIN
                                                                  ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                                                 ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -407,6 +414,8 @@ BEGIN
                                                                AND ObjectFloat_GK_NormInDays.ValueData <> 0
                                     WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                                    )
+
+
        -- –ÂÁÛÎ¸Ú‡Ú
        SELECT COALESCE (Object_Sticker.Id, 0)       :: Integer   AS Id
             , COALESCE (Object_Sticker.Code, 0)     :: Integer   AS Code
@@ -479,7 +488,8 @@ BEGIN
             , Object_StickerProperty.StickerSkinName
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
-            , Object_StickerProperty.isCK
+            , Object_StickerProperty.isCK 
+            , Object_StickerProperty.isNormInDays_not 
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
@@ -725,6 +735,7 @@ BEGIN
                                         , ObjectString_BarCode.ValueData     AS BarCode
                                         , ObjectBoolean_Fix.ValueData        AS isFix
                                         , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+                                        , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
                             
                                         , ObjectFloat_Value1.ValueData       AS Value1
                                         , ObjectFloat_Value2.ValueData       AS Value2
@@ -831,6 +842,10 @@ BEGIN
                                                                  ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
+                                         LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                                                 ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                                                AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+
                                          LEFT JOIN ObjectString AS ObjectString_BarCode
                                                                 ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                                                AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -925,6 +940,7 @@ BEGIN
             , Object_StickerProperty.BarCode
             , Object_StickerProperty.isFix
             , Object_StickerProperty.isCK
+            , Object_StickerProperty.isNormInDays_not
             , Object_StickerProperty.Value1   AS Value1_SP
             , Object_StickerProperty.Value2   AS Value2_SP
             , Object_StickerProperty.Value3   AS Value3_SP
@@ -961,6 +977,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.06.24         * isNormInDays_not
  01.09.23         *
  26.04.21         * isCK
  14.02.20         *

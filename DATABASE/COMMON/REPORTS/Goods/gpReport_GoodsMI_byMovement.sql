@@ -42,6 +42,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar    
              , Price_onDate TFloat, Summ_onDate TFloat  
              , GoodsKindId_price Integer, GoodsKindName_price TVarChar
+             , ReasonName TVarChar, SubjectDocName TVarChar
              )   
 AS
 $BODY$
@@ -273,11 +274,36 @@ BEGIN
                                     AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
                                   )
        , tmpMIFloat_ChangePercentAmount AS (SELECT MovementItemFloat.*
-                                  FROM MovementItemFloat
-                                  WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
-                                    AND MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
-                                  )
+                                            FROM MovementItemFloat
+                                            WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
+                                              AND MovementItemFloat.DescId = zc_MIFloat_ChangePercentAmount()
+                                            )
 
+       , tmpMI_Reason AS (SELECT MovementItem.ParentId AS MovementItemId      --, STRING_AGG (DISTINCT Object_Reason.ValueData, '; ') ::TVarChar AS ReasonName
+                               , STRING_AGG (DISTINCT Object_Reason.ValueData, '; ')     ::TVarChar AS ReasonName
+                               , STRING_AGG (DISTINCT Object_SubjectDoc.ValueData, '; ') ::TVarChar AS SubjectDocName
+                          FROM MovementItem 
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                            ON MovementLinkObject_SubjectDoc.MovementId = MovementItem.MovementId
+                                                           AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                                           AND inDescId = zc_Movement_ReturnIn()
+
+                               LEFT JOIN MovementItemLinkObject AS MILO_Reason
+                                                                ON MILO_Reason.MovementItemId = MovementItem.Id
+                                                               AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                               LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
+                               
+                               LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                               AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                               LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
+
+                          WHERE MovementItem.ParentId IN (SELECT DISTINCT tmpListContainerSumm.MovementItemId FROM tmpListContainerSumm)
+                            AND MovementItem.DescId   = zc_MI_Detail()
+                            AND MovementItem.isErased = FALSE  
+                            AND inDescId = zc_Movement_ReturnIn()
+                          GROUP BY MovementItem.ParentId  
+                         )
 
        , tmpOperationGroup_all AS
                 (SELECT tmpListContainerSumm.MovementId
@@ -295,6 +321,8 @@ BEGIN
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.Price       ELSE 0 END AS Price
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.isBarCode   ELSE FALSE END AS isBarCode
                       , CASE WHEN vbIsGoods_show = TRUE THEN tmpListContainerSumm.ChangePercentAmount ELSE 0 END AS ChangePercentAmount
+                      , STRING_AGG (DISTINCT tmpListContainerSumm.ReasonName, '; ')           ::TVarChar AS ReasonName
+                      , STRING_AGG (DISTINCT tmpListContainerSumm.SubjectDocName, '; ')       ::TVarChar AS SubjectDocName
                       , SUM (tmpListContainerSumm.Amount)              AS Amount
                       , SUM (tmpListContainerSumm.Amount_Sh)           AS Amount_Sh
                       , SUM (tmpListContainerSumm.AmountChangePercent)    AS AmountChangePercent
@@ -344,7 +372,10 @@ BEGIN
                             , (CASE WHEN tmpListContainerSumm.MeasureId = zc_Measure_Sh() THEN tmpListContainerSumm.AmountPartner ELSE 0 END) AS AmountPartner_Sh
 
                             , tmpListContainerSumm.SummPartner_calc
-                            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
+                            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount  
+                            
+                            , tmpMI_Reason.ReasonName
+                            , tmpMI_Reason.SubjectDocName
 
                        FROM tmpListContainerSumm
                              LEFT JOIN tmpMIBoolean_BarCode AS MIBoolean_BarCode 
@@ -352,7 +383,8 @@ BEGIN
                                                            AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
                              LEFT JOIN tmpMIFloat_ChangePercentAmount AS MIFloat_ChangePercentAmount
                                                                       ON MIFloat_ChangePercentAmount.MovementItemId = tmpListContainerSumm.MovementItemId
-                                                                     AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+                                                                     AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()  
+                             LEFT JOIN tmpMI_Reason ON tmpMI_Reason.MovementItemId = tmpListContainerSumm.MovementItemId
                        ) AS tmpListContainerSumm
                  GROUP BY tmpListContainerSumm.MovementId
                         , tmpListContainerSumm.JuridicalId
@@ -411,6 +443,8 @@ BEGIN
                       , tmpListContainerSumm.Price
                       , tmpListContainerSumm.isBarCode
                       , tmpListContainerSumm.ChangePercentAmount
+                      , STRING_AGG (DISTINCT tmpListContainerSumm.ReasonName, '; ')     ::TVarChar AS ReasonName
+                      , STRING_AGG (DISTINCT tmpListContainerSumm.SubjectDocName, '; ') ::TVarChar AS SubjectDocName
                       , SUM (tmpListContainerSumm.Amount)              AS Amount
                       , SUM (tmpListContainerSumm.Amount_Sh)           AS Amount_Sh
                       , SUM (tmpListContainerSumm.AmountChangePercent)    AS AmountChangePercent
@@ -535,8 +569,9 @@ BEGIN
          , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN 0 ELSE Object_GoodsKind.Id END             AS GoodsKindId_price
          , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN '' ELSE Object_GoodsKind.ValueData END ::TVarChar  AS GoodsKindName_price
 
-
---(1 + vbVATPercent / 100)
+         , tmpOperationGroup.ReasonName      ::TVarChar
+         , tmpOperationGroup.SubjectDocName  ::TVarChar
+         
      FROM tmpOperationGroup
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId

@@ -628,6 +628,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_StickerProperty_CK() RETURNS Integer
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_StickerProperty(), 'zc_ObjectBoolean_StickerProperty_CK', 'Выводить фразу для С/К+С/В' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerProperty_CK');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_StickerProperty_NormInDays_not() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerProperty_NormInDays_not'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_StickerProperty(), 'zc_ObjectBoolean_StickerProperty_NormInDays_not', 'Не использовать св-во <срок в днях>' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_StickerProperty_NormInDays_not');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_User_Site() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_User_Site'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -1485,6 +1489,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 13.06.24         * zc_ObjectBoolean_StickerProperty_NormInDays_not
  29.05.24         * zc_ObjectBoolean_Cash_notCurrencyDiff
  16.02.24         * zc_ObjectBoolean_GoodsByGoodsKind_PackLimit
  12.02.24         * zc_ObjectBoolean_PersonalServiceList_BankNot

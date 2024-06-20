@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerFileId_70_70 Integer, StickerFileName_70_70 TVarChar, TradeMarkName_StickerFile_70_70 TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , BarCode TVarChar
-             , isFix Boolean, isCK Boolean
+             , isFix Boolean, isCK Boolean, isNormInDays_not Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat
                -- Кількість діб -> ***срок в днях
              , Value5 TFloat, Value5_orig TFloat, NormInDays_gk TFloat
@@ -80,6 +80,7 @@ BEGIN
             , ObjectString_BarCode.ValueData     AS BarCode
             , ObjectBoolean_Fix.ValueData        AS isFix
             , COALESCE (ObjectBoolean_CK.ValueData, FALSE) ::Boolean AS isCK
+            , COALESCE (ObjectBoolean_NormInDays_not.ValueData, FALSE) ::Boolean AS isNormInDays_not
 
             , ObjectFloat_Value1.ValueData       AS Value1
             , ObjectFloat_Value2.ValueData       AS Value2
@@ -190,6 +191,10 @@ BEGIN
                                      ON ObjectBoolean_CK.ObjectId = Object_StickerProperty.Id
                                     AND ObjectBoolean_CK.DescId = zc_ObjectBoolean_StickerProperty_CK()
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_NormInDays_not
+                                     ON ObjectBoolean_NormInDays_not.ObjectId = Object_StickerProperty.Id
+                                    AND ObjectBoolean_NormInDays_not.DescId = zc_ObjectBoolean_StickerProperty_NormInDays_not()
+              
              LEFT JOIN ObjectString AS ObjectString_BarCode
                                     ON ObjectString_BarCode.ObjectId = Object_StickerProperty.Id
                                    AND ObjectString_BarCode.DescId = zc_ObjectString_StickerProperty_BarCode()
@@ -221,6 +226,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.06.24         * isNormInDays_not
  01.09.23         *
  22.04.21         * zc_ObjectBoolean_StickerProperty_CK
  24.10.17         *

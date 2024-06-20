@@ -23,7 +23,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_GoodsMIForm = class(TAncestorReportForm)
@@ -133,7 +133,7 @@ type
     cbGoodsKind: TcxCheckBox;
     bbGoods: TdxBarControlContainerItem;
     bbPartner: TdxBarControlContainerItem;
-    bb: TdxBarControlContainerItem;
+    bbTradeMark: TdxBarControlContainerItem;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     cbPartionGoods: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
@@ -158,6 +158,8 @@ type
     OperDate: TcxGridDBColumn;
     OperDatePartner: TcxGridDBColumn;
     dxBarControlContainerItem2: TdxBarControlContainerItem;
+    cbReason: TcxCheckBox;
+    bbisReason: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

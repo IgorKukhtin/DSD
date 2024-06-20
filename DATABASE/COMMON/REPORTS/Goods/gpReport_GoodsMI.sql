@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate         TDateTime ,
@@ -21,7 +22,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inIsGoods           Boolean   , --
     IN inIsGoodsKind       Boolean   , --
     IN inIsPartionGoods    Boolean   , --
-    IN inIsDate            Boolean   , --
+    IN inIsDate            Boolean   , -- 
+    IN inisReason          Boolean   , -- развернуть по причинам
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -132,7 +134,9 @@ RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , InfoMoneyGroupName_goods TVarChar, InfoMoneyDestinationName_goods TVarChar, InfoMoneyCode_goods Integer, InfoMoneyName_goods TVarChar
              , OperDate          TDateTime
-             , OperDatePartner   TDateTime
+             , OperDatePartner   TDateTime 
+             , ReasonName TVarChar --причина возврата 
+             , SubjectDocName TVarChar
              )
 AS
 $BODY$
@@ -433,7 +437,10 @@ BEGIN
          , View_InfoMoney_Goods.InfoMoneyName                   AS InfoMoneyName_goods
 
          , tmpOperationGroup.OperDate          ::TDateTime
-         , tmpOperationGroup.OperDatePartner   ::TDateTime
+         , tmpOperationGroup.OperDatePartner   ::TDateTime 
+         
+         , tmpOperationGroup.ReasonName     ::TVarChar
+         , tmpOperationGroup.SubjectDocName ::TVarChar
      FROM (SELECT tmpContainer.LocationId
                 , tmpContainer.OperDate
                 , tmpContainer.OperDatePartner
@@ -451,7 +458,11 @@ BEGIN
                 , CASE WHEN inIsPartner = TRUE THEN COALESCE (ContainerLO_Juridical.ObjectId,  COALESCE (ContainerLO_Member.ObjectId, 0)) ELSE 0 END AS JuridicalId
                 , CASE WHEN ContainerLO_Member.ObjectId > 0 THEN zc_Enum_PaidKind_SecondForm() ELSE COALESCE (ContainerLO_PaidKind.ObjectId, 0)  END AS PaidKindId
                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                , CLO_PartionGoods.ObjectId              AS PartionGoodsId
+                , CLO_PartionGoods.ObjectId              AS PartionGoodsId   
+                
+                --причина возврата
+                , STRING_AGG (DISTINCT tmpContainer.ReasonName, '; ')     ::TVarChar AS ReasonName
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') ::TVarChar AS SubjectDocName
 
                   -- 1.1. Кол-во, без AnalyzerId
                 , SUM (tmpContainer.OperCount * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS OperCount
@@ -629,7 +640,10 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300()     THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                   WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInSumm_10300() THEN 1 * MIContainer.Amount -- !!! Не меняется знак, т.к. надо показать +/-!!!
                                   ELSE 0
-                             END) AS SummOut_Change
+                             END) AS SummOut_Change 
+                       --причина возврата
+                      , Object_Reason.ValueData     ::TVarChar AS ReasonName
+                      , Object_SubjectDoc.ValueData ::TVarChar AS SubjectDocName 
 
                  FROM tmpAnalyzer
                       INNER JOIN MovementItemContainer AS MIContainer
@@ -645,6 +659,24 @@ BEGIN
                       LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                         AND inIsDate = TRUE
 
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                   ON MovementLinkObject_SubjectDoc.MovementId = MIContainer.MovementId
+                                                  AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                                  AND inDescId = zc_Movement_ReturnIn()
+
+                      LEFT JOIN MovementItem ON MovementItem.ParentId = MIContainer.MovementItemId
+                                            AND MovementItem.DescId   = zc_MI_Detail()
+                                            AND MovementItem.isErased = FALSE  
+                                            AND inDescId = zc_Movement_ReturnIn()
+                      LEFT JOIN MovementItemLinkObject AS MILO_Reason
+                                                       ON MILO_Reason.MovementItemId = MovementItem.Id
+                                                      AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                      LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
+
+                      LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                       ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                      AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
                  GROUP BY MIContainer.WhereObjectId_analyzer
                         -- , CASE WHEN inIsGoods        = TRUE THEN MIContainer.ObjectId_analyzer    ELSE 0 END
                         , MIContainer.ObjectId_analyzer
@@ -661,7 +693,10 @@ BEGIN
                         -- , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END 
                       , CASE WHEN inIsDate = TRUE THEN Movement.OperDate ELSE NULL END
                       , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END
-
+                      --, CASE WHEN inisReason = TRUE THEN Object_Reason.Id ELSE NULL END   -- свернуть в след. запросе
+                      , Object_Reason.ValueData 
+                      , Object_SubjectDoc.ValueData 
+                      
                   ) AS tmpContainer
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
 
@@ -704,6 +739,7 @@ BEGIN
                              , ContainerLinkObject_InfoMoney.ObjectId
                              , tmpContainer.OperDate
                              , tmpContainer.OperDatePartner
+                             , CASE WHEN inisReason = TRUE THEN tmpContainer.ReasonName ELSE NULL END
                     ) AS tmpOperationGroup
 
           LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmpOperationGroup.LocationId
@@ -757,6 +793,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 
  02.08.15         * add inIsPartner, inIsTradeMark, inIsGoods, inIsGoodsKind, inIsPartionGoods
  27.07.14                                        * all
  22.07.15         *
@@ -773,3 +810,9 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inDescId:= 5, inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0, inUnitGroupId:=0, inUnitId:= 8459, inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+
+/*
+SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.05.2024', inEndDate:= '01.05.2024', inDescId:= zc_Movement_ReturnIn(), inJuridicalId:=0, inPaidKindId:=0, inInfoMoneyId:=0
+, inUnitGroupId:=0, inUnitId:= 8459, inGoodsGroupId:= 0, inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsPartionGoods:= TRUE, inIsDate:= FALSE, inisReason:= false
+, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+*/

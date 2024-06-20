@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad, dsdGuides;
+  dxSkinXmas2008Blue, ExternalLoad, dsdGuides, dsdCommon;
 
 type
   TStickerForm = class(TParentForm)
@@ -197,6 +197,10 @@ type
     actGet_Params: TdsdExecStoredProc;
     Value5_orig: TcxGridDBColumn;
     NormInDays_gk: TcxGridDBColumn;
+    spUpdate_SP_NormInDays_not: TdsdStoredProc;
+    isNormInDays_not: TcxGridDBColumn;
+    actUpdate_SP_NormInDays_not: TdsdExecStoredProc;
+    bbUpdate_SP_NormInDays_not: TdxBarButton;
 
   private
     { Private declarations }

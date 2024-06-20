@@ -145,7 +145,8 @@ BEGIN
                                                                        , inIsGoods           := FALSE
                                                                        , inIsGoodsKind       := FALSE
                                                                        , inIsPartionGoods    := FALSE
-                                                                       , inIsDate            := FALSE
+                                                                       , inIsDate            := FALSE 
+                                                                       , inisReason          := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
                        , tmpReturnIn AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
@@ -163,6 +164,7 @@ BEGIN
                                                                        , inIsGoodsKind       := FALSE
                                                                        , inIsPartionGoods    := FALSE
                                                                        , inIsDate            := FALSE
+                                                                       , inisReason          := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
          , tmpIncome AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate
