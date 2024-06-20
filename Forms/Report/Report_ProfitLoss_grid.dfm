@@ -6,7 +6,7 @@ inherited Report_ProfitLoss_gridForm: TReport_ProfitLoss_gridForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 961
-  ExplicitHeight = 442
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
