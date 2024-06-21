@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  cxCheckBox, cxImageComboBox;
 
 type
   TReport_GoodsMI_byMovementForm = class(TAncestorReportForm)
@@ -80,6 +81,9 @@ type
     actPriceListGoods: TdsdOpenForm;
     bb: TdxBarButton;
     ContractName: TcxGridDBColumn;
+    cbErased: TcxCheckBox;
+    bbErased: TdxBarControlContainerItem;
+    StatusCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
