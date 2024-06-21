@@ -918,8 +918,8 @@ BEGIN
 
          , Object_PaidKind.Id :: TVarChar AS PaidKindId
          , Object_PaidKind.ValueData      AS PaidKindName
-         , NULL ::TVarChar     AS BusinessName   -- Object_Business.ValueData
-         , NULL ::TVarChar     AS BranchName     --Object_Branch.ValueData
+         , Object_Business.ValueData ::TVarChar     AS BusinessName   -- Object_Business.ValueData
+         , Object_Branch.ValueData   ::TVarChar     AS BranchName     --Object_Branch.ValueData
 
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , 0 :: TFloat AS OperCount_total
@@ -1109,7 +1109,18 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
                                ON ObjectLink_Partner_PartnerTag.ObjectId = Object_Partner.Id
                               AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
-          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId 
+          LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId      
+          
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                               ON ObjectLink_Unit_Business.ObjectId = Object_Location.Id
+                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+          LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Unit_Business.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                               ON ObjectLink_Unit_Branch.ObjectId = Object_Location.Id
+                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+           
   ;
 
 END;
