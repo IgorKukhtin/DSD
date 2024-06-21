@@ -263,7 +263,8 @@ BEGIN
                                 SELECT tmp.OperDate
                                      , tmp.StatusCode
                                      , tmp.UnitId   AS LocationId
-                                     , tmp.FromId   AS PartnerId
+                                     , tmp.FromId   AS PartnerId 
+                                     , tmp.JuridicalId
                                      , tmp.PaidKindId
                                      , tmp.GoodsId
                                      , tmp.GoodsKindId 
@@ -274,6 +275,7 @@ BEGIN
                                      , tmp.SubjectDocName
                                 FROM (SELECT tmpMovement.UnitId
                                            , tmpMovement.FromId
+                                           , tmpMovement.JuridicalId
                                            , CASE WHEN inIsDate = TRUE THEN tmpMovement.OperDate ELSE NULL END AS OperDate 
                                            , Object_Status.ObjectCode AS StatusCode 
                                            , tmpMovement.PaidKindId
@@ -290,6 +292,7 @@ BEGIN
                                       FROM (SELECT Movement.*
                                                  , MovementLinkObject_To.ObjectId   AS UnitId
                                                  , MovementLinkObject_From.ObjectId AS FromId
+                                                 , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                                                  , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
                                             FROM Movement 
                                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -298,9 +301,13 @@ BEGIN
 
                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                         AND MovementLinkObject_To.DescId = CASE WHEN inDescId = zc_Movement_ReturnIn THEN MovementLinkObject_To.ObjectId ELSE zc_MovementLinkObject_From() END
 
                                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+
+                                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                  ON ObjectLink_Partner_Juridical.ObjectId = CASE WHEN inDescId = zc_Movement_ReturnIn THEN MovementLinkObject_From.ObjectId ELSE zc_MovementLinkObject_To() END
+                                                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                              
                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                                                           ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -310,7 +317,7 @@ BEGIN
                                               AND Movement.DescId = inDescId
                                               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                               AND Movement.StatusId = zc_Enum_Status_Erased()
-                                              AND (MovementLinkObject_To.ObjectId = inJuridicalId OR inJuridicalId = 0)
+                                              AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                                               AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                                             ) AS tmpMovement
                                            INNER JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
@@ -349,7 +356,8 @@ BEGIN
                                            , CASE WHEN inIsGoods = TRUE THEN MovementItem.ObjectId ELSE 0 END
                                            , CASE WHEN inIsGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE NULL END
                                            , tmpMovement.PaidKindId
-                                           , _tmpGoods.InfoMoneyId
+                                           , _tmpGoods.InfoMoneyId 
+                                           , tmpMovement.JuridicalId
                                       ) AS tmp
                                 )
         
@@ -755,7 +763,7 @@ BEGIN
                                                        ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                       INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MIContainer.WhereObjectId_analyzer
-                      -- INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
+                      --INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_analyzer
                       LEFT JOIN MovementItemLinkObject AS MLO_Business ON MLO_Business.MovementItemId = MIContainer.MovementItemId
                                                                       AND MLO_Business.DescId = zc_MILinkObject_Business()
                       LEFT JOIN MovementItemLinkObject AS MLO_Branch ON MLO_Branch.MovementItemId = MIContainer.MovementItemId
@@ -1061,10 +1069,7 @@ BEGIN
           LEFT JOIN Object AS Object_Location ON Object_Location.Id = tmp.LocationId
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmp.PartnerId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = tmp.PartnerId
-                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmp.JuridicalId
 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmp.PaidKindId       
           

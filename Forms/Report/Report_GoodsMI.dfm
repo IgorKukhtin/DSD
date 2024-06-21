@@ -2645,6 +2645,22 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReason'
+          Value = Null
+          Component = cbReason
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isErased'
+          Value = Null
+          Component = cbErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
