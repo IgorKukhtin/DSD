@@ -301,12 +301,12 @@ BEGIN
 
                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                         AND MovementLinkObject_To.DescId = CASE WHEN inDescId = zc_Movement_ReturnIn THEN MovementLinkObject_To.ObjectId ELSE zc_MovementLinkObject_From() END
+                                                                         AND MovementLinkObject_To.DescId = CASE WHEN inDescId = zc_Movement_ReturnIn() THEN MovementLinkObject_To.ObjectId ELSE zc_MovementLinkObject_From() END
 
                                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_To.ObjectId
 
                                              LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                                  ON ObjectLink_Partner_Juridical.ObjectId = CASE WHEN inDescId = zc_Movement_ReturnIn THEN MovementLinkObject_From.ObjectId ELSE zc_MovementLinkObject_To() END
+                                                                  ON ObjectLink_Partner_Juridical.ObjectId = CASE WHEN inDescId = zc_Movement_ReturnIn() THEN MovementLinkObject_From.ObjectId ELSE zc_MovementLinkObject_To() END
                                                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                                              
                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
