@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inStartDate    TDateTime ,  
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inInfoMoneyId  Integer   , -- Управленческая статья  
     IN inPaidKindId   Integer   , --
     IN inGoodsGroupId Integer   ,
-    IN inGoodsId      Integer   ,
+    IN inGoodsId      Integer   , 
+    IN inIsErased     Boolean   , -- показать удаленные Да / Нет
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, ChangePercent TFloat
@@ -28,6 +30,7 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , Price TFloat
              , Amount_Weight TFloat, Amount_Sh TFloat
+             , Amount_Weight_del TFloat, Amount_Sh_del TFloat
              , AmountChangePercent_Weight TFloat, AmountChangePercent_Sh TFloat
              , AmountPartner_Weight TFloat, AmountPartner_Sh TFloat
              , Amount_10500_Weight TFloat, Amount_10500_Sh TFloat
@@ -43,7 +46,8 @@ RETURNS TABLE (ItemName TVarChar, InvNumber TVarChar, OperDate TDateTime, OperDa
              , Price_onDate TFloat, Summ_onDate TFloat  
              , GoodsKindId_price Integer, GoodsKindName_price TVarChar
              , ReasonName TVarChar, SubjectDocName TVarChar
-             )   
+             , StatusCode Integer
+             )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -242,7 +246,7 @@ BEGIN
                                                         AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
                              LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                                       ON MovementBoolean_PriceWithVAT.MovementId =  MIContainer.MovementId
+                                                       ON MovementBoolean_PriceWithVAT.MovementId = MIContainer.MovementId
                                                       AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
                              LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                                      ON MovementFloat_VATPercent.MovementId =  MIContainer.MovementId
@@ -427,7 +431,8 @@ BEGIN
                 (SELECT MovementDesc.ItemName
                       , Movement.Id                            AS MovementId
                       , Movement.InvNumber
-                      , Movement.OperDate
+                      , Movement.OperDate 
+                      , Movement.StatusId
                       , MovementFloat_ChangePercent.ValueData  AS ChangePercent
                       , MovementDate_OperDatePartner.ValueData AS OperDatePartner
                       , MovementLinkObject_PriceList.ObjectId  AS PriceListId
@@ -482,7 +487,8 @@ BEGIN
                  GROUP BY MovementDesc.ItemName
                         , Movement.Id
                         , Movement.InvNumber
-                        , Movement.OperDate
+                        , Movement.OperDate 
+                        , Movement.StatusId
                         , MovementFloat_ChangePercent.ValueData
                         , MovementDate_OperDatePartner.ValueData
                         , MovementLinkObject_PriceList.ObjectId
@@ -499,6 +505,154 @@ BEGIN
                         , tmpListContainerSumm.isBarCode
                         , tmpListContainerSumm.ChangePercentAmount
                 )      
+
+        --выбор удаленных документов  inIsErased = True
+       , tmpMovementErased AS (SELECT tmp.ItemName
+                                    , tmp.MovementId
+                                    , tmp.InvNumber
+                                    , tmp.OperDate
+                                    , tmp.StatusCode
+                                    , MovementFloat_ChangePercent.ValueData  AS ChangePercent
+                                    , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+                                    , MovementLinkObject_PriceList.ObjectId  AS PriceListId
+                                    , ObjectBoolean_PriceWithVAT.ValueData   AS isPriceWithVAT   ---для прайса
+                                    , ObjectFloat_VATPercent.ValueData       AS VATPercent       ---для прайса
+                                    , tmp.UnitId
+                                    , tmp.FromId   AS PartnerId
+                                    , tmp.JuridicalId
+                                   -- , tmp.PaidKindId
+                                    , tmp.GoodsId
+                                    , tmp.GoodsKindId 
+                                    , tmp.MeasureId
+                                    , tmp.Amount
+                                    , tmp.Amount_sh 
+                                    , tmp.Price 
+                                    , tmp.ReasonName
+                                    , tmp.SubjectDocName 
+                                    , tmp.isBarCode
+                               FROM (SELECT tmpMovement.ItemName
+                                          , tmpMovement.Id AS MovementId 
+                                          , tmpMovement.InvNumber
+                                          , tmpMovement.OperDate
+                                          
+                                          , tmpMovement.UnitId
+                                          , tmpMovement.FromId
+                                          , tmpMovement.JuridicalId
+                                          , Object_Status.ObjectCode AS StatusCode 
+                                          
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN MovementItem.ObjectId ELSE 0 END AS GoodsId
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END AS GoodsKindId 
+                                          , _tmpGoods.MeasureId
+                                          , SUM (COALESCE (MovementItem.Amount,0) * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS Amount
+                                          , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_sh    
+                                          , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                          --причина возврата
+                                          , STRING_AGG (DISTINCT Object_Reason.ValueData, '; ')     ::TVarChar AS ReasonName
+                                          , STRING_AGG (DISTINCT Object_SubjectDoc.ValueData, '; ') ::TVarChar AS SubjectDocName 
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN COALESCE (MIBoolean_BarCode.ValueData,FALSE) ELSE FALSE END AS isBarCode
+
+                                     FROM (SELECT Movement.* 
+                                                , MovementDesc.ItemName
+                                                , MovementLinkObject_To.ObjectId   AS UnitId
+                                                , MovementLinkObject_From.ObjectId AS FromId
+                                                , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                           FROM Movement 
+                                            INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                         AND MovementLinkObject_From.DescId = CASE WHEN inDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
+
+                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_To.DescId = CASE WHEN inDescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
+
+                                            INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_To.ObjectId
+
+                                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                                            
+                                            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+                                            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+                                           WHERE inIsErased = TRUE
+                                             AND Movement.DescId = inDescId
+                                             AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                             AND Movement.StatusId = zc_Enum_Status_Erased()
+                                             AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
+                                             AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
+                                           ) AS tmpMovement
+                                          INNER JOIN Object AS Object_Status ON Object_Status.Id = tmpMovement.StatusId
+                                          INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                                 AND MovementItem.isErased = FALSE
+                                                                 AND MovementItem.DescId = zc_MI_Master()
+                                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+
+                                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+                                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                                       ON MovementLinkObject_SubjectDoc.MovementId = tmpMovement.Id
+                                                                      AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                                                                      AND inDescId = zc_Movement_ReturnIn()
+ 
+                                          LEFT JOIN tmpMIBoolean_BarCode AS MIBoolean_BarCode 
+                                                                         ON MIBoolean_BarCode.MovementItemId = MovementItem.Id
+                                                                        AND MIBoolean_BarCode.DescId = zc_MIBoolean_BarCode()
+                    
+                                          LEFT JOIN MovementItem AS MI_Detail ON MI_Detail.ParentId = MovementItem.Id
+                                                                AND MI_Detail.DescId   = zc_MI_Detail()
+                                                                AND MovementItem.isErased = FALSE  
+                                                                AND inDescId = zc_Movement_ReturnIn()
+                                          LEFT JOIN MovementItemLinkObject AS MILO_Reason
+                                                                           ON MILO_Reason.MovementItemId = MI_Detail.Id
+                                                                          AND MILO_Reason.DescId = zc_MILinkObject_Reason()
+                                          LEFT JOIN Object AS Object_Reason ON Object_Reason.Id = MILO_Reason.ObjectId
+                    
+                                          LEFT JOIN MovementItemLinkObject AS MILO_SubjectDoc
+                                                                           ON MILO_SubjectDoc.MovementItemId = MovementItem.Id
+                                                                          AND MILO_SubjectDoc.DescId = zc_MILinkObject_SubjectDoc()
+                                          LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = COALESCE (MILO_SubjectDoc.ObjectId, MovementLinkObject_SubjectDoc.ObjectId)
+
+                                     GROUP BY tmpMovement.ItemName
+                                          , tmpMovement.Id
+                                          , tmpMovement.InvNumber
+                                          , tmpMovement.OperDate
+                                          , tmpMovement.UnitId
+                                          , tmpMovement.FromId
+                                          , Object_Status.ObjectCode
+                                         
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN MovementItem.ObjectId ELSE 0 END
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0) ELSE 0 END 
+                                          , _tmpGoods.MeasureId  
+                                          , COALESCE (MIFloat_Price.ValueData, 0)  
+                                          , CASE WHEN vbIsGoods_show = TRUE THEN COALESCE (MIBoolean_BarCode.ValueData,FALSE) ELSE FALSE END
+                                          , tmpMovement.JuridicalId
+                                     ) AS tmp
+                      LEFT JOIN tmpMD_OperDatePartner AS MovementDate_OperDatePartner
+                                                      ON MovementDate_OperDatePartner.MovementId =  tmp.MovementId
+                                                     AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
+                      LEFT JOIN tmpMF_ChangePercent AS MovementFloat_ChangePercent
+                                                    ON MovementFloat_ChangePercent.MovementId =  tmp.MovementId
+                                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                      LEFT JOIN tmpMLO_PriceList AS MovementLinkObject_PriceList
+                                                 ON MovementLinkObject_PriceList.MovementId = tmp.MovementId
+                                                AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_PriceWithVAT
+                                              ON ObjectBoolean_PriceWithVAT.ObjectId = MovementLinkObject_PriceList.ObjectId
+                                             AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT()
+                      LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                            ON ObjectFloat_VATPercent.ObjectId =  MovementLinkObject_PriceList.ObjectId
+                                           AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                               )
 
 
     -- Результат
@@ -530,6 +684,8 @@ BEGIN
 
          , tmpOperationGroup.Amount :: TFloat    AS Amount_Weight
          , tmpOperationGroup.Amount_Sh :: TFloat AS Amount_Sh
+         , 0 :: TFloat    AS Amount_Weight_del
+         , 0 :: TFloat    AS Amount_Sh_del
 
          , tmpOperationGroup.AmountChangePercent :: TFloat    AS AmountChangePercent_Weight
          , tmpOperationGroup.AmountChangePercent_Sh :: TFloat AS AmountChangePercent_Sh
@@ -570,7 +726,9 @@ BEGIN
          , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN '' ELSE Object_GoodsKind.ValueData END ::TVarChar  AS GoodsKindName_price
 
          , tmpOperationGroup.ReasonName      ::TVarChar
-         , tmpOperationGroup.SubjectDocName  ::TVarChar
+         , tmpOperationGroup.SubjectDocName  ::TVarChar 
+         
+         , Object_Status.ObjectCode ::Integer  AS StatusCode
          
      FROM tmpOperationGroup
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId
@@ -614,14 +772,131 @@ BEGIN
 
           LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
                                     ON MovementLinkObject_Contract.MovementId = tmpOperationGroup.MovementId
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId    
+          
+          LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmpOperationGroup.StatusId
+
+  UNION ALL
+      SELECT tmp.ItemName
+         , tmp.InvNumber
+         , tmp.OperDate
+         , tmp.OperDatePartner
+         , tmp.ChangePercent 
+         , Object_PriceList.Id         AS PriceListId
+         , Object_PriceList.ValueData  AS PriceListName
+         , Object_Juridical.ObjectCode AS JuridicalCode
+         , Object_Juridical.ValueData  AS JuridicalName 
+         , Object_Contract.Id          AS ContractId
+         , Object_Contract.ValueData   AS ContractName
+         , Object_Partner.ObjectCode   AS PartnerCode
+         , Object_Partner.ValueData    AS PartnerName
+         , Object_Unit.ObjectCode      AS UnitCode
+         , Object_Unit.ValueData       AS UnitName
+         , Object_GoodsGroup.ValueData            AS GoodsGroupName
+         , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.Id                        AS GoodsId
+         , Object_Goods.ObjectCode                AS GoodsCode
+         , Object_Goods.ValueData                 AS GoodsName
+         , Object_GoodsKind.Id                    AS GoodsKindId
+         , Object_GoodsKind.ValueData             AS GoodsKindName
+         , Object_Measure.ValueData               AS MeasureName
+
+         , tmp.Price :: TFloat AS Price
+
+         , 0 :: TFloat    AS Amount_Weight
+         , 0 :: TFloat    AS Amount_Sh
+         , tmp.Amount :: TFloat    AS Amount_Weight_del
+         , tmp.Amount_Sh :: TFloat AS Amount_Sh_del
+         , 0 :: TFloat    AS AmountChangePercent_Weight
+         , 0 :: TFloat AS AmountChangePercent_Sh
+         
+         , 0    :: TFloat AS AmountPartner_Weight
+         , 0    :: TFloat AS AmountPartner_Sh
+
+         , 0 :: TFloat AS Amount_10500_Weight
+         , 0 :: TFloat AS Amount_10500_Sh
+         , 0 :: TFloat AS Amount_40200_Weight
+         , 0 :: TFloat AS Amount_40200_Sh
+
+         , 0 :: TFloat  AS SummPartner_calc
+         , 0 :: TFloat  AS SummPartner
+         , 0 :: TFloat  AS SummPartner_10100
+         , 0 :: TFloat  AS SummPartner_10200
+         , 0 :: TFloat  AS SummPartner_10250
+         , 0 :: TFloat  AS SummPartner_10300
+         , 0 :: TFloat  AS SummDiff
+         
+           -- Вес в упаковке - GoodsByGoodsKind
+         , ObjectFloat_WeightTotal.ValueData   :: TFloat  AS WeightTotal
+         --% скидки вес
+         , 0  :: TFloat   AS ChangePercentAmount
+         , tmp.isBarCode  ::Boolean  AS isBarCode
+
+         , NULL ::TVarChar              AS InfoMoneyGroupName
+         , NULL ::TVarChar              AS InfoMoneyDestinationName
+         , 0    ::Integer               AS InfoMoneyCode
+         , NULL ::TVarChar              AS InfoMoneyName   
+         
+         , COALESCE (lfSelectPrice.ValuePrice, lfSelectPrice_.ValuePrice) :: TFloat AS Price_onDate
+         , 0 :: TFloat AS Summ_onDate  --сумма по цене прайса наа дату
+         , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN 0 ELSE Object_GoodsKind.Id END             AS GoodsKindId_price
+         , CASE WHEN  lfSelectPrice.ValuePrice IS NULL THEN '' ELSE Object_GoodsKind.ValueData END ::TVarChar  AS GoodsKindName_price
+
+         , tmp.ReasonName      ::TVarChar
+         , tmp.SubjectDocName  ::TVarChar   
+         
+         , tmp.StatusCode
+      FROM tmpMovementErased AS tmp
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmp.PartnerId
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmp.JuridicalId
+          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = tmp.PriceListId     
+          
+          LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmp.GoodsId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
+          --LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Goods ON View_InfoMoney_Goods.InfoMoneyId = tmp.InfoMoneyId_goods
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmp.MeasureId
+
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
+           -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmp.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmp.GoodsKindId
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
+          
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmp.PriceListId
+                                                        , inOperDate   := inPriceDate
+                                                         ) AS lfSelectPrice ON lfSelectPrice.GoodsId = tmp.GoodsId
+                                                                           AND lfSelectPrice.GoodsKindId = tmp.GoodsKindId
+
+          LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= tmp.PriceListId
+                                                        , inOperDate   := inPriceDate
+                                                         ) AS lfSelectPrice_ ON lfSelectPrice_.GoodsId = tmp.GoodsId
+                                                                            AND lfSelectPrice_.GoodsKindId IS Null   
+
+          LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract
+                                    ON MovementLinkObject_Contract.MovementId = tmp.MovementId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+
 
      ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -644,4 +919,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 
 
 
---select * from gpReport_GoodsMI_byMovement(inStartDate := ('03.05.2022')::TDateTime , inEndDate := ('03.05.2022')::TDateTime,inPriceDate:=('03.05.2022')::TDateTime , inDescId := 5 , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 7835 ,  inSession := '9457');
+--select * from gpReport_GoodsMI_byMovement (inStartDate := ('18.06.2024')::TDateTime , inEndDate := ('18.06.2024')::TDateTime,inPriceDate:=('18.06.2024')::TDateTime , inDescId := zc_Movement_ReturnIn() , inUnitId := 0 , inJuridicalId := 862910 , inInfoMoneyId := 0 , inPaidKindId := 0 , inGoodsGroupId := 0 , inGoodsId := 0 , inIsErased := TRUE, inSession := '9457');

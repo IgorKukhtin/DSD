@@ -383,6 +383,16 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummOut_Promo_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_sh_del
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -739,6 +749,16 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = SummOut_Promo_real
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = OperCount_sh_del
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -1092,6 +1112,26 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           object OperCount_sh_Partner_real: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1096#1090'.  ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'OperCount_sh_Partner_real'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperCount_del: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1091#1076#1072#1083#1077#1085#1085#1099#1077')'
+            DataBinding.FieldName = 'OperCount_del'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object OperCount_sh_del: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1096#1090'.  ('#1091#1076#1072#1083#1077#1085#1085#1099#1077')'
+            DataBinding.FieldName = 'OperCount_sh_del'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -2052,6 +2092,15 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     TabOrder = 12
     Width = 90
   end
+  object cbErased: TcxCheckBox [9]
+    Left = 871
+    Top = 87
+    Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+    Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077
+    Properties.ReadOnly = False
+    TabOrder = 13
+    Width = 90
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -2596,6 +2645,22 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isReason'
+          Value = Null
+          Component = cbReason
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isErased'
+          Value = Null
+          Component = cbErased
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -2844,6 +2909,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = cbErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -2905,6 +2978,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         item
           Visible = True
           ItemName = 'bbisReason'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
         end
         item
           Visible = True
@@ -3007,6 +3084,13 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Hint = 'bb'
       Visible = ivAlways
       Control = cbReason
+    end
+    object bbErased: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cbErased
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

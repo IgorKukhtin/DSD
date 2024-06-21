@@ -147,6 +147,7 @@ BEGIN
                                                                        , inIsPartionGoods    := FALSE
                                                                        , inIsDate            := FALSE 
                                                                        , inisReason          := FALSE
+                                                                       , inIsErased          := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
                        , tmpReturnIn AS (SELECT * FROM gpReport_GoodsMI (inStartDate         := inStartDate
@@ -164,7 +165,8 @@ BEGIN
                                                                        , inIsGoodsKind       := FALSE
                                                                        , inIsPartionGoods    := FALSE
                                                                        , inIsDate            := FALSE
-                                                                       , inisReason          := FALSE
+                                                                       , inisReason          := FALSE  
+                                                                       , inIsErased          := FALSE
                                                                        , inSession           := ''
                                                                         ) AS gpReport)
          , tmpIncome AS (SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate         := inStartDate
@@ -1348,7 +1350,7 @@ BEGIN
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpResult.PaidKindId
    ;
 
-END;
+END;                   
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_GoodsGroup (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;

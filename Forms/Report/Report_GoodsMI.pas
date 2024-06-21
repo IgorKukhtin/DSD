@@ -160,6 +160,8 @@ type
     dxBarControlContainerItem2: TdxBarControlContainerItem;
     cbReason: TcxCheckBox;
     bbisReason: TdxBarControlContainerItem;
+    cbErased: TcxCheckBox;
+    bbErased: TdxBarControlContainerItem;
   private
     { Private declarations }
   public
