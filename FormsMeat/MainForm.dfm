@@ -10869,9 +10869,6 @@ inherited MainForm: TMainForm
         object miMemberSheetWorkTime: TMenuItem
           Action = actMemberSheetWorkTime
         end
-        object miMemberPriceList: TMenuItem
-          Action = actMemberPriceList
-        end
       end
       object N21: TMenuItem
         Caption = '-'
@@ -11553,6 +11550,9 @@ inherited MainForm: TMainForm
       end
       object miPriceList: TMenuItem
         Action = actPriceList
+      end
+      object miMemberPriceList: TMenuItem
+        Action = actMemberPriceList
       end
       object N34: TMenuItem
         Caption = '-'
