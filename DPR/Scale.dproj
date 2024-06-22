@@ -304,6 +304,7 @@
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
 			<DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

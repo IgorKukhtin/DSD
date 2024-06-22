@@ -44,7 +44,7 @@ object MemberPriceListForm: TMemberPriceListForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1087#1088#1072#1081#1089' '#1083#1080#1089#1090#1072
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'PriceListCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -68,7 +68,7 @@ object MemberPriceListForm: TMemberPriceListForm
         Width = 129
       end
       object MemberName: TcxGridDBColumn
-        Caption = #1060#1048#1054' '#1092#1080#1079'. '#1083#1080#1094#1086
+        Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -80,6 +80,7 @@ object MemberPriceListForm: TMemberPriceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1060#1048#1054' ('#1060#1080#1079'.'#1083#1080#1094#1086')'
         Width = 116
       end
       object isErased: TcxGridDBColumn
@@ -101,17 +102,19 @@ object MemberPriceListForm: TMemberPriceListForm
         Width = 82
       end
       object UnitName_Personal: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1092'.'#1083'.)'
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName_Personal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1060#1080#1079'.'#1083#1080#1094#1086')'
         Width = 70
       end
       object PositionName_Personal: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1092'.'#1083'.)'
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName_Personal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1086#1083#1078#1085#1086#1089#1090#1100' ('#1060#1080#1079'.'#1083#1080#1094#1086')'
         Options.Editing = False
         Width = 70
       end
@@ -598,6 +601,7 @@ object MemberPriceListForm: TMemberPriceListForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 224
     Top = 272
