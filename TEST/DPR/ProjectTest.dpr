@@ -1504,7 +1504,9 @@ uses
   PartionCellChoiceAll in '..\..\Forms\Guides\PartionCellChoiceAll.pas' {PartionCellChoiceAllForm: TParentForm},
   Report_ReceiptProductionOutAnalyzeLine in '..\..\Forms\Report\Report_ReceiptProductionOutAnalyzeLine.pas' {Report_ReceiptProductionOutAnalyzeLineForm: TParentForm},
   GoodsByGoodsKindPeresort in '..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas' {GoodsByGoodsKindPeresortForm: TParentForm},
-  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas';
+  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
+  ViewPriceList in '..\..\Forms\Guides\ViewPriceList.pas' {ViewPriceListForm: TParentForm},
+  ViewPriceListEdit in '..\..\Forms\Guides\ViewPriceListEdit.pas' {ViewPriceListEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

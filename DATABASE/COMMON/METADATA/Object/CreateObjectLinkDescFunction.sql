@@ -2153,9 +2153,14 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_out', 'Вид товара (пересортица - расход)', zc_Object_GoodsByGoodsKindPeresort(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_out');
     
-            
-    
-    
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_ViewPriceList_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ViewPriceList_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ViewPriceList_PriceList', 'Прайс лист', zc_Object_ViewPriceList(), zc_Object_PriceList() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ViewPriceList_PriceList');
+     
+  CREATE OR REPLACE FUNCTION zc_ObjectLink_ViewPriceList_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ViewPriceList_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ViewPriceList_Member', 'Физ лицо', zc_Object_ViewPriceList(), zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ViewPriceList_Member');
+     
     
     
     
@@ -3047,6 +3052,8 @@ SELECT 'zc_ObjectLink_GoodsGroupProperty_Parent', 'Аналитический классификатор',
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 22.06.24         *  zc_ObjectLink_ViewPriceList_PriceList
+                     zc_ObjectLink_ViewPriceList_Member
  23.05.24         * zc_ObjectLink_GoodsByGoodsKindPeresort_Goods_in
                     zc_ObjectLink_GoodsByGoodsKindPeresort_GoodsKind_in
                     zc_ObjectLink_GoodsByGoodsKindPeresort_Goods_out

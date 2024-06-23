@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 const
   WM_ChangeKeyboard = WM_USER + 1;
@@ -1487,6 +1487,8 @@ type
     actGoodsByGoodsKindPeresort: TdsdOpenForm;
     miGoodsByGoodsKindPeresort: TMenuItem;
     N260: TMenuItem;
+    actViewPriceList: TdsdOpenForm;
+    miViewPriceList: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -230,6 +230,7 @@ type
     procedure LoadTradeMarkFormTest;
     procedure LoadTelegramGroupFormTest;
     procedure LoadToolsWeighingFormTest;
+    procedure LoadViewPriceListFormTest;
     procedure LoadVisitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
@@ -4295,6 +4296,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberPriceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadViewPriceListFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TViewPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TViewPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TViewPriceListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TViewPriceListEditForm');
 end;
 
 procedure TLoadFormTest.LoadMemberPersonalServiceListFormTest;
