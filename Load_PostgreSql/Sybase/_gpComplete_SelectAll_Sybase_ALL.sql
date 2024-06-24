@@ -44,7 +44,7 @@ END IF;
              OR EXTRACT (DOW FROM CURRENT_DATE) = 6
                 -- или
              OR EXTRACT (DAY FROM CURRENT_DATE) <= 15
-           --OR 1=1
+             --OR 1=1
              OR inGroupId = 4
                 ;
 
@@ -175,62 +175,34 @@ END IF;
 --                             SELECT 8296254   AS GoodsId -- 94183
 --                             SELECT 2365   AS GoodsId -- 135
                             )
-            /*, tmp_new as  (SELECT DISTINCT HistoryCost.ContainerId
-SELECT 5183877 AS ContainerId
-union all select 5183878
-union all select 5183880
-union all select 5183881
-union all select 5183882
-union all select 5183883
-union all select 5183888
-union all select 5183889
-union all select 5184011
-union all select 5184012
-union all select 5184014
-union all select 5184015
-union all select 5184016
-union all select 5184017
-union all select 5184022
-union all select 5184023
+/*            , tmp_new as  (with tmp_1 AS (SELECT Container.*
+                                          FROM Container
+                                               INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                                              ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                                             AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                             --AND ContainerLinkObject_Unit.ObjectId IN (zc_Unit_RK(), 8451, 8458, 8450) -- ЦЕХ пакування + Склад База ГП + Дільниця термічної обробки
+                                                                             --AND ContainerLinkObject_Unit.ObjectId IN (8451) -- 8447
+                                                                           --AND ContainerLinkObject_Unit.ObjectId IN (select ObjectId from ObjectLink where DescId = zc_ObjectLink_Unit_Parent() AND ChildObjectId = 8460) -- Возвраты общие
+                          
+                                               INNER JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = ContainerLinkObject_Unit.ObjectId
+                          
+                                          WHERE Container.DescId = zc_Container_Count()
+                                            AND Container.ObjectId in (3569176  -- 953
+                                                                     , 4026174  -- 202 + 4457
+                                                                     , 3902     -- 2269
+                                                                     , 4507487  -- 1716
+                                                                     , 10442610 -- 2489
+                                                                      )
+                                         )
+                              , tmp_2 AS (SELECT Container.*
+                                          FROM Container
+                                          WHERE Container.DescId = zc_Container_Summ()
+                                            AND Container.ParentId in (SELECT tmp_1.Id FROM tmp_1)
+                                         )
+                           SELECT tmp_2.Id AS ContainerId
+                           FROM tmp_2
+                          )
 
-
-union all select 141104
-union all select 156529
-union all select 156533
-union all select 156561
-union all select 402870
-union all select 402871
-union all select 422852
-union all select 422853
-union all select 588740
-union all select 1404522
-union all select 3708226
-union all select 5113320
-
-union all select 141236
-union all select 156899
-union all select 156901
-union all select 156902
-union all select 436189
-union all select 436190
-union all select 436191
-union all select 4521509
-
-union all select 133067
-union all select 150467
-union all select 150468
-union all select 150469
-union all select 401240
-union all select 401241
-union all select 422555
-union all select 3708081            
-                             FROM Container AS Container_Summ
-                                  INNER JOIN Container ON Container.Id = Container_Summ.ParentId
-                                                      AND Container.ObjectId = 6883420 
-                                  INNER JOIN HistoryCost ON HistoryCost.ContainerId  = Container_Summ.Id
-                                                        AND HistoryCost.StartDate = '01.08.2023'
-                             WHERE Container_Summ.DescId = zc_Container_Summ()
-                            )                                      
      , tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
                            FROM Movement
                                 --INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
@@ -238,16 +210,15 @@ union all select 3708081
                                 -- INNER JOIN tmpGoodsContainer  ON tmpGoodsContainer.GoodsId = MovementItem.ObjectId
                                 INNER JOIN MovementItemContainer  ON MovementItemContainer.MovementId = Movement.Id
                                                                  AND MovementItemContainer.ContainerId IN (SELECT DISTINCT tmp_new.ContainerId FROM tmp_new)
+-- !!!
+--AND MovementItemContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ReturnIn()
+--                                           , zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Inventory(), zc_Movement_Sale())
+--!!!
+
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                          )*/
-     /*, tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
-                           FROM Movement
-                                INNER JOIN MovementItem  ON MovementItem.MovementId = Movement.Id
-                                                        AND MovementItem.isErased   = FALSE
-                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                             AND Movement.StatusId = zc_Enum_Status_Complete()
-                          )*/
+                          )
+*/
      , tmpInv_main AS (
                        -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
                        SELECT DISTINCT tmpUnit_from.UnitId
@@ -255,7 +226,7 @@ union all select 3708081
                             LEFT JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id
                                                                     AND MLO_From.DescId = zc_MovementLinkObject_From()
                             LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
-                       
+
                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SaleAsset()) -- , zc_Movement_SendOnPrice()
                          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -263,7 +234,7 @@ union all select 3708081
                            OR Movement.DescId = zc_Movement_SaleAsset()
                              )
                          AND 1=0
-                       
+
                       UNION
                        -- 1.3. To: ReturnIn
                        SELECT tmpUnit_To.UnitId
@@ -281,13 +252,13 @@ union all select 3708081
      -- Результат
      SELECT tmp.MovementId
           , tmp.OperDate
-          , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
+          , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode
                                             WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
                                             ELSE COALESCE (tmp.BranchCode, 0) + 1000
                                        END :: TVarChar) :: TVarChar AS InvNumber
           , tmp.Code
           , tmp.ItemName
-          , CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
+          , CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode
                  WHEN tmp.BranchCode IN (2, 12) THEN tmp.BranchCode + 100
                  ELSE tmp.BranchCode + 1000
             END :: Integer AS BranchCode
@@ -456,7 +427,7 @@ union all select 3708081
            )*/
 
        -- AND 1=0
-       -- AND Object_To.Id 
+       -- AND Object_To.Id
 
        -- !!!НУЖНЫ ли ВОЗВРАТЫ!!!
        AND vbIsReturnIn = TRUE
@@ -756,8 +727,8 @@ union all select 3708081
      FROM Movement
           JOIN MovementLinkMovement on MovementLinkMovement.MovementChildId = Movement.Id AND MovementLinkMovement.Descid = zc_MovementLinkMovement_Production()
           JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-        --JOIN Movement AS Movement2 ON Movement2.Id       = MovementLinkMovement.MovementId 
-        --                          AND Movement2.StatusId = zc_Enum_Status_UnComplete() 
+        --JOIN Movement AS Movement2 ON Movement2.Id       = MovementLinkMovement.MovementId
+        --                          AND Movement2.StatusId = zc_Enum_Status_UnComplete()
 
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_Loss(), zc_Movement_SendOnPrice())

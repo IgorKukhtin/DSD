@@ -1,7 +1,7 @@
-object MemberPriceListForm: TMemberPriceListForm
+object ViewPriceListForm: TViewPriceListForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1089#1090#1091#1087' '#1082' '#1048#1079#1084#1077#1085#1077#1085#1080#1103#1084' '#1074' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1077'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1089#1090#1091#1087' '#1085#1072' '#1055#1088#1086#1089#1084#1086#1090#1088' '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1072'>'
   ClientHeight = 374
   ClientWidth = 950
   Color = clBtnFace
@@ -215,6 +215,14 @@ object MemberPriceListForm: TMemberPriceListForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -297,6 +305,10 @@ object MemberPriceListForm: TMemberPriceListForm
       Visible = ivAlways
       ImageIndex = 42
     end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -324,8 +336,8 @@ object MemberPriceListForm: TMemberPriceListForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMemberPriceListEditForm'
-      FormNameParam.Value = 'TMemberPriceListEditForm'
+      FormName = 'TViewPriceListEditForm'
+      FormNameParam.Value = 'TViewPriceListEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -345,8 +357,8 @@ object MemberPriceListForm: TMemberPriceListForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMemberPriceListEditForm'
-      FormNameParam.Value = 'TMemberPriceListEditForm'
+      FormName = 'TViewPriceListEditForm'
+      FormNameParam.Value = 'TViewPriceListEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -464,7 +476,7 @@ object MemberPriceListForm: TMemberPriceListForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'MemberName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -540,15 +552,42 @@ object MemberPriceListForm: TMemberPriceListForm
         end>
       isShowModal = True
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_MemberPriceList'
+    StoredProcName = 'gpSelect_Object_ViewPriceList'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inIsShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 184
     Top = 200
@@ -607,7 +646,7 @@ object MemberPriceListForm: TMemberPriceListForm
     Top = 272
   end
   object spUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_MemberPriceList'
+    StoredProcName = 'gpInsertUpdate_Object_ViewPriceList'
     DataSets = <>
     OutputType = otResult
     Params = <

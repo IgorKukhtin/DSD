@@ -6,7 +6,7 @@ inherited PersonalReportJournalForm: TPersonalReportJournalForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1167
-  ExplicitHeight = 687
+  ExplicitHeight = 688
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

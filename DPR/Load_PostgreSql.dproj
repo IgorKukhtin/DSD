@@ -184,6 +184,11 @@
 			<DCCReference Include="..\SOURCE\EDI\UAECMRXML.pas"/>
 			<DCCReference Include="..\SOURCE\EUSignCP\EUSignCP.pas"/>
 			<DCCReference Include="..\SOURCE\EUSignCP\EUSignCPOwnUI.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdCommon.pas"/>
+			<DCCReference Include="..\SOURCE\Pdfium\PdfiumCore.pas"/>
+			<DCCReference Include="..\SOURCE\Pdfium\PdfiumCtrl.pas"/>
+			<DCCReference Include="..\SOURCE\Pdfium\PdfiumLib.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -1717,6 +1717,23 @@ begin
             Connected:=false;
          end
          else
+         if ParamStr(1)='srv_a_dp_ua' then
+         with toZConnection do begin
+            Connected:=false;
+            HostName:='integer-srv-a.alan.dp.ua';
+            //HostName:='192.168.0.219';
+            User:='admin';
+            Password:='vas6ok';
+            Database:='project';
+            Connected:=true;
+            //
+            isGlobalLoad:=zc_rvYes;
+            if Connected
+            then Self.Caption:= Self.Caption + ' : ' + HostName + ' : TRUE'
+            else Self.Caption:= Self.Caption + ' : ' + HostName + ' : FALSE';
+            Connected:=false;
+         end
+         else
          if ParamStr(1)='alan_dp_ua' then
          with toZConnection do begin
             Connected:=false;

@@ -591,6 +591,16 @@
               Options.Editing = False
               Width = 40
             end
+            object IsDefaultOut: TcxGridDBColumn
+              Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
+              DataBinding.FieldName = 'isDefaultOut'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              HeaderHint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
+              Options.Editing = False
+              Width = 40
+            end
             object IsUnique: TcxGridDBColumn
               Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
               DataBinding.FieldName = 'isUnique'
@@ -2012,8 +2022,8 @@
   object ContractCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 408
-    Top = 328
+    Left = 416
+    Top = 368
   end
   object spJuridicalDetails: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_JuridicalDetails'
@@ -2106,8 +2116,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 432
-    Top = 304
+    Left = 424
+    Top = 224
   end
   object JuridicalDetailsAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2122,6 +2132,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 184
     Top = 8
@@ -2146,6 +2157,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 384
     Top = 304
@@ -2163,6 +2175,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 480
     Top = 296

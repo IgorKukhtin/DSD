@@ -1,30 +1,30 @@
 inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'  ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')>'
-  ClientHeight = 373
+  ClientHeight = 372
   ClientWidth = 1152
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1168
-  ExplicitHeight = 412
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
     Width = 1152
-    Height = 293
+    Height = 292
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1152
     ExplicitHeight = 293
-    ClientRectBottom = 293
+    ClientRectBottom = 292
     ClientRectRight = 1152
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1152
       ExplicitHeight = 293
       inherited cxGrid: TcxGrid
         Width = 1152
-        Height = 293
+        Height = 292
         ExplicitWidth = 1152
         ExplicitHeight = 293
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -118,6 +118,16 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_onDate
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh_del
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -209,6 +219,16 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_onDate
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_del
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh_del
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -220,6 +240,34 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object StatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
+            Width = 59
+          end
           object ItemName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'ItemName'
@@ -356,6 +404,22 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 35
+          end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object ReasonName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1095#1080#1085#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
+            DataBinding.FieldName = 'ReasonName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object WeightTotal: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
@@ -514,6 +578,26 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object Amount_del: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1074#1077#1089'  ('#1091#1076#1072#1083#1077#1085#1085#1099#1077')'
+            DataBinding.FieldName = 'Amount_del'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Amount_sh_del: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1096#1090'.  ('#1091#1076#1072#1083#1077#1085#1085#1099#1077')'
+            DataBinding.FieldName = 'Amount_sh_del'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object SummPartner_10100: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1090'. '#1087#1088#1072#1081#1089', '#1075#1088#1085' '
             DataBinding.FieldName = 'SummPartner_10100'
@@ -632,6 +716,15 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 70
           end
         end
+      end
+      object cbErased: TcxCheckBox
+        Left = 147
+        Top = 15
+        Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+        Caption = #1059#1076#1072#1083#1077#1085#1085#1099#1077
+        Properties.ReadOnly = False
+        TabOrder = 1
+        Width = 90
       end
     end
   end
@@ -1147,6 +1240,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisErased'
+        Value = Null
+        Component = cbErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 240
@@ -1187,7 +1288,23 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         end
         item
           Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1209,6 +1326,13 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     object bb: TdxBarButton
       Action = actPriceListGoods
       Category = 0
+    end
+    object bbErased: TdxBarControlContainerItem
+      Caption = 'Erased'
+      Category = 0
+      Hint = 'Erased'
+      Visible = ivAlways
+      Control = cbErased
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
