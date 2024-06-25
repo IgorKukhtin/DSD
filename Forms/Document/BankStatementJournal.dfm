@@ -3,6 +3,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   ClientWidth = 872
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 888
   PixelsPerInch = 96
   TextHeight = 13
@@ -574,6 +575,14 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAccountId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inAccountId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -785,6 +794,35 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankStatement'
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'

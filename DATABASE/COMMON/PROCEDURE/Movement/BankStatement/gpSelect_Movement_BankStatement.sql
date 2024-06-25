@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatement (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatement (TDateTime, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatement (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatement (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatement (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatement(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inJuridicalBasisId  Integer   , -- Главное юр.лицо
+    IN inJuridicalBasisId  Integer   , -- Главное юр.лицо   
+    IN inAccountId         Integer   , -- (Павильоны) -  10895486   ()
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -56,7 +58,16 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
-            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
+            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId  
+            
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
+                                 ON ObjectLink_BankAccount_Account.ObjectId = Object_BankAccount_View.Id
+                                AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
+
+       WHERE (  (inAccountId > 0 AND ObjectLink_BankAccount_Account.ChildObjectId = inAccountId)
+             OR (inAccountId < 0 AND COALESCE (ObjectLink_BankAccount_Account.ChildObjectId,0) <> (-1) * inAccountId)
+             OR inAccountId = 0
+             )            
       ;
   
 END;
@@ -74,4 +85,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '30.01.2024', inEndDate:= '01.02.2024', inJuridicalBasisId:=0, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '30.01.2024', inEndDate:= '01.02.2024', inJuridicalBasisId:=0, inAccountId:=-10895486 ,inIsErased:= FALSE, inSession:= '2')

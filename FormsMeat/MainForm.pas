@@ -1489,6 +1489,10 @@ type
     N260: TMenuItem;
     actViewPriceList: TdsdOpenForm;
     miViewPriceList: TMenuItem;
+    actBankAccountDocumentPav: TdsdOpenForm;
+    miBankAccountDocumentPav: TMenuItem;
+    actBankPav: TdsdOpenForm;
+    miBankPav: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

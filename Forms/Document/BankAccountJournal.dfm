@@ -1106,6 +1106,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAccountId'
+        Value = '-10895486'
+        Component = FormParams
+        ComponentItem = 'inAccountId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
@@ -1330,6 +1338,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountId'
+        Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
