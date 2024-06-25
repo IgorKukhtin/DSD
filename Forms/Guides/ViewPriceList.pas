@@ -61,6 +61,8 @@ type
     actPriceListChoice: TOpenChoiceForm;
     bbOpenFormTTN: TdxBarButton;
     UnitName_Personal: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

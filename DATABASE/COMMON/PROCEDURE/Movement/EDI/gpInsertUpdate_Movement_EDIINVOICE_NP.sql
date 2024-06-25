@@ -21,6 +21,7 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbIsUpdate Boolean;
 
    DECLARE vbMovementId Integer;
    DECLARE vbMovementReturnInId Integer;
@@ -29,12 +30,19 @@ $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbDescCode TVarChar;
    DECLARE vbisLoad Boolean;
+   
+   vbDeliveryNoteNumber TVarChar;
+   vbJuridicalName TVarChar;
+   vbDelivery_place_GLN TVarChar; 
+   vbJuridicalSaveId Integer;
+   vbMasterEDI Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
     vbUserId:= lpGetUserBySession (inSession);
 
     vbMovementId := NULL;
+    vbIsUpdate := False;
 
     -- Проверка
     IF (SELECT COUNT (*)
@@ -78,6 +86,7 @@ BEGIN
     THEN
         -- будем проверять на УНИКАЛЬНОСТЬ
         vbIsInsert:= TRUE;
+        
         -- сохранили <Документ>
         vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), indocNumber, indocDate, NULL);
 
@@ -87,22 +96,72 @@ BEGIN
         -- сохранили
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementDesc(), vbMovementId, zc_Movement_ReturnIn());
         
+        -- сохранили
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), vbMovementId, inGLNSender);
+
+        -- сохранили
         PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка DOCUMENTINVOICE_NP из EDIn', vbUserId);
     ELSE
         vbIsInsert:= FALSE;
+        
+       SELECT MovementString_InvNumberSaleLink.ValueData AS DeliveryNoteNumber
+            , MovementString_JuridicalName.ValueData     AS JuridicalName
+            , MovementString_GLNPlaceCode.ValueData      AS GLNPlaceCode
+            , MovementLinkObject_Juridical.ObjectId      AS Juridical
+            , MovementLinkMovement_MasterEDI.MovementId  AS MasterEDI              
+       INTO vbDeliveryNoteNumber, vbJuridicalName, vbDelivery_place_GLN, vbJuridicalSaveId, vbMasterEDI
+       FROM Movement
+       
+            LEFT JOIN MovementString AS MovementString_InvNumberSaleLink
+                                     ON MovementString_InvNumberSaleLink.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberSaleLink.DescId = zc_MovementString_InvNumberSaleLink()
+       
+            LEFT JOIN MovementString AS MovementString_JuridicalName
+                                     ON MovementString_JuridicalName.MovementId =  Movement.Id
+                                    AND MovementString_JuridicalName.DescId = zc_MovementString_JuridicalName()
+       
+            LEFT JOIN MovementString AS MovementString_GLNPlaceCode
+                                     ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                    AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+       
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+       
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_MasterEDI
+                                           ON MovementLinkMovement_MasterEDI.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_MasterEDI.DescId = zc_MovementLinkMovement_MasterEDI()
+       
+       WHERE Movement.DescId = zc_Movement_EDI()
+         AND Movement.Id = vbMovementId;
+        
     END IF;
 
     -- сохранили
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSaleLink(), vbMovementId, inDeliveryNoteNumber);
+    IF COALESCE (inDeliveryNoteNumber, '') <> COALESCE (vbDeliveryNoteNumber, '')
+    THEN
+       vbIsUpdate := TRUE;
+
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberSaleLink(), vbMovementId, inDeliveryNoteNumber);
+    END IF;
+        
+    -- сохранили
+    IF COALESCE (inJuridicalName, '') <> COALESCE (vbJuridicalName, '')
+    THEN
+       vbIsUpdate := TRUE;
+
+      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName(), vbMovementId, inJuridicalName);
+    END IF;
+
+    IF inDelivery_place_GLN <> ''
+    THEN
     
-    -- сохранили
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName(), vbMovementId, inJuridicalName);
-
-    -- сохранили
-    PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), vbMovementId, inGLNSender);
-
-    IF inDelivery_place_GLN <> '' THEN
-       PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), vbMovementId, inDelivery_place_GLN);
+       IF COALESCE (inDelivery_place_GLN, '') <> COALESCE (vbDelivery_place_GLN, '')
+       THEN
+         vbIsUpdate := TRUE;
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), vbMovementId, inDelivery_place_GLN);
+       END IF;
+       
        -- Пытаемся установить связь с точкой доставки
         vbPartnerId := COALESCE((SELECT MIN (ObjectId)
                    FROM ObjectString WHERE DescId = zc_ObjectString_Partner_GLNCode() AND ValueData = inDelivery_place_GLN), 0);
@@ -111,12 +170,15 @@ BEGIN
        END IF;
     END IF;
 
-
-    IF vbPartnerId <> 0 THEN -- Находим Юр лицо по контрагенту
+    IF vbPartnerId <> 0 
+    THEN -- Находим Юр лицо по контрагенту
        vbJuridicalId := COALESCE((SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Partner_Juridical() AND ObjectId = vbPartnerId), 0);
     END IF;
 
-    IF COALESCE (vbJuridicalId, 0) <> 0 THEN
+    IF COALESCE (vbJuridicalId, 0) <> COALESCE (vbJuridicalSaveId, 0)
+    THEN
+       vbIsUpdate := TRUE;
+
        -- сохранили <Юр лицо>
        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementId, vbJuridicalId);
        -- сохранили <ОКПО>
@@ -145,7 +207,8 @@ BEGIN
     END IF;
 */
 
-
+    
+    -- Заполним товары
     inInvoiceLines := replace(inInvoiceLines, '{"LineItem":', '');
     inInvoiceLines := replace(inInvoiceLines, '}}', '}');
 
@@ -281,8 +344,9 @@ BEGIN
                              AND tmpEDISum.GoodsList = tmpReturnInSum.GoodsList;
 
     -- сформировали связь <Возврат от покупателя> с EDI
-    IF COALESCE(vbMovementReturnInId, 0) <> 0
+    IF COALESCE(vbMovementReturnInId, 0) <> COALESCE(vbMasterEDI, 0) 
     THEN
+      vbIsUpdate := TRUE;
       PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_MasterEDI(), vbMovementReturnInId, vbMovementId);
     
       -- сохранили
@@ -294,13 +358,15 @@ BEGIN
       
 
     -- сохранили протокол
-    PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);    
+    IF vbIsInsert = TRUE OR vbIsUpdate = TRUE
+    THEN
+      PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);    
+    END IF;
 
     RETURN QUERY
     SELECT vbMovementId, vbIsInsert;
-           
-           
-    --RAISE EXCEPTION 'Прошло. % %', vbMovementId, vbMovementReturnInId;           
+                      
+    --RAISE EXCEPTION 'Прошло. % % %', vbMovementId, vbMovementReturnInId, vbIsUpdate;           
 
 END;
 $BODY$
@@ -314,4 +380,5 @@ $BODY$
 */
 
 -- тест
--- 
+--
+  

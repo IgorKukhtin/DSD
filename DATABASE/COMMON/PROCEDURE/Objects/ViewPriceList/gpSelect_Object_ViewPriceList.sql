@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ViewPriceList()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ViewPriceList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ViewPriceList(Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ViewPriceList(
+    IN inIsShowAll   Boolean,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -66,7 +68,9 @@ BEGIN
            LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
            LEFT JOIN Object AS Object_Unit     ON Object_Unit.Id   = tmpPersonal.UnitId
             
-   WHERE Object_ViewPriceList.DescId = zc_Object_ViewPriceList();
+   WHERE Object_ViewPriceList.DescId = zc_Object_ViewPriceList()
+     AND (Object_ViewPriceList.isErased = inIsShowAll OR inIsShowAll = TRUE)
+   ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -79,4 +83,4 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ViewPriceList ('2')
+-- SELECT * FROM gpSelect_Object_ViewPriceList (TRUE, '2')
