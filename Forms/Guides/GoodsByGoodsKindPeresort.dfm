@@ -544,6 +544,50 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = 
+        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080'  '#1042#1080#1076' '#1090'.('#1087#1077#1088#1077#1084'. '#1087#1077#1088 +
+        #1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object macStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      TabSheet = tsMain
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1089#1086#1088#1090#1099' '#1090#1086#1074#1072#1088#1072'+'#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1074#1077#1088#1096#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1089#1086#1088#1090#1099' '#1090#1086#1074#1072#1088#1072'+'#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1089#1086#1088#1090#1099' '#1090#1086#1074#1072#1088#1072'+'#1074#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 41
+      WithoutNext = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 88
@@ -616,6 +660,14 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -642,46 +694,9 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
       Action = ProtocolOpenForm
       Category = 0
     end
-    object bbUpdateNewQuality: TdxBarButton
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
-      Category = 0
-      Hint = #1059#1089#1090#1085#1086#1074#1080#1090#1100' "'#1042#1078#1080#1090#1080' '#1076#1086'" ('#1044#1072'/'#1053#1077#1090')'
-      Visible = ivAlways
-      ImageIndex = 77
-      ShortCut = 16505
-    end
     object bbStartLoad: TdxBarButton
-      Caption = 
-        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080'  '#1042#1080#1076' '#1090'.('#1087#1077#1088#1077#1084'. '#1087#1077#1088 +
-        #1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080#1079' '#1092#1072#1081#1083#1072
+      Action = macStartLoad
       Category = 0
-      Hint = 
-        #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1058#1086#1074#1072#1088' ('#1087#1077#1088#1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080'  '#1042#1080#1076' '#1090'.('#1087#1077#1088#1077#1084'. '#1087#1077#1088 +
-        #1077#1089#1086#1088#1090'. '#1085#1072' '#1092#1080#1083'.- '#1088#1072#1089#1093#1086#1076') '#1080#1079' '#1092#1072#1081#1083#1072
-      Visible = ivAlways
-      ImageIndex = 41
-    end
-    object bbStartLoadPK: TdxBarButton
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050' = '#1044#1072' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
-      Category = 0
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1085#1072' '#1056#1050' = '#1044#1072' '#1076#1083#1103' '#1090#1086#1074#1072#1088#1086#1074' '#1080#1079' '#1092#1072#1081#1083#1072
-      Visible = ivAlways
-      ImageIndex = 27
-    end
-    object bbStartLoadGoodsKindNew: TdxBarButton
-      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
-      Category = 0
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074' ('#1053#1086#1074#1099#1077') '#1080#1079' '#1092#1072#1081#1083#1072
-      Visible = ivAlways
-      ImageIndex = 30
-    end
-    object bbUpdate_PackOrder: TdxBarButton
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
-      Category = 0
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077#1090' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1103' '#1074' '#1079#1072#1103#1074#1082#1077' '#1085#1072' '#1091#1087#1072#1082'." ('#1044#1072'/'#1053#1077#1090')'
-      Visible = ivAlways
-      ImageIndex = 85
-      ShortCut = 116
     end
     object bbSetErased: TdxBarButton
       Action = actSetErased
@@ -768,8 +783,8 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
       item
         Name = 'inDefaultKey'
         Value = 
-          'TGoodsByGoodsKind_BrForm;zc_Object_ImportSetting_GoodsByGoodsKin' +
-          'd_Br'
+          'TGoodsByGoodsKindPeresortForm;zc_Object_ImportSetting_GoodsByGoo' +
+          'dsKindPeresort'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -789,8 +804,8 @@ inherited GoodsByGoodsKindPeresortForm: TGoodsByGoodsKindPeresortForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 896
-    Top = 128
+    Left = 840
+    Top = 144
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'

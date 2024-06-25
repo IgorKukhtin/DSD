@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue, ExternalLoad, dsdCommon;
 
 type
   TGoodsByGoodsKindPeresortForm = class(TAncestorEnumForm)
@@ -37,13 +37,9 @@ type
     bbProtocol: TdxBarButton;
     actChoiceFormGoods_out: TOpenChoiceForm;
     actChoiceFormGoodsKind_out: TOpenChoiceForm;
-    bbUpdateNewQuality: TdxBarButton;
     FormParams: TdsdFormParams;
     spGetImportSettingId: TdsdStoredProc;
     bbStartLoad: TdxBarButton;
-    bbStartLoadPK: TdxBarButton;
-    bbStartLoadGoodsKindNew: TdxBarButton;
-    bbUpdate_PackOrder: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
     actSetErased: TdsdUpdateErased;
     actSetUnErased: TdsdUpdateErased;
@@ -51,6 +47,9 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     bbShowAll: TdxBarButton;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
   private
     { Private declarations }
   public
