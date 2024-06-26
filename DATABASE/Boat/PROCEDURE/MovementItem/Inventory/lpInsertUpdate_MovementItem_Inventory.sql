@@ -33,6 +33,11 @@ BEGIN
      IF COALESCE (ioPrice, 0) = 0
      THEN
          ioPrice:= (SELECT lpGet.ValuePrice FROM lpGet_MovementItem_PriceList ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), inGoodsId, inUserId) AS lpGet);
+         --
+         IF COALESCE (ioPrice, 0) = 0
+         THEN
+             ioPrice:= (SELECT ObjectFloat_EKPrice.ValueData FROM ObjectFloat AS ObjectFloat_EKPrice WHERE ObjectFloat_EKPrice.ObjectId = inGoodsId AND ObjectFloat_EKPrice.DescId = zc_ObjectFloat_Goods_EKPrice());
+         END IF;
      END IF;
 
      -- определяются параметры из документа

@@ -225,6 +225,8 @@ type
     bbPrintAll: TdxBarButton;
     EKPrice: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
+    isReceiptGoods: TcxGridDBColumn;
+    isProdOptions: TcxGridDBColumn;
   private
   public
   end;
