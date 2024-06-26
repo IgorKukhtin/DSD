@@ -8,7 +8,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_BankAccount.ValueData                       AS Name
            , BankAccount_Juridical.ChildObjectId                AS JuridicalId
            , Juridical.ValueData                                AS JuridicalName
-           , ((ObjectBoolean_isCorporate.ValueData = TRUE) OR (ObjectBoolean_Guide_Irna.ValueData = TRUE)) :: Boolean AS isCorporate
+           , ((ObjectBoolean_isCorporate.ValueData = TRUE) OR (ObjectBoolean_Guide_Irna.ValueData = TRUE) OR ObjectLink_BankAccount_Account.ChildObjectId > 0) :: Boolean AS isCorporate
            , ObjectLink_BankAccount_Bank.ChildObjectId          AS BankId
            , Object_Bank_View.BankName                          AS BankName
            , Object_Bank_View.MFO                               AS MFO
@@ -56,6 +56,12 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_CorrespondentBank
                              ON ObjectLink_BankAccount_CorrespondentBank.ObjectId = Object_BankAccount.Id
                             AND ObjectLink_BankAccount_CorrespondentBank.DescId = zc_ObjectLink_BankAccount_CorrespondentBank()
+
+        LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
+                             ON ObjectLink_BankAccount_Account.ObjectId = Object_BankAccount.Id
+                            AND ObjectLink_BankAccount_Account.DescId   = zc_ObjectLink_BankAccount_Account()
+
+
         LEFT JOIN ObjectLink AS ObjectLink_BankAccount_BeneficiarysBank
                              ON ObjectLink_BankAccount_BeneficiarysBank.ObjectId = Object_BankAccount.Id
                             AND ObjectLink_BankAccount_BeneficiarysBank.DescId = zc_ObjectLink_BankAccount_BeneficiarysBank()
