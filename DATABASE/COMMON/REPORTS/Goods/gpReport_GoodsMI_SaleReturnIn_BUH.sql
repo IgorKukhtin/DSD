@@ -37,6 +37,8 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , PersonalTradeName TVarChar, UnitName_PersonalTrade TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
 
+             , VATPercent TFloat
+
              , Promo_Summ TFloat, Sale_Summ TFloat, Sale_SummReal TFloat, Sale_Summ_10200 TFloat, Sale_Summ_10250 TFloat, Sale_Summ_10300 TFloat
              , Promo_SummCost TFloat, Sale_SummCost TFloat, Sale_SummCost_10500 TFloat, Sale_SummCost_40200 TFloat
              , Sale_Amount_Weight TFloat, Sale_Amount_Sh TFloat
@@ -243,6 +245,7 @@ BEGIN
                                 , COALESCE (MILinkObject_Branch.ObjectId, 0)     AS BranchId
                                 , COALESCE (ContainerLO_Juridical.ObjectId, 0)   AS JuridicalId
                                 , COALESCE (ContainerLO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
+                                , CASE WHEN vbUserId = 5 THEN COALESCE (MovementFloat_VATPercent.ValueData, 0) ELSE 0 END AS VATPercent
 
                                 -- , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                                 -- , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
@@ -350,7 +353,8 @@ BEGIN
                            WHERE (_tmpJuridical.JuridicalId > 0 OR vbIsJuridical = FALSE)
                              AND (MILinkObject_Branch.ObjectId = inBranchId OR COALESCE (inBranchId, 0) = 0 OR _tmpJuridicalBranch.JuridicalId IS NOT NULL)
                            --AND (vbUserId <> 5 OR MIContainer.MovementId = 21845765)
-                           --AND vbUserId <> 5
+                            -- AND (vbUserId <> 5 OR MIContainer.MovementId = 28222484)
+                            --AND (vbUserId <> 5)
                              
                            GROUP BY MIContainer.ContainerId_Analyzer
                                   , MIContainer.ObjectId_Analyzer
@@ -359,6 +363,7 @@ BEGIN
                                   , MILinkObject_Branch.ObjectId
                                   , ContainerLO_Juridical.ObjectId
                                   , ContainerLO_InfoMoney.ObjectId
+                                  , CASE WHEN vbUserId = 5 THEN COALESCE (MovementFloat_VATPercent.ValueData, 0) ELSE 0 END
 
                           UNION ALL
                            SELECT -1 * MovementLinkObject_Contract.ObjectId        AS ContainerId_Analyzer
@@ -369,11 +374,13 @@ BEGIN
                                 , 0                                                AS BranchId
                                 , MovementLinkObject_From.ObjectId                 AS JuridicalId
                                 , COALESCE (ObjectLink_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
+                                , CASE WHEN vbUserId = 5 THEN COALESCE (MovementFloat_VATPercent.ValueData, 0) ELSE 0 END AS VATPercent
 
                              -- , 0 AS Sale_Summ
                              -- , 0 AS Return_Summ
 
                                 , 0 AS Sale_SummMVAT
+                                  -- Sale_SummVAT
                                 , CAST (-1 * MovementItem.Amount
                                            * CASE WHEN COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0 THEN 0
                                                   WHEN MovementBoolean_PriceWithVAT.ValueData = FALSE
@@ -389,6 +396,7 @@ BEGIN
                            FROM Movement
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
 /*and MovementItem.ObjectId in (2404,
 2163,
 8015,
@@ -437,7 +445,7 @@ BEGIN
                              AND (MovementLinkObject_From.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                              AND (ObjectLink_InfoMoney.ChildObjectId    = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
                              AND (COALESCE (inPaidKindId, 0) <> zc_Enum_PaidKind_SecondForm())
-                           --AND vbUserId <> 5
+                             --AND (vbUserId <> 5 OR Movement.Id = 28222484)
 
 
                           UNION ALL
@@ -449,6 +457,7 @@ BEGIN
                               --, 0                                                AS BranchId
                                 , MovementLinkObject_To.ObjectId                   AS JuridicalId
                                 , COALESCE (ObjectLink_InfoMoney.ChildObjectId, 0) AS InfoMoneyId
+                                , CASE WHEN vbUserId = 5 THEN COALESCE (MovementFloat_VATPercent.ValueData, 0) ELSE 0 END AS VATPercent
 
                                   -- сумма без НДС для скидки
                                 , CAST (-1 * MovementItem.Amount
@@ -518,6 +527,7 @@ BEGIN
                                  END AS ContractId
                                , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END AS PartnerId
                                , tmpOperationGroup2.InfoMoneyId
+                               , tmpOperationGroup2.VATPercent
                                , tmpOperationGroup2.BranchId
                                , _tmpGoods.TradeMarkId
                                , CASE WHEN inIsGoods = TRUE     THEN tmpOperationGroup2.GoodsId ELSE 0 END     AS GoodsId
@@ -550,6 +560,7 @@ BEGIN
                                    END
                                  , CASE WHEN inIsPartner = FALSE THEN 0 ELSE tmpOperationGroup2.PartnerId END
                                  , tmpOperationGroup2.InfoMoneyId
+                                 , tmpOperationGroup2.VATPercent
                                  , tmpOperationGroup2.BranchId
                                  , _tmpGoods.TradeMarkId
                                  , CASE WHEN inIsGoods = TRUE THEN tmpOperationGroup2.GoodsId ELSE 0 END
@@ -568,11 +579,14 @@ BEGIN
                    , tmpOperationGroup.InfoMoneyId
                    , Object_InfoMoney.ObjectCode        AS InfoMoneyCode
                    , Object_InfoMoney.ValueData         AS InfoMoneyName
+                   , tmpOperationGroup.VATPercent
                    , tmpOperationGroup.BranchId
+         
                    , Object_Branch.ObjectCode           AS BranchCode
                    , Object_Branch.ValueData            AS BranchName
                    , Object_TradeMark.Id                AS TradeMarkId
                    , Object_TradeMark.ValueData         AS TradeMarkName
+  
                    , tmpOperationGroup.GoodsId
                    , Object_Goods.ObjectCode            AS GoodsCode
                    , Object_Goods.ValueData             AS GoodsName
@@ -610,12 +624,12 @@ BEGIN
                           , tmp.GoodsName  
                           , tmp.GoodsKindId
                           , tmp.GoodsKindName
-                          , tmp.trademarkid
+                          , tmp.TradeMarkId
                           , tmp.TradeMarkName
-                          , tmp.branchid
+                          , tmp.BranchId
                           , tmp.BranchCode
                           , tmp.BranchName
-                          , tmp.juridicalid
+                          , tmp.JuridicalId
                           , tmp.JuridicalCode
                           , tmp.JuridicalName
                          -- , tmp.RetailName
@@ -625,12 +639,15 @@ BEGIN
                           , tmp.PartnerId
                           , tmp.PartnerCode
                           , tmp.PartnerName
-                          , tmp.contractid
+                          , tmp.ContractId
                           , tmp.ContractCode 
                           , tmp.ContractNumber
                           , tmp.ContractTagName
                           , tmp.ContractTagGroupName
-                          , tmp.infomoneyid
+                          , tmp.InfoMoneyId
+                            -- !!!
+                          , 0 AS VATPercent
+
                          -- , tmp.PersonalName, tmp.UnitName_Personal, tmp.BranchName_Personal
                          -- , tmp.PersonalTradeName, tmp.UnitName_PersonalTrade
                           
@@ -690,22 +707,22 @@ BEGIN
                           , tmp.GoodsKindId
                           , tmp.GoodsKindName
                           , tmp.TradeMarkName
-                          , tmp.branchid
+                          , tmp.BranchId
                           , tmp.BranchCode
                           , tmp.BranchName
-                          , tmp.juridicalid
+                          , tmp.JuridicalId
                           , tmp.JuridicalCode
                           , tmp.JuridicalName
-                          , tmp.trademarkid              
+                          , tmp.TradeMarkId              
                          -- , tmp.RetailName
                          -- , tmp.RetailReportName
                          -- , tmp.AreaName, tmp.PartnerTagName
                          -- , tmp.Address, tmp.RegionName, tmp.ProvinceName, tmp.CityKindName, tmp.CityName
-                          , tmp.infomoneyid
+                          , tmp.InfoMoneyId
                           , tmp.PartnerId
                           , tmp.PartnerCode
                           , tmp.PartnerName
-                          , tmp.contractid
+                          , tmp.ContractId
                           , tmp.ContractCode 
                           , tmp.ContractNumber
                           , tmp.ContractTagName
@@ -715,6 +732,11 @@ BEGIN
       , tmpPartnerAddress AS (SELECT * 
                               FROM Object_Partner_Address_View
                               )
+      , tmpVATPercent AS (SELECT _tmpMI.JuridicalId, /*_tmpMI.ContractId,*/ MAX (_tmpMI.VATPercent) AS VATPercent
+                          FROM _tmpMI
+                          WHERE _tmpMI.VATPercent > 0
+                          GROUP BY _tmpMI.JuridicalId/*, _tmpMI.ContractId*/
+                         )
 
 
        -- результат
@@ -746,6 +768,8 @@ BEGIN
             , tmp.InfoMoneyCode
             , tmp.InfoMoneyName
             , tmp.InfoMoneyName_all
+
+            , tmp.VATPercent :: TFloat AS VATPercent
 
             , SUM (COALESCE (tmp.Promo_Summ, 0))   :: TFloat
               --
@@ -842,6 +866,8 @@ BEGIN
             , View_InfoMoney.InfoMoneyName
             , View_InfoMoney.InfoMoneyName_all
 
+            , COALESCE (tmpVATPercent.VATPercent, 0) AS VATPercent
+
             , tmp.Promo_Summ
               --
               -- сумма c НДС
@@ -901,6 +927,9 @@ BEGIN
                                ON ObjectLink_Goods_GoodsGroupStat.ObjectId = COALESCE (_tmpMI.GoodsId, tmp.GoodsId)
                               AND ObjectLink_Goods_GoodsGroupStat.DescId   = zc_ObjectLink_Goods_GoodsGroupStat()
           LEFT JOIN Object AS Object_GoodsGroupStat ON Object_GoodsGroupStat.Id = ObjectLink_Goods_GoodsGroupStat.ChildObjectId
+
+          LEFT JOIN tmpVATPercent ON tmpVATPercent.JuridicalId = COALESCE (_tmpMI.JuridicalId, tmp.JuridicalId)
+                               --AND tmpVATPercent.ContractId  = COALESCE (_tmpMI.ContractId, tmp.ContractId)
 
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (_tmpMI.JuridicalId, tmp.JuridicalId)
@@ -995,7 +1024,8 @@ BEGIN
             , tmp.InfoMoneyCode
             , tmp.InfoMoneyName
             , tmp.InfoMoneyName_all
-     ;
+            , tmp.VATPercent
+           ;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1008,7 +1038,7 @@ $BODY$
 */
 -- тест
 --
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '31.05.2023', inEndDate:= '31.05.2023', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn_BUH (inStartDate:= '31.05.2024', inEndDate:= '31.05.2024', inBranchId:= 0, inAreaId:= 0, inRetailId:= 0, inJuridicalId:= 0, inPaidKindId:= zc_Enum_PaidKind_FirstForm(), inTradeMarkId:= 0, inGoodsGroupId:= 0, inInfoMoneyId:= zc_Enum_InfoMoney_30101(), inIsPartner:= TRUE, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsContract:= FALSE, inIsOLAP:= TRUE, inSession:= zfCalc_UserAdmin());
 /*
 
 select 1 AS yy, * from gpReport_GoodsMI_SaleReturnIn_BUH(inStartDate := ('01.10.2023')::TDateTime , inEndDate := ('31.12.2023')::TDateTime , inBranchId := 0 , inAreaId := 0 , inRetailId := 0 , inJuridicalId := 6329185  , inPaidKindId := 3 
