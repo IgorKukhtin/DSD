@@ -1020,7 +1020,9 @@ BEGIN
                         , Object_Goods.ValueData  AS GoodsName
                         , Object_GoodsKind.ValueData AS GoodsKindName
                         , Object_GoodsKind_complete.ValueData AS GoodsKindName_complete
-                        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END, CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' THEN '*' || tmpMIContainer_group.PartionGoods_item ELSE '' END) :: TVarChar AS PartionGoods
+                        , COALESCE (CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData ELSE NULL END
+                                  , CASE WHEN tmpMIContainer_group.PartionGoods_item <> '' AND vbUserId = 5 THEN '*док-' ELSE '' END || tmpMIContainer_group.PartionGoods_item
+                                   ) :: TVarChar AS PartionGoods
                         , Object_Goods_parent.Id         AS GoodsId_parent
                         , Object_Goods_parent.ObjectCode AS GoodsCode_parent
                         , Object_Goods_parent.ValueData  AS GoodsName_parent
