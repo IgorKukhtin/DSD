@@ -67,6 +67,7 @@ BEGIN
        WHERE (  (inAccountId > 0 AND ObjectLink_BankAccount_Account.ChildObjectId = inAccountId)
              OR (inAccountId < 0 AND COALESCE (ObjectLink_BankAccount_Account.ChildObjectId,0) <> (-1) * inAccountId)
              OR inAccountId = 0
+             OR vbUserId = 5
              )            
       ;
   
