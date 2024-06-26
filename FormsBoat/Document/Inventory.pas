@@ -223,6 +223,8 @@ type
     spSelectPrintAll: TdsdStoredProc;
     actPrintAll: TdsdPrintAction;
     bbPrintAll: TdxBarButton;
+    EKPrice: TcxGridDBColumn;
+    ArticleVergl: TcxGridDBColumn;
   private
   public
   end;

@@ -397,7 +397,8 @@ uses
   MailKind in '..\..\FormsBoat\Kind\MailKind.pas' {MailKindForm: TParentForm},
   MailSendEdit in '..\..\FormsBoat\Guides\MailSendEdit.pas' {MailSendEditForm: TParentForm},
   MailSend in '..\..\FormsBoat\Guides\MailSend.pas' {MailSendForm: TParentForm},
-  ProdOptions_Translate in '..\..\FormsBoat\Guides\ProdOptions_Translate.pas' {ProdOptions_TranslateForm: TParentForm};
+  ProdOptions_Translate in '..\..\FormsBoat\Guides\ProdOptions_Translate.pas' {ProdOptions_TranslateForm: TParentForm},
+  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
