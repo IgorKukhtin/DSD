@@ -87,16 +87,37 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Нет прав на Просмотр прайса <%>', lfGet_Object_ValueData (inPriceListId);
    END IF;
 
-       -- параметры прайс листа
-       SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-            , ObjectFloat_VATPercent.ValueData     AS VATPercent
-      INTO vbPriceWithVAT, vbVATPercent
-       FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
-            LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
-                                  ON ObjectFloat_VATPercent.ObjectId = ObjectBoolean_PriceWithVAT.ObjectId
-                                 AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
-       WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
-         AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
+
+
+   -- Ограничение - Прайс-лист - просмотр с ограничениями
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10575455)
+   THEN
+       -- Ограничение
+       IF NOT EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId AND Object_ViewPriceList_View.PriceListId = inPriceListId)
+          -- если установлены
+          --AND EXISTS (SELECT 1 FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId AND Object_ViewPriceList_View.PriceListId > 0)
+       THEN
+           IF COALESCE (inPriceListId, 0) = 0
+           THEN
+               RETURN;
+           ELSE
+               RAISE EXCEPTION 'Ошибка.Нет прав на просмотр прайса <%>.', lfGet_Object_ValueData (inPriceListId);
+           END IF;
+       END IF;
+   END IF;
+
+
+   -- параметры прайс листа
+   SELECT ObjectBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+        , ObjectFloat_VATPercent.ValueData     AS VATPercent
+          INTO vbPriceWithVAT, vbVATPercent
+   FROM ObjectBoolean AS ObjectBoolean_PriceWithVAT
+        LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                              ON ObjectFloat_VATPercent.ObjectId = ObjectBoolean_PriceWithVAT.ObjectId
+                             AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+   WHERE ObjectBoolean_PriceWithVAT.ObjectId = inPriceListId
+     AND ObjectBoolean_PriceWithVAT.DescId = zc_ObjectBoolean_PriceList_PriceWithVAT();
+
 
 
    IF inShowAll = TRUE THEN

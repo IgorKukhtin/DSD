@@ -42,8 +42,25 @@ BEGIN
      END IF;
 
 
+     -- Ограничение - Прайс-лист - просмотр с ограничениями
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10575455)
+     THEN
+         -- Ограничение
+         IF NOT EXISTS (SELECT 1 AS Id FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId AND Object_ViewPriceList_View.PriceListId = inPriceListId)
+            -- если установлены
+            --AND EXISTS (SELECT 1 FROM Object_ViewPriceList_View WHERE Object_ViewPriceList_View.UserId = vbUserId AND Object_ViewPriceList_View.PriceListId > 0)
+         THEN
+             IF COALESCE (inPriceListId, 0) = 0
+             THEN
+                 RETURN;
+             ELSE
+                 RAISE EXCEPTION 'Ошибка.Нет прав на просмотр прайса <%>.', lfGet_Object_ValueData (inPriceListId);
+             END IF;
+         END IF;
+     END IF;
+
+
      -- Выбираем данные
-     
      IF COALESCE (inGoodsKindId,0) > 0 
      THEN 
        RETURN QUERY 
