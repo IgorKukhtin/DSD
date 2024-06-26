@@ -59,7 +59,7 @@ BEGIN
                                                  )
                                              THEN 25
 
-                                        WHEN 0 < (SELECT tmpCount.Res FROM tmpCount)
+                                        WHEN 1 < (SELECT tmpCount.Res FROM tmpCount)
                                              AND (inProcName ILIKE 'gpReport_GoodsBalance'
                                                OR inProcName ILIKE 'gpReport_GoodsBalance_Server'
                                                  )
