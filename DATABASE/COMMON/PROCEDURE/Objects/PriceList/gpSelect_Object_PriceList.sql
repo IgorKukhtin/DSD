@@ -69,7 +69,7 @@ BEGIN
                                 AND ObjectLink_Currency.DescId = zc_ObjectLink_PriceList_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Currency.ChildObjectId
        WHERE Object_PriceList.DescId = zc_Object_PriceList()
-         AND (vbNotUser = FALSE OR COALESCE (ObjectBoolean_User.ValueData, FALSE) = FALSE)
+         AND (vbNotUser = FALSE OR COALESCE (ObjectBoolean_User.ValueData, FALSE) = FALSE OR tmpViewPriceList.PriceListId > 0)
          AND (tmpViewPriceList.PriceListId > 0 OR vbNotUser = FALSE OR tmpViewPriceList_isALL.PriceListId = 0)
 
       UNION ALL
