@@ -37,7 +37,7 @@ BEGIN
            , CAST ('' as TVarChar)  AS BusinessName
            , CAST (0 as Integer)    AS PaidKindId
            , CAST ('' as TVarChar)  AS PaidKindName
-           , CAST (NULL AS Boolean) AS isNotCurrencyDiff
+           , CAST (FALSE AS Boolean) AS isNotCurrencyDiff
            ;
    ELSE
        RETURN QUERY 
