@@ -11465,7 +11465,7 @@ END $$;
 
 
 
-TBankStatementJournalForm;zc_Object_ImportSetting_BankStatement_csv
+--TBankStatementJournalForm;zc_Object_ImportSetting_BankStatement_csv
 --Загрузка БВ из csv файла 
 DO $$
 DECLARE vbImportTypeId Integer;
@@ -11609,7 +11609,7 @@ BEGIN
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 6, 
                                                                 inName          := 'inBankMFOMain', 
-                                                                inParamType     := 'ftInteger', 
+                                                                inParamType     := 'ftString', 
                                                                 inUserParamName := 'МФО',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));

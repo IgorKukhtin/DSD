@@ -260,7 +260,23 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ImportSettingsId.Component = FormParams
       ImportSettingsId.ComponentItem = 'ImportSettingId'
       ImportSettingsId.MultiSelectSeparator = ','
-      ExternalParams = <>
+      ExternalParams = <
+        item
+          Name = 'inStartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
     end
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'Load'

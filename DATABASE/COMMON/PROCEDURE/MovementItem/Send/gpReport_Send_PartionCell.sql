@@ -1,13 +1,15 @@
 -- Function: gpReport_Send_PartionCell ()
 
 --DROP FUNCTION IF EXISTS gpReport_Send_PartionCell (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Send_PartionCell (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Send_PartionCell (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_PartionCell (TDateTime, TDateTime, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_PartionCell (
     IN inStartDate         TDateTime ,
     IN inEndDate           TDateTime ,
     IN inUnitId            Integer   ,
-    IN inIsMovement        Boolean   ,
+    IN inIsMovement        Boolean   , 
+    IN inisCell            Boolean   ,
     IN inIsShowAll         Boolean   ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -42,6 +44,28 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellId_18  Integer
              , PartionCellId_19  Integer
              , PartionCellId_20 Integer
+
+             , PartionCellCode_1  Integer
+             , PartionCellCode_2  Integer
+             , PartionCellCode_3  Integer
+             , PartionCellCode_4  Integer
+             , PartionCellCode_5  Integer
+             , PartionCellCode_6  Integer
+             , PartionCellCode_7  Integer
+             , PartionCellCode_8  Integer
+             , PartionCellCode_9  Integer
+             , PartionCellCode_10 Integer
+             , PartionCellCode_11  Integer
+             , PartionCellCode_12  Integer
+             , PartionCellCode_13  Integer
+             , PartionCellCode_14  Integer
+             , PartionCellCode_15  Integer
+             , PartionCellCode_16  Integer
+             , PartionCellCode_17  Integer
+             , PartionCellCode_18  Integer
+             , PartionCellCode_19  Integer
+             , PartionCellCode_20 Integer
+
 
              , PartionCellName_1   TVarChar
              , PartionCellName_2   TVarChar
@@ -433,7 +457,8 @@ BEGIN
                            , tmpData_All_All.GoodsId           -- *** 
                            , tmpData_All_All.GoodsKindId       -- *** 
                            , tmpData_All_All.PartionGoodsDate  -- *** 
-                           , tmpData_All_All.PartionCellId
+                           , tmpData_All_All.PartionCellId 
+                           , Object_PartionCell.ObjectCode AS PartionCellCode
                            , tmpData_All_All.PartionCellId_real
                            , COALESCE (Object_PartionCell_real.ObjectCode :: TVarChar || ' ' || Object_PartionCell_real.ValueData, Object_PartionCell.ObjectCode :: TVarChar || ' ' || Object_PartionCell.ValueData) AS PartionCellName_calc
                              -- если хоть одна партия в ячейке НЕ закрыта - все НЕ закрыты
@@ -464,6 +489,8 @@ BEGIN
                        , tmpData_All.GoodsId
                        , tmpData_All.GoodsKindId
                        , tmpData_All.PartionGoodsDate
+                       , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellCode ELSE NULL END  AS PartionCellCode
+                       , CASE WHEN inisCell = TRUE THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE NULL END ::TVarChar AS PartionCellName
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_2
@@ -485,6 +512,28 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_20
+
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_1
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_2
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 3  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_3
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 4  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_4
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 5  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_5
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 6  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_6
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 7  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_7
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 8  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_8
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 9  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_9
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 10 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_10
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 11 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_11
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 12 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_12
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 13 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_13
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 14 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_14
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 15 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_15
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 16 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_16
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 17 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_17
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_18
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_19
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_20
+
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_2
@@ -561,7 +610,9 @@ BEGIN
                          , tmpData_All.MovementItemId
                          , tmpData_All.GoodsId
                          , tmpData_All.GoodsKindId
-                         , tmpData_All.PartionGoodsDate
+                         , tmpData_All.PartionGoodsDate 
+                         , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellCode ELSE NULL END
+                         , CASE WHEN inisCell = TRUE THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE NULL END
                   )
     , tmpResult AS (
                     -- Результат
@@ -584,7 +635,9 @@ BEGIN
                          , Object_Measure.ValueData                   AS MeasureName
                          , Object_GoodsKind.Id                        AS GoodsKindId
                          , Object_GoodsKind.ValueData                 AS GoodsKindName
-                         , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
+                         , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate 
+                         , tmpData.PartionCellCode
+                         , tmpData.PartionCellName 
                            --
                          , tmpData.PartionCellId_1  :: Integer
                          , tmpData.PartionCellId_2  :: Integer
@@ -607,6 +660,28 @@ BEGIN
                          , tmpData.PartionCellId_19 :: Integer
                          , tmpData.PartionCellId_20 :: Integer
              
+                         , tmpData.PartionCellCode_1  :: Integer
+                         , tmpData.PartionCellCode_2  :: Integer
+                         , tmpData.PartionCellCode_3  :: Integer
+                         , tmpData.PartionCellCode_4  :: Integer
+                         , tmpData.PartionCellCode_5  :: Integer
+                         , tmpData.PartionCellCode_6  :: Integer
+                         , tmpData.PartionCellCode_7  :: Integer
+                         , tmpData.PartionCellCode_8  :: Integer
+                         , tmpData.PartionCellCode_9  :: Integer
+                         , tmpData.PartionCellCode_10 :: Integer
+                         , tmpData.PartionCellCode_11 :: Integer
+                         , tmpData.PartionCellCode_12 :: Integer
+                         , tmpData.PartionCellCode_13 :: Integer
+                         , tmpData.PartionCellCode_14 :: Integer
+                         , tmpData.PartionCellCode_15 :: Integer
+                         , tmpData.PartionCellCode_16 :: Integer
+                         , tmpData.PartionCellCode_17 :: Integer
+                         , tmpData.PartionCellCode_18 :: Integer
+                         , tmpData.PartionCellCode_19 :: Integer
+                         , tmpData.PartionCellCode_20 :: Integer
+
+
                          , tmpData.PartionCellName_1        :: TVarChar
                          , tmpData.PartionCellName_2        :: TVarChar
                          , tmpData.PartionCellName_3        :: TVarChar
@@ -771,6 +846,9 @@ BEGIN
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
         , tmpResult.PartionGoodsDate 
 
+        , tmpResult.PartionCellCode
+        , tmpResult.PartionCellName 
+
         , tmpResult.PartionCellId_1  
         , tmpResult.PartionCellId_2  
         , tmpResult.PartionCellId_3  
@@ -791,6 +869,28 @@ BEGIN
         , tmpResult.PartionCellId_18 
         , tmpResult.PartionCellId_19 
         , tmpResult.PartionCellId_20 
+
+        , tmpResult.PartionCellCode_1  
+        , tmpResult.PartionCellCode_2  
+        , tmpResult.PartionCellCode_3  
+        , tmpResult.PartionCellCode_4  
+        , tmpResult.PartionCellCode_5  
+        , tmpResult.PartionCellCode_6  
+        , tmpResult.PartionCellCode_7  
+        , tmpResult.PartionCellCode_8  
+        , tmpResult.PartionCellCode_9  
+        , tmpResult.PartionCellCode_10 
+        , tmpResult.PartionCellCode_11 
+        , tmpResult.PartionCellCode_12 
+        , tmpResult.PartionCellCode_13 
+        , tmpResult.PartionCellCode_14 
+        , tmpResult.PartionCellCode_15 
+        , tmpResult.PartionCellCode_16 
+        , tmpResult.PartionCellCode_17 
+        , tmpResult.PartionCellCode_18 
+        , tmpResult.PartionCellCode_19 
+        , tmpResult.PartionCellCode_20 
+
 
         , tmpResult.PartionCellName_1
         , tmpResult.PartionCellName_2
