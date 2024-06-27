@@ -75,6 +75,11 @@ type
     BankOshad: TMultiAction;
     BankOshadLoad: TClientBankLoadAction;
     bbBankOshad: TdxBarButton;
+    actGetImportSetting_csv: TdsdExecStoredProc;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    mactStartLoad_csv: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

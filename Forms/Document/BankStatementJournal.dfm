@@ -253,6 +253,15 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     inherited actSetErased: TdsdChangeMovementStatus
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'? '
     end
+    object actDoLoad: TExecuteImportSettingsAction [24]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <>
+    end
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
@@ -546,6 +555,38 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       EndDateParam.DataType = ftDateTime
       EndDateParam.MultiSelectSeparator = ','
     end
+    object actGetImportSetting_csv: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object mactStartLoad_csv: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_csv
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      ImageIndex = 50
+      WithoutNext = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankStatement'
@@ -660,6 +701,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -751,6 +796,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbBankOshad: TdxBarButton
       Action = BankOshad
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = mactStartLoad_csv
       Category = 0
     end
   end
@@ -874,7 +923,41 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 768
+    Top = 64
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TBankStatementJournalForm;zc_Object_ImportSetting_BankStatement_' +
+          'csv'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 160
   end
 end
