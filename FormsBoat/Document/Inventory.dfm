@@ -26,8 +26,6 @@ object InventoryForm: TInventoryForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = 272
-    ExplicitTop = 310
     ClientRectBottom = 373
     ClientRectRight = 808
     ClientRectTop = 24
@@ -183,6 +181,15 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
+          object ArticleVergl: TcxGridDBColumn
+            Caption = 'Vergl. Nr'
+            DataBinding.FieldName = 'ArticleVergl'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1040#1088#1090#1080#1082#1091#1083' ('#1072#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1081')'
+            Options.Editing = False
+            Width = 70
+          end
           object Article_all: TcxGridDBColumn
             Caption = '***Artikel Nr'
             DataBinding.FieldName = 'Article_all'
@@ -208,9 +215,28 @@ object InventoryForm: TInventoryForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object isReceiptGoods: TcxGridDBColumn
+            Caption = #1057#1073#1086#1088#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isReceiptGoods'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1089#1073#1086#1088#1082#1077' '#1059#1079#1083#1072'/'#1052#1086#1076#1077#1083#1080
+            Options.Editing = False
+            Width = 55
+          end
+          object isProdOptions: TcxGridDBColumn
+            Caption = #1054#1087#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isProdOptions'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1087#1094#1080#1103#1093
+            Options.Editing = False
+            Width = 55
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1083#1077#1082#1090#1091#1102#1097#1080#1077
@@ -239,6 +265,7 @@ object InventoryForm: TInventoryForm
           object PartNumber: TcxGridDBColumn
             Caption = 'S/N'
             DataBinding.FieldName = 'PartNumber'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1077#1088#1080#1081#1085#1099#1081' '#8470' '#1087#1086' '#1090#1077#1093' '#1087#1072#1089#1087#1086#1088#1090#1091
@@ -277,18 +304,19 @@ object InventoryForm: TInventoryForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1092#1072#1082#1090' '#1074' '#1084#1072#1075#1072#1079#1080#1085#1077' ('#1073#1077#1079' '#1076#1086#1083#1075#1086#1074')'
             Width = 70
           end
           object AmountScan: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1052#1086#1073'. '#1091#1089#1090#1088
+            Caption = #1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082' ('#1089#1082#1072#1085'.)'
             DataBinding.FieldName = 'AmountScan'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1088#1080' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1080' '#1085#1072' '#1084#1086#1073'.'#1091#1089#1090#1088#1086#1081#1089#1090#1074#1077
             Options.Editing = False
+            Width = 70
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090'. '#1086#1089#1090#1072#1090#1086#1082
@@ -333,6 +361,19 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1074#1093'.'
+            Options.Editing = False
+            Width = 55
+          end
+          object EKPrice: TcxGridDBColumn
+            Caption = 'Netto EK'
+            DataBinding.FieldName = 'EKPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074#1093'. ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
+            Options.Editing = False
             Width = 55
           end
           object Price_find: TcxGridDBColumn
@@ -348,7 +389,7 @@ object InventoryForm: TInventoryForm
             Width = 70
           end
           object isPrice_diff: TcxGridDBColumn
-            Caption = '***'#1055#1086#1089#1090'.'
+            Caption = '***'#1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'isPrice_diff'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -357,7 +398,7 @@ object InventoryForm: TInventoryForm
             Width = 70
           end
           object isPrice_goods: TcxGridDBColumn
-            Caption = '***Artikel'
+            Caption = '***Netto EK'
             DataBinding.FieldName = 'isPrice_goods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -498,6 +539,9 @@ object InventoryForm: TInventoryForm
     object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0

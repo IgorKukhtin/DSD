@@ -101,7 +101,8 @@ uses
   DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
   PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
-  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas';
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas';
 
 {$R *.res}
 
@@ -125,7 +126,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-     Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainFormInstance, MainFormInstance);
   end
   else
   with TLoginForm.Create(Application) do

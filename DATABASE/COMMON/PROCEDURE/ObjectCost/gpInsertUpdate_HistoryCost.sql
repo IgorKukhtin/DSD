@@ -34,6 +34,8 @@ BEGIN
      -- IF inBranchId IN (8379, 3080683) THEN RETURN; END IF;
      -- IF inBranchId IN (0) THEN RETURN; END IF;
 
+     --if inItearationCount > 1 then inItearationCount:= 0;  END IF;
+
      IF inItearationCount > 80 THEN inItearationCount:= 80; END IF;
      inDiffSumm       := 0.009;
 
@@ -934,6 +936,11 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
 
      END IF; -- if inBranchId = 0
 
+     if inBranchId = 0
+     then
+        delete from _tmpChild_2024_06_12;
+        insert into _tmpChild_2024_06_12 select * from _tmpChild;
+     end if;
 
 --    RAISE EXCEPTION 'Ошибка.<%>   %', (select sum(_tmpChild.OperCount) from _tmpChild where _tmpChild.MasterContainerId_Count = 2389013)
 -- , (select count(*) from _tmpChild where _tmpChild.MasterContainerId_Count = 2389013)
@@ -1005,6 +1012,36 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
       where _tmpChild.MasterContainerId = 3098974 and _tmpChild.ContainerId = 120200
       );
 */
+
+     if inBranchId = 0
+     then
+         delete from _tmpMaster_2024_06_12;
+         insert into _tmpMaster_2024_06_12 select * from _tmpMaster;
+         
+         
+         -- !!! error - 15.06.2024!!!||
+         /*UPDATE _tmpMaster SET CalcSumm          = 0.1 * _tmpMaster.calcCount
+                             , CalcSumm_external = 0.1 * _tmpMaster.calcCount_external
+         FROM
+              (with tmp_1 AS (SELECT Container.*
+                              FROM Container
+                                   INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                                  ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                                 AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                 AND ContainerLinkObject_Unit.ObjectId IN (8450) -- ЦЕХ пакування + Склад База ГП + Дільниця термічної обробки
+                              WHERE Container.DescId = zc_Container_Count()
+                                AND Container.ObjectId in (3569176  -- 953
+                                                          )
+                             )
+                  SELECT Container.Id
+                  FROM Container
+                  WHERE Container.DescId = zc_Container_Summ()
+                    AND Container.ParentId in (SELECT tmp_1.Id FROM tmp_1)
+              ) AS tmp
+         WHERE tmp.Id = _tmpMaster.ContainerId
+        ;*/
+         
+     end if;
 
      -- !!! 1-ая итерация для всех !!!
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
@@ -1143,6 +1180,34 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                ;
 
          END IF;
+
+
+         -- !!! error - 15.06.2024!!!
+         /*if inBranchId = 0
+         then
+             -- !!! error - 15.06.2024!!!
+             UPDATE _tmpMaster SET CalcSumm          = 0.1 * _tmpMaster.calcCount
+                                 , CalcSumm_external = 0.1 * _tmpMaster.calcCount_external
+             FROM
+                  (with tmp_1 AS (SELECT Container.*
+                                  FROM Container
+                                       INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                                      ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                                     AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                     AND ContainerLinkObject_Unit.ObjectId IN (8450) -- ЦЕХ пакування + Склад База ГП + Дільниця термічної обробки
+                                  WHERE Container.DescId = zc_Container_Count()
+                                    AND Container.ObjectId in (3569176  -- 953
+                                                              )
+                                 )
+                      SELECT Container.Id
+                      FROM Container
+                      WHERE Container.DescId = zc_Container_Summ()
+                        AND Container.ParentId in (SELECT tmp_1.Id FROM tmp_1)
+                  ) AS tmp
+             WHERE tmp.Id = _tmpMaster.ContainerId
+            ;
+             
+         end if;*/
 
          -- расчет с/с
          UPDATE _tmpMaster SET CalcSumm          = _tmpSumm.CalcSumm
@@ -1508,30 +1573,56 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                                                                         AND MIContainer_Count.ContainerId  = tmpContainer_count.ContainerId
                                                                         AND MIContainer_Count.DescId       = zc_MIContainer_Count()
                                                                       --AND MIContainer_Count.isActive     = TRUE
+                                   WHERE inStartDate >= '01.06.2024'
                                   )
 
           , tmpMaster_find AS (SELECT DISTINCT _tmpMaster.ContainerId FROM _tmpMaster
-                                   UNION
-                                    SELECT DISTINCT _tmpChild.ContainerId FROM _tmpChild
-                                   UNION
-                                    SELECT DISTINCT Container.Id
-                                    FROM _tmpChild
-                                         JOIN Container ON Container.ParentId = _tmpChild.ContainerId_Count
-                                                       AND Container.DescId   = zc_Container_Summ()
-                                   UNION
-                                    SELECT DISTINCT Container.Id
-                                    FROM _tmpChild
-                                         JOIN Container ON Container.ParentId = _tmpChild.MasterContainerId_Count
-                                                       AND Container.DescId   = zc_Container_Summ()
-                                   UNION
-                                    SELECT DISTINCT Container.Id
-                                    FROM tmpChild_find
-                                         JOIN Container ON Container.ParentId = tmpChild_find.ContainerId
-                                                       AND Container.DescId   = zc_Container_Summ()
-                                   )
+                               WHERE inStartDate >= '01.06.2024'
+                              UNION
+                               SELECT DISTINCT _tmpChild.ContainerId FROM _tmpChild
+                               WHERE inStartDate >= '01.06.2024'
+                              UNION
+                               SELECT DISTINCT Container.Id
+                               FROM _tmpChild
+                                    JOIN Container ON Container.ParentId = _tmpChild.ContainerId_Count
+                                                  AND Container.DescId   = zc_Container_Summ()
+                               WHERE inStartDate >= '01.06.2024'
+                              UNION
+                               SELECT DISTINCT Container.Id
+                               FROM _tmpChild
+                                    JOIN Container ON Container.ParentId = _tmpChild.MasterContainerId_Count
+                                                  AND Container.DescId   = zc_Container_Summ()
+                               WHERE inStartDate >= '01.06.2024'
+                              UNION
+                               SELECT DISTINCT Container.Id
+                               FROM tmpChild_find
+                                    JOIN Container ON Container.ParentId = tmpChild_find.ContainerId
+                                                  AND Container.DescId   = zc_Container_Summ()
+                               WHERE inStartDate >= '01.06.2024'
+                              )
+           -- !!! error - 15.06.2024!!!
+         , tmp AS (with tmp_1 AS (SELECT Container.*
+                                  FROM Container
+                                       INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
+                                                                      ON ContainerLinkObject_Unit.ContainerId = Container.Id
+                                                                     AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                                     AND ContainerLinkObject_Unit.ObjectId IN (8450) -- Дільниця термічної обробки
+                                  WHERE Container.DescId = zc_Container_Count()
+                                    AND Container.ObjectId in (3569176  -- 953
+                                                              )
+                                 )
+                      SELECT Container.Id
+                      FROM Container
+                      WHERE Container.DescId = zc_Container_Summ()
+                        AND Container.ParentId in (SELECT tmp_1.Id FROM tmp_1)
+                  )
+
             SELECT _tmpMaster.ContainerId, inStartDate AS StartDate
                  , DATE_TRUNC ('MONTH', inStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AS EndDate
-                 , CASE WHEN _tmpMaster.isInfoMoney_80401 = TRUE
+                 , CASE WHEN tmp.Id > 0 AND 1=0
+                              -- !!! error - 15.06.2024!!!
+                             THEN 0.1
+                        WHEN _tmpMaster.isInfoMoney_80401 = TRUE
                              THEN CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount) <> 0
                                             THEN (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.calcCount)
                                        ELSE  0
@@ -1556,6 +1647,10 @@ join ContainerLinkObject as CLO3 on CLO3.ContainerId = Container.Id
                  , 0 AS MovementItemId_diff, 0 AS Summ_diff
             FROM _tmpMaster
                  -- LEFT JOIN _tmpDiff ON _tmpDiff.ContainerId = _tmpMaster.ContainerId
+
+                 -- !!! error - 15.06.2024!!!
+                 LEFT JOIN tmp ON tmp.Id = _tmpMaster.ContainerId
+
             WHERE (_tmpMaster.UnitId <> zc_Unit_RK()
               --OR inStartDate       < lfGet_Object_Unit_PartionDate_isPartionCell()
                 OR inStartDate       < '01.06.2024'
