@@ -422,6 +422,10 @@ type
     TimerTorchMode: TTimer;
     PanelMain: TPanel;
     iScanBarCodePanel: TPanel;
+    WebServerLayout11: TLayout;
+    WebServerLabel: TLabel;
+    WebServerLayout12: TLayout;
+    pbWebServer: TPopupBox;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -861,6 +865,8 @@ var
   {$IFDEF ANDROID}
   aFMXApplicationEventService: IFMXApplicationEventService;
   {$ENDIF}
+  I, nWebServer: Integer;
+  Res: TArray<string>;
   SettingsFile : TIniFile;
 begin
 
@@ -882,6 +888,7 @@ begin
   FOrderClientId := 0;
   FOrderClientInvNumber := '';
   FOrderClientInvNumberFull := '';
+  nWebServer:= 0;
 
 
   GetSearshBox(lwDictList).OnChangeTracking := lwDictListSearchChange;
@@ -965,9 +972,19 @@ begin
     FisDictGoodsEAN := SettingsFile.ReadBool('Params', 'isDictGoodsEAN', False);
     FisDictCode := SettingsFile.ReadBool('Params', 'isDictCode', False);
 
+    nWebServer := SettingsFile.ReadInteger('Params', 'WebServer', nWebServer);
+
   finally
     FreeAndNil(SettingsFile);
   end;
+
+  if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+  else Res := TRegEx.Split(WebServer, ';');
+
+  for I := Low(Res) to High(Res) do pbWebServer.Items.Add(Res[I]);
+
+  if pbWebServer.Items.Count > nWebServer then pbWebServer.ItemIndex := nWebServer
+  else pbWebServer.ItemIndex := 0;
 
   if FisTestWebServer then
     PasswordLabel.Text := 'Пароль (тестовый сервер)'
@@ -3380,11 +3397,19 @@ begin
       exit;
     end;
 
-    if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
-    else Res := TRegEx.Split(WebServer, ';');
+    if pbWebServer.ItemIndex > 0 then
+    begin
+      SetLength(gc_WebServers, 1);
+      gc_WebServers[0] := pbWebServer.Text;
+    end else
+    begin
+      if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+      else Res := TRegEx.Split(WebServer, ';');
 
-    SetLength(gc_WebServers, High(Res) + 1);
-    for I := Low(Res) to High(Res) do gc_WebServers[I] := Res[I];
+      SetLength(gc_WebServers, High(Res) + 1);
+      for I := Low(Res) to High(Res) do gc_WebServers[I] := Res[I];
+    end;
+
     gc_WebService := gc_WebServers[0];
 
     Wait(True);
@@ -3426,6 +3451,7 @@ begin
     SettingsFile := TIniFile.Create(FINIFile);
     try
       SettingsFile.WriteString('LOGIN', 'USERNAME', LoginEdit.Text);
+      SettingsFile.WriteInteger('Params', 'WebServer', pbWebServer.ItemIndex);
     finally
       FreeAndNil(SettingsFile);
     end;
@@ -3758,6 +3784,8 @@ end;
 
 procedure TfrmMain.rbWebServerClick(Sender: TObject);
   var SettingsFile : TIniFile;
+      I: Integer;
+      Res: TArray<string>;
 begin
   ppWebServer.IsOpen := False;
   FPasswordLabelClick := 0;
@@ -3775,7 +3803,15 @@ begin
 
   if FisTestWebServer then
     PasswordLabel.Text := 'Пароль (тестовый сервер)'
-  else PasswordLabel.Text := 'Пароль'
+  else PasswordLabel.Text := 'Пароль';
+
+  while pbWebServer.Items.Count > 1 do pbWebServer.Items.Delete(1);
+
+  if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+  else Res := TRegEx.Split(WebServer, ';');
+
+  for I := Low(Res) to High(Res) do pbWebServer.Items.Add(Res[I]);
+  pbWebServer.ItemIndex := 0;
 end;
 
 procedure TfrmMain.OnScanResultGoods(Sender: TObject; AData_String: String);

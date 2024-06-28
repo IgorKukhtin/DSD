@@ -45,29 +45,29 @@ BEGIN
      
      vbFilterArt := REPLACE(REPLACE(REPLACE(inFilter, ' ', ''), '.', ''), '-', '');
 
+     CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
+     SELECT MovementItem.Id
+          , MovementItem.ObjectId AS GoodsId
+          , MovementItem.PartionId
+          , MovementItem.Amount
+          , COALESCE (MIString_PartNumber.ValueData, '')::TVarChar  AS PartNumber
+          , MILO_PartionCell.ObjectId                               AS PartionCellId
+          , MovementItem.isErased
+     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+          JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Scan()
+                   AND MovementItem.isErased   = tmpIsErased.isErased
+          LEFT JOIN MovementItemString AS MIString_PartNumber
+                                       ON MIString_PartNumber.MovementItemId = MovementItem.Id
+                                      AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
+
+          LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                           ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                          AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell();     
+
      -- Результат такой
      RETURN QUERY
-       WITH tmpMI AS (SELECT MovementItem.Id
-                           , MovementItem.ObjectId AS GoodsId
-                           , MovementItem.PartionId
-                           , MovementItem.Amount
-                           , COALESCE (MIString_PartNumber.ValueData, '')::TVarChar  AS PartNumber
-                           , MILO_PartionCell.ObjectId                               AS PartionCellId
-                           , MovementItem.isErased
-                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                            AND MovementItem.DescId     = zc_MI_Scan()
-                                            AND MovementItem.isErased   = tmpIsErased.isErased
-                           LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                        ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                       AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-
-                          LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
-                                                           ON MILO_PartionCell.MovementItemId = MovementItem.Id
-                                                          AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()
-                     )
-
-         , tmpRemains AS (SELECT Container.Id       AS ContainerId
+       WITH tmpRemains AS (SELECT Container.Id       AS ContainerId
                                , Container.ObjectId AS GoodsId
                                , Container.Amount
                                , Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate = vbOperDate AND MIContainer.MovementDescId = zc_Movement_Inventory()
@@ -232,4 +232,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 3183, inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 0, inFilter := 'ff', inSession := zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpSelect_MovementItem_MobileInventory (inMovementId := 5773 , inIsOrderBy := 'False', inIsAllUser := 'False', inIsErased := 'False', inLimit := 0, inFilter := '', inSession := '254935');
