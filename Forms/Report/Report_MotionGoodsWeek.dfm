@@ -6,7 +6,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1382
-  ExplicitHeight = 572
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1061,7 +1061,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1072,7 +1072,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1152,7 +1152,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1163,7 +1163,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1380,6 +1380,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         end
         item
           Name = 'LocationName'
+          Value = Null
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1420,7 +1421,7 @@ inherited Report_MotionGoodsWeekForm: TReport_MotionGoodsWeekForm
         end
         item
           Name = 'IsPartner'
-          Value = 'TRUE'
+          Value = True
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','

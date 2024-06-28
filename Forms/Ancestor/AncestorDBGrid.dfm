@@ -118,6 +118,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 520
     Top = 264

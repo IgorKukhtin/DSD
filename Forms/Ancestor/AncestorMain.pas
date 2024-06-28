@@ -10,7 +10,7 @@ uses
   dxSkinsDefaultPainters, dxSkinsdxBarPainter, cxPropertiesStore, Vcl.Menus,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, cxLabel, dsdAction, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
-  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.ActnMenus;
+  Vcl.ToolWin, Vcl.ActnCtrls, Vcl.ActnMenus, dsdCommon;
 
 type
   TAncestorMainForm = class(TForm)

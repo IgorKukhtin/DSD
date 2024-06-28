@@ -140,6 +140,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('Партия учета по Ячейкам хранения', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения.fr3');
+  exit;
    {
    LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Отчеты (производство)\Отчет_Анализ Заявки На Производство.fr3');
   exit;

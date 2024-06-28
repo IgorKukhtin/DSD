@@ -1,28 +1,28 @@
 inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 382
-  ClientWidth = 1071
+  ClientWidth = 1550
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1087
+  ExplicitWidth = 1566
   ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 97
-    Width = 1071
+    Width = 1550
     Height = 285
     TabOrder = 3
     ExplicitTop = 97
     ExplicitWidth = 1071
     ExplicitHeight = 285
     ClientRectBottom = 285
-    ClientRectRight = 1071
+    ClientRectRight = 1550
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1071
       ExplicitHeight = 285
       inherited cxGrid: TcxGrid
-        Width = 1071
+        Width = 1550
         Height = 285
         ExplicitWidth = 1071
         ExplicitHeight = 285
@@ -783,7 +783,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
   end
   inherited Panel: TPanel
-    Width = 1071
+    Width = 1550
     Height = 30
     ExplicitWidth = 1071
     ExplicitHeight = 30
@@ -850,10 +850,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   object PanelSearch: TPanel [2]
     Left = 0
     Top = 30
-    Width = 1071
+    Width = 1550
     Height = 41
     Align = alTop
     TabOrder = 6
+    ExplicitWidth = 1071
     object lbSearchCode: TcxLabel
       Left = 21
       Top = 10
@@ -954,14 +955,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'MovementDescName_order;OperDate;ObjectByName;InvNumber'
+          IndexFieldNames = 'OperDate;InvNumber;GoodsName;GoodsKindName;PartionCellCode_1'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -980,7 +981,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'UnitGroupName'
+          Name = 'UnitName'
           Value = Null
           Component = GuidesUnit
           ComponentItem = 'TextValue'
@@ -988,36 +989,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'LocationName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
+          Name = 'isCell'
           Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isSumm_branch'
-          Value = Null
+          Component = cbisCell
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084
+      ReportName = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
+      ReportNameParam.Value = #1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1569,11 +1548,19 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormPartionCell'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbOpenFormPartionCell'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -2112,8 +2099,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 890
-    Top = 144
+    Left = 874
+    Top = 184
   end
   object FieldFilter_Search: TdsdFieldFilter
     TextEdit = edSearchCode
