@@ -73,7 +73,7 @@ type
     BankOshadLoad: TClientBankLoadAction;
     bbBankOshad: TdxBarButton;
     actGetImportSetting_csv_Privat: TdsdExecStoredProc;
-    spGetImportSettingId: TdsdStoredProc;
+    spGetImportSettingId_Privat: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     mactStartLoad_csv_Privat: TMultiAction;
     bbStartLoad_csv_Privat: TdxBarButton;
@@ -82,6 +82,8 @@ type
     mactStartLoad_csv_Vostok: TMultiAction;
     bbStartLoad_csv_Vostok: TdxBarButton;
     JuridicalName: TcxGridDBColumn;
+    spGetImportSettingId_Vostok: TdsdStoredProc;
+    dxBarSeparator1: TdxBarSeparator;
   private
     { Private declarations }
   public

@@ -579,10 +579,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
+      StoredProc = spGetImportSettingId_Privat
       StoredProcList = <
         item
-          StoredProc = spGetImportSettingId
+          StoredProc = spGetImportSettingId_Privat
         end>
       Caption = 'actGetImportSetting_csv_Privat'
     end
@@ -599,7 +599,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1055#1088#1080#1074#1072#1090' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
       Caption = #1055#1088#1080#1074#1072#1090
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090
@@ -610,10 +610,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGetImportSettingId
+      StoredProc = spGetImportSettingId_Vostok
       StoredProcList = <
         item
-          StoredProc = spGetImportSettingId
+          StoredProc = spGetImportSettingId_Vostok
         end>
       Caption = 'actGetImportSetting_csv_Vostok'
     end
@@ -630,7 +630,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Action = actRefresh
         end>
-      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1042#1086#1089#1090#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
       Caption = #1042#1086#1089#1090#1086#1082
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1042#1086#1089#1090#1086#1082
@@ -863,12 +863,23 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad_csv_Vostok'
         end>
     end
     object bbStartLoad_csv_Vostok: TdxBarButton
       Action = mactStartLoad_csv_Vostok
       Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited PopupMenu: TPopupMenu
@@ -994,7 +1005,41 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     Left = 768
     Top = 64
   end
-  object spGetImportSettingId: TdsdStoredProc
+  object spGetImportSettingId_Privat: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TBankStatementJournalForm;zc_Object_ImportSetting_BankStatement_' +
+          'csv'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 160
+  end
+  object spGetImportSettingId_Vostok: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
     DataSets = <
       item
@@ -1025,7 +1070,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 648
-    Top = 160
+    Left = 560
+    Top = 96
   end
 end
