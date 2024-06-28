@@ -28,20 +28,24 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 95
           end
           inherited colInvNumber: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 135
+            Width = 100
           end
           inherited colOperDate: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 126
+            Width = 80
           end
           object BankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 175
@@ -49,20 +53,18 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           object BankAccountName: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 172
           end
-          object Debet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-          end
-          object Kredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090
-            HeaderAlignmentVert = vaCenter
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1054#1073#1086#1088#1086#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+            Options.Editing = False
+            Width = 200
           end
         end
       end
@@ -72,10 +74,12 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     Width = 872
     ExplicitWidth = 872
     inherited deStart: TcxDateEdit
-      EditValue = 43831d
+      Left = 109
+      EditValue = 45292d
+      ExplicitLeft = 109
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43831d
+      EditValue = 45292d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -571,7 +575,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       EndDateParam.DataType = ftDateTime
       EndDateParam.MultiSelectSeparator = ','
     end
-    object actGetImportSetting_csv: TdsdExecStoredProc
+    object actGetImportSetting_csv_Privat: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -580,15 +584,14 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           StoredProc = spGetImportSettingId
         end>
-      Caption = 'actGetImportSetting_csv'
-      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072
+      Caption = 'actGetImportSetting_csv_Privat'
     end
-    object mactStartLoad_csv: TMultiAction
+    object mactStartLoad_csv_Privat: TMultiAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
       ActionList = <
         item
-          Action = actGetImportSetting_csv
+          Action = actGetImportSetting_csv_Privat
         end
         item
           Action = actDoLoad
@@ -598,8 +601,39 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end>
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1080#1079' '#1092#1072#1081#1083#1072' csv'
+      Caption = #1055#1088#1080#1074#1072#1090
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1088#1080#1074#1072#1090
+      ImageIndex = 50
+      WithoutNext = True
+    end
+    object actGetImportSetting_csv_Vostok: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting_csv_Vostok'
+    end
+    object mactStartLoad_csv_Vostok: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_csv_Vostok
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1041#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082' '#1080#1079' '#1092#1072#1081#1083#1072' csv?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1042#1086#1089#1090#1086#1082
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1042#1086#1089#1090#1086#1082
       ImageIndex = 50
       WithoutNext = True
     end
@@ -718,7 +752,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'dxBarSubItem1'
         end
         item
           BeginGroup = True
@@ -814,8 +848,26 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Action = BankOshad
       Category = 0
     end
-    object bb: TdxBarButton
-      Action = mactStartLoad_csv
+    object bbStartLoad_csv_Privat: TdxBarButton
+      Action = mactStartLoad_csv_Privat
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' csv'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_csv_Privat'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoad_csv_Vostok'
+        end>
+    end
+    object bbStartLoad_csv_Vostok: TdxBarButton
+      Action = mactStartLoad_csv_Vostok
       Category = 0
     end
   end
@@ -953,7 +1005,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         Name = 'inDefaultKey'
         Value = 
           'TBankStatementJournalForm;zc_Object_ImportSetting_BankStatement_' +
-          'csv'
+          'csv_Vostok'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

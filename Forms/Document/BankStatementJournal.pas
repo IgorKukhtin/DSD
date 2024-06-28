@@ -42,9 +42,6 @@ type
     BankForum: TMultiAction;
     BankVostok: TMultiAction;
     BankFido: TMultiAction;
-    Amount: TcxGridDBColumn;
-    Debet: TcxGridDBColumn;
-    Kredit: TcxGridDBColumn;
     BankOTPLoad: TClientBankLoadAction;
     BankOTP: TMultiAction;
     bbOTPLoad: TdxBarButton;
@@ -75,11 +72,16 @@ type
     BankOshad: TMultiAction;
     BankOshadLoad: TClientBankLoadAction;
     bbBankOshad: TdxBarButton;
-    actGetImportSetting_csv: TdsdExecStoredProc;
+    actGetImportSetting_csv_Privat: TdsdExecStoredProc;
     spGetImportSettingId: TdsdStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
-    mactStartLoad_csv: TMultiAction;
-    bb: TdxBarButton;
+    mactStartLoad_csv_Privat: TMultiAction;
+    bbStartLoad_csv_Privat: TdxBarButton;
+    dxBarSubItem1: TdxBarSubItem;
+    actGetImportSetting_csv_Vostok: TdsdExecStoredProc;
+    mactStartLoad_csv_Vostok: TMultiAction;
+    bbStartLoad_csv_Vostok: TdxBarButton;
+    JuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
