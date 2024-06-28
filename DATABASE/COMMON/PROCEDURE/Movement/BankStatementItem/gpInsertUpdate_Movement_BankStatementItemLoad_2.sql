@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankStatementItemLoad()
 
 DROP FUNCTION IF EXISTS
-   gpInsertUpdate_Movement_BankStatementItemLoad_2(TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar,
+   gpInsertUpdate_Movement_BankStatementItemLoad_2( TDateTime, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar,
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
                                                    TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
@@ -48,10 +48,15 @@ BEGIN
 
     IF vbUserId = '5' AND 1=1 THEN inOperDate:= inOperDate + INTERVAL '10 DAY'; END IF;
 
-    --проверка чтоб дата документа попадала в загружаемый период
-    IF inOperDate > inEndDate OR inOperDate < inStartDate
+    IF vbUserId = 9457
     THEN
-        RETURN;
+         RAISE EXCEPTION 'Test.Ok';
+    END IF;
+
+    --проверка чтоб дата документа попадала в загружаемый период
+    IF (inOperDate > inEndDate) OR (inOperDate < inStartDate)
+    THEN
+        RETURN 0;
     END IF;
     
     --
@@ -613,7 +618,7 @@ BEGIN
     PERFORM lpInsert_MovementProtocol (vbMovementItemId, vbUserId, TRUE);
 
 
- if vbUserId = 5 AND 1=0 AND inBankAccountMain <> 'UA423808050000000026003707397'
+ if (vbUserId = 5 OR vbUserId = 9457) AND 1=1 AND inBankAccountMain <> 'UA423808050000000026003707397'
  then
     RAISE EXCEPTION 'ok1 %   %    %    %  %',  lfGet_Object_ValueData (vbJuridicalId), vbContractId, lfGet_Object_ValueData (vbContractId), lfGet_Object_ValueData (vbInfoMoneyId), inComment;
  end if;

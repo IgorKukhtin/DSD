@@ -91,6 +91,14 @@ object Report_Send_PartionCellRemainsDialogForm: TReport_Send_PartionCellRemains
     TabOrder = 8
     Width = 103
   end
+  object cbisCell: TcxCheckBox
+    Left = 136
+    Top = 83
+    Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 9
+    Width = 103
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -98,8 +106,8 @@ object Report_Send_PartionCellRemainsDialogForm: TReport_Send_PartionCellRemains
     Top = 4
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 56
+    Left = 232
+    Top = 8
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -156,6 +164,14 @@ object Report_Send_PartionCellRemainsDialogForm: TReport_Send_PartionCellRemains
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCell'
+        Value = Null
+        Component = cbisCell
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 160
     Top = 92
@@ -187,7 +203,7 @@ object Report_Send_PartionCellRemainsDialogForm: TReport_Send_PartionCellRemains
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 56
+    Left = 32
+    Top = 24
   end
 end
