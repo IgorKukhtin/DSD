@@ -2497,7 +2497,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
@@ -2507,8 +2507,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsForm');
-     exit;
-
+  exit;
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalGroupSummAddForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalGroupSummAddForm');

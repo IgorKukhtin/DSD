@@ -3,7 +3,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' <'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 165
+  ClientHeight = 204
   ClientWidth = 351
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 62
-    Top = 127
+    Top = 167
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   end
   object cxButton2: TcxButton
     Left = 200
-    Top = 127
+    Top = 167
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   end
   object edUnit: TcxButtonEdit
     Left = 11
-    Top = 82
+    Top = 122
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   end
   object cxLabel3: TcxLabel
     Left = 11
-    Top = 59
+    Top = 99
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
   end
   object cxLabel6: TcxLabel
@@ -80,11 +80,19 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
     Caption = #1044#1072#1090#1072' '#1087#1086' :'
   end
   object cbMovement: TcxCheckBox
-    Left = 244
-    Top = 27
+    Left = 11
+    Top = 67
     Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
     Properties.ReadOnly = False
     TabOrder = 8
+    Width = 101
+  end
+  object cbisCell: TcxCheckBox
+    Left = 121
+    Top = 67
+    Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+    Properties.ReadOnly = False
+    TabOrder = 9
     Width = 103
   end
   object PeriodChoice: TPeriodChoice
@@ -95,7 +103,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
-    Top = 56
+    Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -108,7 +116,7 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 312
-    Top = 52
+    Top = 92
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -152,6 +160,14 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCell'
+        Value = Null
+        Component = cbisCell
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 200
     Top = 8
@@ -184,6 +200,6 @@ object Report_Send_PartionCellDialogForm: TReport_Send_PartionCellDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 128
-    Top = 56
+    Top = 96
   end
 end

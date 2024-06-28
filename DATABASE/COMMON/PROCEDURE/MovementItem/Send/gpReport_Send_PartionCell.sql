@@ -23,7 +23,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
-
+          
              , PartionCellId_1  Integer
              , PartionCellId_2  Integer
              , PartionCellId_3  Integer
@@ -43,7 +43,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellId_17  Integer
              , PartionCellId_18  Integer
              , PartionCellId_19  Integer
-             , PartionCellId_20 Integer
+             , PartionCellId_20  Integer
 
              , PartionCellCode_1  Integer
              , PartionCellCode_2  Integer
@@ -219,7 +219,8 @@ BEGIN
                   AND MovementItem.isErased = FALSE
                )
                        
-     , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
+    , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
+                           , COUNT (*) OVER (PARTITION BY MovementItemLinkObject.MovementItemId ) AS CountCell
                       FROM MovementItemLinkObject
                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
                         AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
@@ -358,12 +359,14 @@ BEGIN
                            , CASE WHEN Movement.OperDate <> COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                                   THEN 8435455
                                   ELSE zc_Color_White()
-                             END AS Color_PartionGoodsDate
+                             END AS Color_PartionGoodsDate 
+                           --
+                           , CASE WHEN inisCell = TRUE THEN tmpMILO_PartionCell.CountCell ELSE 1 END AS CountCell 
 
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
                            -- есть привязка или нет - выводится двумя строчками
-                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId FROM tmpMILO_PartionCell
+                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId, CountCell FROM tmpMILO_PartionCell
                                      ) AS tmpMILO_PartionCell
                                        ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
 
@@ -385,6 +388,7 @@ BEGIN
                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                              , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                              , CASE WHEN tmpMILO_PartionCell.MovementItemId > 0 THEN TRUE ELSE FALSE END
+                             , CASE WHEN inisCell = TRUE THEN tmpMILO_PartionCell.CountCell ELSE 1 END
                      )
 
     -- Развернули по ячейкам - вертикально
@@ -472,6 +476,7 @@ BEGIN
                                                            , tmpData_All_All.GoodsId           -- *** 
                                                            , tmpData_All_All.GoodsKindId       -- *** 
                                                            , tmpData_All_All.PartionGoodsDate  -- *** 
+                                                           , CASE WHEN inisCell = TRUE THEN tmpData_All_All.PartionCellId ELSE 0 END --если по ячейкам то все ячейки выводим отдельной строкой
                                                 ORDER BY COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
@@ -489,8 +494,6 @@ BEGIN
                        , tmpData_All.GoodsId
                        , tmpData_All.GoodsKindId
                        , tmpData_All.PartionGoodsDate
-                       , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellCode ELSE NULL END  AS PartionCellCode
-                       , CASE WHEN inisCell = TRUE THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE NULL END ::TVarChar AS PartionCellName
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_2
@@ -611,8 +614,7 @@ BEGIN
                          , tmpData_All.GoodsId
                          , tmpData_All.GoodsKindId
                          , tmpData_All.PartionGoodsDate 
-                         , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellCode ELSE NULL END
-                         , CASE WHEN inisCell = TRUE THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE NULL END
+                         , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellId ELSE NULL END
                   )
     , tmpResult AS (
                     -- Результат
@@ -636,8 +638,6 @@ BEGIN
                          , Object_GoodsKind.Id                        AS GoodsKindId
                          , Object_GoodsKind.ValueData                 AS GoodsKindName
                          , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate 
-                         , tmpData.PartionCellCode
-                         , tmpData.PartionCellName 
                            --
                          , tmpData.PartionCellId_1  :: Integer
                          , tmpData.PartionCellId_2  :: Integer
@@ -751,8 +751,9 @@ BEGIN
                            -- Сформированы данные по ячейкам (да/нет)
                          , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean AS isPartionCell
              
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
-                         , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (CASE WHEN COALESCE (tmpData_MI.CountCell,0) <> 0 THEN tmpData_MI.Amount/tmpData_MI.CountCell ELSE tmpData_MI.Amount END) ELSE 0 END ::TFloat AS Amount
+                         , ((CASE WHEN COALESCE (tmpData_MI.CountCell,0) <> 0 THEN tmpData_MI.Amount/tmpData_MI.CountCell ELSE tmpData_MI.Amount END)
+                             * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
              
                            -- Срок хранения в днях
                          , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
@@ -846,9 +847,6 @@ BEGIN
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
         , tmpResult.PartionGoodsDate 
 
-        , tmpResult.PartionCellCode
-        , tmpResult.PartionCellName 
-
         , tmpResult.PartionCellId_1  
         , tmpResult.PartionCellId_2  
         , tmpResult.PartionCellId_3  
@@ -890,7 +888,6 @@ BEGIN
         , tmpResult.PartionCellCode_18 
         , tmpResult.PartionCellCode_19 
         , tmpResult.PartionCellCode_20 
-
 
         , tmpResult.PartionCellName_1
         , tmpResult.PartionCellName_2
@@ -1068,6 +1065,7 @@ BEGIN
                        )
       -- выбираем заполненные ячейки
      , tmpMILO_PC AS (SELECT _tmpPartionCell.*
+                            , COUNT (*) OVER (PARTITION BY _tmpPartionCell.MovementItemId ) AS CountCell
                       FROM _tmpPartionCell
                       WHERE _tmpPartionCell.ObjectId > 0
                      )
@@ -1102,16 +1100,16 @@ BEGIN
                       )
                       
 
-     , tmpMovementDate_Insert AS (SELECT MovementDate.*
-                          FROM MovementDate
-                          WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                            AND MovementDate.DescId = zc_MovementDate_Insert()
-                          )
+    , tmpMovementDate_Insert AS (SELECT MovementDate.*
+                                 FROM MovementDate
+                                 WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementDate.DescId = zc_MovementDate_Insert()
+                                 )
     , tmpMLO_Insert AS (SELECT MovementLinkObject.*
-                 FROM MovementLinkObject
-                 WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                   AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
-                 )
+                        FROM MovementLinkObject
+                        WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                          AND MovementLinkObject.DescId = zc_MovementLinkObject_Insert()
+                        )
 
     , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
                         FROM MovementItemBoolean
@@ -1222,11 +1220,13 @@ BEGIN
                                   THEN 8435455
                                   ELSE zc_Color_White()
                              END AS Color_PartionGoodsDate
+                             
+                           , CASE WHEN inisCell = TRUE THEN tmpMILO_PartionCell.CountCell ELSE 1 END AS CountCell 
 
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
                            -- есть привязка или нет - выводится двумя строчками
-                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId FROM tmpMILO_PartionCell
+                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId, tmpMILO_PartionCell.CountCell FROM tmpMILO_PartionCell
                                      ) AS tmpMILO_PartionCell
                                        ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
 
@@ -1248,6 +1248,7 @@ BEGIN
                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                              , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                              , CASE WHEN tmpMILO_PartionCell.MovementItemId > 0 THEN TRUE ELSE FALSE END
+                             , CASE WHEN inisCell = TRUE THEN tmpMILO_PartionCell.CountCell ELSE 1 END
                      )
 
     -- Развернули по ячейкам - вертикально
@@ -1320,7 +1321,8 @@ BEGIN
                            , tmpData_All_All.GoodsId           -- *** 
                            , tmpData_All_All.GoodsKindId       -- *** 
                            , tmpData_All_All.PartionGoodsDate  -- *** 
-                           , tmpData_All_All.PartionCellId
+                           , tmpData_All_All.PartionCellId       
+                           , Object_PartionCell.ObjectCode AS PartionCellCode
                            , tmpData_All_All.PartionCellId_real
                            , COALESCE (Object_PartionCell_real.ValueData, Object_PartionCell.ValueData) AS PartionCellName_calc
                              -- если хоть одна партия в ячейке НЕ закрыта - все НЕ закрыты
@@ -1334,6 +1336,7 @@ BEGIN
                                                            , tmpData_All_All.GoodsId           -- *** 
                                                            , tmpData_All_All.GoodsKindId       -- *** 
                                                            , tmpData_All_All.PartionGoodsDate  -- *** 
+                                                           , CASE WHEN inisCell = TRUE THEN tmpData_All_All.PartionCellId ELSE 0 END --если по ячейкам то все ячейки выводим отдельной строкой
                                                 ORDER BY COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
@@ -1372,6 +1375,28 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_20
+
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_1
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_2
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 3  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_3
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 4  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_4
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 5  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_5
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 6  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_6
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 7  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_7
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 8  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_8
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 9  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_9
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 10 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_10
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 11 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_11
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 12 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_12
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 13 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_13
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 14 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_14
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 15 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_15
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 16 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_16
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 17 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_17
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_18
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_19
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_20
+
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_2
@@ -1449,6 +1474,7 @@ BEGIN
                          , tmpData_All.GoodsId
                          , tmpData_All.GoodsKindId
                          , tmpData_All.PartionGoodsDate
+                         , CASE WHEN inisCell = TRUE THEN tmpData_All.PartionCellId ELSE NULL END
                   )
     -- Результат
     , tmpResult AS (
@@ -1496,7 +1522,28 @@ BEGIN
                     , tmpData.PartionCellId_18 :: Integer
                     , tmpData.PartionCellId_19 :: Integer
                     , tmpData.PartionCellId_20 :: Integer
-        
+
+                    , tmpData.PartionCellCode_1  :: Integer
+                    , tmpData.PartionCellCode_2  :: Integer
+                    , tmpData.PartionCellCode_3  :: Integer
+                    , tmpData.PartionCellCode_4  :: Integer
+                    , tmpData.PartionCellCode_5  :: Integer
+                    , tmpData.PartionCellCode_6  :: Integer
+                    , tmpData.PartionCellCode_7  :: Integer
+                    , tmpData.PartionCellCode_8  :: Integer
+                    , tmpData.PartionCellCode_9  :: Integer
+                    , tmpData.PartionCellCode_10 :: Integer
+                    , tmpData.PartionCellCode_11 :: Integer
+                    , tmpData.PartionCellCode_12 :: Integer
+                    , tmpData.PartionCellCode_13 :: Integer
+                    , tmpData.PartionCellCode_14 :: Integer
+                    , tmpData.PartionCellCode_15 :: Integer
+                    , tmpData.PartionCellCode_16 :: Integer
+                    , tmpData.PartionCellCode_17 :: Integer
+                    , tmpData.PartionCellCode_18 :: Integer
+                    , tmpData.PartionCellCode_19 :: Integer
+                    , tmpData.PartionCellCode_20 :: Integer
+
                     , tmpData.PartionCellName_1        :: TVarChar
                     , tmpData.PartionCellName_2        :: TVarChar
                     , tmpData.PartionCellName_3        :: TVarChar
@@ -1566,8 +1613,8 @@ BEGIN
                       -- Сформированы данные по ячейкам (да/нет)
                     , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean  AS isPartionCell
         
-                    , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
-                    , (tmpData_MI.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
+                    , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (CASE WHEN COALESCE (tmpData_MI.CountCell,0) <> 0 THEN tmpData_MI.Amount/tmpData_MI.CountCell ELSE tmpData_MI.Amount END) ELSE 0 END ::TFloat AS Amount
+                    , ((CASE WHEN COALESCE (tmpData_MI.CountCell,0) <> 0 THEN tmpData_MI.Amount/tmpData_MI.CountCell ELSE tmpData_MI.Amount END) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS Amount_Weight
         
                       -- Срок хранения в днях
                     , tmpNormInDays.NormInDays                   :: Integer AS NormInDays
@@ -1664,7 +1711,7 @@ BEGIN
         , tmpResult.GoodsId , tmpResult.GoodsCode , tmpResult.GoodsName 
         , tmpResult.GoodsGroupNameFull, tmpResult.MeasureName 
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
-        , tmpResult.PartionGoodsDate 
+        , tmpResult.PartionGoodsDate   
 
         , tmpResult.PartionCellId_1  
         , tmpResult.PartionCellId_2  
@@ -1686,6 +1733,27 @@ BEGIN
         , tmpResult.PartionCellId_18 
         , tmpResult.PartionCellId_19 
         , tmpResult.PartionCellId_20 
+
+        , tmpResult.PartionCellCode_1  
+        , tmpResult.PartionCellCode_2  
+        , tmpResult.PartionCellCode_3  
+        , tmpResult.PartionCellCode_4  
+        , tmpResult.PartionCellCode_5  
+        , tmpResult.PartionCellCode_6  
+        , tmpResult.PartionCellCode_7  
+        , tmpResult.PartionCellCode_8  
+        , tmpResult.PartionCellCode_9  
+        , tmpResult.PartionCellCode_10 
+        , tmpResult.PartionCellCode_11 
+        , tmpResult.PartionCellCode_12 
+        , tmpResult.PartionCellCode_13 
+        , tmpResult.PartionCellCode_14 
+        , tmpResult.PartionCellCode_15 
+        , tmpResult.PartionCellCode_16 
+        , tmpResult.PartionCellCode_17 
+        , tmpResult.PartionCellCode_18 
+        , tmpResult.PartionCellCode_19 
+        , tmpResult.PartionCellCode_20
 
         , tmpResult.PartionCellName_1
         , tmpResult.PartionCellName_2
@@ -1783,6 +1851,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.24
  04.01.24         *
 */
 
@@ -1799,3 +1868,5 @@ zc_ObjectFloat_OrderType_TermProduction
 */
 
 --select * from gpReport_Send_PartionCell (inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inUnitId := 0 , inIsMovement := 'False' , inIsShowAll := 'false' ,  inSession := '9457');
+--select * from gpReport_Send_PartionCell(inStartDate := ('25.06.2024')::TDateTime , inEndDate := ('26.06.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inisCell := 'true' , inIsShowAll := 'true' ,  inSession := '9457')
+--where GoodsCode = 41;

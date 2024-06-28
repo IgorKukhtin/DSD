@@ -751,6 +751,14 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       TabOrder = 6
       Width = 108
     end
+    object cbisCell: TcxCheckBox
+      Left = 487
+      Top = 4
+      Action = actRefreshCell
+      Properties.ReadOnly = False
+      TabOrder = 7
+      Width = 89
+    end
   end
   object PanelSearch: TPanel [2]
     Left = 0
@@ -827,7 +835,21 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshPartion: TdsdDataSetRefresh [0]
+    object actRefreshCell: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshPartion: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -963,6 +985,14 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           Name = 'isMovement'
           Value = Null
           Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = Null
+          Component = cbisCell
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1376,6 +1406,14 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         Name = 'inIsMovement'
         Value = Null
         Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCell'
+        Value = False
+        Component = cbisCell
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

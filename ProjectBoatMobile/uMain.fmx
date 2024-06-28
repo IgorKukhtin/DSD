@@ -669,7 +669,7 @@
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 15
+        TabIndex = 0
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -711,7 +711,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -738,9 +738,9 @@
                 Align = MostTop
                 Position.Y = 93.000000000000000000
                 Size.Width = 336.000000000000000000
-                Size.Height = 50.000000000000000000
+                Size.Height = 46.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 0
+                TabOrder = 2
                 object LoginEdit: TEdit
                   Touch.InteractiveGestures = [LongTap, DoubleTap]
                   Align = VertCenter
@@ -752,7 +752,7 @@
                   TextSettings.FontColor = xFF005078
                   TextSettings.HorzAlign = Center
                   Position.X = 15.000000000000000000
-                  Position.Y = 9.000000000000000000
+                  Position.Y = 7.000000000000000000
                   Margins.Left = 15.000000000000000000
                   Margins.Right = 15.000000000000000000
                   Size.Width = 306.000000000000000000
@@ -768,7 +768,7 @@
                 Size.Width = 336.000000000000000000
                 Size.Height = 26.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 1
+                TabOrder = 3
                 object Label2: TLabel
                   Align = Client
                   StyledSettings = [Family]
@@ -784,11 +784,11 @@
               end
               object Layout3: TLayout
                 Align = MostTop
-                Position.Y = 143.000000000000000000
+                Position.Y = 139.000000000000000000
                 Size.Width = 336.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 3
+                TabOrder = 5
                 object PasswordLabel: TLabel
                   Align = Client
                   StyledSettings = [Family]
@@ -815,11 +815,11 @@
               end
               object Layout4: TLayout
                 Align = MostTop
-                Position.Y = 168.000000000000000000
+                Position.Y = 164.000000000000000000
                 Size.Width = 336.000000000000000000
-                Size.Height = 50.000000000000000000
+                Size.Height = 46.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 2
+                TabOrder = 4
                 object PasswordEdit: TEdit
                   Touch.InteractiveGestures = [LongTap, DoubleTap]
                   Align = VertCenter
@@ -831,7 +831,7 @@
                   TextSettings.FontColor = xFF005078
                   TextSettings.HorzAlign = Center
                   Position.X = 15.000000000000000000
-                  Position.Y = 9.000000000000000000
+                  Position.Y = 7.000000000000000000
                   Margins.Left = 15.000000000000000000
                   Margins.Right = 15.000000000000000000
                   Size.Width = 306.000000000000000000
@@ -841,13 +841,50 @@
                   KillFocusByReturn = True
                 end
               end
+              object WebServerLayout11: TLayout
+                Align = Top
+                Position.Y = 210.000000000000000000
+                Size.Width = 336.000000000000000000
+                Size.Height = 25.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object WebServerLabel: TLabel
+                  Align = Client
+                  StyledSettings = [Family]
+                  Margins.Left = 15.000000000000000000
+                  Size.Width = 321.000000000000000000
+                  Size.Height = 25.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.Font.StyleExt = {00070000000000000004000000}
+                  TextSettings.FontColor = xFF005078
+                  Text = #1057#1077#1088#1074#1077#1088
+                end
+              end
+              object WebServerLayout12: TLayout
+                Align = Top
+                Position.Y = 235.000000000000000000
+                Size.Width = 336.000000000000000000
+                Size.Height = 46.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                object pbWebServer: TPopupBox
+                  Items.Strings = (
+                    #1040#1074#1090#1086' '#1086#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077)
+                  Position.X = 15.000000000000000000
+                  Position.Y = 10.000000000000000000
+                  Size.Width = 306.000000000000000000
+                  Size.Height = 28.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                end
+              end
               object Panel1: TPanel
                 Align = MostTop
                 Size.Width = 336.000000000000000000
                 Size.Height = 67.000000000000000000
                 Size.PlatformDefault = False
                 StyleLookup = 'Panel1Style1'
-                TabOrder = 4
+                TabOrder = 6
                 object Label3: TLabel
                   Align = Top
                   StyledSettings = []
@@ -880,20 +917,20 @@
               end
               object Layout43: TLayout
                 Align = Top
-                Position.Y = 218.000000000000000000
+                Position.Y = 281.000000000000000000
                 Size.Width = 336.000000000000000000
                 Size.Height = 90.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 8
+                TabOrder = 10
                 object Layout5: TLayout
                   Align = Top
                   Size.Width = 336.000000000000000000
-                  Size.Height = 89.000000000000000000
+                  Size.Height = 85.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 0
                   object Layout37: TLayout
                     Align = Bottom
-                    Position.Y = 29.000000000000000000
+                    Position.Y = 25.000000000000000000
                     Size.Width = 336.000000000000000000
                     Size.Height = 60.000000000000000000
                     Size.PlatformDefault = False
@@ -18444,18 +18481,18 @@
               object Layout6: TLayout
                 Align = Client
                 Size.Width = 336.000000000000000000
-                Size.Height = 176.000000000000000000
+                Size.Height = 113.000000000000000000
                 Size.PlatformDefault = False
-                TabOrder = 7
+                TabOrder = 9
                 object Layout7: TLayout
                   Align = Top
                   Size.Width = 336.000000000000000000
-                  Size.Height = 89.000000000000000000
+                  Size.Height = 85.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 0
                   object Layout8: TLayout
                     Align = Bottom
-                    Position.Y = 29.000000000000000000
+                    Position.Y = 25.000000000000000000
                     Size.Width = 336.000000000000000000
                     Size.Height = 60.000000000000000000
                     Size.PlatformDefault = False
@@ -23833,7 +23870,7 @@
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False

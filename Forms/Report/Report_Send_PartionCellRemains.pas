@@ -23,7 +23,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_Send_PartionCellRemainsForm = class(TAncestorReportForm)
@@ -86,6 +86,8 @@ type
     FieldFilter_Search: TdsdFieldFilter;
     Ord: TcxGridDBColumn;
     ColorFon_ord: TcxGridDBColumn;
+    cbisCell: TcxCheckBox;
+    actRefreshCell: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

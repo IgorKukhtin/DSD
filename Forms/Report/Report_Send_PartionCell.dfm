@@ -445,6 +445,117 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 166
           end
+          object PartionCellCode_1: TcxGridDBColumn
+            Caption = '1.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_2: TcxGridDBColumn
+            Caption = '2.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_3: TcxGridDBColumn
+            Caption = '3.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_4: TcxGridDBColumn
+            Caption = '4.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_5: TcxGridDBColumn
+            Caption = '5.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_6: TcxGridDBColumn
+            Caption = '6.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_7: TcxGridDBColumn
+            Caption = '7.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_8: TcxGridDBColumn
+            Caption = '8.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_8'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_9: TcxGridDBColumn
+            Caption = '9.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_9'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_10: TcxGridDBColumn
+            Caption = '10.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_10'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object Color_PartionGoodsDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PartionGoodsDate'
             Visible = False
@@ -725,7 +836,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Action = actRefreshPartion
       Properties.ReadOnly = False
       TabOrder = 6
-      Width = 108
+      Width = 103
+    end
+    object cbisCell: TcxCheckBox
+      Left = 874
+      Top = 3
+      Action = actRefreshCell
+      Properties.ReadOnly = False
+      TabOrder = 7
+      Width = 89
     end
   end
   object PanelSearch: TPanel [2]
@@ -803,7 +922,21 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       end>
   end
   inherited ActionList: TActionList
-    object actRefreshPartion: TdsdDataSetRefresh [0]
+    object actRefreshCell: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      Hint = #1055#1086' '#1103#1095#1077#1081#1082#1072#1084
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object actRefreshPartion: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelect
@@ -939,6 +1072,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Name = 'isMovement'
           Value = Null
           Component = cbMovement
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = Null
+          Component = cbisCell
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1352,6 +1493,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Name = 'inIsMovement'
         Value = Null
         Component = cbMovement
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCell'
+        Value = Null
+        Component = cbisCell
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
