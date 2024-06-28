@@ -1,9 +1,14 @@
 -- Function: gpInsertUpdate_Movement_BankStatementItemLoad()
 
-DROP FUNCTION IF EXISTS
-   gpInsertUpdate_Movement_BankStatementItemLoad_2(TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar,
-                                                   TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
-                                                   TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankStatementItemLoad_2 (TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar
+                                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                                       , TVarChar, TVarChar, TFloat, TVarChar, TVarChar
+                                                                        );
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankStatementItemLoad_2 (TVarChar, TDateTime, TDateTime, TDateTime, TVarChar, TVarChar
+                                                                       , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                                       , TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar, TVarChar
+                                                                        );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankStatementItemLoad_2(
     IN inStartDate           TDateTime ,
@@ -20,10 +25,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankStatementItemLoad_2(
     IN inCurrencyCode        TVarChar  , -- Код валюты
     IN inCurrencyName        TVarChar  , -- Название валюты
     IN inAmount              TFloat    , -- Сумма операции
+    IN inAmountIn            TFloat    , -- Сумма операции
+    IN inAmountOut           TFloat    , -- Сумма операции
     IN inComment             TVarChar  , -- Комментарии
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMainBankAccountId integer;
@@ -46,12 +54,29 @@ BEGIN
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
 
-    IF vbUserId = '5' AND 1=1 THEN inOperDate:= inOperDate + INTERVAL '10 DAY'; END IF;
+    --IF vbUserId = '5' AND 1=1 THEN inOperDate:= inOperDate + INTERVAL '10 DAY'; END IF;
+
+    IF inAmount <> 0 AND (inAmountIn <> 0 OR inAmountOut <> 0)
+    THEN
+        RAISE EXCEPTION 'Сумма указана несколько раз inAmount = <%> inAmountIn = <%> inAmountOut = <%>', inAmount, inAmountIn, inAmountOut;
+    END IF;
+
+    -- Перенесли
+    IF inAmountIn > 0
+    THEN 
+        inAmount:= inAmountIn;
+    END IF;
+    
+    -- Перенесли
+    IF inAmountOut > 0
+    THEN 
+        inAmount:= -1 * inAmountOut;
+    END IF;
 
     --проверка чтоб дата документа попадала в загружаемый период
     IF inOperDate > inEndDate OR inOperDate < inStartDate
     THEN
-        RETURN;
+        RETURN 0;
     END IF;
     
     --

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
+             , JuridicalName TVarChar
               )
 AS
 $BODY$
@@ -48,6 +49,7 @@ BEGIN
            , Object_BankAccount_View.Name        AS BankAccountName
            , Object_BankAccount_View.BankId
            , Object_BankAccount_View.BankName
+           , Object_BankAccount_View.JuridicalName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankStatement()
@@ -68,6 +70,7 @@ BEGIN
              OR (inAccountId < 0 AND COALESCE (ObjectLink_BankAccount_Account.ChildObjectId,0) <> (-1) * inAccountId)
              OR inAccountId = 0
              OR vbUserId = 5
+             OR vbUserId = 6604558
              )            
       ;
   
@@ -86,4 +89,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '30.01.2024', inEndDate:= '01.02.2024', inJuridicalBasisId:=0, inAccountId:=-10895486 ,inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_BankStatement (inStartDate:= '01.05.2024', inEndDate:= '01.05.2024', inJuridicalBasisId:=0, inAccountId:=-10895486 ,inIsErased:= FALSE, inSession:= '2')
