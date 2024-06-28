@@ -193,11 +193,8 @@ begin
   repeat
     try
       inc(ServNum);
-      if ServNum > 0 then
-      begin
-        gc_WebService := gc_WebServers[ServNum];
-        pStorage.Connection := gc_WebService;
-      end;
+      if ServNum > 0 then gc_WebService := gc_WebServers[ServNum];
+      pStorage.Connection := gc_WebService;
 
       lModel:= lBrand + ' ' + lModel;
       lVesion:= lVesion + ' '  + lVesion_two;
