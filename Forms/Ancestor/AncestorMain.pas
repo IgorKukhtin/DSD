@@ -94,11 +94,10 @@ end;
 procedure TAncestorMainForm.FormShow(Sender: TObject);
 var i, j, k: integer;
 begin
-  if gc_CorrectPositionForms and (Monitor.Height < (Self.Top - 5)) and (Monitor.Width < (Self.Left - 5)) then
-  begin
-    Self.Top := 0;
-    Self.Left := 0;
-  end;
+  if gc_CorrectPositionForms and
+    (((Monitor.Top + Monitor.Height) < Self.Top) or
+    ((Monitor.Left + Monitor.Width) < Self.Left)) then
+    MakeFullyVisible(Nil);
   StoredProc.Execute;
   ClientDataSet.IndexFieldNames := 'ActionName';
   for I := 0 to ActionList.ActionCount - 1 do
