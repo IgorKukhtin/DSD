@@ -9,6 +9,7 @@ var
   gc_ProgramName: String = 'Project.exe'; // Название программы
   gc_allowLocalConnection: Boolean = False;
   gc_BreakingConnection: Boolean = False;
+  gc_CorrectPositionForms: Boolean = True;
 
 CONST
   UM_THREAD_EXCEPTION = WM_USER + 101;

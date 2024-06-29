@@ -443,6 +443,11 @@ end;
 procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
+  if gc_CorrectPositionForms and (Monitor.Height < (Self.Top - 5)) and (Monitor.Width < (Self.Left - 5)) then
+  begin
+    Self.Top := 0;
+    Self.Left := 0;
+  end;
   InitHelpSystem;
   InitcxEditRepository;
   InitcxView;
