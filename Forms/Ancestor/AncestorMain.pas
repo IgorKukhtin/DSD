@@ -96,7 +96,9 @@ var i, j, k: integer;
 begin
   if gc_CorrectPositionForms and
     (((Monitor.Top + Monitor.Height) < Self.Top) or
-    ((Monitor.Left + Monitor.Width) < Self.Left)) then
+    ((Monitor.Left + Monitor.Width) < Self.Left) or
+    ((Monitor.Top + Monitor.Height) > (Self.Top + Self.Height)) or
+    ((Monitor.Left + Monitor.Width) > (Self.Left + Self.Width))) then
     MakeFullyVisible(Nil);
   StoredProc.Execute;
   ClientDataSet.IndexFieldNames := 'ActionName';

@@ -445,7 +445,9 @@ begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
   if gc_CorrectPositionForms and
     (((Monitor.Top + Monitor.Height) < Self.Top) or
-    ((Monitor.Left + Monitor.Width) < Self.Left)) then
+    ((Monitor.Left + Monitor.Width) < Self.Left) or
+    ((Monitor.Top + Monitor.Height) > (Self.Top + Self.Height)) or
+    ((Monitor.Left + Monitor.Width) > (Self.Left + Self.Width))) then
     MakeFullyVisible(Nil);
   InitHelpSystem;
   InitcxEditRepository;
