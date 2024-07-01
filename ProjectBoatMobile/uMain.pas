@@ -750,7 +750,7 @@ var  ScanThread: TThread;
      ScanSymbologyName: String;
 
 const
-  WebServer : string = 'External - http://217.92.58.239:11011/projectBoat_utf8/index.php;Internal - http://291.168.0.50/projectBoat_utf8/index.php';
+  WebServer : string = 'Internal - http://291.168.0.50/projectBoat_utf8/index.php;External - http://217.92.58.239:11011/projectBoat_utf8/index.php';
   WebServerTest : string = 'External - http://in.mer-lin.org.ua/projectboat_test/index.php';
   MainWidth = 336;
 
@@ -3397,18 +3397,19 @@ begin
       exit;
     end;
 
+    if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
+    else Res := TRegEx.Split(WebServer, ';');
+
+    SetLength(gc_WebServers, High(Res) + 1);
+
     if pbWebServer.ItemIndex > 0 then
     begin
-      SetLength(gc_WebServers, 1);
       gc_WebServers[0] := Copy(pbWebServer.Text, Pos('http', pbWebServer.Text), Length(pbWebServer.Text));
-    end else
-    begin
-      if FisTestWebServer then Res := TRegEx.Split(WebServerTest, ';')
-      else Res := TRegEx.Split(WebServer, ';');
-
-      SetLength(gc_WebServers, High(Res) + 1);
-      for I := Low(Res) to High(Res) do gc_WebServers[I] := Copy(Res[I], Pos('http', Res[I]), Length(Res[I]));
-    end;
+      if High(Res) > 0 then
+        if pbWebServer.ItemIndex = 1 then
+          gc_WebServers[1] :=  Copy(Res[1], Pos('http', Res[1]), Length(Res[1]))
+        else gc_WebServers[1] :=  Copy(Res[0], Pos('http', Res[0]), Length(Res[0]));
+    end else for I := Low(Res) to High(Res) do gc_WebServers[I] := Copy(Res[I], Pos('http', Res[I]), Length(Res[I]));
 
     gc_WebService := gc_WebServers[0];
 
