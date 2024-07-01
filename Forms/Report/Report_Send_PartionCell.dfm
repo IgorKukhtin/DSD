@@ -1,30 +1,30 @@
 inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 382
-  ClientWidth = 1550
+  ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1566
+  ExplicitWidth = 1556
   ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 97
-    Width = 1550
+    Width = 1540
     Height = 285
     TabOrder = 3
     ExplicitTop = 97
-    ExplicitWidth = 1071
+    ExplicitWidth = 1550
     ExplicitHeight = 285
     ClientRectBottom = 285
-    ClientRectRight = 1550
+    ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1071
+      ExplicitWidth = 1550
       ExplicitHeight = 285
       inherited cxGrid: TcxGrid
-        Width = 1550
+        Width = 1540
         Height = 285
-        ExplicitWidth = 1071
+        ExplicitWidth = 1550
         ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -783,9 +783,9 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
   end
   inherited Panel: TPanel
-    Width = 1550
+    Width = 1540
     Height = 30
-    ExplicitWidth = 1071
+    ExplicitWidth = 1550
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
       Left = 100
@@ -850,11 +850,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   object PanelSearch: TPanel [2]
     Left = 0
     Top = 30
-    Width = 1550
+    Width = 1540
     Height = 41
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 1071
+    ExplicitWidth = 1550
     object lbSearchCode: TcxLabel
       Left = 21
       Top = 10

@@ -1933,8 +1933,8 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 933
-      Top = 5
+      Left = 941
+      Top = 3
       ParentCustomHint = False
       BeepOnEnter = False
       Enabled = False

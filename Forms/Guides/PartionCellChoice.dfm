@@ -3,7 +3,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
   ClientHeight = 376
-  ClientWidth = 450
+  ClientWidth = 486
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,13 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 450
+    Width = 486
     Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 739
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -97,11 +97,11 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 450
+    Width = 486
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 739
+    ExplicitWidth = 450
     object lbSearchName: TcxLabel
       Left = 5
       Top = 6

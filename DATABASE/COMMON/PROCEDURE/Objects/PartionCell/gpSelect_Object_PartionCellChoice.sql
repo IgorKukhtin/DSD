@@ -14,6 +14,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime 
              , BoxCount TFloat
+             , MovementId Integer
+             , OperDate TDateTime
+             , InvNumber TVarChar
               )
 AS
 $BODY$
@@ -94,15 +97,23 @@ BEGIN
                  )
 
       -- занятые ячейки
-     , tmpMILO_PartionCell AS (SELECT tmpMILO_PartionCell_all.ObjectId             AS PartionCellId
-                                    , MIN (tmpMILO_PartionCell_all.MovementItemId) AS MovementItemId
-                               FROM tmpMILO_PartionCell_all_2 AS tmpMILO_PartionCell_all
-                                    JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
-
-                                    JOIN Movement ON Movement.Id       = MovementItem.MovementId
-                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND Movement.DescId   = zc_Movement_Send()
-                               GROUP BY tmpMILO_PartionCell_all.ObjectId
+     , tmpMILO_PartionCell AS (SELECT DISTINCT 
+                                      tmp.PartionCellId
+                                    , tmp.MovementItemId
+                                    , tmp.MovementId
+                               FROM (SELECT tmpMILO_PartionCell_all.ObjectId             AS PartionCellId
+                                          , MIN (tmpMILO_PartionCell_all.MovementItemId) OVER(PARTITION BY tmpMILO_PartionCell_all.ObjectId) AS MovementItemId
+                                          , Movement.Id                                  AS MovementId
+                                          , ROW_NUMBER () OVER (PARTITION BY tmpMILO_PartionCell_all.ObjectId ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord  --последний документ
+                                     FROM tmpMILO_PartionCell_all_2 AS tmpMILO_PartionCell_all
+                                          JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
+      
+                                          JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                       AND Movement.DescId   = zc_Movement_Send()
+                               ) AS tmp
+                               WHERE tmp.Ord = 1
+                               --GROUP BY tmpMILO_PartionCell_all.ObjectId
                               )
 
        --
@@ -126,6 +137,10 @@ BEGIN
             , MIDate_PartionGoods.ValueData AS PartionGoodsDate  
             
             , ObjectFloat_BoxCount.ValueData     ::TFloat  AS BoxCount
+            
+            , Movement.Id        ::Integer    AS MovementId
+            , Movement.OperDate  ::TDateTime  AS OperDate
+            , Movement.InvNumber ::TVarChar   AS InvNumber
 
        FROM tmpPartionCell AS Object
            LEFT JOIN tmpMILO_PartionCell_all_1 ON tmpMILO_PartionCell_all_1.PartionCellId = Object.Id
@@ -144,7 +159,12 @@ BEGIN
 
            LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
                                  ON ObjectFloat_BoxCount.ObjectId = Object.Id
-                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()
+                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()    
+   
+           --последний документ перемещения                     
+           LEFT JOIN Movement ON Movement.Id       = tmpMILO_PartionCell.MovementId
+                             AND Movement.StatusId = zc_Enum_Status_Complete()
+                             AND Movement.DescId   = zc_Movement_Send()
       ;
 
 
