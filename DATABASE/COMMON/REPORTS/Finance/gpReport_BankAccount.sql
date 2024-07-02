@@ -34,7 +34,8 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
              , MovementId Integer
              , CashName TVarChar
              , GroupId Integer, GroupName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , JuridicalByPrint TVarChar
               )
 AS
 $BODY$
@@ -524,7 +525,10 @@ BEGIN
         TRIM (COALESCE (tmpBankAccount.BankName, '' ) || '  ' || COALESCE (tmpBankAccount.Name, Object_Juridical.ValueData)) :: TVarChar  AS CashName,
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
-        Operation.Comment :: TVarChar                                                               AS Comment
+        Operation.Comment :: TVarChar                                                               AS Comment,
+        
+        CASE WHEN tmpBankAccount.JuridicalId = zc_Juridical_Basis() THEN tmpBankAccount.JuridicalName ELSE '' END ::TVarChar AS JuridicalByPrint
+        
  
      FROM tmpOperation AS Operation
 
