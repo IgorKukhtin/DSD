@@ -39,7 +39,33 @@ BEGIN
 
         -- 3.0. ЕСЛИ НЕ НАШЛИ - находим свойство <Договор> "по умолчанию" для остальных
         IF COALESCE (inContractId, 0) = 0
-        THEN
+        THEN 
+
+            CREATE TEMP TABLE _tmpContract_find ON COMMIT DROP AS -- (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = vbJuridicalId);
+              (SELECT Object_Contract.Id                                  AS ContractId
+                    , Object_Contract.isErased                            AS isErased
+                    , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
+                    , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
+                    , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
+                    , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
+               FROM ObjectLink AS ObjectLink_Contract_Juridical
+                    INNER JOIN Object AS Object_Contract ON Object_Contract.Id       = ObjectLink_Contract_Juridical.ObjectId
+                                                        AND Object_Contract.isErased = FALSE
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                                         ON ObjectLink_Contract_ContractStateKind.ObjectId      = Object_Contract.Id
+                                        AND ObjectLink_Contract_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind() 
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
+                                         ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id
+                                        AND ObjectLink_Contract_PaidKind.DescId   = zc_ObjectLink_Contract_PaidKind()
+                    LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                         ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
+                                        AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+               WHERE ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId
+                 AND ObjectLink_Contract_Juridical.DescId        = zc_ObjectLink_Contract_Juridical()
+                 AND COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) <> zc_Enum_ContractStateKind_Close()
+              );
+
+
             SELECT MAX (View_Contract.ContractId) INTO inContractId
             FROM _tmpContract_find AS View_Contract
                  INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
