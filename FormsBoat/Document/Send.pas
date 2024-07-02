@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TSendForm = class(TParentForm)
@@ -265,8 +265,8 @@ type
     actPartionGoodsChoiceForm: TOpenChoiceForm;
     actInsertRecordPartion: TInsertRecord;
     macInsertRecordPartion: TMultiAction;
-    bb: TdxBarButton;
-    bbb: TdxBarButton;
+    bbInsertRecordPartion: TdxBarButton;
+    bbPartionGoodsChoiceForm: TdxBarButton;
     isProdOptions: TcxGridDBColumn;
     ArticleVergl: TcxGridDBColumn;
     actFormClose: TdsdFormClose;
@@ -320,6 +320,19 @@ type
     Color_Scan: TcxGridDBColumn;
     actSetVisibleScan: TdsdSetVisibleAction;
     Scan_InvNumberFull_OrderClient: TcxGridDBColumn;
+    actUpdateScanDS: TdsdUpdateDataSet;
+    spUpdate_MI_Scan: TdsdStoredProc;
+    actOpenPartionCellForm_scan: TOpenChoiceForm;
+    actOrderClientChoiceForm_scan: TOpenChoiceForm;
+    spErasedMIScan: TdsdStoredProc;
+    spUnErasedMIScan: TdsdStoredProc;
+    actSetErasedScan: TdsdUpdateErased;
+    actSetUnErasedScan: TdsdUpdateErased;
+    bsScan: TdxBarSubItem;
+    bbSetErasedScan: TdxBarButton;
+    bbSetUnErasedScan: TdxBarButton;
+    actMIProtocolScan: TdsdOpenForm;
+    bbMIProtocolScan: TdxBarButton;
   private
   public
   end;

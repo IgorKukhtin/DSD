@@ -3,7 +3,7 @@ object InventoryForm: TInventoryForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 579
-  ClientWidth = 808
+  ClientWidth = 937
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object InventoryForm: TInventoryForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 206
-    Width = 808
+    Width = 937
     Height = 373
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 373
-    ClientRectRight = 808
+    ClientRectRight = 937
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -35,7 +35,7 @@ object InventoryForm: TInventoryForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 8
-        Width = 808
+        Width = 937
         Height = 341
         Align = alClient
         TabOrder = 0
@@ -528,7 +528,7 @@ object InventoryForm: TInventoryForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 0
-        Width = 808
+        Width = 937
         Height = 8
         HotZoneClassName = 'TcxXPTaskBarStyle'
         HotZone.Visible = False
@@ -539,13 +539,10 @@ object InventoryForm: TInventoryForm
     object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 808
+        Width = 937
         Height = 349
         Align = alClient
         TabOrder = 0
@@ -610,7 +607,6 @@ object InventoryForm: TInventoryForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -650,6 +646,7 @@ object InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'EAN'
+            Options.Editing = False
             Width = 106
           end
           object Scan_Article: TcxGridDBColumn
@@ -665,6 +662,7 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 81
           end
           object Scan_Article_all: TcxGridDBColumn
@@ -694,6 +692,7 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Scan_GoodsName: TcxGridDBColumn
@@ -709,6 +708,7 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 137
           end
           object Scan_MeasureName: TcxGridDBColumn
@@ -744,7 +744,7 @@ object InventoryForm: TInventoryForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actOpenPartionCellForm
+                Action = actOpenPartionCellForm_scan
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -801,7 +801,7 @@ object InventoryForm: TInventoryForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 808
+    Width = 937
     Height = 180
     Align = alTop
     BevelOuter = bvNone
@@ -1213,6 +1213,18 @@ object InventoryForm: TInventoryForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErasedScan'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedScan'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1283,6 +1295,10 @@ object InventoryForm: TInventoryForm
         item
           Visible = True
           ItemName = 'bbMIProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIProtocolScan'
         end
         item
           Visible = True
@@ -1400,6 +1416,19 @@ object InventoryForm: TInventoryForm
     end
     object bbPrintAll: TdxBarButton
       Action = actPrintAll
+      Category = 0
+    end
+    object bbSetErasedScan: TdxBarButton
+      Action = actSetErasedScan
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1082#1072#1085'>'
+      Category = 0
+    end
+    object bbSetUnErasedScan: TdxBarButton
+      Action = actSetUnErasedScan
+      Category = 0
+    end
+    object bbMIProtocolScan: TdxBarButton
+      Action = actMIProtocolScan
       Category = 0
     end
   end
@@ -1797,6 +1826,38 @@ object InventoryForm: TInventoryForm
         end>
       isShowModal = False
     end
+    object actMIProtocolScan: TdsdOpenForm
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actReport_Price: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1829,6 +1890,7 @@ object InventoryForm: TInventoryForm
     end
     object actMIProtocol: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
@@ -2691,6 +2753,83 @@ object InventoryForm: TInventoryForm
           ValueParam.DataType = ftBoolean
           ValueParam.MultiSelectSeparator = ','
         end>
+    end
+    object actSetErasedScan: TdsdUpdateErased
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMIScan
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIScan
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1079#1077#1088#1074'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1082#1072#1085'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ScanDS
+    end
+    object actSetUnErasedScan: TdsdUpdateErased
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spUnErasedMIScan
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIScan
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ScanDS
+    end
+    object actOpenPartionCellForm_scan: TOpenChoiceForm
+      Category = 'Scan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'PartionCellId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'PartionCellName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actUpdateScanDS: TdsdUpdateDataSet
+      Category = 'Scan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Scan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Scan
+        end
+        item
+          StoredProc = spBarcode_null
+        end>
+      Caption = 'actUpdateScanDS'
+      DataSource = ScanDS
     end
   end
   object MasterDS: TDataSource
@@ -3844,5 +3983,115 @@ object InventoryForm: TInventoryForm
     PackSize = 1
     Left = 479
     Top = 368
+  end
+  object spUpdate_MI_Scan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Inventory_Scan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 854
+    Top = 399
+  end
+  object spErasedMIScan: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Inventory_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 838
+    Top = 464
+  end
+  object spUnErasedMIScan: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Inventory_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 769
+    Top = 480
   end
 end

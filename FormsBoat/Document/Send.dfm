@@ -3,7 +3,7 @@ object SendForm: TSendForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 567
-  ClientWidth = 1053
+  ClientWidth = 1145
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object SendForm: TSendForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1053
+    Width = 1145
     Height = 175
     Align = alTop
     BevelOuter = bvNone
@@ -364,15 +364,15 @@ object SendForm: TSendForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 210
-    Width = 1053
-    Height = 288
+    Top = 201
+    Width = 1145
+    Height = 297
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 288
-    ClientRectRight = 1053
+    ClientRectBottom = 297
+    ClientRectRight = 1145
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -380,8 +380,8 @@ object SendForm: TSendForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1053
-        Height = 132
+        Width = 1145
+        Height = 141
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -817,8 +817,8 @@ object SendForm: TSendForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 140
-        Width = 1053
+        Top = 149
+        Width = 1145
         Height = 124
         Align = alBottom
         TabOrder = 1
@@ -1035,8 +1035,8 @@ object SendForm: TSendForm
       end
       object cxSplitterBottom: TcxSplitter
         Left = 0
-        Top = 132
-        Width = 1053
+        Top = 141
+        Width = 1145
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1049,8 +1049,8 @@ object SendForm: TSendForm
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 1053
-        Height = 264
+        Width = 1145
+        Height = 273
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView_Scan: TcxGridDBTableView
@@ -1114,7 +1114,6 @@ object SendForm: TSendForm
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -1153,6 +1152,7 @@ object SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 'EAN'
+            Options.Editing = False
             Width = 106
           end
           object Scan_Article: TcxGridDBColumn
@@ -1167,6 +1167,7 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 81
           end
           object Scan_Article_all: TcxGridDBColumn
@@ -1195,6 +1196,7 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object Scan_GoodsName: TcxGridDBColumn
@@ -1209,6 +1211,7 @@ object SendForm: TSendForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 137
           end
           object Scan_MeasureName: TcxGridDBColumn
@@ -1244,7 +1247,7 @@ object SendForm: TSendForm
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actOpenPartionCellForm
+                Action = actOpenPartionCellForm_scan
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1294,6 +1297,14 @@ object SendForm: TSendForm
           object Scan_InvNumberFull_OrderClient: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'InvNumberFull_OrderClient'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actOrderClientChoiceForm_scan
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 114
@@ -1308,7 +1319,7 @@ object SendForm: TSendForm
   object Panel_btn: TPanel
     Left = 0
     Top = 498
-    Width = 1053
+    Width = 1145
     Height = 69
     Align = alBottom
     TabOrder = 6
@@ -1497,7 +1508,7 @@ object SendForm: TSendForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -18
+    Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
@@ -1516,7 +1527,7 @@ object SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      35
+      26
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -1577,6 +1588,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bsScan'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -1602,6 +1621,10 @@ object SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIProtocolScan'
         end
         item
           Visible = True
@@ -1877,11 +1900,11 @@ object SendForm: TSendForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bb: TdxBarButton
+    object bbInsertRecordPartion: TdxBarButton
       Action = macInsertRecordPartion
       Category = 0
     end
-    object bbb: TdxBarButton
+    object bbPartionGoodsChoiceForm: TdxBarButton
       Action = actPartionGoodsChoiceForm
       Category = 0
     end
@@ -1994,11 +2017,11 @@ object SendForm: TSendForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbInsertRecordPartion'
         end
         item
           Visible = True
-          ItemName = 'bbb'
+          ItemName = 'bbPartionGoodsChoiceForm'
         end>
     end
     object bbsReserv: TdxBarSubItem
@@ -2042,6 +2065,33 @@ object SendForm: TSendForm
           Visible = True
           ItemName = 'bbPrint3'
         end>
+    end
+    object bsScan: TdxBarSubItem
+      Caption = 'Scan'
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 44
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSetErasedScan'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErasedScan'
+        end>
+    end
+    object bbSetErasedScan: TdxBarButton
+      Action = actSetErasedScan
+      Category = 0
+    end
+    object bbSetUnErasedScan: TdxBarButton
+      Action = actSetUnErasedScan
+      Category = 0
+    end
+    object bbMIProtocolScan: TdxBarButton
+      Action = actMIProtocolScan
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -2094,7 +2144,6 @@ object SendForm: TSendForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
       MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
@@ -2103,6 +2152,9 @@ object SendForm: TSendForm
         end
         item
           StoredProc = spSelectMIChild
+        end
+        item
+          StoredProc = spSelectScan
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -2134,6 +2186,21 @@ object SendForm: TSendForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actUpdateScanDS: TdsdUpdateDataSet
+      Category = 'Scan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Scan
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Scan
+        end
+        item
+          StoredProc = spBarcode_null
+        end>
+      Caption = 'actUpdateScanDS'
+      DataSource = ScanDS
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -2304,6 +2371,23 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actSetErasedScan: TdsdUpdateErased
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spErasedMIScan
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIScan
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1082#1072#1085'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1082#1072#1085'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ScanDS
+    end
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
@@ -2328,6 +2412,24 @@ object SendForm: TSendForm
       ShortCut = 49220
       ErasedFieldName = 'isErased'
       DataSource = ChildDS
+    end
+    object actSetUnErasedScan: TdsdUpdateErased
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      StoredProc = spUnErasedMIScan
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIScan
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ScanDS
     end
     object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -2567,6 +2669,54 @@ object SendForm: TSendForm
           Value = True
           DataType = ftBoolean
           ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actOrderClientChoiceForm_scan: TOpenChoiceForm
+      Category = 'Scan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOrderClientChoiceForm'
+      FormName = 'TOrderClientJournalChoiceForm'
+      FormNameParam.Value = 'TOrderClientJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'MovementId_OrderClient'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber_Full'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'InvNumberFull_OrderClient'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ProductName'
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CIN'
+          Value = Null
+          DataType = ftString
+          ParamType = ptUnknown
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -3768,6 +3918,33 @@ object SendForm: TSendForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOpenPartionCellForm_scan: TOpenChoiceForm
+      Category = 'Scan'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PartionCellForm'
+      FormName = 'TPartionCellForm'
+      FormNameParam.Value = 'TPartionCellForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'PartionCellId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'PartionCellName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actPartionGoodsChoiceForm: TOpenChoiceForm
       Category = 'Partion'
       MoveParams = <>
@@ -3989,6 +4166,38 @@ object SendForm: TSendForm
           ValueParam.DataType = ftBoolean
           ValueParam.MultiSelectSeparator = ','
         end>
+    end
+    object actMIProtocolScan: TdsdOpenForm
+      Category = 'Scan'
+      TabSheet = cxTabSheetScan
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ScanCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object MasterDS: TDataSource
@@ -4892,7 +5101,7 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 310
+    Left = 286
     Top = 424
   end
   object GuidesFrom: TdsdGuides
@@ -4958,8 +5167,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 454
-    Top = 391
+    Left = 422
+    Top = 375
   end
   object spUnErasedMIchild: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased_Child'
@@ -5060,8 +5269,8 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 760
-    Top = 320
+    Left = 736
+    Top = 272
   end
   object spGet_dop1: TdsdStoredProc
     StoredProcName = 'gpGet_MI_byBarcode'
@@ -5343,7 +5552,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 830
-    Top = 319
+    Top = 327
   end
   object spSelectPrint_Master: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendMaster_Print'
@@ -5473,5 +5682,146 @@ object SendForm: TSendForm
     PropertiesCellList = <>
     Left = 662
     Top = 401
+  end
+  object spUpdate_MI_Scan: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_Scan'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderClient'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'MovementId_OrderClient'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_OrderTop'
+        Value = Null
+        Component = GuidesOrderClient
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartNumber'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'PartNumber'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'PartionCellName'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId_OrderClient'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'MovementId_OrderClient'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber_OrderClient'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'InvNumberFull_OrderClient'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 910
+    Top = 447
+  end
+  object spErasedMIScan: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Send_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1006
+    Top = 384
+  end
+  object spUnErasedMIScan: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = ScanCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 993
+    Top = 448
   end
 end

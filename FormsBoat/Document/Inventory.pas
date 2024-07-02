@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, Vcl.StdCtrls, ExternalLoad;
+  cxImageComboBox, cxSplitter, Vcl.StdCtrls, ExternalLoad, dsdCommon;
 
 type
   TInventoryForm = class(TParentForm)
@@ -227,6 +227,17 @@ type
     ArticleVergl: TcxGridDBColumn;
     isReceiptGoods: TcxGridDBColumn;
     isProdOptions: TcxGridDBColumn;
+    spUpdate_MI_Scan: TdsdStoredProc;
+    spErasedMIScan: TdsdStoredProc;
+    spUnErasedMIScan: TdsdStoredProc;
+    actSetErasedScan: TdsdUpdateErased;
+    actSetUnErasedScan: TdsdUpdateErased;
+    actOpenPartionCellForm_scan: TOpenChoiceForm;
+    actUpdateScanDS: TdsdUpdateDataSet;
+    bbSetErasedScan: TdxBarButton;
+    bbSetUnErasedScan: TdxBarButton;
+    actMIProtocolScan: TdsdOpenForm;
+    bbMIProtocolScan: TdxBarButton;
   private
   public
   end;

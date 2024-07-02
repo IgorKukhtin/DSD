@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Ord Integer
              , MeasureName TVarChar
              , Amount TFloat
              , PartNumber TVarChar
+             , PartionCellId Integer, PartionCellCode Integer, PartionCellName TVarChar
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , isErased Boolean
               )
@@ -90,6 +91,10 @@ BEGIN
 
            , tmpMI.PartNumber             ::TVarChar
 
+           , Object_PartionCell.Id         AS PartionCellId
+           , Object_PartionCell.ObjectCode AS PartionCellCode
+           , Object_PartionCell.ValueData  AS PartionCellName
+
            , tmpProtocol.OperDate  AS OperDate_protocol
            , Object_User.ValueData AS UserName_protocol
            
@@ -127,7 +132,8 @@ BEGIN
                                 AND OL_Goods_Partner.DescId   = zc_ObjectLink_Goods_Partner()
 
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId  = tmpMI.Id  
-            
+
+            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId            
        ORDER BY 2 DESC
        ;
 
