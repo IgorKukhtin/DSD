@@ -4,7 +4,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 998
-  ExplicitHeight = 593
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -141,6 +141,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
           end
           object CurrencyName_BankAccount: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' '#1088'.'#1089#1095'.'
@@ -649,14 +657,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 'NULL'
+          Value = Null
           Component = deStart
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end
         item
           Name = 'EndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
@@ -690,7 +698,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -701,7 +709,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -766,7 +774,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -777,7 +785,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1301,7 +1309,7 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
