@@ -325,7 +325,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
 end;

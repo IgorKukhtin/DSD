@@ -1387,7 +1387,7 @@ inherited BankStatementForm: TBankStatementForm
         Name = 'inJuridicalId'
         Value = ''
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'LinkJuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankStatementItem_Params(
     --IN inJuridicalName       TVarChar  , -- Юр. лицо
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -18,9 +18,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
  
-
-
-       IF COALESCE(inJuridicalId, 0) = 0 THEN
+       IF COALESCE(inJuridicalId, 0) = 0
+       THEN
          -- Пытаемся найти юр. лицо по OKPO
          SELECT ObjectHistory.ObjectId INTO inJuridicalId
          FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
@@ -29,13 +28,13 @@ BEGIN
          WHERE ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
            AND ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
            ;
-       END IF;
 
-       IF COALESCE(inJuridicalId, 0) <> 0 THEN
-           -- сохранили связь с <Юр. лицо>
-           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), inMovementItemId, inJuridicalId);
-       END IF;
+         IF COALESCE(inJuridicalId, 0) <> 0 THEN
+             -- сохранили связь с <Юр. лицо>
+             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), inMovementItemId, inJuridicalId);
+         END IF;
 
+       END IF;
 
 
         -- 3.0. ЕСЛИ НЕ НАШЛИ - находим свойство <Договор> "по умолчанию" для остальных
@@ -55,40 +54,40 @@ BEGIN
               AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
               AND View_Contract.isErased = FALSE
               AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm();
-        END IF;
-
-        -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
-        IF COALESCE (inContractId, 0) = 0
-        THEN
-            -- Внутренний оборот
-            SELECT MAX (View_Contract.ContractId) INTO inContractId
-            FROM _tmpContract_find AS View_Contract
-            WHERE View_Contract.JuridicalId = inJuridicalId
-              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-              AND View_Contract.isErased = FALSE
-              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
-              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_40801() --Внутренний оборот
-             ;
-        END IF;
-        -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
-        IF COALESCE (inContractId, 0) = 0
-        THEN
-            -- НЕ Внутренний оборот
-            SELECT MAX (View_Contract.ContractId) INTO inContractId
-            FROM _tmpContract_find AS View_Contract
-            WHERE View_Contract.JuridicalId = inJuridicalId
-              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-              AND View_Contract.isErased = FALSE
-              AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
-             ;
-        END IF;
 
 
-    IF COALESCE (inContractId, 0) <> 0 THEN
-       -- сохранили связь с <Договор>
-       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementItemId, inContractId);
-    END IF;
-   
+            -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+            IF COALESCE (inContractId, 0) = 0
+            THEN
+                -- Внутренний оборот
+                SELECT MAX (View_Contract.ContractId) INTO inContractId
+                FROM _tmpContract_find AS View_Contract
+                WHERE View_Contract.JuridicalId = inJuridicalId
+                  AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                  AND View_Contract.isErased = FALSE
+                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                  AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_40801() --Внутренний оборот
+                 ;
+            END IF;
+            -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+            IF COALESCE (inContractId, 0) = 0
+            THEN
+                -- НЕ Внутренний оборот
+                SELECT MAX (View_Contract.ContractId) INTO inContractId
+                FROM _tmpContract_find AS View_Contract
+                WHERE View_Contract.JuridicalId = inJuridicalId
+                  AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                  AND View_Contract.isErased = FALSE
+                  AND View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
+                 ;
+            END IF;
+
+            IF COALESCE (inContractId, 0) <> 0 THEN
+               -- сохранили связь с <Договор>
+               PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), inMovementItemId, inContractId);
+            END IF;
+
+        END IF;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (inMovementItemId, vbUserId, TRUE);
