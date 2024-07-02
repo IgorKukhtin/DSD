@@ -14,17 +14,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Height = 285
     TabOrder = 3
     ExplicitTop = 97
-    ExplicitWidth = 1550
+    ExplicitWidth = 1540
     ExplicitHeight = 285
     ClientRectBottom = 285
     ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1550
+      ExplicitWidth = 1540
       ExplicitHeight = 285
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 285
-        ExplicitWidth = 1550
+        ExplicitWidth = 1540
         ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -785,7 +785,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   inherited Panel: TPanel
     Width = 1540
     Height = 30
-    ExplicitWidth = 1550
+    ExplicitWidth = 1540
     ExplicitHeight = 30
     inherited deStart: TcxDateEdit
       Left = 100
@@ -854,7 +854,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Height = 41
     Align = alTop
     TabOrder = 6
-    ExplicitWidth = 1550
     object lbSearchCode: TcxLabel
       Left = 21
       Top = 10
@@ -962,7 +961,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'OperDate;InvNumber;GoodsName;GoodsKindName;PartionCellCode_1'
           GridView = cxGridDBTableView
         end>
       Params = <
