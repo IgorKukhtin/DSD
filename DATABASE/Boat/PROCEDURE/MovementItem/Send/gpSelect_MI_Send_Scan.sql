@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, Ord Integer
              , PartNumber TVarChar
              , OperDate_protocol TDateTime, UserName_protocol TVarChar
              , MovementId_OrderClient Integer, InvNumber_OrderClient Integer, InvNumberFull_OrderClient TVarChar, OperDate_OrderClient TDateTime
+             , PartionCellId Integer, PartionCellCode Integer, PartionCellName TVarChar
              , isErased Boolean
               )
 AS
@@ -104,6 +105,10 @@ BEGIN
            , zfConvert_StringToNumber (Movement_OrderClient.InvNumber) AS InvNumber_OrderClient
            , zfCalc_InvNumber_isErased ('', Movement_OrderClient.InvNumber, Movement_OrderClient.OperDate, Movement_OrderClient.StatusId) AS InvNumberFull_OrderClient
            , Movement_OrderClient.OperDate                             AS OperDate_OrderClient
+
+           , Object_PartionCell.Id         AS PartionCellId
+           , Object_PartionCell.ObjectCode AS PartionCellCode
+           , Object_PartionCell.ValueData  AS PartionCellName
            
            , tmpMI.isErased
        FROM tmpMI
@@ -142,6 +147,8 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_OrderClient ON Movement_OrderClient.Id = tmpMI.MovementId_OrderClient
             
+            LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpMI.PartionCellId
+            
        ORDER BY 2 DESC
        ;
 
@@ -152,10 +159,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 03.07.24         *  PartionCell
  16.04.24                                                       *
 */
 
 -- тест
--- 
-
-SELECT * FROM gpSelect_MI_Send_Scan (inMovementId := 3214 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+--  SELECT * FROM gpSelect_MI_Send_Scan (inMovementId := 3214 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());

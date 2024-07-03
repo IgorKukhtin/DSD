@@ -1506,7 +1506,8 @@ uses
   GoodsByGoodsKindPeresort in '..\..\Forms\Guides\GoodsByGoodsKindPeresort.pas' {GoodsByGoodsKindPeresortForm: TParentForm},
   dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
   ViewPriceList in '..\..\Forms\Guides\ViewPriceList.pas' {ViewPriceListForm: TParentForm},
-  ViewPriceListEdit in '..\..\Forms\Guides\ViewPriceListEdit.pas' {ViewPriceListEditForm: TParentForm};
+  ViewPriceListEdit in '..\..\Forms\Guides\ViewPriceListEdit.pas' {ViewPriceListEditForm: TParentForm},
+  PartionCellMovement in '..\..\Forms\Document\PartionCellMovement.pas' {PartionCellMovementForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

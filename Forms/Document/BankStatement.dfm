@@ -922,6 +922,46 @@ inherited BankStatementForm: TBankStatementForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
       ImageIndex = 30
     end
+    object actUpdateParams: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateParams
+      StoredProcList = <
+        item
+          StoredProc = spUpdateParams
+        end>
+      Caption = 'actUpdateParams'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1091#1102' '#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1074' '#1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
+      ImageIndex = 80
+    end
+    object mactUpdateParams_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateParams
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1102#1088'.'#1083
+      ImageIndex = 80
+    end
+    object mactUpdateParams: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mactUpdateParams_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1054#1073#1085#1086#1074#1080#1090#1100' '#1074' '#1090#1077#1082#1091#1097#1077#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1076#1086#1075#1086#1074#1086#1088' + '#1102#1088'.'#1083#1080#1094#1086'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1086#1073#1085#1086#1074#1083#1077#1085#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088' + '#1102#1088'.'#1083#1080#1094#1086
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074' '#1090#1077#1082#1091#1097#1077#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1076#1086#1075#1086#1074#1086#1088' + '#1102#1088'.'#1083#1080#1094#1086
+      ImageIndex = 80
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -992,6 +1032,18 @@ inherited BankStatementForm: TBankStatementForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateParams'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocolOpenForm'
         end
         item
@@ -1042,6 +1094,10 @@ inherited BankStatementForm: TBankStatementForm
     end
     object bbUpdate_LinkJuridical: TdxBarButton
       Action = macUpdate_LinkJuridical
+      Category = 0
+    end
+    object bbUpdateParams: TdxBarButton
+      Action = mactUpdateParams
       Category = 0
     end
   end
@@ -1313,5 +1369,47 @@ inherited BankStatementForm: TBankStatementForm
     PackSize = 1
     Left = 488
     Top = 136
+  end
+  object spUpdateParams: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_BankStatementItem_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'LinkJuridicalId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = 41640d
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OKPO'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 144
   end
 end

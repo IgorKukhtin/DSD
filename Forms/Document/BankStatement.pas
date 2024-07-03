@@ -23,7 +23,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdGuides;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdGuides,
+  dsdCommon;
 
 type
   TBankStatementForm = class(TAncestorDBGridForm)
@@ -94,6 +95,11 @@ type
     bbUpdate_LinkJuridical: TdxBarButton;
     macUpdate_LinkJuridical: TMultiAction;
     macUpdate_LinkJuridical_list: TMultiAction;
+    spUpdateParams: TdsdStoredProc;
+    actUpdateParams: TdsdExecStoredProc;
+    mactUpdateParams_list: TMultiAction;
+    mactUpdateParams: TMultiAction;
+    bbUpdateParams: TdxBarButton;
   private
     { Private declarations }
   public

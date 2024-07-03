@@ -325,7 +325,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
 end;
@@ -2139,6 +2139,7 @@ end;
 
 procedure TLoadFormTest.LoadPartionCellFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCell_listForm'));
@@ -2148,8 +2149,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellChoiceAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartionCellChoiceAllForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartionCellMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartionCellMovementForm');
 end;
 
 procedure TLoadFormTest.LoadReestrKindFormTest;
@@ -2908,12 +2913,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_TransferDebtDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_TransferDebtDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_DialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DialogForm');
-  {exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SendOnPriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SendOnPriceForm');
@@ -2923,13 +2928,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementAllForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifDialogForm'));
@@ -3150,13 +3155,13 @@ begin
       TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserDialogForm');
 exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountDialogForm');
   exit;
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersDialogForm'));
@@ -3331,10 +3336,10 @@ end;
 
 procedure TLoadFormTest.LoadReportInvoiceFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InvoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_InvoiceDialogForm');
 

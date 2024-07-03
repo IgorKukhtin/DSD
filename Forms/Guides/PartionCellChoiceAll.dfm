@@ -120,6 +120,24 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         Options.Editing = False
         Width = 70
       end
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
+        Options.Editing = False
+        Width = 79
+      end
+      object InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #8470' '#1076#1086#1082'. ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
+        Options.Editing = False
+        Width = 90
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -234,6 +252,14 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenForm_AllMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -291,6 +317,10 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbOpenForm_AllMovement: TdxBarButton
+      Action = actPenForm_AllMovement
       Category = 0
     end
   end
@@ -451,6 +481,43 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
+    object actPenForm_AllMovement: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1074#1089#1077#1093' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 28
+      FormName = 'TPartionCellMovementForm'
+      FormNameParam.Value = 'TPartionCellMovementForm'
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PartionCellId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartionCellName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptUnknown
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCellChoice'
@@ -531,7 +598,7 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
       end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
-    Left = 368
-    Top = 192
+    Left = 376
+    Top = 184
   end
 end
