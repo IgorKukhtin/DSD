@@ -711,7 +711,7 @@ BEGIN
                                      -- Карта БН - 2ф.  (выплачено)
                                    , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND MIContainer.MovementDescId = zc_Movement_Cash() AND MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalCardSecond()) AND vbPersonalServiceListId = Object_PersonalServiceList.Id AND (COALESCE (Object_PersonalServiceList.ValueData, '') NOT ILIKE '%Аванс%' OR vbUserId = -5) THEN MIContainer.Amount ELSE 0 END) AS AmountCardSecond_avance
                                      -- Другие (выплачено)
-                                   , SUM (CASE WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                   , SUM (CASE WHEN CLO_PersonalServiceList.ObjectId <> vbPersonalServiceListId and 1=1 then 0 WHEN MIContainer.MovementId <> inMovementId AND vbIsCardSecond = FALSE AND MIContainer.MovementDescId = zc_Movement_Cash() AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_Cash_PersonalService())THEN MIContainer.Amount ELSE 0 END) AS Amount_service
 
                                    , tmpContainer.PersonalId
                                    , tmpContainer.UnitId
@@ -725,6 +725,9 @@ BEGIN
                                                                     ON MIContainer.ContainerId    = tmpContainer.ContainerId
                                                                    AND MIContainer.DescId         = zc_MIContainer_Summ()
                                                                    AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                   LEFT JOIN ContainerLinkObject AS CLO_PersonalServiceList
+                                                                 ON CLO_PersonalServiceList.ContainerId = MIContainer.ContainerId
+                                                                AND CLO_PersonalServiceList.DescId     = zc_ContainerLinkObject_PersonalServiceList()
                                    LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                                    LEFT JOIN MovementLinkObject AS MLO_PersonalServiceList_cash
                                                                 ON MLO_PersonalServiceList_cash.MovementId = MIContainer.MovementId

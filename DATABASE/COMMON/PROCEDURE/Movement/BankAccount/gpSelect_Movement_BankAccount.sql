@@ -340,10 +340,14 @@ BEGIN
                                  ON ObjectLink_BankAccount_Account.ObjectId = Object_BankAccount_View.Id
                                 AND ObjectLink_BankAccount_Account.DescId = zc_ObjectLink_BankAccount_Account()
 
-       WHERE (Object_BankAccount_View.JuridicalId = inJuridicalBasisId OR inJuridicalBasisId = 0)
+       WHERE (Object_BankAccount_View.JuridicalId = inJuridicalBasisId OR inJuridicalBasisId = 0
+           --OR vbUserId = 5
+           OR (Object_BankAccount_View.JuridicalId <> zc_Juridical_Irna() AND inJuridicalBasisId <> zc_Juridical_Irna())
+             )
          AND (  (inAccountId > 0 AND ObjectLink_BankAccount_Account.ChildObjectId = inAccountId)
              OR (inAccountId < 0 AND COALESCE (ObjectLink_BankAccount_Account.ChildObjectId,0) <> (-1) * inAccountId)
              OR inAccountId = 0
+           --OR vbUserId = 5
              )
        ;
 
