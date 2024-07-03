@@ -202,7 +202,7 @@ BEGIN
      FROM Movement 
      WHERE Movement.ID = vbMovementId;
                
-     -- Если заполнен S/N то можно только 1 ша и раз.
+     -- Если заполнен S/N то можно только 1 шт. и 1 раз
      IF COALESCE (inPartNumber, '') <> ''
      THEN
 

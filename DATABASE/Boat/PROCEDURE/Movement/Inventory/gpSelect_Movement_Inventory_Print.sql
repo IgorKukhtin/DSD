@@ -284,5 +284,4 @@ $BODY$
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_Inventory_Print (inMovementId:= 3281, inIsAll:=FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Inventory_Print (inMovementId:= 3281, inIsAll:=FALSE, inSession:= zfCalc_UserAdmin())

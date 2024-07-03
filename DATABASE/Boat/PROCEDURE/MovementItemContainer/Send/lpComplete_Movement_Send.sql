@@ -100,22 +100,22 @@ BEGIN
 
      -- Если были сканирования
      IF EXISTS (SELECT MovementItem.Id
-                FROM MovementItem 
+                FROM MovementItem
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId     = zc_MI_Scan())
      THEN
-     
-     
-       -- Если проводить нечего ругаемся 
+
+
+       -- Если проводить нечего ругаемся
        IF NOT EXISTS (SELECT MovementItem.ObjectId AS GoodsId
                            , SUM(MovementItem.Amount)::TFloat             AS Amount
                            , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                      FROM MovementItem 
+                      FROM MovementItem
 
                            LEFT JOIN MovementItemString AS MIString_PartNumber
                                                         ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                                        AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                           
+
                       WHERE MovementItem.MovementId = inMovementId
                         AND MovementItem.DescId     = zc_MI_Scan()
                         AND MovementItem.isErased   = False
@@ -130,12 +130,12 @@ BEGIN
        IF EXISTS (SELECT MovementItem.ObjectId AS GoodsId
                        , SUM(MovementItem.Amount)::TFloat             AS Amount
                        , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                  FROM MovementItem 
+                  FROM MovementItem
 
                        LEFT JOIN MovementItemString AS MIString_PartNumber
                                                     ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                                    AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                       
+
                   WHERE MovementItem.MovementId = inMovementId
                     AND MovementItem.DescId     = zc_MI_Scan()
                     AND MovementItem.isErased   = False
@@ -143,14 +143,14 @@ BEGIN
                          , COALESCE (MIString_PartNumber.ValueData, '')
                   HAVING SUM(MovementItem.Amount) < 0)
        THEN
-         RAISE EXCEPTION 'Ошибка.По документу № <%> как минимум по одному товару <%> количество по строке отрицательное. Провести документ не возможно.', vbInvNumber, 
+         RAISE EXCEPTION 'Ошибка.По документу № <%> как минимум по одному товару <%> количество по строке отрицательное. Провести документ не возможно.', vbInvNumber,
                          lfGet_Object_ValueData ((SELECT MovementItem.ObjectId AS GoodsId
-                                                  FROM MovementItem 
+                                                  FROM MovementItem
 
                                                        LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                                     ON MIString_PartNumber.MovementItemId = MovementItem.Id
                                                                                    AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                                                       
+
                                                   WHERE MovementItem.MovementId = inMovementId
                                                     AND MovementItem.DescId     = zc_MI_Scan()
                                                     AND MovementItem.isErased   = False
@@ -159,18 +159,18 @@ BEGIN
                                                   HAVING SUM(MovementItem.Amount) < 0
                                                   LIMIT 1));
        END IF;
-              
+
        -- Востановим удаленные строки в мастере
-       UPDATE MovementItem SET isErased = False
+       /*UPDATE MovementItem SET isErased = False
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = True;       
-     
-       -- Создали Элементы по zc_MI_Scan
+         AND MovementItem.isErased   = True;       */
+
+       -- Перенесли Элементы zc_MI_Scan -> zc_MI_Master
        PERFORM lpInsertUpdate_MovementItem_Send (ioId                     := tmp.Id
                                                , inMovementId             := inMovementId
-                                               , inMovementId_OrderClient := COALESCE(tmp.MovementId_OrderClient, 0)
-                                               , inGoodsId                := tmp.GoodsId 
+                                               , inMovementId_OrderClient := COALESCE (tmp.MovementId_OrderClient, 0)
+                                               , inGoodsId                := tmp.GoodsId
                                                , inPartionCellId          := tmp.PartionCellId
                                                , inAmount                 := tmp.Amount
                                                , inOperPrice              := 0
@@ -181,62 +181,88 @@ BEGIN
                                                )
 
        FROM (WITH tmpMIScan AS (SELECT MovementItem.ObjectId AS GoodsId
-                                       , SUM(MovementItem.Amount)::TFloat             AS Amount
-                                       , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                                       , MAX(MovementItem.Id)                         AS MaxID  
-                                  FROM MovementItem 
+                                       , SUM (MovementItem.Amount)::TFloat                     AS Amount
+                                       , COALESCE (MIString_PartNumber.ValueData, '')          AS PartNumber
+                                       , MAX (MovementItem.Id)                                 AS MaxID
+                                       , COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer AS MovementId_OrderClient
+                                  FROM MovementItem
 
                                        LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                     ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                       
+                                                                   AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                  AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
                                   WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId     = zc_MI_Scan()
-                                    AND MovementItem.isErased   = False
+                                    AND MovementItem.isErased   = FALSE
                                   GROUP BY MovementItem.ObjectId
                                          , COALESCE (MIString_PartNumber.ValueData, '')
+                                         , COALESCE (MIFloat_MovementId.ValueData, 0)
                                  )
                 , tmpMIMaster AS (SELECT MovementItem.Id
                                        , MovementItem.ObjectId AS GoodsId
                                        , COALESCE (MIString_PartNumber.ValueData, '') AS PartNumber
-                                  FROM MovementItem 
-                                  
+                                       , COALESCE (MIFloat_MovementId.ValueData, 0) :: Integer AS MovementId_OrderClient
+                                  FROM MovementItem
                                        LEFT JOIN MovementItemString AS MIString_PartNumber
                                                                     ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                                   AND MIString_PartNumber.DescId = zc_MIString_PartNumber()
-                                                                      
+                                                                   AND MIString_PartNumber.DescId         = zc_MIString_PartNumber()
+                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
+                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
+                                                                  AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
+
                                   WHERE MovementItem.MovementId = inMovementId
                                     AND MovementItem.DescId     = zc_MI_Master()
-                                    AND MovementItem.isErased   = False
+                                    AND MovementItem.isErased   = FALSE
                                  )
-                                 
+
               SELECT COALESCE(tmpMIMaster.Id, 0)                  AS ID
                    , tmpMIScan.GoodsId                            AS GoodsId
                    , tmpMIScan.Amount                             AS Amount
                    , tmpMIScan.PartNumber                         AS PartNumber
-                   , COALESCE(MILO_PartionCell.ObjectId, 0)       AS PartionCellId
-                   , MIFloat_MovementId.ValueData :: Integer      AS MovementId_OrderClient
+                   , COALESCE (MILO_PartionCell.ObjectId, 0)      AS PartionCellId
+                   , tmpMIScan.MovementId_OrderClient             AS MovementId_OrderClient
               FROM tmpMIScan
-                            
-                   FULL JOIN tmpMIMaster ON tmpMIScan.GoodsId = tmpMIMaster.GoodsId
-                                        AND tmpMIScan.PartNumber = tmpMIMaster.PartNumber
-
-                   LEFT JOIN MovementItemFloat AS MIFloat_MovementId
-                                               ON MIFloat_MovementId.MovementItemId = COALESCE(tmpMIScan.MaxID, tmpMIMaster.Id)
-                                              AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
-
+                   LEFT JOIN tmpMIMaster ON tmpMIScan.GoodsId                = tmpMIMaster.GoodsId
+                                        AND tmpMIScan.PartNumber             = tmpMIMaster.PartNumber
+                                        AND tmpMIScan.MovementId_OrderClient = tmpMIMaster.MovementId_OrderClient
+                   -- ошибка, почему один MaxId?
                    LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                     ON MILO_PartionCell.MovementItemId = tmpMIScan.MaxId
-                                                   AND MILO_PartionCell.DescId = zc_MILinkObject_PartionCell()                                                   
+                                                   AND MILO_PartionCell.DescId         = zc_MILinkObject_PartionCell()
+             UNION ALL
+              -- Удалим строки в мастере только если товар сканировался
+              SELECT tmpMIMaster.Id                               AS Id
+                   , tmpMIMaster.GoodsId                          AS GoodsId
+                   , 0                                            AS Amount
+                   , tmpMIMaster.PartNumber                       AS PartNumber
+                   , COALESCE (MILO_PartionCell.ObjectId, 0)      AS PartionCellId
+                   , tmpMIMaster.MovementId_OrderClient           AS MovementId_OrderClient
+              FROM tmpMIMaster
+                   LEFT JOIN tmpMIScan ON tmpMIScan.GoodsId                = tmpMIMaster.GoodsId
+                                      AND tmpMIScan.PartNumber             = tmpMIMaster.PartNumber
+                                      AND tmpMIScan.MovementId_OrderClient = tmpMIMaster.MovementId_OrderClient
+                   -- только если товар сканировался
+                   INNER JOIN(SELECT DISTINCT tmpMIScan.GoodsId FROM tmpMIScan) AS tmpMIScan_find ON tmpMIScan_find.GoodsId  = tmpMIMaster.GoodsId
+                   --
+                   LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                    ON MILO_PartionCell.MovementItemId = tmpMIMaster.Id
+                                                   AND MILO_PartionCell.DescId         = zc_MILinkObject_PartionCell()
+              WHERE tmpMIScan.GoodsId IS NULL
             ) AS tmp;
-            
-       -- Удалим строки в мастере с нолевым количеством
-       UPDATE MovementItem SET isErased = True
+
+
+       -- Удалим строки в мастере с нулевым количеством
+       UPDATE MovementItem SET isErased = TRUE
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = False
-         AND MovementItem.Amount     = 0;       
-            
+         AND MovementItem.isErased   = FALSE
+         AND MovementItem.Amount     = 0
+        ;
+
+
      END IF;
 
      -- заполняем таблицу - элементы документа

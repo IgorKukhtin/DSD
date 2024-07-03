@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Inventory_Scan(
  INOUT ioPartionCellName         TVarChar  , -- код или название
     IN inSession                 TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS TVarChar
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbPartionCellId Integer;

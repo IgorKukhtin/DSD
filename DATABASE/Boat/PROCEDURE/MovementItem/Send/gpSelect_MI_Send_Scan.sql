@@ -164,4 +164,4 @@ $BODY$
 */
 
 -- тест
---  SELECT * FROM gpSelect_MI_Send_Scan (inMovementId := 3214 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpSelect_MI_Send_Scan (inMovementId := 3214 , inIsErased := 'False' ,  inSession := zfCalc_UserAdmin());
