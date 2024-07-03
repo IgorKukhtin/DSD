@@ -77,10 +77,12 @@ BEGIN
      FROM Object_BankAccount_View
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
-     WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
-                                                 , 15505 -- ִ׃Ê־ ׂ־ֲ 
-                                                 , 15512 -- ²נםא-1 װ³נלא ׂ־ֲ
-                                                  )
+     WHERE (Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
+                                                  , 15505 -- ִ׃Ê־ ׂ־ֲ 
+                                                  , 15512 -- ²נםא-1 װ³נלא ׂ־ֲ
+                                                   )
+         OR Object_BankAccount_View.isCorporate = TRUE
+           )
        AND Object_BankAccount_View.isErased = FALSE
     /*UNION ALL
      SELECT Object_Member.Id       

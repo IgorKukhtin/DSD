@@ -99,6 +99,7 @@ BEGIN
                                   AND (ObjectBoolean_isCorporate.ValueData = TRUE
                                     OR Object_BankAccount_View.JuridicalId = 15505 -- ÄÓÊÎ ÒÎÂ 
                                     OR Object_BankAccount_View.JuridicalId = 15512 -- ²ðíà-1 Ô³ðìà ÒÎÂ
+                                    OR Object_BankAccount_View.isCorporate = TRUE
                                       )
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.isErased = FALSE
