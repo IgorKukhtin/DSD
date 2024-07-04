@@ -18,7 +18,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -163,6 +163,8 @@ type
     cxLabel49: TcxLabel;
     edBranchJur: TcxTextEdit;
     cxLabel50: TcxLabel;
+    cxLabel51: TcxLabel;
+    edTerminal: TcxTextEdit;
 
   private
     { Private declarations }

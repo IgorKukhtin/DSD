@@ -38,7 +38,12 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                        Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
                                                        Integer, Integer,
                                                        TDateTime, TDateTime, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                                                       TFloat, TFloat, TFloat,TFloat, TFloat, TFloat, TFloat,
+                                                       Boolean, Boolean, Boolean,
+                                                       Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                       Integer, Integer,
+                                                       TDateTime, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -52,6 +57,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Partner(
 
     IN inBranchCode          TVarChar  ,    -- Номер филиала
     IN inBranchJur           TVarChar  ,    -- Название юр.лица для филиала
+    IN inTerminal            TVarChar  ,    -- код терминала
 
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
@@ -131,7 +137,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_BranchCode(), ioId, inBranchCode); 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_BranchJur(), ioId, inBranchJur); 
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_BranchJur(), ioId, inBranchJur);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Terminal(), ioId, inTerminal); 
          
    -- сохранили свойство <За сколько дней принимается заказ>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount /*CASE WHEN vbIsInsert = TRUE AND COALESCE (inPrepareDayCount, 0) = 0 THEN 1 ELSE inPrepareDayCount END*/);
@@ -213,6 +221,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И. 
+ 04.07.24         *
  24.10.23         *
  27.09.21         *
  25.05.21         *

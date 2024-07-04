@@ -23,7 +23,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls, ExternalLoad;
+  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls, ExternalLoad,
+  dsdCommon;
 
 type
   TPartnerForm = class(TParentForm)
@@ -186,6 +187,7 @@ type
     MovementComment: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
     BranchJur: TcxGridDBColumn;
+    Terminal: TcxGridDBColumn;
   private
     { Private declarations }
   public

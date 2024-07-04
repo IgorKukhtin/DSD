@@ -2357,19 +2357,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
   //exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
-  exit;
-  {
+  //exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
 
