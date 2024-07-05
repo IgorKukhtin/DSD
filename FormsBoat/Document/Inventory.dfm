@@ -2,7 +2,7 @@ object InventoryForm: TInventoryForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
-  ClientHeight = 579
+  ClientHeight = 633
   ClientWidth = 937
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,24 +21,27 @@ object InventoryForm: TInventoryForm
     Left = 0
     Top = 206
     Width = 937
-    Height = 373
+    Height = 427
     Align = alClient
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 373
+    ExplicitHeight = 373
+    ClientRectBottom = 427
     ClientRectRight = 937
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 349
       object cxGrid: TcxGrid
         Left = 0
         Top = 8
         Width = 937
-        Height = 341
+        Height = 395
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 341
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS

@@ -65,7 +65,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, BasisCode Integer,
                isGoodsBox Boolean, 
                MovementComment TVarChar,
                BranchCode TVarChar,
-               BranchJur TVarChar
+               BranchJur TVarChar,
+               Terminal TVarChar
               )
 AS
 $BODY$
@@ -265,7 +266,8 @@ BEGIN
          , COALESCE (ObjectBoolean_Partner_GoodsBox.ValueData, FALSE) :: Boolean AS isGoodsBox
          , ObjectString_Movement.ValueData   ::TVarChar AS MovementComment
          , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
-         , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
+         , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur   
+         , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
      FROM tmpIsErased
          INNER JOIN tmpPartner AS Object_Partner
                                ON Object_Partner.isErased = tmpIsErased.isErased
@@ -326,6 +328,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_BranchJur
                                 ON ObjectString_BranchJur.ObjectId = Object_Partner.Id
                                AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
+         LEFT JOIN ObjectString AS ObjectString_Terminal
+                                ON ObjectString_Terminal.ObjectId = Object_Partner.Id
+                               AND ObjectString_Terminal.DescId = zc_ObjectString_Partner_Terminal()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -698,6 +703,7 @@ BEGIN
          , ObjectString_Movement.ValueData   ::TVarChar AS MovementComment
          , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
          , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
+         , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
      FROM tmpIsErased
          INNER JOIN Object AS Object_Partner
                            ON Object_Partner.isErased = tmpIsErased.isErased
@@ -756,6 +762,9 @@ BEGIN
          LEFT JOIN ObjectString AS ObjectString_BranchJur
                                 ON ObjectString_BranchJur.ObjectId = Object_Partner.Id
                                AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
+         LEFT JOIN ObjectString AS ObjectString_Terminal
+                                ON ObjectString_Terminal.ObjectId = Object_Partner.Id
+                               AND ObjectString_Terminal.DescId = zc_ObjectString_Partner_Terminal()
 
          LEFT JOIN ObjectFloat AS ObjectFloat_PrepareDayCount
                                ON ObjectFloat_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -981,6 +990,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.07.24         * Terminal
  24.10.23         *
  04.05.22         *
  29.04.21         * Category

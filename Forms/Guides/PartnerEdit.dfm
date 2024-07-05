@@ -859,18 +859,18 @@
   end
   object edBranchCode: TcxTextEdit [115]
     Left = 736
-    Top = 367
+    Top = 370
     TabOrder = 115
     Width = 81
   end
   object cxLabel49: TcxLabel [116]
-    Left = 735
+    Left = 736
     Top = 347
     Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
   end
   object edBranchJur: TcxTextEdit [117]
     Left = 832
-    Top = 367
+    Top = 370
     TabOrder = 117
     Width = 241
   end
@@ -878,6 +878,17 @@
     Left = 832
     Top = 347
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1102#1088'.'#1083#1080#1094#1072' '#1076#1083#1103' '#1092#1080#1083#1080#1072#1083#1072
+  end
+  object cxLabel51: TcxLabel [119]
+    Left = 736
+    Top = 398
+    Caption = #1050#1086#1076' '#1090#1077#1088#1084#1080#1085#1072#1083#1072
+  end
+  object edTerminal: TcxTextEdit [120]
+    Left = 735
+    Top = 419
+    TabOrder = 120
+    Width = 81
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 355
@@ -1018,6 +1029,14 @@
         Name = 'inBranchJur'
         Value = Null
         Component = edBranchJur
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTerminal'
+        Value = Null
+        Component = edTerminal
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2069,6 +2088,13 @@
         Name = 'BranchJur'
         Value = Null
         Component = edBranchJur
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Terminal'
+        Value = Null
+        Component = edTerminal
         DataType = ftString
         MultiSelectSeparator = ','
       end>

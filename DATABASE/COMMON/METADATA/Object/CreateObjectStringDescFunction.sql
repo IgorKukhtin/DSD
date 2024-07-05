@@ -503,7 +503,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_BranchJur() RETURNS Integer A
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Partner_BranchJur', zc_Object_Partner(), 'Название юр.лица для филиала' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_BranchJur');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_Terminal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_Terminal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Partner_Terminal', zc_Object_Partner(), 'Код терминала' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner_Terminal');
 
+ 
+ 
+ 
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_ReceiptChild_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ReceiptChild_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)

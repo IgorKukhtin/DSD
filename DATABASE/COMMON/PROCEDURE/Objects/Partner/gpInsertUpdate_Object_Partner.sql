@@ -51,6 +51,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarCha
                                                      , Integer, Integer
                                                      , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
                                                      , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                     , Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                     , Boolean, Boolean, Boolean
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer
+                                                     , TDateTime, TDateTime, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, Integer
+                                                     , Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -65,6 +72,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     
     IN inBranchCode          TVarChar  ,    -- Номер филиала
     IN inBranchJur           TVarChar  ,    -- Название юр.лица для филиала
+    IN inTerminal            TVarChar  ,    -- код терминала
         
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
@@ -202,6 +210,7 @@ BEGIN
                                         , inSchedule        := vbSchedule  
                                         , inBranchCode      := inBranchCode
                                         , inBranchJur       := inBranchJur
+                                        , inTerminal        := inTerminal
 
                                         , inPrepareDayCount := inPrepareDayCount
                                         , inDocumentDayCount:= inDocumentDayCount
@@ -268,6 +277,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.07.24         *
  24.10.23         *
  27.01.23         *
  25.05.21         *

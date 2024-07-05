@@ -54,6 +54,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar,
              , MovementComment TVarChar
              , BranchCode TVarChar
              , BranchJur TVarChar
+             , Terminal TVarChar
                ) AS
 $BODY$
 BEGIN
@@ -182,7 +183,8 @@ BEGIN
            , CAST ('' as TVarChar)  AS MovementComment 
            
            , CAST ('' as TVarChar)  AS BranchCode
-           , CAST ('' as TVarChar)  AS BranchJur
+           , CAST ('' as TVarChar)  AS BranchJur 
+           , CAST ('' as TVarChar)  AS Terminal
 
            ;
    ELSE
@@ -306,6 +308,7 @@ BEGIN
            , ObjectString_Movement.ValueData   ::TVarChar AS MovementComment
            , ObjectString_BranchCode.ValueData ::TVarChar AS BranchCode
            , ObjectString_BranchJur.ValueData  ::TVarChar AS BranchJur
+           , ObjectString_Terminal.ValueData   ::TVarChar AS Terminal
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -359,6 +362,9 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_BranchJur
                                   ON ObjectString_BranchJur.ObjectId = Object_Partner.Id
                                  AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
+           LEFT JOIN ObjectString AS ObjectString_Terminal
+                                  ON ObjectString_Terminal.ObjectId = Object_Partner.Id
+                                 AND ObjectString_Terminal.DescId = zc_ObjectString_Partner_Terminal()
 
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -533,6 +539,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.07.24         * 
  24.10.23         *
  27.01.23         * MovementComment
  25.05.21         *
