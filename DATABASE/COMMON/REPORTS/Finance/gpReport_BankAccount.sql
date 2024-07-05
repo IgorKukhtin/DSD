@@ -50,6 +50,15 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     
+
+     -- Банк выписки Павильоны
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 10985745)
+     THEN
+         inAccountId:= 10895486; -- 040304 Денежные средства  Расчетный счет Расчетный счет (павильоны)
+         inJuridicalBasisId:= 0;
+     END IF;
+     
 
 
      -- проверка доступа
