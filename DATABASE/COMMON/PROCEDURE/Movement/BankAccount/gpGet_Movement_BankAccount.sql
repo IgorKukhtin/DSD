@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , BankAccountId Integer, BankAccountName TVarChar, BankId Integer, BankName TVarChar
              , MoneyPlaceId Integer, MoneyPlaceName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
@@ -57,6 +58,8 @@ BEGIN
            , '':: TVarChar                                     AS BankName
            , 0                                                 AS MoneyPlaceId
            , CAST ('' as TVarChar)                             AS MoneyPlaceName
+           , 0                                                 AS PartnerId
+           , '':: TVarChar                                     AS PartnerName
            , 0                                                 AS InfoMoneyId
            , CAST ('' as TVarChar)                             AS InfoMoneyName
            , 0                                                 AS ContractId
@@ -116,6 +119,8 @@ BEGIN
            , View_BankAccount.BankName
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
+           , Object_Partner.Id                 AS PartnerId
+           , Object_Partner.ValueData          AS PartnerName
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all  AS InfoMoneyName
            , Object_Contract.Id                AS ContractId
@@ -184,6 +189,11 @@ BEGIN
                                              ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                             ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id

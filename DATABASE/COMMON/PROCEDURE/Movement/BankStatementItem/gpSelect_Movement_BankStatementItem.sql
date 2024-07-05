@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Debet TFloat, Kredit TFloat
              , AmountSumm TFloat, AmountCurrency TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
-             , LinkJuridicalId integer, LinkJuridicalName TVarChar, LinkINN TVarChar
+             , LinkJuridicalId integer, LinkJuridicalName TVarChar, LinkINN TVarChar 
+             , PartnerId integer, PartnerName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyId integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -63,6 +64,9 @@ BEGIN
            , Object_Juridical.Id                    AS LinkJuridicalId
            , (Object_Juridical.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS LinkJuridicalName
            , ObjectString_INN.ValueData  ::TVarChar AS LinkINN
+           , Object_Partner.Id                      AS PartnerId
+           , Object_Partner.ValueData    ::TVarChar AS PartnerName
+           
 
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -118,7 +122,6 @@ BEGIN
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
             
-
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId = Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
@@ -175,6 +178,11 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = MovementLinkObject_Juridical.ObjectId
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
@@ -213,6 +221,7 @@ ALTER FUNCTION gpSelect_Movement_BankStatementItem (Integer, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.07.24         * Partner
  12.09.18         *
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  13.03.14                                        * add Object_InfoMoney_View

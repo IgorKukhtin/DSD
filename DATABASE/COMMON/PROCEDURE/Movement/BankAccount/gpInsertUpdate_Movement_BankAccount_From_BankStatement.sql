@@ -86,6 +86,7 @@ end if;
                                                , inBankAccountId        := tmpBankStatementItem.BankAccountId
                                                , inComment              := tmpBankStatementItem.Comment
                                                , inMoneyPlaceId         := tmpBankStatementItem.MoneyPlaceId
+                                               , inPartnerId            := tmpBankStatementItem.PartnerId
                                                , inContractId           := tmpBankStatementItem.ContractId
                                                , inInfoMoneyId          := tmpBankStatementItem.InfoMoneyId
                                                , inUnitId               := tmpBankStatementItem.UnitId
@@ -109,6 +110,7 @@ end if;
                                                     , MovementLinkObject_BankAccount.ObjectId      AS BankAccountId
                                                     , MovementString_Comment.ValueData             AS Comment
                                                     , MovementLinkObject_Juridical.ObjectId        AS MoneyPlaceId
+                                                    , ObjectLink_BankAccount_Partner.ChildObjectId AS PartnerId
                                                     , MovementLinkObject_Contract.ObjectId         AS ContractId
                                                     , MovementLinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                                                     , MovementLinkObject_Unit.ObjectId             AS UnitId
@@ -177,7 +179,11 @@ end if;
                                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                                                                   ON MovementLinkObject_Juridical.MovementId = Movement.Id
                                                                                  AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                                          
+ 
+                                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                                  ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                                                 AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+
                                                      LEFT JOIN MovementFloat AS MovementFloat_AmountCurrency
                                                                              ON MovementFloat_AmountCurrency.MovementId = Movement.Id
                                                                             AND MovementFloat_AmountCurrency.DescId = zc_MovementFloat_AmountCurrency()
@@ -218,7 +224,8 @@ end if;
                   , tmpBankStatementItem_all.AmountCurrency
                   , tmpBankStatementItem_all.BankAccountId
                   , tmpBankStatementItem_all.Comment
-                  , tmpBankStatementItem_all.MoneyPlaceId
+                  , tmpBankStatementItem_all.MoneyPlaceId 
+                  , tmpBankStatementItem_all.PartnerId
                   , tmpBankStatementItem_all.ContractId
                   , tmpBankStatementItem_all.InfoMoneyId
                   , tmpBankStatementItem_all.UnitId
@@ -249,6 +256,7 @@ end if;
                   , tmpBankStatementItem_all.BankAccountId
                   , MAX (tmpBankStatementItem_all.Comment)        AS Comment
                   , tmpBankStatementItem_all.MoneyPlaceId
+                  , tmpBankStatementItem_all.PartnerId
                   , tmpBankStatementItem_all.ContractId
                   , tmpBankStatementItem_all.InfoMoneyId
                   , tmpBankStatementItem_all.UnitId
@@ -267,7 +275,8 @@ end if;
              GROUP BY tmpBankStatementItem_all.OperDate
                     , tmpBankStatementItem_all.ServiceDate
                     , tmpBankStatementItem_all.BankAccountId
-                    , tmpBankStatementItem_all.MoneyPlaceId
+                    , tmpBankStatementItem_all.MoneyPlaceId  
+                    , tmpBankStatementItem_all.PartnerId
                     , tmpBankStatementItem_all.ContractId
                     , tmpBankStatementItem_all.InfoMoneyId
                     , tmpBankStatementItem_all.UnitId
@@ -346,6 +355,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 04.07.24         *
  21.07.16         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...

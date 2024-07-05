@@ -98,6 +98,7 @@ type
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
     spGet_UseJuridicalBankAccount: TdsdStoredProc;
+    PartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

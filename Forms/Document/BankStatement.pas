@@ -100,6 +100,8 @@ type
     mactUpdateParams_list: TMultiAction;
     mactUpdateParams: TMultiAction;
     bbUpdateParams: TdxBarButton;
+    PartnerName: TcxGridDBColumn;
+    actChoicePartner: TOpenChoiceForm;
   private
     { Private declarations }
   public

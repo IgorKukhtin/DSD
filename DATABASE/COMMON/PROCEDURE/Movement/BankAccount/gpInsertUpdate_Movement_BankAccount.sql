@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inBankAccountId        Integer   , -- Расчетный счет 	
     IN inComment              TVarChar  , -- Комментарий 
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса, Ведомости начисления
+    IN inPartnerId            Integer   , -- Контрагент
     IN inContractId           Integer   , -- Договора
     IN inInfoMoneyId          Integer   , -- Статьи назначения 
     IN inUnitId               Integer   , -- Подразделение
@@ -95,6 +97,7 @@ BEGIN
                                                , inBankAccountId        := inBankAccountId
                                                , inComment              := inComment
                                                , inMoneyPlaceId         := inMoneyPlaceId
+                                               , inPartnerId            := inPartnerId
                                                , inContractId           := inContractId
                                                , inInfoMoneyId          := inInfoMoneyId
                                                , inUnitId               := inUnitId
@@ -127,6 +130,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.07.24         *
  18.09.18         *
  21.07.15         *
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
