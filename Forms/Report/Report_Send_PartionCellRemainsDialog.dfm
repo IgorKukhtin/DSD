@@ -173,8 +173,8 @@ object Report_Send_PartionCellRemainsDialogForm: TReport_Send_PartionCellRemains
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 92
+    Left = 152
+    Top = 116
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

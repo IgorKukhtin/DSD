@@ -2,8 +2,6 @@ inherited AncestorEnumForm: TAncestorEnumForm
   ActiveControl = cxGrid
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = ChoiceGuides
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

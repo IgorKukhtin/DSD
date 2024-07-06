@@ -88,6 +88,8 @@ type
     ColorFon_ord: TcxGridDBColumn;
     cbisCell: TcxCheckBox;
     actRefreshCell: TdsdDataSetRefresh;
+    actPrintRem: TdsdPrintAction;
+    bbPrintRem: TdxBarButton;
   private
     { Private declarations }
   public
