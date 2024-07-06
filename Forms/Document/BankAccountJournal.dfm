@@ -1400,6 +1400,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'inAccountId'
         Value = 0
+        Component = FormParams
+        ComponentItem = 'inAccountId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

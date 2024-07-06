@@ -40,6 +40,7 @@ $BODY$
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbContractId Integer;
    DECLARE vbJuridicalId Integer;
+   DECLARE vbPartnerId Integer;
    DECLARE vbCurrencyId Integer;
    DECLARE vbBankId Integer;
    DECLARE vbAmountCurrency TFloat;
@@ -284,8 +285,51 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParPartnerValue(), vbMovementItemId, vbParPartnerValue);
 
 
-    -- нашли свойство Юр. лица
-    vbJuridicalId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Juridical() AND MLO.MovementId = vbMovementItemId);
+/*
+в zc_ObjectString_Partner_Terminal  заполнили 12345абс
+в банк выписке в примечании нашли такой набор  символов
+значит для этой записи будет этот контрагент
+
+*/
+    --Находим свойство Контрагент
+    vbPartnerId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Partner() AND MLO.MovementId = vbMovementItemId);
+
+    IF COALESCE (vbPartnerId,0) = 0
+    THEN
+        --пробуем найти Котрагента по zc_ObjectString_Partner_Terminal  
+        vbPartnerId := (SELECT ObjectString.ObjectId
+                        FROM ObjectString
+                        WHERE ObjectString.DescId = zc_ObjectString_Partner_Terminal()
+                          AND inComment like '%' + ObjectString.ValueData + '%'
+                          AND COALESCE (ObjectString.ValueData,'') <> ''
+                        LIMIT 1 --
+                        );
+        IF COALESCE (vbPartnerId,0) <> 0
+        THEN 
+            vbJuridicalId := (SELECT ObjectLink_Partner_Juridical.ChildObjectId
+                              FROM ObjectLink AS ObjectLink_Partner_Juridical
+                              WHERE ObjectLink_Partner_Juridical.ObjectId = vbPartnerId
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              );
+            
+            -- сохранили связь с <Сотрудник> хотя и называется <Юр. лицо>
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), vbMovementItemId, vbPartnerId);
+            
+            IF COALESCE(vbJuridicalId, 0) <> 0
+            THEN
+               -- сохранили связь с <Юр. лицо>
+               PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementItemId, vbJuridicalId);
+            END IF;        
+        END IF;
+     END IF;
+
+
+    IF COALESCE (vbJuridicalId,0) = 0
+    THEN
+        -- нашли свойство Юр. лица
+        vbJuridicalId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_Juridical() AND MLO.MovementId = vbMovementItemId);
+    END IF;
+    
     -- сначала поиск через Назначение платежа - Удержание
     IF COALESCE(vbJuridicalId, 0) = 0 AND EXISTS (WITH tmpMember AS (SELECT ObjectString.ValueData
                                                                      FROM ObjectString

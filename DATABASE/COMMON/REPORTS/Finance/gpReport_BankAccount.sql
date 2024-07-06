@@ -59,7 +59,10 @@ BEGIN
          inJuridicalBasisId:= 0;
      END IF;
      
-
+     IF inAccountId = 10895486    --Расчетный счет Расчетный счет (павильоны)
+     THEN
+         inJuridicalBasisId:= 0;
+     END IF;
 
      -- проверка доступа
      vbMemberId := (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
@@ -183,10 +186,15 @@ BEGIN
                                 LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
 
                            WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
-                            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+                            --AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                             AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
                             AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0 OR inCurrencyId = zc_Enum_Currency_Basis())
-                            AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount)) -- ограничиваем по гл. юр.лицу)
+                            AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount)) -- ограничиваем по гл. юр.лицу) 
+                            AND (  (inAccountId > 0 AND Container.ObjectId = inAccountId)
+                                OR (inAccountId < 0 AND COALESCE (Container.ObjectId,0) <> (-1) * inAccountId)
+                                OR COALESCE (inAccountId,0) = 0
+                                )
+                            
                           )
 
         , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
