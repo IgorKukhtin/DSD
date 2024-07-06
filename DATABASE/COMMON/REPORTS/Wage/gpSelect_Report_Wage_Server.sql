@@ -489,7 +489,8 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
-              , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+              , CASE WHEN inDetailDay = TRUE THEN Res.OperDate
+                     WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
                      ELSE Res.OperDate
                 END  ::TDateTime AS OperDate
 
@@ -599,7 +600,8 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END
 
-              , CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+              , CASE WHEN inDetailDay = TRUE THEN Res.OperDate
+                     WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
                      ELSE Res.OperDate
                 END  ::TDateTime
 
