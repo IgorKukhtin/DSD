@@ -1,21 +1,26 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
+  ClientHeight = 543
   ClientWidth = 872
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 888
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 872
+    Height = 486
     TabOrder = 3
     ExplicitWidth = 872
+    ClientRectBottom = 486
     ClientRectRight = 872
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 872
       inherited cxGrid: TcxGrid
         Width = 872
+        Height = 486
         ExplicitWidth = 872
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -950,6 +955,30 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAccountName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = Null
+        Component = JuridicalBasisGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
   object JuridicalBasisGuides: TdsdGuides
@@ -979,10 +1008,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 767
+    Left = 671
   end
   object spGet_UserJuridicalBasis: TdsdStoredProc
-    StoredProcName = 'gpGet_User_JuridicalBasis'
+    StoredProcName = 'gpGet_UserJuridicalBankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -202,6 +202,19 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 70
           end
+          object PartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoicePartner
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Width = 70
+          end
           object InfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -449,6 +462,8 @@ inherited BankStatementForm: TBankStatementForm
       Height = 109
       Align = alClient
       TabOrder = 1
+      ExplicitLeft = -647
+      ExplicitTop = -224
       object cxDetailGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -471,8 +486,8 @@ inherited BankStatementForm: TBankStatementForm
     Top = 232
   end
   inherited ActionList: TActionList
-    Left = 79
-    Top = 247
+    Left = 151
+    Top = 335
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -552,6 +567,21 @@ inherited BankStatementForm: TBankStatementForm
           ComponentItem = 'LinkINN'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -585,6 +615,67 @@ inherited BankStatementForm: TBankStatementForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'InfoMoneyCode'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actChoicePartner: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceContract'
+      FormName = 'TPartner_ObjectForm'
+      FormNameParam.Value = 'TPartner_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalName'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False
@@ -964,12 +1055,11 @@ inherited BankStatementForm: TBankStatementForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 56
+    Left = 72
     Top = 104
   end
   inherited MasterCDS: TClientDataSet
-    Left = 24
-    Top = 96
+    Top = 112
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankStatementItem'
@@ -982,7 +1072,7 @@ inherited BankStatementForm: TBankStatementForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Top = 112
+    Top = 176
   end
   inherited BarManager: TdxBarManager
     Left = 136
@@ -1206,6 +1296,14 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ininfomoneyid'
         Value = Null
         Component = MasterCDS
@@ -1254,7 +1352,7 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 320
+    Left = 328
     Top = 128
   end
   object spBankAccount_From_BankStatement: TdsdStoredProc
@@ -1271,8 +1369,8 @@ inherited BankStatementForm: TBankStatementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 152
+    Left = 296
+    Top = 184
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'BankStatementJournalForm'

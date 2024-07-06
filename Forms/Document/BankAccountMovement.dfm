@@ -3,7 +3,7 @@
   ClientHeight = 362
   ClientWidth = 581
   ExplicitWidth = 587
-  ExplicitHeight = 390
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -80,12 +80,12 @@
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object cxLabel6: TcxLabel [11]
-    Left = 7
+    Left = 8
     Top = 115
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
   end
   object ceObject: TcxButtonEdit [12]
-    Left = 7
+    Left = 8
     Top = 135
     Properties.Buttons = <
       item
@@ -94,15 +94,15 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 260
+    Width = 259
   end
   object cxLabel5: TcxLabel [13]
-    Left = 8
+    Left = 280
     Top = 170
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoney: TcxButtonEdit [14]
-    Left = 8
+    Left = 280
     Top = 190
     Properties.Buttons = <
       item
@@ -111,7 +111,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 397
+    Width = 125
   end
   object ceContract: TcxButtonEdit [15]
     Left = 280
@@ -288,6 +288,23 @@
     TabOrder = 37
     Width = 156
   end
+  object cxLabel18: TcxLabel [38]
+    Left = 8
+    Top = 170
+    Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+  end
+  object edPartner: TcxButtonEdit [39]
+    Left = 8
+    Top = 189
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 39
+    Width = 259
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
     Top = 316
@@ -346,7 +363,7 @@
       end
       item
         Name = 'inServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceServiceDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -395,7 +412,15 @@
       item
         Name = 'inMoneyPlaceId'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -480,7 +505,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -547,14 +572,14 @@
       item
         Name = 'moneyplaceid'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'moneyplacename'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -671,13 +696,28 @@
       end
       item
         Name = 'ServiceDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceServiceDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 264
+    Left = 288
+    Top = 256
   end
   object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
@@ -757,7 +797,7 @@
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = ceOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -765,7 +805,7 @@
     Left = 324
     Top = 21
   end
-  object lGuidesObject: TdsdGuides
+  object GuidesObject: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
     FormNameParam.Value = 'TMoneyPlace_ObjectForm'
@@ -777,14 +817,14 @@
       item
         Name = 'Key'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -818,9 +858,24 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 125
+    Left = 132
+    Top = 117
   end
   object GuidesInfoMoney: TdsdGuides
     KeyField = 'Id'
@@ -846,8 +901,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 160
-    Top = 114
+    Left = 328
+    Top = 186
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -876,14 +931,14 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -913,14 +968,14 @@
       item
         Name = 'MasterJuridicalId'
         Value = Null
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = Null
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1040,14 +1095,14 @@
       item
         Name = 'MasterJuridicalId'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MasterJuridicalName'
         Value = ''
-        Component = lGuidesObject
+        Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -1079,5 +1134,47 @@
       end>
     Left = 124
     Top = 231
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'moneyplaceid'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'moneyplacename'
+        Value = ''
+        Component = GuidesObject
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 99
+    Top = 179
   end
 end

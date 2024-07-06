@@ -2,11 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Movement_BankStatementItem(Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankStatementItem(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inJuridicalId         Integer   , -- СПД 
+    IN inJuridicalId         Integer   , -- СПД  
+    IN inPartnerId           Integer   , -- Контрагент  
     IN inInfoMoneyId         Integer   , -- Управленческие статьи 
     IN inContractId          Integer   , -- Договор  
     IN inUnitId              Integer   , -- Подразделение
@@ -51,7 +53,6 @@ BEGIN
      PERFORM lpInsertUpdate_Movement (ioId:= Id, inDescId:= DescId, inInvNumber:= InvNumber, inOperDate:= OperDate, inParentId:= ParentId, inAccessKeyId:= AccessKeyId)
      FROM Movement WHERE Id = ioId -- AND inSession <> '5'
     ;
-
 
      -- Проверка установки значений
      IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND (InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
@@ -101,6 +102,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);     
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+     -- сохранили связь с <Контрагент>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
 
      -- сохранили связь с документом <Счет>
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Invoice(), ioId, inMovementId_Invoice);
@@ -118,6 +121,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.07.24         *
  12.09.18         * add ServiceDate
  21.07.16         * zc_MovementLinkMovement_Invoice
  07.03.14                                        * add zc_Enum_InfoMoney_21419

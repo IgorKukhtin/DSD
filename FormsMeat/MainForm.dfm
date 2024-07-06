@@ -543,6 +543,17 @@ inherited MainForm: TMainForm
           Name = 'inAccountId'
           Value = '10895486'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisId'
+          Value = '10895486'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisName'
+          Value = #1055#1072#1074#1080#1083#1100#1086#1085#1099
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -7862,6 +7873,17 @@ inherited MainForm: TMainForm
         item
           Name = 'inAccountId'
           Value = '-10895486'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisId'
+          Value = '9399'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisName'
+          Value = #1058#1054#1042' '#1040#1051#1040#1053
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       isShowModal = False

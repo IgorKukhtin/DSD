@@ -262,7 +262,7 @@ procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
-  exit;
+  //exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
   exit;
@@ -3558,19 +3558,19 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
-
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceList_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceList_Unit_ObjectForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalRetailPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalRetailPartner_ObjectForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalUnitFounder_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalUnitFounder_ObjectForm');
 

@@ -2,7 +2,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
   ClientWidth = 961
   ExplicitWidth = 977
-  ExplicitHeight = 346
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -263,6 +263,17 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'OKPO'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerId'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PartnerName'
+          Value = Null
           DataType = ftString
           MultiSelectSeparator = ','
         end>

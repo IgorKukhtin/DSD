@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                    Integer   , -- Ключ объекта <Документ>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inAmountCurrency        TFloat    , -- Сумма в валюте
     IN inBankAccountId         Integer   , -- Расчетный счет 	
     IN inComment               TVarChar  , -- Комментарий 
-    IN inMoneyPlaceId          Integer   , -- Юр лицо, счет, касса  	
+    IN inMoneyPlaceId          Integer   , -- Юр лицо, счет, касса
+    IN inPartnerId             Integer   , -- Контрагент  	
     IN inContractId            Integer   , -- Договора
     IN inInfoMoneyId           Integer   , -- Статьи назначения 
     IN inUnitId                Integer   , -- Подразделение
@@ -211,7 +213,9 @@ BEGIN
 
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
-    
+     -- сохранили связь с <Контрагента>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), vbMovementItemId, inPartnerId);
+     
      -- Cумма грн, обмен
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmountSumm);
      -- Сумма в валюте
@@ -288,6 +292,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.07.24         *
  18.09.18         *
  21.07.16         *
  10.05.14                                        * add lpInsert_MovementItemProtocol
