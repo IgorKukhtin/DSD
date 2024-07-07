@@ -15,17 +15,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     TabOrder = 3
     ExplicitTop = 97
     ExplicitWidth = 1540
-    ExplicitHeight = 285
+    ExplicitHeight = 287
     ClientRectBottom = 287
     ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1540
-      ExplicitHeight = 285
+      ExplicitHeight = 287
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 287
         ExplicitWidth = 1540
-        ExplicitHeight = 285
+        ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1367,6 +1367,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
+      AfterAction = actPrint_Pasport
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
       StoredProcList = <
@@ -1429,6 +1430,70 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1055#1072#1088#1090#1080#1080
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1055#1072#1088#1090#1080#1080
       ImageIndex = 67
+    end
+    object actPrint_Pasport: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintPasport
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPasport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45292d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45292d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
+    end
+    object MultiAction1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateMainDS
+        end
+        item
+          Action = actPrint_Pasport
+        end>
+      Caption = 'MultiAction1'
     end
   end
   inherited MasterDS: TDataSource
@@ -1597,6 +1662,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbOpenFormPartionCell: TdxBarButton
       Action = actOpenFormPartionCell
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint_Pasport
       Category = 0
     end
   end
@@ -1957,6 +2026,13 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outPartionCellId_last'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionCellId_last'
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioPartionCellName_1'
         Value = Null
         Component = MasterCDS
@@ -2115,5 +2191,39 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     CheckBoxList = <>
     Left = 728
     Top = 40
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 756
+    Top = 270
+  end
+  object spSelectPrintPasport: TdsdStoredProc
+    StoredProcName = 'gpReport_PartionCell_PasportPrint'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = 43831d
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId'
+        Value = 43831d
+        Component = FormParams
+        ComponentItem = 'PartionCellId_last'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 671
+    Top = 264
   end
 end

@@ -87,6 +87,11 @@ type
     ColorFon_ord: TcxGridDBColumn;
     cbisCell: TcxCheckBox;
     actRefreshCell: TdsdDataSetRefresh;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrintPasport: TdsdStoredProc;
+    actPrint_Pasport: TdsdPrintAction;
+    bb: TdxBarButton;
+    MultiAction1: TMultiAction;
   private
     { Private declarations }
   public

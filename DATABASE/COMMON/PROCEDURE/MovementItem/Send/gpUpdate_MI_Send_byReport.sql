@@ -1,6 +1,8 @@
 -- Function: gpUpdate_MI_Send_byReport()
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, Integer, Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_8       Integer,
  INOUT ioPartionCellId_9       Integer,
  INOUT ioPartionCellId_10      Integer,
+   OUT outPartionCellId_last   Integer,
  INOUT ioPartionCellName_1     TVarChar, --
  INOUT ioPartionCellName_2     TVarChar,
  INOUT ioPartionCellName_3     TVarChar,
@@ -76,6 +79,8 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId:= lpGetUserBySession (inSession);
 
+     --обнул€ем последнюю измененную €чейку
+     outPartionCellId_last := NULL ::Integer;
 
 if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_2) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 1)) > 0   then ioPartionCellName_2     := right (ioPartionCellName_2,  LENGTH(ioPartionCellName_2) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 2)) > 0 THEN 2 ELSE 1 END); end if;
@@ -799,6 +804,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, TRUE);
              --
              vbIsClose_1:= vbPartionCellId_old_1 > 0;
+             
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_1 ::Integer;
 
          ELSE
              -- прив€зали €чейку
@@ -807,6 +815,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), inMovementItemId, 0 :: TFloat);
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_1 ::Integer;
          END IF;
 
 
@@ -849,6 +860,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              --
              vbIsClose_2:= vbPartionCellId_old_2 > 0;
 
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_2 ::Integer;
          ELSE
              -- прив€зали €чейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), inMovementItemId, vbPartionCellId_2);
@@ -856,6 +869,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), inMovementItemId, 0 :: TFloat);
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_2 ::Integer;
          END IF;
 
 
@@ -898,6 +914,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              --
              vbIsClose_3:= vbPartionCellId_old_3 > 0;
 
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_3 ::Integer;
          ELSE
              -- прив€зали €чейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), inMovementItemId, vbPartionCellId_3);
@@ -905,6 +923,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), inMovementItemId, 0 :: TFloat);
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_3 ::Integer;
          END IF;
 
 
@@ -947,6 +968,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              --
              vbIsClose_4:= vbPartionCellId_old_4 > 0;
 
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_4 ::Integer;
          ELSE
              -- прив€зали €чейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), inMovementItemId, vbPartionCellId_4);
@@ -954,6 +977,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), inMovementItemId, 0 :: TFloat);
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_4 ::Integer;
          END IF;
 
 
@@ -996,6 +1022,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              --
              vbIsClose_5:= vbPartionCellId_old_5 > 0;
 
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_5 ::Integer;
          ELSE
              -- 3.1.прив€зали €чейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), inMovementItemId, vbPartionCellId_5);
@@ -1003,6 +1031,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), inMovementItemId, 0 :: TFloat);
              -- 3.3.открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_5 ::Integer;
          END IF;
 
      ELSE
@@ -1078,6 +1109,7 @@ $BODY$
 /*
  »—“ќ–»я –ј«–јЅќ“ »: ƒј“ј, ј¬“ќ–
                ‘елонюк ».¬.    ухтин ».¬.    лиментьев  .».
+
  04.01.24         *
 */
 
