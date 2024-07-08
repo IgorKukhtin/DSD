@@ -22,7 +22,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCurrencyEdit;
+  dxSkinXmas2008Blue, cxCurrencyEdit, dsdCommon;
 
 type
   TPersonalServiceListForm = class(TParentForm)
@@ -86,6 +86,11 @@ type
     isDetail: TcxGridDBColumn;
     isCompensationNot: TcxGridDBColumn;
     isBankNot: TcxGridDBColumn;
+    spUpdate_User: TdsdStoredProc;
+    isUser: TcxGridDBColumn;
+    actUpdate_User: TdsdUpdateDataSet;
+    mactUpdate_User: TMultiAction;
+    bbUpdate_User: TdxBarButton;
   private
     { Private declarations }
   public
