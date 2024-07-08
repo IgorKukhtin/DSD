@@ -168,9 +168,9 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
 --      AND Movement.DescId IN (zc_Movement_Loss())
 --      AND Movement.DescId IN (zc_Movement_Send())
-        AND Movement.DescId IN (zc_Movement_SendOnPrice())
+--        AND Movement.DescId IN (zc_Movement_SendOnPrice())
       --  AND Movement.DescId IN (zc_Movement_Sale())
-      -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Sale(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Inventory())
+      AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Sale(), zc_Movement_Loss())
        -- AND Movement.DescId IN (zc_Movement_ProductionUnion())
 --      AND Movement.DescId IN (zc_Movement_SendOnPrice())
   --     AND Movement.StatusId = zc_Enum_Status_Complete()
