@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+ -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount_From_BankStatement (Integer, TVarChar);
 
@@ -110,7 +110,7 @@ end if;
                                                     , MovementLinkObject_BankAccount.ObjectId      AS BankAccountId
                                                     , MovementString_Comment.ValueData             AS Comment
                                                     , MovementLinkObject_Juridical.ObjectId        AS MoneyPlaceId
-                                                    , ObjectLink_BankAccount_Partner.ChildObjectId AS PartnerId
+                                                    , 0 AS PartnerId -- ObjectLink_BankAccount_Partner.ChildObjectId AS PartnerId
                                                     , MovementLinkObject_Contract.ObjectId         AS ContractId
                                                     , MovementLinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                                                     , MovementLinkObject_Unit.ObjectId             AS UnitId

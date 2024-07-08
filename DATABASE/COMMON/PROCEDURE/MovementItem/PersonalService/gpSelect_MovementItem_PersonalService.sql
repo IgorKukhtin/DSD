@@ -101,8 +101,14 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
+     
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         inMovementId:= -1;
+         -- RETURN;
+     END IF;
 
 
      -- определяется
@@ -111,7 +117,7 @@ BEGIN
      -- определяется Дефолт
      vbInfoMoneyId_def:= (SELECT Object_InfoMoney_View.InfoMoneyId FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_60101()); -- 60101 Заработная плата + Заработная плата
      -- определяется
-     vbIsSummCardRecalc:= COALESCE (inMovementId, 0) = 0
+     vbIsSummCardRecalc:= COALESCE (inMovementId, 0) <= 0
                        -- OR 1=1
                        OR EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
                                   FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList

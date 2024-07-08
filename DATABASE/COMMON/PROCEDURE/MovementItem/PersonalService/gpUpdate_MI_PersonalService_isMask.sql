@@ -25,6 +25,14 @@ BEGIN
       END IF;
 
 
+      -- !!!Проверка прав роль - Ограничение - нет доступа к просмотру ведомость Админ ЗП!!!
+      PERFORM lpCheck_UserRole_11026035 (COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementMaskId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+                                                 , (SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_PersonalServiceList_User() AND OB.ValueData = TRUE LIMIT 1)
+                                                  )
+                                       , vbUserId
+                                        );
+
+
       -- Результат
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer

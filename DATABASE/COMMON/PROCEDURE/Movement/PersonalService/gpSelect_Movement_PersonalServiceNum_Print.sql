@@ -48,6 +48,9 @@ BEGIN
      vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inMovementId AND MD.DescId = zc_MIDate_ServiceDate()));
      vbPersonalServiceListId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
+     -- !!!Проверка прав роль - Ограничение - нет доступа к просмотру ведомость Админ ЗП!!!
+     PERFORM lpCheck_UserRole_11026035 (vbPersonalServiceListId, vbUserId);
+
      --
      OPEN Cursor1 FOR
        SELECT
@@ -236,4 +239,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalServiceNum_Print (inMovementId := 1001606, inSession:= zfCalc_UserAdmin());
---

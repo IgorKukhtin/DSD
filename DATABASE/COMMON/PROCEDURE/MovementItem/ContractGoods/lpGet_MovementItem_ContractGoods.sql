@@ -154,7 +154,7 @@ BEGIN
                                                         AND tmpCurrencyList.PaidKindId = ObjectLink_Contract_PaidKind.ChildObjectId
                                                         AND tmpCurrencyList.Ord        = 1
 
-                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '24 MONTH') AND inOperDate
+                          WHERE Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', CURRENT_DATE - INTERVAL '36 MONTH') AND inOperDate
                             AND Movement.DescId    = zc_Movement_ContractGoods()
                             AND Movement.StatusId  = zc_Enum_Status_Complete()
                             AND (ObjectLink_Contract_Juridical.ChildObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)

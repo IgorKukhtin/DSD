@@ -18,6 +18,7 @@ BEGIN
                                             , zc_Enum_Process_AccessKey_CashDnepr()
                                             , zc_Enum_Process_AccessKey_CashOfficialDnepr()
                                             , zc_Enum_Process_AccessKey_ServiceDnepr()
+                                            , zc_Enum_Process_AccessKey_ServicePav()
                                             , zc_Enum_Process_AccessKey_TrasportDnepr()
                                             --, zc_Enum_Process_AccessKey_PersonalService...()
                                             , zc_Enum_Process_AccessKey_PersonalServiceProduction()

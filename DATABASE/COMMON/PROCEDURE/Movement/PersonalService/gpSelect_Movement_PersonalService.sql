@@ -51,17 +51,39 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUserAll Boolean;
+   DECLARE vbIsLevelMax01 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+
+     -- Доступ почти ко всем
+     vbIsUserAll:= EXISTS (-- Документы-меню (управленцы) AND + ЗП просмотр ВСЕ
+                           SELECT Constant_User_LevelMax01_View.UserId
+                           FROM Constant_User_LevelMax01_View
+                                -- Ограниченние - только разрешенные ведомости ЗП
+                                LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 
+
+                           WHERE Constant_User_LevelMax01_View.UserId = vbUserId
+                             -- если нет Ограничения - только разрешенные ведомости ЗП
+                             AND ObjectLink_UserRole_View.UserId IS NULL
+                           --AND vbUserId <> zfCalc_UserMain()
+                          );
+     -- Доступ ко всем + Админ ЗП
+     vbIsLevelMax01:= vbIsUserAll = TRUE
+                  -- + если нет Ограничения - нет доступа к просмотру ведомость Админ ЗП
+                  AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
+                     ;
+
 
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
@@ -76,15 +98,6 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAll AS (-- Документы-меню (управленцы) AND + ЗП просмотр ВСЕ
-                         SELECT Constant_User_LevelMax01_View.UserId
-                         FROM Constant_User_LevelMax01_View
-                              -- Ограниченние - только разрешенные ведомости ЗП
-                              LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 
-                         WHERE Constant_User_LevelMax01_View.UserId = vbUserId
-                           AND ObjectLink_UserRole_View.UserId IS NULL
-                         --AND vbUserId <> zfCalc_UserMain()
-                        )
         , tmpMemberPersonalServiceList
                      AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                          FROM ObjectLink AS ObjectLink_User_Member
@@ -119,13 +132,15 @@ BEGIN
                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                          FROM Object AS Object_PersonalServiceList
                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND EXISTS (SELECT 1 FROM tmpUserAll)
+                           AND vbIsUserAll = TRUE
                         UNION
                          -- Админ и другие видят ВСЕХ
                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                          FROM Object AS Object_PersonalServiceList
                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+                           AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View
+                                       WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin()
+                                      )
                          --AND vbUserId <> zfCalc_UserMain()
                         /*UNION
                          -- "ЗП филиалов" видят "Галат Е.Н."
@@ -137,7 +152,7 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId
                               UNION
                                -- Админ и другие видят ВСЕХ
-                               SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM tmpUserAll INNER JOIN Object_RoleAccessKeyGuide_View ON tmpUserAll.UserId > 0
+                               SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE vbIsUserAll = TRUE
                               UNION
                                -- "ЗП Админ" видят "ЗП карточки БН"
                                SELECT zc_Enum_Process_AccessKey_PersonalServiceFirstForm() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId and AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin() GROUP BY AccessKeyId_PersonalService
@@ -194,6 +209,7 @@ BEGIN
                       FROM tmpMovement
                            LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                       )
+          -- Информативно - чья ведомость
         , tmpMember AS (SELECT tmp.PersonalServiceListId 
                              , ObjectLink_PersonalServiceList_Member.ChildObjectId AS MemberId
                         FROM (SELECT DISTINCT tmpMovement.PersonalServiceListId FROM tmpMovement) AS tmp
@@ -548,9 +564,20 @@ BEGIN
                                     ON MovementFloat_BankSecondDiff_num.MovementId =  Movement_BankSecondNum.Id
                                    AND MovementFloat_BankSecondDiff_num.DescId = zc_MovementFloat_BankSecondDiff_num()
 
+            -- Ограничить доступ к этим ведомостям
+            LEFT JOIN ObjectBoolean AS OB_PersonalServiceList_User
+                                    ON OB_PersonalServiceList_User.ObjectId  = tmpMovement.PersonalServiceListId
+                                   AND OB_PersonalServiceList_User.DescId    = zc_ObjectBoolean_PersonalServiceList_User()
+                                   AND OB_PersonalServiceList_User.ValueData = TRUE
+
             -- эл.подписи
             LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
-      where vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828
+
+      WHERE (vbUserId NOT IN (/*5,*/ 9457) or tmpMovement.PersonalServiceListId <> 416828)
+         -- + НЕТ ограничения у Ведомости
+        AND (OB_PersonalServiceList_User.ObjectId IS NULL
+          OR vbIsLevelMax01 = TRUE
+            )
             ;
 
 END;
