@@ -300,9 +300,9 @@ BEGIN
         vbPartnerId := (SELECT ObjectString.ObjectId
                         FROM ObjectString
                         WHERE ObjectString.DescId = zc_ObjectString_Partner_Terminal()
-                          AND inComment like '%' + ObjectString.ValueData + '%'
-                          AND COALESCE (ObjectString.ValueData,'') <> ''
-                        LIMIT 1 --
+                          AND inComment ILIKE ('%' || ObjectString.ValueData || '%')
+                          AND ObjectString.ValueData <> ''
+                        LIMIT 1
                         );
         IF COALESCE (vbPartnerId,0) <> 0
         THEN 
@@ -392,7 +392,7 @@ BEGIN
                                               )
                             , tmpMember AS (SELECT tmpCardChild.MemberId
                                             FROM tmpCardChild
-                                            WHERE tmpCardChild.ValueData <> '' AND inComment LIKE '%' || tmpCardChild.ValueData || '%'
+                                            WHERE tmpCardChild.ValueData <> '' AND inComment ILIKE ('%' || tmpCardChild.ValueData || '%')
                                             LIMIT 1 -- на всякий случай
                                            )
                          SELECT tmpMember.MemberId FROM tmpMember
