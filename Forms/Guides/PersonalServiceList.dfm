@@ -264,6 +264,15 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1088#1072#1089#1095#1077#1090#1072' '#1042#1099#1087#1083#1072#1090#1072' '#1073#1072#1085#1082' 2'#1092
         Options.Editing = False
       end
+      object isUser: TcxGridDBColumn
+        Caption = #1054#1075#1088'. '#1076#1086#1089#1090#1091#1087
+        DataBinding.FieldName = 'isUser'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087
+        Options.Editing = False
+        Width = 60
+      end
       object KoeffSummCardSecond: TcxGridDBColumn
         Caption = #1050#1086#1101#1092#1092'. '#1074#1099#1075#1088'. 2'#1092'.'
         DataBinding.FieldName = 'KoeffSummCardSecond'
@@ -470,6 +479,14 @@ object PersonalServiceListForm: TPersonalServiceListForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_User'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
@@ -540,6 +557,11 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Action = macUpdate_PersonalOut
       Category = 0
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+    end
+    object bbUpdate_User: TdxBarButton
+      Action = mactUpdate_User
+      Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
     end
   end
   object ActionList: TActionList
@@ -851,6 +873,33 @@ object PersonalServiceListForm: TPersonalServiceListForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actUpdate_User: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_User
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_User
+        end>
+      Caption = 'actUpdateDataSet'
+      ImageIndex = 76
+      DataSource = DataSource
+    end
+    object mactUpdate_User: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_User
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 76
+    end
     object actUpdate_PersonalOut: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
@@ -1017,5 +1066,31 @@ object PersonalServiceListForm: TPersonalServiceListForm
     PackSize = 1
     Left = 691
     Top = 126
+  end
+  object spUpdate_User: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PersonalServiceList_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUser'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isUser'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 683
+    Top = 198
   end
 end

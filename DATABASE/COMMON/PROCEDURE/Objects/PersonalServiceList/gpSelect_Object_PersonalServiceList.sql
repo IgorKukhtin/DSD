@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isAvanceNot Boolean
              , isBankNot Boolean
              , isCompensationNot Boolean
+             , isUser Boolean
              , isErased Boolean
               )
 AS
@@ -122,13 +123,14 @@ BEGIN
            , COALESCE (ObjectBoolean_AvanceNot.ValueData, FALSE)       ::Boolean AS isAvanceNot
            , COALESCE (ObjectBoolean_BankNot.ValueData, FALSE)         ::Boolean AS isBankNot
            , COALESCE (ObjectBoolean_CompensationNot.ValueData, FALSE) ::Boolean AS isCompensationNot
+           , COALESCE (ObjectBoolean_User.ValueData, FALSE)            ::Boolean AS isUser
 
            , Object_PersonalServiceList.isErased  AS isErased
 
        FROM Object AS Object_PersonalServiceList
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
-                                    ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
-                                   AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_CompensationNot
+                                   ON ObjectBoolean_CompensationNot.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_CompensationNot.DescId    = zc_ObjectBoolean_PersonalServiceList_CompensationNot()
 
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
@@ -153,6 +155,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_BankNot
                                    ON ObjectBoolean_BankNot.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_BankNot.DescId = zc_ObjectBoolean_PersonalServiceList_BankNot()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_User
+                                   ON ObjectBoolean_User.ObjectId  = Object_PersonalServiceList.Id
+                                  AND ObjectBoolean_User.DescId    = zc_ObjectBoolean_PersonalServiceList_User()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -257,6 +263,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.07.24          * isUser
  12.02.24          * isBankNot
  27.04.23          *
  14.03.23          *
