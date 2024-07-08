@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PositionId Integer, PositionName TVarChar                
              , PositionLevelId Integer, PositionLevelName TVarChar                
              , isErased boolean
+             , UpdateName TVarChar, UpdateDate TDateTime
              ) AS
 $BODY$
 BEGIN
@@ -38,6 +39,27 @@ BEGIN
  
 
    RETURN QUERY 
+     WITH
+     tmpObject AS (SELECT Object.*
+                   FROM Object
+                   WHERE Object.DescId = zc_Object_StaffList()  
+                    AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+                   )
+      
+   , tmpProtocol AS (SELECT tmp.ObjectId
+                          , tmp.UserId
+                          , Object_User.ValueData AS UserName
+                          , tmp.OperDate
+                     FROM (SELECT ObjectProtocol.*
+                                  -- ¹ ï/ï
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                           FROM ObjectProtocol
+                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpObject.Id FROM tmpObject)
+                           ) AS tmp 
+                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId  
+                     WHERE tmp.Ord = 1
+                     )
+
      SELECT 
            Object_StaffList.Id         AS Id
          , Object_StaffList.ObjectCode AS Code
@@ -60,14 +82,16 @@ BEGIN
          , Object_PositionLevel.ValueData   AS PositionLevelName
 
          , Object_StaffList.isErased AS isErased
-         
+
+         , tmpProtocol.UserName    ::TVarChar  AS UpdateName
+         , tmpProtocol.OperDate    ::TDateTime AS UpdateDate         
      FROM _tmpUnit
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                ON ObjectLink_StaffList_Unit.ChildObjectId = _tmpUnit.UnitId
                               AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.ChildObjectId
                                 
-          LEFT JOIN OBJECT AS Object_StaffList ON Object_StaffList.Id = ObjectLink_StaffList_Unit.ObjectId
+          LEFT JOIN tmpObject AS Object_StaffList ON Object_StaffList.Id = ObjectLink_StaffList_Unit.ObjectId
          
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                                ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
@@ -98,8 +122,8 @@ BEGIN
                                   ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
                                  AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
 
-     WHERE Object_StaffList.DescId = zc_Object_StaffList()
-      AND (Object_StaffList.isErased = False OR inIsShowAll = True);
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_StaffList.Id
+     ;
   
 END;
 $BODY$

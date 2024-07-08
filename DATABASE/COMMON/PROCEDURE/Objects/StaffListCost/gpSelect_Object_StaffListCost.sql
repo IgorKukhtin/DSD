@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , StaffListId Integer
              , ModelServiceId Integer, ModelServiceName TVarChar                
-             , isErased boolean
+             , isErased boolean 
+             , UpdateName TVarChar, UpdateDate TDateTime
              ) AS
 $BODY$
 BEGIN
@@ -21,6 +22,27 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_StaffListCost());
 
    RETURN QUERY 
+     WITH
+     tmpObject AS (SELECT Object.*
+                   FROM Object
+                   WHERE Object.DescId = zc_Object_StaffListCost()  
+                    AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+                   )
+      
+   , tmpProtocol AS (SELECT tmp.ObjectId
+                          , tmp.UserId
+                          , Object_User.ValueData AS UserName
+                          , tmp.OperDate
+                     FROM (SELECT ObjectProtocol.*
+                                  -- ¹ ï/ï
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                           FROM ObjectProtocol
+                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpObject.Id FROM tmpObject)
+                           ) AS tmp 
+                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId  
+                     WHERE tmp.Ord = 1
+                     )
+
      SELECT 
            Object_StaffListCost.Id        AS Id
  
@@ -33,8 +55,10 @@ BEGIN
          , Object_ModelService.ValueData  AS ModelServiceName
 
          , Object_StaffListCost.isErased  AS isErased
-         
-     FROM OBJECT AS Object_StaffListCost
+
+         , tmpProtocol.UserName    ::TVarChar  AS UpdateName
+         , tmpProtocol.OperDate    ::TDateTime AS UpdateDate         
+     FROM tmpObject AS Object_StaffListCost
           LEFT JOIN ObjectLink AS ObjectLink_StaffListCost_StaffList
                                ON ObjectLink_StaffListCost_StaffList.ObjectId = Object_StaffListCost.Id
                               AND ObjectLink_StaffListCost_StaffList.DescId = zc_ObjectLink_StaffListCost_StaffList()
@@ -53,8 +77,8 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_StaffListCost.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffListCost_Comment()
 
-     WHERE Object_StaffListCost.DescId = zc_Object_StaffListCost()
-      AND (Object_StaffListCost.isErased = False OR inIsShowAll = True);
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_StaffListCost.Id
+     ;
   
 END;
 $BODY$

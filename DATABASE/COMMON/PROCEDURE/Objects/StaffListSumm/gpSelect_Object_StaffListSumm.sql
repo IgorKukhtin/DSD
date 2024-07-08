@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer
              , StaffListId Integer, StaffListName TVarChar                
              , StaffListMasterId Integer, StaffListMasterCode Integer
              , StaffListSummKindId Integer, StaffListSummKindName TVarChar, SummKindComment TVarChar
-             , isErased boolean
+             , isErased boolean 
+             , UpdateName TVarChar, UpdateDate TDateTime
              ) AS
 $BODY$
 BEGIN
@@ -22,6 +23,27 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_StaffListSumm());
 
    RETURN QUERY 
+     WITH
+     tmpObject AS (SELECT Object.*
+                   FROM Object
+                   WHERE Object.DescId = zc_Object_StaffListSumm()  
+                    AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+                   )
+      
+   , tmpProtocol AS (SELECT tmp.ObjectId
+                          , tmp.UserId
+                          , Object_User.ValueData AS UserName
+                          , tmp.OperDate
+                     FROM (SELECT ObjectProtocol.*
+                                  -- ¹ ï/ï
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                           FROM ObjectProtocol
+                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpObject.Id FROM tmpObject)
+                           ) AS tmp 
+                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId  
+                     WHERE tmp.Ord = 1
+                     )
+
      SELECT 
            Object_StaffListSumm.Id        AS Id
  
@@ -39,8 +61,10 @@ BEGIN
          , ObjectString_StaffListSummKind_Comment.ValueData  AS SummKindComment
 
          , Object_StaffListSumm.isErased AS isErased
-         
-     FROM Object AS Object_StaffListSumm
+
+         , tmpProtocol.UserName    ::TVarChar  AS UpdateName
+         , tmpProtocol.OperDate    ::TDateTime AS UpdateDate
+     FROM tmpObject AS Object_StaffListSumm
      
           LEFT JOIN ObjectLink AS ObjectLink_StaffListSumm_StaffList
                                ON ObjectLink_StaffListSumm_StaffList.ObjectId = Object_StaffListSumm.Id
@@ -68,8 +92,8 @@ BEGIN
                                  ON ObjectString_Comment.ObjectId = Object_StaffListSumm.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffListSumm_Comment()
 
-     WHERE Object_StaffListSumm.DescId = zc_Object_StaffListSumm()
-      AND (Object_StaffListSumm.isErased = False OR inIsShowAll = True);
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_StaffListSumm.Id
+     ;
   
 END;
 $BODY$

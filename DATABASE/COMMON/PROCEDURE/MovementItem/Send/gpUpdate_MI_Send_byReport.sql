@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+                                                 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
     IN inStartDate             TDateTime,
@@ -23,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_8       Integer,
  INOUT ioPartionCellId_9       Integer,
  INOUT ioPartionCellId_10      Integer,
+    IN inOrd                   Integer, --№ пп
    OUT outPartionCellId_last   Integer,
  INOUT ioPartionCellName_1     TVarChar, --
  INOUT ioPartionCellName_2     TVarChar,
@@ -1102,6 +1107,10 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ioPartionCellName_9  := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_9, vbPartionCellId_9)), vbIsClose_9);
      ioPartionCellName_10 := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_10,vbPartionCellId_10)),vbIsClose_10);
 
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
