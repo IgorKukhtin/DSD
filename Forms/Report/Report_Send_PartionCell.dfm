@@ -1755,6 +1755,66 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ColorColumn = AmountRemains_Weight
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsKindName
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MeasureName
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionGoodsDate
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_date
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_real
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_tax
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_Weight
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isClose_value_min
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = isPartionCell
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Ord
+        BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
       end>
     Left = 368
     Top = 240
@@ -2120,6 +2180,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ComponentItem = 'PartionCellName_10'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Ord'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
