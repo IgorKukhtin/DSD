@@ -22,7 +22,8 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxContainer, dsdGuides,
-  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls, cxSplitter, cxCurrencyEdit;
+  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls, cxSplitter, cxCurrencyEdit,
+  dsdCommon;
 
 type
   TStaffListDataForm = class(TParentForm)

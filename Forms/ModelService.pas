@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxSplitter, cxCurrencyEdit;
+  DataModul, cxButtonEdit, cxSplitter, cxCurrencyEdit, dsdCommon;
 
 type
   TModelServiceForm = class(TParentForm)

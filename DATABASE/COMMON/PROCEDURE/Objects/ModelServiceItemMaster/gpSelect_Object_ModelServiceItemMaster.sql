@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , ModelServiceId Integer, ModelServiceName TVarChar  
              , DocumentKindId Integer, DocumentKindName TVarChar  
              , isErased boolean
+             , UpdateName TVarChar, UpdateDate TDateTime 
              ) AS
 $BODY$ 
 BEGIN
@@ -24,6 +25,27 @@ BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ModelServiceItemMaster());
 
    RETURN QUERY 
+   WITH
+     tmpObject AS (SELECT Object.*
+                   FROM Object
+                   WHERE Object.DescId = zc_Object_ModelServiceItemMaster()  
+                    AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
+                   )
+      
+   , tmpProtocol AS (SELECT tmp.ObjectId
+                          , tmp.UserId
+                          , Object_User.ValueData AS UserName
+                          , tmp.OperDate
+                     FROM (SELECT ObjectProtocol.*
+                                  -- ¹ ï/ï
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                           FROM ObjectProtocol
+                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpObject.Id FROM tmpObject)
+                           ) AS tmp 
+                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId  
+                     WHERE tmp.Ord = 1
+                     )
+
      SELECT 
            Object_ModelServiceItemMaster.Id    AS Id
  
@@ -48,8 +70,10 @@ BEGIN
          , Object_DocumentKind.ValueData  AS DocumentKindName
 
          , Object_ModelServiceItemMaster.isErased AS isErased
-         
-     FROM OBJECT AS Object_ModelServiceItemMaster
+
+         , tmpProtocol.UserName    ::TVarChar  AS UpdateName
+         , tmpProtocol.OperDate    ::TDateTime AS UpdateDate
+     FROM tmpObject AS Object_ModelServiceItemMaster
           LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_From
                                ON ObjectLink_ModelServiceItemMaster_From.ObjectId = Object_ModelServiceItemMaster.Id
                               AND ObjectLink_ModelServiceItemMaster_From.DescId = zc_ObjectLink_ModelServiceItemMaster_From()
@@ -86,10 +110,11 @@ BEGIN
                                
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemMaster.Id 
-                                AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemMaster_Comment()
+                                AND ObjectString_Comment.DescId = zc_ObjectString_ModelServiceItemMaster_Comment() 
 
-     WHERE Object_ModelServiceItemMaster.DescId = zc_Object_ModelServiceItemMaster()
-      AND (Object_ModelServiceItemMaster.isErased = False OR inIsShowAll = True);
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_ModelServiceItemMaster.Id
+
+     ;
   
 END;
 $BODY$

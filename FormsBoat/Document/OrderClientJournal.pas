@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons;
+  dsdGuides, cxButtonEdit, Vcl.StdCtrls, cxButtons, dsdCommon;
 
 type
   TOrderClientJournalForm = class(TParentForm)

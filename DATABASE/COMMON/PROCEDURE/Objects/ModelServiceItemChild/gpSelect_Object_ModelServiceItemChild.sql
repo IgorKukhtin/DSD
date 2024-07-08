@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer
              , TradeMarkName_from     TVarChar     
              , GoodsTagName_from      TVarChar     
              , GoodsPlatformName_from TVarChar
+             , UpdateName TVarChar, UpdateDate TDateTime 
              ) AS
 $BODY$
 BEGIN
@@ -124,8 +125,22 @@ BEGIN
                                             ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                            AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
                 )  
+      
+   , tmpProtocol AS (SELECT tmp.ObjectId
+                          , tmp.UserId
+                          , Object_User.ValueData AS UserName
+                          , tmp.OperDate
+                     FROM (SELECT ObjectProtocol.*
+                                  -- ¹ ï/ï
+                                , ROW_NUMBER() OVER (PARTITION BY ObjectProtocol.ObjectId ORDER BY ObjectProtocol.OperDate DESC) AS Ord
+                           FROM ObjectProtocol
+                           WHERE ObjectProtocol.ObjectId IN (SELECT tmpObject.Id FROM tmpObject)
+                           ) AS tmp 
+                           LEFT JOIN Object AS Object_User ON Object_User.Id = tmp.UserId  
+                     WHERE tmp.Ord = 1
+                     )
 
-
+     ---
      SELECT
            Object_ModelServiceItemChild.Id    AS Id
 
@@ -190,7 +205,9 @@ BEGIN
          , tmpGoods_from.TradeMarkName          AS TradeMarkName_from        
          , tmpGoods_from.GoodsTagName           AS GoodsTagName_from         
          , tmpGoods_from.GoodsPlatformName      AS GoodsPlatformName_from   
-                     
+
+         , tmpProtocol.UserName    ::TVarChar  AS UpdateName
+         , tmpProtocol.OperDate    ::TDateTime AS UpdateDate                     
      FROM tmpObject AS Object_ModelServiceItemChild
           LEFT JOIN Object AS Object_From ON Object_From.Id = Object_ModelServiceItemChild.FromId 
           LEFT JOIN ObjectDesc AS ObjectDesc_From ON ObjectDesc_From.Id = Object_From.DescId
@@ -273,6 +290,8 @@ BEGIN
           LEFT JOIN tmpGoods AS tmpGoods_to ON tmpGoods_to.GoodsGroupId = Object_To.Id
           LEFT JOIN tmpGoods AS tmpGoods_from ON tmpGoods_from.GoodsGroupId = Object_From.Id 
                                             AND (tmpGoods_from.GoodsId = tmpGoods_to.GoodsId OR COALESCE (tmpGoods_to.GoodsId,0) = 0)
+
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_ModelServiceItemChild.Id
       ;
 
 END;
