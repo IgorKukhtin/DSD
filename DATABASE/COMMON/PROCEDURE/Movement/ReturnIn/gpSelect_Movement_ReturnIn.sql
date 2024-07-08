@@ -66,6 +66,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitCode Integer
              , UnitName TVarChar
              , PositionName TVarChar
+             , AccessKeyId Integer
               )
 AS
 $BODY$
@@ -100,10 +101,10 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
-        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY AccessKeyId)
+        , tmpRoleAccessKey_all AS (SELECT Object_RoleAccessKey_View.AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+        , tmpRoleAccessKey_user AS (SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = vbUserId GROUP BY tmpRoleAccessKey_all.AccessKeyId)
         , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
-                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE tmpRoleAccessKey_user.AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
                                         )
         , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
                          UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
@@ -349,6 +350,8 @@ BEGIN
            , Object_Unit.ObjectCode                 AS UnitCode
            , Object_Unit.ValueData                  AS UnitName
            , CASE WHEN MovementString_GUID.ValueData <> '' THEN Object_Position.ValueData ELSE '' END :: TVarChar AS PositionName
+           
+           , Movement.AccessKeyId
 
        FROM tmpMovement
 
