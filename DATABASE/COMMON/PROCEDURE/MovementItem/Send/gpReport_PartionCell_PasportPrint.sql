@@ -30,12 +30,12 @@ BEGIN
   RETURN QUERY
 
      --
-     SELECT Object_Goods.ObjectCode        AS GoodsCode
-          , Object_Goods.ValueData         AS GoodsName
-          , Object_GoodsKind.ValueData     AS GoodsKindName 
+     SELECT Object_Goods.ObjectCode            AS GoodsCode
+          , Object_Goods.ValueData             AS GoodsName
+          , Object_GoodsKind.ValueData         AS GoodsKindName 
           , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime AS PartionGoodsDate
-          , Object_PartionCell.ValueData   AS PartionCellName
-          , ''                  ::TVarChar AS StoreKeeper
+          , Object_PartionCell.ValueData       AS PartionCellName
+          , Object_Member.ValueData ::TVarChar AS StoreKeeper
  
      FROM MovementItem
           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -49,6 +49,11 @@ BEGIN
                                      ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                     AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
           LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = inPartionCellId
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ObjectId = vbUserId
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
 
      WHERE MovementItem.Id = inMovementItemId
        AND MovementItem.DescId = zc_MI_Master()
@@ -65,4 +70,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_PartionCell_PasportPrint(inMovementItemId := 0 , inPartionCellId := 0, inSession := '5');
+-- select * from gpReport_PartionCell_PasportPrint(inMovementItemId := 294981981   , inPartionCellId := 10239308 , inSession := '5');
