@@ -2057,6 +2057,14 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Ord'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioPartionCellName_1'
         Value = Null
         Component = MasterCDS

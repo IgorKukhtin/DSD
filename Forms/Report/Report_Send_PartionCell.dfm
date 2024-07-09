@@ -2086,6 +2086,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inOrd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Ord'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outPartionCellId_last'
         Value = Null
         Component = FormParams
@@ -2180,14 +2188,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ComponentItem = 'PartionCellName_10'
         DataType = ftString
         ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOrd'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Ord'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
