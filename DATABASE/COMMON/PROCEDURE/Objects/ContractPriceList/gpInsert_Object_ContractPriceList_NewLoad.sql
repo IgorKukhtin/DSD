@@ -19,7 +19,7 @@ BEGIN
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractPriceList());
 
     -- Проверка
-    IF COALESCE(inContractCode, 0) = 0 OR (COALESCE (inPriceListName_old,'') = '' AND COALESCE (inPriceListName_new,'') ='')
+    IF COALESCE(inContractCode, 0) = 0 OR COALESCE (inPriceListName_new,'') =''
     THEN
         RETURN;
     END IF;
