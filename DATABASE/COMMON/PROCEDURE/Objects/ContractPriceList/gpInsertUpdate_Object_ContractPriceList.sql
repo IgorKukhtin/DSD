@@ -38,11 +38,16 @@ BEGIN
                                              ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractPriceList_Contract.ObjectId
                                             AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractPriceList_StartDate()
                                             AND ObjectDate_StartDate.ValueData = inStartDate
+
+                       INNER JOIN Object AS Object_ContractPriceList
+                                         ON Object_ContractPriceList.Id = ObjectLink_ContractPriceList_Contract.ObjectId
+                                        AND Object_ContractPriceList.isErased = FALSE
+
                    WHERE ObjectLink_ContractPriceList_Contract.ChildObjectId = inContractId
                      AND ObjectLink_ContractPriceList_Contract.ObjectId <> ioId
                      AND ObjectLink_ContractPriceList_Contract.DescId = zc_ObjectLink_ContractPriceList_Contract())
         THEN
-            RAISE EXCEPTION 'Ошибка.Дата начала действия прайса не уникальна.';
+            RAISE EXCEPTION 'Ошибка.Дата начала действия прайса не уникальна. Дата <%>, Прайс <%>, Договор <%>', inStartDate, lfGet_Object_ValueData (inPriceListId), lfGet_Object_ValueData (inContractId);
         END IF;
    END IF;
    
