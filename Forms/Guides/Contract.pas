@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, ExternalLoad;
+  dxSkinXmas2008Blue, ExternalLoad, dsdCommon;
 
 type
   TContractForm = class(TParentForm)
@@ -353,6 +353,10 @@ type
     actInsertUpdateCP_grid: TdsdExecStoredProc;
     bbInsertUpdateCP_grid: TdxBarButton;
     spInsertUpdateContractPartner_connect: TdsdStoredProc;
+    spGetImportSettingId_PriceListNew: TdsdStoredProc;
+    actGetImportSetting_PriceListNew: TdsdExecStoredProc;
+    macStartLoadPriceListNew: TMultiAction;
+    bbStartLoadPriceListNew: TdxBarButton;
 
   private
     { Private declarations }

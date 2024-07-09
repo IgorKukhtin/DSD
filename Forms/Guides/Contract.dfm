@@ -903,7 +903,7 @@
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
-          Width = 43
+          Width = 50
         end
         object InvNumber: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1075'.'
@@ -2040,6 +2040,10 @@
         item
           Visible = True
           ItemName = 'bbStartLoadPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadPriceListNew'
         end>
     end
     object bbShowErased: TdxBarButton
@@ -2267,6 +2271,10 @@
       Action = actInsertUpdateCP_grid
       Category = 0
     end
+    object bbStartLoadPriceListNew: TdxBarButton
+      Action = macStartLoadPriceListNew
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -2281,6 +2289,17 @@
       ImportSettingsId.MultiSelectSeparator = ','
       ExternalParams = <>
     end
+    object actGetImportSetting_PriceListNew: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId_PriceListNew
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId_PriceListNew
+        end>
+      Caption = 'actGetImportSetting'
+    end
     object InsertRecord_ContractPriceList: TInsertRecord
       Category = 'ContractPriceList'
       MoveParams = <>
@@ -2291,6 +2310,25 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1076#1086#1075#1086#1074#1086#1088')>'
       ImageIndex = 0
+    end
+    object macStartLoadPriceListNew: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting_PriceListNew
+        end
+        item
+          Action = actDoLoad_PriceList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1074' '#1048#1089#1090#1086#1088#1080#1102' '#1087#1088#1072#1081#1089#1086#1074' ('#1085#1086#1074#1099#1081' '#1087#1088#1072#1081#1089') '#1080#1079' '#1101#1082#1089#1077#1083#1103'?'
+      InfoAfterExecute = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1072
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1088#1072#1081#1089#1086#1074' ('#1085#1086#1074#1099#1081' '#1087#1088#1072#1081#1089')'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103' '#1080#1089#1090#1086#1088#1080#1080' '#1087#1088#1072#1081#1089#1086#1074' ('#1085#1086#1074#1099#1081' '#1087#1088#1072#1081#1089')'
+      ImageIndex = 41
     end
     object actGetImportSetting_PriceList: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
@@ -4211,6 +4249,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 760
     Top = 240
@@ -4467,6 +4506,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 32
     Top = 480
@@ -4583,6 +4623,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 936
     Top = 440
@@ -4629,6 +4670,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1208
     Top = 464
@@ -4908,6 +4950,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 552
     Top = 504
@@ -5087,6 +5130,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1136
     Top = 144
@@ -5357,5 +5401,39 @@
     PackSize = 1
     Left = 1008
     Top = 440
+  end
+  object spGetImportSettingId_PriceListNew: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 
+          'TContractPriceListForm;zc_Object_ImportSetting_ContractPriceList' +
+          'New'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 232
   end
 end
