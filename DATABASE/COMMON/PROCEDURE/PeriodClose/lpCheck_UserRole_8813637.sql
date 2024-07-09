@@ -1,4 +1,4 @@
--- Проверка закрытия периода
+-- Проверка - 10200 - нет ВООБЩЕ доступа к просмотру данных ЗП
 -- Function: lpCheck_UserRole_8813637()
 
 DROP FUNCTION IF EXISTS lpCheck_UserRole_8813637 (Integer);
@@ -8,11 +8,10 @@ CREATE OR REPLACE FUNCTION lpCheck_UserRole_8813637(
 )
 RETURNS VOID
 AS
-$BODY$  
+$BODY$
 BEGIN
 
-
-     -- Ограничение просмотра данных ЗП
+     -- Ограничение - 10200 - нет ВООБЩЕ доступа к просмотру данных ЗП
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = inUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
      THEN
          RAISE EXCEPTION 'Ошибка.Для роли <%> нет прав для выбранного действия.', lfGet_Object_ValueData_sh (8813637);

@@ -114,7 +114,9 @@ BEGIN
 --                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND (((RoleCode BETWEEN 40 and 49
-                                                                                 OR RoleCode BETWEEN 71 and 78)
+                                                                                 OR RoleCode BETWEEN 71 and 78
+                                                                                 OR RoleCode IN (10274) -- Начисления Павильоны
+                                                                                   )
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )
@@ -220,7 +222,9 @@ BEGIN
 --                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND (((RoleCode BETWEEN 40 and 49
-                                                                                 OR RoleCode BETWEEN 71 and 78)
+                                                                                 OR RoleCode BETWEEN 71 and 78
+                                                                                 OR RoleCode IN (10274) -- Начисления Павильоны
+                                                                                   )
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
                                                                                                  , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
                                                                                   )

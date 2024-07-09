@@ -59,7 +59,7 @@ BEGIN
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
   
@@ -74,8 +74,10 @@ BEGIN
 
      -- доступ Документы-меню (управленцы) + ЗП просмотр ВСЕ
      vbIsLevelMax01:= EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId)
-             -- Ограниченние - только разрешенные ведомости ЗП
+             -- + если нет Ограничения - только разрешенные ведомости ЗП
              AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326)
+             -- + если нет Ограничения - нет доступа к просмотру ведомость Админ ЗП
+             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
            ;
 
  
@@ -154,8 +156,11 @@ BEGIN
    --vbIsList_all:= EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    --            OR NOT EXISTS (SELECT 1 FROM _tmpList)
    --              ;
-     vbIsList_all:= (EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-                  OR NOT EXISTS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+     vbIsList_all:= (-- Роль Админ
+                     EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+                     -- или НЕТ разрешенных ведомостей ЗП
+                  OR NOT EXISTS (-- В справочнике Разрешений
+                                 SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                                  FROM ObjectLink AS ObjectLink_User_Member
                                       INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                             ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
@@ -174,6 +179,7 @@ BEGIN
                                  WHERE ObjectLink_User_Member.ObjectId = vbUserId
                                    AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
                                 UNION
+                                 -- В справочнике Ведомости
                                  SELECT ObjectLink_PersonalServiceList_Member.ObjectId AS PersonalServiceListId
                                  FROM ObjectLink AS ObjectLink_User_Member
                                       INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
@@ -184,8 +190,8 @@ BEGIN
                                 )
                   OR vbUserId = 14599 -- Коротченко Т.Н.
                     )
-             -- Ограниченние - только разрешенные ведомости ЗП
-             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326)
+                -- + если нет Ограничения - только разрешенные ведомости ЗП
+                AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326)
                    ;
 
      -- Результат
@@ -633,6 +639,12 @@ BEGIN
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = Operation.PositionId
           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = Operation.BranchId
 
+          -- Ограничить доступ к этим ведомостям
+          LEFT JOIN ObjectBoolean AS OB_PersonalServiceList_User
+                                  ON OB_PersonalServiceList_User.ObjectId  = Operation.PersonalServiceListId
+                                 AND OB_PersonalServiceList_User.DescId    = zc_ObjectBoolean_PersonalServiceList_User()
+                                 AND OB_PersonalServiceList_User.ValueData = TRUE
+
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
 
           LEFT JOIN _tmpList ON _tmpList.PersonalServiceListId = Operation.PersonalServiceListId
@@ -653,14 +665,19 @@ BEGIN
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0)
        AND (_tmpList.PersonalServiceListId > 0 OR vbIsList_all = TRUE)
-       AND (Operation.PersonalServiceListId NOT IN (293443 -- Ведомость Админ
-                                                  , 418967 -- Ведомость Админ ДП
-                                                  , 593890 -- Премии АП
-                                                  , 541887 -- Премии АДМИН KPI
-                                                   )
+       AND ((Operation.PersonalServiceListId NOT IN (293443 -- Ведомость Админ
+                                                   , 418967 -- Ведомость Админ ДП
+                                                   , 593890 -- Премии АП
+                                                   , 541887 -- Премии АДМИН KPI
+                                                    )
+           -- ИЛИ НЕТ ограничения у Ведомости
+         AND OB_PersonalServiceList_User.ObjectId IS NULL
+            )
+
             OR vbUserId IN (2573318 -- Любарський Георгій Олегович
                           , 14599   -- Коротченко Т.Н.
                            )
+            -- !!!Разрешено ВСЕ!!!
             OR vbIsLevelMax01 = TRUE
            )
      ;

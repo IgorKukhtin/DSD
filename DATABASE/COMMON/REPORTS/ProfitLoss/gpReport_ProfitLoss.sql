@@ -48,8 +48,11 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
-     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637);
+     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
+     vbIsUserRole_8813637:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 8813637)
+                         -- или если Ограничение - нет доступа к просмотру ведомость Админ ЗП
+                         OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
+                           ;
 
 
      -- Ограниченние - нет доступа к ОПиУ

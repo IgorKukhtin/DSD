@@ -31,6 +31,15 @@ BEGIN
       THEN RETURN; END IF;*/
 
 
+/*   IF inMovementId IN (28363986, 28364016) THEN RETURN; END IF;
+-- select * from gpComplete_All_Sybase(28363986,False,'444873')
+-- select * from gpComplete_All_Sybase(28364016,False,'444873')
+-- select * from gpComplete_All_Sybase(28364189,False,'444873')
+     IF EXISTS (SELECT 1  FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId IN (zc_Unit_RK()))
+        AND vbMovementDescId IN (zc_Movement_Sale())
+        THEN RETURN;
+     END IF;
+*/
 
    --IF vbMovementDescId IN (zc_Movement_SendOnPrice()) THEN RETURN; END IF;
 

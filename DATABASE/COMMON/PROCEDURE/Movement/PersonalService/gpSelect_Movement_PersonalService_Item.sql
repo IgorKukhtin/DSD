@@ -80,22 +80,43 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUserAll Boolean;
+   DECLARE vbIsLevelMax01 Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+     -- Доступ почти ко всем
+     vbIsUserAll:= EXISTS (-- Документы-меню (управленцы) AND + ЗП просмотр ВСЕ
+                           SELECT Constant_User_LevelMax01_View.UserId
+                           FROM Constant_User_LevelMax01_View
+                                -- Ограниченние - только разрешенные ведомости ЗП
+                                LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 10657326 
+
+                           WHERE Constant_User_LevelMax01_View.UserId = vbUserId
+                             -- если нет Ограничения - только разрешенные ведомости ЗП
+                             AND ObjectLink_UserRole_View.UserId IS NULL
+                           --AND vbUserId <> zfCalc_UserMain()
+                          );
+     -- Доступ ко всем + Админ ЗП
+     vbIsLevelMax01:= vbIsUserAll = TRUE
+                  -- + если нет Ограничения - нет доступа к просмотру ведомость Админ ЗП
+                  AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
+                     ;
+
+
      -- Блокируем ему просмотр
      IF 1=0 AND vbUserId = 9457 -- Климентьев К.И.
      THEN
-        vbUserId:= NULL;
+         vbUserId:= NULL;
          RETURN;
      END IF;
 
@@ -104,7 +125,6 @@ BEGIN
      THEN
           -- Оптимизация
           CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS 
-            WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM ObjectLink AS ObjectLink_User_Member
                  INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
@@ -138,8 +158,8 @@ BEGIN
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM Object AS Object_PersonalServiceList
             WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-              AND (EXISTS (SELECT 1 FROM tmpUserAll_check)
-               OR vbUserId = 80373 -- Прохорова С.А.
+              AND (vbIsUserAll = TRUE
+                OR vbUserId = 80373 -- Прохорова С.А.
                   )
            UNION
             -- Админ и другие видят ВСЕХ
@@ -156,10 +176,6 @@ BEGIN
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View
-                         WHERE UserId = vbUserId   -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
-                         --AND vbUserId <> zfCalc_UserMain()
-                        )
         , tmpMemberPersonalServiceList
                      AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                          FROM ObjectLink AS ObjectLink_User_Member
@@ -194,7 +210,7 @@ BEGIN
                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                          FROM Object AS Object_PersonalServiceList
                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
-                           AND EXISTS (SELECT 1 FROM tmpUserAll)
+                           AND vbIsUserAll = TRUE
                         UNION
                          -- Админ и другие видят ВСЕХ
                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
@@ -212,7 +228,7 @@ BEGIN
         , tmpRoleAccessKey AS (SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId
                               UNION
                                -- Админ и другие видят ВСЕХ
-                               SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM tmpUserAll INNER JOIN Object_RoleAccessKeyGuide_View ON tmpUserAll.UserId > 0
+                               SELECT DISTINCT AccessKeyId_PersonalService AS AccessKeyId FROM Object_RoleAccessKeyGuide_View WHERE vbIsUserAll = TRUE
                               UNION
                                -- "ЗП Админ" видят "ЗП карточки БН"
                                SELECT zc_Enum_Process_AccessKey_PersonalServiceFirstForm() FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId and AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin() GROUP BY AccessKeyId_PersonalService
@@ -1066,7 +1082,16 @@ BEGIN
             LEFT JOIN tmpMI_SummCardSecondRecalc ON tmpMI_SummCardSecondRecalc.PersonalId = tmpAll.PersonalId
                                                 AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId
                                                 AND tmpMI_SummCardSecondRecalc.ServiceDate = tmpMovement.ServiceDate
-         
+
+            -- Ограничить доступ к этим ведомостям
+            LEFT JOIN ObjectBoolean AS OB_PersonalServiceList_User
+                                    ON OB_PersonalServiceList_User.ObjectId  = tmpAll.PersonalServiceListId
+                                   AND OB_PersonalServiceList_User.DescId    = zc_ObjectBoolean_PersonalServiceList_User()
+                                   AND OB_PersonalServiceList_User.ValueData = TRUE
+
+      WHERE (OB_PersonalServiceList_User.ObjectId IS NULL
+          OR vbIsLevelMax01 = TRUE
+            )
             ;
 
 END;
@@ -1116,7 +1141,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
---select * from gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2022')::TDateTime , inEndDate := ('01.12.2022')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
-
-
---select * from gpSelect_Movement_PersonalService_Item (inStartDate := ('06.09.2023')::TDateTime , inEndDate := ('06.09.2023')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
