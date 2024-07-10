@@ -122,13 +122,16 @@ BEGIN
                                   ON ObjectBoolean_PositionLevel.ObjectId = Object_StaffList.Id 
                                  AND ObjectBoolean_PositionLevel.DescId = zc_ObjectBoolean_StaffList_PositionLevel()
 
-          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_StaffList.Id
+          LEFT JOIN tmpProtocol ON tmpProtocol.ObjectId = Object_StaffList.Id  -- and 1=0  
+
+     WHERE Object_StaffList.DescId = zc_Object_StaffList()
+      AND (Object_StaffList.isErased = False OR inIsShowAll = True)
      ;
   
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;                                                                
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
