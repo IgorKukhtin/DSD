@@ -84,6 +84,7 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
      vbUserId:= lpGetUserBySession (inSession);
 
+
      --обнул€ем последнюю измененную €чейку
      outPartionCellId_last := NULL ::Integer;
 
@@ -1041,6 +1042,9 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              outPartionCellId_last := vbPartionCellId_5 ::Integer;
          END IF;
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+
      ELSE
 
          SELECT outPartionCellId_1, outPartionCellId_2, outPartionCellId_3, outPartionCellId_4, outPartionCellId_5
@@ -1108,8 +1112,10 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ioPartionCellName_10 := zfCalc_PartionCell_IsClose ((SELECT Object.ObjectCode :: TVarChar || ' ' || Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_10,vbPartionCellId_10)),vbIsClose_10);
 
 
+     outPartionCellId_last := COALESCE (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, 0);
+
      -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+     --PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
      
 END;
 $BODY$
