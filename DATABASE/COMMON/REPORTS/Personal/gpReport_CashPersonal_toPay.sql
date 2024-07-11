@@ -36,8 +36,15 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inServiceDate, inServiceDate, NULL, NULL, NULL, vbUserId);
 
-    -- !!!Проверка прав роль - Ограничение просмотра данных ЗП!!!
+    -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
     PERFORM lpCheck_UserRole_8813637 (vbUserId);
+
+
+    -- !!!Проверка прав роль - Ограничение - нет доступа к просмотру ведомость Админ ЗП!!!
+    PERFORM lpCheck_UserRole_11026035 ((SELECT OB.ObjectId FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_PersonalServiceList_User() AND OB.ValueData = TRUE LIMIT 1)
+                                     , vbUserId
+                                      );
+
 
     vbMemberId := (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                    FROM ObjectLink AS ObjectLink_Personal_Member
