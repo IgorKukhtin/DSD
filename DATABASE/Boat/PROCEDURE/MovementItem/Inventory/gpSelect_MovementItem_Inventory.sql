@@ -34,6 +34,11 @@ RETURNS TABLE (Id Integer
                -- Опция (да/нет) - Участвует в опциях
              , isProdOptions Boolean
                --
+             , isNotMaster   Boolean
+             , isDiffAmount  Boolean
+             , Amount_master TFloat
+             , Amount_scan   TFloat
+
              , Color_Scan Integer
               )
 AS
@@ -128,6 +133,10 @@ BEGIN
                            , COALESCE(tmpMIMaster.PartionCellId, MILO_PartionCell.ObjectId) AS PartionCellId
                            , tmpMIMaster.isErased
                            , tmpMIMaster.MovementId_OrderClient
+                           , CASE WHEN tmpMIMaster.Id IS NULL THEN TRUE ELSE FALSE END AS isNotMaster
+                           , CASE WHEN COALESCE (tmpMIMaster.Amount, 0) <> COALESCE(tmpMIScan.Amount, 0) THEN TRUE ELSE FALSE END AS isDiffAmount
+                           , tmpMIMaster.Amount AS Amount_master
+                           , tmpMIScan.Amount   AS Amount_scan
                       FROM tmpMIMaster
                       
                            FULL JOIN tmpMIScan ON tmpMIScan.GoodsId    = tmpMIMaster.GoodsId
@@ -365,7 +374,13 @@ BEGIN
                -- Опция (да/нет) - Участвует в опциях
            , CASE WHEN tmpProdOptions.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isProdOptions
 
+           , tmpMI.isNotMaster   :: Boolean
+           , tmpMI.isDiffAmount  :: Boolean
+           , tmpMI.Amount_master :: TFloat
+           , tmpMI.Amount_scan   :: TFloat
+
            , CASE WHEN COALESCE(tmpMI.Id, 0) = 0 THEN zc_Color_Blue() ELSE zc_Color_Black() END AS Color_Scan
+
        FROM tmpMI
 
             LEFT JOIN tmpReceiptGoods ON tmpReceiptGoods.GoodsId = tmpMI.GoodsId
