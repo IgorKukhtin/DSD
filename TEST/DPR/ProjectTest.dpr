@@ -1507,7 +1507,9 @@ uses
   dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
   ViewPriceList in '..\..\Forms\Guides\ViewPriceList.pas' {ViewPriceListForm: TParentForm},
   ViewPriceListEdit in '..\..\Forms\Guides\ViewPriceListEdit.pas' {ViewPriceListEditForm: TParentForm},
-  PartionCellMovement in '..\..\Forms\Document\PartionCellMovement.pas' {PartionCellMovementForm: TParentForm};
+  PartionCellMovement in '..\..\Forms\Document\PartionCellMovement.pas' {PartionCellMovementForm: TParentForm},
+  ChoiceCell in '..\..\Forms\Guides\ChoiceCell.pas' {ChoiceCellForm: TParentForm},
+  ChoiceCellEdit in '..\..\Forms\Guides\ChoiceCellEdit.pas' {ChoiceCellEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

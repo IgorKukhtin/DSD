@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ChoiceCell(
     IN inId                     Integer,       -- ключ объекта <>
     IN inSession                TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Name TVarChar 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar  
              , NPP TFloat, BoxCount TFloat
@@ -27,6 +27,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
+           , lfGet_ObjectCode(0, zc_Object_ChoiceCell()) AS Code
            , CAST ('' as TVarChar)  AS Name
  
            , CAST (0 as Integer)    AS GoodsId
@@ -44,6 +45,7 @@ BEGIN
        RETURN QUERY 
        SELECT 
               Object_ChoiceCell.Id          AS Id
+            , Object_ChoiceCell.ObjectCode  AS Code
             , Object_ChoiceCell.ValueData   AS Name
    
             , Object_Goods.Id         AS GoodsId

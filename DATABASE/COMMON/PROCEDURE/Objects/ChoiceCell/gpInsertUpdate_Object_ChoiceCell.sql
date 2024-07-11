@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Object_ChoiceCell  
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ChoiceCell (Integer,Integer,Integer,TFloat,TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ChoiceCell (Integer, Integer, TVarChar, Integer, Integer, TFloat,TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ChoiceCell(
  INOUT ioId                Integer   ,    -- ключ объекта <Товары в реализации покупателям> 
+    IN inCode              Integer   ,
+    IN inName              TVarChar  ,    
     IN inGoodsId           Integer   ,    -- товар
     IN inGoodsKindId       Integer   ,    -- 
     IN inBoxCount          TFloat   ,    -- 
@@ -21,18 +23,20 @@ BEGIN
    
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
+
+   inCode:= lfGet_ObjectCode (inCode, zc_Object_ChoiceCell());
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ChoiceCell(), 0,'');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ChoiceCell(), inCode, inName);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ChoiceCell_Goods(), ioId, inGoodsId);                          
    -- сохранили связь с < >
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ChoiceCell_GoodsKind(), ioId, inGoodsKindId);
    -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ChoiceCell_NPP(), inId, inNPP);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_ChoiceCell_NPP(), ioId, inNPP);
    -- сохранили св-во <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ChoiceCell_BoxCount(), inId, inBoxCount);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ChoiceCell_BoxCount(), ioId, inBoxCount);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ChoiceCell_Comment(), ioId, inComment);
 
