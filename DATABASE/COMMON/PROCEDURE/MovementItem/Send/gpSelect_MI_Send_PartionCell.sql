@@ -157,51 +157,51 @@ BEGIN
             
            , Object_PartionCell_1.Id            AS PartionCellId_1
            , Object_PartionCell_1.ObjectCode    AS PartionCellCode_1
-           , (Object_PartionCell_1.ObjectCode :: TVarChar || '-' || Object_PartionCell_1.ValueData ):: TVarChar        AS PartionCellName_1
+           , (/*Object_PartionCell_1.ObjectCode :: TVarChar || '-' ||*/  Object_PartionCell_1.ValueData ):: TVarChar       AS PartionCellName_1
 
            , Object_PartionCell_2.Id            AS PartionCellId_2
            , Object_PartionCell_2.ObjectCode    AS PartionCellCode_2
-           , (Object_PartionCell_2.ObjectCode :: TVarChar || '-'  || Object_PartionCell_2.ValueData ):: TVarChar        AS PartionCellName_2
+           , (/*Object_PartionCell_2.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_2.ValueData ):: TVarChar       AS PartionCellName_2
 
            , Object_PartionCell_3.Id            AS PartionCellId_3
            , Object_PartionCell_3.ObjectCode    AS PartionCellCode_3
-           , (Object_PartionCell_3.ObjectCode :: TVarChar || '-'  || Object_PartionCell_3.ValueData ):: TVarChar        AS PartionCellName_3
+           , (/*Object_PartionCell_3.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_3.ValueData ):: TVarChar       AS PartionCellName_3
 
            , Object_PartionCell_4.Id            AS PartionCellId_4
            , Object_PartionCell_4.ObjectCode    AS PartionCellCode_4
-           , (Object_PartionCell_4.ObjectCode :: TVarChar || '-'  || Object_PartionCell_4.ValueData ):: TVarChar     AS PartionCellName_4
+           , (/*Object_PartionCell_4.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_4.ValueData ):: TVarChar       AS PartionCellName_4
 
            , Object_PartionCell_5.Id            AS PartionCellId_5
            , Object_PartionCell_5.ObjectCode    AS PartionCellCode_5
-           , (Object_PartionCell_5.ObjectCode :: TVarChar || '-'  || Object_PartionCell_5.ValueData):: TVarChar        AS PartionCellName_5
+           , (/*Object_PartionCell_5.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_5.ValueData):: TVarChar        AS PartionCellName_5
 
            , Object_PartionCell_6.Id            AS PartionCellId_6
            , Object_PartionCell_6.ObjectCode    AS PartionCellCode_6
-           , (Object_PartionCell_6.ObjectCode :: TVarChar || '-'  || Object_PartionCell_6.ValueData):: TVarChar        AS PartionCellName_6
+           , (/*Object_PartionCell_6.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_6.ValueData):: TVarChar        AS PartionCellName_6
 
            , Object_PartionCell_7.Id            AS PartionCellId_7
            , Object_PartionCell_7.ObjectCode    AS PartionCellCode_7
-           , (Object_PartionCell_7.ObjectCode :: TVarChar || '-'  || Object_PartionCell_7.ValueData):: TVarChar        AS PartionCellName_7
+           , (/*Object_PartionCell_7.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_7.ValueData):: TVarChar        AS PartionCellName_7
 
            , Object_PartionCell_8.Id            AS PartionCellId_8
            , Object_PartionCell_8.ObjectCode    AS PartionCellCode_8
-           , (Object_PartionCell_8.ObjectCode :: TVarChar || '-'  || Object_PartionCell_8.ValueData):: TVarChar        AS PartionCellName_8
+           , (/*Object_PartionCell_8.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_8.ValueData):: TVarChar        AS PartionCellName_8
 
            , Object_PartionCell_9.Id            AS PartionCellId_9
            , Object_PartionCell_9.ObjectCode    AS PartionCellCode_9
-           , (Object_PartionCell_9.ObjectCode :: TVarChar || '-'  || Object_PartionCell_9.ValueData):: TVarChar        AS PartionCellName_9
+           , (/*Object_PartionCell_9.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_9.ValueData):: TVarChar        AS PartionCellName_9
 
            , Object_PartionCell_10.Id            AS PartionCellId_10
            , Object_PartionCell_10.ObjectCode    AS PartionCellCode_10
-           , (Object_PartionCell_10.ObjectCode :: TVarChar || '-'  || Object_PartionCell_10.ValueData):: TVarChar        AS PartionCellName_10
+           , (/*Object_PartionCell_10.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_10.ValueData):: TVarChar      AS PartionCellName_10
 
            , Object_PartionCell_11.Id            AS PartionCellId_11
            , Object_PartionCell_11.ObjectCode    AS PartionCellCode_11
-           , (Object_PartionCell_11.ObjectCode :: TVarChar || '-'  || Object_PartionCell_11.ValueData):: TVarChar        AS PartionCellName_11
+           , (/*Object_PartionCell_11.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_11.ValueData):: TVarChar      AS PartionCellName_11
 
            , Object_PartionCell_12.Id            AS PartionCellId_12
            , Object_PartionCell_12.ObjectCode    AS PartionCellCode_12
-           , (Object_PartionCell_12.ObjectCode :: TVarChar || '-'  || Object_PartionCell_12.ValueData):: TVarChar        AS PartionCellName_12
+           , (/*Object_PartionCell_12.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_12.ValueData):: TVarChar      AS PartionCellName_12
 
            , (Object_PartionCell_real_1.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_1.ValueData):: TVarChar AS PartionCellName_real_1 
            , (Object_PartionCell_real_2.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_2.ValueData):: TVarChar AS PartionCellName_real_2 
