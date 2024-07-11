@@ -557,6 +557,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -1308,7 +1311,7 @@ object IncomeForm: TIncomeForm
       object cxSplitter_Bottom: TcxSplitter
         Left = 0
         Top = 184
-        Width = 1372
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -2168,6 +2171,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateMaskIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'Separator_1'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertAddLimit_Goods1'
         end>
     end
@@ -2301,6 +2312,11 @@ object IncomeForm: TIncomeForm
     object bbPrintPrice: TdxBarButton
       Action = actPrintPrice
       Category = 0
+    end
+    object bbUpdateMaskIncome: TdxBarButton
+      Action = mactUpdateMaskIncome
+      Category = 0
+      ImageIndex = 74
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -3976,6 +3992,54 @@ object IncomeForm: TIncomeForm
           Component = MasterCDS
           ComponentItem = 'PartionCellName'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object mactUpdateMaskIncome: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actIncomeJournalChoice
+        end
+        item
+          Action = actUpdateMask
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1055#1088#1080#1093#1086#1076#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1076#1088#1091#1075#1086#1075#1086' '#1055#1088#1080#1093#1086#1076#1072
+      ImageIndex = 27
+    end
+    object actUpdateMask: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMask
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMask
+        end>
+      Caption = 'actUpdateMask'
+    end
+    object actIncomeJournalChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'IncomeJournalChoice'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'MaskId'
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -6057,5 +6121,30 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 976
     Top = 360
+  end
+  object spUpdateMask: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_isMask'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId '
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementMaskId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MaskId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1088
+    Top = 299
   end
 end

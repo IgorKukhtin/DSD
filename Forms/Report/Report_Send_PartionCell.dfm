@@ -1460,17 +1460,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       Params = <
         item
-          Name = 'StartDate'
+          Name = 'PartionCellName_print'
           Value = 45292d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 45292d
-          Component = deEnd
-          DataType = ftDateTime
+          Component = FormParams
+          ComponentItem = 'PartionCellName_print'
+          DataType = ftString
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
@@ -2287,6 +2281,41 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = 43831d
         Component = FormParams
         ComponentItem = 'PartionCellId_last'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsCode'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsCode'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -2,11 +2,16 @@
 -- Function: gpReport_PartionCell_PasportPrint
 
 DROP FUNCTION IF EXISTS gpReport_PartionCell_PasportPrint (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_PartionCell_PasportPrint (Integer, Integer, Integer, Integer, TVarChar, TVarChar, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_PartionCell_PasportPrint(
     IN inMovementItemId    Integer  , --
-    IN inPartionCellId     Integer  , -- 
-    IN inSession          TVarChar    -- сессия пользователя
+    IN inPartionCellId     Integer  , --
+    IN inGoodsCode         Integer  , --
+    IN inGoodsName         TVarChar  , --
+    IN inGoodsKindName     TVarChar  , -- 
+    IN inPartionGoodsDate  TDateTime , 
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
@@ -21,7 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     IF COALESCE (inPartionCellId,0) = 0
+     IF COALESCE (inPartionCellId,0) = 0 
      THEN
          RETURN;
      END IF;
@@ -57,7 +62,25 @@ BEGIN
 
      WHERE MovementItem.Id = inMovementItemId
        AND MovementItem.DescId = zc_MI_Master()
-       AND MovementItem.isErased = FALSE;
+       AND MovementItem.isErased = FALSE
+       AND COALESCE (inMovementItemId, 0) <> 0
+   UNION all
+     SELECT inGoodsCode            AS GoodsCode
+          , inGoodsName            AS GoodsName
+          , inGoodsKindName        AS GoodsKindName 
+          , inPartionGoodsDate :: TDateTime AS PartionGoodsDate
+          , Object_PartionCell.ValueData       AS PartionCellName
+          , Object_Member.ValueData ::TVarChar AS StoreKeeper
+     FROM Object AS Object_PartionCell
+
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ObjectId = vbUserId
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+
+     WHERE Object_PartionCell.Id = inPartionCellId
+       AND COALESCE (inMovementItemId, 0) = 0
+    ;
 
 END;
 $BODY$
@@ -66,8 +89,9 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.07.24         *
  07.07.24         * 
 */
 
 -- тест
--- select * from gpReport_PartionCell_PasportPrint(inMovementItemId := 294981981   , inPartionCellId := 10239308 , inSession := '5');
+--
