@@ -1062,6 +1062,10 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ViewPriceList_Comment', zc_object_ViewPriceList(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ViewPriceList_Comment');
 
+ CREATE OR REPLACE FUNCTION zc_ObjectString_ChoiceCell_Comment() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ChoiceCell_Comment'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_ChoiceCell_Comment', zc_object_ChoiceCell(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ChoiceCell_Comment');
+
    
 
 ---!!! Аптека
