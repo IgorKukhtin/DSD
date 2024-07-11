@@ -1,4 +1,4 @@
- -- Function: gpSelect_Scale_Goods()
+-- Function: gpSelect_Scale_Goods()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
