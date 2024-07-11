@@ -91,28 +91,28 @@ BEGIN
             END                       :: TVarChar AS Subject
           , ''                        :: TBlob    AS Body
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu777@gmail.com'
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'agilisjet@gmail.com'
                  ELSE gpGet_Mail.Value
             END :: TVarChar                      AS AddressFrom
 
-          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'ashtu@ua.fm'
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'k.klimentiev@alan.ua' -- ashtu@ua.fm -- ashtu@ukr.net
                  WHEN vbUserId = 9457 AND 1=1 THEN 'innafelon@gmail.com'
                  ELSE tmpExportJuridical.ContactPersonMail --|| ';ashtu@ua.fm'
             END :: TVarChar AS AddressTo
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'imap.gmail.com' -- 'smtp.ua.fm' 
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'smtp.gmail.com' -- 'smtp.ua.fm' 
                  ELSE gpGet_Host.Value
             END :: TVarChar                       AS Host
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN '993' 
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN '587' -- 993
                  ELSE gpGet_Port.Value
             END :: TVarChar                       AS Port
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'ashtu777@gmail.com'
+          , CASE WHEN vbUserId = 5    AND 1=1 THEN 'agilisjet@gmail.com'
                  ELSE gpGet_User.Value
             END :: TVarChar                      AS UserName
 
-          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'et' -- 'q' 
+          , CASE WHEN vbUserId = 5    AND 1=0 THEN 'qsws neeu jtxs ufhm' -- 'et' 
                  ELSE gpGet_Password.Value
             END :: TVarChar                      AS Password
 
