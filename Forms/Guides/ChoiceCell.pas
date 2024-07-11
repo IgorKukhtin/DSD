@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxCurrencyEdit, dsdCommon;
+  DataModul, cxButtonEdit, cxCurrencyEdit, dsdCommon, ExternalLoad;
 
 type
   TChoiceCellForm = class(TParentForm)
@@ -62,6 +62,12 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     actUpdateDataSet: TdsdUpdateDataSet;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

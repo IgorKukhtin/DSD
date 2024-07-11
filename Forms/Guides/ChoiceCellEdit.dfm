@@ -236,8 +236,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 8
-    Top = 152
+    Left = 16
+    Top = 112
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -328,6 +328,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    Left = 16
     Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -346,8 +347,8 @@
     Top = 238
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 8
-    Top = 240
+    Left = 16
+    Top = 168
   end
   object GuidesGoodsKind: TdsdGuides
     KeyField = 'Id'
