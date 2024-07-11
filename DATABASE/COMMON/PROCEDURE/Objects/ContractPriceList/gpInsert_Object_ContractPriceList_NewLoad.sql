@@ -50,7 +50,7 @@ BEGIN
                     );
     IF vbStartDate > inStartDate_new
     THEN 
-         RAISE EXCEPTION 'Ошибка.У договора с кодом <%> есть прайс позже даты загрузки.', inContractCode;
+         RAISE EXCEPTION 'Ошибка.У договора с кодом <%> есть прайс с датой = <%> в загрузке установлена меньше дата = <%>.', inContractCode, zfConvert_DateToString (vbStartDate), zfConvert_DateToString (inStartDate_new);
     END IF;
     
     IF COALESCE (TRIM (inPriceListName_new), '') <> ''
