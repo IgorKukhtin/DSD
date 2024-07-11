@@ -110,7 +110,7 @@ end if;
                                                     , MovementLinkObject_BankAccount.ObjectId      AS BankAccountId
                                                     , MovementString_Comment.ValueData             AS Comment
                                                     , MovementLinkObject_Juridical.ObjectId        AS MoneyPlaceId
-                                                    , MovementLinkObject_Partner.ObjectId           AS PartnerId
+                                                    , MovementLinkObject_Partner.ObjectId          AS PartnerId
                                                     , MovementLinkObject_Contract.ObjectId         AS ContractId
                                                     , MovementLinkObject_InfoMoney.ObjectId        AS InfoMoneyId
                                                     , MovementLinkObject_Unit.ObjectId             AS UnitId
