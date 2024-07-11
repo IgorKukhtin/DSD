@@ -300,6 +300,8 @@ type
     fStartProcess : Boolean;
     isMsgCurrency_all : Boolean;
 
+    start_Hour_calc_6 : Boolean;
+
     ArrayCurrencyList : TArrayCurrencyList;
 
     procedure AddToLog(num, lMovementId : Integer; S: string);
@@ -636,6 +638,9 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoad_https_Currency_all;
 var i,count: Integer;
+  Present: TDateTime;
+  Present_old: TDateTime;
+  Year, Month, Month_old, Day: Word;
 begin
     if (not cbCurrency.Checked)or(not cbCurrency.Enabled) then exit;
     //
@@ -656,11 +661,43 @@ begin
     myLogMemo_add(IntToStr(count));
     myLogMemo_add(EndDateCompleteEdit.Text);
     //
+    myLogMemo_add('*');
+    myLogMemo_add('-- start period --');
+    myLogMemo_add('*');
     for i:= 0 to count
     do begin
        myLogMemo_add(IntToStr(i));
        pLoad_https_Currency(StrToDate(StartDateCompleteEdit.Text) + i);
     end;
+    //
+    myLogMemo_add('*');
+    myLogMemo_add('-- end period --');
+    myLogMemo_add('*');
+    //
+    //еще след месяц
+     Present_old:= StrToDate(StartDateCompleteEdit.Text);
+     DecodeDate(Present_old, Year, Month_old, Day);
+     //
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     //
+     if (Month_old <> Month) and (Day <> 1) then
+     begin
+          myLogMemo_add('*');
+          myLogMemo_add('-- start next period --');
+          myLogMemo_add('*');
+          count:= Day - 1;
+          for i:= 0 to count
+          do begin
+             myLogMemo_add(IntToStr(i));
+             pLoad_https_Currency(StrToDate(EndDateCompleteEdit.Text) + 1 + i);
+          end;
+          myLogMemo_add('*');
+          myLogMemo_add('-- end next period --');
+          myLogMemo_add('*');
+     end
+
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoad_https_Currency(OperDate : TDateTime);
@@ -2267,17 +2304,21 @@ begin
      if Pos('stop-', ParamStr(14)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(14), 'stop-', '')); except MIN_stop:= 70;end;
      if Pos('stop-', ParamStr(15)) = 1 then try MIN_stop:= StrToInt(myReplaceStr(ParamStr(15), 'stop-', '')); except MIN_stop:= 70;end;
      //
-     if (Hour_calc = 6)  and (MIN_stop > 0) then
+     if (Hour_calc = 6)  and (MIN_stop > 0) and (start_Hour_calc_6 = false) then
      begin
+          start_Hour_calc_6:= true;
+          //
           myLogMemo_add('start stop ('+IntToStr(MIN_stop)+') min');
           MyDelay(MIN_stop*60*1000);
           myLogMemo_add('end stop');
      end
-     else if (Hour_calc = 6)
-          then
-              myLogMemo_add('!!! not stop !!!');
-          ;
-
+     else begin
+              if (Hour_calc = 6)
+              then
+                  myLogMemo_add('!!! not stop !!!');
+              //
+              if Hour_calc <> 6 then start_Hour_calc_6:= false;
+          end;
      //
      //
      if (Hour_calc = 22) and (beginVACUUM > 0) then beginVACUUM:= 0;
@@ -2326,6 +2367,9 @@ begin
      and (BranchEdit.Text = 'BranchId : 0')
      then
           try
+              myLogMemo_add('*');
+              myLogMemo_add('*');
+              myLogMemo_add('*');
               if beginVACUUM_ii = 0
               then myLogMemo_add('beginVACUUM_ii = ' + IntToStr(beginVACUUM_ii))
               else beginVACUUM_ii:=0;
@@ -2335,12 +2379,11 @@ begin
                                +'   and query ILIKE ' + FormatToVarCharServer_notNULL('%VACUUM%')
                                 +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%')
                                  );
-              myLogMemo_add('rec VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
+              myLogMemo_add('-');
+              myLogMemo_add('record VACUUM = ' + IntToStr(toSqlQuery_two.RecordCount));
               //!!!if not ((Hour_calc = 5) and (Minute_calc >= 40) and (Minute_calc <= 55)) then
               if toSqlQuery_two.RecordCount > 0 then
               begin
-                   myLogMemo_add('-');
-                   myLogMemo_add('-');
                    with toSqlQuery_two do
                      while not EOF do begin
                        myLogMemo_add('query_start = ' + DateTimeToStr(FieldByName('query_start').AsDateTime));
@@ -2360,15 +2403,15 @@ begin
               //
               fOpenSqToQuery_two('select pId, Query, query_start from pg_stat_activity as Load_PostgreSql'
                                +' where state = ' + FormatToVarCharServer_notNULL('active')
-                               +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%')
+                               +'   and query NOT ILIKE ' + FormatToVarCharServer_notNULL('%VACUUM%')
+                               +' order by case when query NOT ILIKE ' + FormatToVarCharServer_notNULL('%from pg_stat_activity as Load_PostgreSql%') + ' then 0 else 1 end'
                                  );
               //myLogMemo_add('rec2 = ' + IntToStr(toSqlQuery_two.RecordCount));
               if toSqlQuery_two.RecordCount > 0 then
               begin
-                   myLogMemo_add('rec oth = ' + IntToStr(toSqlQuery_two.RecordCount));
+                   myLogMemo_add('-');
+                   myLogMemo_add('record oth = ' + IntToStr(toSqlQuery_two.RecordCount));
                    //
-                   myLogMemo_add('-');
-                   myLogMemo_add('-');
                    with toSqlQuery_two do
                      while not EOF do begin
                        myLogMemo_add('query_start = ' + DateTimeToStr(FieldByName('query_start').AsDateTime));
@@ -3931,7 +3974,8 @@ begin
      with fromZQuery,Sql do begin
         Close;
         Clear;
-        Add('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
+        //Add('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
+        Add('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(DateToStr(Date-1))+')');
         Add('order by OperDate,MovementId,InvNumber');
         //Open;
         fTryOpenSq(fromZQuery);
@@ -3940,7 +3984,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
 
-        myLogMemo_add('start Расчет курс. разн.' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        //myLogMemo_add('start Расчет курс. разн.' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + EndDateCompleteEdit.Text);
+        myLogMemo_add('start Расчет курс. разн.' + '('+IntToStr(RecordCount)+') ' + StartDateCompleteEdit.Text + ' - ' + DateToStr(Date-1));
         cbCurrency.Caption:='('+IntToStr(RecordCount)+') Расчет курс. разн.';
         //
         fStop:=cbOnlyOpen.Checked;
