@@ -64,7 +64,8 @@ BEGIN
 
           , gpGet_Mail.Value :: TVarChar AS AddressFrom
 
-          , CASE WHEN vbUserId = 5 AND 1=1 THEN tmpMailSend.Name
+          , CASE WHEN vbUserId = 5 AND 1=1 THEN 'ashtu@ukr.net'
+                 WHEN vbUserId = 5 AND 1=1 THEN tmpMailSend.Name
                  ELSE CASE WHEN COALESCE (tmpMailSend.Name,'') <> '' THEN tmpMailSend.Name ELSE tmpObjectMail.Email END 
             END :: TVarChar AS AddressTo
 
