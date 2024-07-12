@@ -238,6 +238,10 @@ type
     bbSetUnErasedScan: TdxBarButton;
     actMIProtocolScan: TdsdOpenForm;
     bbMIProtocolScan: TdxBarButton;
+    isNotMaster: TcxGridDBColumn;
+    isDiffAmount: TcxGridDBColumn;
+    Amount_master: TcxGridDBColumn;
+    Amount_scan: TcxGridDBColumn;
   private
   public
   end;

@@ -26,14 +26,12 @@ object InventoryForm: TInventoryForm
     TabOrder = 0
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 373
     ClientRectBottom = 427
     ClientRectRight = 937
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 349
       object cxGrid: TcxGrid
         Left = 0
         Top = 8
@@ -41,7 +39,6 @@ object InventoryForm: TInventoryForm
         Height = 395
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 341
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -76,6 +73,16 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountScan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_scan
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -112,6 +119,16 @@ object InventoryForm: TInventoryForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountScan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_master
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_scan
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -523,6 +540,50 @@ object InventoryForm: TInventoryForm
             Visible = False
             VisibleForCustomization = False
           end
+          object isNotMaster: TcxGridDBColumn
+            Caption = #1090#1086#1083#1100#1082#1086' '#1057#1082#1072#1085
+            DataBinding.FieldName = 'isNotMaster'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object isDiffAmount: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'isDiffAmount'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_master: TcxGridDBColumn
+            Caption = '***'#1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Amount_master'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082' - '#1084#1072#1089#1090#1077#1088
+            Options.Editing = False
+            Width = 70
+          end
+          object Amount_scan: TcxGridDBColumn
+            Caption = '***'#1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082' ('#1089#1082#1072#1085')'
+            DataBinding.FieldName = 'Amount_scan'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1060#1072#1082#1090' '#1086#1089#1090#1072#1090#1086#1082' - '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -542,14 +603,11 @@ object InventoryForm: TInventoryForm
     object cxTabSheetScan: TcxTabSheet
       Caption = #1057#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072' '#1084#1086#1073'. '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072#1093
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
         Width = 937
-        Height = 349
+        Height = 403
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView_Scan: TcxGridDBTableView
@@ -668,7 +726,6 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 81
           end
           object Scan_Article_all: TcxGridDBColumn
@@ -698,7 +755,6 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object Scan_GoodsName: TcxGridDBColumn
@@ -714,7 +770,6 @@ object InventoryForm: TInventoryForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 137
           end
           object Scan_MeasureName: TcxGridDBColumn
