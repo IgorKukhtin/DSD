@@ -6,7 +6,7 @@ CREATE OR REPLACE VIEW Constant_User_LevelMax01_View
 AS
   SELECT DISTINCT UserId
   FROM ObjectLink_UserRole_View
-  WHERE RoleId IN (10898    -- Отчеты (управленцы)
+  WHERE RoleId IN (10898    -- Отчеты (руководство)
                  , 413075   -- ЗП просмотр ВСЕ
                  , 10597056 -- Только просмотр Аудитор
                   )
