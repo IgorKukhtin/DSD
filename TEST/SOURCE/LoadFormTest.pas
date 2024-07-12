@@ -43,6 +43,7 @@ type
     procedure LoadCarExternalFormTest;
     procedure LoadCarInfoFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadChoiceCellFormTest;
     procedure LoadClientKindFormTest;
     procedure LoadConditionPromoFormTest;
     procedure LoadContractKindFormTest;
@@ -4686,6 +4687,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarModelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCarModelEditForm');
 end;
+
+procedure TLoadFormTest.LoadChoiceCellFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceCellForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceCellorm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceCellEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChoiceCellEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadClientKindFormTest;
 begin

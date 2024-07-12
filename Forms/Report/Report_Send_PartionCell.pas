@@ -91,7 +91,9 @@ type
     spSelectPrintPasport: TdsdStoredProc;
     actPrint_Pasport: TdsdPrintAction;
     bb: TdxBarButton;
-    MultiAction1: TMultiAction;
+    mactTestPrint5: TMultiAction;
+    actPrint_Pasport_test: TdsdPrintAction;
+    actUpdate_MI_Send_byReport_test: TdsdExecStoredProc;
   private
     { Private declarations }
   public

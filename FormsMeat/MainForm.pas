@@ -1493,6 +1493,8 @@ type
     miBankAccountDocumentPav: TMenuItem;
     actBankPav: TdsdOpenForm;
     miBankPav: TMenuItem;
+    actChoiceCell: TdsdOpenForm;
+    N261: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

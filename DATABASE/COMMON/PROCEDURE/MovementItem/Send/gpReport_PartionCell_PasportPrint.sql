@@ -28,7 +28,8 @@ BEGIN
 
      IF COALESCE (inPartionCellId,0) = 0 
      THEN
-         RETURN;
+         RETURN;  
+         
      END IF;
      
   -- Результат

@@ -1477,17 +1477,76 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
-    object MultiAction1: TMultiAction
+    object actPrint_Pasport_test: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      StoredProc = spSelectPrintPasport
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintPasport
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'PartionCellName_print'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PartionCellName_print'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
+    end
+    object mactTestPrint5: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actUpdateMainDS
+          Action = actUpdate_MI_Send_byReport_test
         end
         item
-          Action = actPrint_Pasport
+          Action = actPrint_Pasport_test
         end>
-      Caption = 'MultiAction1'
+      Caption = 'mactTestPrint'
+    end
+    object actUpdate_MI_Send_byReport_test: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_Send_byReport
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_Send_byReport
+        end>
+      Caption = 'actUpdate_MI_Send_byReport_test'
     end
   end
   inherited MasterDS: TDataSource

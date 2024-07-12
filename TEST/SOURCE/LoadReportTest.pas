@@ -140,7 +140,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Отчеты (товарные)\Печать паспорта ячейки.fr3');
+  LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Товарный Учет\Печать паспорта ячейки.fr3');
   exit;
   LoadReportFromFile('Партия учета по Ячейкам хранения(остатки)', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения(остатки).fr3');
   exit;

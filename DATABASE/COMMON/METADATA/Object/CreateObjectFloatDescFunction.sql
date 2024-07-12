@@ -1341,8 +1341,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Bank_SummMax() RETURNS Integer AS $BOD
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Bank(), 'zc_ObjectFloat_Bank_SummMax', 'Ограничение по максимальной сумме для Банк - Ф2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Bank_SummMax');
     
-    
-     
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ChoiceCell_BoxCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ChoiceCell_BoxCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_ChoiceCell_BoxCount', 'Кол-во ящиков Е2 (итого в ячейке)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ChoiceCell_BoxCount');
+        
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ChoiceCell_NPP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ChoiceCell_NPP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_ChoiceCell_NPP', '№ п/п для сортировки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ChoiceCell_NPP');
+
+
+
+
  
 --!!! АПТЕКА
 
