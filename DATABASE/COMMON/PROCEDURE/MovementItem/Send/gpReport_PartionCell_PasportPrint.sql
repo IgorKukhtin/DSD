@@ -56,10 +56,10 @@ BEGIN
                                     AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
           LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = inPartionCellId
 
-        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+        /*LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = vbUserId
-                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()*/
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = vbUserId -- ObjectLink_User_Member.ChildObjectId
 
      WHERE MovementItem.Id = inMovementItemId
        AND MovementItem.DescId = zc_MI_Master()
@@ -74,10 +74,10 @@ BEGIN
           , Object_Member.ValueData ::TVarChar AS StoreKeeper
      FROM Object AS Object_PartionCell
 
-        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+        /*LEFT JOIN ObjectLink AS ObjectLink_User_Member
                              ON ObjectLink_User_Member.ObjectId = vbUserId
-                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()*/
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = vbUserId -- ObjectLink_User_Member.ChildObjectId
 
      WHERE Object_PartionCell.Id = inPartionCellId
        AND COALESCE (inMovementItemId, 0) = 0
