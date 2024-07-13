@@ -89,6 +89,8 @@ RETURNS TABLE (PartionId            Integer
              , TotalSummPriceJur       TFloat -- Сумма вх. без скидки в валюте (информативно)
              , PriceTax                TFloat -- % наценки по курсу на тек дату
              , PriceTax_doc            TFloat -- % наценки по курсу документа  
+             
+             , StartDate_DiscountTax   TDateTime
              , DiscountTax             TFloat -- % Сезонной скидки !!!НА!!! zc_DateEnd
              , DiscountTaxNext         TFloat -- % Сезонной скидки дополнительный !!!НА!!! zc_DateEnd
              , Amount_GoodsPrint       TFloat -- Кол-во для печати ценников
@@ -628,6 +630,7 @@ BEGIN
 
  , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                         , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
+                        , ObjectHistory_DiscountPeriodItem.StartDate
                         , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
                         , ObjectHistoryFloat_DiscountPeriodItem_ValueNext.ValueData AS DiscountTaxNext
                         , (COALESCE (ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData,0) 
@@ -887,6 +890,7 @@ BEGIN
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax_doc
 
+           , tmpDiscount.StartDate AS StartDate_DiscountTax
              -- % Сезонной скидки !!!НА!!! zc_DateEnd
            , tmpDiscount.DiscountTax         :: TFloat AS DiscountTax
              -- % Сезонной скидки доп. !!!НА!!! zc_DateEnd
