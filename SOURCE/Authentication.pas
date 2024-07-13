@@ -158,7 +158,8 @@ begin
    //ловим ProjectTest.exe
    S:= ExtractFileName(ParamStr(0));
    //
-   isBoutique:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
+   isBoutique:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Podium.exe'))
+              or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique.exe'))
               or(AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Boutique_Demo.exe'));
    //
    isProject:= (AnsiUpperCase(gc_ProgramName) =  AnsiUpperCase('Project.exe'))

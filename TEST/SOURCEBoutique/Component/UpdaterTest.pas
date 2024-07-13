@@ -57,6 +57,7 @@ end;
 
 procedure TUpdaterTest.UpdateBoutique;
 begin
+  ShowMessage(ExtractFileDir(ParamStr(0)) + '\Boutique.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\Boutique.exe');
 end;
 
@@ -68,6 +69,8 @@ begin
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
   if FileExists(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe')
   then SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
+
+  ShowMessage(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;
 

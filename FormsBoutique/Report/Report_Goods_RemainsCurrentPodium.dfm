@@ -6,8 +6,9 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -237
   ExplicitWidth = 1147
-  ExplicitHeight = 601
+  ExplicitHeight = 602
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -649,6 +650,15 @@ inherited Report_Goods_RemainsCurrentPodiumForm: TReport_Goods_RemainsCurrentPod
             HeaderHint = #1062#1077#1085#1072' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 55
+          end
+          object StartDate_DiscountTax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' % '#1089#1082'. '#1089#1077#1079#1086#1085
+            DataBinding.FieldName = 'StartDate_DiscountTax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1089' '#1082#1086#1090#1086#1088#1086#1081' '#1076#1077#1081#1089#1090#1074#1091#1077#1090' % '#1089#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 70
           end
           object DiscountTax: TcxGridDBColumn
             Caption = '% '#1089#1082'.'
