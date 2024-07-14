@@ -99,6 +99,7 @@ uses
   IniUtils in '..\FormsFarmacy\Cash\IniUtils.pas',
   EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
   EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
   PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
   PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
   PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',

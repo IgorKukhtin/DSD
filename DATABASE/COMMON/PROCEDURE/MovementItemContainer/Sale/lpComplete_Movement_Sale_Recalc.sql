@@ -116,30 +116,38 @@ BEGIN
                               --WHERE inUnitId = 8459
                               WHERE vbOperDate >= '01.01.2023'
                              )
-       , tmpContainer_all AS (SELECT _tmpItem.GoodsId
+       , tmpGoods AS (SELECT DISTINCT _tmpItem.GoodsId FROM _tmpItem)
+       , tmpContainer_all_1 AS (SELECT _tmpItem.GoodsId
+                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                     , Container.Id AS ContainerId
+                                FROM tmpGoods AS _tmpItem
+                                     INNER JOIN Container ON Container.ObjectId = _tmpItem.GoodsId
+                                                         AND Container.DescId   = zc_Container_Count()
+                                     INNER JOIN ContainerLinkObject AS CLO_Unit
+                                                                    ON CLO_Unit.ContainerId = Container.Id
+                                                                   AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
+                                                                   AND CLO_Unit.ObjectId    = inUnitId
+                                     LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
+                                                                   ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                  AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                     LEFT JOIN ContainerLinkObject AS CLO_Account
+                                                                   ON CLO_Account.ContainerId = Container.Id
+                                                                  AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
+                                -- без Товар в пути
+                                WHERE CLO_Account.ObjectId IS NULL
+                                  AND vbOperDate >= '01.01.2023'
+                                --!!!Розподільчий комплекс!!!
+                                --AND inUnitId = 8459
+                               )
+       , tmpContainer_all AS (SELECT DISTINCT
+                                     _tmpItem.GoodsId
                                    , _tmpItem.GoodsKindId
-                                   , Container.Id AS ContainerId
+                                   , tmpContainer_all_1.ContainerId
                               FROM (SELECT DISTINCT _tmpItem.GoodsId, _tmpItem.GoodsKindId FROM _tmpItem) AS _tmpItem
-                                   INNER JOIN Container ON Container.ObjectId = _tmpItem.GoodsId
-                                                       AND Container.DescId   = zc_Container_Count()
-                                   INNER JOIN ContainerLinkObject AS CLO_Unit
-                                                                  ON CLO_Unit.ContainerId = Container.Id
-                                                                 AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
-                                                                 AND CLO_Unit.ObjectId    = inUnitId
-                                   INNER JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                                  ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                 AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-                                                                 AND CLO_GoodsKind.ObjectId    = _tmpItem.GoodsKindId
-                                   LEFT JOIN ContainerLinkObject AS CLO_Account
-                                                                 ON CLO_Account.ContainerId = Container.Id
-                                                                AND CLO_Account.DescId      = zc_ContainerLinkObject_Account()
-                              -- без Товар в пути
-                              WHERE CLO_Account.ObjectId IS NULL
-                                AND vbOperDate >= '01.01.2023'
-                              --!!!Розподільчий комплекс!!!
-                              --AND inUnitId = 8459
+                                   INNER JOIN tmpContainer_all_1 ON tmpContainer_all_1.GoodsId     = _tmpItem.GoodsId
+                                                                AND tmpContainer_all_1.GoodsKindId = _tmpItem.GoodsKindId
                              )
-       , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
+   /*, tmpMIContainer_all_1 AS (SELECT tmpContainer_all.ContainerId
                                      , tmpContainer_all.GoodsId
                                      , tmpContainer_all.GoodsKindId
                                      , COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount
@@ -155,6 +163,27 @@ BEGIN
                                 GROUP BY tmpContainer_all.ContainerId
                                        , tmpContainer_all.GoodsId
                                        , tmpContainer_all.GoodsKindId
+                               )*/
+       -- оптимизация
+     , tmpMIContainer_all_1 AS (SELECT MIContainer.ContainerId
+                                     , SUM (MIContainer.Amount) AS Amount
+                                FROM MovementItemContainer AS MIContainer
+                                WHERE MIContainer.ContainerId IN (SELECT DISTINCT tmpContainer_all.ContainerId FROM tmpContainer_all)
+                                  AND MIContainer.DescId      = zc_MIContainer_Count()
+                                  AND MIContainer.OperDate    BETWEEN DATE_TRUNC ('MONTH', vbOperDate) AND vbOperDate
+                                  AND (MIContainer.MovementDescId <> zc_Movement_Inventory()
+                                    OR MIContainer.OperDate <> vbOperDate
+                                      )
+                                --AND (MIContainer.OperDate < vbOperDate OR tmpContainer_all.GoodsId <> 2383)
+                                GROUP BY MIContainer.ContainerId
+                               )
+         -- оптимизация
+       , tmpMIContainer_all AS (SELECT tmpContainer_all.ContainerId
+                                     , tmpContainer_all.GoodsId
+                                     , tmpContainer_all.GoodsKindId
+                                     , COALESCE (tmpMIContainer_all_1.Amount, 0) AS Amount
+                                FROM tmpContainer_all
+                                     LEFT JOIN tmpMIContainer_all_1 ON tmpMIContainer_all_1.ContainerId = tmpContainer_all.ContainerId
                                )
            , tmpContainer AS (SELECT tmpContainer.GoodsId
                                    , tmpContainer.GoodsKindId

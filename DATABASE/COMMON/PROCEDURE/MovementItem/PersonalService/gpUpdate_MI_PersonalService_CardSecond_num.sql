@@ -134,10 +134,10 @@ END IF;
 
              -- ограничение мин - 1
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 1 AND vbMovementId_avance > 0
-                       THEN 3000
+                       THEN 3000 -- ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 1
-                       THEN 4000
+                       THEN 4000 -- ВОСТОК
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 1
                        THEN 0
@@ -150,10 +150,10 @@ END IF;
 
              -- ограничение мин - 2
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 2 AND vbMovementId_avance > 0
-                       THEN 3000
+                       THEN 3000 --ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 2
-                       THEN 4000
+                       THEN 4000 -- ВОСТОК
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 2
                        THEN 0
@@ -165,10 +165,10 @@ END IF;
 
              -- ограничение мин - 3
            , CASE WHEN MovementFloat_BankSecond_num.ValueData = 3 AND vbMovementId_avance > 0
-                       THEN 3000
+                       THEN 3000 -- ВОСТОК + аванс
 
                   WHEN MovementFloat_BankSecond_num.ValueData = 3
-                       THEN 4000
+                       THEN 4000 -- ВОСТОК
 
                   WHEN MovementFloat_BankSecondTwo_num.ValueData = 3
                        THEN 0
@@ -223,14 +223,17 @@ END IF;
 
        FROM MovementLinkMovement AS MLM_BankSecondNum
 
+            -- БАНК ВОСТОК
             LEFT JOIN MovementFloat AS MovementFloat_BankSecond_num
                                     ON MovementFloat_BankSecond_num.MovementId =  MLM_BankSecondNum.MovementChildId
                                    AND MovementFloat_BankSecond_num.DescId = zc_MovementFloat_BankSecond_num()
 
+            -- ОТП БАНК
             LEFT JOIN MovementFloat AS MovementFloat_BankSecondTwo_num
                                     ON MovementFloat_BankSecondTwo_num.MovementId =  MLM_BankSecondNum.MovementChildId
                                    AND MovementFloat_BankSecondTwo_num.DescId = zc_MovementFloat_BankSecondTwo_num()
 
+            -- БАНК Личный
             LEFT JOIN MovementFloat AS MovementFloat_BankSecondDiff_num
                                     ON MovementFloat_BankSecondDiff_num.MovementId =  MLM_BankSecondNum.MovementChildId
                                    AND MovementFloat_BankSecondDiff_num.DescId = zc_MovementFloat_BankSecondDiff_num()

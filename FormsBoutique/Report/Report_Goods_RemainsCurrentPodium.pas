@@ -163,6 +163,7 @@ type
     spGet_Export_Email: TdsdStoredProc;
     actGet_Export_Email: TdsdExecStoredProc;
     StartDate_Price: TcxGridDBColumn;
+    StartDate_DiscountTax: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -350,7 +350,12 @@ uses
   UAECMRXML in '..\..\SOURCE\EDI\UAECMRXML.pas',
   EUSignCP in '..\..\SOURCE\EUSignCP\EUSignCP.pas',
   EUSignCPOwnUI in '..\..\SOURCE\EUSignCP\EUSignCPOwnUI.pas',
-  IntegerDialog in '..\..\FormsBoutique\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm};
+  IntegerDialog in '..\..\FormsBoutique\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm},
+  dsdCommon in '..\..\SOURCE\COMPONENT\dsdCommon.pas',
+  PdfiumCore in '..\..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\..\SOURCE\Pdfium\PdfiumLib.pas',
+  DOCUMENTINVOICE_DRN_XML in '..\..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -369,7 +374,7 @@ begin
   then gc_AdminPassword := 'qsxqsxw1'
   else gc_AdminPassword := 'Админ';
 
-  gc_ProgramName := 'Boutique.exe';
+  gc_ProgramName := 'Podium.exe';
 
   Application.Initialize;
   gc_isSetDefault := true;
