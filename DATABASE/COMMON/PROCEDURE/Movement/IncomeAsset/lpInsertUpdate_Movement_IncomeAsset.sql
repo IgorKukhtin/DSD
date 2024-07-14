@@ -34,6 +34,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbCurrencyDocumentId Integer;
    DECLARE vbCurrencyPartnerId Integer;
+   DECLARE vbCurrencyUser Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -61,6 +62,10 @@ BEGIN
      -- сохраненна€ ¬алюта (контрагента)
      vbCurrencyPartnerId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner()), zc_Enum_Currency_Basis());    
 
+     --ручной ввод курса
+     vbCurrencyUser := COALESCE( (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_CurrencyUser()), FALSE);
+
+
      -- определ€ем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
 
@@ -86,10 +91,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчитали и свойство < урс дл€ перевода в валюту баланса>
-     --outCurrencyValue := 1.00;
+     --outCurrencyValue := 1.00; 
+     --если ручной ввод тогда не делаем расчет курса
+     IF
      IF (inCurrencyDocumentId <> inCurrencyPartnerId) OR (inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyPartnerId <> zc_Enum_Currency_Basis())
      THEN
-         IF (inCurrencyDocumentId <> inCurrencyPartnerId)
+         IF (inCurrencyDocumentId <> inCurrencyPartnerId) AND (vbCurrencyUser = FALSE)     --если ручной ввод не пересчитываем курс
          THEN
              -- если изменилась валюта документа или если значение курса = 0
              IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0) 

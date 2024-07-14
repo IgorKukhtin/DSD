@@ -34,7 +34,7 @@ BEGIN
      -- форма оплаты
      vbPaidKindId := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inId AND MLO.DescId = zc_MovementLinkObject_PaidKind());    
      -- дата поставщика
-     vbOperDatePartner := (SELECT MD.ObjectId FROM MovementDate AS MD WHERE MD.MovementId = inId AND MD.DescId = zc_MovementDate_OperDatePartner());    
+     vbOperDatePartner := (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = inId AND MD.DescId = zc_MovementDate_OperDatePartner());    
 
      IF COALESCE (inisCurrencyUser,FALSE) = FALSE
      THEN
@@ -82,6 +82,11 @@ BEGIN
              ioCurrencyValue := 1.00; ioParValue := 1.00;
          END IF;  
      END IF; 
+
+     -- сохранили связь с <Валюта (документа)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), inId, inCurrencyDocumentId);
+     -- сохранили связь с <Валюта (контрагента) >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), inId, inCurrencyPartnerId);
           
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), inId, ioCurrencyValue);

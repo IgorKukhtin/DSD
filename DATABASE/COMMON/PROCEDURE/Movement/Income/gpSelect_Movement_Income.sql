@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat, ParValue TFloat
+             , isCurrencyUser Boolean
              , FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -95,6 +96,7 @@ BEGIN
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue
+           , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean    AS isCurrencyUser
 
            , Object_From.ValueData                       AS FromName
            , ObjectDesc_from.ItemName                    AS ItemName_from
@@ -173,6 +175,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementBoolean AS MovementBoolean_CurrencyUser
+                                      ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
+                                     AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -314,6 +320,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.07.24         * CurrencyUser
  02.12.20         * 
  14.04.17         * add Movement_Order
  04.10.16         * add inJuridicalBasisId
