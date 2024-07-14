@@ -36,11 +36,12 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbAccessKeyId Integer;
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbCurrencyValue TFloat;
+   DECLARE vbAccessKeyId        Integer;
+   DECLARE vbIsInsert           Boolean;
+   DECLARE vbCurrencyValue      TFloat;
    DECLARE vbCurrencyDocumentId Integer;
-   DECLARE vbCurrencyPartnerId Integer;
+   DECLARE vbCurrencyPartnerId  Integer; 
+   DECLARE vbCurrencyUser       Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -59,6 +60,8 @@ BEGIN
      -- сохраненна€ ¬алюта (контрагента)
      vbCurrencyPartnerId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner()), zc_Enum_Currency_Basis());    
 
+     --ручной ввод курса
+     vbCurrencyUser := COALESCE( (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_CurrencyUser()), FALSE);
 
      -- ѕрайс-лист
      IF COALESCE (ioPriceListId, 0) <> 0 
@@ -107,8 +110,9 @@ BEGIN
      --outCurrencyValue := 1.00;
      IF (inCurrencyDocumentId <> inCurrencyPartnerId) OR (inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyPartnerId <> zc_Enum_Currency_Basis())
      THEN
-         IF (inCurrencyDocumentId <> inCurrencyPartnerId)
-         THEN
+         IF (inCurrencyDocumentId <> inCurrencyPartnerId) AND (vbCurrencyUser = FALSE)     --если ручной ввод не пересчитываем курс
+         THEN 
+         
              -- если изменилась валюта документа или если значение курса = 0
              IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0) 
              OR (inCurrencyDocumentId <> inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
@@ -139,8 +143,10 @@ BEGIN
                                                         , inCurrencyToId   := inCurrencyDocumentId
                                                         , inPaidKindId     := inPaidKindId)            AS tmp;
               END IF;
-         END IF;
-     ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;
+         END IF; 
+         
+     ELSE
+         ioCurrencyValue := 1.00; ioParValue := 1.00;
      END IF; 
           
      -- сохранили свойство < урс дл€ перевода в валюту баланса>

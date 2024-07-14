@@ -1055,6 +1055,8 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202Form'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202Form');
