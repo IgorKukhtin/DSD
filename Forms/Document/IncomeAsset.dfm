@@ -2392,6 +2392,14 @@ object IncomeAssetForm: TIncomeAssetForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outCurrencyPartnerName'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
