@@ -99,7 +99,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1087'/'#1087' '#1076#1083#1103' '#1089#1085#1103#1090#1080#1103' '#1089' '#1086#1089#1090#1072#1090#1082#1086#1074
             Options.Editing = False
-            Width = 55
+            Width = 40
           end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -165,7 +165,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Width = 120
           end
           object GoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -312,6 +312,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Options.Editing = False
             Width = 60
           end
+          object PartionCellCode_1: TcxGridDBColumn
+            Caption = '1.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object PartionCellName_1: TcxGridDBColumn
             Caption = '1.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_1'
@@ -325,6 +336,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 60
+          end
+          object PartionCellCode_2: TcxGridDBColumn
+            Caption = '2.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
             Width = 60
           end
           object PartionCellName_2: TcxGridDBColumn
@@ -342,6 +364,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderHint = #1071#1095#1077#1081#1082#1072'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
+          object PartionCellCode_3: TcxGridDBColumn
+            Caption = '3.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object PartionCellName_3: TcxGridDBColumn
             Caption = '3.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_3'
@@ -355,6 +388,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 60
+          end
+          object PartionCellCode_4: TcxGridDBColumn
+            Caption = '4.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
             Width = 60
           end
           object PartionCellName_4: TcxGridDBColumn
@@ -372,6 +416,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderHint = #1071#1095#1077#1081#1082#1072'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
+          object PartionCellCode_5: TcxGridDBColumn
+            Caption = '5.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_5'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object PartionCellName_5: TcxGridDBColumn
             Caption = '5.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_5'
@@ -385,6 +440,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 60
+          end
+          object PartionCellCode_6: TcxGridDBColumn
+            Caption = '6.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_6'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
             Width = 60
           end
           object PartionCellName_6: TcxGridDBColumn
@@ -402,6 +468,18 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderHint = #1071#1095#1077#1081#1082#1072'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
+          object PartionCellCode_7: TcxGridDBColumn
+            Caption = '7.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_7'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object PartionCellName_7: TcxGridDBColumn
             Caption = '7.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_7'
@@ -416,6 +494,17 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Width = 60
+          end
+          object PartionCellCode_8: TcxGridDBColumn
+            Caption = '8.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_8'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
             Width = 60
           end
           object PartionCellName_8: TcxGridDBColumn
@@ -448,6 +537,28 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderHint = #1071#1095#1077#1081#1082#1072'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Width = 60
           end
+          object PartionCellCode_9: TcxGridDBColumn
+            Caption = '9.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_9'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
+          object PartionCellCode_10: TcxGridDBColumn
+            Caption = '10.1 '#1050#1086#1076
+            DataBinding.FieldName = 'PartionCellCode_10'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 60
+          end
           object PartionCellName_10: TcxGridDBColumn
             Caption = '10.1 '#1071#1095#1077#1081#1082#1072
             DataBinding.FieldName = 'PartionCellName_10'
@@ -471,117 +582,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderHint = #1071#1095#1077#1081#1082#1080' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
             Options.Editing = False
             Width = 166
-          end
-          object PartionCellCode_1: TcxGridDBColumn
-            Caption = '1.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_2: TcxGridDBColumn
-            Caption = '2.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_3: TcxGridDBColumn
-            Caption = '3.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_4: TcxGridDBColumn
-            Caption = '4.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_5: TcxGridDBColumn
-            Caption = '5.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_5'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_6: TcxGridDBColumn
-            Caption = '6.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_6'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_7: TcxGridDBColumn
-            Caption = '7.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_7'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_8: TcxGridDBColumn
-            Caption = '8.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_8'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_9: TcxGridDBColumn
-            Caption = '9.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_9'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
-          end
-          object PartionCellCode_10: TcxGridDBColumn
-            Caption = '10.1 '#1050#1086#1076
-            DataBinding.FieldName = 'PartionCellCode_10'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
-            Width = 60
           end
           object Color_PartionGoodsDate: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PartionGoodsDate'
