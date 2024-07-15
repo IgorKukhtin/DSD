@@ -1055,6 +1055,8 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202Form'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202Form');
@@ -1064,11 +1066,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
-  exit;
-  {
+  //
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
-  }
+  exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChangePriceUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChangePriceUserDialogForm');
@@ -1100,10 +1102,10 @@ procedure TLoadFormTest.LoadIncomeAssetFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeAssetJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeAssetJournalForm');
-  //
+  {//
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetPlace_ObjectForm');
   }

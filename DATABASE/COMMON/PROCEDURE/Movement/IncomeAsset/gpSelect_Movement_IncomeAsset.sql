@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalCount_unit TFloat, TotalCount_diff TFloat, TotalCountPartner TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , CurrencyValue TFloat, ParValue TFloat
+             , isCurrencyUser Boolean
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -123,10 +124,10 @@ BEGIN
                                )
 
         , tmpMovementBoolean AS (SELECT *
-                              FROM MovementBoolean
-                              WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                                AND MovementBoolean.DescId = zc_MovementBoolean_PriceWithVAT()
-                              )
+                                 FROM MovementBoolean
+                                 WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                   AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT(), zc_MovementBoolean_CurrencyUser())
+                                 )
 
         , tmpMLM AS (SELECT *
                      FROM MovementLinkMovement
@@ -172,6 +173,7 @@ BEGIN
 
            , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
            , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat              AS ParValue
+           , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean    AS isCurrencyUser
 
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
@@ -218,8 +220,11 @@ BEGIN
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                         ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                        AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_CurrencyUser
+                                         ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
+                                        AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -335,6 +340,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.07.24         * isCurrencyUser
  15.01.20         * add InvNumber_Invoice
  07.10.16         * add inJuridicalBasisId
  06.10.16         * parce

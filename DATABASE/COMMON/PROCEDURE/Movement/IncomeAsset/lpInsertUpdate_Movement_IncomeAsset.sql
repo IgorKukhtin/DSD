@@ -22,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeAsset(
     IN inContractId          Integer   , -- ƒоговора
     IN inCurrencyDocumentId  Integer   , -- ¬алюта (документа)
     IN inCurrencyPartnerId   Integer   , -- ¬алюта (контрагента)
+   OUT outCurrencyPartnerName TVarChar ,
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
  INOUT ioParValue            TFloat    , -- номинал
     IN inComment             TVarChar  , -- примечание
@@ -34,6 +35,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbCurrencyDocumentId Integer;
    DECLARE vbCurrencyPartnerId Integer;
+   DECLARE vbCurrencyUser Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
@@ -61,6 +63,10 @@ BEGIN
      -- сохраненна€ ¬алюта (контрагента)
      vbCurrencyPartnerId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner()), zc_Enum_Currency_Basis());    
 
+     --ручной ввод курса
+     vbCurrencyUser := COALESCE( (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_CurrencyUser()), FALSE);
+
+
      -- определ€ем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeAsset());
 
@@ -86,48 +92,57 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчитали и свойство < урс дл€ перевода в валюту баланса>
-     --outCurrencyValue := 1.00;
-     IF (inCurrencyDocumentId <> inCurrencyPartnerId) OR (inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyPartnerId <> zc_Enum_Currency_Basis())
+     --outCurrencyValue := 1.00; 
+     --если ручной ввод тогда не делаем расчет курса
+     IF COALESCE (vbCurrencyUser, FALSE) = FALSE         --если ручной ввод не пересчитываем курс
      THEN
-         IF (inCurrencyDocumentId <> inCurrencyPartnerId)
+         IF (inCurrencyDocumentId <> inCurrencyPartnerId) OR (inCurrencyDocumentId <> zc_Enum_Currency_Basis() AND inCurrencyPartnerId <> zc_Enum_Currency_Basis())
          THEN
-             -- если изменилась валюта документа или если значение курса = 0
-             IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0) 
-             OR (inCurrencyDocumentId <> inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
+             IF (inCurrencyDocumentId <> inCurrencyPartnerId) 
              THEN
-                 IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                 -- если изменилась валюта документа или если значение курса = 0
+                 IF (vbCurrencyDocumentId <> inCurrencyDocumentId OR vbCurrencyPartnerId <> inCurrencyPartnerId OR COALESCE (ioCurrencyValue, 0) = 0) 
+                 OR (inCurrencyDocumentId <> inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
                  THEN
-                     SELECT tmp.Amount, tmp.ParValue
-                     INTO ioCurrencyValue, ioParValue
-                     FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
-                                                           , inCurrencyFromId := zc_Enum_Currency_Basis()
-                                                           , inCurrencyToId   := inCurrencyDocumentId
-                                                           , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
-                                                            )            AS tmp;
-                 ELSE 
-                     SELECT tmp.Amount, tmp.ParValue
-                     INTO ioCurrencyValue, ioParValue
-                     FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
-                                                           , inCurrencyFromId := zc_Enum_Currency_Basis()
-                                                           , inCurrencyToId   := inCurrencyPartnerId
-                                                           , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
-                                                            )            AS tmp;
-                 END IF;    
+                     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                     THEN
+                         SELECT tmp.Amount, tmp.ParValue
+                         INTO ioCurrencyValue, ioParValue
+                         FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                               , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                               , inCurrencyToId   := inCurrencyDocumentId
+                                                               , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                                )            AS tmp;
+                     ELSE 
+                         SELECT tmp.Amount, tmp.ParValue
+                         INTO ioCurrencyValue, ioParValue
+                         FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                               , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                               , inCurrencyToId   := inCurrencyPartnerId
+                                                               , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                                )            AS tmp;
+                     END IF;    
+                 END IF;
+             ELSE IF (inCurrencyDocumentId = inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
+                  THEN
+                      SELECT tmp.Amount, tmp.ParValue
+                      INTO ioCurrencyValue, ioParValue
+                      FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                            , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                            , inCurrencyToId   := inCurrencyDocumentId
+                                                            , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
+                                                             )            AS tmp;
+                  END IF;
              END IF;
-         ELSE IF (inCurrencyDocumentId = inCurrencyPartnerId AND COALESCE (ioCurrencyValue, 0) = 0)
-              THEN
-                  SELECT tmp.Amount, tmp.ParValue
-                  INTO ioCurrencyValue, ioParValue
-                  FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
-                                                        , inCurrencyFromId := zc_Enum_Currency_Basis()
-                                                        , inCurrencyToId   := inCurrencyDocumentId
-                                                        , inPaidKindId     := CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END
-                                                         )            AS tmp;
-              END IF;
+         ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;
          END IF;
-     ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;
+     ELSE 
+         --возвращаем сохраненные значение
+         ioCurrencyValue := COALESCE( (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CurrencyValue()), 1);
+         ioParValue      := COALESCE( (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_ParValue()), 1);
+         inCurrencyDocumentId := vbCurrencyDocumentId;
+         inCurrencyPartnerId  := vbCurrencyPartnerId;
      END IF;
-     
 
      -- сохранили свойство < урс дл€ перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, ioCurrencyValue);
@@ -149,6 +164,7 @@ BEGIN
      -- сохранили св€зь с <¬алюта (контрагента) >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
+     outCurrencyPartnerName := (SELECT Object.ValueData FROM Object WHERE Object.Id = inCurrencyPartnerId);
 
      -- пересчитали »тоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

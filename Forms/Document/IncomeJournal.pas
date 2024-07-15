@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit;
+  dsdGuides, cxButtonEdit, dsdCommon;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -136,6 +136,7 @@ type
     bbPrintStickerTermo: TdxBarButton;
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
+    isCurrencyUser: TcxGridDBColumn;
   private
   public
   end;

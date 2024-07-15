@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, dsdCommon;
 
 type
   TIncomeForm = class(TParentForm)
@@ -235,6 +235,12 @@ type
     bbUpdateMaskReturnOut: TdxBarButton;
     bbUpdateMaskSend: TdxBarButton;
     GoodsName_old: TcxGridDBColumn;
+    cbCurrencyUser: TcxCheckBox;
+    actUpdate_CurrencyDialog: TExecuteDialog;
+    actUpdate_Currency: TdsdUpdateDataSet;
+    mactUpdate_Currency: TMultiAction;
+    spUpdate_CurrencyUser: TdsdStoredProc;
+    bbUpdate_Currency: TdxBarButton;
   private
   public
   end;

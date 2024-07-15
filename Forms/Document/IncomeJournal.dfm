@@ -527,6 +527,14 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object isCurrencyUser: TcxGridDBColumn
+        Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+        DataBinding.FieldName = 'isCurrencyUser'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object CurrencyValue: TcxGridDBColumn
         Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
         DataBinding.FieldName = 'CurrencyValue'
@@ -1568,11 +1576,13 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

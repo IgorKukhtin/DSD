@@ -3,7 +3,7 @@ object IncomeAssetForm: TIncomeAssetForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1054#1057')>'
   ClientHeight = 429
-  ClientWidth = 907
+  ClientWidth = 922
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object IncomeAssetForm: TIncomeAssetForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 907
+    Width = 922
     Height = 140
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 907
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -267,7 +268,7 @@ object IncomeAssetForm: TIncomeAssetForm
       Left = 451
       Top = 103
       TabOrder = 30
-      Width = 454
+      Width = 267
     end
     object cxLabel19: TcxLabel
       Left = 271
@@ -304,25 +305,28 @@ object IncomeAssetForm: TIncomeAssetForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 166
-    Width = 907
+    Width = 922
     Height = 263
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 907
     ClientRectBottom = 263
-    ClientRectRight = 907
+    ClientRectRight = 922
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 907
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 907
+        Width = 922
         Height = 239
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 907
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -622,13 +626,15 @@ object IncomeAssetForm: TIncomeAssetForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitWidth = 907
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 907
+        Width = 922
         Height = 239
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 907
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSourceCost
@@ -851,6 +857,14 @@ object IncomeAssetForm: TIncomeAssetForm
     TabOrder = 6
     Width = 256
   end
+  object cbCurrencyUser: TcxCheckBox
+    Left = 724
+    Top = 103
+    Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 120
+  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1024,6 +1038,18 @@ object IncomeAssetForm: TIncomeAssetForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Currency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1157,6 +1183,10 @@ object IncomeAssetForm: TIncomeAssetForm
     end
     object bbOpenFormService: TdxBarButton
       Action = actOpenFormService
+      Category = 0
+    end
+    object bbUpdate_Currency: TdxBarButton
+      Action = mactUpdate_Currency
       Category = 0
     end
   end
@@ -1940,6 +1970,101 @@ object IncomeAssetForm: TIncomeAssetForm
         end>
       isShowModal = False
     end
+    object actUpdate_CurrencyDialog: TExecuteDialog
+      Category = 'CurrUser'
+      MoveParams = <>
+      Caption = 'actUpdate_CurrencyDialog'
+      FormName = 'TChange'#1057'urrencyUserDialogForm'
+      FormNameParam.Value = 'TChange'#1057'urrencyUserDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isCurrencyUser'
+          Value = False
+          Component = cbCurrencyUser
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentId'
+          Value = ''
+          Component = GuidesCurrencyDocument
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentName'
+          Value = ''
+          Component = GuidesCurrencyDocument
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyPartnerId'
+          Value = ''
+          Component = GuidesCurrencyPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyPartnerName'
+          Value = ''
+          Component = GuidesCurrencyPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyValue'
+          Value = 0.000000000000000000
+          Component = edCurrencyValue
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParValue'
+          Value = 1.000000000000000000
+          Component = edParValue
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Currency: TdsdUpdateDataSet
+      Category = 'CurrUser'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CurrencyUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CurrencyUser
+        end>
+      Caption = 'actUpdate_Currency'
+    end
+    object mactUpdate_Currency: TMultiAction
+      Category = 'CurrUser'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CurrencyDialog
+        end
+        item
+          Action = actUpdate_Currency
+        end>
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+      Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+      ImageIndex = 56
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2099,14 +2224,14 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'outCurrencyDocumentId'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'outCurrencyDocumentName'
         Value = Null
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2140,6 +2265,7 @@ object IncomeAssetForm: TIncomeAssetForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -2252,7 +2378,7 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'inCurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2260,9 +2386,17 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'inCurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCurrencyPartnerName'
+        Value = Null
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -2501,14 +2635,14 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'CurrencyDocumentId'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyDocumentName'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2516,14 +2650,14 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'CurrencyPartnerId'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyPartnerName'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2585,6 +2719,13 @@ object IncomeAssetForm: TIncomeAssetForm
         Value = Null
         Component = edParValue
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCurrencyUser'
+        Value = Null
+        Component = cbCurrencyUser
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2831,14 +2972,14 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'CurrencyId'
         Value = Null
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CurrencyName'
         Value = Null
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2871,7 +3012,7 @@ object IncomeAssetForm: TIncomeAssetForm
     Left = 484
     Top = 292
   end
-  object CurrencyDocumentGuides: TdsdGuides
+  object GuidesCurrencyDocument: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyDocument
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -2883,7 +3024,7 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2891,7 +3032,7 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyDocumentGuides
+        Component = GuidesCurrencyDocument
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2900,7 +3041,7 @@ object IncomeAssetForm: TIncomeAssetForm
     Left = 736
     Top = 120
   end
-  object CurrencyPartnerGuides: TdsdGuides
+  object GuidesCurrencyPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrencyPartner
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -2912,7 +3053,7 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2921,7 +3062,7 @@ object IncomeAssetForm: TIncomeAssetForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyPartnerGuides
+        Component = GuidesCurrencyPartner
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3337,5 +3478,62 @@ object IncomeAssetForm: TIncomeAssetForm
       end>
     Left = 364
     Top = 88
+  end
+  object spUpdate_CurrencyUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_Currency'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyDocumentId'
+        Value = ''
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParValue'
+        Value = 1.000000000000000000
+        Component = edParValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCurrencyUser'
+        Value = False
+        Component = cbCurrencyUser
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 99
   end
 end

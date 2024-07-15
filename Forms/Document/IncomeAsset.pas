@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox;
+  cxImageComboBox, dsdCommon;
 
 type
   TIncomeAssetForm = class(TParentForm)
@@ -116,10 +116,10 @@ type
     edCurrencyValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
     edCurrencyDocument: TcxButtonEdit;
-    CurrencyDocumentGuides: TdsdGuides;
+    GuidesCurrencyDocument: TdsdGuides;
     cxLabel15: TcxLabel;
     edCurrencyPartner: TcxButtonEdit;
-    CurrencyPartnerGuides: TdsdGuides;
+    GuidesCurrencyPartner: TdsdGuides;
     actMIContainer: TdsdOpenForm;
     bbMIContainer: TdxBarButton;
     MovementItemProtocolOpenForm: TdsdOpenForm;
@@ -183,6 +183,12 @@ type
     edParValue: TcxCurrencyEdit;
     actOpenFormService: TdsdOpenForm;
     bbOpenFormService: TdxBarButton;
+    cbCurrencyUser: TcxCheckBox;
+    spUpdate_CurrencyUser: TdsdStoredProc;
+    actUpdate_CurrencyDialog: TExecuteDialog;
+    actUpdate_Currency: TdsdUpdateDataSet;
+    mactUpdate_Currency: TMultiAction;
+    bbUpdate_Currency: TdxBarButton;
   private
   public
   end;
