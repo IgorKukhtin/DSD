@@ -2257,7 +2257,7 @@ begin
     GetStoredProc.OutputType := otBlob;
     GetStoredProc.Params.AddParam('inProgramName', ftString, ptInput, ApplicationName);
     try
-      ReConvertConvert(GetStoredProc.Execute(false, false, false), BytesStream);
+      ReConvertConvertStream(GetStoredProc.Execute(false, false, false), BytesStream);
 
       if BytesStream.Size = 0 then
       begin

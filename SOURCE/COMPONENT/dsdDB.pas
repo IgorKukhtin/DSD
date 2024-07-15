@@ -978,6 +978,8 @@ begin
      End;
      if Component is TdsdProperties—hange then
         result := (Component as TdsdProperties—hange).IndexProperties;
+     if Component is TdsdContinueAction then
+        Result := (Component as TdsdContinueAction).Continue.Value;
   end
   else
   Begin
@@ -1266,6 +1268,8 @@ begin
            TcxGridDBTableView(Component).DataController.Groups.ClearGrouping;
        end;
      end;
+     if Component is TdsdContinueAction then
+      (Component as TdsdContinueAction).Continue.Value := FValue;
   end;
   if Assigned(FonChange) then
      FonChange(Self);
