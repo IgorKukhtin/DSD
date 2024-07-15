@@ -88,6 +88,12 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         Options.Editing = False
         Width = 145
       end
+      object ColorFon: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorFon'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -477,7 +483,11 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ChartList = <>
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = ColorFon
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -497,7 +507,7 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
       end>
     ActionNumber1 = dsdChoiceGuides
     CheckBoxList = <>
-    Left = 368
-    Top = 192
+    Left = 400
+    Top = 184
   end
 end

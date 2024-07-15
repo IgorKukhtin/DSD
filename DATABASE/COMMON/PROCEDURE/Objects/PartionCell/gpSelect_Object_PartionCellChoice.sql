@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , MovementId Integer
              , OperDate TDateTime
              , InvNumber TVarChar
+             , ColorFon Integer
               )
 AS
 $BODY$
@@ -140,7 +141,12 @@ BEGIN
             
             , Movement.Id        ::Integer    AS MovementId
             , Movement.OperDate  ::TDateTime  AS OperDate
-            , Movement.InvNumber ::TVarChar   AS InvNumber
+            , Movement.InvNumber ::TVarChar   AS InvNumber   
+            
+            , CASE WHEN inIsShowFree = FALSE
+                        THEN CASE WHEN tmpMILO_PartionCell_all_1.PartionCellId > 0 THEN zc_Color_Cyan() ELSE zc_Color_White() END
+                   ELSE CASE WHEN tmpMILO_PartionCell.PartionCellId > 0 THEN zc_Color_Cyan() ELSE zc_Color_White() END
+              END :: Integer AS ColorFon
 
        FROM tmpPartionCell AS Object
            LEFT JOIN tmpMILO_PartionCell_all_1 ON tmpMILO_PartionCell_all_1.PartionCellId = Object.Id
