@@ -1720,6 +1720,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <
       item
         ColorColumn = PartionGoodsDate
@@ -1865,6 +1866,37 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ColorColumn = Ord
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
+      end>
+    ColumnEnterList = <
+      item
+        Column = PartionCellName_1
+      end
+      item
+        Column = PartionCellName_2
+      end
+      item
+        Column = PartionCellName_3
+      end
+      item
+        Column = PartionCellName_4
+      end
+      item
+        Column = PartionCellName_5
+      end
+      item
+        Column = PartionCellName_6
+      end
+      item
+        Column = PartionCellName_7
+      end
+      item
+        Column = PartionCellName_8
+      end
+      item
+        Column = PartionCellName_9
+      end
+      item
+        Column = PartionCellName_10
       end>
     Left = 368
     Top = 240
