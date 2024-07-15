@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
 DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-                                                 
+
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
     IN inStartDate             TDateTime,
@@ -98,7 +98,6 @@ if zfConvert_StringToNumber (ioPartionCellName_7) = 0  and zfConvert_StringToNum
 if zfConvert_StringToNumber (ioPartionCellName_8) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 1)) > 0   then ioPartionCellName_8     := right (ioPartionCellName_8,  LENGTH(ioPartionCellName_8) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_9) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 1)) > 0   then ioPartionCellName_9     := right (ioPartionCellName_9,  LENGTH(ioPartionCellName_9) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 1)) > 0  then ioPartionCellName_10    := right (ioPartionCellName_10, LENGTH(ioPartionCellName_10) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 2))> 0 THEN 2 ELSE 1 END); end if;
-
 
 
      --  1
@@ -438,6 +437,16 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              vbPartionCellId_10:= NULL;
          END IF;
 
+     END IF;
+
+
+     -- ѕереброска любой €чейки в отбор
+     IF inOrd <> 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
+        AND zc_PartionCell_RK() IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5
+                                  , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
+                                   )
+     THEN
+         RAISE EXCEPTION 'ќшибка.Ќет прав перемещать в отбор. є п/п должен быть = 1.';
      END IF;
 
 
@@ -810,7 +819,7 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, TRUE);
              --
              vbIsClose_1:= vbPartionCellId_old_1 > 0;
-             
+
              --записываем последнюю измененную €чейку
              outPartionCellId_last := vbPartionCellId_1 ::Integer;
 
@@ -1116,7 +1125,7 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
 
      -- сохранили протокол
      --PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
-     
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

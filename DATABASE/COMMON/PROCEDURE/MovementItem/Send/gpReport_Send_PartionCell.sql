@@ -464,7 +464,7 @@ BEGIN
                            , tmpData_All_All.PartionCellId 
                            , Object_PartionCell.ObjectCode AS PartionCellCode
                            , tmpData_All_All.PartionCellId_real
-                           , COALESCE (Object_PartionCell_real.ObjectCode :: TVarChar || ' ' || Object_PartionCell_real.ValueData, Object_PartionCell.ObjectCode :: TVarChar || ' ' || Object_PartionCell.ValueData) AS PartionCellName_calc
+                           , COALESCE (Object_PartionCell_real.ValueData, Object_PartionCell.ValueData) AS PartionCellName_calc
                              -- если хоть одна парти€ в €чейке Ќ≈ закрыта - все Ќ≈ закрыты
                            , tmpData_All_All.isClose_value_max
                              -- есть хоть одна закрыта€ €чейка
