@@ -59,7 +59,7 @@ BEGIN
    
             , ObjectString_Comment.ValueData  AS Comment
    
-       FROM Object AS Object_ChoiceCell 
+       FROM Object AS Object_ChoiceCell
    
            LEFT JOIN ObjectLink AS ObjectLink_Goods
                                 ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id

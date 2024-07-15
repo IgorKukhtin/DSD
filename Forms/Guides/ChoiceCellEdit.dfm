@@ -256,7 +256,7 @@
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -277,10 +277,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'GoodslId'
+        Name = 'GoodsId'
         Value = ''
         Component = GuidesGoods
-        ComponentItem = 'key'
+        ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
@@ -405,7 +405,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 127
+    Left = 151
     Top = 55
   end
 end

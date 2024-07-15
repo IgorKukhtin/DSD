@@ -65,6 +65,7 @@ type
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
     BoxCount: TcxGridDBColumn;
+    ColorFon: TcxGridDBColumn;
   private
     { Private declarations }
   public
