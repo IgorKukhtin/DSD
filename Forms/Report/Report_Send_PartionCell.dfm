@@ -1364,7 +1364,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actPrint_Pasport
+      AfterAction = macPrint_New
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
       StoredProcList = <
@@ -1544,6 +1544,27 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           StoredProc = spUpdate_MI_Send_byReport
         end>
       Caption = 'actUpdate_MI_Send_byReport_test'
+    end
+    object actContinueAction: TdsdContinueAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actContinueAction'
+      Continue.Component = FormParams
+      Continue.ComponentItem = 'outisPrint'
+      Continue.DataType = ftBoolean
+      Continue.MultiSelectSeparator = ','
+    end
+    object macPrint_New: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actContinueAction
+        end
+        item
+          Action = actPrint_Pasport
+        end>
+      Caption = 'macPrint_New'
     end
   end
   inherited MasterDS: TDataSource
@@ -2011,6 +2032,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPrint'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 296
     Top = 200
@@ -2270,6 +2297,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ComponentItem = 'PartionCellName_10'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPrint'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outisPrint'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

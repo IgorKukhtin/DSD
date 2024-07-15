@@ -38,7 +38,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_7     TVarChar,
  INOUT ioPartionCellName_8     TVarChar,
  INOUT ioPartionCellName_9     TVarChar,
- INOUT ioPartionCellName_10    TVarChar,
+ INOUT ioPartionCellName_10    TVarChar,  
+   OUT outisPrint              Boolean,
     IN inSession               TVarChar  -- сессия пользователя
 )
 RETURNS RECORD
@@ -1096,18 +1097,19 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      END IF;
 
      --outPartionCellId_last := COALESCE (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, 0);
-     IF COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_old_1, vbPartionCellId_1) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_1, vbPartionCellId_1); 
-     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_old_2, vbPartionCellId_2) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_2, vbPartionCellId_2); 
-     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_old_3, vbPartionCellId_3) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_3, vbPartionCellId_3); 
-     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_old_4, vbPartionCellId_4) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_4, vbPartionCellId_4); 
-     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_old_5, vbPartionCellId_5) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_5, vbPartionCellId_5); 
-     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_old_6, vbPartionCellId_6) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_6, vbPartionCellId_6); 
-     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_old_7, vbPartionCellId_7) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_7, vbPartionCellId_7); 
-     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_old_8, vbPartionCellId_8) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_8, vbPartionCellId_8); 
-     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_old_9, vbPartionCellId_9) THEN outPartionCellId_last := COALESCE (vbPartionCellId_old_9, vbPartionCellId_9); 
-     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_old_10,vbPartionCellId_10) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_old_10,vbPartionCellId_10); 
+     IF     COALESCE(ioPartionCellId_1,0) <> COALESCE (vbPartionCellId_1, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_1, 0); 
+     ELSEIF COALESCE(ioPartionCellId_2,0) <> COALESCE (vbPartionCellId_2, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_2, 0); 
+     ELSEIF COALESCE(ioPartionCellId_3,0) <> COALESCE (vbPartionCellId_3, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_3, 0); 
+     ELSEIF COALESCE(ioPartionCellId_4,0) <> COALESCE (vbPartionCellId_4, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_4, 0); 
+     ELSEIF COALESCE(ioPartionCellId_5,0) <> COALESCE (vbPartionCellId_5, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_5, 0); 
+     ELSEIF COALESCE(ioPartionCellId_6,0) <> COALESCE (vbPartionCellId_6, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_6, 0); 
+     ELSEIF COALESCE(ioPartionCellId_7,0) <> COALESCE (vbPartionCellId_7, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_7, 0); 
+     ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0); 
+     ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0); 
+     ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0); 
      END IF;
-     
+     --пареметр для печати
+     outisPrint := CASE WHEN COALESCE (outPartionCellId_last,0) = 0 THEN FALSE ELSE TRUE END;
 
      -- вернули Id
      ioPartionCellId_1 := CASE WHEN vbPartionCellId_old_1 > 0 THEN vbPartionCellId_old_1 ELSE vbPartionCellId_1 END;
