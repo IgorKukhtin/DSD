@@ -173,6 +173,44 @@ BEGIN
 
 
    IF inIsShowAll = FALSE THEN
+
+     --
+     CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+
+     --
+     OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() ORDER BY Object.Id;
+     -- начало цикла по курсору
+     LOOP
+          -- данные
+          FETCH curPartionCell INTO vbPartionCellId;
+          -- если данных нет, то мы выходим
+          IF NOT FOUND THEN
+             EXIT;
+          END IF;
+
+          --
+          INSERT INTO _tmpPartionCell (MovementItemId, DescId, ObjectId)
+             WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
+             SELECT tmpMILO.MovementItemId, tmpMILO.DescId, tmpMILO.ObjectId
+             FROM tmpMILO
+             WHERE tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
+                                    , zc_MILinkObject_PartionCell_2()
+                                    , zc_MILinkObject_PartionCell_3()
+                                    , zc_MILinkObject_PartionCell_4()
+                                    , zc_MILinkObject_PartionCell_5()
+                                    , zc_MILinkObject_PartionCell_6()
+                                    , zc_MILinkObject_PartionCell_7()
+                                    , zc_MILinkObject_PartionCell_8()
+                                    , zc_MILinkObject_PartionCell_9()
+                                    , zc_MILinkObject_PartionCell_10()
+                                    , zc_MILinkObject_PartionCell_11()
+                                    , zc_MILinkObject_PartionCell_12()
+                                     )
+            ;
+          --
+     END LOOP; -- финиш цикла по курсору
+     CLOSE curPartionCell; -- закрыли курсор
+
      -- –езультат
      RETURN QUERY
      WITH
@@ -189,6 +227,26 @@ BEGIN
                         WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
                        )
 
+       -- выбираем заполненные €чейки
+     , tmpMILO_PC AS (SELECT _tmpPartionCell.*
+                            , COUNT (*) OVER (PARTITION BY _tmpPartionCell.MovementItemId ) AS CountCell
+                      FROM _tmpPartionCell
+                      -- “олько заполненные €чейки
+                      WHERE _tmpPartionCell.ObjectId > 0
+                     )
+    , tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
+                     , MovementItem.MovementId AS MovementId
+                     , MovementItem.ObjectId   AS GoodsId
+                     , MovementItem.Amount     AS Amount
+                FROM MovementItem
+                     --ограничили товаром
+                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+                WHERE MovementItem.Id IN (SELECT DISTINCT tmpMILO_PC.MovementItemId FROM tmpMILO_PC)
+                --AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                  AND MovementItem.DescId   = zc_MI_Master()
+                  AND MovementItem.isErased = FALSE
+               )
+
     , tmpMovement AS (SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
                            , MovementLinkObject_To.ObjectId   AS ToId
@@ -201,50 +259,19 @@ BEGIN
                                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
 
-                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                      WHERE Movement.Id IN (SELECT DISTINCT tmpMI.MovementId FROM tmpMI)
+                      --AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                         AND Movement.DescId = zc_Movement_Send()
                         AND Movement.StatusId = zc_Enum_Status_Complete()
                         AND MovementLinkObject_To.ObjectId = inUnitId
                       )
 
-    , tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
-                     , MovementItem.MovementId AS MovementId
-                     , MovementItem.ObjectId   AS GoodsId
-                     , MovementItem.Amount     AS Amount
-                FROM MovementItem
-                     --ограничили товаром
-                     INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
-                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                  AND MovementItem.DescId   = zc_MI_Master()
-                  AND MovementItem.isErased = FALSE
-               )
-                       
-    , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
-                           , COUNT (*) OVER (PARTITION BY MovementItemLinkObject.MovementItemId ) AS CountCell
-                      FROM MovementItemLinkObject
-                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
-                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                            , zc_MILinkObject_PartionCell_2()
-                                                            , zc_MILinkObject_PartionCell_3()
-                                                            , zc_MILinkObject_PartionCell_4()
-                                                            , zc_MILinkObject_PartionCell_5()
-                                                            , zc_MILinkObject_PartionCell_6()
-                                                            , zc_MILinkObject_PartionCell_7()
-                                                            , zc_MILinkObject_PartionCell_8()
-                                                            , zc_MILinkObject_PartionCell_9()
-                                                            , zc_MILinkObject_PartionCell_10()
-                                                            , zc_MILinkObject_PartionCell_11()
-                                                            , zc_MILinkObject_PartionCell_12()
-                                                             )
-                        -- “олько заполненные €чейки
-                        AND MovementItemLinkObject.ObjectId > 0
-                     )
 
-     , tmpMovementDate_Insert AS (SELECT MovementDate.*
-                          FROM MovementDate
-                          WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
-                            AND MovementDate.DescId = zc_MovementDate_Insert()
-                          )
+ , tmpMovementDate_Insert AS (SELECT MovementDate.*
+                              FROM MovementDate
+                              WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                AND MovementDate.DescId = zc_MovementDate_Insert()
+                             )
     , tmpMLO_Insert AS (SELECT MovementLinkObject.*
                  FROM MovementLinkObject
                  WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -1063,7 +1090,7 @@ BEGIN
                              JOIN tmpGoods ON tmpGoods.GoodsId = Object_GoodsByGoodsKind_View.GoodsId
                         WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
                        )
-      -- выбираем заполненные €чейки
+       -- выбираем заполненные €чейки
      , tmpMILO_PC AS (SELECT _tmpPartionCell.*
                             , COUNT (*) OVER (PARTITION BY _tmpPartionCell.MovementItemId ) AS CountCell
                       FROM _tmpPartionCell
@@ -1079,7 +1106,7 @@ BEGIN
                 WHERE MovementItem.Id IN (SELECT DISTINCT tmpMILO_PC.MovementItemId FROM tmpMILO_PC)
                   AND MovementItem.isErased = FALSE
                   AND MovementItem.DescId = zc_MI_Master() 
-                )
+               )
 
     , tmpMovement AS (SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
