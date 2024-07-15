@@ -21,6 +21,34 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ChoiceCell());
    
+   IF COALESCE (inNPP,0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка. № п/п не установлено.';
+   END IF;
+
+   IF COALESCE (inCode,0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка. Код не установлен.';
+   END IF;
+
+   IF TRIM (COALESCE (inName,'')) = ''
+   THEN
+      RAISE EXCEPTION 'Ошибка. Название не установлено.';
+   END IF;
+
+
+   IF COALESCE (inGoodsId,0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка. Товар не установлен.';
+   END IF;
+
+
+   IF COALESCE (inGoodsKindId,0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка. Вид Товара не установлен.';
+   END IF;
+
+
    -- определяем признак Создание/Корректировка
    vbIsInsert:= COALESCE (ioId, 0) = 0;
 

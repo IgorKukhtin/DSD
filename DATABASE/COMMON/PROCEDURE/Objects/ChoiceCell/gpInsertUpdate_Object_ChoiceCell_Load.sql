@@ -4,11 +4,11 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ChoiceCell_Load (Integer, Integer,
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ChoiceCell_Load(
-    IN inNPP           Integer    , 
-    IN inCode          Integer    , 
+    IN inNPP           Integer    ,
+    IN inCode          Integer    ,
     IN inName          TVarChar    ,
-    IN inGoodsCode     Integer    , 
-    IN inGoodsName     TVarChar    , 
+    IN inGoodsCode     Integer    ,
+    IN inGoodsName     TVarChar    ,
     IN inGoodsKindName TVarChar    ,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -19,7 +19,7 @@ $BODY$
    DECLARE vbChoiceCellId Integer;
    DECLARE vbGoodsId      Integer;
    DECLARE vbGoodsKindId  Integer;
-   
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -30,24 +30,38 @@ BEGIN
         RETURN; -- !!!ВЫХОД!!!
      END IF;
 
-     --пробуем найти ячейку по коду
+     IF COALESCE (inNPP,0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка. № п/п для ячейки = <(%)%> + товар = <(%)%> не указан.', inCode, inName, inGoodsCode, inGoodsName;
+     END IF;
+
+
+     -- пробуем найти ячейку по коду
      vbChoiceCellId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_ChoiceCell() AND Object.ObjectCode = inCode);
-     
-     --находим товар по коду
-     vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode);
 
-     IF COALESCE (vbGoodsId,0) = 0
-     THEN
-        RAISE EXCEPTION 'Ошибка. Товар <%>% не найден.';     --, lfGet_Object_ValueData(UnitId), 
-     END IF;
-     
-     --находим вид товара
-     vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind());
 
-     IF COALESCE (vbGoodsKindId,0) = 0
+     IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode) AND inGoodsCode > 0
      THEN
-        RAISE EXCEPTION 'Ошибка. Вид товара <%> не найден.';
+         RAISE EXCEPTION 'Ошибка. Товар <%> по коду <%> найден несколько раз.', inGoodsName, inGoodsCode;
      END IF;
+
+     -- находим товар по коду
+     vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode AND inGoodsCode > 0);
+
+     IF COALESCE (vbGoodsId,0) = 0 AND inGoodsCode > 0
+     THEN
+        RAISE EXCEPTION 'Ошибка. Товар <%> по коду <%> не найден.', inGoodsName, inGoodsCode;
+     END IF;
+
+
+     -- находим вид товара
+     vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind() AND TRIM (inGoodsKindName) <> '');
+
+     IF COALESCE (vbGoodsKindId,0) = 0 AND TRIM (inGoodsKindName) <> ''
+     THEN
+        RAISE EXCEPTION 'Ошибка. Вид товара по названию <%> не найден.', inGoodsKindName;
+     END IF;
+
 
      IF COALESCE (vbChoiceCellId,0) = 0
      THEN
@@ -59,9 +73,9 @@ BEGIN
                                                  , inBoxCount    := NULL         :: TFloat
                                                  , inNPP         := NULL         :: TFloat
                                                  , inComment     := NULL      :: TVarChar
-                                                 , inSession     := inSession :: TVarChar 
+                                                 , inSession     := inSession :: TVarChar
                                                  );
-     ELSE 
+     ELSE
          PERFORM gpInsertUpdate_Object_ChoiceCell( ioId          := COALESCE (vbChoiceCellId,0) :: Integer
                                                  , inCode        := inCode                      :: Integer
                                                  , inName        := TRIM (inName) :: TVarChar
@@ -70,13 +84,13 @@ BEGIN
                                                  , inBoxCount    := tmp.BoxCount  :: TFloat
                                                  , inNPP         := inNPP       :: TFloat
                                                  , inComment     := tmp.Comment   :: TVarChar
-                                                 , inSession     := inSession     :: TVarChar 
+                                                 , inSession     := inSession     :: TVarChar
                                                  )
          FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
          WHERE tmp.Id = vbChoiceCellId;
-         
+
      END IF;
-     
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
