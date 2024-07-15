@@ -1,7 +1,7 @@
 object PartionCellForm: TPartionCellForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1074#1089#1077')'
   ClientHeight = 376
   ClientWidth = 958
   Color = clBtnFace
@@ -826,6 +826,10 @@ object PartionCellForm: TPartionCellForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -861,7 +865,6 @@ object PartionCellForm: TPartionCellForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -960,10 +963,9 @@ object PartionCellForm: TPartionCellForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides

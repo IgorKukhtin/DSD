@@ -1,5 +1,5 @@
 inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsForm
-  Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1086#1089#1090#1072#1090#1082#1080')>'
+  Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1086#1089#1090#1072#1090#1082#1080')'
   ClientHeight = 382
   ClientWidth = 1071
   AddOnFormData.isAlwaysRefresh = False
@@ -879,7 +879,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
     Align = alTop
     TabOrder = 6
     object lbSearchCode: TcxLabel
-      Left = 21
+      Left = 30
       Top = 10
       Caption = #1055#1086#1080#1089#1082' '#1050#1086#1076': '
       ParentFont = False
@@ -891,7 +891,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       Style.IsFontAssigned = True
     end
     object edSearchCode: TcxTextEdit
-      Left = 106
+      Left = 110
       Top = 10
       TabOrder = 1
       DesignSize = (
@@ -900,9 +900,9 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       Width = 79
     end
     object lbSearchName: TcxLabel
-      Left = 208
+      Left = 220
       Top = 10
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' : '
+      Caption = #1058#1086#1074#1072#1088':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clBlue
@@ -912,7 +912,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       Style.IsFontAssigned = True
     end
     object edSearchName: TcxTextEdit
-      Left = 290
+      Left = 270
       Top = 10
       TabOrder = 3
       DesignSize = (

@@ -1,7 +1,7 @@
 object PartionCell_listForm: TPartionCell_listForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')> '#1089#1087#1080#1089#1086#1082
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1089#1087#1080#1089#1086#1082')'
   ClientHeight = 376
   ClientWidth = 902
   Color = clBtnFace
@@ -14,7 +14,7 @@ object PartionCell_listForm: TPartionCell_listForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -149,7 +149,7 @@ object PartionCell_listForm: TPartionCell_listForm
         Width = 92
       end
       object RowWidth: TcxGridDBColumn
-        Caption = '7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076#1099
+        Caption = '7. '#1075#1083#1091#1073#1080#1085#1072' - '#1056#1103#1076
         DataBinding.FieldName = 'RowWidth'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -160,7 +160,7 @@ object PartionCell_listForm: TPartionCell_listForm
         Width = 77
       end
       object RowHeight: TcxGridDBColumn
-        Caption = '8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076#1099
+        Caption = '8. '#1074#1099#1089#1086#1090#1072' - '#1056#1103#1076
         DataBinding.FieldName = 'RowHeight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = '0.####;-0.####; ;'
@@ -284,6 +284,10 @@ object PartionCell_listForm: TPartionCell_listForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -303,7 +307,6 @@ object PartionCell_listForm: TPartionCell_listForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbShowAll'
         end
@@ -321,6 +324,18 @@ object PartionCell_listForm: TPartionCell_listForm
         end
         item
           Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolOpenForm'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -330,11 +345,6 @@ object PartionCell_listForm: TPartionCell_listForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -355,29 +365,32 @@ object PartionCell_listForm: TPartionCell_listForm
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Action = actSetErased
       Category = 0
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Action = actSetUnErased
       Category = 0
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
+      Category = 0
+    end
+    object bbProtocolOpenForm: TdxBarButton
+      Action = actProtocolOpenForm
       Category = 0
     end
   end
@@ -447,7 +460,7 @@ object PartionCell_listForm: TPartionCell_listForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -458,11 +471,11 @@ object PartionCell_listForm: TPartionCell_listForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
+      ShortCut = 16433
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spErasedUnErased
@@ -473,12 +486,12 @@ object PartionCell_listForm: TPartionCell_listForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 32776
+      ShortCut = 16434
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -510,7 +523,7 @@ object PartionCell_listForm: TPartionCell_listForm
       ImageIndex = 7
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
@@ -537,6 +550,35 @@ object PartionCell_listForm: TPartionCell_listForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       ImageIndexTrue = 62
       ImageIndexFalse = 63
+    end
+    object actProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072'>'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -585,14 +627,14 @@ object PartionCell_listForm: TPartionCell_listForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -620,7 +662,7 @@ object PartionCell_listForm: TPartionCell_listForm
       item
         Column = Name_search
       end>
-    ActionNumber1 = dsdChoiceGuides
+    ActionNumber1 = actChoiceGuides
     CheckBoxList = <>
     Left = 640
     Top = 128

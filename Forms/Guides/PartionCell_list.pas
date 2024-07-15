@@ -41,11 +41,11 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErasedUnErased: TdsdStoredProc;
@@ -55,7 +55,7 @@ type
     clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     Level: TcxGridDBColumn;
     Length: TcxGridDBColumn;
@@ -71,6 +71,8 @@ type
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
     Ord: TcxGridDBColumn;
+    actProtocolOpenForm: TdsdOpenForm;
+    bbProtocolOpenForm: TdxBarButton;
   private
     { Private declarations }
   public

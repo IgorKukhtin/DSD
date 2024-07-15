@@ -1,9 +1,9 @@
 object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')> '#1076#1077#1090#1072#1083#1100#1085#1086
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1074#1099#1073#1086#1088', '#1076#1077#1090#1072#1083#1100#1085#1086')'
   ClientHeight = 376
-  ClientWidth = 739
+  ClientWidth = 894
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 59
-    Width = 739
+    Width = 894
     Height = 317
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 739
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -146,10 +147,11 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 739
+    Width = 894
     Height = 33
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 739
     object lbSearchName: TcxLabel
       Left = 5
       Top = 6
@@ -240,11 +242,15 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         end
         item
           Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbChoice'
         end
         item
           Visible = True
@@ -260,20 +266,11 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -306,10 +303,9 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
@@ -331,10 +327,10 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -465,10 +461,10 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1090#1086#1073#1088#1072#1079#1080#1090#1100' '#1089#1090#1072#1090#1091#1089
@@ -519,7 +515,7 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
       isShowModal = False
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartionCellChoice'
     DataSet = ClientDataSet
     DataSets = <

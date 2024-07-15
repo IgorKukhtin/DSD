@@ -126,7 +126,6 @@ inherited PartionCellMovementForm: TPartionCellMovementForm
   end
   inherited Panel: TPanel
     Width = 775
-    ExplicitTop = -1
     ExplicitWidth = 775
     inherited deStart: TcxDateEdit
       Left = 539
@@ -435,7 +434,7 @@ inherited PartionCellMovementForm: TPartionCellMovementForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementProtocol'
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -443,7 +442,7 @@ inherited PartionCellMovementForm: TPartionCellMovementForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbMovementProtocol'
         end
         item
           Visible = True
@@ -457,6 +456,10 @@ inherited PartionCellMovementForm: TPartionCellMovementForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
     end
     object bbPrint: TdxBarButton
       Action = actPrint
