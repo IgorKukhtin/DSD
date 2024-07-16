@@ -1364,7 +1364,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
-      AfterAction = actPrint_Pasport
+      AfterAction = macPrint_New
       PostDataSetBeforeExecute = False
       StoredProc = spUpdate_MI_Send_byReport
       StoredProcList = <
@@ -1545,6 +1545,27 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       Caption = 'actUpdate_MI_Send_byReport_test'
     end
+    object actContinueAction: TdsdContinueAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actContinueAction'
+      Continue.Component = FormParams
+      Continue.ComponentItem = 'outisPrint'
+      Continue.DataType = ftBoolean
+      Continue.MultiSelectSeparator = ','
+    end
+    object macPrint_New: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actContinueAction
+        end
+        item
+          Action = actPrint_Pasport
+        end>
+      Caption = 'macPrint_New'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1720,6 +1741,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <
       item
         ColorColumn = PartionGoodsDate
@@ -1866,6 +1888,37 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
       end>
+    ColumnEnterList = <
+      item
+        Column = PartionCellName_1
+      end
+      item
+        Column = PartionCellName_2
+      end
+      item
+        Column = PartionCellName_3
+      end
+      item
+        Column = PartionCellName_4
+      end
+      item
+        Column = PartionCellName_5
+      end
+      item
+        Column = PartionCellName_6
+      end
+      item
+        Column = PartionCellName_7
+      end
+      item
+        Column = PartionCellName_8
+      end
+      item
+        Column = PartionCellName_9
+      end
+      item
+        Column = PartionCellName_10
+      end>
     Left = 368
     Top = 240
   end
@@ -1977,6 +2030,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Name = 'inIsShowAll'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPrint'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2238,6 +2297,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ComponentItem = 'PartionCellName_10'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPrint'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'outisPrint'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

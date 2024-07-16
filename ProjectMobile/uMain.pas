@@ -17,8 +17,7 @@ uses
   FMX.Grid, FMX.Objects, FMX.ExtCtrls, FMX.ListView.Types, FMX.ListView,
   System.Sensors, System.Sensors.Components, FMX.WebBrowser, FMX.Memo,
   FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.ScrollBox,
-  FMX.Platform, FMX.TMSWebGMaps, System.Math.Vectors, FMX.TMSWebGMapsGeocoding,
-  FMX.TMSWebGMapsCommon, FMX.TMSWebGMapsReverseGeocoding, FMX.ListBox,
+  FMX.Platform, System.Math.Vectors, FMX.ListBox,
   FMX.DateTimeCtrls, FMX.Controls3D, FMX.Layers3D, FMX.Menus, Generics.Collections,
   FMX.Gestures, System.Actions, FMX.ActnList, System.ImageList, FMX.ImgList,
   FMX.Grid.Style, FMX.Media, FMX.Surfaces, FMX.VirtualKeyboard, FMX.SearchBox, IniFiles,
@@ -549,7 +548,6 @@ type
     Layout31: TLayout;
     Layout32: TLayout;
     Layout33: TLayout;
-    WebGMapsReverseGeocoder: TTMSFMXWebGMapsReverseGeocoding;
     Panel35: TPanel;
     Label58: TLabel;
     eOrderComment: TEdit;
@@ -609,7 +607,6 @@ type
     pMapButtons: TPanel;
     bSetPartnerCoordinate: TButton;
     Image11: TImage;
-    WebGMapsGeocoder: TTMSFMXWebGMapsGeocoding;
     Layout35: TLayout;
     Label78: TLabel;
     lPartnerAddressGPS: TLabel;
@@ -1114,7 +1111,7 @@ type
     FCurCoordinates: TLocationCoord2D;
     FSensorCoordinates: TLocationCoord2D;
     FMapLoaded: Boolean;
-    FWebGMap: TTMSFMXWebGMaps;
+    //FWebGMap: TTMSFMXWebGMaps;
 
     FCheckedGooodsItems: TList<String>;
     FDeletedOI: TList<Integer>;
@@ -1467,13 +1464,13 @@ begin
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
-  if Assigned(FWebGMap) then
-  try
-    FWebGMap.Visible := False;
-    FreeAndNil(FWebGMap);
-  except
-    // buggy piece of shit
-  end;
+//  if Assigned(FWebGMap) then
+//  try
+//    FWebGMap.Visible := False;
+//    FreeAndNil(FWebGMap);
+//  except
+//    // buggy piece of shit
+//  end;
 
   FFormsStack.Free;
   FMarkerList.Free;
@@ -4147,22 +4144,22 @@ begin
       RouteQuery.Next;
     end;
 
-    if Assigned(FWebGMap) then
-    try
-      FWebGMap.Visible := False;
-      FreeAndNil(FWebGMap);
-    except
-      // buggy piece of shit
-    end;
-
-    FMapLoaded := False;
-
-    FWebGMap := TTMSFMXWebGMaps.Create(Self);
-    FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-    FWebGMap.Align := TAlignLayout.Client;
-    FWebGMap.MapOptions.ZoomMap := 14;
-    FWebGMap.Parent := pPathOnMap;
-    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
+//    if Assigned(FWebGMap) then
+//    try
+//      FWebGMap.Visible := False;
+//      FreeAndNil(FWebGMap);
+//    except
+//      // buggy piece of shit
+//    end;
+//
+//    FMapLoaded := False;
+//
+//    FWebGMap := TTMSFMXWebGMaps.Create(Self);
+//    FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+//    FWebGMap.Align := TAlignLayout.Client;
+//    FWebGMap.MapOptions.ZoomMap := 14;
+//    FWebGMap.Parent := pPathOnMap;
+//    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
   finally
     FreeAndNil(RouteQuery);
   end;
@@ -4809,14 +4806,14 @@ begin
   begin
     tErrorMap.Enabled := false;
 
-    if Assigned(FWebGMap) then
-    begin
-      try
-        FWebGMap.Visible := false;
-        FreeAndNil(FWebGMap);
-      except
-      end;
-    end;
+//    if Assigned(FWebGMap) then
+//    begin
+//      try
+//        FWebGMap.Visible := false;
+//        FreeAndNil(FWebGMap);
+//      except
+//      end;
+//    end;
   end;
 end;
 
@@ -4826,14 +4823,14 @@ begin
 
   FMapLoaded := true;
 
-  if Assigned(FWebGMap) then
-  begin
-    try
-      FWebGMap.Visible := false;
-      FreeAndNil(FWebGMap);
-    except
-    end;
-  end;
+//  if Assigned(FWebGMap) then
+//  begin
+//    try
+//      FWebGMap.Visible := false;
+//      FreeAndNil(FWebGMap);
+//    except
+//    end;
+//  end;
 
   pMapButtons.Enabled := true;
   bRefreshMapScreen.Visible := true;
@@ -4967,13 +4964,13 @@ end;
 function TfrmMain.GetCoordinates(const Address: string; out Coordinates: TLocationCoord2D): Boolean;
 begin
   try
-    WebGMapsGeocoder.Address:= Address;
-    if WebGMapsGeocoder.LaunchGeocoding = erOk then
-    begin
-      Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
-      Result := True;
-    end
-    else
+//    WebGMapsGeocoder.Address:= Address;
+//    if WebGMapsGeocoder.LaunchGeocoding = erOk then
+//    begin
+//      Coordinates := TLocationCoord2D.Create(WebGMapsGeocoder.ResultLatitude, WebGMapsGeocoder.ResultLongitude);
+//      Result := True;
+//    end
+//    else
       Result := False;
   except
     Result := False;
@@ -4991,31 +4988,31 @@ var
   end;
 
 begin
-  if Assigned(FWebGMap) and not FMapLoaded then
-  begin
-    tErrorMap.Enabled := false;
-    FMapLoaded := True;
-
-    FWebGMap.Markers.Clear;
-
-    if FMarkerList.Count > 0 then
-    begin
-      Location := TLocationCoord2D.Create(FMarkerList[0].Latitude, FMarkerList[0].Longitude);
-      for i := 0 to FMarkerList.Count - 1 do if (i = 0) or IsDelta(FMarkerList[I].Latitude, FMarkerList[I].Longitude) then
-      begin
-        Location := TLocationCoord2D.Create(FMarkerList[I].Latitude, FMarkerList[i].Longitude);
-        with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, FMarkerList[i].Address, '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
-          if tcMain.ActiveTab = tiPathOnMap then
-            MapLabel.Text := IntToStr(i + 1) + ') ' + FormatDateTime('DD.MM.YYYY hh:mm:ss', FMarkerList[i].VisitTime)
-          else
-            MapLabel.Text := Title;
-      end;
-
-      FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
-    end;
-
-    pMapButtons.Enabled := true;
-  end;
+//  if Assigned(FWebGMap) and not FMapLoaded then
+//  begin
+//    tErrorMap.Enabled := false;
+//    FMapLoaded := True;
+//
+//    FWebGMap.Markers.Clear;
+//
+//    if FMarkerList.Count > 0 then
+//    begin
+//      Location := TLocationCoord2D.Create(FMarkerList[0].Latitude, FMarkerList[0].Longitude);
+//      for i := 0 to FMarkerList.Count - 1 do if (i = 0) or IsDelta(FMarkerList[I].Latitude, FMarkerList[I].Longitude) then
+//      begin
+//        Location := TLocationCoord2D.Create(FMarkerList[I].Latitude, FMarkerList[i].Longitude);
+//        with FWebGMap.Markers.Add(FMarkerList[i].Latitude, FMarkerList[i].Longitude, FMarkerList[i].Address, '', True, True, False, True, False, 0, TMarkerIconColor.icDefault, -1, -1, -1, -1) do
+//          if tcMain.ActiveTab = tiPathOnMap then
+//            MapLabel.Text := IntToStr(i + 1) + ') ' + FormatDateTime('DD.MM.YYYY hh:mm:ss', FMarkerList[i].VisitTime)
+//          else
+//            MapLabel.Text := Title;
+//      end;
+//
+//      FWebGMap.MapPanTo(FWebGMap.Markers[0].Latitude, FWebGMap.Markers[0].Longitude);
+//    end;
+//
+//    pMapButtons.Enabled := true;
+//  end;
 end;
 
 // переход на форму отображения большой карты
@@ -5025,12 +5022,12 @@ begin
 
   FMapLoaded := False;
 
-  FWebGMap := TTMSFMXWebGMaps.Create(Self);
-  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-  FWebGMap.Align := TAlignLayout.Client;
-  FWebGMap.MapOptions.ZoomMap := 13;
-  FWebGMap.Parent := tiMap;
-  FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
+//  FWebGMap := TTMSFMXWebGMaps.Create(Self);
+//  FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+//  FWebGMap.Align := TAlignLayout.Client;
+//  FWebGMap.MapOptions.ZoomMap := 13;
+//  FWebGMap.Parent := tiMap;
+//  FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
 end;
 
 // вызов карты с координатами ТТ
@@ -5080,25 +5077,25 @@ begin
 
     FMapLoaded := False;
 
-    FWebGMap := TTMSFMXWebGMaps.Create(Self);
-    FWebGMap.Align := TAlignLayout.Client;
-    {FWebGMap.ControlsOptions.PanControl.Visible := false;
-    FWebGMap.ControlsOptions.ZoomControl.Visible := false;
-    FWebGMap.ControlsOptions.MapTypeControl.Visible := false;
-    FWebGMap.ControlsOptions.ScaleControl.Visible := false;
-    FWebGMap.ControlsOptions.StreetViewControl.Visible := false;
-    FWebGMap.ControlsOptions.OverviewMapControl.Visible := false;
-    FWebGMap.ControlsOptions.RotateControl.Visible := false;
-    }
-    FWebGMap.MapOptions.ZoomMap := 18;
-    FWebGMap.Parent := pMap;
-    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
-    FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
-    if SetCordinate then
-    begin
-      FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
-      FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
-    end;
+//    FWebGMap := TTMSFMXWebGMaps.Create(Self);
+//    FWebGMap.Align := TAlignLayout.Client;
+//    {FWebGMap.ControlsOptions.PanControl.Visible := false;
+//    FWebGMap.ControlsOptions.ZoomControl.Visible := false;
+//    FWebGMap.ControlsOptions.MapTypeControl.Visible := false;
+//    FWebGMap.ControlsOptions.ScaleControl.Visible := false;
+//    FWebGMap.ControlsOptions.StreetViewControl.Visible := false;
+//    FWebGMap.ControlsOptions.OverviewMapControl.Visible := false;
+//    FWebGMap.ControlsOptions.RotateControl.Visible := false;
+//    }
+//    FWebGMap.MapOptions.ZoomMap := 18;
+//    FWebGMap.Parent := pMap;
+//    FWebGMap.APIKey := DM.tblObject_ConstAPIKey.AsString;
+//    FWebGMap.OnDownloadFinish := WebGMapDownloadFinish;
+//    if SetCordinate then
+//    begin
+//      FWebGMap.CurrentLocation.Latitude := Coordinates.Latitude;
+//      FWebGMap.CurrentLocation.Longitude := Coordinates.Longitude;
+//    end;
 
     pMapButtons.Enabled := false;
     bSetPartnerCoordinate.Visible := true;
@@ -5153,13 +5150,13 @@ var
 begin
   FUseAdminRights := false;
 
-  if Assigned(FWebGMap) then
-  try
-    FWebGMap.Visible := False;
-    FreeAndNil(FWebGMap);
-  except
-    // buggy piece of shit
-  end;
+//  if Assigned(FWebGMap) then
+//  try
+//    FWebGMap.Visible := False;
+//    FreeAndNil(FWebGMap);
+//  except
+//    // buggy piece of shit
+//  end;
 
   { настройка панели возврата }
   if (tcMain.ActiveTab = tiStart) or (tcMain.ActiveTab = tiGoodsItems) or (tcMain.ActiveTab = tiSubjectDoc) or (tcMain.ActiveTab = tiCamera)  then

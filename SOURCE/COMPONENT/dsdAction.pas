@@ -1973,6 +1973,23 @@ type
     property SetPropValueParams: TOwnedCollection read FSetPropValueParams write FSetPropValueParams;
   end;
 
+  TdsdContinueAction = class(TdsdCustomAction)
+  private
+    FContinueParam: TdsdParam;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property Continue: TdsdParam read FContinueParam write FContinueParam;
+  end;
+
 procedure Register;
 
 implementation
@@ -2051,6 +2068,7 @@ begin
   RegisterActions('DSDLib', [TdsdeSputnikSendSMS], TdsdeSputnikSendSMS);
   RegisterActions('DSDLib', [TBooleanSetVisibleAction], TBooleanSetVisibleAction);
   RegisterActions('DSDLib', [TdsdSetPropValueAction], TdsdSetPropValueAction);
+  RegisterActions('DSDLib', [TdsdContinueAction], TdsdContinueAction);
 
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
@@ -9363,6 +9381,29 @@ begin
     end;
   end;
 
+end;
+
+  { TdsdContinueAction }
+
+constructor TdsdContinueAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FContinueParam := TdsdParam.Create(Nil);
+  FContinueParam.DataType := ftBoolean;
+  FContinueParam.Value := False;
+end;
+
+destructor TdsdContinueAction.Destroy;
+begin
+  FContinueParam.Free;
+  inherited Destroy;
+end;
+
+function TdsdContinueAction.LocalExecute: Boolean;
+var i, j: integer; PropInfo: PPropInfo; Value: TObject;
+begin
+  inherited;
+  Result := FContinueParam.Value;
 end;
 
 initialization

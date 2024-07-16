@@ -94,6 +94,8 @@ type
     mactTestPrint5: TMultiAction;
     actPrint_Pasport_test: TdsdPrintAction;
     actUpdate_MI_Send_byReport_test: TdsdExecStoredProc;
+    actContinueAction: TdsdContinueAction;
+    macPrint_New: TMultiAction;
   private
     { Private declarations }
   public
