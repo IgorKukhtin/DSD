@@ -23,7 +23,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TSaleForm = class(TAncestorDocumentForm)
@@ -298,6 +298,12 @@ type
     bbSeparator: TdxBarSeparator;
     bbsShow: TdxBarSubItem;
     bbsUnLoad: TdxBarSubItem;
+    spUpdate_CurrencyUser: TdsdStoredProc;
+    actUpdate_CurrencyDialog: TExecuteDialog;
+    actUpdate_Currency: TdsdUpdateDataSet;
+    mactUpdate_Currency: TMultiAction;
+    cbCurrencyUser: TcxCheckBox;
+    bbUpdate_Currency: TdxBarButton;
   private
     { Private declarations }
   public

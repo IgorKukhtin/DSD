@@ -3,6 +3,7 @@ inherited SaleForm: TSaleForm
   ClientHeight = 658
   ClientWidth = 1360
   AddOnFormData.OnLoadAction = actSetDefaults
+  ExplicitLeft = -196
   ExplicitWidth = 1376
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -22,6 +23,8 @@ inherited SaleForm: TSaleForm
       inherited cxGrid: TcxGrid
         Width = 1360
         Height = 467
+        ExplicitLeft = -3
+        ExplicitTop = 3
         ExplicitWidth = 1360
         ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -593,6 +596,8 @@ inherited SaleForm: TSaleForm
     Width = 1360
     Height = 141
     TabOrder = 3
+    ExplicitLeft = -8
+    ExplicitTop = 1
     ExplicitWidth = 1360
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
@@ -925,6 +930,14 @@ inherited SaleForm: TSaleForm
       Properties.ReadOnly = True
       TabOrder = 42
       Width = 170
+    end
+    object cbCurrencyUser: TcxCheckBox
+      Left = 1274
+      Top = 23
+      Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+      Properties.ReadOnly = True
+      TabOrder = 43
+      Width = 120
     end
   end
   object cxLabel17: TcxLabel [2]
@@ -3031,6 +3044,12 @@ inherited SaleForm: TSaleForm
       Error.Value = ''
       Error.DataType = ftString
       Error.MultiSelectSeparator = ','
+      GLN.Value = ''
+      GLN.DataType = ftString
+      GLN.MultiSelectSeparator = ','
+      GLN_Sender.Value = ''
+      GLN_Sender.DataType = ftString
+      GLN_Sender.MultiSelectSeparator = ','
       KeyFileName.Value = ''
       KeyFileName.DataType = ftString
       KeyFileName.MultiSelectSeparator = ','
@@ -3050,6 +3069,101 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectPrint_TTN
         end>
       Caption = 'actExecSelectPrint_TTN'
+    end
+    object actUpdate_CurrencyDialog: TExecuteDialog
+      Category = 'CurrUser'
+      MoveParams = <>
+      Caption = 'actUpdate_CurrencyDialog'
+      FormName = 'TChange'#1057'urrencyUserDialogForm'
+      FormNameParam.Value = 'TChange'#1057'urrencyUserDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isCurrencyUser'
+          Value = False
+          Component = cbCurrencyUser
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentId'
+          Value = ''
+          Component = GuidesCurrencyDocument
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyDocumentName'
+          Value = ''
+          Component = GuidesCurrencyDocument
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyPartnerId'
+          Value = ''
+          Component = GuidesCurrencyPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyPartnerName'
+          Value = ''
+          Component = GuidesCurrencyPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CurrencyValue'
+          Value = 0.000000000000000000
+          Component = edCurrencyValue
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ParValue'
+          Value = 1.000000000000000000
+          Component = edParValue
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Currency: TdsdUpdateDataSet
+      Category = 'CurrUser'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_CurrencyUser
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_CurrencyUser
+        end>
+      Caption = 'actUpdate_Currency'
+    end
+    object mactUpdate_Currency: TMultiAction
+      Category = 'CurrUser'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_CurrencyDialog
+        end
+        item
+          Action = actUpdate_Currency
+        end>
+      Caption = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+      Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+      ImageIndex = 56
     end
   end
   inherited MasterDS: TDataSource
@@ -3414,6 +3528,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Currency'
+        end
+        item
+          Visible = True
           ItemName = 'bbSeparator'
         end
         item
@@ -3600,6 +3718,10 @@ inherited SaleForm: TSaleForm
           Visible = True
           ItemName = 'bbExport_XML'
         end>
+    end
+    object bbUpdate_Currency: TdxBarButton
+      Action = mactUpdate_Currency
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4184,6 +4306,13 @@ inherited SaleForm: TSaleForm
         Component = GuidesReturnIn
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCurrencyUser'
+        Value = Null
+        Component = cbCurrencyUser
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -5398,7 +5527,7 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1248
+    Left = 1200
     Top = 32
   end
   object GuidesFrom: TdsdGuides
@@ -6789,5 +6918,62 @@ inherited SaleForm: TSaleForm
     Params = <>
     Left = 880
     Top = 552
+  end
+  object spUpdate_CurrencyUser: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Currency'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyDocumentId'
+        Value = ''
+        Component = GuidesCurrencyDocument
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioCurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParValue'
+        Value = 1.000000000000000000
+        Component = edParValue
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCurrencyUser'
+        Value = False
+        Component = cbCurrencyUser
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1024
+    Top = 435
   end
 end

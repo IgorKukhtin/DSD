@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSummChange TFloat, TotalSumm TFloat, TotalSummCurrency TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , isCurrencyUser Boolean
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -303,7 +304,8 @@ end if;
                                                                 , zc_MovementBoolean_EdiInvoice()
                                                                 , zc_MovementBoolean_EdiDesadv()
                                                                 , zc_MovementBoolean_Print()
-                                                                , zc_MovementBoolean_Promo()
+                                                                , zc_MovementBoolean_Promo() 
+                                                                , zc_MovementBoolean_CurrencyUser()
                                                                 )
                                  )
         , tmpMovementDate AS (SELECT MovementDate.*
@@ -741,6 +743,7 @@ end if;
            , MovementFloat_ParValue.ValueData               AS ParValue
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+           , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
 
            , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
@@ -881,6 +884,10 @@ end if;
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_Promo
                                          ON MovementBoolean_Promo.MovementId =  Movement.Id
                                         AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_CurrencyUser
+                                         ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
+                                        AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                       ON MovementDate_Insert.MovementId =  Movement.Id
