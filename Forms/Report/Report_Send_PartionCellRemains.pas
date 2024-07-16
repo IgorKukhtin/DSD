@@ -90,6 +90,16 @@ type
     actRefreshCell: TdsdDataSetRefresh;
     actPrintRem: TdsdPrintAction;
     bbPrintRem: TdxBarButton;
+    PartionCellCode_11: TcxGridDBColumn;
+    PartionCellName_11: TcxGridDBColumn;
+    PartionCellCode_12: TcxGridDBColumn;
+    PartionCellName_12: TcxGridDBColumn;
+    ColorFon_11: TcxGridDBColumn;
+    ColorFon_12: TcxGridDBColumn;
+    Color_11: TcxGridDBColumn;
+    Color_12: TcxGridDBColumn;
+    actOpenPartionCellForm11: TOpenChoiceForm;
+    actOpenPartionCellForm12: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -3,7 +3,10 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Send_PartionCell (Integer, Integer, Integer, Integer, TFloat
+                                                          , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                          , TVarChar
+                                                           );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
     IN inId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -21,9 +24,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Send_PartionCell(
  INOUT ioPartionCellName_7     TVarChar   ,
  INOUT ioPartionCellName_8     TVarChar   ,
  INOUT ioPartionCellName_9     TVarChar   ,
- INOUT ioPartionCellName_10     TVarChar   ,
- INOUT ioPartionCellName_11     TVarChar   ,
- INOUT ioPartionCellName_12     TVarChar   ,
+ INOUT ioPartionCellName_10    TVarChar   ,
+ INOUT ioPartionCellName_11    TVarChar   ,
+ INOUT ioPartionCellName_12    TVarChar   ,
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD

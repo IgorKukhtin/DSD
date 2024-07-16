@@ -96,6 +96,16 @@ type
     actUpdate_MI_Send_byReport_test: TdsdExecStoredProc;
     actContinueAction: TdsdContinueAction;
     macPrint_New: TMultiAction;
+    PartionCellName_12: TcxGridDBColumn;
+    ColorFon_11: TcxGridDBColumn;
+    ColorFon_12: TcxGridDBColumn;
+    Color_11: TcxGridDBColumn;
+    Color_12: TcxGridDBColumn;
+    PartionCellName_21: TcxGridDBColumn;
+    PartionCellCode_11: TcxGridDBColumn;
+    PartionCellCode_12: TcxGridDBColumn;
+    actOpenPartionCellForm11: TOpenChoiceForm;
+    actOpenPartionCellForm12: TOpenChoiceForm;
   private
     { Private declarations }
   public

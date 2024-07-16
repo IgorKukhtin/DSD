@@ -1,8 +1,14 @@
 -- Function: lpUpdate_MI_Send_byReport_all()
 
+/*DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byReport_all (Integer, TDateTime, TDateTime, Integer, Integer, TDateTime
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer
+                                                      );*/
+
 DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byReport_all (Integer, TDateTime, TDateTime, Integer, Integer, TDateTime
-                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                     , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                      , Integer
                                                       );
 
@@ -23,6 +29,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byReport_all(
     IN inPartionCellId_8       Integer  ,
     IN inPartionCellId_9       Integer  ,
     IN inPartionCellId_10      Integer  ,
+    IN inPartionCellId_11      Integer  ,
+    IN inPartionCellId_12      Integer  ,
 
     IN inPartionCellId_1_new   Integer  , --
     IN inPartionCellId_2_new   Integer  ,
@@ -34,6 +42,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byReport_all(
     IN inPartionCellId_8_new   Integer  ,
     IN inPartionCellId_9_new   Integer  ,
     IN inPartionCellId_10_new  Integer  ,
+    IN inPartionCellId_11_new  Integer  ,
+    IN inPartionCellId_12_new  Integer  ,
 
    OUT outPartionCellId_1      Integer  , --
    OUT outPartionCellId_2      Integer  ,
@@ -45,6 +55,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byReport_all(
    OUT outPartionCellId_8      Integer  ,
    OUT outPartionCellId_9      Integer  ,
    OUT outPartionCellId_10     Integer  ,
+   OUT outPartionCellId_11     Integer  ,
+   OUT outPartionCellId_12     Integer  ,
    
    OUT outIsClose_1            Boolean  ,
    OUT outIsClose_2            Boolean  ,
@@ -56,6 +68,8 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byReport_all(
    OUT outIsClose_8            Boolean  ,
    OUT outIsClose_9            Boolean  ,
    OUT outIsClose_10           Boolean  ,
+   OUT outIsClose_11           Boolean  ,
+   OUT outIsClose_12           Boolean  ,
 
     IN inUserId                Integer
 )
@@ -120,6 +134,13 @@ BEGIN
                                                                                                  , zc_MILinkObject_PartionCell_3()
                                                                                                  , zc_MILinkObject_PartionCell_4()
                                                                                                  , zc_MILinkObject_PartionCell_5()
+                                                                                                 , zc_MILinkObject_PartionCell_6()
+                                                                                                 , zc_MILinkObject_PartionCell_7()
+                                                                                                 , zc_MILinkObject_PartionCell_8()
+                                                                                                 , zc_MILinkObject_PartionCell_9()
+                                                                                                 , zc_MILinkObject_PartionCell_10()
+                                                                                                 , zc_MILinkObject_PartionCell_11()
+                                                                                                 , zc_MILinkObject_PartionCell_12()
                                                                                                   )
                                                            -- !!!
                                                            AND 1=0
@@ -135,6 +156,21 @@ BEGIN
                                                                                                           THEN zc_MIFloat_PartionCell_real_4()
                                                                                                      WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_5()
                                                                                                           THEN zc_MIFloat_PartionCell_real_5()
+
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_6()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_6()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_7()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_7()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_8()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_8()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_9()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_9()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_10()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_10()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_11()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_11()
+                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_12()
+                                                                                                          THEN zc_MIFloat_PartionCell_real_12()
                                                                                                 END
                                                            -- !!!
                                                            AND 1=0
@@ -154,12 +190,26 @@ BEGIN
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIFloat_PartionCell_real_3()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MIFloat_PartionCell_real_4()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MIFloat_PartionCell_real_5()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_6() THEN zc_MIFloat_PartionCell_real_6()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_7() THEN zc_MIFloat_PartionCell_real_7()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_8() THEN zc_MIFloat_PartionCell_real_8()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_9() THEN zc_MIFloat_PartionCell_real_9()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_10() THEN zc_MIFloat_PartionCell_real_10()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_11() THEN zc_MIFloat_PartionCell_real_11()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_12() THEN zc_MIFloat_PartionCell_real_12()
               END AS DescId_MIF_real
             , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MIBoolean_PartionCell_Close_1()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MIBoolean_PartionCell_Close_2()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIBoolean_PartionCell_Close_3()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MIBoolean_PartionCell_Close_4()
                    WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MIBoolean_PartionCell_Close_5()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_6() THEN zc_MIBoolean_PartionCell_Close_6()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_7() THEN zc_MIBoolean_PartionCell_Close_7()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_8() THEN zc_MIBoolean_PartionCell_Close_8()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_9() THEN zc_MIBoolean_PartionCell_Close_9()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Close_10()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Close_11()
+                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Close_12()
               END AS DescId_Boolean
               -- –асчет нужной €чейки по которой группировать
             , PartionCellId
@@ -214,11 +264,16 @@ BEGIN
      IF COALESCE (inPartionCellId_10_new, 0) NOT IN (0, zc_PartionCell_RK())
      THEN vbCount_begin:= vbCount_begin + 1; END IF;
 
+     IF COALESCE (inPartionCellId_11_new, 0) NOT IN (0, zc_PartionCell_RK())
+     THEN vbCount_begin:= vbCount_begin + 1; END IF;
+
+     IF COALESCE (inPartionCellId_12_new, 0) NOT IN (0, zc_PartionCell_RK())
+     THEN vbCount_begin:= vbCount_begin + 1; END IF;
 
      -- ѕроверка, в одном документе может быть только 5 €чеек
-     IF vbCount_begin > 5 AND (SELECT COUNT(*) FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementId FROM _tmpItem_PartionCell) AS tmpItem_PartionCell) <= 1
+     IF vbCount_begin > 12
      THEN
-         RAISE EXCEPTION 'ќшибка.¬ одном документе заполнение возможно только дл€ 5 €чеек.';
+         RAISE EXCEPTION 'ќшибка.¬ одном документе заполнение возможно только дл€ 12 €чеек.';
      END IF;
 
 
@@ -262,7 +317,7 @@ BEGIN
      IF COALESCE (inPartionCellId_3_new, 0) = 0
      THEN
              -- открыли
-             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), _tmpItem_PartionCell.MovementItemId, FALSE)
              -- FROM _tmpItem_PartionCell;
 
              -- 1.2.обнулили €чейку
@@ -281,7 +336,7 @@ BEGIN
      IF COALESCE (inPartionCellId_4_new, 0) = 0
      THEN
              -- открыли
-             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), _tmpItem_PartionCell.MovementItemId, FALSE)
              -- FROM _tmpItem_PartionCell;
 
              -- 1.2.обнулили €чейку
@@ -299,7 +354,7 @@ BEGIN
      IF COALESCE (inPartionCellId_5_new, 0) = 0
      THEN
              -- открыли
-             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), _tmpItem_PartionCell.MovementItemId, FALSE)
              -- FROM _tmpItem_PartionCell;
 
              -- 1.2.обнулили €чейку
@@ -314,6 +369,136 @@ BEGIN
      END IF;
 
 
+     -- 1.6. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_6_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+     -- 1.7. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_7_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+
+     -- 1.8. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_8_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+
+     -- 1.9. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_9_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+
+     -- 1.10. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_10_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+
+     -- 1.11. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_11_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
+
+
+     -- 1.12. если выполн€етс€ "обнулили €чейку"
+     IF COALESCE (inPartionCellId_12_new, 0) = 0
+     THEN
+             -- открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), _tmpItem_PartionCell.MovementItemId, FALSE)
+             -- FROM _tmpItem_PartionCell;
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), _tmpItem_PartionCell.MovementItemId, NULL)
+             FROM _tmpItem_PartionCell;
+
+
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
+             FROM _tmpItem_PartionCell;
+
+     END IF;
 
 
      -- 2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -585,8 +770,6 @@ BEGIN
      -- 2.6. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_6_new = zc_PartionCell_RK()
      THEN
-             RAISE EXCEPTION 'ќшибка.ячейка є 6 только дл€ просмотра.';
-
              -- 1. закрыли
              outIsClose_6:= TRUE;
              -- 1.вернем айди какой был
@@ -622,8 +805,6 @@ BEGIN
      -- 2.7. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_7_new = zc_PartionCell_RK()
      THEN
-             RAISE EXCEPTION 'ќшибка.ячейка є 7 только дл€ просмотра.';
-
              -- 1. закрыли
              outIsClose_7:= TRUE;
              -- 1.вернем айди какой был
@@ -659,8 +840,6 @@ BEGIN
      -- 2.8. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_8_new = zc_PartionCell_RK()
      THEN
-             RAISE EXCEPTION 'ќшибка.ячейка є 8 только дл€ просмотра.';
-
              -- 1. закрыли
              outIsClose_8:= TRUE;
              -- 1.вернем айди какой был
@@ -696,8 +875,6 @@ BEGIN
      -- 2.9. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_9_new = zc_PartionCell_RK()
      THEN
-             RAISE EXCEPTION 'ќшибка.ячейка є 9 только дл€ просмотра.';
-
              -- 1. закрыли
              outIsClose_9:= TRUE;
              -- 1.вернем айди какой был
@@ -732,8 +909,6 @@ BEGIN
      -- 2.10. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
      IF inPartionCellId_10_new = zc_PartionCell_RK()
      THEN
-             RAISE EXCEPTION 'ќшибка.ячейка є 10 только дл€ просмотра.';
-
              -- 1. закрыли
              outIsClose_10:= TRUE;
              -- 1.вернем айди какой был
@@ -765,6 +940,81 @@ BEGIN
 
      END IF;
 
+
+     -- 2.11. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
+     IF inPartionCellId_11_new = zc_PartionCell_RK()
+     THEN
+             -- 1. закрыли
+             outIsClose_11:= TRUE;
+             -- 1.вернем айди какой был
+             IF COALESCE (inPartionCellId_11 IN (0, zc_PartionCell_RK()))
+             THEN outPartionCellId_11:= (SELECT DISTINCT PartionCellId FROM _tmpItem_PartionCell);
+             ELSE outPartionCellId_11:= inPartionCellId_11;
+             END IF;
+
+             -- 2.если была реальна€ €чейка - сохранили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_11
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+             -- 3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO, _tmpItem_PartionCell.MovementItemId, inPartionCellId_11_new)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_11
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+             -- 4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (_tmpItem_PartionCell.DescId_Boolean, _tmpItem_PartionCell.MovementItemId, TRUE)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_11
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+     END IF;
+
+
+     -- 2.12. если выполн€етс€ поставить €чейку ¬ ќ“Ѕќ– - zc_PartionCell_RK
+     IF inPartionCellId_12_new = zc_PartionCell_RK()
+     THEN
+             -- 1. закрыли
+             outIsClose_12:= TRUE;
+             -- 1.вернем айди какой был
+             IF COALESCE (inPartionCellId_12 IN (0, zc_PartionCell_RK()))
+             THEN outPartionCellId_12:= (SELECT DISTINCT PartionCellId FROM _tmpItem_PartionCell);
+             ELSE outPartionCellId_12:= inPartionCellId_12;
+             END IF;
+
+             -- 2.если была реальна€ €чейка - сохранили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (_tmpItem_PartionCell.DescId_MIF_real, _tmpItem_PartionCell.MovementItemId, _tmpItem_PartionCell.PartionCellId :: TFloat)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_12
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+             -- 3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (_tmpItem_PartionCell.DescId_MILO, _tmpItem_PartionCell.MovementItemId, inPartionCellId_12_new)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_12
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+             -- 4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (_tmpItem_PartionCell.DescId_Boolean, _tmpItem_PartionCell.MovementItemId, TRUE)
+             FROM _tmpItem_PartionCell
+             WHERE _tmpItem_PartionCell.PartionCellId = inPartionCellId_12
+               AND _tmpItem_PartionCell.PartionCellId <> zc_PartionCell_RK()
+            ;
+
+     END IF;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (tmpItem.MovementItemId, inUserId, FALSE)
+     FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell
+          ) AS tmpItem
+    ;
 
 END;
 $BODY$

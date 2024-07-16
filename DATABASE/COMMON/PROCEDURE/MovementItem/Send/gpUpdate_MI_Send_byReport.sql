@@ -4,9 +4,16 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+/*DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);*/
+
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Intege
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar
+                                                  );
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
@@ -27,8 +34,12 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_8       Integer,
  INOUT ioPartionCellId_9       Integer,
  INOUT ioPartionCellId_10      Integer,
+ INOUT ioPartionCellId_11      Integer,
+ INOUT ioPartionCellId_12      Integer,
+
     IN inOrd                   Integer, --є пп
    OUT outPartionCellId_last   Integer,
+
  INOUT ioPartionCellName_1     TVarChar, --
  INOUT ioPartionCellName_2     TVarChar,
  INOUT ioPartionCellName_3     TVarChar,
@@ -39,6 +50,9 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_8     TVarChar,
  INOUT ioPartionCellName_9     TVarChar,
  INOUT ioPartionCellName_10    TVarChar,  
+ INOUT ioPartionCellName_11    TVarChar,  
+ INOUT ioPartionCellName_12    TVarChar,  
+
    OUT outisPrint              Boolean,
     IN inSession               TVarChar  -- сесси€ пользовател€
 )
@@ -56,6 +70,8 @@ $BODY$
    DECLARE vbPartionCellId_8 Integer;
    DECLARE vbPartionCellId_9 Integer;
    DECLARE vbPartionCellId_10 Integer;
+   DECLARE vbPartionCellId_11 Integer;
+   DECLARE vbPartionCellId_12 Integer;
 
    DECLARE vbPartionCellId_old_1 Integer;
    DECLARE vbPartionCellId_old_2 Integer;
@@ -67,6 +83,8 @@ $BODY$
    DECLARE vbPartionCellId_old_8 Integer;
    DECLARE vbPartionCellId_old_9 Integer;
    DECLARE vbPartionCellId_old_10 Integer;
+   DECLARE vbPartionCellId_old_11 Integer;
+   DECLARE vbPartionCellId_old_12 Integer;
 
    DECLARE vbIsClose_1  Boolean;
    DECLARE vbIsClose_2  Boolean;
@@ -78,6 +96,8 @@ $BODY$
    DECLARE vbIsClose_8  Boolean;
    DECLARE vbIsClose_9  Boolean;
    DECLARE vbIsClose_10 Boolean;
+   DECLARE vbIsClose_11 Boolean;
+   DECLARE vbIsClose_12 Boolean;
    DECLARE vbMI_Id_check Integer;
 
 BEGIN
@@ -99,6 +119,8 @@ if zfConvert_StringToNumber (ioPartionCellName_7) = 0  and zfConvert_StringToNum
 if zfConvert_StringToNumber (ioPartionCellName_8) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 1)) > 0   then ioPartionCellName_8     := right (ioPartionCellName_8,  LENGTH(ioPartionCellName_8) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_8, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_9) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 1)) > 0   then ioPartionCellName_9     := right (ioPartionCellName_9,  LENGTH(ioPartionCellName_9) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_9, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 1)) > 0  then ioPartionCellName_10    := right (ioPartionCellName_10, LENGTH(ioPartionCellName_10) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 2))> 0 THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_11) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 1)) > 0  then ioPartionCellName_11    := right (ioPartionCellName_11, LENGTH(ioPartionCellName_11) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 2))> 0 THEN 2 ELSE 1 END); end if;
+if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 1)) > 0  then ioPartionCellName_12    := right (ioPartionCellName_12, LENGTH(ioPartionCellName_12) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 2))> 0 THEN 2 ELSE 1 END); end if;
 
 
      --  1
@@ -441,10 +463,77 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      END IF;
 
 
-     -- ѕереброска любой €чейки в отбор
+     --  11
+     IF ioPartionCellName_11 ILIKE '%отбор%' OR TRIM (ioPartionCellName_11) = '0'
+     THEN
+         vbPartionCellId_11:= zc_PartionCell_RK();
+     ELSE
+         IF TRIM (COALESCE (ioPartionCellName_11, '')) <> ''
+         THEN
+             --если ввели код ищем по коду, иначе по названию
+             IF zfConvert_StringToNumber (ioPartionCellName_11) <> 0
+             THEN
+                 vbPartionCellId_11:= (SELECT Object.Id
+                                       FROM Object
+                                       WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_11)
+                                         AND Object.DescId     = zc_Object_PartionCell());
+             ELSE
+                 vbPartionCellId_11:= (SELECT Object.Id
+                                       FROM Object
+                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_11))
+                                         AND Object.DescId     = zc_Object_PartionCell());
+             END IF;
+             --если не нашли ошибка
+             IF COALESCE (vbPartionCellId_11, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'ќшибка.Ќе найдена €чейка <%>.', ioPartionCellName_11;
+             END IF;
+         ELSE
+             -- обнулили
+             vbPartionCellId_11:= NULL;
+         END IF;
+
+     END IF;
+
+
+     --  12
+     IF ioPartionCellName_12 ILIKE '%отбор%' OR TRIM (ioPartionCellName_12) = '0'
+     THEN
+         vbPartionCellId_12:= zc_PartionCell_RK();
+     ELSE
+         IF TRIM (COALESCE (ioPartionCellName_12, '')) <> ''
+         THEN
+             --если ввели код ищем по коду, иначе по названию
+             IF zfConvert_StringToNumber (ioPartionCellName_12) <> 0
+             THEN
+                 vbPartionCellId_12:= (SELECT Object.Id
+                                       FROM Object
+                                       WHERE Object.ObjectCode = zfConvert_StringToNumber (ioPartionCellName_12)
+                                         AND Object.DescId     = zc_Object_PartionCell());
+             ELSE
+                 vbPartionCellId_12:= (SELECT Object.Id
+                                       FROM Object
+                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_12))
+                                         AND Object.DescId     = zc_Object_PartionCell());
+             END IF;
+             --если не нашли ошибка
+             IF COALESCE (vbPartionCellId_12, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'ќшибка.Ќе найдена €чейка <%>.', ioPartionCellName_12;
+             END IF;
+         ELSE
+             -- обнулили
+             vbPartionCellId_12:= NULL;
+         END IF;
+
+     END IF;
+
+
+     -- –оль - ѕереброска любой €чейки в отбор
      IF inOrd <> 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
         AND zc_PartionCell_RK() IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5
                                   , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
+                                  , vbPartionCellId_11, vbPartionCellId_12
                                    )
      THEN
          RAISE EXCEPTION 'ќшибка.Ќет прав перемещать в отбор. є п/п должен быть = 1.';
@@ -479,6 +568,11 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      IF vbPartionCellId_10 <> zc_PartionCell_RK() AND vbPartionCellId_10 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9)
      THEN vbPartionCellId_10:= NULL; END IF;
 
+     IF vbPartionCellId_11 <> zc_PartionCell_RK() AND vbPartionCellId_11 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10)
+     THEN vbPartionCellId_11:= NULL; END IF;
+
+     IF vbPartionCellId_12 <> zc_PartionCell_RK() AND vbPartionCellId_12 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11)
+     THEN vbPartionCellId_12:= NULL; END IF;
 
      -- 1. ѕроверка - дл€ €чейки может быть только одна парти€
      IF vbPartionCellId_1 > 0
@@ -772,15 +866,73 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      END IF;
 
 
+     -- 11. ѕроверка - в €чейке только одна парти€
+     IF vbPartionCellId_11 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_11
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'ќшибка.ƒл€ €чейки <%> %уже установлена парти€ <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_11)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
+     -- 12. ѕроверка - в €чейке только одна парти€
+     IF vbPartionCellId_12 > 0
+     THEN
+         vbMI_Id_check:= lpCheck_MI_Send_PartionCell (inPartionCellId   := vbPartionCellId_12
+                                                    , inGoodsId         := inGoodsId
+                                                    , inGoodsKindId     := inGoodsKindId
+                                                    , inPartionGoodsDate:= inPartionGoodsDate
+                                                    , inUserId          := vbUserId
+                                                     );
+         IF vbMI_Id_check > 0
+         THEN
+             RAISE EXCEPTION 'ќшибка.ƒл€ €чейки <%> %уже установлена парти€ <%> % <%> <%>.'
+                           , lfGet_Object_ValueData (vbPartionCellId_12)
+                           , CHR (13)
+                           , zfConvert_DateToString ((SELECT COALESCE (MIDate.ValueData, Movement.OperDate)
+                                                      FROM MovementItem
+                                                           LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                                           LEFT JOIN MovementItemDate AS MIDate ON MIDate.MovementItemId = vbMI_Id_check AND MIDate.DescId = zc_MIDate_PartionGoods()
+                                                      WHERE MovementItem.Id = vbMI_Id_check
+                                                     ))
+                           , CHR (13)
+                           , (SELECT lfGet_Object_ValueData (MI.ObjectId) FROM MovementItem AS MI WHERE MI.Id = vbMI_Id_check)
+                           , (SELECT lfGet_Object_ValueData_sh (MILO.Objectid) FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMI_Id_check AND MILO.DescId = zc_MILinkObject_GoodsKind())
+                            ;
+         END IF;
+
+     END IF;
+
+
      -- сохранить
      IF inMovementItemId <> 0
      THEN
          --
-         IF vbPartionCellId_6  <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 6 только дл€ просмотра.'; END IF;
+         /*IF vbPartionCellId_6  <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 6 только дл€ просмотра.'; END IF;
          IF vbPartionCellId_7  <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 7 только дл€ просмотра.'; END IF;
          IF vbPartionCellId_8  <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 8 только дл€ просмотра.'; END IF;
          IF vbPartionCellId_9  <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 9 только дл€ просмотра.'; END IF;
-         IF vbPartionCellId_10 <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 10 только дл€ просмотра.'; END IF;
+         IF vbPartionCellId_10 <> 0 THEN RAISE EXCEPTION 'ќшибка.ячейка є 10 только дл€ просмотра.'; END IF;*/
 
          -- 1. обнулили
          IF COALESCE (vbPartionCellId_1, 0) = 0
@@ -1052,17 +1204,397 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
              outPartionCellId_last := vbPartionCellId_5 ::Integer;
          END IF;
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
+         -- 6. обнулили
+         IF COALESCE (vbPartionCellId_6, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_6 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_6:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_6() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_6 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, vbPartionCellId_old_6 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_6:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_6() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, vbPartionCellId_6);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), inMovementItemId, TRUE);
+             --
+             vbIsClose_6:= vbPartionCellId_old_6 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_6 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), inMovementItemId, vbPartionCellId_6);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_6 ::Integer;
+         END IF;
+
+
+         -- 7. обнулили
+         IF COALESCE (vbPartionCellId_7, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_7 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_7:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_7() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_7 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, vbPartionCellId_old_7 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_7:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_7() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, vbPartionCellId_7);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), inMovementItemId, TRUE);
+             --
+             vbIsClose_7:= vbPartionCellId_old_7 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_7 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), inMovementItemId, vbPartionCellId_7);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_7 ::Integer;
+         END IF;
+
+
+         -- 8. обнулили
+         IF COALESCE (vbPartionCellId_8, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_8 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_8:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_8() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_8 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, vbPartionCellId_old_8 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_8:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_8() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, vbPartionCellId_8);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), inMovementItemId, TRUE);
+             --
+             vbIsClose_8:= vbPartionCellId_old_8 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_8 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), inMovementItemId, vbPartionCellId_8);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_8 ::Integer;
+         END IF;
+
+
+         -- 9. обнулили
+         IF COALESCE (vbPartionCellId_9, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_9 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_9:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_9() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_9 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, vbPartionCellId_old_9 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_9:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_9() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, vbPartionCellId_9);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), inMovementItemId, TRUE);
+             --
+             vbIsClose_9:= vbPartionCellId_old_9 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_9 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), inMovementItemId, vbPartionCellId_9);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_9 ::Integer;
+         END IF;
+
+
+         -- 10. обнулили
+         IF COALESCE (vbPartionCellId_10, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_10 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_10:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_10() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_10 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, vbPartionCellId_old_10 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_10:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_10() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, vbPartionCellId_10);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), inMovementItemId, TRUE);
+             --
+             vbIsClose_10:= vbPartionCellId_old_10 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_10 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), inMovementItemId, vbPartionCellId_10);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_10 ::Integer;
+         END IF;
+
+
+         -- 11. обнулили
+         IF COALESCE (vbPartionCellId_11, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_11 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_11:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_11() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_11 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, vbPartionCellId_old_11 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_11:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_11() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, vbPartionCellId_11);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), inMovementItemId, TRUE);
+             --
+             vbIsClose_11:= vbPartionCellId_old_11 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_11 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), inMovementItemId, vbPartionCellId_11);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_11 ::Integer;
+         END IF;
+
+
+         -- 12. обнулили
+         IF COALESCE (vbPartionCellId_12, 0) = 0
+         THEN
+             -- 1.1.открыли
+             -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), inMovementItemId, FALSE);
+
+             -- 1.2.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, NULL);
+             -- 1.3.обнулили €чейку
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, 0 :: TFloat);
+
+         ELSEIF vbPartionCellId_12 = zc_PartionCell_RK()
+         THEN
+             -- 2.1.реальна€ €чейка - потом сохранить
+             vbPartionCellId_old_12:= (SELECT MILO.ObjectId
+                                      FROM MovementItemLinkObject AS MILO
+                                      WHERE MILO.MovementItemId = inMovementItemId AND MILO.DescId = zc_MILinkObject_PartionCell_12() AND MILO.ObjectId <> zc_PartionCell_RK()
+                                     );
+
+             -- 2.2.если была реальна€ €чейка
+             IF vbPartionCellId_old_12 > 0
+             THEN
+                 -- сохранили оригинал
+                 PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, vbPartionCellId_old_12 :: TFloat);
+             ELSE
+                 -- попробуем найти
+                 vbPartionCellId_old_12:= (SELECT MILO.ObjectId
+                                          FROM MovementItemFloat AS MIF
+                                          WHERE MIF.MovementItemId = inMovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_12() AND MIF.ValueData NOT IN (zc_PartionCell_RK(), 0)
+                                         );
+             END IF;
+
+             -- 2.3.прив€зали €чейку - виртуальную
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, vbPartionCellId_12);
+             -- 2.4.закрыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), inMovementItemId, TRUE);
+             --
+             vbIsClose_12:= vbPartionCellId_old_12 > 0;
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_12 ::Integer;
+         ELSE
+             -- 3.1.прив€зали €чейку
+             PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), inMovementItemId, vbPartionCellId_12);
+             -- 3.2.обнулили оригинал
+             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), inMovementItemId, 0 :: TFloat);
+             -- 3.3.открыли
+             PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), inMovementItemId, FALSE);
+
+             --записываем последнюю измененную €чейку
+             outPartionCellId_last := vbPartionCellId_12 ::Integer;
+         END IF;
+
+
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
      ELSE
 
          SELECT outPartionCellId_1, outPartionCellId_2, outPartionCellId_3, outPartionCellId_4, outPartionCellId_5
               , outPartionCellId_6, outPartionCellId_7, outPartionCellId_8, outPartionCellId_9, outPartionCellId_10
+              , outPartionCellId_11, outPartionCellId_12
               , outIsClose_1, outIsClose_2, outIsClose_3, outIsClose_4, outIsClose_5, outIsClose_6, outIsClose_7, outIsClose_8, outIsClose_9, outIsClose_10
          INTO vbPartionCellId_old_1, vbPartionCellId_old_2, vbPartionCellId_old_3, vbPartionCellId_old_4, vbPartionCellId_old_5
             , vbPartionCellId_old_6, vbPartionCellId_old_7, vbPartionCellId_old_8, vbPartionCellId_old_9, vbPartionCellId_old_10
             , vbIsClose_1, vbIsClose_2, vbIsClose_3, vbIsClose_4, vbIsClose_5, vbIsClose_6, vbIsClose_7, vbIsClose_8, vbIsClose_9, vbIsClose_10
+            , vbIsClose_11, vbIsClose_12
 
          FROM lpUpdate_MI_Send_byReport_all (inUnitId                := inUnitId
                                            , inStartDate             := inStartDate
@@ -1080,6 +1612,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
                                            , inPartionCellId_8       := ioPartionCellId_8
                                            , inPartionCellId_9       := ioPartionCellId_9
                                            , inPartionCellId_10      := ioPartionCellId_10
+                                           , inPartionCellId_11      := ioPartionCellId_11
+                                           , inPartionCellId_12      := ioPartionCellId_12
 
                                            , inPartionCellId_1_new   := vbPartionCellId_1
                                            , inPartionCellId_2_new   := vbPartionCellId_2
@@ -1091,6 +1625,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
                                            , inPartionCellId_8_new   := vbPartionCellId_8
                                            , inPartionCellId_9_new   := vbPartionCellId_9
                                            , inPartionCellId_10_new  := vbPartionCellId_10
+                                           , inPartionCellId_11_new  := vbPartionCellId_11
+                                           , inPartionCellId_12_new  := vbPartionCellId_12
                                            , inUserId                := vbUserId
                                             ) AS tmp;
 
@@ -1107,6 +1643,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ELSEIF COALESCE(ioPartionCellId_8,0) <> COALESCE (vbPartionCellId_8, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_8, 0); 
      ELSEIF COALESCE(ioPartionCellId_9,0) <> COALESCE (vbPartionCellId_9, 0) THEN outPartionCellId_last := COALESCE (vbPartionCellId_9, 0); 
      ELSEIF COALESCE(ioPartionCellId_10,0)<> COALESCE (vbPartionCellId_10, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_10, 0); 
+     ELSEIF COALESCE(ioPartionCellId_11,0)<> COALESCE (vbPartionCellId_11, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_11, 0); 
+     ELSEIF COALESCE(ioPartionCellId_12,0)<> COALESCE (vbPartionCellId_12, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_12, 0); 
      END IF;
      --пареметр дл€ печати
      outisPrint := CASE WHEN COALESCE (outPartionCellId_last,0) = 0 THEN FALSE ELSE TRUE END;
@@ -1122,6 +1660,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ioPartionCellId_8 := CASE WHEN vbPartionCellId_old_8 > 0 THEN vbPartionCellId_old_8 ELSE vbPartionCellId_8 END;
      ioPartionCellId_9 := CASE WHEN vbPartionCellId_old_9 > 0 THEN vbPartionCellId_old_9 ELSE vbPartionCellId_9 END;
      ioPartionCellId_10:= CASE WHEN vbPartionCellId_old_10 > 0 THEN vbPartionCellId_old_10 ELSE vbPartionCellId_10 END;
+     ioPartionCellId_11:= CASE WHEN vbPartionCellId_old_11 > 0 THEN vbPartionCellId_old_11 ELSE vbPartionCellId_11 END;
+     ioPartionCellId_12:= CASE WHEN vbPartionCellId_old_12 > 0 THEN vbPartionCellId_old_12 ELSE vbPartionCellId_12 END;
 
      -- вернули Name
      ioPartionCellName_1  := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_1, vbPartionCellId_1)), vbIsClose_1);
@@ -1134,7 +1674,8 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
      ioPartionCellName_8  := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_8, vbPartionCellId_8)), vbIsClose_8);
      ioPartionCellName_9  := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_9, vbPartionCellId_9)), vbIsClose_9);
      ioPartionCellName_10 := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_10,vbPartionCellId_10)),vbIsClose_10);
-
+     ioPartionCellName_11 := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_11,vbPartionCellId_11)),vbIsClose_11);
+     ioPartionCellName_12 := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_12,vbPartionCellId_12)),vbIsClose_12);
 
 
      -- сохранили протокол
