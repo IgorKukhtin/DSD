@@ -36,6 +36,9 @@ RETURNS TABLE (Id               Integer
              , isOrderMin       Boolean  -- Разрешен минимальный заказ = заказ меньше 5 кг.
              , isErased         Boolean  -- Удаленный ли элемент
              , isSync           Boolean  -- Синхронизируется (да/нет)
+             , ContractId_orig     Integer
+             , ContractId_Key      Integer
+             , ContractId_Key_calc Integer
               )
 AS
 $BODY$
@@ -68,7 +71,11 @@ BEGIN
                                         -- это все ContractId
                                       , COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
                                         -- это "главный" ContractId
-                                      , CASE WHEN (Object.ValueData ILIKE '%физобмен%' 
+                                      , CASE WHEN View_Contract_ContractKey.ContractId_Key IN (8679226, 583450)
+                                                  -- !!!замена!!!
+                                                  THEN 8679226
+
+                                             WHEN (Object.ValueData ILIKE '%физобмен%' 
                                                 OR Object.ValueData ILIKE '%обмін%'
                                                 OR Object.ValueData ILIKE '%обмiн%')
                                               AND COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) <> View_Contract_ContractKey.ContractId_Key 
@@ -391,6 +398,12 @@ BEGIN
 
                   , Object_Partner.isErased
                   , TRUE :: Boolean AS isSync
+                  
+                    -- оставили "оригинал"
+                  , tmpContract.ContractId                :: Integer ContractId_orig
+                  , tmpContract.ContractId_Key            :: Integer ContractId_Key
+                  , tmpContract_state.ContractId_Key_calc :: Integer ContractId_Key_calc
+
              FROM Object AS Object_Partner
                   -- убрали Закрытые
                   JOIN tmpContract_state ON tmpContract_state.PartnerId = Object_Partner.Id
@@ -479,7 +492,7 @@ BEGIN
              WHERE Object_Partner.DescId   = zc_Object_Partner()
                AND Object_Partner.isErased = FALSE
                -- AND (COALESCE (tmpDebt.PaidKindId, ObjectLink_Contract_PaidKind.ChildObjectId) = 4 or inSession <> '1839161')
-           --LIMIT CASE WHEN vbUserId = 1072129 THEN 0 ELSE 500000 END
+           --LIMIT CASE WHEN vbUserId = 1058558 THEN 1 ELSE 500000 END
              LIMIT CASE WHEN vbUserId = zfCalc_UserMobile_limit0() THEN 0 ELSE 500000 END
             ;
 
