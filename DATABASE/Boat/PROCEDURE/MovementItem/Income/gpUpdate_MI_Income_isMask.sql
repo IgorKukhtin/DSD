@@ -15,65 +15,67 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpGetUserBySession (inSession);
-  
-      -- Результат
-       CREATE TEMP TABLE tmpMI (GoodsId Integer
-                              , Amount TFloat, OperPriceList TFloat
-                              , PartNumber TVarChar) ON COMMIT DROP;
 
-      INSERT INTO tmpMI (GoodsId, Amount, OperPriceList, PartNumber)
+      -- Результат
+       CREATE TEMP TABLE tmpMI ON COMMIT DROP AS (
 
          WITH
-         --товары из тек. документа 
+          -- товары из тек. документа
           tmpGoods AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsId
-                       FROM MovementItem 
+                       FROM MovementItem
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId = zc_MI_Master()
                          AND MovementItem.isErased = FALSE
                       )
-          --строки из документа маски
-        , tmpGoods_mask AS (SELECT MovementItem.ObjectId           AS GoodsId
-                                 , MIFloat_OperPriceList.ValueData AS OperPriceList
-                                 , MIString_PartNumber.ValueData   AS PartNumber 
-                                 , SUM (MovementItem.Amount)       AS Amount
-                            FROM MovementItem
+          -- строки из документа маски
+        , tmpGoods_mask AS (SELECT gpSelect.GoodsId
+                                 , gpSelect.Amount
+                                 , gpSelect.DiscountTax
+                                 , gpSelect.CountForPrice
+                                 , gpSelect.OperPrice
+                                 , gpSelect.OperPrice_orig
+                                 , gpSelect.OperPrice_orig_old
+                                 , gpSelect.SummIn
+                                 , gpSelect.EmpfPrice
+                                 , gpSelect.OperPriceList
+                                 , gpSelect.PartNumber
+                                 , gpSelect.PartionCellName
+                                 , gpSelect.Comment
 
-                                 LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
-                                                             ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+                            FROM gpSelect_MI_Income_Master (inMovementMaskId, FALSE, FALSE, inSession) AS gpSelect
+                           )
 
-                                 LEFT JOIN MovementItemString AS MIString_PartNumber
-                                                              ON MIString_PartNumber.MovementItemId = MovementItem.Id
-                                                             AND MIString_PartNumber.DescId = zc_MIString_PartNumber() 
-
-                            WHERE MovementItem.MovementId = inMovementMaskId
-                              AND MovementItem.DescId     = zc_MI_Master()
-                              AND MovementItem.isErased   = FALSE
-                            GROUP BY MovementItem.ObjectId
-                                   , MIFloat_OperPriceList.ValueData
-                                   , MIString_PartNumber.ValueData 
-                            )
-                            
-        SELECT tmp.GoodsId
-             , tmp.Amount
-             , tmp.OperPriceList  ::TFloat
-             , tmp.PartNumber     ::TVarChar
+        SELECT tmp.*
         FROM tmpGoods_mask AS tmp
             LEFT JOIN tmpGoods ON tmpGoods.GoodsId = tmp.GoodsId
-        WHERE tmpGoods.GoodsId IS NULL;
+        WHERE tmpGoods.GoodsId IS NULL
+       );
 
 
-     --cохраняем  строки только те товары, которых нет в тек. документе                
-     PERFORM  lpInsertUpdate_MovementItem_Income (ioId            := 0             ::Integer
-                                                , inMovementId    := inMovementId  ::Integer
-                                                , inGoodsId       := tmpMI.GoodsId ::Integer
-                                                , inAmount        := tmpMI.Amount  ::TFloat
-                                                , inOperPriceList := COALESCE (tmpMI.OperPriceList,0) ::TFloat
-                                                , inPartNumber    := COALESCE (tmpMI.PartNumber,'')   ::TVarChar
-                                                , inComment       := ''            ::TVarChar
-                                                , inPartionCellId := NULL            ::Integer
-                                                , inUserId        := vbUserId      ::Integer
-                                                 )
+     --cохраняем  строки только те товары, которых нет в тек. документе
+     PERFORM gpInsertUpdate_MovementItem_Income (ioId                  := 0
+                                               , inMovementId          := inMovementId
+                                               , inGoodsId             := tmpMI.GoodsId
+                                               , inAmount              := COALESCE (tmpMI.Amount, 0)
+
+                                               , inOperPrice_orig      := COALESCE (tmpMI.OperPrice_orig, 0)
+                                               , inCountForPrice       := COALESCE (tmpMI.CountForPrice, 0)
+                                               , ioDiscountTax         := COALESCE (tmpMI.DiscountTax, 0)
+                                               , ioOperPrice           := COALESCE (tmpMI.OperPrice, 0)
+                                               , ioSummIn              := COALESCE (tmpMI.SummIn, 0)
+                                               , inAmount_old          := COALESCE (tmpMI.Amount, 0)
+                                               , inOperPrice_orig_old  := COALESCE (tmpMI.OperPrice_orig_old, 0)
+                                               , inDiscountTax_old     := COALESCE (tmpMI.DiscountTax, 0)
+                                               , inOperPrice_old       := COALESCE (tmpMI.OperPrice, 0)
+                                               , inSummIn_old          := COALESCE (tmpMI.SummIn, 0)
+
+                                               , inOperPriceList       := COALESCE (tmpMI.OperPriceList, 0)
+                                               , inEmpfPrice           := COALESCE (tmpMI.EmpfPrice, 0)
+                                               , inPartNumber          := tmpMI.PartNumber
+                                               , ioPartionCellName     := tmpMI.PartionCellName
+                                               , inComment             := tmpMI.Comment
+                                               , inSession             := inSession
+                                                )
 
      FROM tmpMI;
 
