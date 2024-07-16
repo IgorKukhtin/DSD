@@ -1594,6 +1594,7 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
               , outIsClose_11, outIsClose_12
          INTO vbPartionCellId_old_1, vbPartionCellId_old_2, vbPartionCellId_old_3, vbPartionCellId_old_4, vbPartionCellId_old_5
             , vbPartionCellId_old_6, vbPartionCellId_old_7, vbPartionCellId_old_8, vbPartionCellId_old_9, vbPartionCellId_old_10
+            , vbPartionCellId_old_11, vbPartionCellId_old_12
             , vbIsClose_1, vbIsClose_2, vbIsClose_3, vbIsClose_4, vbIsClose_5, vbIsClose_6, vbIsClose_7, vbIsClose_8, vbIsClose_9, vbIsClose_10
             , vbIsClose_11, vbIsClose_12
 
