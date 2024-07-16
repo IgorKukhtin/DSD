@@ -9,7 +9,7 @@ AS
 $BODY$
 BEGIN
 
-     RETURN '01.06.2024';
+     RETURN '01.07.2024';
 
 
 END;
@@ -24,4 +24,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Unit_PartionDate_isPartionCell ()
+-- SELECT * FROM lfGet_Object_Unit_PartionDate_isPartionCell()
