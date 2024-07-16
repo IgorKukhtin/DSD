@@ -38,6 +38,7 @@ $BODY$
    DECLARE vbIsInsert    Boolean;
    DECLARE vbBranchId    Integer;
    DECLARE vbIsContract_NotVAT Boolean;
+   DECLARE vbCurrencyUser      Boolean;
 BEGIN
 
      -- Проверка/замена Валюта - Договор
@@ -106,6 +107,8 @@ BEGIN
           ioParPartnerValue:= 0;
      END IF;
 
+     --ручной ввод курса
+     vbCurrencyUser := COALESCE( (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = ioId AND MB.DescId = zc_MovementBoolean_CurrencyUser()), FALSE);
 
 
      -- Прайс-лист
@@ -205,17 +208,27 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, ioChangePercent);
 
-     -- рассчет курса для баланса
-     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
-     THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= inPaidKindId);
-     ELSE IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
-          THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
-               FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
-          ELSE outCurrencyValue:= 0;
-               outParValue:=0;
-          END IF;
+     IF COALESCE (vbCurrencyUser, FALSE) = FALSE
+     THEN
+         -- рассчет курса для баланса
+         IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
+         THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+              FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= inPaidKindId);
+         ELSE IF inCurrencyPartnerId <> zc_Enum_Currency_Basis()
+              THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
+                   FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
+              ELSE outCurrencyValue:= 0;
+                   outParValue:=0;
+              END IF;
+         END IF;
+     ELSE
+         --возвращаем сохраненные значение
+         outCurrencyValue     := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_CurrencyValue()), 1);
+         outParValue          := COALESCE ((SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = ioId AND MF.DescId = zc_MovementFloat_ParValue()), 1);
+         inCurrencyDocumentId := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyDocument()), zc_Enum_Currency_Basis());
+         inCurrencyPartnerId  := COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_CurrencyPartner()), zc_Enum_Currency_Basis());             
      END IF;
+
      -- сохранили свойство <Курс для перевода в валюту баланса>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
      -- сохранили свойство <Номинал для перевода в валюту баланса>
@@ -225,7 +238,8 @@ BEGIN
      /*IF inCurrencyDocumentId <> inCurrencyPartnerId
      THEN SELECT Amount, ParValue INTO ioCurrencyPartnerValue, ioParPartnerValue
           FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDatePartner, inCurrencyFromId:= inCurrencyDocumentId, inCurrencyToId:= inCurrencyPartnerId, inPaidKindId:= inPaidKindId);
-     END IF;*/
+     END IF;
+     */
      -- сохранили свойство <Курс для перевода из вал. док. в валюту контрагента>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyPartnerValue(), ioId, ioCurrencyPartnerValue);
      -- сохранили свойство <Номинал для перевода из вал. док. в валюту контрагента>

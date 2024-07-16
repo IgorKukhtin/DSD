@@ -25,7 +25,7 @@ uses
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
   cxButtonEdit, dsdGuides, frxClass, frxDBSet, EDI, dsdInternetAction,
-  dsdExportToXLSAction;
+  dsdExportToXLSAction, dsdCommon;
 
 type
   TSale_OrderJournalForm = class(TAncestorJournalForm)

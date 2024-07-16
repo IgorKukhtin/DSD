@@ -24,7 +24,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dsdInternetAction, MeDOC;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dsdInternetAction, MeDOC,
+  dsdCommon;
 
 type
   TSale_PartnerJournalForm = class(TAncestorJournalForm)

@@ -601,6 +601,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             Options.Editing = False
             Width = 70
           end
+          object isCurrencyUser: TcxGridDBColumn
+            Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
+            DataBinding.FieldName = 'isCurrencyUser'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object CurrencyPartnerValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyPartnerValue'

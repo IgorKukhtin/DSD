@@ -14,7 +14,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat, ChangePercentAmount TFloat
              , CurrencyValue TFloat, ParValue TFloat
-             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , CurrencyPartnerValue TFloat, ParPartnerValue TFloat 
+             , isCurrencyUser Boolean
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -78,7 +79,8 @@ BEGIN
              , CAST (0 as TFloat)                           AS CurrencyValue
              , CAST (0 as TFloat)                           AS ParValue
              , CAST (0 as TFloat)                           AS CurrencyPartnerValue
-             , CAST (0 as TFloat)                           AS ParPartnerValue
+             , CAST (0 as TFloat)                           AS ParPartnerValue 
+             , CAST (FALSE AS Boolean)                      AS isCurrencyUser
 
              , 0                     		            AS FromId
              , CAST ('' AS TVarChar)                        AS FromName
@@ -198,7 +200,8 @@ BEGIN
                , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
                , MovementFloat_ParValue.ValueData               AS ParValue
                , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
-               , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
+               , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue 
+               , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
 
                , Object_From.Id                    		    AS FromId
                , Object_From.ValueData             		    AS FromName
@@ -301,6 +304,10 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                           ON MovementBoolean_Checked.MovementId =  Movement.Id
                                          AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+                LEFT JOIN MovementBoolean AS MovementBoolean_CurrencyUser
+                                          ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
+                                         AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
 
                 LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                        ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -461,6 +468,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 15.07.24         *
  21.03.22         * 
  26.01.22         *
  04.07.18         *

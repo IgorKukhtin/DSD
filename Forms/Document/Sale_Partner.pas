@@ -23,7 +23,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
+  dsdCommon;
 
 type
   TSale_PartnerForm = class(TAncestorDocumentForm)
@@ -247,6 +248,12 @@ type
     bbsShow: TdxBarSubItem;
     bbsUnLoad: TdxBarSubItem;
     bbsPrint: TdxBarSubItem;
+    cbCurrencyUser: TcxCheckBox;
+    spUpdate_CurrencyUser: TdsdStoredProc;
+    actUpdate_CurrencyDialog: TExecuteDialog;
+    actUpdate_Currency: TdsdUpdateDataSet;
+    mactUpdate_Currency: TMultiAction;
+    bbUpdate_Currency: TdxBarButton;
   private
     { Private declarations }
   public
