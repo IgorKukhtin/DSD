@@ -288,25 +288,11 @@ BEGIN
                         OR tmpMovement.OperDate BETWEEN inStartDate AND inEndDate
                     )
 
-    , tmpMILO_PC AS (SELECT MovementItemLinkObject.*
-                           , COUNT (*) OVER (PARTITION BY MovementItemLinkObject.MovementItemId ) AS CountCell
-                      FROM MovementItemLinkObject
-                      WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.MovementItemId FROM tmpMI)
-                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                            , zc_MILinkObject_PartionCell_2()
-                                                            , zc_MILinkObject_PartionCell_3()
-                                                            , zc_MILinkObject_PartionCell_4()
-                                                            , zc_MILinkObject_PartionCell_5()
-                                                            , zc_MILinkObject_PartionCell_6()
-                                                            , zc_MILinkObject_PartionCell_7()
-                                                            , zc_MILinkObject_PartionCell_8()
-                                                            , zc_MILinkObject_PartionCell_9()
-                                                            , zc_MILinkObject_PartionCell_10()
-                                                            , zc_MILinkObject_PartionCell_11()
-                                                            , zc_MILinkObject_PartionCell_12()
-                                                             )
-                        -- “олько заполненные €чейки
-                        AND MovementItemLinkObject.ObjectId > 0
+    , tmpMILO_PC AS (SELECT _tmpPartionCell.*
+                           , COUNT (*) OVER (PARTITION BY _tmpPartionCell.MovementItemId ) AS CountCell
+                      FROM _tmpPartionCell
+                      -- “олько заполненные €чейки
+                      WHERE _tmpPartionCell.ObjectId > 0
                      )
 
      , tmpMovementDate_Insert AS (SELECT MovementDate.*
@@ -468,6 +454,7 @@ BEGIN
                              , tmpData_list.GoodsKindId       -- ***
                              , tmpData_list.PartionGoodsDate  -- ***
                                -- группируетс€ по €чейкам
+                             , tmpData_list.DescId_milo
                              , tmpData_list.PartionCellId
                                -- информативно
                              , MAX (tmpData_list.PartionCellId_real) AS PartionCellId_real
@@ -484,6 +471,7 @@ BEGIN
                                    , MovementItem.GoodsId                                                            AS GoodsId           -- ***
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId       -- ***
                                    , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime        AS PartionGoodsDate  -- ***
+                                   , MILinkObject_PartionCell.DescId AS DescId_milo
                                      -- –асчет нужной €чейки по которой группировать
                                    , CASE WHEN inIsMovement = TRUE
                                           THEN MILinkObject_PartionCell.ObjectId
@@ -521,6 +509,7 @@ BEGIN
                                , tmpData_list.GoodsKindId       -- ***
                                , tmpData_list.PartionGoodsDate  -- ***
                                  -- группируетс€ по €чейкам
+                               , tmpData_list.DescId_milo
                                , tmpData_list.PartionCellId
                        )
       -- “олько заполненные €чейки - є п/п
@@ -546,7 +535,8 @@ BEGIN
                                                            , tmpData_All_All.GoodsKindId       -- *** 
                                                            , tmpData_All_All.PartionGoodsDate  -- *** 
                                                            , CASE WHEN inisCell = TRUE THEN tmpData_All_All.PartionCellId ELSE 0 END --если по €чейкам то все €чейки выводим отдельной строкой
-                                                ORDER BY COALESCE (ObjectFloat_Level.ValueData, 0)
+                                                ORDER BY COALESCE (tmpData_All_All.DescId_milo, 0)
+                                                       , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
                       FROM tmpData_All_All

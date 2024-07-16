@@ -10,7 +10,7 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
-                                                 , Intege
+                                                 , Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );
@@ -1591,6 +1591,7 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
               , outPartionCellId_6, outPartionCellId_7, outPartionCellId_8, outPartionCellId_9, outPartionCellId_10
               , outPartionCellId_11, outPartionCellId_12
               , outIsClose_1, outIsClose_2, outIsClose_3, outIsClose_4, outIsClose_5, outIsClose_6, outIsClose_7, outIsClose_8, outIsClose_9, outIsClose_10
+              , outIsClose_11, outIsClose_12
          INTO vbPartionCellId_old_1, vbPartionCellId_old_2, vbPartionCellId_old_3, vbPartionCellId_old_4, vbPartionCellId_old_5
             , vbPartionCellId_old_6, vbPartionCellId_old_7, vbPartionCellId_old_8, vbPartionCellId_old_9, vbPartionCellId_old_10
             , vbIsClose_1, vbIsClose_2, vbIsClose_3, vbIsClose_4, vbIsClose_5, vbIsClose_6, vbIsClose_7, vbIsClose_8, vbIsClose_9, vbIsClose_10
