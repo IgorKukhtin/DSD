@@ -473,7 +473,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             DataBinding.FieldName = 'PartionCellCode_7'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
@@ -490,7 +489,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
                 Default = True
                 Kind = bkEllipsis
               end>
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
@@ -577,6 +575,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           object PartionCellCode_11: TcxGridDBColumn
             Caption = '11.1 '#1050#1086#1076
             DataBinding.FieldName = 'PartionCellCode_11'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-11 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
@@ -602,6 +602,8 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           object PartionCellCode_12: TcxGridDBColumn
             Caption = '12.1 '#1050#1086#1076
             DataBinding.FieldName = 'PartionCellCode_12'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080'-12 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
@@ -1883,6 +1885,18 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         ColorValueList = <>
       end
       item
+        ColorColumn = PartionCellName_11
+        ValueColumn = Color_11
+        BackGroundValueColumn = ColorFon_11
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = PartionCellName_12
+        ValueColumn = Color_12
+        BackGroundValueColumn = ColorFon_12
+        ColorValueList = <>
+      end
+      item
         ColorColumn = GoodsCode
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
@@ -1901,6 +1915,43 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         ColorColumn = AmountRemains_Weight
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
+      end>
+    ColumnEnterList = <
+      item
+        Column = PartionCellName_1
+      end
+      item
+        Column = PartionCellName_2
+      end
+      item
+        Column = PartionCellName_3
+      end
+      item
+        Column = PartionCellName_4
+      end
+      item
+        Column = PartionCellName_5
+      end
+      item
+        Column = PartionCellName_6
+      end
+      item
+        Column = PartionCellName_7
+      end
+      item
+        Column = PartionCellName_8
+      end
+      item
+        Column = PartionCellName_9
+      end
+      item
+        Column = PartionCellName_10
+      end
+      item
+        Column = PartionCellName_11
+      end
+      item
+        Column = PartionCellName_12
       end>
     Left = 368
     Top = 240
