@@ -12,7 +12,7 @@ BEGIN
     -- RETURN 1160641;
     -- RETURN 4057829; 
     -- RETURN 1059546; -- Ищик Н.Н.
-    RETURN 0;
+    RETURN 0; -- 1058558
 
 END;
 $BODY$
