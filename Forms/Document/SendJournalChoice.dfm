@@ -111,6 +111,14 @@ inherited SendJournalChoiceForm: TSendJournalChoiceForm
             Options.Editing = False
             Width = 39
           end
+          object isRePack: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1087#1072#1082
+            DataBinding.FieldName = 'isRePack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object InvNumber_SendFull: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'InvNumber_SendFull'

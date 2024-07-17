@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
              , isList Boolean
+             , isRePack Boolean
              , TotalCount TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
@@ -137,8 +138,9 @@ BEGIN
                END :: TVarChar AS PartionGoods
 
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
-             , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
-             , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean  AS isList
+             , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
+             , COALESCE (MovementBoolean_List.ValueData,False)      :: Boolean  AS isList
+             , COALESCE (MovementBoolean_isRePack.ValueData, False) :: Boolean  AS isRePack
 
              , MovementFloat_TotalCount.ValueData         AS TotalCount
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
@@ -236,6 +238,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId = Movement.Id
@@ -423,6 +428,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.07.24         * isRePack
  15.11.22         *
  06.09.21         *
  08.02.21         * Comment

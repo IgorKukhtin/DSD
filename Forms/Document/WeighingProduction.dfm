@@ -26,7 +26,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 6
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -293,7 +292,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 319
     end
     object cbisList: TcxCheckBox
-      Left = 795
+      Left = 797
       Top = 96
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
       Caption = #1048#1085#1074#1077#1085#1090'. '#1076#1083#1103' '#1089#1087#1080#1089#1082#1072
@@ -322,6 +321,16 @@ object WeighingProductionForm: TWeighingProductionForm
       Caption = #1050#1086#1076' '#1060#1080#1083#1080#1072#1083#1072
       ParentShowHint = False
       ShowHint = True
+    end
+    object cbisRePack: TcxCheckBox
+      Left = 935
+      Top = 96
+      Caption = #1055#1077#1088#1077#1087#1072#1082
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 35
+      Width = 69
     end
   end
   object cxPageControl: TcxPageControl
@@ -1799,6 +1808,7 @@ object WeighingProductionForm: TWeighingProductionForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337
@@ -1985,6 +1995,13 @@ object WeighingProductionForm: TWeighingProductionForm
         Name = 'isList'
         Value = Null
         Component = cbisList
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRePack'
+        Value = Null
+        Component = cbisRePack
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -2633,8 +2650,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1064
-    Top = 96
+    Left = 960
+    Top = 120
   end
   object GuidesSubjectDoc: TdsdGuides
     KeyField = 'Id'

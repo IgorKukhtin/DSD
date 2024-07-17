@@ -1633,6 +1633,7 @@ inherited SendForm: TSendForm
     Width = 1172
     Height = 92
     TabOrder = 3
+    ExplicitTop = 8
     ExplicitWidth = 1172
     ExplicitHeight = 92
     inherited edInvNumber: TcxTextEdit
@@ -1785,7 +1786,7 @@ inherited SendForm: TSendForm
       Width = 153
     end
     object edInvNumberProduction: TcxButtonEdit
-      Left = 938
+      Left = 936
       Top = 63
       Properties.Buttons = <
         item
@@ -1801,6 +1802,16 @@ inherited SendForm: TSendForm
       Left = 936
       Top = 45
       Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
+    end
+    object cbisRePack: TcxCheckBox
+      Left = 301
+      Top = 63
+      Caption = #1055#1077#1088#1077#1087#1072#1082
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 22
+      Width = 67
     end
   end
   object cxLabel6: TcxLabel [2]
@@ -1821,12 +1832,12 @@ inherited SendForm: TSendForm
     Width = 153
   end
   object edIsAuto: TcxCheckBox [4]
-    Left = 180
+    Left = 177
     Top = 63
-    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+    Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095'.'
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 187
+    Width = 120
   end
   object cxLabel5: TcxLabel [5]
     Left = 373
@@ -4449,7 +4460,7 @@ inherited SendForm: TSendForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Send'
-    Left = 160
+    Left = 104
     Top = 40
   end
   inherited spGet: TdsdStoredProc
@@ -4550,6 +4561,13 @@ inherited SendForm: TSendForm
         Name = 'isAuto'
         Value = False
         Component = edIsAuto
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRePack'
+        Value = Null
+        Component = cbisRePack
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -5129,8 +5147,7 @@ inherited SendForm: TSendForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 312
-    Top = 16
+    Left = 432
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'

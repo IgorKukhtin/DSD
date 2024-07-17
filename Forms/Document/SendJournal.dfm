@@ -210,6 +210,14 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 39
           end
+          object isRePack: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1087#1072#1082
+            DataBinding.FieldName = 'isRePack'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object UnionDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1086#1073#1098#1077#1076#1080#1085#1077#1085')'
             DataBinding.FieldName = 'UnionDate'

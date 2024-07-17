@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
-             , isAuto Boolean
+             , isAuto Boolean 
+             , isRePack Boolean
              , UnionName TVarChar
              , UnionDate TDateTime
              , InsertDate TDateTime, InsertName TVarChar
@@ -114,7 +115,8 @@ BEGIN
 
            , MovementString_Comment.ValueData       AS Comment
 
-           , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
+           , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
+           , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
 
            , Object_Union.ValueData                 AS UnionName
            , MovementDate_Union.ValueData           AS UnionDate
@@ -185,6 +187,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -275,6 +280,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.07.24         *
  19.04.23         * StatusInsert....
  09.12.22         * add MovementId_Production
  04.10.19         *

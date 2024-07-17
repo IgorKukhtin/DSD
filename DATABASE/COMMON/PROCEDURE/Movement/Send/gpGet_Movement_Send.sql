@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , DocumentKindId Integer, DocumentKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean
+             , isRePack Boolean
              , InsertName TVarChar
              , InsertDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
@@ -58,6 +59,7 @@ BEGIN
              , CAST ('' as TVarChar)                            AS Comment
 
              , FALSE                                            AS isAuto
+             , FALSE                                            AS isRePack
 
              , Object_Insert.ValueData                          AS InsertName
              , CURRENT_TIMESTAMP ::TDateTime                    AS InsertDate
@@ -96,7 +98,8 @@ BEGIN
            , Object_DocumentKind.ValueData                      AS DocumentKindName
            , MovementString_Comment.ValueData                   AS Comment
 
-           , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
+           , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
+           , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
 
            , Object_Insert.ValueData                            AS InsertName
            , COALESCE (MovementDate_Insert.ValueData, Movement.OperDate) :: TDateTime AS InsertDate
@@ -149,6 +152,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -224,6 +230,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.07.24         *
  09.12.22         * add MovementId_Production
  07.08.20         *
  27.02.19         *

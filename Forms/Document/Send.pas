@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, dsdCommon;
 
 type
   TSendForm = class(TAncestorDocumentForm)
@@ -245,6 +245,7 @@ type
     bbGridDetailToExcel: TdxBarButton;
     bbGridChildlToExcel: TdxBarButton;
     bbGrid_PartionCelllToExcel: TdxBarButton;
+    cbisRePack: TcxCheckBox;
   private
     { Private declarations }
   public
