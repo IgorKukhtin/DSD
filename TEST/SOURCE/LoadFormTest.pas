@@ -2505,6 +2505,9 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
