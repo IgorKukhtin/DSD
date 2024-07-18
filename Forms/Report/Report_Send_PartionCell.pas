@@ -106,6 +106,9 @@ type
     PartionCellCode_12: TcxGridDBColumn;
     actOpenPartionCellForm11: TOpenChoiceForm;
     actOpenPartionCellForm12: TOpenChoiceForm;
+    GoodsGroupName: TcxGridDBColumn;
+    DescId_milo_num: TcxGridDBColumn;
+    PartionCellId_num: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -100,6 +100,7 @@ type
     Color_12: TcxGridDBColumn;
     actOpenPartionCellForm11: TOpenChoiceForm;
     actOpenPartionCellForm12: TOpenChoiceForm;
+    GoodsGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
