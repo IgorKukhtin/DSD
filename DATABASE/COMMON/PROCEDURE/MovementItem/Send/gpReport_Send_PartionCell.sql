@@ -20,7 +20,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, MeasureName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
           
@@ -454,7 +454,8 @@ BEGIN
                              , tmpData_list.GoodsKindId       -- ***
                              , tmpData_list.PartionGoodsDate  -- ***
                                -- группируетс€ по €чейкам
-                             , tmpData_list.DescId_milo
+--                             , tmpData_list.DescId_milo
+                             , 0 AS DescId_milo
                              , tmpData_list.PartionCellId
                                -- информативно
                              , MAX (tmpData_list.PartionCellId_real) AS PartionCellId_real
@@ -509,7 +510,7 @@ BEGIN
                                , tmpData_list.GoodsKindId       -- ***
                                , tmpData_list.PartionGoodsDate  -- ***
                                  -- группируетс€ по €чейкам
-                               , tmpData_list.DescId_milo
+  --                             , tmpData_list.DescId_milo
                                , tmpData_list.PartionCellId
                        )
       -- “олько заполненные €чейки - є п/п
@@ -693,6 +694,7 @@ BEGIN
                          , Object_Goods.ObjectCode                    AS GoodsCode
                          , Object_Goods.ValueData                     AS GoodsName
                          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                         , Object_GoodsGroup.ValueData                AS GoodsGroupName
                          , Object_Measure.ValueData                   AS MeasureName
                          , Object_GoodsKind.Id                        AS GoodsKindId
                          , Object_GoodsKind.ValueData                 AS GoodsKindName
@@ -869,6 +871,11 @@ BEGIN
                                            AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
              
+                       LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                            ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData_MI.GoodsId
+                                           AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                       LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
                        LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                               ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                              AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -902,7 +909,7 @@ BEGIN
 
         , tmpResult.MovementItemId 
         , tmpResult.GoodsId , tmpResult.GoodsCode , tmpResult.GoodsName 
-        , tmpResult.GoodsGroupNameFull, tmpResult.MeasureName 
+        , tmpResult.GoodsGroupNameFull, tmpResult.GoodsGroupName, tmpResult.MeasureName 
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
         , tmpResult.PartionGoodsDate 
 
@@ -1554,6 +1561,7 @@ BEGIN
                     , Object_Goods.ObjectCode                    AS GoodsCode
                     , Object_Goods.ValueData                     AS GoodsName
                     , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                    , Object_GoodsGroup.ValueData                AS GoodsGroupName
                     , Object_Measure.ValueData                   AS MeasureName
                     , Object_GoodsKind.Id                        AS GoodsKindId
                     , Object_GoodsKind.ValueData                 AS GoodsKindName
@@ -1736,6 +1744,11 @@ BEGIN
                                       AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                   LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
         
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
                   LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                          ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                         AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -1769,7 +1782,7 @@ BEGIN
 
         , tmpResult.MovementItemId 
         , tmpResult.GoodsId , tmpResult.GoodsCode , tmpResult.GoodsName 
-        , tmpResult.GoodsGroupNameFull, tmpResult.MeasureName 
+        , tmpResult.GoodsGroupNameFull, tmpResult.GoodsGroupName, tmpResult.MeasureName 
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName  
         , tmpResult.PartionGoodsDate   
 
