@@ -285,7 +285,9 @@ BEGIN
                           , tmpMI_all.Amount
                      FROM tmpMI_all
                           INNER JOIN tmpMovement ON tmpMovement.Id = tmpMI_all.MovementId
-                          LEFT JOIN _tmpPartionCell ON _tmpPartionCell.MovementItemId = tmpMI_all.MovementItemId
+                          LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                    ) AS _tmpPartionCell
+                                      ON _tmpPartionCell.MovementItemId = tmpMI_all.MovementItemId
                      WHERE _tmpPartionCell.MovementItemId > 0
                         OR tmpMovement.OperDate BETWEEN inStartDate AND inEndDate
                     )
@@ -1060,7 +1062,11 @@ BEGIN
         , tmpResult.NormInDays_tax
         , tmpResult.NormInDays_date
 
-        , tmpResult.Color_PartionGoodsDate
+        , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
+                    THEN tmpResult.Color_PartionGoodsDate
+               WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow()
+               ELSE tmpResult.Color_PartionGoodsDate
+          END :: Integer AS Color_PartionGoodsDate
 
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
@@ -1068,6 +1074,7 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
         , CASE WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+
    FROM tmpResult
         ;
 
@@ -1941,7 +1948,11 @@ BEGIN
         , tmpResult.NormInDays_tax
         , tmpResult.NormInDays_date
 
-        , tmpResult.Color_PartionGoodsDate
+        , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
+                    THEN tmpResult.Color_PartionGoodsDate
+               WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow()
+               ELSE tmpResult.Color_PartionGoodsDate
+          END :: Integer AS Color_PartionGoodsDate
 
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
