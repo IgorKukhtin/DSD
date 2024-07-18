@@ -2382,10 +2382,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPartionCellId_num'
+        Name = 'inDescId_milo_num'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PartionCellId_num'
+        ComponentItem = 'DescId_milo_num'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

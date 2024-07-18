@@ -134,7 +134,7 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
      -- если не нашли ошибка
      IF COALESCE (inDescId_milo_num, 0) <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.В режиме <По ячейкам> нет прав заполнять.', ioPartionCellName_1;
+         RAISE EXCEPTION 'Ошибка.В режиме <По ячейкам> нет прав заполнять.<%>', inDescId_milo_num;
      END IF;
 
      --  1
