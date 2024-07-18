@@ -725,8 +725,8 @@ BEGIN
                          , Object_GoodsKind.Id                        AS GoodsKindId
                          , Object_GoodsKind.ValueData                 AS GoodsKindName
                          , tmpData_MI.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
-                         , tmpData_MI.DescId_milo_num    :: Integer   AS DescId_milo_num
-                         , tmpData_MI.PartionCellId_num  :: Integer   AS PartionCellId_num
+                         , COALESCE (tmpData.DescId_milo_num, 0)      AS DescId_milo_num
+                         , tmpData.PartionCellId_num     :: Integer   AS PartionCellId_num
                            --
                          , tmpData.PartionCellId_1  :: Integer
                          , tmpData.PartionCellId_2  :: Integer
@@ -941,7 +941,7 @@ BEGIN
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName
         , tmpResult.PartionGoodsDate
           --
-        , tmpResult.DescId_milo_num
+        , tmpResult.DescId_milo_num :: Integer
         , tmpResult.PartionCellId_num
 
         , tmpResult.PartionCellId_1

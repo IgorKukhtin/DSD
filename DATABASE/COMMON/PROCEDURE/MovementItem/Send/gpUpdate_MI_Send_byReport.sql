@@ -158,6 +158,17 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE TRIM (Object.ValueData) ILIKE TRIM (ioPartionCellName_1)
                                         AND Object.DescId           = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_1, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_1:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_1)
+                                         );
+                 END IF;
+
              END IF;
              -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_1, 0) = 0
@@ -194,6 +205,16 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_2))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_2, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_2:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_2)
+                                         );
+                 END IF;
              END IF;
 
              -- если не нашли ошибка
@@ -230,6 +251,16 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_3))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_3, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_3:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_3)
+                                         );
+                 END IF;
              END IF;
              --если не нашли ошибка
              IF COALESCE (vbPartionCellId_3, 0) = 0
@@ -265,6 +296,16 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_4))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_4, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_4:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_4)
+                                         );
+                 END IF;
              END IF;
              --если не нашли ошибка
              IF COALESCE (vbPartionCellId_4, 0) = 0
@@ -298,8 +339,19 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_5))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_5, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_5:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_5)
+                                         );
+                 END IF;
              END IF;
-             --если не нашли ошибка
+
+             -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_5, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_5;
@@ -331,7 +383,18 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_6))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_6, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_6:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_6)
+                                         );
+                 END IF;
              END IF;
+
              --если не нашли ошибка
              IF COALESCE (vbPartionCellId_6, 0) = 0
              THEN
@@ -364,7 +427,18 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_7))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_7, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_7:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_7)
+                                         );
+                 END IF;
              END IF;
+
              -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_7, 0) = 0
              THEN
@@ -397,7 +471,18 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_8))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_8, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_8:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_8)
+                                         );
+                 END IF;
              END IF;
+
              --если не нашли ошибка
              IF COALESCE (vbPartionCellId_8, 0) = 0
              THEN
@@ -430,8 +515,19 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                       FROM Object
                                       WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_9))
                                         AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_9, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_9:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_9)
+                                         );
+                 END IF;
              END IF;
-             --если не нашли ошибка
+
+             -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_9, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_9;
@@ -463,8 +559,19 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                        FROM Object
                                        WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_10))
                                          AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_10, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_10:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_10)
+                                         );
+                 END IF;
              END IF;
-             --если не нашли ошибка
+
+             -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_10, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_10;
@@ -496,8 +603,19 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                        FROM Object
                                        WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_11))
                                          AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_11, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_11:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_11)
+                                         );
+                 END IF;
              END IF;
-             --если не нашли ошибка
+
+             -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_11, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_11;
@@ -529,8 +647,19 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                        FROM Object
                                        WHERE UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (ioPartionCellName_12))
                                          AND Object.DescId     = zc_Object_PartionCell());
+                 -- поиск без разделителя
+                 IF COALESCE (vbPartionCellId_12, 0) = 0
+                 THEN
+                     -- поиск
+                     vbPartionCellId_12:= (WITH tmpPartionCell AS (SELECT * FROM Object WHERE Object.DescId = zc_Object_PartionCell() AND Object.isErased = FALSE)
+                                          SELECT tmpPartionCell.Id
+                                          FROM tmpPartionCell
+                                          WHERE REPLACE (TRIM (tmpPartionCell.ValueData), '-', '') ILIKE TRIM (ioPartionCellName_12)
+                                         );
+                 END IF;
              END IF;
-             --если не нашли ошибка
+
+             -- если не нашли ошибка
              IF COALESCE (vbPartionCellId_12, 0) = 0
              THEN
                  RAISE EXCEPTION 'Ошибка.Не найдена ячейка <%>.', ioPartionCellName_12;
