@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit, dsdCommon;
 
 type
   TWeighingProductionForm = class(TParentForm)
@@ -183,6 +183,7 @@ type
     cbisList: TcxCheckBox;
     edBranchCode: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
+    cbisRePack: TcxCheckBox;
   private
   public
   end;

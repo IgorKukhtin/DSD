@@ -17,7 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
-             , isList Boolean
+             , isList Boolean 
+             , isRePack Boolean
              , TotalCountKg TFloat, TotalCountTare TFloat
              , FromName TVarChar, ToName TVarChar
              , UserName TVarChar
@@ -84,6 +85,7 @@ BEGIN
              , MovementBoolean_isIncome.ValueData         AS isProductionIn
              , COALESCE (MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
              , COALESCE (MovementBoolean_List.ValueData,False)    :: Boolean  AS isList
+             , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
 
              , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
              , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
@@ -147,6 +149,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
             LEFT JOIN MovementString AS MovementString_PartionGoods
                                      ON MovementString_PartionGoods.MovementId =  Movement.Id
@@ -227,6 +232,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.07.24         * isRePack
  15.11.22         * add BranchCode
  06.09.21         * isList
  08.02.21         * Comment

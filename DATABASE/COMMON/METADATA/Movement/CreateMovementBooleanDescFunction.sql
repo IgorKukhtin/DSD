@@ -478,12 +478,17 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_CurrencyUser() RETURNS integer AS 
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_CurrencyUser', 'Ручной ввод курса'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_CurrencyUser');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_isRePack() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_isRePack'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_isRePack', 'Перепак'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_isRePack');
+
 
   
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 17.07.24         * zc_MovementBoolean_isRePack
  13.07.24         * zc_MovementBoolean_CurrencyUser
  26.01.23         * zc_MovementBoolean_PrintAuto
  17.05.23                                                                                   * zc_MovementBoolean_DiscountInformation

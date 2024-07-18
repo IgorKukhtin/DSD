@@ -1140,9 +1140,7 @@ end;
 
 procedure TLoadFormTest.LoadSendFormTest;
 begin
-
-
-  {
+ {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSend_DatePartionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSend_DatePartionDialogForm');
@@ -1152,7 +1150,7 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  exit;
+  //exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_WeighingProduction(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumber_Parent TVarChar, MovementId_parent Integer, OperDate_Parent TDateTime
              , isProductionIn Boolean, isAuto Boolean, isList Boolean
+             , isRePack Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementId_Order Integer, InvNumberOrder TVarChar
              , MovementDescNumber Integer
@@ -49,7 +50,8 @@ BEGIN
 
              , FALSE                 AS isProductionIn
              , FALSE                 AS isAuto
-             , FALSE                 AS isList
+             , FALSE                 AS isList 
+             , FALSE                 AS isRePack
              , CAST (CURRENT_DATE AS TDateTime) AS StartWeighing
              , CAST (CURRENT_DATE AS TDateTime) AS EndWeighing
 
@@ -103,8 +105,9 @@ BEGIN
              , Movement_Parent.OperDate          AS OperDate_Parent
 
              , MovementBoolean_isIncome.ValueData    AS isProductionIn
-             , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
-             , COALESCE (MovementBoolean_List.ValueData,False)   :: Boolean  AS isList
+             , COALESCE(MovementBoolean_isAuto.ValueData, False)    :: Boolean  AS isAuto
+             , COALESCE (MovementBoolean_List.ValueData,False)      :: Boolean  AS isList
+             , COALESCE (MovementBoolean_isRePack.ValueData, FALSE) :: Boolean  AS isRePack
 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
@@ -157,6 +160,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_List
                                       ON MovementBoolean_List.MovementId = Movement.Id
                                      AND MovementBoolean_List.DescId = zc_MovementBoolean_List()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
             LEFT JOIN MovementDate AS MovementDate_StartWeighing
                                    ON MovementDate_StartWeighing.MovementId = Movement.Id
@@ -246,6 +253,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 17.07.24         * isRePack
  15.11.22         * 
  06.09.21         *
  03.03.20         * Add Order

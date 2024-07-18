@@ -291,6 +291,14 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
         Options.Editing = False
         Width = 57
       end
+      object isRePack: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1087#1072#1082
+        DataBinding.FieldName = 'isRePack'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object BarCodeBoxName: TcxGridDBColumn
         Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
         DataBinding.FieldName = 'BarCodeBoxName'
@@ -1254,6 +1262,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216

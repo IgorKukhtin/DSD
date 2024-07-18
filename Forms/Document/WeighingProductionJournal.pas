@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, dsdCommon;
 
 type
   TWeighingProductionJournalForm = class(TParentForm)
@@ -133,6 +133,7 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     cxGridDBTableViewColumn2: TcxGridDBColumn;
     BranchCode: TcxGridDBColumn;
+    isRePack: TcxGridDBColumn;
   private
   public
   end;
