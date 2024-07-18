@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -859,6 +858,27 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Visible = False
             VisibleForCustomization = False
             Width = 50
+          end
+          object DescId_milo_num: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1103#1095#1077#1081#1082#1080
+            DataBinding.FieldName = 'DescId_milo_num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionCellId_num: TcxGridDBColumn
+            Caption = #1050#1083#1102#1095' '#1103#1095#1077#1081#1082#1080
+            DataBinding.FieldName = 'PartionCellId_num'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
         end
       end
@@ -2358,6 +2378,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Ord'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId_num'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_num'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -8,13 +8,20 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);*/
 
+/*
 DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );
-
+*/
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar
+                                                  );
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
     IN inStartDate             TDateTime,
@@ -38,6 +45,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_12      Integer,
 
     IN inOrd                   Integer, --№ пп
+    IN inDescId_milo_num       Integer, --№ пп
    OUT outPartionCellId_last   Integer,
 
  INOUT ioPartionCellName_1     TVarChar, --
@@ -122,6 +130,12 @@ if zfConvert_StringToNumber (ioPartionCellName_10) = 0 and zfConvert_StringToNum
 if zfConvert_StringToNumber (ioPartionCellName_11) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 1)) > 0  then ioPartionCellName_11    := right (ioPartionCellName_11, LENGTH(ioPartionCellName_11) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 2))> 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 1)) > 0  then ioPartionCellName_12    := right (ioPartionCellName_12, LENGTH(ioPartionCellName_12) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 2))> 0 THEN 2 ELSE 1 END); end if;
 
+
+     -- если не нашли ошибка
+     IF COALESCE (inDescId_milo_num, 0) <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.В режиме <По ячейкам> нет прав заполнять.', ioPartionCellName_1;
+     END IF;
 
      --  1
      IF ioPartionCellName_1 ILIKE '%отбор%' OR TRIM (ioPartionCellName_1) = '0'
