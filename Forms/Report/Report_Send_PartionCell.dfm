@@ -1995,11 +1995,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ColorValueList = <>
       end
       item
-        ColorColumn = PartionGoodsDate
-        BackGroundValueColumn = ColorFon_ord
-        ColorValueList = <>
-      end
-      item
         ColorColumn = NormInDays
         BackGroundValueColumn = ColorFon_ord
         ColorValueList = <>
