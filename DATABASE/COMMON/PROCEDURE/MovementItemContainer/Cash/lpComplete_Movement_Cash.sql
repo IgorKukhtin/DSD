@@ -45,7 +45,7 @@ BEGIN
      
      -- определили 
    --vbOperDate_currency:= DATE_TRUNC ('MONTH', (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)); -- + INTERVAL '1 MONTH';
-     vbOperDate_currency:= (SELECT Movement.OperDate - INTERVAL '0 DAY' FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDate_currency:= (SELECT Movement.OperDate - INTERVAL '1 DAY' FROM Movement WHERE Movement.Id = inMovementId);
 
 
          -- пока определяется "из справочника", доработать - вывести на форму
