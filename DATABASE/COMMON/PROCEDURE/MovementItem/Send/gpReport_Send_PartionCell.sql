@@ -191,13 +191,12 @@ BEGIN
              EXIT;
           END IF;
 
-          --
+          -- Только заполненные ячейки + отбор
           INSERT INTO _tmpPartionCell (MovementItemId, DescId, ObjectId)
              WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
              SELECT tmpMILO.MovementItemId, tmpMILO.DescId, tmpMILO.ObjectId
              FROM tmpMILO
-             WHERE tmpMILO.ObjectId > 0
-               AND tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
+             WHERE tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
                                     , zc_MILinkObject_PartionCell_2()
                                     , zc_MILinkObject_PartionCell_3()
                                     , zc_MILinkObject_PartionCell_4()
@@ -232,7 +231,9 @@ BEGIN
                         WHERE Object_GoodsByGoodsKind_View.NormInDays > 0
                        )
 
-    , tmpMovement AS (SELECT Movement.*
+      -- Все документы
+    , tmpMovement AS (-- или в Периоде
+                      SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
                            , MovementLinkObject_To.ObjectId   AS ToId
                       FROM Movement
@@ -250,6 +251,7 @@ BEGIN
                         AND MovementLinkObject_To.ObjectId = inUnitId
 
                      UNION
+                      -- или в Ячейке
                       SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
                            , MovementLinkObject_To.ObjectId   AS ToId
@@ -262,23 +264,30 @@ BEGIN
                                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
 
-                      WHERE Movement.Id IN (SELECT DISTINCT MovementItem.MovementId FROM _tmpPartionCell JOIN MovementItem ON MovementItem.Id = _tmpPartionCell.MovementItemId)
+                      WHERE Movement.Id IN (SELECT DISTINCT MovementItem.MovementId
+                                            FROM _tmpPartionCell
+                                                 JOIN MovementItem ON MovementItem.Id = _tmpPartionCell.MovementItemId
+                                            -- Без отбор
+                                            WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                           )
                         AND Movement.DescId = zc_Movement_Send()
                         AND MovementLinkObject_To.ObjectId = inUnitId
                       )
 
+       -- Все MI
      , tmpMI_all AS (SELECT MovementItem.Id         AS MovementItemId
                           , MovementItem.MovementId AS MovementId
                           , MovementItem.ObjectId   AS GoodsId
                           , MovementItem.Amount     AS Amount
                      FROM MovementItem
-                          --ограничили товаром
+                          -- ограничили товаром
                           INNER JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
+
                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                        AND MovementItem.DescId   = zc_MI_Master()
                        AND MovementItem.isErased = FALSE
                     )
-
+           -- Все MI - или в Периоде или в Ячейке
          , tmpMI AS (SELECT tmpMI_all.MovementItemId
                           , tmpMI_all.MovementId
                           , tmpMI_all.GoodsId
@@ -286,18 +295,20 @@ BEGIN
                      FROM tmpMI_all
                           INNER JOIN tmpMovement ON tmpMovement.Id = tmpMI_all.MovementId
                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                     -- Без отбор
+                                     WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
                                     ) AS _tmpPartionCell
                                       ON _tmpPartionCell.MovementItemId = tmpMI_all.MovementItemId
-                     WHERE _tmpPartionCell.MovementItemId > 0
-                        OR tmpMovement.OperDate BETWEEN inStartDate AND inEndDate
+                     WHERE (tmpMovement.OperDate BETWEEN inStartDate AND inEndDate)
+                        -- или в Ячейке
+                        OR _tmpPartionCell.MovementItemId > 0
                     )
 
+      -- Только заполненные ячейки + отбор
     , tmpMILO_PC AS (SELECT _tmpPartionCell.*
                            , COUNT (*) OVER (PARTITION BY _tmpPartionCell.MovementItemId ) AS CountCell
-                      FROM _tmpPartionCell
-                      -- Только заполненные ячейки
-                      WHERE _tmpPartionCell.ObjectId > 0
-                     )
+                     FROM _tmpPartionCell
+                    )
 
      , tmpMovementDate_Insert AS (SELECT MovementDate.*
                           FROM MovementDate
@@ -425,7 +436,7 @@ BEGIN
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
                            -- есть привязка или нет - выводится двумя строчками
-                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId, CountCell FROM tmpMILO_PartionCell
+                           LEFT JOIN (SELECT DISTINCT tmpMILO_PartionCell.MovementItemId, tmpMILO_PartionCell.CountCell FROM tmpMILO_PartionCell
                                      ) AS tmpMILO_PartionCell
                                        ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
 
@@ -553,7 +564,8 @@ BEGIN
                            , tmpData_All_All.isClose_value_max
                              -- есть хоть одна закрытая ячейка
                            , tmpData_All_All.isClose_value_min
-                             --
+
+                             -- для сортировки - горизонтально
                            , ROW_NUMBER() OVER (PARTITION BY tmpData_All_All.MovementId        -- ***
                                                            , tmpData_All_All.ToId              -- ***
                                                            , tmpData_All_All.MovementItemId    -- ***
@@ -565,6 +577,7 @@ BEGIN
                                                        , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
                                                ) AS Ord
+
                       FROM tmpData_All_All
                            LEFT JOIN Object AS Object_PartionCell      ON Object_PartionCell.Id      = tmpData_All_All.PartionCellId
                            LEFT JOIN Object AS Object_PartionCell_real ON Object_PartionCell_real.Id = tmpData_All_All.PartionCellId_real
@@ -874,7 +887,22 @@ BEGIN
                          , 0 ::TFloat AS AmountRemains_Weight
 
                            -- № п/п
-                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END
+                         , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN COALESCE (tmpData.PartionCellId_1, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_2, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_3, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_4, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_5, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_6, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_7, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_8, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_9, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_10, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_11, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_12, 0) IN (0, zc_PartionCell_RK())
+                                                                                                                    THEN 999
+                                                                                                              ELSE 1
+                                                                                                         END
+                                                                                                       , CASE WHEN tmpData_MI.isPartionCell = FALSE THEN 999 ELSE 1 END
                                                                                                        , COALESCE (tmpData_MI.PartionGoodsDate, tmpData_MI.PartionGoodsDate, zc_DateStart()) ASC
                                                                                                         ) :: Integer AS Ord
 
@@ -1758,9 +1786,25 @@ BEGIN
 
                       -- № п/п
                     --, ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC) :: Integer AS Ord
-                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN tmpData_MI.isPartionCell = False THEN 999 ELSE 1 END
-                                                                                                            , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
-                                                                                                            ) :: Integer AS Ord
+                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN COALESCE (tmpData.PartionCellId_1, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_2, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_3, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_4, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_5, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_6, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_7, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_8, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_9, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_10, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_11, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_12, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               THEN 999
+                                                                                                         ELSE 1
+                                                                                                    END
+                                                                                                  , CASE WHEN tmpData_MI.isPartionCell = FALSE THEN 999 ELSE 1 END
+                                                                                                  , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
+                                        ) :: Integer AS Ord
+
              FROM tmpData_MI -- расчет кол-во - мастер
                   FULL JOIN tmpRemains ON tmpRemains.GoodsId          = tmpData_MI.GoodsId
                                       AND tmpRemains.GoodsKindId      = tmpData_MI.GoodsKindId
@@ -1778,7 +1822,7 @@ BEGIN
                   LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
                   LEFT JOIN Object AS Object_Goods         ON Object_Goods.Id         = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
-                  LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
+                  LEFT JOIN Object AS Object_GoodsKind     ON Object_GoodsKind.Id     = COALESCE (tmpData_MI.GoodsKindId, tmpRemains.GoodsKindId)
                   LEFT JOIN tmpNormInDays ON tmpNormInDays.GoodsId     = COALESCE (tmpData_MI.GoodsId, tmpRemains.GoodsId)
                                          AND tmpNormInDays.GoodsKindId = COALESCE (tmpData_MI.GoodsKindId,tmpRemains.GoodsKindId)
 
@@ -1960,6 +2004,7 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
         , CASE WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+
    FROM tmpResult
 
         ;
