@@ -109,6 +109,8 @@ type
     GoodsGroupName: TcxGridDBColumn;
     DescId_milo_num: TcxGridDBColumn;
     PartionCellId_num: TcxGridDBColumn;
+    actOpenReport_PartionCell_history: TdsdOpenForm;
+    bbOpenReport_PartionCell_history: TdxBarButton;
   private
     { Private declarations }
   public
