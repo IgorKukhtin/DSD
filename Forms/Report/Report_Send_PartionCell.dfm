@@ -1184,8 +1184,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       ImageIndex = 26
       FormName = 'TReport_PartionCell_historyForm'
       FormNameParam.Value = 'TReport_PartionCell_historyForm'
-      FormNameParam.Component = FormParams
-      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1242,8 +1240,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       ImageIndex = 25
       FormName = 'TPartionCellChoiceAllForm'
       FormNameParam.Value = 'TPartionCellChoiceAllForm'
-      FormNameParam.Component = FormParams
-      FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2220,7 +2216,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       end
       item
         Name = 'FormName'
-        Value = Null
+        Value = 'TSendlForm'
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString
@@ -2232,12 +2228,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   end
   object FormParams: TdsdFormParams
     Params = <
-      item
-        Name = 'FormName'
-        Value = 'TReport_PartionCell_historyForm'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'StartDate'
         Value = 43101d
@@ -2271,9 +2261,16 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = 'TSendlForm'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 296
-    Top = 200
+    Left = 264
+    Top = 264
   end
   object spUpdate_MI_Send_byReport: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Send_byReport'

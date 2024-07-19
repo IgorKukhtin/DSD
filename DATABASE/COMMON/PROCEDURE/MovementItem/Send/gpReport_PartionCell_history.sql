@@ -27,6 +27,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      vbGoodsKindName = (SELECT Object.ValueData FROM Object WHERE Object.Id = inGoodsKindId );
+
 RETURN QUERY 
 WITH 
 tmpMI AS (
@@ -51,7 +52,7 @@ tmpMI AS (
               INNER JOIN MovementItemContainer AS MIContainer
                                                ON MIContainer.ContainerId = CLO_PartionGoods.ContainerId 
                                               AND MIContainer.DescId = zc_MIContainer_Count() 
-                                            --  AND MIContainer.ObjectId_Analyzer = inGoodsId
+                                              AND MIContainer.ObjectId_Analyzer = inGoodsId
               LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                             ON CLO_GoodsKind.ContainerId = CLO_PartionGoods.ContainerId
                                            AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()                                              
@@ -61,7 +62,7 @@ tmpMI AS (
          WHERE --ObjectDate_Value.ObjectId = Object_PartionGoods.Id
                ObjectDate_Value.ValueData = inPartionGoodsDate  --'2024-07-15'
            AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-          -- AND COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
+         --  AND COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
          )
          
       , tmpProtocol_All AS (SELECT *
@@ -95,24 +96,24 @@ tmpMI AS (
                              FROM MovementItemProtocol
                              WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                              ) AS tmp                    
-                           WHERE tmp.GoodsId = inGoodsId AND COALESCE (tmp.GoodsKindName, '') = COALESCE (vbGoodsKindName,'')
+                     --      WHERE tmp.GoodsId = inGoodsId AND COALESCE (tmp.GoodsKindName, '') = COALESCE (vbGoodsKindName,'')
                             )
                              
-, tmpCell_1 AS (SELECT tmp.Ord,  1 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_1 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  2 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_2 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  3 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_3 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  4 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_4 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  5 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_5 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  6 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_6 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  7 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_7 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  8 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_8 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord,  9 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_9 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord, 10 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_10 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord, 11 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_11 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
-          UNION SELECT tmp.Ord, 12 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_12 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp                
+, tmpCell_1 AS (SELECT DISTINCT tmp.Ord,  1 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_1 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  2 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_2 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  3 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_3 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  4 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_4 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  5 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_5 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  6 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_6 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  7 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_7 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  8 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_8 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord,  9 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_9 AS PartionCellName,  tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord, 10 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_10 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord, 11 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_11 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp
+          UNION SELECT DISTINCT tmp.Ord, 12 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, tmp.PartionCell_12 AS PartionCellName, tmp.OperDate, tmp.MovementItemId FROM tmpProtocol_All AS tmp                
                 )
 
-    SELECT tmpCell_old.OperDate
+    SELECT DISTINCT tmpCell_old.OperDate
          , tmpCell_old.MovementItemId
          , tmpCell_old.GoodsId
          , tmpCell_old.GoodsName     ::TVarChar
@@ -149,3 +150,4 @@ $BODY$
 
 -- тест
 --select * from gpReport_PartionCell_history(inPartionGoodsDate := ('16.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 ,  inSession := '9457');
+--select * from gpReport_PartionCell_history(inPartionGoodsDate := ('17.07.2024')::TDateTime , inGoodsId := 2116 , inGoodsKindId := 8346 ,  inSession := '9457');
