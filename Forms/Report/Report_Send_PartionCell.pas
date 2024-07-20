@@ -101,7 +101,7 @@ type
     ColorFon_12: TcxGridDBColumn;
     Color_11: TcxGridDBColumn;
     Color_12: TcxGridDBColumn;
-    PartionCellName_21: TcxGridDBColumn;
+    PartionCellName_ets: TcxGridDBColumn;
     PartionCellCode_11: TcxGridDBColumn;
     PartionCellCode_12: TcxGridDBColumn;
     actOpenPartionCellForm11: TOpenChoiceForm;

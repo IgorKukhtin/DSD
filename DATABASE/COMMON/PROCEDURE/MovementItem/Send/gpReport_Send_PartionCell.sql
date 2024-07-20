@@ -46,6 +46,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellId_18  Integer
              , PartionCellId_19  Integer
              , PartionCellId_20  Integer
+             , PartionCellId_21  Integer
+             , PartionCellId_22  Integer
 
              , PartionCellCode_1  Integer
              , PartionCellCode_2  Integer
@@ -67,6 +69,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellCode_18  Integer
              , PartionCellCode_19  Integer
              , PartionCellCode_20 Integer
+             , PartionCellCode_21 Integer
+             , PartionCellCode_22 Integer
 
 
              , PartionCellName_1   TVarChar
@@ -90,6 +94,8 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , PartionCellName_19   TVarChar
              , PartionCellName_20  TVarChar
              , PartionCellName_21  TVarChar
+             , PartionCellName_22  TVarChar
+             , PartionCellName_ets  TVarChar
 
              , ColorFon_1  Integer
              , ColorFon_2  Integer
@@ -110,7 +116,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , ColorFon_17  Integer
              , ColorFon_18  Integer
              , ColorFon_19  Integer
-             , ColorFon_20 Integer
+             , ColorFon_20  Integer
+             , ColorFon_21  Integer
+             , ColorFon_22  Integer
 
              , Color_1  Integer
              , Color_2  Integer
@@ -131,7 +139,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , Color_17  Integer
              , Color_18  Integer
              , Color_19  Integer
-             , Color_20 Integer
+             , Color_20  Integer
+             , Color_21  Integer
+             , Color_22  Integer
 
                -- есть ли хоть одна закрытая партия
              , isClose_value_min Boolean
@@ -208,6 +218,16 @@ BEGIN
                                     , zc_MILinkObject_PartionCell_10()
                                     , zc_MILinkObject_PartionCell_11()
                                     , zc_MILinkObject_PartionCell_12()
+                                    , zc_MILinkObject_PartionCell_13()
+                                    , zc_MILinkObject_PartionCell_14()
+                                    , zc_MILinkObject_PartionCell_15()
+                                    , zc_MILinkObject_PartionCell_16()
+                                    , zc_MILinkObject_PartionCell_17()
+                                    , zc_MILinkObject_PartionCell_18()
+                                    , zc_MILinkObject_PartionCell_19()
+                                    , zc_MILinkObject_PartionCell_20()
+                                    , zc_MILinkObject_PartionCell_21()
+                                    , zc_MILinkObject_PartionCell_22()
                                      )
             ;
           --
@@ -336,6 +356,16 @@ BEGIN
                                                            , zc_MIBoolean_PartionCell_Close_10()
                                                            , zc_MIBoolean_PartionCell_Close_11()
                                                            , zc_MIBoolean_PartionCell_Close_12()
+                                                           , zc_MIBoolean_PartionCell_Close_13()
+                                                           , zc_MIBoolean_PartionCell_Close_14()
+                                                           , zc_MIBoolean_PartionCell_Close_15()
+                                                           , zc_MIBoolean_PartionCell_Close_16()
+                                                           , zc_MIBoolean_PartionCell_Close_17()
+                                                           , zc_MIBoolean_PartionCell_Close_18()
+                                                           , zc_MIBoolean_PartionCell_Close_19()
+                                                           , zc_MIBoolean_PartionCell_Close_20()
+                                                           , zc_MIBoolean_PartionCell_Close_21()
+                                                           , zc_MIBoolean_PartionCell_Close_22()
                                                             )
                        )
 
@@ -370,6 +400,27 @@ BEGIN
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_11()
                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_12()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_13()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_14()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_15()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_16()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_17()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_18()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_19()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_20()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_21()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_22()
+                                                                                                   
                                                                                               END
                                     LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_real
                                                                      ON MILO_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
@@ -397,6 +448,27 @@ BEGIN
                                                                                                                         THEN zc_MILinkObject_PartionCell_real_11()
                                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
                                                                                                                         THEN zc_MILinkObject_PartionCell_real_12()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_13()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_14()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_15()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_16()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_17()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_18()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_19()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_20()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_21()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_22()
+                                                                                                                   
                                                                                                               END
                               )
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
@@ -548,8 +620,18 @@ BEGIN
                                             WHEN zc_MILinkObject_PartionCell_8() THEN 8
                                             WHEN zc_MILinkObject_PartionCell_9() THEN 9
                                             WHEN zc_MILinkObject_PartionCell_10() THEN 10
-                                            WHEN zc_MILinkObject_PartionCell_11() THEN 12
+                                            WHEN zc_MILinkObject_PartionCell_11() THEN 11
                                             WHEN zc_MILinkObject_PartionCell_12() THEN 12
+                                            WHEN zc_MILinkObject_PartionCell_13() THEN 13
+                                            WHEN zc_MILinkObject_PartionCell_14() THEN 14
+                                            WHEN zc_MILinkObject_PartionCell_15() THEN 15
+                                            WHEN zc_MILinkObject_PartionCell_16() THEN 16
+                                            WHEN zc_MILinkObject_PartionCell_17() THEN 17
+                                            WHEN zc_MILinkObject_PartionCell_18() THEN 18
+                                            WHEN zc_MILinkObject_PartionCell_19() THEN 19
+                                            WHEN zc_MILinkObject_PartionCell_20() THEN 20
+                                            WHEN zc_MILinkObject_PartionCell_21() THEN 21
+                                            WHEN zc_MILinkObject_PartionCell_22() THEN 22
                                             ELSE - 1
                                        END
                                   ELSE 0
@@ -615,6 +697,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_2
@@ -636,7 +720,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_20
-
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_2
@@ -658,6 +743,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_2
@@ -679,6 +766,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_2
@@ -700,11 +789,13 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_22
 
                          -- есть хоть одна закрытая ячейка
                        , MIN (tmpData_All.isClose_value_min) AS isClose_value_min
 
-                       , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_All.Ord, 0) > 20  THEN tmpData_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_21
+                       , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_All.Ord, 0) > 20  THEN tmpData_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
                   FROM tmpData_All
 
@@ -763,6 +854,8 @@ BEGIN
                          , tmpData.PartionCellId_18 :: Integer
                          , tmpData.PartionCellId_19 :: Integer
                          , tmpData.PartionCellId_20 :: Integer
+                         , tmpData.PartionCellId_21 :: Integer
+                         , tmpData.PartionCellId_22 :: Integer
 
                          , tmpData.PartionCellCode_1  :: Integer
                          , tmpData.PartionCellCode_2  :: Integer
@@ -784,6 +877,8 @@ BEGIN
                          , tmpData.PartionCellCode_18 :: Integer
                          , tmpData.PartionCellCode_19 :: Integer
                          , tmpData.PartionCellCode_20 :: Integer
+                         , tmpData.PartionCellCode_21 :: Integer
+                         , tmpData.PartionCellCode_22 :: Integer
 
 
                          , tmpData.PartionCellName_1        :: TVarChar
@@ -807,6 +902,8 @@ BEGIN
                          , tmpData.PartionCellName_19       :: TVarChar
                          , tmpData.PartionCellName_20       :: TVarChar
                          , tmpData.PartionCellName_21       :: TVarChar
+                         , tmpData.PartionCellName_22       :: TVarChar
+                         , tmpData.PartionCellName_ets      :: TVarChar
 
                          , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer   AS  ColorFon_1
                          , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer   AS  ColorFon_2
@@ -828,6 +925,8 @@ BEGIN
                          , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer  AS  ColorFon_18
                          , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer  AS  ColorFon_19
                          , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer   AS  ColorFon_20
+                         , CASE WHEN COALESCE (tmpData.ColorFon_21, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_21 END :: Integer   AS  ColorFon_21
+                         , CASE WHEN COALESCE (tmpData.ColorFon_22, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_22 END :: Integer   AS  ColorFon_22
 
                          , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer   AS Color_1
                          , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer   AS Color_2
@@ -849,6 +948,8 @@ BEGIN
                          , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer   AS Color_18
                          , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer   AS Color_19
                          , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer   AS Color_20
+                         , CASE WHEN COALESCE (tmpData.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_21 END :: Integer   AS Color_21
+                         , CASE WHEN COALESCE (tmpData.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_22 END :: Integer   AS Color_22
 
                            -- есть хоть одна закрытая ячейка
                          , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
@@ -899,6 +1000,16 @@ BEGIN
                                                                                                                AND COALESCE (tmpData.PartionCellId_10, 0) IN (0, zc_PartionCell_RK())
                                                                                                                AND COALESCE (tmpData.PartionCellId_11, 0) IN (0, zc_PartionCell_RK())
                                                                                                                AND COALESCE (tmpData.PartionCellId_12, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_13, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_14, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_15, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_16, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_17, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_18, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_19, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_20, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_21, 0) IN (0, zc_PartionCell_RK())
+                                                                                                               AND COALESCE (tmpData.PartionCellId_22, 0) IN (0, zc_PartionCell_RK())
                                                                                                                     THEN 999
                                                                                                               ELSE 1
                                                                                                          END
@@ -994,6 +1105,8 @@ BEGIN
         , tmpResult.PartionCellId_18
         , tmpResult.PartionCellId_19
         , tmpResult.PartionCellId_20
+        , tmpResult.PartionCellId_21
+        , tmpResult.PartionCellId_22
 
         , tmpResult.PartionCellCode_1
         , tmpResult.PartionCellCode_2
@@ -1015,6 +1128,8 @@ BEGIN
         , tmpResult.PartionCellCode_18
         , tmpResult.PartionCellCode_19
         , tmpResult.PartionCellCode_20
+        , tmpResult.PartionCellCode_21
+        , tmpResult.PartionCellCode_22
 
         , tmpResult.PartionCellName_1
         , tmpResult.PartionCellName_2
@@ -1037,6 +1152,8 @@ BEGIN
         , tmpResult.PartionCellName_19
         , tmpResult.PartionCellName_20
         , tmpResult.PartionCellName_21
+        , tmpResult.PartionCellName_22
+        , tmpResult.PartionCellName_ets
 
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
@@ -1058,6 +1175,8 @@ BEGIN
         , tmpResult.ColorFon_18
         , tmpResult.ColorFon_19
         , tmpResult.ColorFon_20
+        , tmpResult.ColorFon_21
+        , tmpResult.ColorFon_22
 
         , tmpResult.Color_1
         , tmpResult.Color_2
@@ -1079,6 +1198,8 @@ BEGIN
         , tmpResult.Color_18
         , tmpResult.Color_19
         , tmpResult.Color_20
+        , tmpResult.Color_21
+        , tmpResult.Color_22
 
         , tmpResult.isClose_value_min
         , tmpResult.isPartionCell
@@ -1140,6 +1261,16 @@ BEGIN
                                     , zc_MILinkObject_PartionCell_10()
                                     , zc_MILinkObject_PartionCell_11()
                                     , zc_MILinkObject_PartionCell_12()
+                                    , zc_MILinkObject_PartionCell_13()
+                                    , zc_MILinkObject_PartionCell_14()
+                                    , zc_MILinkObject_PartionCell_15()
+                                    , zc_MILinkObject_PartionCell_16()
+                                    , zc_MILinkObject_PartionCell_17()
+                                    , zc_MILinkObject_PartionCell_18()
+                                    , zc_MILinkObject_PartionCell_19()
+                                    , zc_MILinkObject_PartionCell_20()
+                                    , zc_MILinkObject_PartionCell_21()
+                                    , zc_MILinkObject_PartionCell_22()
                                      )
             ;
           --
@@ -1259,6 +1390,16 @@ BEGIN
                                                            , zc_MIBoolean_PartionCell_Close_10()
                                                            , zc_MIBoolean_PartionCell_Close_11()
                                                            , zc_MIBoolean_PartionCell_Close_12()
+                                                           , zc_MIBoolean_PartionCell_Close_13()
+                                                           , zc_MIBoolean_PartionCell_Close_14()
+                                                           , zc_MIBoolean_PartionCell_Close_15()
+                                                           , zc_MIBoolean_PartionCell_Close_16()
+                                                           , zc_MIBoolean_PartionCell_Close_17()
+                                                           , zc_MIBoolean_PartionCell_Close_18()
+                                                           , zc_MIBoolean_PartionCell_Close_19()
+                                                           , zc_MIBoolean_PartionCell_Close_20()
+                                                           , zc_MIBoolean_PartionCell_Close_21()
+                                                           , zc_MIBoolean_PartionCell_Close_22()
                                                             )
                        )
 
@@ -1293,6 +1434,26 @@ BEGIN
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_11()
                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
                                                                                                         THEN zc_MIBoolean_PartionCell_Close_12()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_13()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_14()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_15()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_16()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_17()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_18()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_19()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_20()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_21()
+                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                        THEN zc_MIBoolean_PartionCell_Close_22()
                                                                                               END
                                     LEFT JOIN MovementItemLinkObject AS MILO_PartionCell_real
                                                                      ON MILO_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
@@ -1320,6 +1481,26 @@ BEGIN
                                                                                                                         THEN zc_MILinkObject_PartionCell_real_11()
                                                                                                                    WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_12()
                                                                                                                         THEN zc_MILinkObject_PartionCell_real_12()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_13()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_14()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_15()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_16()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_17()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_18()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_19()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_20()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_21()
+                                                                                                                   WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                                        THEN zc_MILinkObject_PartionCell_real_22()
                                                                                                               END
                               )
      , tmpMILO_GoodsKind AS (SELECT MovementItemLinkObject.*
@@ -1513,6 +1694,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN tmpData_All.PartionCellId ELSE 0 END) AS PartionCellId_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_2
@@ -1534,6 +1717,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN tmpData_All.PartionCellCode ELSE 0 END) AS PartionCellCode_22
 
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_1
@@ -1556,6 +1741,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 THEN zfCalc_PartionCell_IsClose (tmpData_All.PartionCellName_calc, tmpData_All.isClose_value_max = 0) ELSE '' END) AS PartionCellName_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_2
@@ -1577,6 +1764,8 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_White() ELSE zc_Color_Cyan() END ELSE 0 END) AS ColorFon_22
 
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 1  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_1
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 2  AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_2
@@ -1598,11 +1787,13 @@ BEGIN
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 18 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_18
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 19 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_19
                        , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 20 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_20
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 21 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_21
+                       , MAX (CASE WHEN COALESCE (tmpData_All.Ord, 0) = 22 AND tmpData_All.PartionCellId > 0 THEN CASE WHEN tmpData_All.isClose_value_max = 0 THEN zc_Color_Cyan() ELSE zc_Color_Black() END ELSE 0 END) AS Color_22
 
                          -- есть хоть одна закрытая ячейка
                        , MIN (tmpData_All.isClose_value_min) AS isClose_value_min
 
-                       , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_All.Ord, 0) > 20  THEN tmpData_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_21
+                       , STRING_AGG (DISTINCT CASE WHEN COALESCE (tmpData_All.Ord, 0) > 20  THEN tmpData_All.PartionCellName_calc ELSE '' END, ';') AS PartionCellName_ets
 
                   FROM tmpData_All
 
@@ -1661,6 +1852,8 @@ BEGIN
                     , tmpData.PartionCellId_18 :: Integer
                     , tmpData.PartionCellId_19 :: Integer
                     , tmpData.PartionCellId_20 :: Integer
+                    , tmpData.PartionCellId_21 :: Integer
+                    , tmpData.PartionCellId_22 :: Integer
 
                     , tmpData.PartionCellCode_1  :: Integer
                     , tmpData.PartionCellCode_2  :: Integer
@@ -1682,6 +1875,8 @@ BEGIN
                     , tmpData.PartionCellCode_18 :: Integer
                     , tmpData.PartionCellCode_19 :: Integer
                     , tmpData.PartionCellCode_20 :: Integer
+                    , tmpData.PartionCellCode_21 :: Integer
+                    , tmpData.PartionCellCode_22 :: Integer
 
                     , tmpData.PartionCellName_1        :: TVarChar
                     , tmpData.PartionCellName_2        :: TVarChar
@@ -1704,48 +1899,54 @@ BEGIN
                     , tmpData.PartionCellName_19       :: TVarChar
                     , tmpData.PartionCellName_20       :: TVarChar
                     , tmpData.PartionCellName_21       :: TVarChar
+                    , tmpData.PartionCellName_22       :: TVarChar
+                    , tmpData.PartionCellName_ets       :: TVarChar
 
-                    , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.ColorFon_1,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_1  END :: Integer  AS ColorFon_1 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_2,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_2  END :: Integer  AS ColorFon_2 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_3,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_3  END :: Integer  AS ColorFon_3 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_4,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_4  END :: Integer  AS ColorFon_4 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_5,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_5  END :: Integer  AS ColorFon_5 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_6,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_6  END :: Integer  AS ColorFon_6 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_7,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_7  END :: Integer  AS ColorFon_7 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_8,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_8  END :: Integer  AS ColorFon_8 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_9,  0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_9  END :: Integer  AS ColorFon_9 
+                    , CASE WHEN COALESCE (tmpData.ColorFon_10, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_10 END :: Integer  AS ColorFon_10
+                    , CASE WHEN COALESCE (tmpData.ColorFon_11, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_11  END :: Integer AS ColorFon_11
+                    , CASE WHEN COALESCE (tmpData.ColorFon_12, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_12  END :: Integer AS ColorFon_12
+                    , CASE WHEN COALESCE (tmpData.ColorFon_13, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_13  END :: Integer AS ColorFon_13
+                    , CASE WHEN COALESCE (tmpData.ColorFon_14, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_14  END :: Integer AS ColorFon_14
+                    , CASE WHEN COALESCE (tmpData.ColorFon_15, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_15  END :: Integer AS ColorFon_15
+                    , CASE WHEN COALESCE (tmpData.ColorFon_16, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_16  END :: Integer AS ColorFon_16
+                    , CASE WHEN COALESCE (tmpData.ColorFon_17, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_17  END :: Integer AS ColorFon_17
+                    , CASE WHEN COALESCE (tmpData.ColorFon_18, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_18  END :: Integer AS ColorFon_18
+                    , CASE WHEN COALESCE (tmpData.ColorFon_19, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_19  END :: Integer AS ColorFon_19
+                    , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_20  END :: Integer AS ColorFon_20
+                    , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_21  END :: Integer AS ColorFon_21
+                    , CASE WHEN COALESCE (tmpData.ColorFon_20, 0) = 0 THEN zc_Color_White() ELSE tmpData.ColorFon_22  END :: Integer AS ColorFon_22
 
-                    , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer
-                    , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer
+                    , CASE WHEN COALESCE (tmpData.Color_1,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_1  END :: Integer  AS Color_1 
+                    , CASE WHEN COALESCE (tmpData.Color_2,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_2  END :: Integer  AS Color_2 
+                    , CASE WHEN COALESCE (tmpData.Color_3,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_3  END :: Integer  AS Color_3 
+                    , CASE WHEN COALESCE (tmpData.Color_4,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_4  END :: Integer  AS Color_4 
+                    , CASE WHEN COALESCE (tmpData.Color_5,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_5  END :: Integer  AS Color_5 
+                    , CASE WHEN COALESCE (tmpData.Color_6,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_6  END :: Integer  AS Color_6 
+                    , CASE WHEN COALESCE (tmpData.Color_7,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_7  END :: Integer  AS Color_7 
+                    , CASE WHEN COALESCE (tmpData.Color_8,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_8  END :: Integer  AS Color_8 
+                    , CASE WHEN COALESCE (tmpData.Color_9,  0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_9  END :: Integer  AS Color_9 
+                    , CASE WHEN COALESCE (tmpData.Color_10, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_10 END :: Integer  AS Color_10
+                    , CASE WHEN COALESCE (tmpData.Color_11, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_11 END :: Integer  AS Color_11
+                    , CASE WHEN COALESCE (tmpData.Color_12, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_12 END :: Integer  AS Color_12
+                    , CASE WHEN COALESCE (tmpData.Color_13, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_13 END :: Integer  AS Color_13
+                    , CASE WHEN COALESCE (tmpData.Color_14, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_14 END :: Integer  AS Color_14
+                    , CASE WHEN COALESCE (tmpData.Color_15, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_15 END :: Integer  AS Color_15
+                    , CASE WHEN COALESCE (tmpData.Color_16, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_16 END :: Integer  AS Color_16
+                    , CASE WHEN COALESCE (tmpData.Color_17, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_17 END :: Integer  AS Color_17
+                    , CASE WHEN COALESCE (tmpData.Color_18, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_18 END :: Integer  AS Color_18
+                    , CASE WHEN COALESCE (tmpData.Color_19, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_19 END :: Integer  AS Color_19
+                    , CASE WHEN COALESCE (tmpData.Color_20, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_20 END :: Integer  AS Color_20
+                    , CASE WHEN COALESCE (tmpData.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_21 END :: Integer  AS Color_21
+                    , CASE WHEN COALESCE (tmpData.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_22 END :: Integer  AS Color_22
 
                       -- есть хоть одна закрытая ячейка
                     , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
@@ -1798,7 +1999,17 @@ BEGIN
                                                                                                           AND COALESCE (tmpData.PartionCellId_10, 0) IN (0, zc_PartionCell_RK())
                                                                                                           AND COALESCE (tmpData.PartionCellId_11, 0) IN (0, zc_PartionCell_RK())
                                                                                                           AND COALESCE (tmpData.PartionCellId_12, 0) IN (0, zc_PartionCell_RK())
-                                                                                                               THEN 999
+                                                                                                          AND COALESCE (tmpData.PartionCellId_13, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_14, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_15, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_16, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_17, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_18, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_19, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_20, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_21, 0) IN (0, zc_PartionCell_RK())
+                                                                                                          AND COALESCE (tmpData.PartionCellId_22, 0) IN (0, zc_PartionCell_RK())
+                                                                                                         THEN 999
                                                                                                          ELSE 1
                                                                                                     END
                                                                                                   , CASE WHEN tmpData_MI.isPartionCell = FALSE THEN 999 ELSE 1 END
@@ -1896,6 +2107,8 @@ BEGIN
         , tmpResult.PartionCellId_18
         , tmpResult.PartionCellId_19
         , tmpResult.PartionCellId_20
+        , tmpResult.PartionCellId_21
+        , tmpResult.PartionCellId_22
 
         , tmpResult.PartionCellCode_1
         , tmpResult.PartionCellCode_2
@@ -1917,6 +2130,8 @@ BEGIN
         , tmpResult.PartionCellCode_18
         , tmpResult.PartionCellCode_19
         , tmpResult.PartionCellCode_20
+        , tmpResult.PartionCellCode_21
+        , tmpResult.PartionCellCode_22
 
         , tmpResult.PartionCellName_1
         , tmpResult.PartionCellName_2
@@ -1939,6 +2154,8 @@ BEGIN
         , tmpResult.PartionCellName_19
         , tmpResult.PartionCellName_20
         , tmpResult.PartionCellName_21
+        , tmpResult.PartionCellName_22
+        , tmpResult.PartionCellName_ets
 
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
@@ -1960,6 +2177,8 @@ BEGIN
         , tmpResult.ColorFon_18
         , tmpResult.ColorFon_19
         , tmpResult.ColorFon_20
+        , tmpResult.ColorFon_21
+        , tmpResult.ColorFon_22
 
         , tmpResult.Color_1
         , tmpResult.Color_2
@@ -1981,6 +2200,8 @@ BEGIN
         , tmpResult.Color_18
         , tmpResult.Color_19
         , tmpResult.Color_20
+        , tmpResult.Color_21
+        , tmpResult.Color_22
 
         , tmpResult.isClose_value_min
         , tmpResult.isPartionCell
@@ -2019,6 +2240,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.24         *
  28.06.24
  04.01.24         *
 */

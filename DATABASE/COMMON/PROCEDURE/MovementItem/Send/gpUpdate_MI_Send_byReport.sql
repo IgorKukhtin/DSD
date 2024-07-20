@@ -16,10 +16,18 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , TVarChar
                                                   );
 */
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+/*DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar
+                                                  ); */
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
@@ -43,6 +51,16 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellId_10      Integer,
  INOUT ioPartionCellId_11      Integer,
  INOUT ioPartionCellId_12      Integer,
+ INOUT ioPartionCellId_13       Integer,
+ INOUT ioPartionCellId_14       Integer,
+ INOUT ioPartionCellId_15       Integer,
+ INOUT ioPartionCellId_16       Integer,
+ INOUT ioPartionCellId_17       Integer,
+ INOUT ioPartionCellId_18       Integer,
+ INOUT ioPartionCellId_19       Integer,
+ INOUT ioPartionCellId_20       Integer,
+ INOUT ioPartionCellId_21       Integer,
+ INOUT ioPartionCellId_22       Integer,
 
     IN inOrd                   Integer, --№ пп
     IN inDescId_milo_num       Integer, --№ пп
@@ -59,7 +77,17 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_9     TVarChar,
  INOUT ioPartionCellName_10    TVarChar,  
  INOUT ioPartionCellName_11    TVarChar,  
- INOUT ioPartionCellName_12    TVarChar,  
+ INOUT ioPartionCellName_12    TVarChar,
+ INOUT ioPartionCellName_13     TVarChar,
+ INOUT ioPartionCellName_14     TVarChar,
+ INOUT ioPartionCellName_15     TVarChar,
+ INOUT ioPartionCellName_16     TVarChar,
+ INOUT ioPartionCellName_17     TVarChar,
+ INOUT ioPartionCellName_18     TVarChar,
+ INOUT ioPartionCellName_19     TVarChar,
+ INOUT ioPartionCellName_20     TVarChar,
+ INOUT ioPartionCellName_21     TVarChar,
+ INOUT ioPartionCellName_22     TVarChar,
 
    OUT outisPrint              Boolean,
     IN inSession               TVarChar  -- сессия пользователя
