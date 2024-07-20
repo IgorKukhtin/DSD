@@ -556,12 +556,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
     object bbUpdate_PersonalOut: TdxBarButton
       Action = macUpdate_PersonalOut
       Category = 0
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
     end
     object bbUpdate_User: TdxBarButton
       Action = mactUpdate_User
       Category = 0
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
     end
   end
   object ActionList: TActionList
@@ -873,7 +871,34 @@ object PersonalServiceListForm: TPersonalServiceListForm
       isSetErased = False
       DataSource = DataSource
     end
-    object actUpdate_User: TdsdUpdateDataSet
+    object actUpdate_PersonalOut: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PersonalOut
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PersonalOut
+        end>
+      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 77
+    end
+    object macUpdate_PersonalOut: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PersonalOut
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 77
+    end
+    object actUpdate_User: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -882,9 +907,9 @@ object PersonalServiceListForm: TPersonalServiceListForm
         item
           StoredProc = spUpdate_User
         end>
-      Caption = 'actUpdateDataSet'
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 76
-      DataSource = DataSource
     end
     object mactUpdate_User: TMultiAction
       Category = 'DSDLib'
@@ -899,32 +924,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1085#1099#1081' '#1076#1086#1089#1090#1091#1087' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 76
-    end
-    object actUpdate_PersonalOut: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_PersonalOut
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_PersonalOut
-        end>
-      Caption = 'actUpdateDataSet'
-      ImageIndex = 5
-      DataSource = DataSource
-    end
-    object macUpdate_PersonalOut: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_PersonalOut
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 77
     end
   end
   object dsdStoredProc: TdsdStoredProc

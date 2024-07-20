@@ -74,10 +74,8 @@ type
     Compensation: TcxGridDBColumn;
     CompensationName: TcxGridDBColumn;
     spUpdate_PersonalOut: TdsdStoredProc;
-    actUpdate_PersonalOut: TdsdUpdateDataSet;
     bbUpdate_PersonalOut: TdxBarButton;
     isPersonalOut: TcxGridDBColumn;
-    macUpdate_PersonalOut: TMultiAction;
     isBankOut: TcxGridDBColumn;
     BankAccountName: TcxGridDBColumn;
     PSLExportKindName: TcxGridDBColumn;
@@ -88,9 +86,11 @@ type
     isBankNot: TcxGridDBColumn;
     spUpdate_User: TdsdStoredProc;
     isUser: TcxGridDBColumn;
-    actUpdate_User: TdsdUpdateDataSet;
-    mactUpdate_User: TMultiAction;
     bbUpdate_User: TdxBarButton;
+    actUpdate_User: TdsdExecStoredProc;
+    mactUpdate_User: TMultiAction;
+    actUpdate_PersonalOut: TdsdExecStoredProc;
+    macUpdate_PersonalOut: TMultiAction;
   private
     { Private declarations }
   public
