@@ -53,8 +53,6 @@ type
     spErasedUnErased: TdsdStoredProc;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
-    PartionCellCode: TcxGridDBColumn;
-    PartionCellName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -66,7 +64,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
+    OperDate_new: TcxGridDBColumn;
     ColorFon: TcxGridDBColumn;
     cxLabel7: TcxLabel;
     edGoods: TcxButtonEdit;
@@ -81,6 +79,9 @@ type
     CellNum: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     MovementItemId: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edUnit: TcxButtonEdit;
+    GuidesUnit: TdsdGuides;
   private
     { Private declarations }
   public
