@@ -57,7 +57,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byReport_all(
    OUT outPartionCellId_10     Integer  ,
    OUT outPartionCellId_11     Integer  ,
    OUT outPartionCellId_12     Integer  ,
-   
+
    OUT outIsClose_1            Boolean  ,
    OUT outIsClose_2            Boolean  ,
    OUT outIsClose_3            Boolean  ,
@@ -93,21 +93,67 @@ BEGIN
          DELETE FROM _tmpItem_PartionCell;
      ELSE
          -- таблица - элементы
-         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat
-                                               , DescId_MILO Integer, DescId_MIF_real Integer, DescId_Boolean Integer
-                                               , PartionCellId Integer, PartionCellId_real Integer, PartionCellId_old Integer) ON COMMIT DROP;
+         CREATE TEMP TABLE _tmpItem_PartionCell (MovementId Integer, MovementItemId Integer, Amount TFloat, DescId_MILO Integer, PartionCellId Integer) ON COMMIT DROP;
 
      END IF;
 
 
-     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, DescId_MIF_real, DescId_Boolean, PartionCellId, PartionCellId_real, PartionCellId_old)
-       WITH tmpMovement AS (SELECT Movement.*
+     INSERT INTO _tmpItem_PartionCell (MovementId, MovementItemId, Amount, DescId_MILO, PartionCellId)
+       WITH -- для Партия дата
+            tmpMI_PartionDate AS (SELECT MovementItem.MovementId                  AS MovementId
+                                       , MovementItem.Id                          AS MovementItemId
+                                       , MovementItem.Amount                      AS Amount
+                                         -- текущее значение
+                                       , COALESCE (MILO_PartionCell.DescId, 0)    AS DescId_MILO
+                                       , COALESCE (MILO_PartionCell.ObjectId, 0)  AS PartionCellId
+                                  FROM MovementItemDate AS MIDate_PartionGoods
+                                       INNER JOIN MovementItem ON MovementItem.Id       = MIDate_PartionGoods.MovementItemId
+                                                              AND MovementItem.DescId   = zc_MI_Master()
+                                                              AND MovementItem.isErased = FALSE
+                                                              -- ограничили товаром
+                                                              AND MovementItem.ObjectId = inGoodsId
+
+                                       INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                          AND Movement.DescId   = zc_Movement_Send()
+                                                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                                       LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+                                                                        ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
+                                                                       AND MILO_GoodsKind.DescId          = zc_MILinkObject_GoodsKind()
+
+                                       LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
+                                                                        ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                                                       AND MILO_PartionCell.ObjectId       > 0
+                                                                       AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_1()
+                                                                                                             , zc_MILinkObject_PartionCell_2()
+                                                                                                             , zc_MILinkObject_PartionCell_3()
+                                                                                                             , zc_MILinkObject_PartionCell_4()
+                                                                                                             , zc_MILinkObject_PartionCell_5()
+                                                                                                             , zc_MILinkObject_PartionCell_6()
+                                                                                                             , zc_MILinkObject_PartionCell_7()
+                                                                                                             , zc_MILinkObject_PartionCell_8()
+                                                                                                             , zc_MILinkObject_PartionCell_9()
+                                                                                                             , zc_MILinkObject_PartionCell_10()
+                                                                                                             , zc_MILinkObject_PartionCell_11()
+                                                                                                             , zc_MILinkObject_PartionCell_12()
+                                                                                                              )
+                                                                       -- !!!
+                                                                       -- AND 1=0
+
+                                  -- ограничили Партия дата, если установлена для MI
+                                  WHERE MIDate_PartionGoods.ValueData = inPartionGoodsDate
+                                    AND MIDate_PartionGoods.DescId    = zc_MIDate_PartionGoods()
+                                    -- ограничили видом
+                                    AND COALESCE (MILO_GoodsKind.ObjectId, 0) = inGoodsKindId
+                                 )
+
+            -- или документы за период, дата документа = дата партии
+          , tmpMovement AS (SELECT Movement.*
                             FROM Movement
                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                               AND MovementLinkObject_To.ObjectId   = inUnitId
-                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            WHERE Movement.OperDate = inPartionGoodsDate -- BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
@@ -115,20 +161,23 @@ BEGIN
           , tmpMI AS (SELECT MovementItem.MovementId        AS MovementId
                            , MovementItem.Id                AS MovementItemId
                            , MovementItem.Amount            AS Amount
-                           , MILO_PartionCell.DescId        AS DescId_MILO
-
                              -- текущее значение
-                           , MILO_PartionCell.ObjectId      AS PartionCellId_old
-                             -- Расчет нужной ячейки по которой группировать
-                           , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData :: Integer ELSE MILO_PartionCell.ObjectId END AS PartionCellId
-                             -- если была реальная ячейка
-                           , CASE WHEN MIF_PartionCell_real.ValueData > 0 THEN MIF_PartionCell_real.ValueData ELSE NULL END :: Integer AS PartionCellId_real
+                           , COALESCE (MILO_PartionCell.DescId, 0)    AS DescId_MILO
+                           , COALESCE (MILO_PartionCell.ObjectId, 0)  AS PartionCellId
+
                       FROM MovementItem
+                           LEFT JOIN tmpMI_PartionDate ON tmpMI_PartionDate.MovementItemId = MovementItem.Id
+                           -- выбрали только с пустой Партия дата
+                           LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                      ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                     AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
                            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                             ON MILO_GoodsKind.MovementItemId  = MovementItem.Id
                                                            AND MILO_GoodsKind.DescId          = zc_MILinkObject_GoodsKind()
+
                            LEFT JOIN MovementItemLinkObject AS MILO_PartionCell
                                                             ON MILO_PartionCell.MovementItemId = MovementItem.Id
+                                                           AND MILO_PartionCell.ObjectId       > 0
                                                            AND MILO_PartionCell.DescId         IN (zc_MILinkObject_PartionCell_1()
                                                                                                  , zc_MILinkObject_PartionCell_2()
                                                                                                  , zc_MILinkObject_PartionCell_3()
@@ -143,37 +192,8 @@ BEGIN
                                                                                                  , zc_MILinkObject_PartionCell_12()
                                                                                                   )
                                                            -- !!!
-                                                           AND 1=0
-                           LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
-                                                       ON MIF_PartionCell_real.MovementItemId = MovementItem.Id
-                                                      AND MIF_PartionCell_real.DescId         = CASE WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_1()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_1()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_2()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_2()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_3()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_3()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_4()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_4()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_5()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_5()
+                                                           -- AND 1=0
 
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_6()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_6()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_7()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_7()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_8()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_8()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_9()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_9()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_10()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_10()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_11()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_11()
-                                                                                                     WHEN MILO_PartionCell.DescId = zc_MILinkObject_PartionCell_12()
-                                                                                                          THEN zc_MIFloat_PartionCell_real_12()
-                                                                                                END
-                                                           -- !!!
-                                                           AND 1=0
                       WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItem.DescId   = zc_MI_Master()
                         AND MovementItem.isErased = FALSE
@@ -181,42 +201,26 @@ BEGIN
                         AND MovementItem.ObjectId = inGoodsId
                         -- ограничили видом
                         AND COALESCE (MILO_GoodsKind.ObjectId, 0) = inGoodsKindId
+                        -- пустая Партия дата
+                        AND MIDate_PartionGoods.ValueData IS NULL
+                        -- нет в этом списке
+                        AND tmpMI_PartionDate.MovementItemId IS NULL
+
+                     UNION ALL
+                      SELECT tmpMI_PartionDate.MovementId
+                           , tmpMI_PartionDate.MovementItemId
+                           , tmpMI_PartionDate.Amount
+                             -- текущее значение
+                           , tmpMI_PartionDate.DescId_MILO
+                           , tmpMI_PartionDate.PartionCellId
+
+                      FROM tmpMI_PartionDate
                      )
        -- Результат
        SELECT MovementId, MovementItemId, Amount
-            , DescId_MILO
-            , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MIFloat_PartionCell_real_1()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MIFloat_PartionCell_real_2()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIFloat_PartionCell_real_3()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MIFloat_PartionCell_real_4()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MIFloat_PartionCell_real_5()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_6() THEN zc_MIFloat_PartionCell_real_6()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_7() THEN zc_MIFloat_PartionCell_real_7()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_8() THEN zc_MIFloat_PartionCell_real_8()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_9() THEN zc_MIFloat_PartionCell_real_9()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_10() THEN zc_MIFloat_PartionCell_real_10()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_11() THEN zc_MIFloat_PartionCell_real_11()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_12() THEN zc_MIFloat_PartionCell_real_12()
-              END AS DescId_MIF_real
-            , CASE WHEN DescId_MILO = zc_MILinkObject_PartionCell_1() THEN zc_MIBoolean_PartionCell_Close_1()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_2() THEN zc_MIBoolean_PartionCell_Close_2()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_3() THEN zc_MIBoolean_PartionCell_Close_3()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_4() THEN zc_MIBoolean_PartionCell_Close_4()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_5() THEN zc_MIBoolean_PartionCell_Close_5()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_6() THEN zc_MIBoolean_PartionCell_Close_6()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_7() THEN zc_MIBoolean_PartionCell_Close_7()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_8() THEN zc_MIBoolean_PartionCell_Close_8()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_9() THEN zc_MIBoolean_PartionCell_Close_9()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_10() THEN zc_MIBoolean_PartionCell_Close_10()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_11() THEN zc_MIBoolean_PartionCell_Close_11()
-                   WHEN DescId_MILO = zc_MILinkObject_PartionCell_12() THEN zc_MIBoolean_PartionCell_Close_12()
-              END AS DescId_Boolean
-              -- Расчет нужной ячейки по которой группировать
-            , PartionCellId
-              -- если была реальная ячейка
-            , PartionCellId_real
               -- текущее значение
-            , PartionCellId_old
+            , DescId_MILO
+            , PartionCellId
 
        FROM tmpMI
       ;
@@ -282,16 +286,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -300,16 +304,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -318,16 +322,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -337,16 +341,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -355,16 +359,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -374,16 +378,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -392,16 +396,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -411,16 +415,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -430,16 +434,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -449,16 +453,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -468,16 +472,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -487,16 +491,16 @@ BEGIN
      THEN
              -- открыли
              -- PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             -- FROM _tmpItem_PartionCell;
+             -- FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
              -- 1.2.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), _tmpItem_PartionCell.MovementItemId, NULL)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
 
              -- 1.3.обнулили ячейку
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell;
+             FROM (SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell) AS _tmpItem_PartionCell;
 
      END IF;
 
@@ -537,17 +541,39 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_1_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_1, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-1.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_1_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_1 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_1, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_1 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_1, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_1 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_1, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- вернули
              outPartionCellId_1:= inPartionCellId_1_new;
@@ -589,19 +615,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_2_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_2, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-2.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_2(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_2_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_2 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_2, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_2(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_2 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_2, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_2(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_2 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_2, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_2:= inPartionCellId_2_new;
              outIsClose_2:= FALSE;
@@ -642,19 +690,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_3_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_3, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-3.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_3(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_3_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_3 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_3, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_3(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_3 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_3, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_3(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_3 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_3, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_3:= inPartionCellId_3_new;
              outIsClose_3:= FALSE;
@@ -695,19 +765,42 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_4_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_4, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-4.';
+             END IF;
+
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_4(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_4_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_4 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_4, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_4(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_4 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_4, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_4(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_4 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_4, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_4:= inPartionCellId_4_new;
              outIsClose_4:= FALSE;
@@ -748,19 +841,42 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_5_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_5, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-5.';
+             END IF;
+
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_5(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_5_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_5 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_5, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_5(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_5 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_5, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_5(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_5 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_5, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_5:= inPartionCellId_5_new;
              outIsClose_5:= FALSE;
@@ -802,19 +918,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_6_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_6, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-6.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_6(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_6_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_6 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_6, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_6(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_6 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_6, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_6(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_6 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_6, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_6:= inPartionCellId_6_new;
              outIsClose_6:= FALSE;
@@ -856,19 +994,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_7_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_7, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-7.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_7(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_7_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_7 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_7, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_7(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_7 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_7, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_7(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_7 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_7, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_7:= inPartionCellId_7_new;
              outIsClose_7:= FALSE;
@@ -910,19 +1070,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_8_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_8, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-8.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_8(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_8_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_8 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_8, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_8(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_8 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_8, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_8(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_8 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_8, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_8:= inPartionCellId_8_new;
              outIsClose_8:= FALSE;
@@ -964,19 +1146,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_9_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_9, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-9.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_9(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_9_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_9 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_9, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_9(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_9 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_9, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_9(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_9 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_9, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_9:= inPartionCellId_9_new;
              outIsClose_9:= FALSE;
@@ -1018,19 +1222,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_10_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_10, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-10.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_10(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_10_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_10 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_10, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_10(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_10 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_10, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_10(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_10 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_10, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_10:= inPartionCellId_10_new;
              outIsClose_10:= FALSE;
@@ -1072,19 +1298,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_11_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_11, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-11.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_11(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_11_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_11 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_11, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_11(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_11 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_11, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_11(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_11 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_11, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_11:= inPartionCellId_11_new;
              outIsClose_11:= FALSE;
@@ -1126,19 +1374,41 @@ BEGIN
      -- реальная ячейка
      ELSEIF inPartionCellId_12_new > 0
      THEN
+             -- проверка
+             IF COALESCE (inPartionCellId_12, 0) = 0
+                AND NOT EXISTS (SELECT 1 FROM _tmpItem_PartionCell WHERE _tmpItem_PartionCell.PartionCellId = 0)
+             THEN
+                 RAISE EXCEPTION 'Ошибка-11.Не найдена строка для привязки Ячейки-12.';
+             END IF;
+
              -- привязали ячейку
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_12(), _tmpItem_PartionCell.MovementItemId, inPartionCellId_12_new)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_12 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_12, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- обнулили оригинал
              PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_12(), _tmpItem_PartionCell.MovementItemId, 0 :: TFloat)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_12 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_12, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
              -- открыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_12(), _tmpItem_PartionCell.MovementItemId, FALSE)
-             FROM _tmpItem_PartionCell
+             FROM (-- все
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE inPartionCellId_12 > 0
+                  UNION 
+                   -- только пустые
+                   SELECT DISTINCT _tmpItem_PartionCell.MovementItemId FROM _tmpItem_PartionCell WHERE COALESCE (inPartionCellId_12, 0) = 0 AND _tmpItem_PartionCell.PartionCellId = 0
+                  ) AS _tmpItem_PartionCell
             ;
-            
+
              -- вернули
              outPartionCellId_12:= inPartionCellId_12_new;
              outIsClose_12:= FALSE;

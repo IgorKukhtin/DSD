@@ -21,7 +21,7 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
-                                                  ); */
+                                                  );*/
 DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
@@ -77,7 +77,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_9     TVarChar,
  INOUT ioPartionCellName_10    TVarChar,  
  INOUT ioPartionCellName_11    TVarChar,  
- INOUT ioPartionCellName_12    TVarChar,
+ INOUT ioPartionCellName_12    TVarChar,  
  INOUT ioPartionCellName_13     TVarChar,
  INOUT ioPartionCellName_14     TVarChar,
  INOUT ioPartionCellName_15     TVarChar,
@@ -142,8 +142,85 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     --обнуляем последнюю измененную ячейку
+     IF vbUserId <> 5
+     THEN
+         IF TRIM (ioPartionCellName_1) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_1() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_1 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <1>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_2) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_2() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_2 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <2>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_3) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_3() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_3 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <3>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_4) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_4() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_4 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <4>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_5) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_5() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_5 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <5>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_6) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_6() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_6 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <6>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_7) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_7() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_7 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <7>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_8) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_8() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_8 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <8>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_9) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_9() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_9 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <9>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_10) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_10() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_10 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <10>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_11) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_11() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_11 > 0
+                                                )
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <11>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+         IF TRIM (ioPartionCellName_12) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_12() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
+                                              OR ioPartionCellId_12 > 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка.%Нет прав очищать ячейку <12>.%Можно выбрать любую ячейку или поставить в отбор.', CHR (13), CHR (13);
+         END IF;
+     END IF;
+  
+
+     -- обнуляем последнюю измененную ячейку
      outPartionCellId_last := NULL ::Integer;
+
 
 if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_2) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 1)) > 0   then ioPartionCellName_2     := right (ioPartionCellName_2,  LENGTH(ioPartionCellName_2) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 2)) > 0 THEN 2 ELSE 1 END); end if;
@@ -706,6 +783,7 @@ if zfConvert_StringToNumber (ioPartionCellName_12) = 0 and zfConvert_StringToNum
                                   , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
                                   , vbPartionCellId_11, vbPartionCellId_12
                                    )
+        AND vbUserId <> 5
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав перемещать в отбор. № п/п должен быть = 1.';
      END IF;
