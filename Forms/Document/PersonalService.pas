@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdInternetAction, Vcl.StdCtrls;
+  dxSkinXmas2008Blue, dsdInternetAction, Vcl.StdCtrls, dsdCommon;
 
 type
   TPersonalServiceForm = class(TAncestorDocumentForm)
@@ -387,6 +387,9 @@ type
     expCardSecond: TcxGridDBColumn;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    actPrint_Grid: TdsdPrintAction;
+    bbPrint_Grid: TdxBarButton;
+    Amount_avance_ret: TcxGridDBColumn;
   private
     { Private declarations }
   public

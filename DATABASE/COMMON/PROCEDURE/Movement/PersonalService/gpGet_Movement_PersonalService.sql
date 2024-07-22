@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName       TVarChar    -- ФИО (пользователь) - ведомость начисления 
              , InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , MovementId_BankSecondNum Integer, InvNumber_BankSecondNum TVarChar
+             , AuditColumnName TVarChar
               )
 AS
 $BODY$
@@ -70,7 +71,7 @@ BEGIN
              , CAST ('' AS TVarChar) 	 AS InfoMoneyName_all
              , 0                         AS MovementId_BankSecondNum
              , '' ::TVarChar             AS InvNumber_BankSecondNum
-
+             , '' ::TVarChar             AS AuditColumnName
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -113,6 +114,7 @@ BEGIN
                                       || ' № ' || Movement_BankSecondNum.InvNumber
                                        , Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
+           , CASE WHEN Object_PersonalServiceList.Id  IN (293428, 301885) THEN 'Допл. за ревизию' ELSE 'Возмещ. налоги грн' END :: TVarChar AS AuditColumnName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -192,6 +194,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 
+ 22.07.24         *
  12.03.24         *
  05.07.23         *
  16.11.21         *

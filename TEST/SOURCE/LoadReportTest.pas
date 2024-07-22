@@ -140,14 +140,14 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  {
   LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Товарный Учет\Печать паспорта ячейки.fr3');
   exit;
   LoadReportFromFile('Партия учета по Ячейкам хранения(остатки)', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения(остатки).fr3');
   exit;
   LoadReportFromFile('Партия учета по Ячейкам хранения', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения.fr3');
  //exit;
-   {
-   LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Отчеты (производство)\Отчет_Анализ Заявки На Производство.fr3');
+  LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Отчеты (производство)\Отчет_Анализ Заявки На Производство.fr3');
   exit;
 
   LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Товарный Учет\Отчет_Анализ Заявки На Производство.fr3');
@@ -314,10 +314,9 @@ begin
 
   LoadReportFromFile('Обороты из акта сверки', ReportPath + '\Отчеты (финансы)\Обороты из акта сверки.fr3');
 
-  }
   LoadReportFromFile('Обороты по расчетному счету', ReportPath + '\Отчеты (финансы)\Обороты по расчетному счету.fr3');
   exit;
-  {
+
   LoadReportFromFile('Обороты по кассе', ReportPath + '\Отчеты (финансы)\Обороты по кассе.fr3');
   exit;
 
@@ -709,7 +708,10 @@ begin
   LoadReportFromFile('PrintMovement_ProductionUnion', ReportPath + '\Товарный Учет\PrintMovement_ProductionUnion.fr3');
   exit;
   }
-   LoadReportFromFile('PrintMovement_PersonalServiceNum', ReportPath + '\Персонал\PrintMovement_PersonalServiceNum.fr3');
+  LoadReportFromFile('PrintMovement_PersonalServiceGrid', ReportPath + '\Персонал\PrintMovement_PersonalServiceGrid.fr3');
+  exit;
+
+  LoadReportFromFile('PrintMovement_PersonalServiceNum', ReportPath + '\Персонал\PrintMovement_PersonalServiceNum.fr3');
   exit;
   LoadReportFromFile('PrintMovement_PersonalService', ReportPath + '\Персонал\PrintMovement_PersonalService.fr3');
   exit;
