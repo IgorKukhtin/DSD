@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
-               Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
+               Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat, 
+               TaxLossCEH TFloat, TaxLossTRM TFloat, TaxLossVPR TFloat, RealDelicShp TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,                
@@ -42,6 +43,11 @@ BEGIN
            , CAST (NULL as TFloat) AS PartionCount
            , CAST (NULL as TFloat) AS WeightPackage
                                                         
+           , CAST (NULL as TFloat) AS TaxLossCEH
+           , CAST (NULL as TFloat) AS TaxLossTRM
+           , CAST (NULL as TFloat) AS TaxLossVPR
+           , CAST (NULL as TFloat) AS RealDelicShp
+
            , CAST (NULL as TDateTime) AS StartDate
            , CAST (NULL as TDateTime) AS EndDate
         
@@ -88,6 +94,11 @@ BEGIN
          , ObjectFloat_PartionValue.ValueData  AS PartionValue
          , ObjectFloat_PartionCount.ValueData  AS PartionCount
          , ObjectFloat_WeightPackage.ValueData AS WeightPackage
+
+         , ObjectFloat_TaxLossCEH.ValueData   ::TFloat AS TaxLossCEH
+         , ObjectFloat_TaxLossTRM.ValueData   ::TFloat AS TaxLossTRM
+         , ObjectFloat_TaxLossVPR.ValueData   ::TFloat AS TaxLossVPR
+         , ObjectFloat_RealDelicShp.ValueData ::TFloat AS RealDelicShp
                                                         
          , ObjectDate_StartDate.ValueData AS StartDate
          , ObjectDate_EndDate.ValueData   AS EndDate
@@ -184,7 +195,19 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage 
                                 ON ObjectFloat_WeightPackage.ObjectId = Object_Receipt.Id 
                                AND ObjectFloat_WeightPackage.DescId = zc_ObjectFloat_Receipt_WeightPackage()
-                               
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossCEH
+                                ON ObjectFloat_TaxLossCEH.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossCEH.DescId = zc_ObjectFloat_Receipt_TaxLossCEH()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossTRM
+                                ON ObjectFloat_TaxLossTRM.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossTRM.DescId = zc_ObjectFloat_Receipt_TaxLossTRM()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossVPR
+                                ON ObjectFloat_TaxLossVPR.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossVPR.DescId = zc_ObjectFloat_Receipt_TaxLossVPR()
+          LEFT JOIN ObjectFloat AS ObjectFloat_RealDelicShp
+                                ON ObjectFloat_RealDelicShp.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_RealDelicShp.DescId = zc_ObjectFloat_Receipt_RealDelicShp()               
      WHERE Object_Receipt.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
      
   END IF;
@@ -205,4 +228,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpGet_Object_Receipt (100, '2')
---select * from gpGet_Object_Receipt(inId := 0 ,  inSession := '5');
+-- select * from gpGet_Object_Receipt(inId :=1 , inMaskId:= 0, inSession := '5');

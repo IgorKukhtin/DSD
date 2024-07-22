@@ -23,7 +23,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdGuides, Vcl.ExtCtrls, ExternalLoad;
+  dxSkinXmas2008Blue, dsdGuides, Vcl.ExtCtrls, ExternalLoad, dsdCommon;
 
 type
   TReceiptForm = class(TParentForm)

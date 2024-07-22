@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
@@ -14,6 +15,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
     IN inPartionValue        TFloat    , -- Количество в партии (количество в кутере)
     IN inPartionCount        TFloat    , -- Минимальное количество партий (количество кутеров, значение или 0.5 или 1)
     IN inWeightPackage       TFloat    , -- Вес упаковки
+    IN inTaxLossCEH          TFloat    , --
+    IN inTaxLossTRM          TFloat    , --
+    IN inTaxLossVPR          TFloat    , --
+    IN inRealDelicShp        TFloat    , --
     IN inStartDate           TDateTime , -- Начальная дата
     IN inEndDate             TDateTime , -- Конечная дата
     IN inIsMain              Boolean   , -- Признак главный
@@ -97,6 +102,15 @@ BEGIN
    -- сохранили свойство <Вес упаковки>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_WeightPackage(), ioId, inWeightPackage);
 
+   -- сохранили свойство <Значение>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TaxLossCEH(), ioId, inTaxLossCEH);
+   -- сохранили свойство <Значение >
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TaxLossTRM(), ioId, inTaxLossTRM);
+   -- сохранили свойство <Значение >
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TaxLossVPR(), ioId, inTaxLossVPR);
+   -- сохранили свойство <Значение >
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_RealDelicShp(), ioId, inRealDelicShp);
+   
    -- сохранили свойство <Начальная дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
@@ -188,11 +202,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.07.24         *
  15.03.15         * add inMaskId
  13.02.15                                        * all
  24.12.14         *
