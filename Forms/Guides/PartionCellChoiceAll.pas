@@ -73,6 +73,7 @@ type
     bbOpenForm_AllMovement: TdxBarButton;
     OperDate: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
+    isPartionCell_check: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -111,6 +111,9 @@ type
     PartionCellId_num: TcxGridDBColumn;
     actOpenReport_PartionCell_history: TdsdOpenForm;
     bbOpenReport_PartionCell_history: TdxBarButton;
+    cxLabel3: TcxLabel;
+    edSearchPartionCellName: TcxTextEdit;
+    PartionCellName_srch: TcxGridDBColumn;
   private
     { Private declarations }
   public

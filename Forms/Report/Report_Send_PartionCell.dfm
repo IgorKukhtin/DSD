@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -168,7 +167,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Width = 200
           end
           object GoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1331,6 +1330,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 55
           end
+          object PartionCellName_srch: TcxGridDBColumn
+            Caption = #1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_srch'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
         end
       end
     end
@@ -1428,7 +1436,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object lbSearchName: TcxLabel
       Left = 220
-      Top = 9
+      Top = 10
       Caption = #1058#1086#1074#1072#1088':'
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
@@ -1446,6 +1454,27 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         337
         21)
       Width = 337
+    end
+    object cxLabel3: TcxLabel
+      Left = 645
+      Top = 10
+      Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchPartionCellName: TcxTextEdit
+      Left = 748
+      Top = 10
+      TabOrder = 5
+      DesignSize = (
+        144
+        21)
+      Width = 144
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -2951,8 +2980,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 632
-    Top = 8
+    Left = 592
+    Top = 65528
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -3567,10 +3596,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       item
         Column = GoodsName
         TextEdit = edSearchName
+      end
+      item
+        Column = PartionCellName_srch
+        TextEdit = edSearchPartionCellName
       end>
     CheckBoxList = <>
     Left = 728
-    Top = 40
+    Top = 112
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
