@@ -57,20 +57,11 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = '1. '#1071#1095#1077#1081#1082#1072
+        Caption = #1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
-      end
-      object Name_search: TcxGridDBColumn
-        Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
-        DataBinding.FieldName = 'Name_search'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
-        Width = 80
       end
       object Status: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
@@ -87,6 +78,15 @@ object PartionCellChoiceForm: TPartionCellChoiceForm
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2'
         Options.Editing = False
         Width = 145
+      end
+      object Name_search: TcxGridDBColumn
+        Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'Name_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
+        Width = 80
       end
       object ColorFon: TcxGridDBColumn
         DataBinding.FieldName = 'ColorFon'

@@ -1,7 +1,7 @@
 object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1074#1099#1073#1086#1088', '#1076#1077#1090#1072#1083#1100#1085#1086')'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1071#1095#1077#1081#1082#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1087#1088#1086#1089#1084#1086#1090#1088', '#1076#1077#1090#1072#1083#1100#1085#1086')'
   ClientHeight = 376
   ClientWidth = 894
   Color = clBtnFace
@@ -26,7 +26,6 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 739
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -58,7 +57,7 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = '1. '#1071#1095#1077#1081#1082#1072
+        Caption = #1071#1095#1077#1081#1082#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -80,8 +79,16 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 92
       end
+      object isPartionCell_check: TcxGridDBColumn
+        Caption = #1054#1096#1080#1073#1082#1072
+        DataBinding.FieldName = 'isPartionCell_check'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
       object GoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+        Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -97,7 +104,7 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         Width = 194
       end
       object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        Caption = #1042#1080#1076
         DataBinding.FieldName = 'GoodsKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -115,6 +122,7 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074' '#1045'2'
@@ -151,9 +159,8 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     Height = 33
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 739
     object lbSearchName: TcxLabel
-      Left = 5
+      Left = 6
       Top = 6
       Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
       ParentFont = False
