@@ -884,8 +884,8 @@ BEGIN
              + tmpAll.SummCompensation
               ) :: TFloat AS SummService
             , tmpAll.SummCard               :: TFloat AS SummCard
-            , tmpAll.SummCardSecond         :: TFloat AS SummCardSecond
-            , tmpAll.SummCardSecondCash     :: TFloat AS SummCardSecondCash
+            , COALESCE (tmpAll.SummCardSecond,0)         :: TFloat AS SummCardSecond
+            , COALESCE (tmpAll.SummCardSecondCash,0)     :: TFloat AS SummCardSecondCash
             , tmpMIContainer.SummNalog      :: TFloat AS SummNalog
             , tmpMIContainer.SummNalogRet   :: TFloat AS SummNalogRet
 --            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc

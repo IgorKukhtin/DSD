@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 759
   ClientWidth = 1474
+  ExplicitLeft = -310
   ExplicitWidth = 1490
   ExplicitHeight = 798
   PixelsPerInch = 96
@@ -1943,6 +1944,12 @@ inherited PersonalServiceForm: TPersonalServiceForm
             VisibleForCustomization = False
             Width = 70
           end
+          object Amount_avance_ret: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1072#1074#1072#1085#1089', '#1075#1088#1085
+            DataBinding.FieldName = 'Amount_avance_ret'
+            Visible = False
+            Width = 70
+          end
         end
       end
       object cxGrid1: TcxGrid
@@ -2627,9 +2634,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2723,9 +2727,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0
@@ -4128,6 +4129,65 @@ inherited PersonalServiceForm: TPersonalServiceForm
       ReportNameParam.Value = 'PrintMovement_PersonalService'
       ReportNameParam.ParamType = ptInput
     end
+    object actPrint_Grid: TdsdPrintAction [52]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1074#1099#1073#1086#1088#1086#1095#1085#1086
+      Hint = #1055#1077#1095#1072#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'> '#1074#1099#1073#1086#1088#1086#1095#1085#1086
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ServiceDate'
+          Value = Null
+          Component = edServiceDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AuditColumnName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AuditColumnName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_PersonalServiceGrid'
+      ReportNameParam.Value = 'PrintMovement_PersonalServiceGrid'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -4160,7 +4220,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           MultiSelectSeparator = ','
         end>
     end
-    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [58]
+    object actUnitFineSubjectChoiceForm: TOpenChoiceForm [59]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4187,7 +4247,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end>
       isShowModal = True
     end
-    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [61]
+    object actFineSubjectOpenChoiceForm: TOpenChoiceForm [62]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5863,6 +5923,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         item
           Visible = True
           ItemName = 'bbPrint_Num'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Grid'
         end>
     end
     object bbInsertData: TdxBarSubItem
@@ -6028,6 +6096,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbPrint_Num: TdxBarButton
       Action = actPrint_Num
+      Category = 0
+    end
+    object bbPrint_Grid: TdxBarButton
+      Action = actPrint_Grid
       Category = 0
     end
   end
@@ -6312,6 +6384,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         Value = Null
         Component = GuidesBankSecondNum
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AuditColumnName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AuditColumnName'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
