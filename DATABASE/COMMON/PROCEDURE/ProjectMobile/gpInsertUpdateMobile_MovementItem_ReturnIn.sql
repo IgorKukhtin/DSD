@@ -181,9 +181,8 @@ BEGIN
       -- сохранили свойство <ƒата/врем€ сохранени€ с мобильного устройства>
       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UpdateMobile(), vbMovementId, CURRENT_TIMESTAMP);
       
-      RAISE EXCEPTION 'ѕрошло.';
-
       RETURN vbId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -114,6 +114,7 @@ type
     cxLabel3: TcxLabel;
     edSearchPartionCellName: TcxTextEdit;
     PartionCellName_srch: TcxGridDBColumn;
+    isPartionCell_min: TcxGridDBColumn;
   private
     { Private declarations }
   public

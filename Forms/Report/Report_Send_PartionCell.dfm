@@ -4,6 +4,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -31,10 +32,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount
             end
             item
@@ -43,10 +40,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
               Column = Amount_Weight
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
@@ -300,6 +293,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1103#1095#1077#1081#1082#1072#1084' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 60
+          end
+          object isPartionCell_min: TcxGridDBColumn
+            Caption = #1045#1089#1090#1100' '#1087#1091#1089#1090#1099#1077' '#1071#1095#1077#1081#1082#1080
+            DataBinding.FieldName = 'isPartionCell_min'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object PartionCellCode_1: TcxGridDBColumn
             Caption = '1.1 '#1050#1086#1076

@@ -101,6 +101,7 @@ type
     actOpenPartionCellForm11: TOpenChoiceForm;
     actOpenPartionCellForm12: TOpenChoiceForm;
     GoodsGroupName: TcxGridDBColumn;
+    isPartionCell_min: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -214,6 +214,60 @@ inherited Report_SheetWorkTime_UpdateForm: TReport_SheetWorkTime_UpdateForm
             Options.Editing = False
             Width = 80
           end
+          object CheckedHeadName: TcxGridDBColumn
+            Caption = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1088#1077#1085#1086')'
+            DataBinding.FieldName = 'CheckedHeadName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1088#1077#1085#1086')'
+            Options.Editing = False
+            Width = 138
+          end
+          object CheckedPersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072' ('#1087#1088#1086#1074#1077#1088#1077#1085#1086')'
+            DataBinding.FieldName = 'CheckedPersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072' ('#1087#1088#1086#1074#1077#1088#1077#1085#1086')'
+            Options.Editing = False
+            Width = 138
+          end
+          object CheckedHead_date: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1088#1086#1074#1077#1088#1077#1085' '#1088#1091#1082'-'#1077#1084
+            DataBinding.FieldName = 'CheckedHead_date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1088#1086#1074#1077#1088#1077#1085' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084
+            Options.Editing = False
+            Width = 101
+          end
+          object CheckedPersonal_date: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072
+            DataBinding.FieldName = 'CheckedPersonal_date'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1055#1088#1086#1074#1077#1088#1077#1085' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072
+            Options.Editing = False
+            Width = 82
+          end
+          object isCheckedHead: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCheckedHead'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1077#1085' '#1088#1091#1082#1086#1074#1086#1076#1080#1090#1077#1083#1077#1084' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 97
+          end
+          object isCheckedPersonal: TcxGridDBColumn
+            Caption = #1055#1088#1086#1074#1077#1088#1077#1085' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCheckedPersonal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1074#1077#1088#1077#1085' '#1054#1090#1076#1077#1083' '#1087#1077#1088#1089#1086#1085#1072#1083#1072' ('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 110
+          end
           object OperDate_mi: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' ('#1101#1083#1077#1084#1077#1085#1090')'
             DataBinding.FieldName = 'OperDate_mi'

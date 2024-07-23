@@ -782,6 +782,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 216
