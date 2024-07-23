@@ -32,12 +32,12 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsNormDiff_GoodsKind(), ioId, inGoodsKindId);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ValuePF(), ioId, inValuePF);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsNormDiff_ValuePF(), ioId, inValuePF);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_ValueGP(), ioId, inValueGP);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsNormDiff_ValueGP(), ioId, inValueGP);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_Comment(), inId, inComment);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_GoodsNormDiff_Comment(), ioId, inComment);
 
    IF vbIsInsert = TRUE THEN
       -- сохранили свойство <Дата создания>
