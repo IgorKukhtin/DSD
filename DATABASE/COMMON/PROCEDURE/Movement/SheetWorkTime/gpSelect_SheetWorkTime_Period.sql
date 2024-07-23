@@ -200,7 +200,7 @@ BEGIN
                                    , (MovementDate_Update.ValueData)
                                    , CASE WHEN inIsDetail = TRUE THEN Movement.Id ELSE 0 END
 
-                                   ,  (Object_CheckedHead.Id)
+                                   /*,  (Object_CheckedHead.Id)
                                    ,  (Object_CheckedHead.ValueData)
                                    ,  (Object_CheckedPersonal.Id)
                                    ,  (Object_CheckedPersonal.ValueData)
@@ -208,7 +208,7 @@ BEGIN
                                    ,  (MovementDate_CheckedHead.ValueData)        :: TDateTime
                                    ,  (MovementDate_CheckedPersonal.ValueData)    :: TDateTime
                                    ,  (CASE WHEN COALESCE (MovementBoolean_CheckedHead.ValueData, FALSE)     = TRUE THEN 1 ELSE 0 END)
-                                   ,  (CASE WHEN COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END)
+                                   ,  (CASE WHEN COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END)*/
                            )
           , tmpPeriod AS (SELECT tmp.OperDate, tmpList.UnitId
                           FROM (SELECT generate_series (vbStartDate, vbEndDate, '1 MONTH' :: INTERVAL) AS OperDate) AS tmp

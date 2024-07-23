@@ -102,6 +102,7 @@ type
     actOpenPartionCellForm12: TOpenChoiceForm;
     GoodsGroupName: TcxGridDBColumn;
     isPartionCell_min: TcxGridDBColumn;
+    Color_NormInDays: TcxGridDBColumn;
   private
     { Private declarations }
   public

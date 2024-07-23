@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -1338,6 +1337,12 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
+          end
+          object Color_NormInDays: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_NormInDays'
+            Visible = False
+            VisibleForCustomization = False
             Width = 55
           end
         end
@@ -2825,17 +2830,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       end
       item
         ColorColumn = NormInDays_date
-        BackGroundValueColumn = ColorFon_ord
+        BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end
       item
         ColorColumn = NormInDays_real
-        BackGroundValueColumn = ColorFon_ord
+        BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end
       item
         ColorColumn = NormInDays_tax
-        BackGroundValueColumn = ColorFon_ord
+        BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end
       item

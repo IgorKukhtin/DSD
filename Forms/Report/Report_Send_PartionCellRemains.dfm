@@ -1331,6 +1331,12 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             VisibleForCustomization = False
             Width = 50
           end
+          object Color_NormInDays: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_NormInDays'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 50
+          end
         end
       end
     end
@@ -2632,6 +2638,21 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       item
         ColorColumn = AmountRemains_Weight
         BackGroundValueColumn = ColorFon_ord
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_date
+        BackGroundValueColumn = Color_NormInDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_real
+        BackGroundValueColumn = Color_NormInDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = NormInDays_tax
+        BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end>
     ColumnEnterList = <
