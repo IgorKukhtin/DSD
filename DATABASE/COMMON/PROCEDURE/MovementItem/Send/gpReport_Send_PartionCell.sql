@@ -159,6 +159,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , NormInDays_date TDateTime
 
              , Color_PartionGoodsDate Integer
+             , Color_NormInDays       Integer
 
              , AmountRemains TFloat
              , AmountRemains_Weight TFloat
@@ -1029,6 +1030,7 @@ BEGIN
                            -- Срок хранения, дата
                          , (tmpData_MI.PartionGoodsDate + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL) :: TDateTime AS NormInDays_date
 
+                           -- цвет для Партия дата
                          , CASE WHEN tmpData_MI.isColor_PartionGoodsDate = 1
                                      THEN 8435455
                                      ELSE zc_Color_White()
@@ -1309,6 +1311,20 @@ BEGIN
                ELSE tmpResult.Color_PartionGoodsDate
 
           END :: Integer AS Color_PartionGoodsDate
+          
+          -- цвет для Остаток в днях и Остаток в %
+        , CASE WHEN tmpResult.NormInDays_tax < 50
+                    THEN zc_Color_Red()
+
+               WHEN tmpResult.NormInDays_tax <= 70
+                    THEN zc_Color_Orange() -- zc_Color_Aqua()
+
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+                    -- если надо подсветить
+                    THEN zc_Color_Yelow()
+
+               ELSE zc_Color_White()
+          END :: Integer AS Color_NormInDays
 
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
@@ -2107,6 +2123,7 @@ BEGIN
                                THEN COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate) + ((tmpNormInDays.NormInDays :: Integer) :: TVarChar || 'DAY') :: INTERVAL
                       END :: TDateTime AS NormInDays_date
 
+                      -- цвет для Партия дата
                     , CASE WHEN tmpData_MI.isColor_PartionGoodsDate = 1
                                 THEN 8435455
                                 ELSE zc_Color_White()
@@ -2351,18 +2368,33 @@ BEGIN
         , tmpResult.NormInDays_tax
         , tmpResult.NormInDays_date
 
+          -- цвет для Партия дата
         , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
                     THEN tmpResult.Color_PartionGoodsDate
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow()
                ELSE tmpResult.Color_PartionGoodsDate
           END :: Integer AS Color_PartionGoodsDate
+
+          -- цвет для Остаток в днях и Остаток в %
+        , CASE WHEN tmpResult.NormInDays_tax < 50
+                    THEN zc_Color_Red()
+
+               WHEN tmpResult.NormInDays_tax <= 70
+                    THEN zc_Color_Orange() -- zc_Color_Aqua()
+
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+                    -- если надо подсветить
+                    THEN zc_Color_Yelow()
+
+               ELSE zc_Color_White()
+          END :: Integer AS Color_NormInDays
 
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
 
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
-        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
    FROM tmpResult
   ;

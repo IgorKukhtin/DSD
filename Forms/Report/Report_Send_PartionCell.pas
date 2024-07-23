@@ -115,6 +115,7 @@ type
     edSearchPartionCellName: TcxTextEdit;
     PartionCellName_srch: TcxGridDBColumn;
     isPartionCell_min: TcxGridDBColumn;
+    Color_NormInDays: TcxGridDBColumn;
   private
     { Private declarations }
   public
