@@ -74,6 +74,7 @@ type
     OperDate: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     isPartionCell_check: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
   private
     { Private declarations }
   public

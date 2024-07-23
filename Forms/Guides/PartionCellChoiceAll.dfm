@@ -29,12 +29,22 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
+        end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1057#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = clName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Amount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -110,6 +120,17 @@ object PartionCellChoiceAllForm: TPartionCellChoiceAllForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 79
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object PartionGoodsDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080

@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridChartView, cxGridDBChartView, cxSplitter, cxImageComboBox;
+  cxGridChartView, cxGridDBChartView, cxSplitter, cxImageComboBox, dsdCommon;
 
 type
   TReport_SheetWorkTime_UpdateForm = class(TAncestorReportForm)

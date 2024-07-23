@@ -149,6 +149,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , isClose_value_min Boolean
                -- —формированы данные по €чейкам (да/нет)
              , isPartionCell Boolean
+             , isPartionCell_min Boolean
 
              , Amount TFloat, Amount_Weight TFloat
 
@@ -508,8 +509,9 @@ BEGIN
                              -- кол-во
                            , SUM (MovementItem.Amount / CASE WHEN inIsCell = TRUE AND tmpMILO_PC_count.CountCell > 0 THEN tmpMILO_PC_count.CountCell ELSE 1 END) AS Amount
 
-                             -- есть прив€зка или нет - выводитс€ двум€ строчками
-                           , CASE WHEN tmpMILO_PC_count.MovementItemId > 0 THEN TRUE ELSE FALSE END       AS isPartionCell
+                             -- есть прив€зка или нет - !!!Ќ≈!!! выводитс€ двум€ строчками
+                           , MIN (COALESCE (tmpMILO_PC_count.MovementItemId, 0)) AS isPartionCell_min
+                           , MAX (COALESCE (tmpMILO_PC_count.MovementItemId, 0)) AS isPartionCell_max
 
                              -- если дата партии отличаетс€ от даты документа - выделить фон другим цветом
                            , MAX (CASE WHEN Movement.OperDate <> COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
@@ -520,7 +522,7 @@ BEGIN
                           , MAX (tmpMILO_PC_count.CountCell) AS CountCell
                           
                             -- по €чейкам
-                          , COALESCE (tmpMILO_PartionCell.ObjectId, 0) AS PartionCellId
+                          , CASE WHEN inIsCell = TRUE THEN COALESCE (tmpMILO_PartionCell.ObjectId, 0) ELSE 0 END AS PartionCellId
 
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
@@ -548,7 +550,6 @@ BEGIN
                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
                              , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
 
-                             , CASE WHEN tmpMILO_PC_count.MovementItemId > 0 THEN TRUE ELSE FALSE END
                              , COALESCE (tmpMILO_PartionCell.ObjectId, 0)
                      )
 
@@ -995,10 +996,11 @@ BEGIN
                          , CASE WHEN COALESCE (tmpData.Color_21, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_21 END :: Integer   AS Color_21
                          , CASE WHEN COALESCE (tmpData.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_22 END :: Integer   AS Color_22
 
-                           -- есть хоть одна закрыта€ €чейка
-                         , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
+                           -- есть заполненна€ €чейка + хоть одна закрыта€ €чейка
+                         , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                            -- —формированы данные по €чейкам (да/нет)
-                         , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean AS isPartionCell
+                         , CASE WHEN tmpData_MI.isPartionCell_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isPartionCell_min
+                         , CASE WHEN tmpData_MI.isPartionCell_max > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPartionCell_max
 
                            --  ол-во - пропорционально
                          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
@@ -1114,7 +1116,7 @@ BEGIN
                                         AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
                                         AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
                                         -- !!!—формированы данные по €чейкам!!!
-                                        AND tmpData_MI.isPartionCell = TRUE
+                                        AND tmpData_MI.isPartionCell_max > 0
                                       --  AND vbUserId <> 5
                                         AND (tmpData.PartionCellId_num  = tmpData_MI.PartionCellId -- ***
                                           OR tmpData_MI.PartionCellId = 0
@@ -1130,7 +1132,8 @@ BEGIN
         , tmpResult.OperDate_max
         , tmpResult.InsertDate
         , tmpResult.InsertName
-        , tmpResult.FromId
+
+        , CASE WHEN vbUserId = 5 AND 1=0 THEN (select count(*) from tmpMILO_PC_count where tmpMILO_PC_count.MovementItemId = 296896881) ELSE tmpResult.FromId END :: Integer AS FromId
         , tmpResult.FromName
         , tmpResult.ToId
         , tmpResult.ToName
@@ -1140,7 +1143,7 @@ BEGIN
         , tmpResult.GoodsGroupNameFull, tmpResult.GoodsGroupName, tmpResult.MeasureName
 
         , tmpResult.GoodsKindId
-        , (tmpResult.GoodsKindName || CASE WHEN vbUserId = 5 THEN ' *' || COALESCE (tmpResult.CountCell, 0) :: TVarChar ELSE '' END) :: TVarChar AS GoodsKindName
+        , (tmpResult.GoodsKindName || CASE WHEN vbUserId = 5 AND 1=0 THEN ' *' || COALESCE (tmpResult.CountCell, 0) :: TVarChar ELSE '' END) :: TVarChar AS GoodsKindName
           --
         , tmpResult.PartionGoodsDate
           --
@@ -1284,9 +1287,10 @@ BEGIN
         , tmpResult.Color_22
 
         , tmpResult.isClose_value_min
-        , tmpResult.isPartionCell
+        , tmpResult.isPartionCell_max AS isPartionCell
+        , tmpResult.isPartionCell_min AS isPartionCell_min
 
-        , tmpResult.Amount , tmpResult.Amount_Weight
+        , tmpResult.Amount, tmpResult.Amount_Weight
 
         , tmpResult.NormInDays
         , tmpResult.NormInDays_real
@@ -1298,7 +1302,7 @@ BEGIN
                     -- если отличаетс€ от даты документа
                     THEN tmpResult.Color_PartionGoodsDate
 
-               WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -1310,9 +1314,9 @@ BEGIN
         , tmpResult.AmountRemains_Weight
 
           -- є п/п дл€ сн€ти€
-        , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
+        , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
           -- подсвечиваем строчку 
-        , CASE WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
    FROM tmpResult
         ;
@@ -1624,8 +1628,9 @@ BEGIN
                              -- кол-во
                            , SUM (MovementItem.Amount / CASE WHEN inIsCell = TRUE AND tmpMILO_PC_count.CountCell > 0 THEN tmpMILO_PC_count.CountCell ELSE 1 END) AS Amount
 
-                             -- есть прив€зка или нет - выводитс€ двум€ строчками
-                           , CASE WHEN tmpMILO_PC_count.MovementItemId > 0 THEN TRUE ELSE FALSE END          AS isPartionCell
+                             -- есть прив€зка или нет - !!!Ќ≈!!! выводитс€ двум€ строчками
+                           , MIN (COALESCE (tmpMILO_PC_count.MovementItemId, 0)) AS isPartionCell_min
+                           , MAX (COALESCE (tmpMILO_PC_count.MovementItemId, 0)) AS isPartionCell_max
 
                              -- если дата партии отличаетс€ от даты документа - выделить фон другим цветом
                            , MAX (CASE WHEN Movement.OperDate <> COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
@@ -2068,9 +2073,10 @@ BEGIN
                     , CASE WHEN COALESCE (tmpData.Color_22, 0) = 0 THEN zc_Color_Black() ELSE tmpData.Color_22 END :: Integer  AS Color_22
 
                       -- есть хоть одна закрыта€ €чейка
-                    , CASE WHEN tmpData_MI.isPartionCell = TRUE AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
+                    , CASE WHEN tmpData_MI.isPartionCell_max > 0 AND tmpData.isClose_value_min = 0 THEN TRUE ELSE FALSE END :: Boolean AS isClose_value_min
                       -- —формированы данные по €чейкам (да/нет)
-                    , COALESCE (tmpData_MI.isPartionCell, FALSE) :: Boolean  AS isPartionCell
+                    , CASE WHEN COALESCE (tmpData_MI.isPartionCell_min, 0) = 0 THEN TRUE ELSE FALSE END :: Boolean  AS isPartionCell_min
+                    , CASE WHEN COALESCE (tmpData_MI.isPartionCell_max, 0) > 0 THEN TRUE ELSE FALSE END :: Boolean  AS isPartionCell_max
 
                       --  ол-во - пропорционально
                     , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpData_MI.Amount ELSE 0 END ::TFloat AS Amount
@@ -2135,7 +2141,7 @@ BEGIN
                                                                                                          THEN 999
                                                                                                          ELSE 1
                                                                                                     END
-                                                                                                  , CASE WHEN tmpData_MI.isPartionCell = FALSE THEN 999 ELSE 1 END
+                                                                                                  , CASE WHEN tmpData_MI.isPartionCell_max > 0 THEN 999 ELSE 1 END
                                                                                                   , COALESCE (tmpData_MI.PartionGoodsDate, tmpRemains.PartionGoodsDate, zc_DateStart()) ASC
                                         ) :: Integer AS Ord
 
@@ -2185,7 +2191,7 @@ BEGIN
                                    AND tmpData.GoodsKindId      = tmpData_MI.GoodsKindId      -- ***
                                    AND tmpData.PartionGoodsDate = tmpData_MI.PartionGoodsDate -- ***
                                    -- !!!—формированы данные по €чейкам!!!
-                                   AND tmpData_MI.isPartionCell = TRUE
+                                   AND tmpData_MI.isPartionCell_max > 0
                                  --  AND vbUserId <> 5
                                    AND (tmpData.PartionCellId_num  = tmpData_MI.PartionCellId -- ***
                                      OR tmpData_MI.PartionCellId = 0
@@ -2213,6 +2219,7 @@ BEGIN
         , tmpResult.PartionGoodsDate
           --
         , CASE WHEN inIsCell = TRUE THEN -1 ELSE 0 END :: Integer AS DescId_milo_num
+          -- 23
         , 0 :: Integer AS PartionCellId_num
 
         , tmpResult.PartionCellId_1
@@ -2285,6 +2292,8 @@ BEGIN
         , tmpResult.PartionCellName_22
         , tmpResult.PartionCellName_ets
 
+        , '' :: TVarChar AS PartionCellName_srch
+
         , tmpResult.ColorFon_1
         , tmpResult.ColorFon_2
         , tmpResult.ColorFon_3
@@ -2332,9 +2341,10 @@ BEGIN
         , tmpResult.Color_22
 
         , tmpResult.isClose_value_min
-        , tmpResult.isPartionCell
+        , tmpResult.isPartionCell_max :: Boolean AS isPartionCell
+        , tmpResult.isPartionCell_min :: Boolean AS isPartionCell_min
 
-        , tmpResult.Amount , tmpResult.Amount_Weight
+        , tmpResult.Amount, tmpResult.Amount_Weight
 
         , tmpResult.NormInDays
         , tmpResult.NormInDays_real
@@ -2343,20 +2353,19 @@ BEGIN
 
         , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
                     THEN tmpResult.Color_PartionGoodsDate
-               WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow()
                ELSE tmpResult.Color_PartionGoodsDate
           END :: Integer AS Color_PartionGoodsDate
 
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
 
-        , CASE WHEN tmpResult.isPartionCell = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
+        , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
-        , CASE WHEN tmpResult.isPartionCell = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
    FROM tmpResult
-
-        ;
+  ;
 
     END IF;
 

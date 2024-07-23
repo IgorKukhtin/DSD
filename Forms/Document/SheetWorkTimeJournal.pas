@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  cxButtonEdit, dsdGuides, cxCheckBox;
+  cxButtonEdit, dsdGuides, cxCheckBox, dsdCommon;
 
 type
   TSheetWorkTimeJournalForm = class(TParentForm)
