@@ -36,6 +36,14 @@ CREATE OR REPLACE FUNCTION gpReport_SheetWorkTime_Update(
                , OperDate_mov TDateTime, UserName_mov TVarChar 
                , StatusCode Integer
                , StatusName TVarChar
+
+               , CheckedHeadId Integer, CheckedHeadName TVarChar
+               , CheckedPersonalId Integer, CheckedPersonalName TVarChar
+               , CheckedHead_date TDateTime
+               , CheckedPersonal_date TDateTime
+               , isCheckedHead Boolean
+               , isCheckedPersonal Boolean
+
                , isErased Boolean
                 )
 AS
@@ -72,6 +80,17 @@ BEGIN
                       END AS WorkTimeKindId_key
                     , Object_Status.ObjectCode AS StatusCode
                     , Object_Status.ValueData  AS StatusName
+
+                    , Object_CheckedHead.Id                     AS CheckedHeadId
+                    , Object_CheckedHead.ValueData              AS CheckedHeadName
+                    , Object_CheckedPersonal.Id                 AS CheckedPersonalId
+                    , Object_CheckedPersonal.ValueData          AS CheckedPersonalName
+
+                    , MovementDate_CheckedHead.ValueData         :: TDateTime AS CheckedHead_date
+                    , MovementDate_CheckedPersonal.ValueData     :: TDateTime AS CheckedPersonal_date
+                    , COALESCE (MovementBoolean_CheckedHead.ValueData, FALSE)     :: Boolean  AS isCheckedHead
+                    , COALESCE (MovementBoolean_CheckedPersonal.ValueData, FALSE) :: Boolean  AS isCheckedPersonal
+
                     , MI_SheetWorkTime.isErased 
                FROM Movement
                     JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -102,6 +121,30 @@ BEGIN
                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
                                                     AND MIObject_StorageLine.DescId         = zc_MILinkObject_StorageLine()
                     LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+                    LEFT JOIN MovementDate AS MovementDate_CheckedHead
+                                           ON MovementDate_CheckedHead.MovementId = Movement.Id
+                                          AND MovementDate_CheckedHead.DescId = zc_MovementDate_CheckedHead()
+                    LEFT JOIN MovementDate AS MovementDate_CheckedPersonal
+                                           ON MovementDate_CheckedPersonal.MovementId = Movement.Id
+                                          AND MovementDate_CheckedPersonal.DescId = zc_MovementDate_CheckedPersonal()
+
+                    LEFT JOIN MovementBoolean AS MovementBoolean_CheckedHead
+                                              ON MovementBoolean_CheckedHead.MovementId = Movement.Id
+                                             AND MovementBoolean_CheckedHead.DescId = zc_MovementBoolean_CheckedHead()
+                    LEFT JOIN MovementBoolean AS MovementBoolean_CheckedPersonal
+                                              ON MovementBoolean_CheckedPersonal.MovementId = Movement.Id
+                                             AND MovementBoolean_CheckedPersonal.DescId = zc_MovementBoolean_CheckedPersonal()
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedHead
+                                                 ON MovementLinkObject_CheckedHead.MovementId = Movement.Id
+                                                AND MovementLinkObject_CheckedHead.DescId = zc_MovementLinkObject_CheckedHead()
+                    LEFT JOIN Object AS Object_CheckedHead ON Object_CheckedHead.Id = MovementLinkObject_CheckedHead.ObjectId
+
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckedPersonal
+                                                 ON MovementLinkObject_CheckedPersonal.MovementId = Movement.Id
+                                                AND MovementLinkObject_CheckedPersonal.DescId = zc_MovementLinkObject_CheckedPersonal()
+                    LEFT JOIN Object AS Object_CheckedPersonal ON Object_CheckedPersonal.Id = MovementLinkObject_CheckedPersonal.ObjectId
 
                WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                  AND Movement.DescId   = zc_Movement_SheetWorkTime()
@@ -168,6 +211,17 @@ BEGIN
 
          , tmpMI.StatusCode
          , tmpMI.StatusName
+
+         , tmpMI.CheckedHeadId
+         , tmpMI.CheckedHeadName
+         , tmpMI.CheckedPersonalId
+         , tmpMI.CheckedPersonalName
+
+         , tmpMI.CheckedHead_date
+         , tmpMI.CheckedPersonal_date
+         , tmpMI.isCheckedHead
+         , tmpMI.isCheckedPersonal
+
          , tmpMI.isErased ::Boolean
 
     FROM tmpMI
