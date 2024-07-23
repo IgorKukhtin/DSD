@@ -82,6 +82,8 @@ type
     cxLabel8: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    cbisDetail: TcxCheckBox;
+    actRefreshDetail: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

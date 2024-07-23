@@ -390,6 +390,7 @@ type
     actPrint_Grid: TdsdPrintAction;
     bbPrint_Grid: TdxBarButton;
     Amount_avance_ret: TcxGridDBColumn;
+    AmountCash_print: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1945,10 +1945,18 @@ inherited PersonalServiceForm: TPersonalServiceForm
             Width = 70
           end
           object Amount_avance_ret: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1072#1074#1072#1085#1089', '#1075#1088#1085
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1072#1074#1072#1085#1089', '#1075#1088#1085' ('#1076#1083#1103' '#1087#1077#1095#1072#1090#1080')'
             DataBinding.FieldName = 'Amount_avance_ret'
             Visible = False
             Width = 70
+          end
+          object AmountCash_print: TcxGridDBColumn
+            Caption = #1050' '#1074#1099#1087#1083#1072#1090#1077' ('#1080#1079' '#1082#1072#1089#1089#1099') '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080
+            DataBinding.FieldName = 'AmountCash_print'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -2391,6 +2399,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
           object msisQuestionRead: TcxGridDBColumn
             Caption = #1055#1088#1086#1095'. '#1074#1086#1087#1088#1086#1089
             DataBinding.FieldName = 'isQuestionRead'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1074#1086#1087#1088#1086#1089
@@ -2634,6 +2643,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -2727,6 +2739,9 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridChild_all: TcxGrid
         Left = 0
         Top = 0

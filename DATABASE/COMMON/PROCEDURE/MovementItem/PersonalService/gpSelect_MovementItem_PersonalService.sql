@@ -35,7 +35,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , UnitFineSubjectId Integer, UnitFineSubjectName TVarChar
              , StaffListSummKindName TVarChar
              
-             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat,AmountCash_rem TFloat, AmountCash_pay TFloat
+             , Amount TFloat, AmountToPay TFloat, AmountCash TFloat, AmountCash_rem TFloat, AmountCash_print TFloat, AmountCash_pay TFloat
              , SummService TFloat
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat
              , SummCardSecondRecalc TFloat, SummCardSecondRecalc_00807 TFloat, SummCardSecondRecalc_005 TFloat
@@ -210,7 +210,9 @@ BEGIN
                                         , CLO_Unit.ObjectId     AS UnitId
                                         , CLO_Position.ObjectId AS PositionId
                                         , CLO_Personal.ObjectId AS PersonalId
-                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog() THEN MIContainer.Amount ELSE 0 END) AS SummNalog
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_Nalog()    THEN  1 * MIContainer.Amount ELSE 0 END) AS SummNalog
+                                        , (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_PersonalService_NalogRet() THEN -1 * MIContainer.Amount ELSE 0 END) AS SummNalogRet
+                                        
                                         , ROW_NUMBER() OVER (PARTITION BY MIContainer.MovementItemId ORDER BY ABS (MIContainer.Amount) DESC) AS Ord
                                    FROM MovementItemContainer AS MIContainer
                                         LEFT JOIN ContainerLinkObject AS CLO_Unit
@@ -775,16 +777,30 @@ BEGIN
                              + COALESCE (tmpMIContainer_pay.Amount_avance_all, 0)
                              + COALESCE (tmpMIContainer_pay.Amount_service, 0)
                       END
-              ) :: TFloat AS AmountCash_rem
+              ) :: TFloat AS AmountCash_rem   
+
+            --к выплате из кассы для печати  
+            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+             - COALESCE (tmpMIContainer_all.SummNalog, 0)    + COALESCE (MIFloat_SummNalog.ValueData,0)
+             + COALESCE (tmpMIContainer_all.SummNalogRet, 0) - COALESCE (MIFloat_SummNalogRet.ValueData,0)
+             - COALESCE (MIFloat_SummCard.ValueData, 0)
+             - COALESCE (MIFloat_SummCardSecond.ValueData, 0)
+             - COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)
+             - COALESCE (tmpMIContainer_pay.Amount_avance, 0) - (COALESCE (MIFloat_SummAvance.ValueData, 0) + COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)
+                                                               + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0))
+             - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
+             - COALESCE (tmpMIContainer_pay.Amount_service, 0)
+              ) :: TFloat AS AmountCash_print
+              
               -- выдадано из кассы
             , (COALESCE (tmpMIContainer_pay.Amount_avance_all, 0) + COALESCE (tmpMIContainer_pay.Amount_service, 0)) :: TFloat AS AmountCash_pay
 
-            , MIFloat_SummService.ValueData           AS SummService
-            , MIFloat_SummCard.ValueData              AS SummCard
-            , MIFloat_SummCardRecalc.ValueData        AS SummCardRecalc
-            , MIFloat_SummCardSecond.ValueData        AS SummCardSecond
+            , COALESCE (MIFloat_SummService.ValueData, 0)    ::TFloat AS SummService
+            , COALESCE (MIFloat_SummCard.ValueData, 0)       ::TFloat AS SummCard
+            , COALESCE (MIFloat_SummCardRecalc.ValueData, 0) ::TFloat AS SummCardRecalc
+            , COALESCE (MIFloat_SummCardSecond.ValueData, 0) ::TFloat AS SummCardSecond
 
-            , MIFloat_SummCardSecondRecalc.ValueData  AS SummCardSecondRecalc
+            , COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) ::TFloat  AS SummCardSecondRecalc
 
             , (FLOOR (100 * CAST ((COALESCE (MIFloat_SummCardSecondRecalc.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)) * vbKoeffSummCardSecond
                                  AS NUMERIC (16, 0))
@@ -797,47 +813,47 @@ BEGIN
                           ELSE tmpMI_card_b2.Summ_calc + (tmpMI_card_b2.Summ_calc - 29999) * 0.005
                     END AS NUMERIC (16, 0)) :: TFloat AS SummCardSecondRecalc_005
 
-            , MIFloat_SummCardSecondDiff.ValueData    AS SummCardSecondDiff
-            , MIFloat_SummCardSecondCash.ValueData    AS SummCardSecondCash
-            , tmpMI_SummCardSecondRecalc.SummCardSecondRecalc ::TFloat AS SummCardSecond_Avance    
-            , MIFloat_SummAvCardSecond.ValueData       AS SummAvCardSecond
-            , MIFloat_SummAvCardSecondRecalc.ValueData AS SummAvCardSecondRecalc
-            , MIFloat_SummNalog.ValueData             AS SummNalog
-            , MIFloat_SummNalogRecalc.ValueData       AS SummNalogRecalc
-            , MIFloat_SummNalogRet.ValueData          AS SummNalogRet
-            , MIFloat_SummNalogRetRecalc.ValueData    AS SummNalogRetRecalc
-            , MIFloat_SummMinus.ValueData             AS SummMinus
-            , MIFloat_SummFine.ValueData              AS SummFine
-            , MIFloat_SummFineOth.ValueData           AS SummFineOth
-            , MIFloat_SummFineOthRecalc.ValueData     AS SummFineOthRecalc
-            , MIFloat_SummAdd.ValueData               AS SummAdd
-            , MIFloat_SummAuditAdd.ValueData          AS SummAuditAdd
-            , MIFloat_SummHoliday.ValueData           AS SummHoliday
-            , MIFloat_SummHosp.ValueData              AS SummHosp
-            , MIFloat_SummHospOth.ValueData           AS SummHospOth
-            , MIFloat_SummHospOthRecalc.ValueData     AS SummHospOthRecalc
-            , MIFloat_SummSocialIn.ValueData          AS SummSocialIn
-            , MIFloat_SummSocialAdd.ValueData         AS SummSocialAdd
-            , MIFloat_SummChild.ValueData             AS SummChild
-            , MIFloat_SummChildRecalc.ValueData       AS SummChildRecalc
-            , MIFloat_SummMinusExt.ValueData          AS SummMinusExt
-            , MIFloat_SummMinusExtRecalc.ValueData    AS SummMinusExtRecalc
+            , COALESCE (MIFloat_SummCardSecondDiff.ValueData, 0)    ::TFloat    AS SummCardSecondDiff
+            , COALESCE (MIFloat_SummCardSecondCash.ValueData, 0)    ::TFloat    AS SummCardSecondCash
+            , COALESCE (tmpMI_SummCardSecondRecalc.SummCardSecondRecalc, 0)    ::TFloat AS SummCardSecond_Avance    
+            , COALESCE (MIFloat_SummAvCardSecond.ValueData, 0)    ::TFloat       AS SummAvCardSecond
+            , COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0)    ::TFloat AS SummAvCardSecondRecalc
+            , COALESCE (MIFloat_SummNalog.ValueData, 0)    ::TFloat             AS SummNalog
+            , COALESCE (MIFloat_SummNalogRecalc.ValueData, 0)    ::TFloat       AS SummNalogRecalc
+            , COALESCE (MIFloat_SummNalogRet.ValueData, 0)    ::TFloat          AS SummNalogRet
+            , COALESCE (MIFloat_SummNalogRetRecalc.ValueData, 0)    ::TFloat    AS SummNalogRetRecalc
+            , COALESCE (MIFloat_SummMinus.ValueData, 0)    ::TFloat             AS SummMinus
+            , COALESCE (MIFloat_SummFine.ValueData, 0)    ::TFloat              AS SummFine
+            , COALESCE (MIFloat_SummFineOth.ValueData, 0)    ::TFloat           AS SummFineOth
+            , COALESCE (MIFloat_SummFineOthRecalc.ValueData, 0)    ::TFloat     AS SummFineOthRecalc
+            , COALESCE (MIFloat_SummAdd.ValueData, 0)    ::TFloat               AS SummAdd
+            , COALESCE (MIFloat_SummAuditAdd.ValueData, 0)    ::TFloat          AS SummAuditAdd
+            , COALESCE (MIFloat_SummHoliday.ValueData, 0)    ::TFloat           AS SummHoliday
+            , COALESCE (MIFloat_SummHosp.ValueData, 0)    ::TFloat              AS SummHosp
+            , COALESCE (MIFloat_SummHospOth.ValueData, 0)    ::TFloat           AS SummHospOth
+            , COALESCE (MIFloat_SummHospOthRecalc.ValueData, 0)    ::TFloat     AS SummHospOthRecalc
+            , COALESCE (MIFloat_SummSocialIn.ValueData, 0)    ::TFloat          AS SummSocialIn
+            , COALESCE (MIFloat_SummSocialAdd.ValueData, 0)    ::TFloat         AS SummSocialAdd
+            , COALESCE (MIFloat_SummChild.ValueData, 0)    ::TFloat             AS SummChild
+            , COALESCE (MIFloat_SummChildRecalc.ValueData, 0)    ::TFloat       AS SummChildRecalc
+            , COALESCE (MIFloat_SummMinusExt.ValueData, 0)    ::TFloat          AS SummMinusExt
+            , COALESCE (MIFloat_SummMinusExtRecalc.ValueData, 0)    ::TFloat    AS SummMinusExtRecalc
 
-            , MIFloat_SummTransport.ValueData         AS SummTransport
-            , MIFloat_SummTransportAdd.ValueData      AS SummTransportAdd
-            , MIFloat_SummTransportAddLong.ValueData  AS SummTransportAddLong
-            , MIFloat_SummTransportTaxi.ValueData     AS SummTransportTaxi
-            , MIFloat_SummPhone.ValueData             AS SummPhone
+            , COALESCE (MIFloat_SummTransport.ValueData, 0)    ::TFloat         AS SummTransport
+            , COALESCE (MIFloat_SummTransportAdd.ValueData, 0)    ::TFloat      AS SummTransportAdd
+            , COALESCE (MIFloat_SummTransportAddLong.ValueData, 0)    ::TFloat  AS SummTransportAddLong
+            , COALESCE (MIFloat_SummTransportTaxi.ValueData, 0)    ::TFloat     AS SummTransportTaxi
+            , COALESCE (MIFloat_SummPhone.ValueData, 0)    ::TFloat             AS SummPhone
             , ( 1 * tmpMIContainer_pay.Amount_avance)    :: TFloat AS Amount_avance
             , ( 1 * tmpMIContainer_pay.Amount_avance_ps) :: TFloat AS Amount_avance_ps 
-            , (tmpMIContainer_pay.Amount_avance_ret)     :: TFloat AS Amount_avance_ret
+            , COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)    ::TFloat    AS Amount_avance_ret
 
-            , MIFloat_SummAvance.ValueData        ::TFloat AS SummAvance
-            , MIFloat_SummAvanceRecalc.ValueData  ::TFloat AS SummAvanceRecalc   
+            , COALESCE (MIFloat_SummAvance.ValueData, 0)                 ::TFloat AS SummAvance
+            , COALESCE (MIFloat_SummAvanceRecalc.ValueData, 0)           ::TFloat AS SummAvanceRecalc   
             
-            , MIFloat_Summ_BankSecond_num.ValueData        ::TFloat AS Summ_BankSecond_num
-            , MIFloat_Summ_BankSecondTwo_num.ValueData     ::TFloat AS Summ_BankSecondTwo_num
-            , MIFloat_Summ_BankSecondDiff_num.ValueData    ::TFloat AS Summ_BankSecondDiff_num
+            , COALESCE (MIFloat_Summ_BankSecond_num.ValueData, 0)        ::TFloat AS Summ_BankSecond_num
+            , COALESCE (MIFloat_Summ_BankSecondTwo_num.ValueData, 0)     ::TFloat AS Summ_BankSecondTwo_num
+            , COALESCE (MIFloat_Summ_BankSecondDiff_num.ValueData, 0)    ::TFloat AS Summ_BankSecondDiff_num
 
             , COALESCE (tmpMIChild.Amount, 0)                                                 :: TFloat AS TotalSummChild
             , (COALESCE (tmpMIChild.Amount, 0) - COALESCE (MIFloat_SummService.ValueData, 0)) :: TFloat AS SummDiff

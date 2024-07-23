@@ -3,7 +3,7 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
   Top = 0
   Caption = #1048#1089#1090#1086#1088#1080#1103' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' <'#1071#1095#1077#1077#1082' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
   ClientHeight = 376
-  ClientWidth = 1040
+  ClientWidth = 845
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,13 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 97
-    Width = 1040
+    Width = 845
     Height = 279
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 1040
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -90,30 +91,12 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         HeaderAlignmentVert = vaCenter
         Width = 132
       end
-      object UserName_old: TcxGridDBColumn
-        Caption = '1. '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (old)'
-        DataBinding.FieldName = 'UserName_old'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 132
-      end
       object UserName_new: TcxGridDBColumn
         Caption = '1. '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (new)'
         DataBinding.FieldName = 'UserName_new'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 132
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 82
       end
       object OperDate_new: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' (new)'
@@ -122,20 +105,6 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 145
-      end
-      object OperDate_old: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' (old)'
-        DataBinding.FieldName = 'OperDate_old'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 145
-      end
-      object ColorFon: TcxGridDBColumn
-        DataBinding.FieldName = 'ColorFon'
-        Visible = False
-        VisibleForCustomization = False
-        Width = 70
       end
       object Name_search: TcxGridDBColumn
         Caption = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
@@ -146,11 +115,48 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         HeaderHint = '1. '#1071#1095#1077#1081#1082#1072' ('#1087#1086#1080#1089#1082')'
         Width = 80
       end
+      object ColorFon: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorFon'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
       object MovementItemId: TcxGridDBColumn
         Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1090#1088#1086#1082#1080
         DataBinding.FieldName = 'MovementItemId'
         Visible = False
         Width = 80
+      end
+      object UserName_old: TcxGridDBColumn
+        Caption = '1. '#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' (old)'
+        DataBinding.FieldName = 'UserName_old'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        VisibleForCustomization = False
+        Width = 132
+      end
+      object OperDate_old: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' '#1087#1088#1086#1090#1086#1082#1086#1083' (old)'
+        DataBinding.FieldName = 'OperDate_old'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 145
+      end
+      object Amount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086
+        DataBinding.FieldName = 'Amount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        VisibleForCustomization = False
+        Width = 82
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -160,10 +166,11 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 1040
+    Width = 845
     Height = 71
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1040
     object lbSearchName: TcxLabel
       Left = 5
       Top = 43
@@ -249,6 +256,16 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 210
+    end
+    object cbisDetail: TcxCheckBox
+      Left = 690
+      Top = 14
+      Hint = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Action = actRefreshDetail
+      Caption = #1055#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      Properties.ReadOnly = False
+      TabOrder = 10
+      Width = 111
     end
   end
   object DataSource: TDataSource
@@ -399,6 +416,19 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
     Images = dmMain.ImageList
     Left = 304
     Top = 112
+    object actRefreshDetail: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -590,6 +620,14 @@ object Report_PartionCell_historyForm: TReport_PartionCell_historyForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDetail'
+        Value = Null
+        Component = cbisDetail
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
