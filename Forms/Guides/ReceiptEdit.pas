@@ -20,7 +20,8 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit, cxCheckBox, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
+  cxButtonEdit, cxCheckBox, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
+  dsdCommon;
 
 type
   TReceiptEditForm = class(TParentForm)
@@ -75,6 +76,14 @@ type
     cxLabel4: TcxLabel;
     edReceiptCode: TcxTextEdit;
     cxLabel6: TcxLabel;
+    cxLabel8: TcxLabel;
+    edTaxLossCEH: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    edTaxLossVPR: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edTaxLossTRM: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    edRealDelicShp: TcxCurrencyEdit;
   private
     { Private declarations }
   public

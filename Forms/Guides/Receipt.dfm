@@ -181,6 +181,63 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 50
       end
+      object TaxLossCEH: TcxGridDBColumn
+        Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1094#1077#1093')'
+        DataBinding.FieldName = 'TaxLossCEH'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxLossTRM: TcxGridDBColumn
+        Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1090#1077#1088#1084#1080#1095#1082#1072')'
+        DataBinding.FieldName = 'TaxLossTRM'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxLossVPR: TcxGridDBColumn
+        Caption = '% '#1074#1087#1088#1080#1089#1082#1072
+        DataBinding.FieldName = 'TaxLossVPR'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object RealDelicShp: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1096#1087#1088'-'#1080#1103
+        DataBinding.FieldName = 'RealDelicShp'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
+      object TaxLossCEHTRM: TcxGridDBColumn
+        Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1094#1077#1093' + '#1090#1077#1088#1084'.)'
+        DataBinding.FieldName = 'TaxLossCEHTRM'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1087#1086#1090#1077#1088#1100' ('#1094#1077#1093' + '#1090#1077#1088#1084#1080#1095#1082#1072')'
+        Options.Editing = False
+        Width = 85
+      end
       object ValueWeight: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1077#1089')'
         DataBinding.FieldName = 'ValueWeight'
@@ -2062,6 +2119,7 @@ object ReceiptForm: TReceiptForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 272
     Top = 184
@@ -2367,6 +2425,7 @@ object ReceiptForm: TReceiptForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 448
     Top = 360
@@ -2596,7 +2655,7 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 688
+    Left = 672
     Top = 3
   end
   object GuidesGoodsKind: TdsdGuides
@@ -2625,7 +2684,7 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 768
+    Left = 792
     Top = 3
   end
   object spUpdateDisabled_yes: TdsdStoredProc

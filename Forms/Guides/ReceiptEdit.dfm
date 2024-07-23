@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1077#1094#1077#1087#1090#1091#1088#1091'>'
-  ClientHeight = 448
+  ClientHeight = 532
   ClientWidth = 361
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,7 +30,7 @@
   end
   object cxButton1: TcxButton
     Left = 58
-    Top = 409
+    Top = 497
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -40,7 +40,7 @@
   end
   object cxButton2: TcxButton
     Left = 232
-    Top = 409
+    Top = 497
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -65,17 +65,17 @@
   end
   object cxLabel5: TcxLabel
     Left = 32
-    Top = 198
+    Top = 286
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   end
   object cxLabel7: TcxLabel
     Left = 32
-    Top = 281
+    Top = 369
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
   end
   object ceReceiptCost: TcxButtonEdit
     Left = 32
-    Top = 296
+    Top = 384
     Properties.Buttons = <
       item
         Default = True
@@ -87,12 +87,12 @@
   end
   object cxLabel3: TcxLabel
     Left = 32
-    Top = 320
+    Top = 408
     Caption = #1058#1080#1087' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object ceReceiptKind: TcxButtonEdit
     Left = 32
-    Top = 335
+    Top = 423
     Properties.Buttons = <
       item
         Default = True
@@ -111,7 +111,7 @@
   end
   object edComment: TcxTextEdit
     Left = 32
-    Top = 374
+    Top = 462
     TabOrder = 12
     Width = 303
   end
@@ -183,12 +183,12 @@
   end
   object cxLabel15: TcxLabel
     Left = 32
-    Top = 159
+    Top = 247
     Caption = #1042#1077#1089' '#1091#1087#1072#1082'. ('#1087#1086#1083#1080#1072#1084#1080#1076')'
   end
   object ceWeightPackage: TcxCurrencyEdit
     Left = 32
-    Top = 175
+    Top = 263
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 24
@@ -196,17 +196,17 @@
   end
   object cxLabel16: TcxLabel
     Left = 158
-    Top = 159
+    Top = 247
     Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072
   end
   object cxLabel17: TcxLabel
     Left = 252
-    Top = 159
+    Top = 247
     Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072
   end
   object edStartDate: TcxDateEdit
     Left = 158
-    Top = 175
+    Top = 263
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -215,7 +215,7 @@
   end
   object edEndDate: TcxDateEdit
     Left = 252
-    Top = 175
+    Top = 263
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -224,7 +224,7 @@
   end
   object ceGoods: TcxButtonEdit
     Left = 32
-    Top = 214
+    Top = 302
     Properties.Buttons = <
       item
         Default = True
@@ -235,12 +235,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 32
-    Top = 241
+    Top = 329
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsKind: TcxButtonEdit
     Left = 32
-    Top = 257
+    Top = 345
     Properties.Buttons = <
       item
         Default = True
@@ -251,12 +251,12 @@
   end
   object cxLabel18: TcxLabel
     Left = 190
-    Top = 241
+    Top = 329
     Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1075'.'#1087'.)'
   end
   object ceGoodsKindComplete: TcxButtonEdit
     Left = 190
-    Top = 257
+    Top = 345
     Properties.Buttons = <
       item
         Default = True
@@ -267,7 +267,7 @@
   end
   object cxLabel4: TcxLabel
     Left = 32
-    Top = 357
+    Top = 445
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edReceiptCode: TcxTextEdit
@@ -280,6 +280,62 @@
     Left = 115
     Top = 5
     Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+  end
+  object cxLabel8: TcxLabel
+    Left = 32
+    Top = 160
+    Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1094#1077#1093')'
+  end
+  object edTaxLossCEH: TcxCurrencyEdit
+    Left = 32
+    Top = 177
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 38
+    Width = 140
+  end
+  object cxLabel9: TcxLabel
+    Left = 32
+    Top = 203
+    Caption = '% '#1074#1087#1088#1080#1089#1082#1072
+  end
+  object edTaxLossVPR: TcxCurrencyEdit
+    Left = 32
+    Top = 220
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 40
+    Width = 140
+  end
+  object cxLabel19: TcxLabel
+    Left = 195
+    Top = 160
+    Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1090#1077#1088#1084#1080#1095#1082#1072')'
+  end
+  object edTaxLossTRM: TcxCurrencyEdit
+    Left = 195
+    Top = 176
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 42
+    Width = 140
+  end
+  object cxLabel20: TcxLabel
+    Left = 195
+    Top = 203
+    Caption = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103
+  end
+  object edRealDelicShp: TcxCurrencyEdit
+    Left = 196
+    Top = 220
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 44
+    Width = 140
   end
   object ActionList: TActionList
     Left = 65528
@@ -406,8 +462,40 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTaxLossCEH'
+        Value = Null
+        Component = edTaxLossCEH
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxLossTRM'
+        Value = Null
+        Component = edTaxLossTRM
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxLossVPR'
+        Value = Null
+        Component = edTaxLossVPR
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRealDelicShp'
+        Value = Null
+        Component = edRealDelicShp
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = edStartDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -415,7 +503,7 @@
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -589,7 +677,7 @@
       end
       item
         Name = 'EndDate'
-        Value = ''
+        Value = Null
         Component = edEndDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
@@ -672,6 +760,34 @@
         Component = ReceiptKindGuides
         ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxLossCEH'
+        Value = Null
+        Component = edTaxLossCEH
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxLossTRM'
+        Value = Null
+        Component = edTaxLossTRM
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TaxLossVPR'
+        Value = Null
+        Component = edTaxLossVPR
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RealDelicShp'
+        Value = Null
+        Component = edRealDelicShp
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Top = 64
@@ -722,7 +838,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 151
-    Top = 282
+    Top = 370
   end
   object ReceiptKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -752,7 +868,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 223
-    Top = 322
+    Top = 410
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -782,7 +898,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 132
-    Top = 206
+    Top = 294
   end
   object GoodsKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -812,7 +928,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 68
-    Top = 246
+    Top = 334
   end
   object GoodsKindCompleteGuides: TdsdGuides
     KeyField = 'Id'
@@ -841,6 +957,6 @@
         MultiSelectSeparator = ','
       end>
     Left = 244
-    Top = 238
+    Top = 326
   end
 end
