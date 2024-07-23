@@ -1366,7 +1366,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ChoiceCell_NPP() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Bank(), 'zc_ObjectFloat_ChoiceCell_NPP', '№ п/п для сортировки' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ChoiceCell_NPP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsNormDiff_ValuePF() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValuePF'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_GoodsNormDiff_ValuePF', 'Норма отклонения П/Ф (ГП), кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValuePF');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsNormDiff_ValueGP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValueGP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Bank(), 'zc_ObjectFloat_GoodsNormDiff_ValueGP', 'Норма отклонения ГП, кг' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsNormDiff_ValueGP');
 
 
  

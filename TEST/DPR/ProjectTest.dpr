@@ -1511,7 +1511,9 @@ uses
   ChoiceCell in '..\..\Forms\Guides\ChoiceCell.pas' {ChoiceCellForm: TParentForm},
   ChoiceCellEdit in '..\..\Forms\Guides\ChoiceCellEdit.pas' {ChoiceCellEditForm: TParentForm},
   Change—urrencyUserDialog in '..\..\Forms\Document\Change—urrencyUserDialog.pas' {Change—urrencyUserDialogForm: TParentForm},
-  Report_PartionCell_history in '..\..\Forms\Report\Report_PartionCell_history.pas' {Report_PartionCell_historyForm: TParentForm};
+  Report_PartionCell_history in '..\..\Forms\Report\Report_PartionCell_history.pas' {Report_PartionCell_historyForm: TParentForm},
+  GoodsNormDiff in '..\..\Forms\Guides\GoodsNormDiff.pas' {GoodsNormDiffForm: TParentForm},
+  GoodsNormDiffEdit in '..\..\Forms\Guides\GoodsNormDiffEdit.pas' {GoodsNormDiffEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

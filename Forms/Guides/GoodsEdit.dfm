@@ -915,8 +915,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 88
-    Top = 234
+    Left = 64
+    Top = 210
   end
   object dsdInfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1015,8 +1015,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 72
-    Top = 304
+    Left = 40
+    Top = 368
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1042,8 +1042,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 152
-    Top = 136
+    Left = 136
+    Top = 112
   end
   object GoodsGroupStatGuides: TdsdGuides
     KeyField = 'Id'
@@ -1069,8 +1069,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 112
-    Top = 184
+    Left = 88
+    Top = 152
   end
   object GoodsTagGuides: TdsdGuides
     KeyField = 'Id'
@@ -1116,7 +1116,7 @@
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 112
+    Left = 104
     Top = 322
   end
   object GoodsGroupAnalystGuides: TdsdGuides
