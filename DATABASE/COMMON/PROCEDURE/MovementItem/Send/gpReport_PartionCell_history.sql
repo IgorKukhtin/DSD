@@ -181,7 +181,8 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                   , tmpCell_old.PartionCellName ::TVarChar     AS PartionCellName_old
                   , Object_PartionCell_new.ObjectCode          AS PartionCellCode_new
                   , tmpCell_new.PartionCellName ::TVarChar     AS PartionCellName_new
-                  , (tmpCell_new.PartionCellName ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (tmpCell_new.PartionCellName, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
+                  , (tmpCell_new.PartionCellName ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (tmpCell_new.PartionCellName, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')
+                   ||tmpCell_old.PartionCellName ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (tmpCell_old.PartionCellName, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
                   , tmpCell_old.Amount        ::TFloat
                   , ROW_NUMBER() OVER (PARTITION BY tmpCell_old.CellNum, tmpCell_old.MovementItemId ORDER BY tmpCell_old.OperDate ) ::Integer AS Ord --tmpCell_old.ord           ::Integer
                   , tmpCell_old.CellNum       ::Integer
@@ -201,7 +202,8 @@ tmpMI AS (SELECT DISTINCT tmp.Id
          LEFT JOIN Object AS Object_User_new ON Object_User_new.Id = tmpCell_new.UserId
          
     Where (tmpCell_new.PartionCellName <> tmpCell_old.PartionCellName OR tmpCell_new.GoodsId IS NULL)
-        AND (COALESCE (tmpCell_new.PartionCellName, '') <> '' OR COALESCE (tmpCell_old.PartionCellName,'')<>'')
+        AND (COALESCE (tmpCell_new.PartionCellName, '') <> '' OR COALESCE (tmpCell_old.PartionCellName,'')<>'') 
+        AND tmpCell_new.OperDate IS NOT NULL
 
     ;
 --select * from tmpCell_1
