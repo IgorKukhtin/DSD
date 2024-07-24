@@ -1078,7 +1078,10 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_ChoiceCell', 'Ячейка отбора' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ChoiceCell');
   
-     
+  CREATE OR REPLACE FUNCTION zc_Object_GoodsNormDiff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsNormDiff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_GoodsNormDiff', 'Нормы отклонений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsNormDiff');
+       
    
  
 
@@ -1716,6 +1719,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 23.07.24         * zc_Object_GoodsNormDiff
  22.06.24         * zc_Object_ViewPriceList
  23.05.24         * zc_Object_GoodsByGoodsKindPeresort
  27.12.23         * zc_Object_PartionCell

@@ -1,9 +1,10 @@
-object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
+object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
   Left = 0
   Top = 0
-  Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072' '#1076#1083#1103' '#1103#1097#1080#1082#1072
-  ClientHeight = 195
-  ClientWidth = 381
+  Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1086#1088#1084#1099' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1081'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1086#1088#1084#1099' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1081'>'
+  ClientHeight = 239
+  ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +18,8 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 87
-    Top = 164
+    Left = 58
+    Top = 206
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,95 +28,91 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 231
-    Top = 164
+    Left = 202
+    Top = 206
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 1
   end
-  object cxLabel3: TcxLabel
-    Left = 145
-    Top = 58
-    Caption = #1071#1097#1080#1082
-  end
-  object cxLabel9: TcxLabel
-    Left = 17
-    Top = 110
-    Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097#1080#1082#1077
-  end
-  object ceBox: TcxButtonEdit
-    Left = 145
-    Top = 77
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 4
-    Width = 215
-  end
-  object ceWeightOnBox: TcxCurrencyEdit
-    Left = 17
-    Top = 126
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 5
-    Width = 163
-  end
-  object cxLabel2: TcxLabel
-    Left = 17
-    Top = 58
-    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-  end
-  object ceGoodsKind: TcxButtonEdit
-    Left = 17
-    Top = 77
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 7
-    Width = 112
-  end
-  object cxLabel4: TcxLabel
-    Left = 17
-    Top = 12
+  object cxLabel5: TcxLabel
+    Left = 34
+    Top = 7
     Caption = #1058#1086#1074#1072#1088
   end
   object ceGoods: TcxButtonEdit
-    Left = 17
-    Top = 31
+    Left = 34
+    Top = 25
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 343
+    TabOrder = 3
+    Width = 275
   end
-  object cxLabel11: TcxLabel
-    Left = 197
-    Top = 107
-    Caption = #1050#1086#1083'-'#1074#1086' '#1077#1076#1080#1085#1080#1094' '#1074' '#1103#1097#1080#1082#1077
+  object cxLabel4: TcxLabel
+    Left = 34
+    Top = 148
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
-  object ceCountOnBox: TcxCurrencyEdit
-    Left = 197
-    Top = 126
+  object edComment: TcxTextEdit
+    Left = 34
+    Top = 167
+    TabOrder = 5
+    Width = 275
+  end
+  object cxLabel8: TcxLabel
+    Left = 34
+    Top = 100
+    Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082'. '#1055'/'#1060' ('#1043#1055'), '#1082#1075
+  end
+  object edValuePF: TcxCurrencyEdit
+    Left = 34
+    Top = 121
+    EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
+    TabOrder = 7
+    Width = 130
+  end
+  object edValueGP: TcxCurrencyEdit
+    Left = 179
+    Top = 121
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 8
+    Width = 130
+  end
+  object cxLabel19: TcxLabel
+    Left = 179
+    Top = 100
+    Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082'. '#1043#1055', '#1082#1075
+  end
+  object cxLabel2: TcxLabel
+    Left = 34
+    Top = 53
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceGoodsKind: TcxButtonEdit
+    Left = 34
+    Top = 73
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 11
-    Width = 163
+    Width = 275
   end
   object ActionList: TActionList
-    Left = 336
-    Top = 10
+    Left = 296
+    Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -131,7 +128,7 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
       MoveParams = <>
       PostDataSetBeforeExecute = False
     end
@@ -148,7 +145,7 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsPropertyBox'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsNormDiff'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -161,14 +158,6 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inBoxId'
-        Value = ''
-        Component = GuidesBox
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inGoodsId'
         Value = ''
         Component = GuidesGoods
@@ -178,31 +167,38 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
       end
       item
         Name = 'inGoodsKindId'
-        Value = ''
+        Value = Null
         Component = GuidesGoodsKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCountOnBox'
-        Value = Null
-        Component = ceCountOnBox
+        Name = 'inValueGP'
+        Value = ''
+        Component = edValueGP
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inWeightOnBox'
-        Value = 0.000000000000000000
-        Component = ceWeightOnBox
+        Name = 'inValuePF'
+        Value = Null
+        Component = edValuePF
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 32
-    Top = 137
+    Top = 136
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -212,14 +208,12 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 62
+    Left = 240
+    Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_GoodsPropertyBox'
-    DataSets = <
-      item
-      end>
+    StoredProcName = 'gpGet_Object_GoodsNormDiff'
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -231,39 +225,11 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'WeightOnBox'
-        Value = 0.000000000000000000
-        Component = ceWeightOnBox
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'CountOnBox'
-        Value = Null
-        Component = ceCountOnBox
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BoxId'
-        Value = ''
-        Component = GuidesBox
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'BoxName'
-        Value = ''
-        Component = GuidesBox
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'GoodsId'
         Value = ''
         Component = GuidesGoods
         ComponentItem = 'Key'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -276,51 +242,84 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
       end
       item
         Name = 'GoodsKindId'
-        Value = ''
+        Value = ' '
         Component = GuidesGoodsKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsKindName'
-        Value = ''
+        Value = Null
         Component = GuidesGoodsKind
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ValuePF'
+        Value = Null
+        Component = edValuePF
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ValueGP'
+        Value = Null
+        Component = edValueGP
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 179
-    Top = 130
+    Top = 40
   end
-  object GuidesBox: TdsdGuides
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 296
+    Top = 128
+  end
+  object GuidesGoods: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceBox
-    FormNameParam.Value = 'TBoxForm'
+    LookupControl = ceGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TBoxForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesBox
+        Component = GuidesGoods
         ComponentItem = 'Key'
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesBox
+        Component = GuidesGoods
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 235
-    Top = 74
+    Left = 184
+    Top = 11
   end
   object GuidesGoodsKind: TdsdGuides
     KeyField = 'Id'
@@ -348,36 +347,7 @@ object GoodsPropertyBoxEditForm: TGoodsPropertyBoxEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 52
-    Top = 102
-  end
-  object GuidesGoods: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoods
-    FormNameParam.Value = 'TGoods_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoods_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesGoods
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 180
-    Top = 14
+    Left = 133
+    Top = 49
   end
 end

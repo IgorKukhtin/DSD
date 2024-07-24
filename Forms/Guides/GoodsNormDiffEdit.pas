@@ -1,4 +1,4 @@
-unit GoodsPropertyBoxEdit;
+unit GoodsNormDiffEdit;
 
 interface
 
@@ -21,10 +21,10 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxButtonEdit, dsdCommon;
+  dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit, dsdCommon;
 
 type
-  TGoodsPropertyBoxEditForm = class(TParentForm)
+  TGoodsNormDiffEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -32,21 +32,21 @@ type
     FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
-    cxLabel3: TcxLabel;
-    GuidesBox: TdsdGuides;
-    cxLabel9: TcxLabel;
+    dsdFormClose: TdsdFormClose;
+    cxPropertiesStore: TcxPropertiesStore;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    ceBox: TcxButtonEdit;
-    ceWeightOnBox: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    GuidesGoods: TdsdGuides;
+    ceGoods: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edValuePF: TcxCurrencyEdit;
+    edValueGP: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
     cxLabel2: TcxLabel;
     ceGoodsKind: TcxButtonEdit;
     GuidesGoodsKind: TdsdGuides;
-    cxLabel4: TcxLabel;
-    ceGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    cxLabel11: TcxLabel;
-    ceCountOnBox: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -59,6 +59,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TGoodsPropertyBoxEditForm);
+  RegisterClass(TGoodsNormDiffEditForm);
 
 end.

@@ -86,6 +86,7 @@ type
     procedure LoadGoodsPlatformFormTest;
     procedure LoadGoodsSeparateFormTest;
     procedure LoadGoodsScaleCehFormTest;
+    procedure LoadGoodsNormDiffFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadInfoMoneyFormTest;
@@ -731,6 +732,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsScaleCehForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsScaleCehEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsScaleCehEditForm');
+end;
+
+ procedure TLoadFormTest.LoadGoodsNormDiffFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsNormDiffForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsNormDiffForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsNormDiffEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsNormDiffEditForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;
