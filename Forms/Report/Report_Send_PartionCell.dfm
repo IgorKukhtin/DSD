@@ -2293,7 +2293,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Component = MasterCDS
           ComponentItem = 'PartionGoodsDate'
           DataType = ftDateTime
-          ParamType = ptInputOutput
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True

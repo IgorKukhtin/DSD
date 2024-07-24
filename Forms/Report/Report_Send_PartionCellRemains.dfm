@@ -2221,7 +2221,7 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
           Component = MasterCDS
           ComponentItem = 'PartionGoodsDate'
           DataType = ftDateTime
-          ParamType = ptInputOutput
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
