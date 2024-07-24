@@ -98,26 +98,31 @@ BEGIN
                         -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
                         THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
                         ELSE
-                         lpGetAccessKey ((SELECT tmp.ObjectId
-                                          FROM
-                                         (SELECT ObjectLink_User_Member.ObjectId
-                                          FROM ObjectLink
-                                               INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
-                                                                                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                                          WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
-                                            AND ObjectLink.ObjectId = inPersonalServiceListId
-                                         /*UNION
-                                          SELECT ObjectLink_User_Member.ObjectId
-                                          FROM ObjectLink AS ObjectLink_User_Member
-                                               INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
-                                                                     ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
-                                                                    AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
-                                                                    AND ObjectLink_PersonalServiceList_Member.ObjectId      = inPersonalServiceListId
-                                          WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()*/
+                         lpGetAccessKey (COALESCE ((SELECT ObjectLink_User_Member.ObjectId
+                                                    FROM ObjectLink
+                                                         INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                                    WHERE ObjectLink.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                                                      AND ObjectLink.ObjectId = inPersonalServiceListId
+                                                    LIMIT 1
+                                                   )
+                                                 , (SELECT ObjectLink_User_Member.ObjectId
+                                                    FROM ObjectLink AS ObjectLink_User_Member
+                                                         INNER JOIN ObjectLink AS MemberPersonalServiceList_Member
+                                                                               ON MemberPersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                                              AND MemberPersonalServiceList_Member.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                                                         INNER JOIN Object AS Object_MemberPersonalServiceList
+                                                                           ON Object_MemberPersonalServiceList.Id       = MemberPersonalServiceList_Member.ObjectId
+                                                                          AND Object_MemberPersonalServiceList.isErased = FALSE
+                                                         INNER JOIN ObjectLink AS MemberPersonalServiceList_PersonalServiceList
+                                                                               ON MemberPersonalServiceList_PersonalServiceList.ObjectId = MemberPersonalServiceList_Member.ObjectId
+                                                                              AND MemberPersonalServiceList_PersonalServiceList.ChildObjectId = inPersonalServiceListId
+                                                                              AND MemberPersonalServiceList_PersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
 
-                                         ) AS tmp
-                                          LIMIT 1
-                                         )
+                                                    WHERE ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                                    LIMIT 1
+                                                   )
+                                                  )
                                        , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
                                         )
                         END;
