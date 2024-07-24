@@ -24,6 +24,8 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Нет прав.';
    END IF;
 
+   IF inisUser = FALSE THEN RAISE EXCEPTION 'Ошибка.Нет прав.'; END IF;
+
    -- доступ Документы-меню (управленцы) + ЗП просмотр ВСЕ
    IF NOT EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId)
    THEN

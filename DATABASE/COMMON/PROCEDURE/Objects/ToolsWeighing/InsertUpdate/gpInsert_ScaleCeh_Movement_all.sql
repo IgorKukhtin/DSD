@@ -29,7 +29,8 @@ $BODY$
    DECLARE vbWeighingNumber TFloat;
 
    DECLARE vbIsUpak_UnComplete Boolean;
-   DECLARE vbIsCloseInventory Boolean;
+   DECLARE vbIsCloseInventory  Boolean;
+   DECLARE vbIsRePack          Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement_all());
@@ -54,7 +55,46 @@ BEGIN
      -- определили <Тип документа>
      vbMovementDescId:= (SELECT MovementFloat.ValueData FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId AND MovementFloat.DescId = zc_MovementFloat_MovementDesc()) :: Integer;
      -- определили
-     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
+     vbUnitId:= (SELECT CASE -- отправитель = РК
+                             WHEN vbMovementDescId IN (zc_Movement_Inventory(), zc_Movement_Loss())
+                                  THEN MLO_From.ObjectId
+                             -- отправитель = РК
+                             WHEN vbMovementDescId IN (zc_Movement_Send()) AND MLO_From.ObjectId = zc_Unit_RK()
+                                  THEN MLO_From.ObjectId
+                             -- получатель = РК, без Упаковки
+                             WHEN vbMovementDescId IN (zc_Movement_Send()) AND MLO_From.ObjectId <> zc_Unit_Pack() AND MLO_To.ObjectId = zc_Unit_RK()
+                                  THEN MLO_To.ObjectId
+                             -- получатель = РК
+                             WHEN vbMovementDescId IN (zc_Movement_SendOnPrice()) AND MLO_To.ObjectId = zc_Unit_RK()
+                                  THEN MLO_To.ObjectId
+                             ELSE 0
+                        END
+                 FROM MovementLinkObject AS MLO_From
+                      LEFT JOIN MovementLinkObject AS MLO_To
+                                                   ON MLO_To.MovementId = inMovementId
+                                                  AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                 WHERE MLO_From.MovementId = inMovementId
+                   AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                );
+
+     -- !!!определили параметр - isRePack !!!
+     IF vbMovementDescId = zc_Movement_Send()
+     THEN
+         vbIsRePack:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+                               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                                     , inLevel2      := 'Movement'
+                                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat.ValueData :: Integer) :: TVarChar
+                                                                     , inItemName    := 'isRePack'
+                                                                     , inDefaultValue:= 'FALSE'
+                                                                     , inSession     := inSession
+                                                                      ) AS RetV
+                                     FROM MovementFloat
+                                     WHERE MovementFloat.MovementId = inMovementId
+                                       AND MovementFloat.DescId     = zc_MovementFloat_MovementDescNumber()
+                                       AND MovementFloat.ValueData  > 0
+                                    ) AS tmp
+                              );
+      END IF;
 
      -- !!!определили параметр!!!
      IF vbMovementDescId = zc_Movement_Inventory()
@@ -732,13 +772,14 @@ BEGIN
 
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)                AS AssetId
                            , COALESCE (MILinkObject_Asset_two.ObjectId, 0)            AS AssetId_two
-                           , COALESCE (MIFloat_PartionCell.ValueData, 0)   :: Integer AS PartionCellId
+                         --, COALESCE (MIFloat_PartionCell.ValueData, 0)   :: Integer AS PartionCellId
+                           , 0   :: Integer AS PartionCellId
 
                            , CASE 
-                                  WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
+                                  WHEN vbUnitId = zc_Unit_RK() -- Розподільчий комплекс
                                        AND 1=1
                                        --AND vbUserId = 5 -- !!!tmp
-                                       THEN MIDate_PartionGoods.ValueData
+                                       THEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
 
                                   WHEN vbMovementDescId = zc_Movement_Inventory()
                                        -- Склад Реализации + Склад База ГП
@@ -770,6 +811,11 @@ BEGIN
                            , ROW_NUMBER() OVER (PARTITION BY -- Склад Реализации + Склад База ГП
                                                              CASE WHEN vbMovementDescId = zc_Movement_Inventory() AND MLO_From.ObjectId IN (8459, 8458) THEN 0 ELSE MovementItem.Id END
                                                            , MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId
+                                                           , CASE WHEN vbUnitId = zc_Unit_RK()
+                                                                   AND 1=1
+                                                                       THEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
+                                                                  ELSE zc_DateStart()
+                                                             END
                                                 ORDER BY MovementItem.Amount DESC) AS Ord
 
                       FROM (SELECT zc_MI_Master() AS DescId, 0 AS Amount WHERE vbMovementDescId = zc_Movement_Inventory()
@@ -1009,12 +1055,7 @@ BEGIN
                            , COALESCE (MILinkObject_Asset.ObjectId, 0)       AS AssetId
                            , COALESCE (MILinkObject_Asset_two.ObjectId, 0)   AS AssetId_two
 
-                           , CASE WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
-                                       AND 1=1
-                                       AND vbUserId <> 5 -- !!!tmp
-                                       THEN 0
-                                  ELSE COALESCE (MIFloat_PartionCell.ValueData, 0)
-                             END :: Integer AS PartionCellId
+                           , 0 :: Integer AS PartionCellId
 
                            , MIString_PartNumber.ValueData                   AS PartNumber
 
@@ -1022,10 +1063,10 @@ BEGIN
                                        THEN NULL
                                   WHEN vbIsProductionIn = FALSE AND vbMovementDescId = zc_Movement_ProductionUnion()
                                        THEN NULL
-                                  WHEN vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459 -- Розподільчий комплекс
-                                       AND 1=0
+                                  WHEN vbUnitId = zc_Unit_RK() -- Розподільчий комплекс
+                                       AND 1=1
                                        --AND vbUserId <> 5 -- !!!tmp
-                                       THEN NULL
+                                       THEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
 
                                   ELSE MIDate_PartionGoods.ValueData
                              END AS PartionGoodsDate
@@ -1370,6 +1411,22 @@ BEGIN
      THEN
           -- сохранили свойство <Номер взвешивания>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), inMovementId, vbWeighingNumber);
+     END IF;
+
+
+     -- дописали св-во - vbIsRePack
+     IF vbIsRePack = TRUE
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isRePack(), vbMovementId_begin, TRUE);
+          --
+          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), MovementItem.Id, zc_PartionCell_RK())
+          FROM MovementItem
+          WHERE MovementItem.MovementId = vbMovementId_begin
+            AND MovementItem.DescId     = zc_MI_Master()
+            AND MovementItem.isErased   = FALSE
+           ;
+          
      END IF;
 
 

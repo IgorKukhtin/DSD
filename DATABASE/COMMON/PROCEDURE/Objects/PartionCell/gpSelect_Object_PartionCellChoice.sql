@@ -12,11 +12,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
-             , PartionGoodsDate TDateTime 
+             , PartionGoodsDate TDateTime
              , BoxCount TFloat
              , MovementId Integer
              , OperDate TDateTime
              , InvNumber TVarChar
+             , Amount TFloat
+             , isPartionCell_check Boolean
              , ColorFon Integer
               )
 AS
@@ -46,6 +48,7 @@ BEGIN
           --
           INSERT INTO _tmpPartionCell_mi (MovementItemId, DescId, ObjectId)
              WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
+             -- Результат
              SELECT tmpMILO.MovementItemId, tmpMILO.DescId, tmpMILO.ObjectId
              FROM tmpMILO
              WHERE tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
@@ -60,6 +63,16 @@ BEGIN
                                     , zc_MILinkObject_PartionCell_10()
                                     , zc_MILinkObject_PartionCell_11()
                                     , zc_MILinkObject_PartionCell_12()
+                                    , zc_MILinkObject_PartionCell_13()
+                                    , zc_MILinkObject_PartionCell_14()
+                                    , zc_MILinkObject_PartionCell_15()
+                                    , zc_MILinkObject_PartionCell_16()
+                                    , zc_MILinkObject_PartionCell_17()
+                                    , zc_MILinkObject_PartionCell_18()
+                                    , zc_MILinkObject_PartionCell_19()
+                                    , zc_MILinkObject_PartionCell_20()
+                                    , zc_MILinkObject_PartionCell_21()
+                                    , zc_MILinkObject_PartionCell_22()
                                      )
             ;
           --
@@ -73,49 +86,75 @@ BEGIN
                                Object.Id         AS Id
                              , Object.ObjectCode AS Code
                              , Object.ValueData  AS Name
-                             , (Object.ValueData ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
+                             , (Object.ValueData ||';'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
                          FROM Object
                          WHERE Object.DescId = zc_Object_PartionCell()
                            AND Object.isErased = FALSE
                          )
-      -- занятые ячейки
+       -- занятые ячейки - показать да/нет
      , tmpMILO_PartionCell_all_1 AS (SELECT DISTINCT _tmpPartionCell_mi.ObjectId AS PartionCellId
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                      WHERE inIsShowFree = FALSE
                                     )
-      -- занятые ячейки
+       -- занятые ячейки - показать MovementItem
      , tmpMILO_PartionCell_all_2 AS (SELECT _tmpPartionCell_mi.*
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
                                      WHERE inIsShowFree = TRUE
+                                       AND _tmpPartionCell_mi.ObjectId <> zc_PartionCell_RK()
                                     )
-
+       -- занятые ячейки - показать MovementItem
      , tmpMI AS (SELECT MovementItem.*
                  FROM MovementItem
                  WHERE MovementItem.Id IN (SELECT DISTINCT tmpMILO_PartionCell_all_2.MovementItemId FROM tmpMILO_PartionCell_all_2)
-                   AND MovementItem.isErased = FALSE 
-                 )
+                   AND MovementItem.isErased = FALSE
+                )
 
-      -- занятые ячейки
-     , tmpMILO_PartionCell AS (SELECT DISTINCT 
+       -- занятые ячейки - показать MovementItem
+     , tmpMILO_PartionCell AS (SELECT DISTINCT
                                       tmp.PartionCellId
                                     , tmp.MovementItemId
                                     , tmp.MovementId
-                               FROM (SELECT tmpMILO_PartionCell_all.ObjectId             AS PartionCellId
-                                          , MIN (tmpMILO_PartionCell_all.MovementItemId) OVER(PARTITION BY tmpMILO_PartionCell_all.ObjectId) AS MovementItemId
-                                          , Movement.Id                                  AS MovementId
-                                          , ROW_NUMBER () OVER (PARTITION BY tmpMILO_PartionCell_all.ObjectId ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord  --последний документ
+                                    , tmp.Ord
+                               FROM (SELECT tmpMILO_PartionCell_all.ObjectId        AS PartionCellId
+                                          , tmpMILO_PartionCell_all.MovementItemId
+                                          , MovementItem.MovementId
+                                            -- первый документ
+                                          , ROW_NUMBER () OVER (PARTITION BY tmpMILO_PartionCell_all.ObjectId ORDER BY Movement.OperDate ASC, Movement.Id ASC) AS Ord
                                      FROM tmpMILO_PartionCell_all_2 AS tmpMILO_PartionCell_all
                                           JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
-      
+
                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                        AND Movement.DescId   = zc_Movement_Send()
                                ) AS tmp
-                               WHERE tmp.Ord = 1
-                               --GROUP BY tmpMILO_PartionCell_all.ObjectId
+                               -- первый документ
+                               -- WHERE tmp.Ord = 1
                               )
+       -- занятые ячейки - показать MovementItem
+     , tmpMILO_PartionCell_check AS (SELECT tmpMILO_PartionCell_all.ObjectId        AS PartionCellId
+                                          , MIN (MovementItem.ObjectId) AS GoodsId_min
+                                          , MAX (MovementItem.ObjectId) AS GoodsId_max
+                                          , MIN (COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) AS GoodsKindId_min
+                                          , MAX (COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) AS GoodsKindId_max
+                                          , MIN (COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate, zc_DateStart())) AS PartionDate_min
+                                          , MAX (COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate, zc_DateStart())) AS PartionDate_max
+                                            -- первый документ
+                                     FROM tmpMILO_PartionCell_all_2 AS tmpMILO_PartionCell_all
+                                          JOIN tmpMI AS MovementItem ON MovementItem.Id = tmpMILO_PartionCell_all.MovementItemId
+
+                                          JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                       AND Movement.DescId   = zc_Movement_Send()
+                                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+                                          LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                                     ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                                    AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+                                     GROUP BY tmpMILO_PartionCell_all.ObjectId
+                                    )
 
        --
        SELECT
@@ -135,22 +174,40 @@ BEGIN
             , Object_GoodsKind.Id                  AS GoodsKindId
             , Object_GoodsKind.ValueData           AS GoodsKindName
 
-            , MIDate_PartionGoods.ValueData AS PartionGoodsDate  
-            
+            , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) AS PartionGoodsDate
+
             , ObjectFloat_BoxCount.ValueData     ::TFloat  AS BoxCount
-            
+
             , Movement.Id        ::Integer    AS MovementId
             , Movement.OperDate  ::TDateTime  AS OperDate
-            , Movement.InvNumber ::TVarChar   AS InvNumber   
+            , Movement.InvNumber ::TVarChar   AS InvNumber
+            , MovementItem.Amount             AS Amount
             
+            , CASE WHEN tmpMILO_PartionCell_check.GoodsId_min     <> tmpMILO_PartionCell_check.GoodsId_max
+                     OR tmpMILO_PartionCell_check.GoodsKindId_min <> tmpMILO_PartionCell_check.GoodsKindId_max
+                     OR tmpMILO_PartionCell_check.PartionDate_min <> tmpMILO_PartionCell_check.PartionDate_max
+                        THEN TRUE
+                   ELSE FALSE
+              END :: Boolean AS isPartionCell_check
+
             , CASE WHEN inIsShowFree = FALSE
                         THEN CASE WHEN tmpMILO_PartionCell_all_1.PartionCellId > 0 THEN zc_Color_Cyan() ELSE zc_Color_White() END
                    ELSE CASE WHEN tmpMILO_PartionCell.PartionCellId > 0 THEN zc_Color_Cyan() ELSE zc_Color_White() END
               END :: Integer AS ColorFon
 
        FROM tmpPartionCell AS Object
+           -- err
+           LEFT JOIN tmpMILO_PartionCell_check ON tmpMILO_PartionCell_check.PartionCellId = Object.Id
+
+           -- занятые ячейки - показать да/нет
            LEFT JOIN tmpMILO_PartionCell_all_1 ON tmpMILO_PartionCell_all_1.PartionCellId = Object.Id
+           -- занятые ячейки - показать MovementItem
            LEFT JOIN tmpMILO_PartionCell ON tmpMILO_PartionCell.PartionCellId = Object.Id
+                                        AND (tmpMILO_PartionCell.Ord = 1
+                                          OR tmpMILO_PartionCell_check.PartionCellId > 0
+                                            )
+
+
            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                       ON MIDate_PartionGoods.MovementItemId =  tmpMILO_PartionCell.MovementItemId
                                      AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
@@ -165,9 +222,9 @@ BEGIN
 
            LEFT JOIN ObjectFloat AS ObjectFloat_BoxCount
                                  ON ObjectFloat_BoxCount.ObjectId = Object.Id
-                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()    
-   
-           --последний документ перемещения                     
+                                AND ObjectFloat_BoxCount.DescId = zc_ObjectFloat_PartionCell_BoxCount()
+
+           -- последний документ перемещения
            LEFT JOIN Movement ON Movement.Id       = tmpMILO_PartionCell.MovementId
                              AND Movement.StatusId = zc_Enum_Status_Complete()
                              AND Movement.DescId   = zc_Movement_Send()

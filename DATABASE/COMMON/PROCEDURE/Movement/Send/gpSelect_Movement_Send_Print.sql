@@ -96,7 +96,7 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS StoreKeeperName_to -- ÍÎ‡‰Ó‚˘ËÍ
 
-           , Object_SubjectDoc.ValueData                        AS SubjectDocName
+           , (COALESCE (Object_SubjectDoc.ValueData, '') || CASE WHEN MovementBoolean_isRePack.ValueData = TRUE THEN 'œ≈–≈œ¿ '  ELSE '' END)  :: TVarChar AS SubjectDocName
 
            , Object_PersonalGroup.ValueData                     AS PersonalGroupName
            , Object_Unit.ValueData                              AS UnitName_PersonalGroup
@@ -142,6 +142,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                      ON MovementBoolean_isRePack.MovementId =  Movement.Id
+                                     AND MovementBoolean_isRePack.DescId = zc_MovementBoolean_isRePack()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory())

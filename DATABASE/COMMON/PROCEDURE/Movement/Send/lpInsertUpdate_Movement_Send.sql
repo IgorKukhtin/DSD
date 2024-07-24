@@ -20,6 +20,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
+   DECLARE vbOperDate_old TDateTime;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -36,6 +37,60 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.%Нет прав формировать документ <Перемещение>.%Не заполнено <Основание для перемещения>.', CHR (13), CHR (13);
      END IF;
+
+     -- определяем
+     vbOperDate_old:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioId);
+
+     -- определяем признак Создание/Корректировка
+     IF ioId > 0 AND inToId = zc_Unit_RK()
+    AND inOperDate <> vbOperDate_old
+    AND EXISTS (SELECT 1
+                FROM MovementItem
+                     INNER JOIN MovementItemLinkObject AS MILinkObject_PartionCell
+                                                       ON MILinkObject_PartionCell.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_PartionCell.DescId IN (zc_MILinkObject_PartionCell_1()
+                                                                                            , zc_MILinkObject_PartionCell_2()
+                                                                                            , zc_MILinkObject_PartionCell_3()
+                                                                                            , zc_MILinkObject_PartionCell_4()
+                                                                                            , zc_MILinkObject_PartionCell_5()
+                                                                                            , zc_MILinkObject_PartionCell_6()
+                                                                                            , zc_MILinkObject_PartionCell_7()
+                                                                                            , zc_MILinkObject_PartionCell_8()
+                                                                                            , zc_MILinkObject_PartionCell_9()
+                                                                                            , zc_MILinkObject_PartionCell_10()
+                                                                                            , zc_MILinkObject_PartionCell_11()
+                                                                                            , zc_MILinkObject_PartionCell_12()
+                                                                                            , zc_MILinkObject_PartionCell_13()
+                                                                                            , zc_MILinkObject_PartionCell_14()
+                                                                                            , zc_MILinkObject_PartionCell_15()
+                                                                                            , zc_MILinkObject_PartionCell_16()
+                                                                                            , zc_MILinkObject_PartionCell_17()
+                                                                                            , zc_MILinkObject_PartionCell_18()
+                                                                                            , zc_MILinkObject_PartionCell_19()
+                                                                                            , zc_MILinkObject_PartionCell_20()
+                                                                                            , zc_MILinkObject_PartionCell_21()
+                                                                                            , zc_MILinkObject_PartionCell_22()
+                                                                                             )
+
+                WHERE MovementItem.MovementId = ioId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased = FALSE
+               )
+    THEN
+        PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), MovementItem.Id, vbOperDate_old)
+        FROM MovementItem
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                       AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
+        WHERE MovementItem.MovementId = ioId
+          AND MovementItem.DescId     = zc_MI_Master()
+          AND MovementItem.isErased = FALSE
+          AND MIDate_PartionGoods.ValueData IS NULL
+         ;
+
+    END IF;
+
+
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
