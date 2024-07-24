@@ -158,6 +158,7 @@ BEGIN
           -- Оптимизация
           CREATE TEMP TABLE tmpPersonalServiceList_check ON COMMIT DROP AS
             WITH tmpUserAll_check AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+            --
             SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
             FROM ObjectLink AS ObjectLink_User_Member
                  INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
@@ -402,6 +403,16 @@ BEGIN
                                                           ON ObjectLink_Personal_PersonalServiceList_all.ChildObjectId = tmpPersonalServiceList_check.PersonalServiceListId
                                                          AND ObjectLink_Personal_PersonalServiceList_all.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
                                     INNER JOIN tmp_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Personal_PersonalServiceList_all.ObjectId
+                              UNION
+                               SELECT View_Personal.*
+                               FROM tmp_Personal_View AS View_Personal
+                               WHERE View_Personal.UnitId IN (SELECT DISTINCT View_Personal.UnitId
+                                                              FROM tmpPersonalServiceList_check
+                                                                   INNER JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList_all
+                                                                                         ON ObjectLink_Personal_PersonalServiceList_all.ChildObjectId = tmpPersonalServiceList_check.PersonalServiceListId
+                                                                                        AND ObjectLink_Personal_PersonalServiceList_all.DescId        = zc_ObjectLink_Personal_PersonalServiceList()
+                                                                   INNER JOIN tmp_Personal_View AS View_Personal ON View_Personal.PersonalId = ObjectLink_Personal_PersonalServiceList_all.ObjectId
+                                                             )
                               )
          , tmpPersonal AS (SELECT 0 AS MovementItemId
                                 , 0 AS Amount
