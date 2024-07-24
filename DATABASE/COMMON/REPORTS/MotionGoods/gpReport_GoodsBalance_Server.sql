@@ -165,6 +165,13 @@ BEGIN
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
 
+    -- !!!Нет прав!!! - Ограниченние - нет доступа к Отчету по остаткам
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11086934)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+    END IF;
+
+
     -- замена
     IF vbUserId <> 5
     THEN inIsInfoMoney:= FALSE;

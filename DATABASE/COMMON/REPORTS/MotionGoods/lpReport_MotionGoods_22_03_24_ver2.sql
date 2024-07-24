@@ -125,6 +125,13 @@ BEGIN
     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, inUserId);
 
 
+    -- !!!Нет прав!!! - Ограниченние - нет доступа к Отчету по остаткам
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11086934)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+    END IF;
+
+
     -- ускорение - ОЛАП + Только просмотр Аудитор + Просмотр СБ
     vb_IsContainer_OLAP:= inEndDate < '01.01.2024' AND (inUserId IN (5, 6604558)
                                                      OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId IN (10597056, 447972))
@@ -1906,8 +1913,13 @@ end if;
                                       OR SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId = zc_Movement_SendOnPrice() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)<> 0
                                  )
 
+       , tmpErr_replace AS (SELECT DISTINCT tmpMIContainer.AccountId, tmpMIContainer.ContainerId_count
+                            FROM tmpMIContainer
+                            WHERE tmpMIContainer.AccountId = 9086 -- 20101 Продукция
+                           )
+
          -- Результат
-         SELECT (tmpMIContainer_all.AccountId)       AS AccountId
+         SELECT (COALESCE (tmpErr_replace.AccountId, tmpMIContainer_all.AccountId))       AS AccountId
               , tmpMIContainer_all.ContainerDescId_count :: Integer AS ContainerDescId_count
               , tmpMIContainer_all.ContainerId_count           :: Integer AS ContainerId_count
               , tmpMIContainer_all.ContainerId_begin           :: Integer AS ContainerId
@@ -2001,7 +2013,9 @@ end if;
               , SUM (tmpMIContainer_all.CountSendOnPriceOut_byCount) :: TFloat AS  CountSendOnPriceOut_byCount
 
          FROM tmpMIContainer AS tmpMIContainer_all
-         GROUP BY tmpMIContainer_all.AccountId 
+              LEFT JOIN tmpErr_replace ON tmpErr_replace.ContainerId_count = tmpMIContainer_all.ContainerId_count
+                                      AND tmpMIContainer_all.AccountId     = 256303 -- 20105 Ирна
+         GROUP BY COALESCE (tmpErr_replace.AccountId, tmpMIContainer_all.AccountId)
                 , tmpMIContainer_all.ContainerDescId_count
                 , tmpMIContainer_all.ContainerId_count
                 , tmpMIContainer_all.ContainerId_begin
