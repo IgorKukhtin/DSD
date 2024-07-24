@@ -33,6 +33,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbDocumentKindId Integer;
+   DECLARE vbIsRePack Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
@@ -49,6 +50,26 @@ BEGIN
                                                                 ) AS RetV
                               ) AS tmp
                         );
+
+     IF inMovementDescId = zc_Movement_Send()
+    AND inFromId = 8451 -- ЦЕХ пакування
+    AND inToId   = zc_Unit_RK()
+    THEN
+        -- определили vbIsRePack
+        vbIsRePack:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+                      FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                            , inLevel2      := 'Movement'
+                                                            , inLevel3      := 'MovementDesc_' || CASE WHEN inMovementDescNumber < 10 THEN '0' ELSE '' END || (inMovementDescNumber :: Integer) :: TVarChar
+                                                            , inItemName    := 'isRePack'
+                                                            , inDefaultValue:= 'FALSE'
+                                                            , inSession     := inSession
+                                                             ) AS RetV
+                           ) AS tmp
+                     );
+    ELSE
+        vbIsRePack:= FALSE;
+    END IF;
+                        
 
 
      -- сохранили
@@ -101,6 +122,13 @@ BEGIN
      THEN
           -- сохранили
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_List(), inId, inIsListInventory);
+     END IF;
+
+     -- дописали св-во - vbIsRePack
+     IF vbIsRePack = TRUE
+     THEN
+          -- сохранили
+          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isRePack(), inId, TRUE);
      END IF;
 
      -- дописали свойство <Код Филиала>
