@@ -31,7 +31,7 @@ BEGIN
 
      -- Проводим Документ
      PERFORM gpComplete_Movement_Inventory (inMovementId     := inMovementId
-                                          , inIsLastComplete := NULL
+                                          , inIsLastComplete := TRUE
                                           , inSession        := inSession);
 
 END;
