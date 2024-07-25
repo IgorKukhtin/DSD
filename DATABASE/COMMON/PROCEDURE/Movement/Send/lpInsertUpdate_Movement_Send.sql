@@ -41,7 +41,7 @@ BEGIN
      -- определяем
      vbOperDate_old:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioId);
 
-     -- определяем признак Создание/Корректировка
+     -- проставляем партию для РК
      IF ioId > 0 AND inToId = zc_Unit_RK()
     AND inOperDate <> vbOperDate_old
     AND EXISTS (SELECT 1
