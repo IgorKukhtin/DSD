@@ -26,7 +26,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TMainForm = class(TForm)
@@ -275,6 +275,10 @@ type
     OperDatePartnerPanel: TPanel;
     Label4: TLabel;
     OperDatePartnerEdit: TEdit;
+    PartionGoodsDate: TcxGridDBColumn;
+    PanelPartionDate: TPanel;
+    LabelPartionDate: TLabel;
+    PartionDateEdit: TcxDateEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -853,6 +857,17 @@ begin
      end
      else WriteParamsMovement;
      //
+     try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
+     except
+          if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = true
+          then begin
+            PanelMovementDesc.Caption:='Ошибка.Не определена <Дата партии>';
+            exit;
+          end
+          else
+            ParamsMI.ParamByName('inPartionGoodsDate').AsDateTime:= Date;
+     end;
+     //
      //т.е. изначально будем считать что это НЕ сканирование
      ParamsMI.ParamByName('isBarCode').AsBoolean:= FALSE;
      //
@@ -1087,23 +1102,35 @@ begin
      //
      execParams:=nil;
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
-     ParamAddValue(execParams,'inDescCode',ftString,'zc_MIString_PartionGoods');
+     if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+     then ParamAddValue(execParams,'inDescCode',ftString,'zc_MIDate_PartionGoods')
+     else ParamAddValue(execParams,'inDescCode',ftString,'zc_MIString_PartionGoods');
 
-     if SettingMain.isPartionDate = TRUE
+     if (SettingMain.isPartionDate = TRUE) or (ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE)
      then
          with DialogDateValueForm do
          begin
               LabelDateValue.Caption:='Партия ДАТА';
               ActiveControl:=DateValueEdit;
-              try DateValueEdit.Text:=DateToStr(StrToDate(CDS.FieldByName('PartionGoods').AsString));
+              try
+                  if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+                  then DateValueEdit.Text:=DateToStr(CDS.FieldByName('PartionGoodsDate').AsDateTime)
+                  else DateValueEdit.Text:=DateToStr(StrToDate(CDS.FieldByName('PartionGoods').AsString));
               except
                    DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
               end;
               isPartionGoodsDate:=true;
               if not Execute then begin execParams.Free;exit;end;
               //
-              ParamAddValue(execParams,'inValueData',ftString,DateValueEdit.Text);
-              DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
+              if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+              then begin
+                   ParamAddValue(execParams,'inValueData',ftDateTime,StrToDate(DateValueEdit.Text));
+                   DMMainScaleForm.gpUpdate_Scale_MIDate(execParams);
+              end
+              else begin
+                   ParamAddValue(execParams,'inValueData',ftString,DateValueEdit.Text);
+                   DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
+              end;
          end
       else
          with DialogStringValueForm do
@@ -1902,6 +1929,8 @@ begin
   //bbSetReason.Visible:= SettingMain.isReason = TRUE;
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('ReasonName').Index].Visible:= SettingMain.isReason = TRUE;
   //
+  PartionDateEdit.Text:= DateToStr(Date - 1);
+  //
   if SettingMain.isPartionDate = TRUE then
   begin
        cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Caption:= 'ПАРТИЯ Дата';
@@ -2040,6 +2069,28 @@ begin
   //
   OperDatePartnerEdit.Text:= DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
   //
+  //
+  if (SettingMain.BranchCode = 1)
+  then begin
+       if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+       then begin
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible:= TRUE;
+           PanelPartionDate.Visible:= TRUE;
+           bbSetPartionGoods.Visible:= TRUE;
+           bbChangePartionGoods.Visible:= TRUE;
+           bbChangePartionGoods.Glyph:= bbSetPartionGoods.Glyph;
+           bbChangePartionGoods.Hint:= 'Исправить <партия Дата>';
+       end
+       else begin
+          cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible:= FALSE;
+          PanelPartionDate.Visible:= FALSE;
+          bbSetPartionGoods.Visible:= FALSE;
+          bbChangePartionGoods.Visible:= FALSE;
+       end;
+  end;
+
+
+
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.RefreshDataSet;
@@ -2363,13 +2414,17 @@ begin
           //
           if SettingMain.isOperDatePartner = TRUE
           then begin
-                 DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
+             DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDatePartner').AsDateTime);
           end
           else begin
-            try DateValueEdit.Text:=DateToStr(StrToDate(EditPartionGoods.Text));
-            except
-                 DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
-            end;
+            if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+            then
+               DateValueEdit.Text:=DateToStr(StrToDate(PartionDateEdit.Text))
+            else
+              try DateValueEdit.Text:=DateToStr(StrToDate(EditPartionGoods.Text));
+              except
+                   DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
+              end;
             isPartionGoodsDate:=true;
           end;
           if not Execute then begin EditPartionGoods.Text:=''; exit;end;
@@ -2387,7 +2442,11 @@ begin
                    myActiveControl;
           end
           else
-               EditPartionGoods.Text:=DateValueEdit.Text;
+              if ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean = TRUE
+              then
+                 PartionDateEdit.Text:=DateToStr(StrToDate(DateValueEdit.Text))
+              else
+                EditPartionGoods.Text:=DateValueEdit.Text;
           //
      end;
 end;
