@@ -21,7 +21,8 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon,
+  ExternalLoad;
 
 type
   TGoodsNormDiffForm = class(TAncestorGuidesForm)
@@ -33,6 +34,12 @@ type
     ValuePF: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
     ValueGP: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    bbStartLoad: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
   private
     { Private declarations }
   public

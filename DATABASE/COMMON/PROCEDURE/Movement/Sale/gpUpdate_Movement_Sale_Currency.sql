@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Sale_Currency(
     IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
     IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioCurrencyValue       TFloat    , -- курс валюты
- INOUT ioParValue            TFloat    , -- номинал 
+IF vbUserId = 9457 INOUT ioParValue            TFloat    , -- номинал 
     IN inisCurrencyUser      Boolean   ,
     IN inSession             TVarChar     -- пользователь
 )
