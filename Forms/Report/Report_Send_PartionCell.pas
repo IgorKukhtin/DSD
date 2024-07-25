@@ -116,6 +116,7 @@ type
     PartionCellName_srch: TcxGridDBColumn;
     isPartionCell_min: TcxGridDBColumn;
     Color_NormInDays: TcxGridDBColumn;
+    Marker_NormInDays: TcxGridDBColumn;
   private
     { Private declarations }
   public

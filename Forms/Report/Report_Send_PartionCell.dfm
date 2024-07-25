@@ -4,6 +4,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -518
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -188,6 +189,18 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderHint = #1057#1088#1086#1082' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1076#1085#1103#1093
             Options.Editing = False
             Width = 50
+          end
+          object Marker_NormInDays: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1088
+            DataBinding.FieldName = 'Marker_NormInDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' 0 - '#1041#1086#1083#1100#1096#1077' 70%, '#1076#1083#1103' 1 - '#1086#1090' 50% '#1076#1086' 70%, '#1076#1083#1103' 2 - '#1084#1077#1085#1100#1096#1077' 50%'
+            Options.Editing = False
+            Width = 55
           end
           object NormInDays_real: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093
@@ -2840,6 +2853,11 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       end
       item
         ColorColumn = NormInDays_tax
+        BackGroundValueColumn = Color_NormInDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Marker_NormInDays
         BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end

@@ -211,6 +211,18 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             Options.Editing = False
             Width = 50
           end
+          object Marker_NormInDays: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1077#1088
+            DataBinding.FieldName = 'Marker_NormInDays'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1076#1083#1103' 0 - '#1041#1086#1083#1100#1096#1077' 70%, '#1076#1083#1103' 1 - '#1086#1090' 50% '#1076#1086' 70%, '#1076#1083#1103' 2 - '#1084#1077#1085#1100#1096#1077' 50%'
+            Options.Editing = False
+            Width = 55
+          end
           object NormInDays_real: TcxGridDBColumn
             Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093
             DataBinding.FieldName = 'NormInDays_real'
@@ -2652,6 +2664,11 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
       end
       item
         ColorColumn = NormInDays_tax
+        BackGroundValueColumn = Color_NormInDays
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Marker_NormInDays
         BackGroundValueColumn = Color_NormInDays
         ColorValueList = <>
       end>

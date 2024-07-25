@@ -20,11 +20,11 @@ BEGIN
 
      IF COALESCE (inMovementItemId,0) = 0
      THEN
-         RETURN;
+         RAISE EXCEPTION 'Ошибка.%Изменение партии возможно в режиме <По документам>.', CHR (13);
      END IF;
      
      -- меняем параметр
-     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
+     IF inPartionGoodsDate <= '01.01.2010' THEN inPartionGoodsDate:= NULL; END IF;
      
      -- сохранили свойство <Дата партии>
      IF COALESCE (inPartionGoodsDate, zc_DateStart()) <> zc_DateStart() OR EXISTS (SELECT 1 FROM MovementItemDate AS MID WHERE MID.MovementItemId = inMovementItemId AND MID.DescId = zc_MIDate_PartionGoods())

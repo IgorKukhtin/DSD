@@ -160,6 +160,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              , Color_PartionGoodsDate Integer
              , Color_NormInDays       Integer
+             , Marker_NormInDays      Integer
 
              , AmountRemains TFloat
              , AmountRemains_Weight TFloat
@@ -1326,6 +1327,16 @@ BEGIN
                ELSE zc_Color_White()
           END :: Integer AS Color_NormInDays
 
+        , CASE WHEN tmpResult.NormInDays_tax < 50
+                    THEN 2
+
+               WHEN tmpResult.NormInDays_tax <= 70
+                    THEN 1
+
+               ELSE 0
+          END :: Integer AS Marker_NormInDays
+          
+
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
 
@@ -1450,6 +1461,7 @@ BEGIN
                            FROM _tmpPartionCell
                            GROUP BY _tmpPartionCell.MovementItemId
                           )
+      -- “олько заполненные €чейки + отбор
     , tmpMI AS (SELECT MovementItem.Id         AS MovementItemId
                      , MovementItem.MovementId AS MovementId
                      , MovementItem.ObjectId   AS GoodsId
@@ -1660,13 +1672,34 @@ BEGIN
                              -- по €чейкам
                            , COALESCE (tmpMILO_PartionCell.ObjectId, 0) AS PartionCellId
 
+                             -- есть MovementItem - все в отборе
+                           , MAX (CASE WHEN _tmpPartionCell.MovementItemId > 0 THEN 0
+                                       WHEN _tmpPartionCell_RK.MovementItemId > 0 THEN 1
+                                       ELSE 0 
+                                  END) AS isPartionCell_RK_max
+
+                             -- есть MovementItem - что-то в €чейке
+                           , MIN (CASE WHEN _tmpPartionCell.MovementItemId > 0 THEN 0
+                                       ELSE 1
+                                  END) AS isPartionCell_RK_min
+
                       FROM tmpMovement AS Movement
                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
-                           -- пропорционально
+                           -- пропорционально - “олько заполненные €чейки + отбор
                            LEFT JOIN tmpMILO_PC_count AS tmpMILO_PC_count ON tmpMILO_PC_count.MovementItemId = MovementItem.MovementItemId
                            -- по €чейкам
                            LEFT JOIN tmpMILO_PC AS tmpMILO_PartionCell ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
                                                                       AND inIsCell = TRUE 
+                          LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                     -- Ѕез отбор
+                                     WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                    ) AS _tmpPartionCell
+                                      ON _tmpPartionCell.MovementItemId = MovementItem.MovementItemId
+                          LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
+                                     -- только отбор
+                                     WHERE _tmpPartionCell.ObjectId = zc_PartionCell_RK()
+                                    ) AS _tmpPartionCell_RK
+                                      ON _tmpPartionCell_RK.MovementItemId = MovementItem.MovementItemId
 
                            LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
@@ -2214,6 +2247,11 @@ BEGIN
                                      OR tmpData_MI.PartionCellId = 0
                                      OR inIsCell = FALSE
                                        )
+            WHERE COALESCE (tmpRemains.Amount, 0) <> 0
+              -- есть MovementItem - все в отборе
+              OR COALESCE (tmpData_MI.isPartionCell_RK_max, 0) = 0
+              -- есть MovementItem - что-то в €чейке
+              OR COALESCE (tmpData_MI.isPartionCell_RK_min, 0) = 0
            )
 
    --
@@ -2389,6 +2427,15 @@ BEGIN
                ELSE zc_Color_White()
           END :: Integer AS Color_NormInDays
 
+        , CASE WHEN tmpResult.NormInDays_tax < 50
+                    THEN 2
+
+               WHEN tmpResult.NormInDays_tax <= 70
+                    THEN 1
+
+               ELSE 0
+          END :: Integer AS Marker_NormInDays
+
         , tmpResult.AmountRemains
         , tmpResult.AmountRemains_Weight
 
@@ -2426,6 +2473,5 @@ zc_ObjectFloat_OrderType_TermProduction
 
 */
 
---select * from gpReport_Send_PartionCell (inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inUnitId := 0 , inIsMovement := 'False' , inIsShowAll := 'false' ,  inSession := '9457');
---select * from gpReport_Send_PartionCell(inStartDate := ('25.06.2024')::TDateTime , inEndDate := ('26.06.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'true' , inIsShowAll := 'true' ,  inSession := '9457')
---where GoodsCode = 41;
+-- select * from gpReport_Send_PartionCell (inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inUnitId := 0 , inIsMovement := 'False' , inIsShowAll := 'false' ,  inSession := '9457');
+-- select * from gpReport_Send_PartionCell(inStartDate := ('25.06.2024')::TDateTime , inEndDate := ('26.06.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'true' , inIsShowAll := 'true' ,  inSession := '9457') --where GoodsCode = 41;
