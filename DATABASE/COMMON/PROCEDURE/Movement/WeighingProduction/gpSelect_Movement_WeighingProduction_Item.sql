@@ -47,6 +47,15 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoodsMI TVarChar
              , GoodsKindName TVarChar
+
+             , PersonalKVKId Integer, PersonalKVKName TVarChar
+             , PositionCode_KVK Integer
+             , PositionName_KVK TVarChar
+             , UnitCode_KVK Integer
+             , UnitName_KVK TVarChar
+             , KVK TVarChar
+             , AssetName TVarChar, AssetName_two TVarChar
+
              , isErased Boolean
               )
 AS
@@ -195,6 +204,17 @@ BEGIN
            , MIString_PartionGoodsMI.ValueData AS PartionGoodsMI
 
            , Object_GoodsKind.ValueData AS GoodsKindName
+
+           , Object_PersonalKVK.Id           AS PersonalKVKId
+           , Object_PersonalKVK.ValueData    AS PersonalKVKName
+           , Object_PositionKVK.ObjectCode   AS PositionCode_KVK
+           , Object_PositionKVK.ValueData    AS PositionName_KVK
+           , Object_UnitKVK.ObjectCode       AS UnitCode_KVK
+           , Object_UnitKVK.ValueData        AS UnitName_KVK
+           , MIString_KVK.ValueData          AS KVK
+
+           , Object_Asset.ValueData          AS AssetName
+           , Object_Asset_two.ValueData      AS AssetName_two
 
            , MovementItem.isErased
 
@@ -417,6 +437,35 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                         ON MIFloat_CuterCount.MovementItemId = MI_Partion.Id
                                        AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+
+            LEFT JOIN MovementItemString AS MIString_KVK
+                                         ON MIString_KVK.MovementItemId = MovementItem.Id
+                                        AND MIString_KVK.DescId = zc_MIString_KVK()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PersonalKVK
+                                             ON MILinkObject_PersonalKVK.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PersonalKVK.DescId = zc_MILinkObject_PersonalKVK()
+            LEFT JOIN Object AS Object_PersonalKVK ON Object_PersonalKVK.Id = MILinkObject_PersonalKVK.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionKVK
+                                 ON ObjectLink_Personal_PositionKVK.ObjectId = Object_PersonalKVK.Id
+                                AND ObjectLink_Personal_PositionKVK.DescId = zc_ObjectLink_Personal_Position()
+            LEFT JOIN Object AS Object_PositionKVK ON Object_PositionKVK.Id = ObjectLink_Personal_PositionKVK.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Personal_UnitKVK
+                                 ON ObjectLink_Personal_UnitKVK.ObjectId = Object_PersonalKVK.Id
+                                AND ObjectLink_Personal_UnitKVK.DescId = zc_ObjectLink_Personal_Unit()
+            LEFT JOIN Object AS Object_UnitKVK ON Object_UnitKVK.Id = ObjectLink_Personal_UnitKVK.ChildObjectId
+
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset_two
+                                             ON MILinkObject_Asset_two.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset_two.DescId = zc_MILinkObject_Asset_two()
+            LEFT JOIN Object AS Object_Asset_two ON Object_Asset_two.Id = MILinkObject_Asset_two.ObjectId
 
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;

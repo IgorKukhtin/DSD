@@ -560,6 +560,7 @@ begin
      ParamAdd(Params,'BoxCount',ftFloat);            //
      ParamAdd(Params,'BoxCode',ftInteger);           //
      ParamAdd(Params,'PartionGoods',ftString);       //
+     ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
      ParamAdd(Params,'isBarCode',ftBoolean);         //
      ParamAdd(Params,'MovementId_Promo',ftInteger);  //
      ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1

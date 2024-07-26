@@ -51,6 +51,28 @@ BEGIN
                                                                                                               THEN zc_MIBoolean_PartionCell_Close_11()
                                                                                                          WHEN MILO.DescId = zc_MILinkObject_PartionCell_12()
                                                                                                               THEN zc_MIBoolean_PartionCell_Close_12()
+
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_13()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_13()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_14()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_14()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_15()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_15()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_16()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_16()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_17()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_17()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_18()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_18()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_19()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_19()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_20()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_20()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_21()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_21()
+                                                                                                         WHEN MILO.DescId = zc_MILinkObject_PartionCell_22()
+                                                                                                              THEN zc_MIBoolean_PartionCell_Close_22()
+
                                                                                                     END
                                                    AND MIBoolean_PartionCell_Close.ValueData      = TRUE
             
@@ -64,7 +86,9 @@ BEGIN
             
                  WHERE MILO.DescId   IN (zc_MILinkObject_PartionCell_1(), zc_MILinkObject_PartionCell_2(), zc_MILinkObject_PartionCell_3(), zc_MILinkObject_PartionCell_4(), zc_MILinkObject_PartionCell_5()
                                        , zc_MILinkObject_PartionCell_6(), zc_MILinkObject_PartionCell_7(), zc_MILinkObject_PartionCell_8(), zc_MILinkObject_PartionCell_9(), zc_MILinkObject_PartionCell_10()
-                                       , zc_MILinkObject_PartionCell_11(), zc_MILinkObject_PartionCell_12()
+                                       , zc_MILinkObject_PartionCell_11(), zc_MILinkObject_PartionCell_12(), zc_MILinkObject_PartionCell_13(), zc_MILinkObject_PartionCell_14(), zc_MILinkObject_PartionCell_15()
+                                       , zc_MILinkObject_PartionCell_16(), zc_MILinkObject_PartionCell_17(), zc_MILinkObject_PartionCell_18(), zc_MILinkObject_PartionCell_19(), zc_MILinkObject_PartionCell_20()
+                                       , zc_MILinkObject_PartionCell_21(), zc_MILinkObject_PartionCell_22()
                                         )
                    AND MILO.ObjectId = inPartionCellId
                    -- партия открыта

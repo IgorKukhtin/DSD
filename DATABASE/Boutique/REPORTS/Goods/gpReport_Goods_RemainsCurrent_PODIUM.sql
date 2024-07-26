@@ -330,7 +330,7 @@ BEGIN
                       WHERE Container.DescId = zc_Container_Count()
                         -- AND Container.WhereObjectId = inUnitId
                         AND (Container.Amount <> 0 OR Container_SummDebt.Amount <> 0 OR Container_SummDebt_profit.Amount <> 0
-                          OR inPartnerId <> 0 -- OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
+                          -- OR inPartnerId <> 0 -- OR (inIsYear = TRUE AND inStartYear = inEndYear) -- OR inBrandId <> 0 -- OR (inIsYear = TRUE AND inStartYear >0)
                           -- OR inBrandId   <> 0
                           OR inIsRemains = TRUE
                             )

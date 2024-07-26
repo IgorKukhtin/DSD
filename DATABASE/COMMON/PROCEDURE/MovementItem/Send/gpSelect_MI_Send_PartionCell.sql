@@ -203,18 +203,18 @@ BEGIN
            , Object_PartionCell_12.ObjectCode    AS PartionCellCode_12
            , (/*Object_PartionCell_12.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_12.ValueData):: TVarChar      AS PartionCellName_12
 
-           , (Object_PartionCell_real_1.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_1.ValueData):: TVarChar AS PartionCellName_real_1 
-           , (Object_PartionCell_real_2.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_2.ValueData):: TVarChar AS PartionCellName_real_2 
-           , (Object_PartionCell_real_3.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_3.ValueData):: TVarChar AS PartionCellName_real_3 
-           , (Object_PartionCell_real_4.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_4.ValueData):: TVarChar AS PartionCellName_real_4 
-           , (Object_PartionCell_real_5.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_5.ValueData):: TVarChar AS PartionCellName_real_5 
-           , (Object_PartionCell_real_6.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_6.ValueData):: TVarChar AS PartionCellName_real_6 
-           , (Object_PartionCell_real_7.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_7.ValueData):: TVarChar AS PartionCellName_real_7 
-           , (Object_PartionCell_real_8.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_8.ValueData):: TVarChar AS PartionCellName_real_8 
-           , (Object_PartionCell_real_9.ObjectCode :: TVarChar || '-'  || Object_PartionCell_real_9.ValueData):: TVarChar AS PartionCellName_real_9 
-           , (Object_PartionCell_real_10.ObjectCode :: TVarChar|| '-'  || Object_PartionCell_real_10.ValueData)::TVarChar AS PartionCellName_real_10
-           , (Object_PartionCell_real_11.ObjectCode :: TVarChar|| '-'  || Object_PartionCell_real_11.ValueData)::TVarChar AS PartionCellName_real_11
-           , (Object_PartionCell_real_12.ObjectCode :: TVarChar|| '-'  || Object_PartionCell_real_12.ValueData)::TVarChar AS PartionCellName_real_12
+           , (/*Object_PartionCell_real_1.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_1.ValueData):: TVarChar AS PartionCellName_real_1 
+           , (/*Object_PartionCell_real_2.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_2.ValueData):: TVarChar AS PartionCellName_real_2 
+           , (/*Object_PartionCell_real_3.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_3.ValueData):: TVarChar AS PartionCellName_real_3 
+           , (/*Object_PartionCell_real_4.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_4.ValueData):: TVarChar AS PartionCellName_real_4 
+           , (/*Object_PartionCell_real_5.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_5.ValueData):: TVarChar AS PartionCellName_real_5 
+           , (/*Object_PartionCell_real_6.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_6.ValueData):: TVarChar AS PartionCellName_real_6 
+           , (/*Object_PartionCell_real_7.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_7.ValueData):: TVarChar AS PartionCellName_real_7 
+           , (/*Object_PartionCell_real_8.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_8.ValueData):: TVarChar AS PartionCellName_real_8 
+           , (/*Object_PartionCell_real_9.ObjectCode :: TVarChar || '-'  ||*/ Object_PartionCell_real_9.ValueData):: TVarChar AS PartionCellName_real_9 
+           , (/*Object_PartionCell_real_10.ObjectCode :: TVarChar|| '-'  ||*/ Object_PartionCell_real_10.ValueData)::TVarChar AS PartionCellName_real_10
+           , (/*Object_PartionCell_real_11.ObjectCode :: TVarChar|| '-'  ||*/ Object_PartionCell_real_11.ValueData)::TVarChar AS PartionCellName_real_11
+           , (/*Object_PartionCell_real_12.ObjectCode :: TVarChar|| '-'  ||*/ Object_PartionCell_real_12.ValueData)::TVarChar AS PartionCellName_real_12
                       
            , MovementItem.isErased                 AS isErased
            
@@ -293,67 +293,68 @@ BEGIN
                                             AND MILinkObject_PartionCell_12.DescId = zc_MILinkObject_PartionCell_12()
             LEFT JOIN Object AS Object_PartionCell_12 ON Object_PartionCell_12.Id = MILinkObject_PartionCell_12.ObjectId
 
-  ---
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_1
-                                             ON MILinkObject_PartionCell_real_1.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_1.DescId = zc_MILinkObject_PartionCell_real_1()
-            LEFT JOIN Object AS Object_PartionCell_real_1 ON Object_PartionCell_real_1.Id = MILinkObject_PartionCell_real_1.ObjectId
+            --
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_1
+                                        ON MIFloat_PartionCell_real_1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_1.DescId = zc_MIFloat_PartionCell_real_1()
+            LEFT JOIN Object AS Object_PartionCell_real_1 ON Object_PartionCell_real_1.Id = MIFloat_PartionCell_real_1.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_2
-                                             ON MILinkObject_PartionCell_real_2.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_2.DescId = zc_MILinkObject_PartionCell_real_2()
-            LEFT JOIN Object AS Object_PartionCell_real_2 ON Object_PartionCell_real_2.Id = MILinkObject_PartionCell_real_2.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_2
+                                        ON MIFloat_PartionCell_real_2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_2.DescId = zc_MIFloat_PartionCell_real_2()
+            LEFT JOIN Object AS Object_PartionCell_real_2 ON Object_PartionCell_real_2.Id = MIFloat_PartionCell_real_2.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_3
-                                             ON MILinkObject_PartionCell_real_3.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_3.DescId = zc_MILinkObject_PartionCell_real_3()
-            LEFT JOIN Object AS Object_PartionCell_real_3 ON Object_PartionCell_real_3.Id = MILinkObject_PartionCell_real_3.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_3
+                                        ON MIFloat_PartionCell_real_3.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_3.DescId = zc_MIFloat_PartionCell_real_3()
+            LEFT JOIN Object AS Object_PartionCell_real_3 ON Object_PartionCell_real_3.Id = MIFloat_PartionCell_real_3.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_4
-                                             ON MILinkObject_PartionCell_real_4.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_4.DescId = zc_MILinkObject_PartionCell_real_4()
-            LEFT JOIN Object AS Object_PartionCell_real_4 ON Object_PartionCell_real_4.Id = MILinkObject_PartionCell_real_4.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_4
+                                        ON MIFloat_PartionCell_real_4.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_4.DescId = zc_MIFloat_PartionCell_real_4()
+            LEFT JOIN Object AS Object_PartionCell_real_4 ON Object_PartionCell_real_4.Id = MIFloat_PartionCell_real_4.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_5
-                                             ON MILinkObject_PartionCell_real_5.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_5.DescId = zc_MILinkObject_PartionCell_real_5()
-            LEFT JOIN Object AS Object_PartionCell_real_5 ON Object_PartionCell_real_5.Id = MILinkObject_PartionCell_real_5.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_5
+                                        ON MIFloat_PartionCell_real_5.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_5.DescId = zc_MIFloat_PartionCell_real_5()
+            LEFT JOIN Object AS Object_PartionCell_real_5 ON Object_PartionCell_real_5.Id = MIFloat_PartionCell_real_5.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_6
-                                             ON MILinkObject_PartionCell_real_6.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_6.DescId = zc_MILinkObject_PartionCell_real_6()
-            LEFT JOIN Object AS Object_PartionCell_real_6 ON Object_PartionCell_real_6.Id = MILinkObject_PartionCell_real_6.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_6
+                                        ON MIFloat_PartionCell_real_6.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_6.DescId = zc_MIFloat_PartionCell_real_6()
+            LEFT JOIN Object AS Object_PartionCell_real_6 ON Object_PartionCell_real_6.Id = MIFloat_PartionCell_real_6.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_7
-                                             ON MILinkObject_PartionCell_real_7.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_7.DescId = zc_MILinkObject_PartionCell_real_7()
-            LEFT JOIN Object AS Object_PartionCell_real_7 ON Object_PartionCell_real_7.Id = MILinkObject_PartionCell_real_7.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_7
+                                        ON MIFloat_PartionCell_real_7.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_7.DescId = zc_MIFloat_PartionCell_real_7()
+            LEFT JOIN Object AS Object_PartionCell_real_7 ON Object_PartionCell_real_7.Id = MIFloat_PartionCell_real_7.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_8
-                                             ON MILinkObject_PartionCell_real_8.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_8.DescId = zc_MILinkObject_PartionCell_real_8()
-            LEFT JOIN Object AS Object_PartionCell_real_8 ON Object_PartionCell_real_8.Id = MILinkObject_PartionCell_real_8.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_8
+                                        ON MIFloat_PartionCell_real_8.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_8.DescId = zc_MIFloat_PartionCell_real_8()
+            LEFT JOIN Object AS Object_PartionCell_real_8 ON Object_PartionCell_real_8.Id = MIFloat_PartionCell_real_8.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_9
-                                             ON MILinkObject_PartionCell_real_9.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_9.DescId = zc_MILinkObject_PartionCell_real_9()
-            LEFT JOIN Object AS Object_PartionCell_real_9 ON Object_PartionCell_real_9.Id = MILinkObject_PartionCell_real_9.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_9
+                                        ON MIFloat_PartionCell_real_9.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_9.DescId = zc_MIFloat_PartionCell_real_9()
+            LEFT JOIN Object AS Object_PartionCell_real_9 ON Object_PartionCell_real_9.Id = MIFloat_PartionCell_real_9.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_10
-                                             ON MILinkObject_PartionCell_real_10.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_10.DescId = zc_MILinkObject_PartionCell_real_10()
-            LEFT JOIN Object AS Object_PartionCell_real_10 ON Object_PartionCell_real_10.Id = MILinkObject_PartionCell_real_10.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_10
+                                        ON MIFloat_PartionCell_real_10.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_10.DescId = zc_MIFloat_PartionCell_real_10()
+            LEFT JOIN Object AS Object_PartionCell_real_10 ON Object_PartionCell_real_10.Id = MIFloat_PartionCell_real_10.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_11
-                                             ON MILinkObject_PartionCell_real_11.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_11.DescId = zc_MILinkObject_PartionCell_real_11()
-            LEFT JOIN Object AS Object_PartionCell_real_11 ON Object_PartionCell_real_11.Id = MILinkObject_PartionCell_real_11.ObjectId
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_11
+                                        ON MIFloat_PartionCell_real_11.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_11.DescId = zc_MIFloat_PartionCell_real_11()
+            LEFT JOIN Object AS Object_PartionCell_real_11 ON Object_PartionCell_real_11.Id = MIFloat_PartionCell_real_11.ValueData :: Integer
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionCell_real_12
-                                             ON MILinkObject_PartionCell_real_12.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_PartionCell_real_12.DescId = zc_MILinkObject_PartionCell_real_12()
-            LEFT JOIN Object AS Object_PartionCell_real_12 ON Object_PartionCell_real_12.Id = MILinkObject_PartionCell_real_12.ObjectId
-  ---
+            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_real_12
+                                        ON MIFloat_PartionCell_real_12.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PartionCell_real_12.DescId = zc_MIFloat_PartionCell_real_12()
+            LEFT JOIN Object AS Object_PartionCell_real_12 ON Object_PartionCell_real_12.Id = MIFloat_PartionCell_real_12.ValueData :: Integer
+
+            --
             LEFT JOIN MovementItemFloat AS MIFloat_PartionCell_Amount_1
                                         ON MIFloat_PartionCell_Amount_1.MovementItemId = MovementItem.Id
                                        AND MIFloat_PartionCell_Amount_1.DescId         = zc_MIFloat_PartionCell_Amount_1()
