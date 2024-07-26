@@ -74,7 +74,7 @@ BEGIN
 
                 WHERE MovementItem.MovementId = ioId
                   AND MovementItem.DescId     = zc_MI_Master()
-                  AND MovementItem.isErased = FALSE
+                  AND MovementItem.isErased   = FALSE
                )
     THEN
         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), MovementItem.Id, vbOperDate_old)
