@@ -2514,6 +2514,11 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
 

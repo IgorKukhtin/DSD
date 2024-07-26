@@ -1497,6 +1497,8 @@ type
     N261: TMenuItem;
     actGoodsNormDiff: TdsdOpenForm;
     miGoodsNormDiff: TMenuItem;
+    actReport_ProductionUnion_TaxExitUpdate: TdsdOpenForm;
+    miReport_ProductionUnion_TaxExitUpdate: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
