@@ -2,7 +2,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
   Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'> ('#1086#1089#1090#1072#1090#1082#1080')'
   ClientHeight = 382
   ClientWidth = 1071
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1087
@@ -670,7 +669,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-13 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_14: TcxGridDBColumn
@@ -697,7 +695,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-14 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_15: TcxGridDBColumn
@@ -724,7 +721,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-15 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_16: TcxGridDBColumn
@@ -751,7 +747,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-16 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_17: TcxGridDBColumn
@@ -778,7 +773,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-17 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_18: TcxGridDBColumn
@@ -805,7 +799,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-18 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_19: TcxGridDBColumn
@@ -832,7 +825,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-19 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_20: TcxGridDBColumn
@@ -859,7 +851,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-20 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_21: TcxGridDBColumn
@@ -886,7 +877,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-21 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellCode_22: TcxGridDBColumn
@@ -913,7 +903,6 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-22 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Options.Editing = False
             Width = 60
           end
           object PartionCellName_ets: TcxGridDBColumn
@@ -3025,6 +3014,86 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioPartionCellId_13'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_13'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_14'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_14'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_15'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_15'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_16'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_16'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_17'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_17'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_18'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_18'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_19'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_19'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_20'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_20'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_21'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_21'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellId_22'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_22'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOrd'
         Value = Null
         Component = MasterCDS
@@ -3144,6 +3213,96 @@ inherited Report_Send_PartionCellRemainsForm: TReport_Send_PartionCellRemainsFor
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PartionCellName_12'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_13'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_13'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_14'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_14'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_15'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_15'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_16'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_16'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_17'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_17'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_18'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_18'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_19'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_19'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_20'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_20'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_21'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_21'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPartionCellName_22'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionCellName_22'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
