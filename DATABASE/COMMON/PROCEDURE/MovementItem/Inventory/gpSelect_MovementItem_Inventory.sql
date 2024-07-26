@@ -482,7 +482,7 @@ BEGIN
            , CASE WHEN COALESCE (MIString_PartNumber.ValueData,'') = '' THEN ObjectString_PartNumber.ValueData ELSE MIString_PartNumber.ValueData END :: TVarChar     AS PartNumber
 
            , Object_GoodsKind.Id                 AS GoodsKindId
-           , CASE WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN Object_GoodsKind.ValueData ELSE '***' || Object_GoodsKind.ValueData END :: TVarChar AS GoodsKindName
+           , CASE WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN Object_GoodsKind.ValueData WHEN vbUserId = 5 THEN '***' || Object_GoodsKind.ValueData ELSE Object_GoodsKind.ValueData END :: TVarChar AS GoodsKindName
 
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
            , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
