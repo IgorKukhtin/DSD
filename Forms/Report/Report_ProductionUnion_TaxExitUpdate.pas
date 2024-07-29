@@ -50,6 +50,16 @@ type
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     AmountShp_diff: TcxGridDBColumn;
+    actPrintTRM: TdsdPrintAction;
+    actPrintCEH: TdsdPrintAction;
+    actPrintOUT: TdsdPrintAction;
+    bbPrintTRM: TdxBarButton;
+    bbPrintCEH: TdxBarButton;
+    bbPrintOUT: TdxBarButton;
+    ValueGP: TcxGridDBColumn;
+    ValueGP_diff: TcxGridDBColumn;
+    ValuePF: TcxGridDBColumn;
+    ValuePF_diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -36,7 +36,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , TaxExit_fact TFloat
              , TaxExit_diff TFloat 
              , Amount_GP_in TFloat
-             
+             , ValueGP TFloat, ValuePF TFloat 
+             , ValueGP_diff TFloat, ValuePF_diff TFloat 
            )  
 
 AS
@@ -494,6 +495,36 @@ BEGIN
                              , tmp.GoodsKindId_Complete
                      )
 
+
+    , tmpGoodsNormDiff AS (SELECT ObjectLink_Goods.ChildObjectId AS GoodsId
+                                , COALESCE (ObjectLink_GoodsKind.ChildObjectId,0) AS GoodsKindId
+                               , ObjectFloat_ValuePF.ValueData AS ValuePF
+                               , ObjectFloat_ValueGP.ValueData AS ValueGP   
+                               
+                           FROM Object AS Object_GoodsNormDiff
+                 
+                               LEFT JOIN ObjectFloat AS ObjectFloat_ValuePF
+                                                     ON ObjectFloat_ValuePF.ObjectId = Object_GoodsNormDiff.Id
+                                                    AND ObjectFloat_ValuePF.DescId = zc_ObjectFloat_GoodsNormDiff_ValuePF()
+                               LEFT JOIN ObjectFloat AS ObjectFloat_ValueGP
+                                                     ON ObjectFloat_ValueGP.ObjectId = Object_GoodsNormDiff.Id
+                                                    AND ObjectFloat_ValueGP.DescId = zc_ObjectFloat_GoodsNormDiff_ValueGP()
+                     
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                                    ON ObjectLink_Goods.ObjectId = Object_GoodsNormDiff.Id
+                                                   AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsNormDiff_Goods()
+                               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
+                        
+                               LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
+                                                    ON ObjectLink_GoodsKind.ObjectId = Object_GoodsNormDiff.Id
+                                                   AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_GoodsNormDiff_GoodsKind()
+                               LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKind.ChildObjectId
+                             
+                           WHERE Object_GoodsNormDiff.DescId = zc_Object_GoodsNormDiff()
+                             AND Object_GoodsNormDiff.isErased = FALSE
+                           )
+
+
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                AS GoodsCode
          , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar                AS GoodsName
@@ -579,7 +610,19 @@ BEGIN
 
           -- Выход ГП факт
           , tmpResult.Amount_GP_in :: TFloat             AS Amount_GP_in
-
+ 
+          --
+          , tmpGoodsNormDiff.ValueGP ::TFloat
+          , tmpGoodsNormDiff.ValuePF ::TFloat
+          
+          , (ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END 
+                 - COALESCE (tmpResult.TaxExit,0) )
+                 )
+            - COALESCE (tmpGoodsNormDiff.ValueGP,0)) ::TFloat AS ValueGP_diff
+          --- 
+          , ( ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END 
+           - COALESCE (tmpResult.TotalWeight_in ,0)) )
+            - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_Complete
@@ -595,6 +638,9 @@ BEGIN
           LEFT JOIN ObjectDate AS ObjectDate_PartionGoods
                                ON ObjectDate_PartionGoods.ObjectId = tmpResult.PartionGoodsId
                               AND ObjectDate_PartionGoods.DescId = zc_ObjectDate_PartionGoods_Value()
+
+          LEFT JOIN tmpGoodsNormDiff ON tmpGoodsNormDiff.GoodsId = tmpResult.GoodsId
+                                    AND COALESCE (tmpGoodsNormDiff.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
     ;
          
 END;

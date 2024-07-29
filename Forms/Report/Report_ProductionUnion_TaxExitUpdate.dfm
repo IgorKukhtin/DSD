@@ -16,17 +16,17 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     TabOrder = 3
     ExplicitTop = 84
     ExplicitWidth = 1298
-    ExplicitHeight = 343
+    ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
-      ExplicitHeight = 343
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 1298
         Height = 342
         ExplicitWidth = 1298
-        ExplicitHeight = 343
+        ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -490,6 +490,42 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Width = 68
           end
+          object ValueGP: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1043#1055', '#1082#1075
+            DataBinding.FieldName = 'ValueGP'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ValueGP_diff: TcxGridDBColumn
+            Caption = #1054#1058#1050#1051' '#1086#1090' '#1085#1086#1088#1084#1099' '#1042#1099#1093#1086#1076' '#1043#1055', '#1082#1075' '
+            DataBinding.FieldName = 'ValueGP_diff'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ValuePF: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1055'/'#1060' ('#1043#1055'), '#1082#1075
+            DataBinding.FieldName = 'ValuePF'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object ValuePF_diff: TcxGridDBColumn
+            Caption = #1054#1058#1050#1051' '#1086#1090' '#1085#1086#1088#1084#1099' '#1042#1077#1089' '#1087#1086#1089#1083#1077' '#1084#1072#1089#1089#1072#1078#1077#1088#1072', '#1082#1075
+            DataBinding.FieldName = 'ValuePF_diff'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -582,17 +618,183 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       end>
   end
   inherited ActionList: TActionList
+    object actPrintOUT: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintCEH: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintTRM: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072')'
+      ImageIndex = 3
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = FromGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = ToGroupGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1090#1077#1088#1084#1080#1095#1082#1072')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1090#1077#1088#1084#1080#1095#1082#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
-      Hint = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1091
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
           UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -613,20 +815,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ReportType'
-          Value = '0'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'FromName'
           Value = Null
           Component = FromGroupGuides
@@ -642,21 +830,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = Null
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1080#1093#1086#1076'_'#1056#1072#1089#1093#1086#1076'_'#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'_'#1087#1086'_'#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084'_1'
+      ReportName = #1054#1090#1095#1077#1090'_'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1058#1077#1093#1085#1086#1083#1086#1075'_new'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086'_'#1058#1077#1093#1085#1086#1083#1086#1075'_new'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -985,6 +1161,42 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTRM'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCEH'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintOUT'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1003,6 +1215,21 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     object bbReport_Goods: TdxBarButton
       Action = actReport_Goods
       Category = 0
+    end
+    object bbPrintTRM: TdxBarButton
+      Action = actPrintTRM
+      Category = 0
+      ImageIndex = 16
+    end
+    object bbPrintCEH: TdxBarButton
+      Action = actPrintCEH
+      Category = 0
+      ImageIndex = 17
+    end
+    object bbPrintOUT: TdxBarButton
+      Action = actPrintOUT
+      Category = 0
+      ImageIndex = 18
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
