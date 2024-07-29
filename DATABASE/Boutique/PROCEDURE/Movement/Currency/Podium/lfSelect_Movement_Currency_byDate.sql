@@ -64,11 +64,18 @@ BEGIN
              END :: TFloat AS Amount
 
            , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
+                       THEN tmpMovement.Amount
+                  WHEN tmpMovement.CurrencyFromId = inCurrencyToId AND tmpMovement.CurrencyToId = inCurrencyFromId
+                       THEN tmpMovement.ParValue / tmpMovement.Amount
+                          * tmpMovement.ParValue
+             END :: TFloat AS CurrencyValueIn
+
+/*           , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
                        THEN tmpMovement.CurrencyValueIn
                   WHEN tmpMovement.CurrencyFromId = inCurrencyToId AND tmpMovement.CurrencyToId = inCurrencyFromId
                        THEN tmpMovement.ParValue / tmpMovement.CurrencyValueIn
                           * tmpMovement.ParValue
-             END :: TFloat AS CurrencyValueIn
+             END :: TFloat AS CurrencyValueIn*/
 
            , CASE WHEN tmpMovement.CurrencyFromId = inCurrencyFromId AND tmpMovement.CurrencyToId = inCurrencyToId
                        THEN tmpMovement.ParValue

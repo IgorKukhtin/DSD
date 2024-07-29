@@ -94,7 +94,7 @@ BEGIN
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCurrencyFromId,Null, ioId, inAmount, NULL);
 
      -- курс продажи
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValueIn(), vbMovementItemId, inCurrencyValueIn);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValueIn(), vbMovementItemId, inAmount /*inCurrencyValueIn*/);
 
      -- Номинал валюты для которой вводится курс
      IF COALESCE (inParValue, 0) = 0 THEN inParValue := 1; END IF;

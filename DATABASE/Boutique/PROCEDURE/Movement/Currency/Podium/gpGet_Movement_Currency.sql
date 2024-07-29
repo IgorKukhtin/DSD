@@ -56,7 +56,7 @@ BEGIN
                      
            , MovementItem.Amount AS Amount
 
-           , MIFloat_CurrencyValueIn.ValueData  AS CurrencyValueIn
+           , MovementItem.Amount /*MIFloat_CurrencyValueIn.ValueData*/  AS CurrencyValueIn
            , MIFloat_ParValue.ValueData   AS ParValue
            , MIString_Comment.ValueData   AS Comment
 

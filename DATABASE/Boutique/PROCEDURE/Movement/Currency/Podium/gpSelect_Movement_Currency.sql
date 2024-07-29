@@ -87,7 +87,10 @@ BEGIN
             , tmpMovement.OperDate AS StartDate
             , CASE WHEN tmpMovement.OperDate < COALESCE (tmpMovement_next.OperDate, zc_DateEnd()) THEN COALESCE (tmpMovement_next.OperDate - INTERVAL '1 DAY', zc_DateEnd()) ELSE NULL END :: TDateTime AS EndDate
             , tmpMovement.StatusCode, tmpMovement.StatusName
-            , tmpMovement.Amount, tmpMovement.CurrencyValueIn, tmpMovement.ParValue
+            , tmpMovement.Amount
+            , tmpMovement.Amount AS CurrencyValueIn
+          --, tmpMovement.CurrencyValueIn
+            , tmpMovement.ParValue
             , tmpMovement.Comment
             , tmpMovement.CurrencyFromName
             , tmpMovement.CurrencyToName
