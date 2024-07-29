@@ -17,9 +17,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ChoiceCell(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsInsert Boolean;   
+   DECLARE vbIsLoad Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ChoiceCell());
+   IF zfConvert_StringToNumber (inSession) < 0
+   THEN
+       vbIsLoad:= TRUE;
+       vbUserId := lpCheckRight ((-1 * zfConvert_StringToNumber (inSession)) :: TVarChar, zc_Enum_Process_InsertUpdate_Object_ChoiceCell());
+   ELSE
+       vbIsLoad:= FAlSE;
+       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ChoiceCell());
+   END IF;
    
    IF COALESCE (inNPP,0) = 0
    THEN
@@ -37,13 +45,13 @@ BEGIN
    END IF;
 
 
-   IF COALESCE (inGoodsId,0) = 0
+   IF COALESCE (inGoodsId,0) = 0 AND vbIsLoad = FALSE
    THEN
       RAISE EXCEPTION 'Ошибка. Товар не установлен.';
    END IF;
 
 
-   IF COALESCE (inGoodsKindId,0) = 0
+   IF COALESCE (inGoodsKindId,0) = 0 AND vbIsLoad = FALSE
    THEN
       RAISE EXCEPTION 'Ошибка. Вид Товара не установлен.';
    END IF;

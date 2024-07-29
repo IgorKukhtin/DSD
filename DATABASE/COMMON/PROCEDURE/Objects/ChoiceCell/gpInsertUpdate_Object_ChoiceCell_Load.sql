@@ -73,7 +73,7 @@ BEGIN
                                                  , inBoxCount    := NULL         :: TFloat
                                                  , inNPP         := NULL         :: TFloat
                                                  , inComment     := NULL      :: TVarChar
-                                                 , inSession     := inSession :: TVarChar
+                                                 , inSession     := (-1 * vbUserId) :: TVarChar
                                                  );
      ELSE
          PERFORM gpInsertUpdate_Object_ChoiceCell( ioId          := COALESCE (vbChoiceCellId,0) :: Integer
@@ -84,7 +84,7 @@ BEGIN
                                                  , inBoxCount    := tmp.BoxCount  :: TFloat
                                                  , inNPP         := inNPP       :: TFloat
                                                  , inComment     := tmp.Comment   :: TVarChar
-                                                 , inSession     := inSession     :: TVarChar
+                                                 , inSession     := (-1 * vbUserId) :: TVarChar
                                                  )
          FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
          WHERE tmp.Id = vbChoiceCellId;
