@@ -93,6 +93,8 @@ BEGIN
      IF vbUnitId = 8451 -- ЦЕХ упаковки
         AND vbToId = 8459 -- Розподільчий комплекс
         AND inGoodsKindId = zc_GoodsKind_Basis()
+        AND EXISTS (SELECT 1 FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
+        
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для перемещения вида <%>.', lfGet_Object_ValueData_sh (inGoodsKindId);
      END IF;
@@ -115,7 +117,7 @@ BEGIN
 
 
      -- !!!замена, приходит вес - из него получаем м. или шт.
-     IF 1=1 AND EXISTS (SELECT FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
+     IF 1=1 AND EXISTS (SELECT 1 FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId NOT IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
         AND NOT EXISTS (SELECT 1
                         FROM ObjectLink AS ObjectLink_Goods_InfoMoney
                              INNER JOIN Object_InfoMoney_View AS View_InfoMoney
@@ -256,24 +258,6 @@ BEGIN
                                                           , inSession             := inSession
                                                            );
 
-
-     -- дописали св-во <Asset >
-     IF inIsAsset = TRUE
-     THEN
-         IF inBranchCode IN (1, 101)
-        AND vbUnitId = 8451
-        AND vbToId  IN (8459, 8458) -- Розподільчий комплекс + Склад База ГП
-        AND COALESCE (inAssetId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определено значение <Оборудование - 1>.';
-         END IF;
-
-         --
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbId, inAssetId);
-         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
-
-     END IF;
-
      -- дописали св-во <Asset>
      IF inIsAsset = TRUE
      THEN
@@ -281,6 +265,7 @@ BEGIN
         AND vbUnitId = 8451
         AND vbToId  IN (8459, 8458) -- Розподільчий комплекс + Склад База ГП
         AND COALESCE (inAssetId, 0) = 0
+        AND EXISTS (SELECT 1 FROM ObjectLink AS OL_Measure WHERE OL_Measure.ChildObjectId IN (zc_Measure_Kg(), zc_Measure_Sh()) AND OL_Measure.ObjectId = inGoodsId AND OL_Measure.DescId = zc_ObjectLink_Goods_Measure())
          THEN
              RAISE EXCEPTION 'Ошибка.Не определено значение <Оборудование - 1>.';
          END IF;
@@ -290,7 +275,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset_two(), vbId, inAssetId_two);
 
      -- Розподільчий комплекс
-     ELSEIF vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = 8459
+     ELSEIF vbMovementDescId = zc_Movement_Inventory() AND vbUnitId = zc_Unit_RK()
         AND inAssetId > 0
         -- AND vbUserId = 5 -- !!!tmp
      THEN
