@@ -474,8 +474,9 @@ BEGIN
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 THEN ObjectDate_Value.ValueData    ELSE MIDate_PartionGoods.ValueData   END AS PartionGoodsDate
 
            , CASE WHEN COALESCE (Object_PartionGoods.Id, 0) <> 0 AND Object_PartionGoods.ValueData <> '0'
-                       THEN Object_PartionGoods.ValueData WHEN MIString_PartionGoods.ValueData <> '' THEN  MIString_PartionGoods.ValueData
-                  WHEN vbUserId = 5 THEN '***'  || Object_PartionGoods_container.ValueData
+                       THEN Object_PartionGoods.ValueData
+                  WHEN MIString_PartionGoods.ValueData <> ''
+                       THEN  MIString_PartionGoods.ValueData
                   ELSE ''
              END :: TVarChar AS PartionGoods
 
@@ -485,7 +486,15 @@ BEGIN
            , CASE WHEN MILinkObject_GoodsKind.ObjectId > 0 THEN Object_GoodsKind.ValueData WHEN vbUserId = 5 THEN '***' || Object_GoodsKind.ValueData ELSE Object_GoodsKind.ValueData END :: TVarChar AS GoodsKindName
 
            , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
-           , Object_GoodsKindComplete.ValueData  AS GoodsKindName_Complete
+           , (COALESCE (Object_GoodsKindComplete.ValueData, '') || CASE WHEN vbUserId = 5 AND Object_PartionGoods_container.ValueData <> ''
+                                                                             THEN '***'  || Object_PartionGoods_container.ValueData
+                                                                        WHEN vbUserId = 5 AND Object_PartionGoods_container.Id <> 0
+                                                                             THEN '***'  || Object_PartionGoods_container.Id :: TVarChar || ' * ' || COALESCE (MIFloat_ContainerId.ContainerId, 0)
+                                                                        WHEN vbUserId = 5 AND MIFloat_ContainerId.ContainerId <> 0
+                                                                             THEN '*'  || MIFloat_ContainerId.ContainerId :: TVarChar
+                                                                        ELSE ''
+                                                                   END) :: TVarChar AS GoodsKindName_Complete
+             --
            , Object_Asset.Id                     AS AssetId
            , Object_Asset.ValueData              AS AssetName
            , Object_InfoMoney_View.InfoMoneyCode
