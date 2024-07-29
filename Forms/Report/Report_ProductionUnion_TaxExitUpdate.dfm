@@ -622,9 +622,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093')'
-      ImageIndex = 3
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084
+      ImageIndex = 18
       DataSets = <
         item
           UserName = 'frxDBDMaster'
@@ -665,8 +665,8 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1229,7 +1229,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     object bbPrintOUT: TdxBarButton
       Action = actPrintOUT
       Category = 0
-      ImageIndex = 18
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
