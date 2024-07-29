@@ -1513,7 +1513,9 @@ uses
   Change—urrencyUserDialog in '..\..\Forms\Document\Change—urrencyUserDialog.pas' {Change—urrencyUserDialogForm: TParentForm},
   Report_PartionCell_history in '..\..\Forms\Report\Report_PartionCell_history.pas' {Report_PartionCell_historyForm: TParentForm},
   GoodsNormDiff in '..\..\Forms\Guides\GoodsNormDiff.pas' {GoodsNormDiffForm: TParentForm},
-  GoodsNormDiffEdit in '..\..\Forms\Guides\GoodsNormDiffEdit.pas' {GoodsNormDiffEditForm: TParentForm};
+  GoodsNormDiffEdit in '..\..\Forms\Guides\GoodsNormDiffEdit.pas' {GoodsNormDiffEditForm: TParentForm},
+  Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm},
+  Report_ProductionUnion_TaxExitUpdateDialog in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdateDialog.pas' {Report_ProductionUnion_TaxExitUpdateDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
