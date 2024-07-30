@@ -1542,8 +1542,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -2469,6 +2469,56 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       Caption = 'macPrint_New'
     end
+    object actPrintChoiceCell: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_ChoiceCell
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ChoiceCell
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1086#1090#1073#1086#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1086#1090#1073#1086#1088#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -2613,6 +2663,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintChoiceCell'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2646,12 +2704,16 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Action = actOpenFormPartionCell
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrint_Pasport: TdxBarButton
       Action = actPrint_Pasport
       Category = 0
     end
     object bbOpenReport_PartionCell_history: TdxBarButton
       Action = actOpenReport_PartionCell_history
+      Category = 0
+    end
+    object bbPrintChoiceCell: TdxBarButton
+      Action = actPrintChoiceCell
       Category = 0
     end
   end
@@ -3621,8 +3683,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 756
-    Top = 270
+    Left = 772
+    Top = 238
   end
   object spSelectPrintPasport: TdsdStoredProc
     StoredProcName = 'gpReport_PartionCell_PasportPrint'
@@ -3686,5 +3748,24 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     PackSize = 1
     Left = 671
     Top = 264
+  end
+  object spSelectPrint_ChoiceCell: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ChoiceCell'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 248
   end
 end

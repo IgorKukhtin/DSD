@@ -70,6 +70,9 @@ type
     FormParams: TdsdFormParams;
     PartionGoodsDate_RK: TcxGridDBColumn;
     PartionGoodsDate_real: TcxGridDBColumn;
+    PrintItemsCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
