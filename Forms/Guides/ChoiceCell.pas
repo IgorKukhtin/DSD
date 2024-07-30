@@ -68,6 +68,8 @@ type
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
     FormParams: TdsdFormParams;
+    PartionGoodsDate_RK: TcxGridDBColumn;
+    PartionGoodsDate_real: TcxGridDBColumn;
   private
     { Private declarations }
   public

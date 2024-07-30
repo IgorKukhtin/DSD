@@ -107,6 +107,22 @@ object ChoiceCellForm: TChoiceCellForm
         Options.Editing = False
         Width = 80
       end
+      object PartionGoodsDate_RK: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1086#1090#1073#1086#1088')'
+        DataBinding.FieldName = 'PartionGoodsDate_RK'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PartionGoodsDate_real: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' ('#1082' '#1089#1085#1103#1090#1080#1102')'
+        DataBinding.FieldName = 'PartionGoodsDate_real'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount'
