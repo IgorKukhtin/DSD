@@ -16,6 +16,14 @@ $BODY$
 BEGIN
   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_Inventory());
 
+
+  -- !!!Проверка - Инвентаризация - запрет на изменения (разрешено только проведение)!!!
+  IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11109744)
+  THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав.';
+  END IF;
+
+
   -- устанавливаем новое значение
   outIsErased := TRUE;
 

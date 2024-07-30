@@ -30,6 +30,14 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
+
+     -- !!!Проверка - Инвентаризация - запрет на изменения (разрешено только проведение)!!!
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11109744)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Нет прав.';
+     END IF;
+
+
       -- !!!Проверка inPartionGoodsDate!!!
      IF inPartionGoodsDate IS NOT NULL
      -- Склад Реализации + Склад База ГП
