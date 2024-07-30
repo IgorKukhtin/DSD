@@ -280,6 +280,18 @@ object ChoiceCellForm: TChoiceCellForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -344,6 +356,10 @@ object ChoiceCellForm: TChoiceCellForm
     end
     object bbStartLoad: TdxBarButton
       Action = macStartLoad
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -580,6 +596,53 @@ object ChoiceCellForm: TChoiceCellForm
       Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1071#1095#1077#1081#1082#1080' '#1086#1090#1073#1086#1088#1072' '#1080#1079' '#1092#1072#1081#1083#1072
       ImageIndex = 41
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ChoiceCell'
@@ -695,5 +758,11 @@ object ChoiceCellForm: TChoiceCellForm
       end>
     Left = 432
     Top = 216
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 580
+    Top = 198
   end
 end

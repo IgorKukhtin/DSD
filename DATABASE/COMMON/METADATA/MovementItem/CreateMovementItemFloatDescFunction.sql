@@ -1029,8 +1029,12 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_Summ_BankSecondDiff_num', 'Карта Банк- 2ф.(личный, по приоритету)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Summ_BankSecondDiff_num');
 
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountForm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountForm', 'кол-во формовка+1день,кг' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountForm');
 
-
+       
+       
 
 ----!!!!!!Farmacy
 

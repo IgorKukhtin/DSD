@@ -90,7 +90,7 @@ type
     PrintItemsCDS: TClientDataSet;
     spSelectPrintPasport: TdsdStoredProc;
     actPrint_Pasport: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint_Pasport: TdxBarButton;
     mactTestPrint5: TMultiAction;
     actPrint_Pasport_test: TdsdPrintAction;
     actUpdate_MI_Send_byReport_test: TdsdExecStoredProc;
@@ -117,6 +117,9 @@ type
     isPartionCell_min: TcxGridDBColumn;
     Color_NormInDays: TcxGridDBColumn;
     Marker_NormInDays: TcxGridDBColumn;
+    spSelectPrint_ChoiceCell: TdsdStoredProc;
+    actPrintChoiceCell: TdsdPrintAction;
+    bbPrintChoiceCell: TdxBarButton;
   private
     { Private declarations }
   public
