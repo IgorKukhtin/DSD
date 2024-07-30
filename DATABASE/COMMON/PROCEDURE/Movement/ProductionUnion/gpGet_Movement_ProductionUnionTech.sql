@@ -22,7 +22,7 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime
              , Amount_order TFloat, CuterCount_order TFloat
              , RealWeight TFloat, RealWeightMsg TFloat, RealWeightShp TFloat
              , CuterCount TFloat, CuterWeight TFloat, Count TFloat, CountReal TFloat
-             , Amount TFloat
+             , Amount TFloat, AmountForm TFloat
              , Comment TVarChar
                )
 AS
@@ -65,7 +65,8 @@ BEGIN
                , 0 :: TFloat		           AS Count
                , 0 :: TFloat		           AS CountReal
                , 0 :: TFloat		           AS Amount
-               , '' :: TVarChar                    AS Comment
+               , 0 :: TFloat                   AS AmountForm
+               , '' :: TVarChar                AS Comment
 
           FROM MovementItem
                LEFT JOIN MovementLinkObject AS MLO_To
@@ -135,6 +136,7 @@ BEGIN
                , MIFloat_Count.ValueData	       AS Count
                , MIFloat_CountReal.ValueData       AS CountReal
                , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN MovementItem.Amount ELSE 0 END :: TFloat AS Amount
+               , MIFloat_AmountForm.ValueData ::TFloat AS AmountForm
                , MIString_Comment.ValueData        AS Comment
 
           FROM MovementItem
@@ -189,6 +191,9 @@ BEGIN
                LEFT JOIN MovementItemFloat AS MIFloat_RealWeightShp
                                            ON MIFloat_RealWeightShp.MovementItemId = MovementItem.Id
                                           AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
+               LEFT JOIN MovementItemFloat AS MIFloat_AmountForm
+                                           ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
 
                LEFT JOIN MovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -206,22 +211,22 @@ BEGIN
 
      ELSE
           RETURN QUERY
-          SELECT 0                                   AS MovementId
-               , inOperDate                          AS OperDate
+          SELECT 0                               AS MovementId
+               , inOperDate                      AS OperDate
                , inFromId	                     AS FromId
-               , inToId                              AS ToId
+               , inToId                          AS ToId
 
-               , 0                                   AS MovementItemId
-               , 0                                   AS GoodsId
-               , '' :: TVarChar                      AS GoodsName
-               , 0                                   AS GoodsKindId
-               , '' :: TVarChar                      AS GoodsKindName
-               , 0                                   AS GoodsKindId_Complete
-               , '' :: TVarChar                      AS GoodsKindName_Complete
+               , 0                               AS MovementItemId
+               , 0                               AS GoodsId
+               , '' :: TVarChar                  AS GoodsName
+               , 0                               AS GoodsKindId
+               , '' :: TVarChar                  AS GoodsKindName
+               , 0                               AS GoodsKindId_Complete
+               , '' :: TVarChar                  AS GoodsKindName_Complete
 
-               , 0                                   AS ReceiptId
-               , '' :: TVarChar                      AS ReceiptName
-               , '' :: TVarChar                      AS ReceiptCode
+               , 0                               AS ReceiptId
+               , '' :: TVarChar                  AS ReceiptName
+               , '' :: TVarChar                  AS ReceiptCode
 
                , 0 :: TFloat		             AS Amount_order
                , 0 :: TFloat		             AS CuterCount_order
@@ -234,7 +239,8 @@ BEGIN
                , 0 :: TFloat		             AS Count
                , 0 :: TFloat		             AS CountReal
                , 0 :: TFloat		             AS Amount
-               , '' :: TVarChar                      AS Comment
+               , 0 :: TFloat                     AS AmountForm
+               , '' :: TVarChar                  AS Comment
          ;
 
      END IF;
@@ -247,6 +253,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 30.07.24         * AmountForm
  13.02.22         *
  02.12.20         *
  13.06.16         * CuterWeight

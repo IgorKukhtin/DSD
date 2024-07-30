@@ -179,6 +179,7 @@ BEGIN
 
     WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()  
       AND (Object_ChoiceCell.isErased = FALSE OR inShowAll = TRUE)
+    ORDER BY Object_ChoiceCell.ObjectCode
     ;
 
 END;

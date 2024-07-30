@@ -2,7 +2,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
   ExplicitWidth = 1144
-  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -78,6 +77,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = CountReal_LAK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -133,6 +137,11 @@ inherited ProductionUnionForm: TProductionUnionForm
               Format = ',0.####'
               Kind = skSum
               Column = CountReal_LAK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -316,7 +325,19 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object PartionGoodsDate: TcxGridDBColumn [18]
+          object AmountForm: TcxGridDBColumn [18]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+1'#1076#1077#1085#1100', '#1082#1075
+            DataBinding.FieldName = 'AmountForm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+1'#1076#1077#1085#1100','#1082#1075
+            Options.Editing = False
+            Width = 69
+          end
+          object PartionGoodsDate: TcxGridDBColumn [19]
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
             PropertiesClassName = 'TcxDateEditProperties'
@@ -327,14 +348,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object PartionGoods: TcxGridDBColumn [19]
+          object PartionGoods: TcxGridDBColumn [20]
             Caption = #1055#1072#1088#1090#1080#1103' '#1089#1099#1088#1100#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object ReceiptCode: TcxGridDBColumn [20]
+          object ReceiptCode: TcxGridDBColumn [21]
             Caption = #1050#1086#1076' '#1088#1077#1094#1077#1087#1090'.'
             DataBinding.FieldName = 'ReceiptCode'
             HeaderAlignmentHorz = taCenter
@@ -342,7 +363,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 80
           end
-          object ReceiptName: TcxGridDBColumn [21]
+          object ReceiptName: TcxGridDBColumn [22]
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
             DataBinding.FieldName = 'ReceiptName'
             HeaderAlignmentHorz = taCenter
@@ -350,7 +371,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 120
           end
-          object IsPartionClose: TcxGridDBColumn [22]
+          object IsPartionClose: TcxGridDBColumn [23]
             Caption = #1055#1072#1088#1090#1080#1103' '#1079#1072#1082#1088#1099#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPartionClose'
             Visible = False
@@ -359,7 +380,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 60
           end
-          object Comment: TcxGridDBColumn [23]
+          object Comment: TcxGridDBColumn [24]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
@@ -368,7 +389,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 150
           end
-          object InfoMoneyCode: TcxGridDBColumn [24]
+          object InfoMoneyCode: TcxGridDBColumn [25]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -377,7 +398,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [25]
+          object InfoMoneyGroupName: TcxGridDBColumn [26]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -386,7 +407,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [26]
+          object InfoMoneyDestinationName: TcxGridDBColumn [27]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -395,7 +416,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [27]
+          object InfoMoneyName: TcxGridDBColumn [28]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -404,7 +425,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyName_all: TcxGridDBColumn [28]
+          object InfoMoneyName_all: TcxGridDBColumn [29]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -413,7 +434,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Options.Editing = False
             Width = 90
           end
-          object isAuto: TcxGridDBColumn [29]
+          object isAuto: TcxGridDBColumn [30]
             Caption = #1040#1074#1090'.'
             DataBinding.FieldName = 'isAuto'
             HeaderAlignmentHorz = taCenter
@@ -710,7 +731,6 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited DataPanel: TPanel
     Width = 1128
     Height = 96
-    ExplicitTop = 4
     ExplicitWidth = 1128
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit

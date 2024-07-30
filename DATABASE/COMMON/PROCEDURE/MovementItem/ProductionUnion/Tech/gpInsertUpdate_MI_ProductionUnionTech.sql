@@ -5,8 +5,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer,
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer
+                                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);*/
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_ProductionUnionTech (Integer, Integer, Integer, TDateTime, Integer, Integer, Integer, Integer, Integer
-                                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+                                                             , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inMovementItemId_order Integer   , -- Ключ объекта <Элемент документа>
@@ -28,6 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnionTech(
     IN inCuterWeight          TFloat    , -- Вес п/ф факт(куттер)
 
     IN inAmount               TFloat    , -- Кол-во шт.факт - !!!обратный расчет кол-во куттеров!!!
+    IN inAmountForm           TFloat    , -- кол-во формовка+1день,кг
 
     IN inComment              TVarChar  , -- Примечание
     IN inGoodsKindId          Integer   , -- Виды товаров
@@ -364,7 +367,8 @@ BEGIN
                                                                   , inRealWeightMsg      := inRealWeightMsg
                                                                   , inRealWeightShp      := inRealWeightShp
                                                                   , inCuterCount         := inCuterCount
-                                                                  , inCuterWeight        := inCuterWeight
+                                                                  , inCuterWeight        := inCuterWeight 
+                                                                  , inAmountForm         := inAmountForm
                                                                   , inComment            := inComment
                                                                   , inGoodsKindId        := inGoodsKindId
                                                                   , inGoodsKindCompleteId:= inGoodsKindCompleteId
@@ -441,6 +445,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.07.24         * inAmountForm
  13.06.16         *
  21.03.15                                        *all
  19.12.14                                                       * add zc_MILinkObject_GoodsKindComplete
