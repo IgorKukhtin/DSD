@@ -118,6 +118,14 @@ type
     cxLabel30: TcxLabel;
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    spUpdate_AmountForm: TdsdStoredProc;
+    actUpdate_AmountForm: TdsdUpdateDataSet;
+    actExecuteDialog_AmountForm: TExecuteDialog;
+    mactUpdate_AmountForm: TMultiAction;
+    bbUpdate_AmountForm: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator2: TdxBarSeparator;
+    actRefreshMI: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

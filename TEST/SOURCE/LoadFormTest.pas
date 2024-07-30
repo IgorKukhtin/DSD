@@ -1947,10 +1947,12 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
-  {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountFormDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAmountFormDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-  exit;
+  {exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
