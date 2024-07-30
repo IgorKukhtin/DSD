@@ -1353,8 +1353,7 @@ object MainCehForm: TMainCehForm
         Font.Name = 'Arial'
         Font.Style = [fsBold]
         ParentFont = False
-        ExplicitLeft = 0
-        ExplicitTop = 3
+        ExplicitWidth = 62
       end
       object PartionDateEdit: TcxDateEdit
         Left = 10

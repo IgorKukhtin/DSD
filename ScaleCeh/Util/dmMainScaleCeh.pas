@@ -3,7 +3,8 @@ unit dmMainScaleCeh;
 interface
 
 uses
-  System.SysUtils, System.Classes, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Dialogs,UtilScale;
+  System.SysUtils, System.Classes, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Dialogs,UtilScale,
+  dsdCommon;
 
 type
   TDMMainScaleCehForm = class(TDataModule)
@@ -1113,6 +1114,9 @@ begin
        Params.Clear;
        Params.AddParam('inIsGoodsComplete', ftBoolean, ptInput, SettingMain.isGoodsComplete);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       //Params.AddParam('inMovementDescId', ftInteger, ptInput, ParamsMovement.ParamByName('MovementDescId').AsInteger);
+       //Params.AddParam('inWeight_gd', ftFloat, ptInput, execParams.ParamByName('Weight_gd').AsFloat);
+       //Params.AddParam('inMeasureId', ftInteger, ptInput, execParams.ParamByName('MeasureId').AsInteger);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
        //try
          Execute;
@@ -1152,7 +1156,9 @@ begin
               {and((SettingMain.BranchCode = 1)
                 or(SettingMain.BranchCode = 102)
                 or(SettingMain.BranchCode = 103)}
-              and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
+              and((ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)
+                or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Send)
+                 )
               then ParamByName('isWeight_gd').AsBoolean := true
              //else ParamByName('isWeight_gd').AsBoolean := false;
               else ParamByName('isWeight_gd').AsBoolean := false;
