@@ -1,5 +1,5 @@
 inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxExitUpdateForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075'> NEW'
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
   ClientHeight = 426
   ClientWidth = 1298
   AddOnFormData.isSingle = False
@@ -1206,6 +1206,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       Category = 0
     end
     object bbExecuteDialog: TdxBarButton
