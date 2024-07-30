@@ -155,7 +155,8 @@ inherited MainForm: TMainForm
     object actReport_ProductionUnion_TaxExitUpdate: TdsdOpenForm [0]
       Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1090#1077#1093#1085#1086#1083#1086#1075' (NEW)'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
       FormName = 'TReport_ProductionUnion_TaxExitUpdateForm'
       FormNameParam.Value = 'TReport_ProductionUnion_TaxExitUpdateForm'
       FormNameParam.DataType = ftString
