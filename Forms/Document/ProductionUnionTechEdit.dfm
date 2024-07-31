@@ -1,32 +1,32 @@
 ﻿inherited ProductionUnionTechEditForm: TProductionUnionTechEditForm
   ActiveControl = ceRealWeight
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1047#1072#1082#1083#1072#1076#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072'>'
-  ClientHeight = 296
+  ClientHeight = 332
   ClientWidth = 562
   AddOnFormData.isSingle = False
   ExplicitWidth = 568
-  ExplicitHeight = 325
+  ExplicitHeight = 361
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 168
-    Top = 253
+    Top = 298
     Height = 26
     ExplicitLeft = 168
-    ExplicitTop = 253
+    ExplicitTop = 298
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 312
-    Top = 253
+    Top = 298
     Height = 26
     ExplicitLeft = 312
-    ExplicitTop = 253
+    ExplicitTop = 298
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
-    Left = 246
-    Top = 198
+    Left = 242
+    Top = 200
     Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
     Visible = False
   end
@@ -71,15 +71,15 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
   end
   object cxLabel10: TcxLabel [8]
-    Left = 370
-    Top = 200
+    Left = 8
+    Top = 241
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [9]
-    Left = 370
-    Top = 218
+    Left = 8
+    Top = 259
     TabOrder = 5
-    Width = 187
+    Width = 549
   end
   object ceGooods: TcxButtonEdit [10]
     Left = 8
@@ -202,7 +202,7 @@
   end
   object cxLabel9: TcxLabel [26]
     Left = 8
-    Top = 152
+    Top = 155
     Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
   end
   object ceCuterWeight: TcxCurrencyEdit [27]
@@ -215,7 +215,7 @@
   end
   object cxLabel14: TcxLabel [28]
     Left = 8
-    Top = 198
+    Top = 200
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit [29]
@@ -270,7 +270,7 @@
     Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088')'
   end
   object cxLabel18: TcxLabel [36]
-    Left = 370
+    Left = 374
     Top = 155
     Hint = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
     Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'#1092#1072#1082#1090
@@ -286,6 +286,22 @@
     TabOrder = 37
     Width = 86
   end
+  object cxLabel19: TcxLabel [38]
+    Left = 370
+    Top = 200
+    Hint = #1050#1086#1083'-'#1074#1086' '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
+    Caption = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+1'#1076#1077#1085#1100','#1082#1075
+  end
+  object ceAmountForm: TcxCurrencyEdit [39]
+    Left = 370
+    Top = 218
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    ShowHint = True
+    TabOrder = 39
+    Width = 187
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 11
     Top = 258
@@ -296,7 +312,7 @@
   end
   inherited ActionList: TActionList
     Left = 391
-    Top = 233
+    Top = 272
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -503,6 +519,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountForm'
+        Value = Null
+        Component = ceAmountForm
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = ''
         Component = ceComment
@@ -526,8 +550,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 448
-    Top = 184
+    Left = 480
+    Top = 272
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProductionUnionTech'
@@ -759,9 +783,16 @@
         Component = ceCountReal
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'AmountForm'
+        Value = Null
+        Component = ceAmountForm
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     Left = 257
-    Top = 236
+    Top = 275
   end
   object ReceiptGuides: TdsdGuides
     KeyField = 'Id'

@@ -107,6 +107,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = CountReal_LAK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -193,6 +198,11 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = CountReal_LAK
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountForm
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -379,16 +389,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
             Options.Editing = False
             Width = 60
           end
-          object CuterCount: TcxGridDBColumn [18]
-            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'CuterCount'
+          object AmountForm: TcxGridDBColumn [18]
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+1'#1076#1077#1085#1100', '#1082#1075
+            DataBinding.FieldName = 'AmountForm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'+1'#1076#1077#1085#1100','#1082#1075
             Options.Editing = False
-            Width = 60
+            Width = 69
           end
           object Amount: TcxGridDBColumn [19]
             Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
@@ -553,6 +564,17 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
           object CuterWeight: TcxGridDBColumn [35]
             Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090'('#1082#1091#1090#1090#1077#1088')'
             DataBinding.FieldName = 'CuterWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object CuterCount: TcxGridDBColumn [36]
+            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'CuterCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

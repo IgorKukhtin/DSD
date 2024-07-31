@@ -23,7 +23,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TProductionUnionForm = class(TAncestorDocumentMCForm)
@@ -118,6 +118,14 @@ type
     cxLabel30: TcxLabel;
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    spUpdate_AmountForm: TdsdStoredProc;
+    actUpdate_AmountForm: TdsdUpdateDataSet;
+    actExecuteDialog_AmountForm: TExecuteDialog;
+    mactUpdate_AmountForm: TMultiAction;
+    bbUpdate_AmountForm: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator2: TdxBarSeparator;
+    actRefreshMI: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

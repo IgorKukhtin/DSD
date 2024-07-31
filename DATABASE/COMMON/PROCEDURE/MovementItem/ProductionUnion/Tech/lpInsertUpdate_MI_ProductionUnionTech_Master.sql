@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_ProductionUnionTech_Master (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_ProductionUnionTech_Master(
     IN inRealWeightMsg       TFloat    , -- Фактический вес(после массажера)
     IN inRealWeightShp       TFloat    , -- Фактический вес(после шприцевания)
     IN inCuterCount          TFloat    , -- Количество кутеров
-    IN inCuterWeight         TFloat    , -- Вес п/ф факт(куттер)
+    IN inCuterWeight         TFloat    , -- Вес п/ф факт(куттер) 
+    IN inAmountForm          TFloat    , -- кол-во формовка+1день,кг
     IN inComment             TVarChar  , -- Примечание
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inGoodsKindCompleteId Integer   , -- Виды товаров  ГП
@@ -59,6 +61,10 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterCount(), ioId, inCuterCount);
    -- сохранили свойство <Вес п/ф факт(куттер)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CuterWeight(), ioId, inCuterWeight);
+
+   -- сохранили свойство <кол-во формовка+1день,кг>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountForm(), ioId, inAmountForm);
+
 
    -- закріть доступ корректировки взвешиваний после массажера и  после шприцевания определенным лицам: Гриневич Е. + Пронько Л.
    IF inUserId IN (9031170, 954882)
@@ -117,6 +123,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.07.24         * inAmountForm
  25.10.23         *
  13.09.22         * inCountReal
  02.12.20         *
