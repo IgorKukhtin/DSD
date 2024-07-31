@@ -183,6 +183,14 @@ type
     spPrintLak: TdsdStoredProc;
     actPrintLak: TdsdPrintAction;
     bbPrintLak: TdxBarButton;
+    spUpdate_AmountForm: TdsdStoredProc;
+    actExecuteDialog_AmountForm: TExecuteDialog;
+    actUpdate_AmountForm: TdsdUpdateDataSet;
+    mactUpdate_AmountForm: TMultiAction;
+    bbUpdate_AmountForm: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator2: TdxBarSeparator;
+    bbsProtoco: TdxBarSubItem;
   private
     { Private declarations }
   public

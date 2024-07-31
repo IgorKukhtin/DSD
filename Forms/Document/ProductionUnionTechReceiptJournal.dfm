@@ -24,8 +24,6 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       inherited cxGrid: TcxGrid
         Width = 1164
         Height = 292
-        ExplicitLeft = 256
-        ExplicitTop = 3
         ExplicitWidth = 1164
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -2823,6 +2821,63 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actExecuteDialog_AmountForm: TExecuteDialog
+      Category = 'AmountForm'
+      MoveParams = <>
+      Caption = 'actUpdate_InvnumberDialog'
+      FormName = 'TAmountFormDialogForm'
+      FormNameParam.Value = 'TAmountFormDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'AmountForm'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AmountForm'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountForm'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountForm'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_AmountForm: TdsdUpdateDataSet
+      Category = 'AmountForm'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_AmountForm
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_AmountForm
+        end>
+      Caption = 'actUpdate_Invnumber'
+    end
+    object mactUpdate_AmountForm: TMultiAction
+      Category = 'AmountForm'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteDialog_AmountForm
+        end
+        item
+          Action = actUpdate_AmountForm
+        end
+        item
+        end>
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072'?'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1083'-'#1074#1086' '#1092#1086#1088#1084#1086#1074#1082#1072
+      ImageIndex = 43
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
@@ -2946,6 +3001,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_AmountForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -2958,35 +3021,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         end
         item
           Visible = True
-          ItemName = 'bbPrintReceipt'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_TaxExit_Loss'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_TaxLoss'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrintCeh'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -2994,63 +3033,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         end
         item
           Visible = True
-          ItemName = 'bbPrintDays1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactPrintDays2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactPrintDays3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactPrintDays4'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPrintDays1_test'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintDays2_cuter'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbactPrintLak'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIMasterProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMIChildProtocol'
+          ItemName = 'bbsProtocol'
         end
         item
           Visible = True
@@ -3139,6 +3126,115 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     object bbactPrintLak: TdxBarButton
       Action = actPrintLak
       Category = 0
+    end
+    object bbUpdate_AmountForm: TdxBarButton
+      Action = mactUpdate_AmountForm
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintReceipt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_TaxExit_Loss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_TaxLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCeh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDays1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactPrintDays2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactPrintDays3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactPrintDays4'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDays1_test'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintDays2_cuter'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbactPrintLak'
+        end>
+    end
+    object bbsProtocol: TdxBarSubItem
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 34
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIChildProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIMasterProtocol'
+        end>
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4455,5 +4551,31 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     PackSize = 1
     Left = 944
     Top = 440
+  end
+  object spUpdate_AmountForm: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionUnion_AmountForm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountForm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AmountForm'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1000
+    Top = 459
   end
 end
