@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, cxSplitter, Document, dsdInternetAction;
+  Vcl.StdCtrls, cxButtons, cxSplitter, Document, dsdInternetAction, dsdCommon;
 
 type
   TInvoiceJournalForm = class(TAncestorJournal_boatForm)

@@ -594,7 +594,15 @@ object UserForm: TUserForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel_Role'
         end
         item
           Visible = True
@@ -626,14 +634,12 @@ object UserForm: TUserForm
       Action = dsdSetUnErased
       Category = 0
     end
-    object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
+    object bbGridToExcel: TdxBarButton
+      Action = actGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
       Category = 0
-      Hint = '       '
       Visible = ivAlways
       ShowCaption = False
     end
@@ -659,6 +665,10 @@ object UserForm: TUserForm
     end
     object bbUpdate_KeyAuthent: TdxBarButton
       Action = actUpdate_KeyAuthent
+      Category = 0
+    end
+    object bbGridToExcel_Role: TdxBarButton
+      Action = actGridToExcel_Role
       Category = 0
     end
   end
@@ -779,14 +789,23 @@ object UserForm: TUserForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actGridToExcel_Role: TdsdGridToExcel
+      Category = 'DSDLib'
+      MoveParams = <>
+      Grid = RoleGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1056#1086#1083#1080')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1056#1086#1083#1080')'
+      ImageIndex = 6
+      ShortCut = 16434
+    end
+    object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       MoveParams = <>
       Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080')'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel ('#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080')'
       ImageIndex = 6
-      ShortCut = 16472
+      ShortCut = 16433
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -1157,6 +1176,7 @@ object UserForm: TUserForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 248
     Top = 232
@@ -1194,6 +1214,7 @@ object UserForm: TUserForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 392
     Top = 96
@@ -1284,6 +1305,7 @@ object UserForm: TUserForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 472
     Top = 216
