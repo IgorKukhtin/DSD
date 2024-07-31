@@ -120,6 +120,8 @@ type
     spSelectPrint_ChoiceCell: TdsdStoredProc;
     actPrintChoiceCell: TdsdPrintAction;
     bbPrintChoiceCell: TdxBarButton;
+    ItemName: TcxGridDBColumn;
+    isRePack: TcxGridDBColumn;
   private
     { Private declarations }
   public

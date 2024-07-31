@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PartionCell (
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_min TDateTime, OperDate_max TDateTime
              , ItemName TVarChar
+             , isRePack Boolean
              , InsertDate TDateTime, InsertName TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -179,7 +180,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
 
-     vbIsWeighing:= vbUserId = TRUE;
+     vbIsWeighing:= vbUserId = 5;
 
 
      -- !!!“олько просмотр јудитор!!!
@@ -555,6 +556,7 @@ BEGIN
                            , CASE WHEN inIsMovement = TRUE THEN Movement.DescId ELSE 0 END                   AS MovementDescId    -- ***
                            , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END               AS InvNumber
                            , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END              AS OperDate
+                           , MAX (CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE THEN 1 ELSE 0 END) AS isRePack_Value
                            , MIN (Movement.OperDate)                                                         AS OperDate_min
                            , MAX (Movement.OperDate)                                                         AS OperDate_max
                            , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END                   AS FromId
@@ -562,7 +564,11 @@ BEGIN
                            , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId    -- ***
                            , MovementItem.GoodsId                                                            AS GoodsId           -- ***
                            , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId       -- ***
-                           , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime        AS PartionGoodsDate  -- ***
+                             -- ***
+                           , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE
+                                       THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) -- zc_DateStart()
+                                  ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                             END :: TDateTime AS PartionGoodsDate
                              -- кол-во
                            , SUM (MovementItem.Amount / CASE WHEN inIsCell = TRUE AND tmpMILO_PC_count.CountCell > 0 THEN tmpMILO_PC_count.CountCell ELSE 1 END) AS Amount
 
@@ -589,6 +595,10 @@ BEGIN
                            LEFT JOIN tmpMILO_PC AS tmpMILO_PartionCell ON tmpMILO_PartionCell.MovementItemId = MovementItem.MovementItemId
                                                                       AND inIsCell = TRUE 
 
+                           LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                                     ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                                    AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
+
                            LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
                                                 ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
                                                AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
@@ -606,7 +616,10 @@ BEGIN
                              , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END
                              , MovementItem.GoodsId
                              , COALESCE (MILinkObject_GoodsKind.ObjectId,0)
-                             , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                             , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE
+                                         THEN zc_DateStart()
+                                    ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                               END
 
                              , COALESCE (tmpMILO_PartionCell.ObjectId, 0)
                      )
@@ -635,12 +648,16 @@ BEGIN
                         FROM -- –асчет нужной €чейки по которой группировать
                              (SELECT DISTINCT
                                      CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END                       AS MovementId        -- ***
-                                   , CASE WHEN inIsMovement = TRUE THEN Movement.MovementDescId ELSE 0 END           AS MovementDescId    -- ***
+                                   , CASE WHEN inIsMovement = TRUE THEN Movement.DescId ELSE 0 END                   AS MovementDescId    -- ***
                                    , Movement.ToId                                                                   AS ToId              -- ***
                                    , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId    -- ***
                                    , MovementItem.GoodsId                                                            AS GoodsId           -- ***
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId,0)                                    AS GoodsKindId       -- ***
-                                   , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) :: TDateTime        AS PartionGoodsDate  -- ***
+                                     -- ***
+                                   , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE
+                                               THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) -- zc_DateStart()
+                                          ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
+                                     END :: TDateTime AS PartionGoodsDate
                                      --
                                    , MILinkObject_PartionCell.DescId AS DescId_milo
                                      -- –асчет нужной €чейки по которой группировать
@@ -659,6 +676,10 @@ BEGIN
 
                               FROM tmpMovement AS Movement
                                    INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
+
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                                             ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                                            AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
 
                                    LEFT JOIN tmpMI_Date AS MIDate_PartionGoods
                                                         ON MIDate_PartionGoods.MovementItemId = MovementItem.MovementItemId
@@ -742,7 +763,8 @@ BEGIN
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_All_All.PartionCellId ELSE 0 END --если по €чейкам то все €чейки выводим отдельной строкой
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_All_All.Ord_all       ELSE 0 END
                                                            
-                                                ORDER BY CASE WHEN COALESCE (tmpData_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK()) THEN 1 ELSE 0 END
+                                                ORDER BY CASE WHEN tmpData_All_All.PartionGoodsDate = zc_DateStart() THEN 1 ELSE 0 END
+                                                       , CASE WHEN COALESCE (tmpData_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK()) THEN 1 ELSE 0 END
                                                        , COALESCE (tmpData_All_All.DescId_milo, 0)
                                                        , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
@@ -923,6 +945,7 @@ BEGIN
                          , tmpData_MI.OperDate_min :: TDateTime
                          , tmpData_MI.OperDate_max :: TDateTime
                          , MovementDesc.ItemName         AS ItemName
+                         , CASE WHEN tmpData_MI.isRePack_Value = 1 THEN TRUE ELSE FALSE END :: Boolean AS isRePack
                          , MovementDate_Insert.ValueData AS InsertDate
                          , Object_Insert.ValueData       AS InsertName
                          , Object_From.Id                AS FromId
@@ -1199,6 +1222,7 @@ BEGIN
         , tmpResult.OperDate_min
         , tmpResult.OperDate_max
         , tmpResult.ItemName
+        , tmpResult.isRePack
         , tmpResult.InsertDate
         , tmpResult.InsertName
 
@@ -2328,6 +2352,7 @@ BEGIN
         , tmpResult.OperDate_min
         , tmpResult.OperDate_max
         , '' :: TVarChar AS ItemName
+        , FALSE :: Boolean AS isRePack
         , tmpResult.InsertDate
         , tmpResult.InsertName
         , tmpResult.FromId
