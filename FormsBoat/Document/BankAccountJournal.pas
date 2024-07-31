@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter, Document;
+  Vcl.StdCtrls, cxButtons, ExternalLoad, cxSplitter, Document, dsdCommon;
 
 type
   TBankAccountJournalForm = class(TAncestorJournal_boatForm)

@@ -21,7 +21,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TUserForm = class(TParentForm)
@@ -41,7 +41,7 @@ type
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
-    bbToExcel: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     ActionList: TActionList;
@@ -50,7 +50,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
     spSelect: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -117,6 +117,8 @@ type
     spUpdate_KeyAuthent: TdsdStoredProc;
     bbUpdate_KeyAuthent: TdxBarButton;
     actUpdate_KeyAuthent: TdsdExecStoredProc;
+    actGridToExcel_Role: TdsdGridToExcel;
+    bbGridToExcel_Role: TdxBarButton;
   private
     { Private declarations }
   public

@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_Send_PartionCell (
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDate_min TDateTime, OperDate_max TDateTime
+             , ItemName TVarChar
              , InsertDate TDateTime, InsertName TVarChar
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -173,8 +174,13 @@ $BODY$
  DECLARE vbUserId Integer;
  DECLARE curPartionCell refcursor;
  DECLARE vbPartionCellId Integer;
+ DECLARE vbIsWeighing Boolean;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
+     
+
+     vbIsWeighing:= vbUserId = TRUE;
+
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
@@ -260,7 +266,7 @@ BEGIN
                        )
 
       -- Все документы
-    , tmpMovement AS (-- или в Периоде
+    , tmpMovement AS (-- или в Периоде - Send
                       SELECT Movement.*
                            , MovementLinkObject_From.ObjectId AS FromId
                            , MovementLinkObject_To.ObjectId   AS ToId
@@ -300,6 +306,54 @@ BEGIN
                                            )
                         AND Movement.DescId = zc_Movement_Send()
                         AND MovementLinkObject_To.ObjectId = inUnitId
+
+                     UNION
+                      -- или в Периоде - WeighingProduction
+                      SELECT Movement.*
+                           , MovementLinkObject_From.ObjectId AS FromId
+                           , MovementLinkObject_To.ObjectId   AS ToId
+                      FROM Movement
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+
+                      WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate + INTERVAL '14 DAY'
+                        AND Movement.DescId = zc_Movement_WeighingProduction()
+                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                        AND MovementLinkObject_From.ObjectId = zc_Unit_Pack()
+                        AND MovementLinkObject_To.ObjectId = inUnitId
+                        AND vbIsWeighing = TRUE
+
+                     UNION
+                      -- или в Ячейке
+                      SELECT Movement.*
+                           , MovementLinkObject_From.ObjectId AS FromId
+                           , MovementLinkObject_To.ObjectId   AS ToId
+                      FROM Movement
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                        ON MovementLinkObject_From.MovementId = Movement.Id
+                                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+
+                      WHERE Movement.Id IN (SELECT DISTINCT MovementItem.MovementId
+                                            FROM _tmpPartionCell
+                                                 JOIN MovementItem ON MovementItem.Id       = _tmpPartionCell.MovementItemId
+                                                                  AND MovementItem.isErased = FALSE
+                                            -- Без отбор
+                                            WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                           )
+                        AND Movement.DescId = zc_Movement_WeighingProduction()
+                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                        AND MovementLinkObject_From.ObjectId = zc_Unit_Pack()
+                        AND MovementLinkObject_To.ObjectId = inUnitId
+                        AND vbIsWeighing = TRUE
                       )
 
        -- Все MI
@@ -498,6 +552,7 @@ BEGIN
 
        -- расчет кол-во - мастер
      , tmpData_MI AS (SELECT CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END                       AS MovementId        -- ***
+                           , CASE WHEN inIsMovement = TRUE THEN Movement.DescId ELSE 0 END                   AS MovementDescId    -- ***
                            , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END               AS InvNumber
                            , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END              AS OperDate
                            , MIN (Movement.OperDate)                                                         AS OperDate_min
@@ -543,6 +598,7 @@ BEGIN
                                                        AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
                       GROUP BY CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END
+                             , CASE WHEN inIsMovement = TRUE THEN Movement.DescId ELSE 0 END
                              , CASE WHEN inIsMovement = TRUE THEN Movement.InvNumber ELSE '' END
                              , CASE WHEN inIsMovement = TRUE THEN Movement.OperDate ELSE NULL END
                              , CASE WHEN inIsMovement = TRUE THEN Movement.FromId ELSE 0 END
@@ -557,6 +613,7 @@ BEGIN
 
     -- Развернули по ячейкам - вертикально
   , tmpData_All_All AS (SELECT tmpData_list.MovementId        -- ***
+                             , tmpData_list.MovementDescId    -- ***
                              , tmpData_list.ToId              -- ***
                              , tmpData_list.MovementItemId    -- ***
                              , tmpData_list.GoodsId           -- ***
@@ -578,6 +635,7 @@ BEGIN
                         FROM -- Расчет нужной ячейки по которой группировать
                              (SELECT DISTINCT
                                      CASE WHEN inIsMovement = TRUE THEN Movement.Id ELSE 0 END                       AS MovementId        -- ***
+                                   , CASE WHEN inIsMovement = TRUE THEN Movement.MovementDescId ELSE 0 END           AS MovementDescId    -- ***
                                    , Movement.ToId                                                                   AS ToId              -- ***
                                    , CASE WHEN inIsMovement = TRUE THEN MovementItem.MovementItemId ELSE 0 END       AS MovementItemId    -- ***
                                    , MovementItem.GoodsId                                                            AS GoodsId           -- ***
@@ -616,6 +674,7 @@ BEGIN
                              ) AS tmpData_list
 
                         GROUP BY tmpData_list.MovementId        -- ***
+                               , tmpData_list.MovementDescId    -- ***
                                , tmpData_list.ToId              -- ***
                                , tmpData_list.MovementItemId    -- ***
                                , tmpData_list.GoodsId           -- ***
@@ -627,6 +686,7 @@ BEGIN
                        )
       -- Только заполненные ячейки - № п/п
     , tmpData_All AS (SELECT tmpData_All_All.MovementId        -- ***
+                           , tmpData_All_All.MovementDescId    -- ***
                            , tmpData_All_All.ToId              -- ***
                            , tmpData_All_All.MovementItemId    -- ***
                            , tmpData_All_All.GoodsId           -- ***
@@ -712,6 +772,7 @@ BEGIN
                      )
       -- Развернули по ячейкам - горизонтально
     , tmpData AS (SELECT tmpData_All.MovementId
+                       , tmpData_All.MovementDescId
                        , tmpData_All.ToId
                        , tmpData_All.MovementItemId
                        , tmpData_All.GoodsId
@@ -846,6 +907,7 @@ BEGIN
                   FROM tmpData_All
 
                   GROUP BY tmpData_All.MovementId
+                         , tmpData_All.MovementDescId
                          , tmpData_All.ToId
                          , tmpData_All.MovementItemId
                          , tmpData_All.GoodsId
@@ -860,6 +922,7 @@ BEGIN
                          , tmpData_MI.OperDate     :: TDateTime
                          , tmpData_MI.OperDate_min :: TDateTime
                          , tmpData_MI.OperDate_max :: TDateTime
+                         , MovementDesc.ItemName         AS ItemName
                          , MovementDate_Insert.ValueData AS InsertDate
                          , Object_Insert.ValueData       AS InsertName
                          , Object_From.Id                AS FromId
@@ -1073,6 +1136,8 @@ BEGIN
 
                   FROM tmpData_MI -- расчет кол-во - мастер
                   
+                       LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData_MI.MovementDescId
+
                        -- Данные по ячейкам - горизонтально
                        LEFT JOIN tmpData_npp ON tmpData_npp.GoodsId          = tmpData_MI.GoodsId
                                             AND tmpData_npp.GoodsKindId      = tmpData_MI.GoodsKindId
@@ -1133,6 +1198,7 @@ BEGIN
         , tmpResult.OperDate
         , tmpResult.OperDate_min
         , tmpResult.OperDate_max
+        , tmpResult.ItemName
         , tmpResult.InsertDate
         , tmpResult.InsertName
 
@@ -2261,6 +2327,7 @@ BEGIN
         , tmpResult.OperDate
         , tmpResult.OperDate_min
         , tmpResult.OperDate_max
+        , '' :: TVarChar AS ItemName
         , tmpResult.InsertDate
         , tmpResult.InsertName
         , tmpResult.FromId

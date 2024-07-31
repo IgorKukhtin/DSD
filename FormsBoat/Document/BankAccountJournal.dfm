@@ -2228,7 +2228,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Name = 'frxPDFExport1_EmbeddedFonts'
-          Value = False
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end
