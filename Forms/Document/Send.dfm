@@ -2,8 +2,7 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1186
-  ExplicitLeft = -22
-  ExplicitTop = -26
+  ExplicitTop = -27
   ExplicitWidth = 1202
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -12,20 +11,17 @@ inherited SendForm: TSendForm
     Top = 118
     Width = 1186
     Height = 540
-    Properties.ActivePage = cxTabSheet_PartionCell
     ExplicitTop = 118
-    ExplicitWidth = 1173
+    ExplicitWidth = 1186
     ExplicitHeight = 540
     ClientRectBottom = 540
     ClientRectRight = 1186
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1173
+      ExplicitWidth = 1186
       ExplicitHeight = 516
       inherited cxGrid: TcxGrid
         Width = 1186
         Height = 516
-        ExplicitLeft = 552
-        ExplicitTop = 184
         ExplicitWidth = 1186
         ExplicitHeight = 516
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -507,7 +503,6 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
-      ExplicitWidth = 1173
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -516,7 +511,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1173
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -734,7 +728,6 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
-      ExplicitWidth = 1173
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -743,7 +736,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1173
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -909,7 +901,6 @@ inherited SendForm: TSendForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 3
-      ExplicitWidth = 1173
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -918,7 +909,6 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1173
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -1471,7 +1461,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_13'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-13 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1480,7 +1470,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_14'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-14 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1489,7 +1479,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_15'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-15 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1498,7 +1488,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_16'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-16 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1507,7 +1497,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_17'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-17 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1516,7 +1506,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_18'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-18 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1525,7 +1515,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_19'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-19 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1534,7 +1524,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_20'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-20 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1543,7 +1533,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_21'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-21 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1552,7 +1542,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'PartionCellName_real_22'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-22 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
             Width = 68
           end
@@ -1682,7 +1672,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-13('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1692,7 +1682,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-14('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1702,7 +1692,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-15('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1712,7 +1702,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-16('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1722,7 +1712,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-17('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1732,7 +1722,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-18('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1742,7 +1732,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-19('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1752,7 +1742,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-20('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1762,7 +1752,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-21('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1772,7 +1762,7 @@ inherited SendForm: TSendForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-22('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 68
           end
@@ -1924,7 +1914,7 @@ inherited SendForm: TSendForm
     Width = 1186
     Height = 92
     TabOrder = 3
-    ExplicitWidth = 1173
+    ExplicitWidth = 1186
     ExplicitHeight = 92
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2243,6 +2233,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       StoredProc = spErasedMIPC
       StoredProcList = <
         item
@@ -2260,7 +2251,6 @@ inherited SendForm: TSendForm
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
     inherited actGridToExcel: TdsdGridToExcel
-      Enabled = False
       ShortCut = 16433
     end
     object actGridDetailToExcel: TdsdGridToExcel [5]
@@ -2289,6 +2279,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       Grid = cxGrid_PartionCell
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -2318,6 +2309,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       StoredProc = spUnErasedMIPC
       StoredProcList = <
         item
@@ -2357,7 +2349,6 @@ inherited SendForm: TSendForm
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
     end
     object actMISetUnErasedDetail: TdsdUpdateErased [12]
       Category = 'DSDLib'
@@ -2384,6 +2375,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       StoredProc = spSelect_MI_PartionCell
       StoredProcList = <
         item
@@ -2402,7 +2394,6 @@ inherited SendForm: TSendForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
-      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -2445,7 +2436,6 @@ inherited SendForm: TSendForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
-      Enabled = False
     end
     object actShowAllDetail: TBooleanStoredProcAction [18]
       Category = 'DSDLib'
@@ -2470,7 +2460,6 @@ inherited SendForm: TSendForm
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
-      Enabled = False
     end
     object actUpdatePartionCellDS: TdsdUpdateDataSet [20]
       Category = 'DSDLib'
@@ -2720,7 +2709,6 @@ inherited SendForm: TSendForm
     end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actGoodsKindChoicePC: TOpenChoiceForm [34]
       Category = 'DSDLib'
@@ -2807,6 +2795,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       ImageIndex = 34
@@ -2917,7 +2906,6 @@ inherited SendForm: TSendForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
-      Enabled = False
     end
     object actAddMaskDetail: TdsdExecStoredProc [44]
       Category = 'DSDLib'
@@ -2939,7 +2927,6 @@ inherited SendForm: TSendForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
-      Enabled = False
     end
     object actOpenPartionCellForm6: TOpenChoiceForm
       Category = 'DSDLib'
@@ -3182,7 +3169,6 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
@@ -3836,7 +3822,6 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = actInsertRecordAsset
@@ -3980,7 +3965,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = InsertRecord20202
@@ -4060,7 +4044,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
@@ -4176,6 +4159,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       ImageIndex = 1
@@ -4288,6 +4272,7 @@ inherited SendForm: TSendForm
       Category = 'OperDatePartner'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogUpdatePartionGoodsDate
@@ -5911,8 +5896,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 986
-    Top = 384
+    Left = 866
+    Top = 312
   end
   object DetailDS: TDataSource
     DataSet = DetailCDS
@@ -6351,8 +6336,8 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1112
-    Top = 448
+    Left = 992
+    Top = 480
   end
   object spGetImportSetting: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -6451,15 +6436,15 @@ inherited SendForm: TSendForm
   end
   object PartionCellDS: TDataSource
     DataSet = PartionCellCDS
-    Left = 808
-    Top = 576
+    Left = 1072
+    Top = 384
   end
   object PartionCellCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 672
-    Top = 552
+    Left = 1104
+    Top = 384
   end
   object spSelect_MI_PartionCell: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Send_PartionCell'
@@ -6512,8 +6497,8 @@ inherited SendForm: TSendForm
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 758
-    Top = 553
+    Left = 1110
+    Top = 329
   end
   object spInsertUpdateMIPartionCell: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Send_PartionCell'
@@ -6670,7 +6655,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 856
+    Left = 1120
     Top = 448
   end
   object spUpdateMI_PartionGoodsDate: TdsdStoredProc
