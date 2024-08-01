@@ -852,6 +852,7 @@ type
     LinkListControlToField21: TLinkListControlToField;
     bClearSubjectDoc: TButton;
     bSubjectDoc: TButton;
+    TimerPopupClose: TTimer;
     procedure LogInButtonClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure bInfoClick(Sender: TObject);
@@ -1091,6 +1092,7 @@ type
     procedure btCloseSubjectDocClick(Sender: TObject);
     procedure bClearSubjectDocClick(Sender: TObject);
     procedure bSubjectDocClick(Sender: TObject);
+    procedure TimerPopupCloseTimer(Sender: TObject);
   private
     { Private declarations }
     FFormsStack: TStack<TFormStackItem>;
@@ -3506,6 +3508,8 @@ procedure TfrmMain.bEnterAmountClick(Sender: TObject);
 var
   MovementItemId: Integer;
 begin
+  if TimerPopupClose.Enabled then Exit;
+
   if FEditCashAmount then
   begin
     CashAmountValue := StrToFloatDef(lAmount.Text, 0);
@@ -3561,7 +3565,7 @@ begin
     RecalculateReturnInTotalPriceAndWeight;
   end;
 
-  ppEnterAmount.IsOpen := false;
+  TimerPopupClose.Enabled := True;
 end;
 
 procedure TfrmMain.bEnterServerClick(Sender: TObject);
@@ -3590,6 +3594,8 @@ procedure TfrmMain.bAddAmountClick(Sender: TObject);
 var
   MovementItemId: Integer;
 begin
+  if TimerPopupClose.Enabled then Exit;
+
   if FEditCashAmount then
   begin
     CashAmountValue := CashAmountValue + StrToFloatDef(lAmount.Text, 0);
@@ -3645,7 +3651,7 @@ begin
     RecalculateReturnInTotalPriceAndWeight;
   end;
 
-  ppEnterAmount.IsOpen := false;
+  TimerPopupClose.Enabled := True;
 end;
 
 // отнимание количества товаров от введенных ранее
@@ -3654,6 +3660,8 @@ var
   NewVal: Double;
   MovementItemId: Integer;
 begin
+  if TimerPopupClose.Enabled then Exit;
+
   if FEditCashAmount then
   begin
     NewVal := CashAmountValue - StrToFloatDef(lAmount.Text, 0);
@@ -3725,7 +3733,7 @@ begin
     RecalculateReturnInTotalPriceAndWeight;
   end;
 
-  ppEnterAmount.IsOpen := false;
+  TimerPopupClose.Enabled := True;
 end;
 
 // переход на форму справочников
@@ -4837,6 +4845,12 @@ begin
   bSetPartnerCoordinate.Visible := false;
   lNoMap.Visible := true;
   lNoMap.Text := 'Не удалось загрузить карту с расположением ТТ';
+end;
+
+procedure TfrmMain.TimerPopupCloseTimer(Sender: TObject);
+begin
+  TimerPopupClose.Enabled := False;
+  ppEnterAmount.IsOpen := false;
 end;
 
 procedure TfrmMain.tiSubjectDocClick(Sender: TObject);
