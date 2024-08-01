@@ -210,6 +210,8 @@ type
     actGetImportSetting_ReceiptCost: TdsdExecStoredProc;
     macStartLoad_ReceiptCost: TMultiAction;
     bbStartLoad_ReceiptCost: TdxBarButton;
+    cbSave: TcxCheckBox;
+    cbDel: TcxCheckBox;
   private
     { Private declarations }
   public
