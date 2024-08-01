@@ -1,27 +1,32 @@
 inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
-  ClientWidth = 1172
-  ExplicitWidth = 1188
+  ClientWidth = 1186
+  ExplicitLeft = -22
+  ExplicitTop = -26
+  ExplicitWidth = 1202
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 118
-    Width = 1172
+    Width = 1186
     Height = 540
+    Properties.ActivePage = cxTabSheet_PartionCell
     ExplicitTop = 118
-    ExplicitWidth = 1172
+    ExplicitWidth = 1173
     ExplicitHeight = 540
     ClientRectBottom = 540
-    ClientRectRight = 1172
+    ClientRectRight = 1186
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1172
+      ExplicitWidth = 1173
       ExplicitHeight = 516
       inherited cxGrid: TcxGrid
-        Width = 1172
+        Width = 1186
         Height = 516
-        ExplicitWidth = 1172
+        ExplicitLeft = 552
+        ExplicitTop = 184
+        ExplicitWidth = 1186
         ExplicitHeight = 516
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -502,14 +507,16 @@ inherited SendForm: TSendForm
     object cxTabSheetDetail: TcxTabSheet
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086
       ImageIndex = 1
+      ExplicitWidth = 1173
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
-        Width = 1172
+        Width = 1186
         Height = 516
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1173
         object cxGridDBTableViewDetail: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -727,14 +734,16 @@ inherited SendForm: TSendForm
     object cxTabSheetChild: TcxTabSheet
       Caption = #1056#1072#1089#1093#1086#1076' '#1085#1072' '#1087#1088#1086#1080#1079#1074'.'
       ImageIndex = 2
+      ExplicitWidth = 1173
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
-        Width = 1172
+        Width = 1186
         Height = 516
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1173
         object cxGridDBTableViewChild: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -900,14 +909,16 @@ inherited SendForm: TSendForm
     object cxTabSheet_PartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 3
+      ExplicitWidth = 1173
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
-        Width = 1172
+        Width = 1186
         Height = 516
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitWidth = 1173
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -1090,7 +1101,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-1 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 159
+            Width = 68
           end
           object PartionCellName_2_ch4: TcxGridDBColumn
             Caption = '2.1 '#1071#1095#1077#1081#1082#1072
@@ -1105,7 +1116,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-2 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_3_ch4: TcxGridDBColumn
             Caption = '3.1 '#1071#1095#1077#1081#1082#1072
@@ -1120,7 +1131,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-3 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_4_ch4: TcxGridDBColumn
             Caption = '4.1 '#1071#1095#1077#1081#1082#1072
@@ -1135,7 +1146,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-4 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_5_ch4: TcxGridDBColumn
             Caption = '5.1 '#1071#1095#1077#1081#1082#1072
@@ -1150,7 +1161,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-5 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_6_ch4: TcxGridDBColumn
             Caption = '6.1 '#1071#1095#1077#1081#1082#1072
@@ -1165,7 +1176,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-6 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_7_ch4: TcxGridDBColumn
             Caption = '7.1 '#1071#1095#1077#1081#1082#1072
@@ -1180,7 +1191,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_8_ch4: TcxGridDBColumn
             Caption = '8.1 '#1071#1095#1077#1081#1082#1072
@@ -1195,7 +1206,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-8 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_9_ch4: TcxGridDBColumn
             Caption = '9.1 '#1071#1095#1077#1081#1082#1072
@@ -1210,7 +1221,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-9 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_10_ch4: TcxGridDBColumn
             Caption = '10.1 '#1071#1095#1077#1081#1082#1072
@@ -1225,7 +1236,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-10 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_11_ch4: TcxGridDBColumn
             Caption = '11.1 '#1071#1095#1077#1081#1082#1072
@@ -1240,7 +1251,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-11 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
           end
           object PartionCellName_12_ch4: TcxGridDBColumn
             Caption = '12.1 '#1071#1095#1077#1081#1082#1072
@@ -1255,7 +1266,97 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-12 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
-            Width = 166
+            Width = 68
+          end
+          object PartionCellName_13_ch4: TcxGridDBColumn
+            Caption = '13.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-13 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_14_ch4: TcxGridDBColumn
+            Caption = '14.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-14 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_15_ch4: TcxGridDBColumn
+            Caption = '15.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-15 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_16_ch4: TcxGridDBColumn
+            Caption = '16.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_16'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-16 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_17_ch4: TcxGridDBColumn
+            Caption = '17.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_17'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-17 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_18_ch4: TcxGridDBColumn
+            Caption = '18.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_18'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-18 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_19_ch4: TcxGridDBColumn
+            Caption = '19.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_19'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-19 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_20_ch4: TcxGridDBColumn
+            Caption = '20.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_20'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-20 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_21_ch4: TcxGridDBColumn
+            Caption = '21.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_21'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-21 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_22_ch4: TcxGridDBColumn
+            Caption = '22.1 '#1071#1095#1077#1081#1082#1072
+            DataBinding.FieldName = 'PartionCellName_22'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-22 '#1093#1088#1072#1085#1077#1085#1080#1103' ('#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072')'
+            Options.Editing = False
+            Width = 68
           end
           object PartionCellName_real_1_ch4: TcxGridDBColumn
             Caption = '1.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1264,7 +1365,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_2_ch4: TcxGridDBColumn
             Caption = '2.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1273,7 +1374,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-2 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_3_ch4: TcxGridDBColumn
             Caption = '3.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1282,7 +1383,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-3 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_4_ch4: TcxGridDBColumn
             Caption = '4.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1291,7 +1392,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-4 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_5_ch4: TcxGridDBColumn
             Caption = '5.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1300,7 +1401,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-5 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_6_ch4: TcxGridDBColumn
             Caption = '6.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1309,7 +1410,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-6 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_7_ch4: TcxGridDBColumn
             Caption = '7.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1318,7 +1419,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-7 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_8_ch4: TcxGridDBColumn
             Caption = '8.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1327,7 +1428,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-8 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_9_ch4: TcxGridDBColumn
             Caption = '9.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1336,7 +1437,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-9 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_10_ch4: TcxGridDBColumn
             Caption = '10.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1345,7 +1446,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-10 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_11_ch4: TcxGridDBColumn
             Caption = '11.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1354,7 +1455,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-11 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
           end
           object PartionCellName_real_12_ch4: TcxGridDBColumn
             Caption = '12.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
@@ -1363,7 +1464,97 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1071#1095#1077#1081#1082#1072'-12 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
             Options.Editing = False
-            Width = 166
+            Width = 68
+          end
+          object PartionCellName_real_13_ch4: TcxGridDBColumn
+            Caption = '13.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_13'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_14_ch4: TcxGridDBColumn
+            Caption = '14.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_14'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_15_ch4: TcxGridDBColumn
+            Caption = '15.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_15'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_16_ch4: TcxGridDBColumn
+            Caption = '16.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_16'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_17_ch4: TcxGridDBColumn
+            Caption = '17.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_17'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_18_ch4: TcxGridDBColumn
+            Caption = '18.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_18'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_19_ch4: TcxGridDBColumn
+            Caption = '19.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_19'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_20_ch4: TcxGridDBColumn
+            Caption = '20.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_20'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_21_ch4: TcxGridDBColumn
+            Caption = '21.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_21'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
+          end
+          object PartionCellName_real_22_ch4: TcxGridDBColumn
+            Caption = '22.4 '#1071#1095#1077#1081#1082#1072' ('#1089#1090#1072#1088#1090')'
+            DataBinding.FieldName = 'PartionCellName_real_22'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1071#1095#1077#1081#1082#1072'-51 ('#1089#1090#1072#1088#1090', '#1076#1086' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1084#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072'")'
+            Options.Editing = False
+            Width = 68
           end
           object isPartionCell_Close_1_ch4: TcxGridDBColumn
             Caption = '1.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1373,7 +1564,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_2_ch4: TcxGridDBColumn
             Caption = '2.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1383,7 +1574,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-2('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_3_ch4: TcxGridDBColumn
             Caption = '3.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1393,7 +1584,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-3('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_4_ch4: TcxGridDBColumn
             Caption = '4.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1403,7 +1594,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-4('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_5_ch4: TcxGridDBColumn
             Caption = '5.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1413,7 +1604,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-5('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_6_ch4: TcxGridDBColumn
             Caption = '6.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1423,7 +1614,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-6('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_7_ch4: TcxGridDBColumn
             Caption = '7.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1433,7 +1624,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-7('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_8_ch4: TcxGridDBColumn
             Caption = '8.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1443,7 +1634,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-8('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_9_ch4: TcxGridDBColumn
             Caption = '9.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1453,7 +1644,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-9('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_10_ch4: TcxGridDBColumn
             Caption = '10.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1463,7 +1654,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-10('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_11_ch4: TcxGridDBColumn
             Caption = '11.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1473,7 +1664,7 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-11('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
           end
           object isPartionCell_Close_12_ch4: TcxGridDBColumn
             Caption = '12.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
@@ -1483,7 +1674,107 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-12('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
-            Width = 125
+            Width = 68
+          end
+          object isPartionCell_Close_13_ch4: TcxGridDBColumn
+            Caption = '13.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_13'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_14_ch4: TcxGridDBColumn
+            Caption = '14.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_14'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_15_ch4: TcxGridDBColumn
+            Caption = '15.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_15'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_16_ch4: TcxGridDBColumn
+            Caption = '16.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_16'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_17_ch4: TcxGridDBColumn
+            Caption = '17.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_17'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_18_ch4: TcxGridDBColumn
+            Caption = '18.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_18'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_19_ch4: TcxGridDBColumn
+            Caption = '19.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_19'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_20_ch4: TcxGridDBColumn
+            Caption = '20.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_20'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_21_ch4: TcxGridDBColumn
+            Caption = '21.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_21'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
+          end
+          object isPartionCell_Close_22_ch4: TcxGridDBColumn
+            Caption = '22.2 '#1045#1089#1090#1100' '#1054#1089#1090' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPartionCell_Close_22'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1047#1072#1082#1086#1085#1095#1080#1083#1089#1103' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1071#1095#1077#1081#1082#1072'-1('#1076#1072'/'#1085#1077#1090')'
+            Options.Editing = False
+            Width = 68
           end
           object PartionCell_Amount_1_ch4: TcxGridDBColumn
             Caption = '1.3 '#1050#1086#1083'-'#1074#1086
@@ -1630,11 +1921,10 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1172
+    Width = 1186
     Height = 92
     TabOrder = 3
-    ExplicitTop = 8
-    ExplicitWidth = 1172
+    ExplicitWidth = 1173
     ExplicitHeight = 92
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1953,7 +2243,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedMIPC
       StoredProcList = <
         item
@@ -1971,6 +2260,7 @@ inherited SendForm: TSendForm
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
     inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
       ShortCut = 16433
     end
     object actGridDetailToExcel: TdsdGridToExcel [5]
@@ -1999,7 +2289,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       Grid = cxGrid_PartionCell
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -2029,7 +2318,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedMIPC
       StoredProcList = <
         item
@@ -2069,6 +2357,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
     end
     object actMISetUnErasedDetail: TdsdUpdateErased [12]
       Category = 'DSDLib'
@@ -2095,7 +2384,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       StoredProc = spSelect_MI_PartionCell
       StoredProcList = <
         item
@@ -2114,6 +2402,7 @@ inherited SendForm: TSendForm
     end
     inherited actMISetUnErased: TdsdUpdateErased
       TabSheet = tsMain
+      Enabled = False
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
@@ -2156,6 +2445,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowErased: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actShowAllDetail: TBooleanStoredProcAction [18]
       Category = 'DSDLib'
@@ -2180,6 +2470,7 @@ inherited SendForm: TSendForm
     end
     inherited actShowAll: TBooleanStoredProcAction
       TabSheet = tsMain
+      Enabled = False
     end
     object actUpdatePartionCellDS: TdsdUpdateDataSet [20]
       Category = 'DSDLib'
@@ -2429,6 +2720,7 @@ inherited SendForm: TSendForm
     end
     inherited actMovementItemContainer: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
     object actGoodsKindChoicePC: TOpenChoiceForm [34]
       Category = 'DSDLib'
@@ -2511,7 +2803,38 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm [37]
+    object actMICellProtocolOpenForm: TdsdOpenForm [37]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet_PartionCell
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actAssetChoiceForm: TOpenChoiceForm [38]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2538,7 +2861,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actGoodsKindChoice: TOpenChoiceForm [38]
+    object actGoodsKindChoice: TOpenChoiceForm [39]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2565,7 +2888,7 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
-    object actAsset_twoChoiceForm: TOpenChoiceForm [39]
+    object actAsset_twoChoiceForm: TOpenChoiceForm [40]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2594,8 +2917,9 @@ inherited SendForm: TSendForm
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
+      Enabled = False
     end
-    object actAddMaskDetail: TdsdExecStoredProc [43]
+    object actAddMaskDetail: TdsdExecStoredProc [44]
       Category = 'DSDLib'
       TabSheet = cxTabSheetDetail
       MoveParams = <>
@@ -2615,6 +2939,7 @@ inherited SendForm: TSendForm
     end
     inherited actAddMask: TdsdExecStoredProc
       TabSheet = tsMain
+      Enabled = False
     end
     object actOpenPartionCellForm6: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2857,6 +3182,7 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       PostDataSetBeforeExecute = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1090#1080#1102' <'#1054#1057'>'
@@ -3510,6 +3836,7 @@ inherited SendForm: TSendForm
       Category = 'Asset'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = actInsertRecordAsset
@@ -3653,6 +3980,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       ActionList = <
         item
           Action = InsertRecord20202
@@ -3732,6 +4060,7 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
+      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072'>'
       ImageIndex = 26
@@ -3847,7 +4176,6 @@ inherited SendForm: TSendForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1072#1085#1085#1099#1077' '#1103#1095#1077#1077#1082'>'
       ImageIndex = 1
@@ -3960,7 +4288,6 @@ inherited SendForm: TSendForm
       Category = 'OperDatePartner'
       TabSheet = cxTabSheet_PartionCell
       MoveParams = <>
-      Enabled = False
       ActionList = <
         item
           Action = ExecuteDialogUpdatePartionGoodsDate
@@ -4211,27 +4538,7 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintNoGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrder'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSaleOrderTax'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -4240,6 +4547,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMICellProtocol'
         end
         item
           Visible = True
@@ -4376,6 +4687,44 @@ inherited SendForm: TSendForm
     end
     object bbGrid_PartionCelllToExcel: TdxBarButton
       Action = actGrid_PartionCelllToExcel
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintNoGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbMICellProtocol: TdxBarButton
+      Action = actMICellProtocolOpenForm
       Category = 0
     end
   end
@@ -5678,7 +6027,7 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end>
     Left = 864
-    Top = 64
+    Top = 32
   end
   object spInsertMaskMIDetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send_Detail'

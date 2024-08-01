@@ -246,6 +246,10 @@ type
     bbGridChildlToExcel: TdxBarButton;
     bbGrid_PartionCelllToExcel: TdxBarButton;
     cbisRePack: TcxCheckBox;
+    bbsPrint: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    actMICellProtocolOpenForm: TdsdOpenForm;
+    bbMICellProtocol: TdxBarButton;
   private
     { Private declarations }
   public
