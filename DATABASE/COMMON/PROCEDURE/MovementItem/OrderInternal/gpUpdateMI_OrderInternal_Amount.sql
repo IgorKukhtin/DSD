@@ -32,12 +32,15 @@ BEGIN
      -- Склады База + Реализации -> ЦЕХ упаковки
      IF   EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId = 8457 AND MLO.DescId = zc_MovementLinkObject_From())
       AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.ObjectId = 8451 AND MLO.DescId = zc_MovementLinkObject_To())
+      -- !!!только при изменении кол-ва
       AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inId AND MI.Amount <> inAmount)
      THEN
+         -- меняется признак
          outIsCalculated:= FALSE;
          -- сохранили свойство <Изменять факт при пересчете>
          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), inId, FALSE);
      ELSE
+         -- НЕ меняется признак
          outIsCalculated:= COALESCE ((SELECT MIB.ValueData FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId = inId AND MIB.DescId = zc_MIBoolean_Calculated()), TRUE);
      END IF;
 

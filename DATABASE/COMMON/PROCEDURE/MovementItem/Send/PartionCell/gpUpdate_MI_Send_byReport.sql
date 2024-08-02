@@ -22,14 +22,23 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );*/
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+/*DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
+                                                  );*/
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer, Boolean
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar
                                                   );
+                                                  
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
     IN inStartDate             TDateTime,
@@ -64,6 +73,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
 
     IN inOrd                   Integer, --№ пп
     IN inDescId_milo_num       Integer, --№ пп
+    IN inIsRePack              Boolean, --№ пп
    OUT outPartionCellId_last   Integer,
 
  INOUT ioPartionCellName_1     TVarChar, --
@@ -335,6 +345,13 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      THEN
          RAISE EXCEPTION 'Ошибка.В режиме <По ячейкам> нет прав заполнять.<%>', inDescId_milo_num;
      END IF;
+
+     -- если не нашли ошибка
+     IF COALESCE (inIsRePack, FALSE) = TRUE
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для <Перепак.> нет прав заполнять.';
+     END IF;
+     
 
      --  1
      IF ioPartionCellName_1 ILIKE '%отбор%' OR TRIM (ioPartionCellName_1) = '0'

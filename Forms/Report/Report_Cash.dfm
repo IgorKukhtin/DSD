@@ -4,8 +4,10 @@ inherited Report_CashForm: TReport_CashForm
   ClientWidth = 1020
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -143
+  ExplicitTop = -67
   ExplicitWidth = 1036
-  ExplicitHeight = 593
+  ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -217,7 +219,6 @@ inherited Report_CashForm: TReport_CashForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -229,6 +230,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 48
           end
           object GroupName: TcxGridDBColumn
@@ -236,6 +238,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'GroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object BranchName: TcxGridDBColumn
@@ -243,6 +246,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'BranchName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object CashName: TcxGridDBColumn
@@ -268,6 +272,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object MoneyPlaceName: TcxGridDBColumn
@@ -275,6 +280,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object ItemName: TcxGridDBColumn
@@ -282,6 +288,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object ContractCode: TcxGridDBColumn
@@ -299,6 +306,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object ContractTagName: TcxGridDBColumn
@@ -350,6 +358,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'InfoMoneyName_all'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object UnitCode: TcxGridDBColumn
@@ -358,6 +367,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object UnitName: TcxGridDBColumn
@@ -365,6 +375,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object StartAmount: TcxGridDBColumn
@@ -391,6 +402,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object StartAmountK: TcxGridDBColumn
@@ -404,6 +416,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object DebetSumm: TcxGridDBColumn
@@ -456,6 +469,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object EndAmountK: TcxGridDBColumn
@@ -469,6 +483,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Summ_Currency: TcxGridDBColumn
@@ -493,6 +508,7 @@ inherited Report_CashForm: TReport_CashForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072' ('#1079#1072#1090#1088#1072#1090#1099' - '#1089#1090#1072#1090#1100#1103' '#1054#1055#1080#1059')'
+            Options.Editing = False
             Width = 70
           end
           object StartAmount_Currency: TcxGridDBColumn
@@ -606,6 +622,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object ProfitLossGroupCode: TcxGridDBColumn
@@ -614,6 +631,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object ProfitLossGroupName: TcxGridDBColumn
@@ -622,6 +640,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object ProfitLossDirectionCode: TcxGridDBColumn
@@ -630,6 +649,7 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object ProfitLossDirectionName: TcxGridDBColumn
@@ -637,6 +657,7 @@ inherited Report_CashForm: TReport_CashForm
             DataBinding.FieldName = 'ProfitLossDirectionName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 180
           end
           object AccountName: TcxGridDBColumn
@@ -653,7 +674,22 @@ inherited Report_CashForm: TReport_CashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             VisibleForCustomization = False
+            Width = 55
+          end
+          object ContainerId: TcxGridDBColumn
+            DataBinding.FieldName = 'ContainerId'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
         end
@@ -794,7 +830,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -805,7 +841,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -870,7 +906,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -881,7 +917,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -946,7 +982,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -957,7 +993,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1029,7 +1065,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'StartDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','
@@ -1040,7 +1076,7 @@ inherited Report_CashForm: TReport_CashForm
           FromParam.DataType = ftDateTime
           FromParam.MultiSelectSeparator = ','
           ToParam.Name = 'EndDate'
-          ToParam.Value = 'NULL'
+          ToParam.Value = Null
           ToParam.DataType = ftDateTime
           ToParam.ParamType = ptInputOutput
           ToParam.MultiSelectSeparator = ','

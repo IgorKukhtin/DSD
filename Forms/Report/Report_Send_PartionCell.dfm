@@ -84,7 +84,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           object isRePack: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1087#1072#1082
             DataBinding.FieldName = 'isRePack'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1352,7 +1351,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Width = 55
           end
           object PartionCellName_srch: TcxGridDBColumn
-            Caption = #1071#1095#1077#1081#1082#1072
+            Caption = '***'#1071#1095#1077#1081#1082#1080' ('#1087#1086#1080#1089#1082')'
             DataBinding.FieldName = 'PartionCellName_srch'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -3409,6 +3408,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'DescId_milo_num'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsRePack'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isRePack'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
