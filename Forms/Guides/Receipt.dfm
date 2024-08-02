@@ -20,12 +20,14 @@ object ReceiptForm: TReceiptForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 61
+    Top = 67
     Width = 1065
-    Height = 271
+    Height = 265
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 61
+    ExplicitHeight = 271
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -751,7 +753,6 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 77
       end
       object EndDateChild: TcxGridDBColumn
@@ -760,7 +761,6 @@ object ReceiptForm: TReceiptForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 77
       end
       object InfoMoneyCodeChild: TcxGridDBColumn
@@ -959,7 +959,7 @@ object ReceiptForm: TReceiptForm
     Left = 0
     Top = 0
     Width = 1065
-    Height = 35
+    Height = 41
     Align = alTop
     TabOrder = 4
     object cxLabel3: TcxLabel
@@ -994,17 +994,37 @@ object ReceiptForm: TReceiptForm
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 173
+      Width = 124
+    end
+    object cbSave: TcxCheckBox
+      Left = 576
+      Top = 8
+      Caption = 'C'#1086#1093#1088#1072#1085#1080#1090#1100' '#1080#1089#1090#1086#1088#1080#1102' '#1076#1083#1103' '#1088#1072#1089#1093#1086#1076#1072
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 4
+      Width = 196
+    end
+    object cbDel: TcxCheckBox
+      Left = 778
+      Top = 8
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1080#1089#1090#1086#1088#1080#1102' '#1076#1083#1103' '#1088#1072#1089#1093#1086#1076#1072
+      ParentShowHint = False
+      Properties.ReadOnly = False
+      ShowHint = True
+      TabOrder = 5
+      Width = 196
     end
   end
   object cxLabel2: TcxLabel
-    Left = 755
-    Top = 9
+    Left = 992
+    Top = 8
     Caption = #1069#1090#1072#1087#1099' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072':'
     Visible = False
   end
   object edReceiptLevel: TcxButtonEdit
-    Left = 872
+    Left = 1016
     Top = 8
     Properties.Buttons = <
       item
@@ -2188,21 +2208,37 @@ object ReceiptForm: TReceiptForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDate'
+        Name = 'inisSave'
         Value = Null
-        Component = ChildCDS
-        ComponentItem = 'StartDate'
-        DataType = ftDateTime
+        Component = cbSave
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEndDate'
+        Name = 'inisDel'
+        Value = Null
+        Component = cbDel
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioStartDate'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioEndDate'
         Value = Null
         Component = ChildCDS
         ComponentItem = 'EndDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
@@ -2655,7 +2691,7 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 672
+    Left = 176
     Top = 3
   end
   object GuidesGoodsKind: TdsdGuides
@@ -2684,8 +2720,8 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 792
-    Top = 3
+    Left = 424
+    Top = 11
   end
   object spUpdateDisabled_yes: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_isBoolean'

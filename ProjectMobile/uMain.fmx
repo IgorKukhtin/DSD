@@ -22751,10 +22751,6 @@ object frmMain: TfrmMain
     Top = 266
     GestureData = <
       item
-        Control = tcDocuments
-        Collection = <>
-      end
-      item
         Control = tcPartnerInfo
         Collection = <
           item
@@ -22765,6 +22761,10 @@ object frmMain: TfrmMain
             Action = ChangePartnerInfoRight
             GestureID = sgiRight
           end>
+      end
+      item
+        Control = tcDocuments
+        Collection = <>
       end>
   end
   object acMain: TActionList
@@ -24014,5 +24014,12 @@ object frmMain: TfrmMain
     ScopeMappings = <>
     Left = 96
     Top = 212
+  end
+  object TimerPopupClose: TTimer
+    Enabled = False
+    Interval = 200
+    OnTimer = TimerPopupCloseTimer
+    Left = 167
+    Top = 219
   end
 end

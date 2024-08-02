@@ -3,6 +3,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boolean, Boolean, Boolean, TDateTime, TDateTime, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
@@ -11,8 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ReceiptChild(
     IN inIsWeightMain    Boolean   , -- Входит в осн. сырье (100 кг.)
     IN inIsTaxExit       Boolean   , -- Зависит от % выхода
  --   IN inIsReal          Boolean   , -- Зависит от факта
-    IN inStartDate       TDateTime , -- Начальная дата
-    IN inEndDate         TDateTime , -- Конечная дата
+    IN inisSave          Boolean   , --
+    IN inisDel           Boolean   , --
+ INOUT ioStartDate       TDateTime , -- Начальная дата
+ INOUT ioEndDate         TDateTime , -- Конечная дата
     IN inComment         TVarChar  , -- Комментарий
     IN inReceiptId       Integer   , -- ссылка на Рецептуры
     IN inReceiptLevelId  Integer   , -- этапы производства
@@ -28,6 +31,12 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ReceiptChild());
+
+   --проверка
+   IF COALESCE (inisSave,FALSE) = TRUE AND COALESCE (inisDel,FALSE) = TRUE
+   THEN
+       RAISE EXCEPTION 'Ошибка.Может быть выбрано только одно значание Cохранить или Удалить историю для расхода.';
+   END IF;
 
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;
@@ -66,10 +75,25 @@ BEGIN
    -- сохранили свойство <Зависит от факта>
    --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_Real(), ioId, inIsReal);
 
-   -- сохранили свойство <Начальная дата>
-   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
-   -- сохранили свойство <Конечная дата>
-   -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, inEndDate);
+   
+   IF COALESCE (inisSave,FALSE) = TRUE
+      THEN   
+          -- сохранили свойство <Начальная дата>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, ioStartDate);
+          -- сохранили свойство <Конечная дата>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, ioEndDate);
+   END IF;
+   IF COALESCE (inisDel,FALSE) = TRUE
+      THEN   
+          -- сохранили свойство <Начальная дата>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, NULL);
+          -- сохранили свойство <Конечная дата>
+          PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, NULL);
+   END IF;
+   -- возвращаем сохраненные значения 
+   ioStartDate := (SELECT ObjectDate.ValueData FROM ObjectDate WHERE ObjectDate.DescId = zc_ObjectDate_ReceiptChild_Start() AND ObjectDate.ObjectId = ioId);
+   ioEndDate   := (SELECT ObjectDate.ValueData FROM ObjectDate WHERE ObjectDate.DescId = zc_ObjectDate_ReceiptChild_End() AND ObjectDate.ObjectId = ioId);
+   
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptChild_Comment(), ioId, inComment);
 
@@ -81,7 +105,13 @@ BEGIN
 
    -- сохранили протокол
    --PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);  
+
+   
+   if vbUserId = 9457
+   then   
+        RAISE EXCEPTION 'Test.OK. <%> , <%>', ioStartDate, ioEndDate;
+   end if;
 
 END;
 $BODY$

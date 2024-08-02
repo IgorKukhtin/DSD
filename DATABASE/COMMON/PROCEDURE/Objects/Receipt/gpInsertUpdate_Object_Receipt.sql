@@ -175,8 +175,10 @@ BEGIN
                                              , inValue              := tmp.Value
                                              , inIsWeightMain       := tmp.IsWeightMain
                                              , inIsTaxExit          := tmp.IsTaxExit
-                                             , inStartDate          := tmp.StartDate
-                                             , inEndDate            := tmp.EndDate
+                                             , inisSave             := TRUE
+                                             , inisDel              := FALSE
+                                             , ioStartDate          := tmp.StartDate
+                                             , ioEndDate            := tmp.EndDate
                                              , inComment            := tmp.Comment 
                                              , inReceiptId          := ioId            --tmp.ReceiptId
                                              , inReceiptLevelId     := tmp.ReceiptLevelId

@@ -4798,7 +4798,7 @@ end;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
 
@@ -4864,7 +4864,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
-
+ exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
   exit;
