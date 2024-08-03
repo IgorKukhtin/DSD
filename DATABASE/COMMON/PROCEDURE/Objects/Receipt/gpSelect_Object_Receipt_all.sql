@@ -22,7 +22,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Co
                MeasureName TVarChar
              , Code_Parent Integer, Name_Parent TVarChar, ReceiptCode_Parent TVarChar, isMain_Parent Boolean
              , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, MeasureName_Parent TVarChar
-             , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar
+             , GoodsKindName_Parent TVarChar, GoodsKindCompleteName_Parent TVarChar  
+             , Code_Parent_old Integer, Name_Parent_old TVarChar, ReceiptCode_Parent_old TVarChar 
+             , GoodsCode_Parent_old Integer, GoodsName_Parent_old TVarChar 
+             , GoodsKindName_Parent_old  TVarChar, EndDate_Parent_old TDateTime                          
              , GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -109,6 +112,14 @@ BEGIN
          , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
          , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
 
+         , Object_Receipt_Parent_old.ObjectCode   ::Integer    AS Code_Parent_old
+         , Object_Receipt_Parent_old.ValueData    ::TVarChar   AS Name_Parent_old
+         , ObjectString_Code_Parent_old.ValueData ::TVarChar   AS ReceiptCode_Parent_old
+         , Object_Goods_Parent_old.ObjectCode     ::Integer    AS GoodsCode_Parent_old
+         , Object_Goods_Parent_old.ValueData      ::TVarChar   AS GoodsName_Parent_old
+         , Object_GoodsKind_Parent_old.ValueData  ::TVarChar   AS GoodsKindName_Parent_old
+         , ObjectDate_End_Parent_old.ValueData    ::TDateTime  AS EndDate_Parent_old
+                                  
          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
          , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
          , Object_GoodsTag.ValueData                   AS GoodsTagName
@@ -183,6 +194,31 @@ BEGIN
                                ON ObjectLink_Receipt_GoodsKind_Parent.ObjectId = Object_Receipt_Parent.Id
                               AND ObjectLink_Receipt_GoodsKind_Parent.DescId = zc_ObjectLink_Receipt_GoodsKind()
           LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = ObjectLink_Receipt_GoodsKind_Parent.ChildObjectId
+
+          --
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_old
+                               ON ObjectLink_Receipt_Parent_old.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Receipt_Parent_old.DescId = zc_ObjectLink_Receipt_Parent_old()
+          LEFT JOIN Object AS Object_Receipt_Parent_old ON Object_Receipt_Parent_old.Id = ObjectLink_Receipt_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Code_Parent_old
+                                 ON ObjectString_Code_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                                AND ObjectString_Code_Parent_old.DescId = zc_ObjectString_Receipt_Code()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent_old
+                               ON ObjectLink_Receipt_Goods_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                              AND ObjectLink_Receipt_Goods_Parent_old.DescId = zc_ObjectLink_Receipt_Goods()
+          LEFT JOIN Object AS Object_Goods_Parent_old ON Object_Goods_Parent_old.Id = ObjectLink_Receipt_Goods_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_old
+                               ON ObjectLink_Receipt_GoodsKind_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                              AND ObjectLink_Receipt_GoodsKind_Parent_old.DescId = zc_ObjectLink_Receipt_GoodsKind()
+          LEFT JOIN Object AS Object_GoodsKind_Parent_old ON Object_GoodsKind_Parent_old.Id = ObjectLink_Receipt_GoodsKind_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectDate AS ObjectDate_End_Parent_old
+                               ON ObjectDate_End_Parent_old.ObjectId = Object_Receipt.Id
+                              AND ObjectDate_End_Parent_old.DescId = zc_ObjectDate_Receipt_End_Parent_old()
+          ---
 
           LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete_Parent
                                ON ObjectLink_Receipt_GoodsKindComplete_Parent.ObjectId = Object_Receipt_Parent.Id
@@ -355,6 +391,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 03.08.24        *
  14.09.20        * _all
  10.09.20        * add isDisabled
  21.03.15                                       * add inReceiptId
@@ -366,3 +403,5 @@ $BODY$
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Receipt_all (0, 0, 0, FALSE, zfCalc_UserAdmin())
+
+select * from gpSelect_Object_Receipt_all(inReceiptId := 0 , inGoodsId := 112643 , inGoodsKindId := 0 , inShowAll := 'False' ,  inSession := '9457');

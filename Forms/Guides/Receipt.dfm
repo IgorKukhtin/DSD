@@ -26,8 +26,6 @@ object ReceiptForm: TReceiptForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 61
-    ExplicitHeight = 271
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -544,6 +542,65 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 45
+      end
+      object ReceiptCode_Parent_old: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1075#1083'. '#1088#1077#1094#1077#1087#1090'. ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'ReceiptCode_Parent_old'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object Code_Parent_old: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1075#1083'. '#1088#1077#1094#1077#1087#1090'. ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'Code_Parent_old'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object Name_Parent_old: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1072#1103' '#1088#1077#1094#1077#1087#1090#1091#1088#1072' ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'Name_Parent_old'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object GoodsCode_Parent_old: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'. ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'GoodsCode_Parent_old'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object GoodsName_Parent_old: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'GoodsName_Parent_old'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object GoodsKindName_Parent_old: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'GoodsKindName_Parent_old'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
+      object EndDate_Parent_old: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1076#1086' ('#1080#1089#1090#1086#1088#1080#1103')'
+        DataBinding.FieldName = 'EndDate_Parent_old'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 69
       end
       object IsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
