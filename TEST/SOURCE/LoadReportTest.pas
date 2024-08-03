@@ -141,6 +141,8 @@ var
  i : integer;
 begin
 
+  LoadReportFromFile('Печать паспорта ячейки(строка)', ReportPath + '\Товарный Учет\Печать паспорта ячейки(строка).fr3');
+  exit;
   LoadReportFromFile('Печать_ ЯчеекОтбора', ReportPath + '\Справочники\Печать_ ЯчеекОтбора.fr3');
   {exit;
 

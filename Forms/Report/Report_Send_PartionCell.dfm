@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -2384,8 +2383,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
-      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080'('#1089#1090#1088#1086#1082#1072')'
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080'('#1089#1090#1088#1086#1082#1072')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2394,7 +2393,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       PrinterNameParam.MultiSelectSeparator = ','
       PreviewWindowMaximized = False
     end
-    object actPrint_Pasport_test: TdsdPrintAction
+    object actPrint_Pasport_list: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -2410,13 +2409,13 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
-      StoredProc = spSelectPrintPasport
+      StoredProc = spSelectPrintPasportList
       StoredProcList = <
         item
-          StoredProc = spSelectPrintPasport
+          StoredProc = spSelectPrintPasportList
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1077#1082
+      Hint = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1077#1082
       ImageIndex = 3
       DataSets = <
         item
@@ -2432,8 +2431,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
-      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080
+      ReportName = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080'('#1089#1090#1088#1086#1082#1072')'
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100' '#1087#1072#1089#1087#1086#1088#1090#1072' '#1103#1095#1077#1081#1082#1080'('#1089#1090#1088#1086#1082#1072')'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2450,7 +2449,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
           Action = actUpdate_MI_Send_byReport_test
         end
         item
-          Action = actPrint_Pasport_test
+          Action = actPrint_Pasport_list
         end>
       Caption = 'mactTestPrint'
     end
@@ -2689,11 +2688,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbPrint_Pasport'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbPrint: TdxBarButton
@@ -2723,7 +2726,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Category = 0
     end
     object bbPrint_Pasport: TdxBarButton
-      Action = actPrint_Pasport
+      Action = actPrint_Pasport_list
       Category = 0
     end
     object bbOpenReport_PartionCell_history: TdxBarButton
@@ -3794,5 +3797,66 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     PackSize = 1
     Left = 520
     Top = 248
+  end
+  object spSelectPrintPasportList: TdsdStoredProc
+    StoredProcName = 'gpReport_PartionCell_PasportPrint_list'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionCellId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'PartionCellId_1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartionGoodsDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsCell'
+        Value = Null
+        Component = cbisCell
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 288
   end
 end

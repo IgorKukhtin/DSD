@@ -92,7 +92,7 @@ type
     actPrint_Pasport: TdsdPrintAction;
     bbPrint_Pasport: TdxBarButton;
     mactTestPrint5: TMultiAction;
-    actPrint_Pasport_test: TdsdPrintAction;
+    actPrint_Pasport_list: TdsdPrintAction;
     actUpdate_MI_Send_byReport_test: TdsdExecStoredProc;
     actContinueAction: TdsdContinueAction;
     macPrint_New: TMultiAction;
@@ -122,6 +122,7 @@ type
     bbPrintChoiceCell: TdxBarButton;
     ItemName: TcxGridDBColumn;
     isRePack: TcxGridDBColumn;
+    spSelectPrintPasportList: TdsdStoredProc;
   private
     { Private declarations }
   public
