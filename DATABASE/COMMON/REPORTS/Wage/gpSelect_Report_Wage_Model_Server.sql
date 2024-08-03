@@ -189,9 +189,9 @@ BEGIN
        ,Object_SelectKind.ValueData                         AS SelectKindName
        ,CASE WHEN MovementDesc.Id IN (zc_Movement_Send(), zc_Movement_SendAsset())
                   THEN FALSE
-             WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_InHead()) -- Кол-во приход
+             WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_InAmountForm()) -- Кол-во приход
                   THEN TRUE
-              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight(), zc_Enum_SelectKind_OutHead()) -- Кол-во расход
+              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_OutAmount(), zc_Enum_SelectKind_OutWeight(), zc_Enum_SelectKind_OutHead(), zc_Enum_SelectKind_OutAmountForm()) -- Кол-во расход
                   THEN FALSE
         END                                                 AS isActive              -- Тип выбора данных
        ,ObjectFloat_Ratio.ValueData                         AS Ratio                 -- Коэффициент для выбора данных
@@ -432,8 +432,188 @@ BEGIN
                      END AS GoodsId_to
 
                     ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
-                                     THEN MovementItemContainer.Amount
-                                ELSE -1 * MovementItemContainer.Amount
+                                     THEN MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
+                                ELSE -1 * MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
+                          END)::TFloat as Amount
+
+                    , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                           ELSE MovementItemContainer.ObjectIntId_Analyzer
+                      END AS GoodsKind_FromId
+
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                           ELSE OL_GoodsKindComplete_master.ChildObjectId
+                      END AS GoodsKindComplete_FromId
+
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer
+                           ELSE CLO_GoodsKind.ObjectId
+                      END AS GoodsKind_ToId
+
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId
+                           ELSE OL_GoodsKindComplete.ChildObjectId
+                      END AS GoodsKindComplete_ToId
+
+                    , CASE WHEN MovementItemContainer.IsActive = FALSE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END AS StorageLineId_From
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END AS StorageLineId_To
+
+                 FROM (SELECT Setting.MovementDescId
+                            , MAX (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                             THEN zc_Enum_SelectKind_InAmountForm()
+                                        ELSE 0
+                                   END) AS SelectKindId
+                       FROM Setting_Wage_1 as Setting
+                       WHERE Setting.MovementDescId IS NOT NULL
+                         AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
+                                                          zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
+                                                          -- Стикеровка
+                                                        , zc_Enum_SelectKind_MI_MasterSh()
+                                                          -- Значение для клдв.
+                                                        , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
+                                                          -- Значение возврат на филилал
+                                                        , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
+                                                          -- Значение возврат на Днепр
+                                                        , zc_Enum_SelectKind_MI_Master_WareOut()
+                                                          -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
+                                                        , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
+                                                          -- формовка 
+                                                        --, zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm()
+                                                         )
+                       GROUP BY Setting.MovementDescId
+                      ) AS SettingDesc
+                      INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
+                                                      AND MovementItemContainer.DescId         = zc_MIContainer_Count()
+                                                      AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                      AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
+                                                      -- !!!временное решение!!!
+                                                      AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
+                                                    --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
+
+                      -- формовка 
+                      LEFT OUTER JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
+                                                                         AND MIF_AmountForm.DescId         = zc_MIFloat_AmountForm()
+                                                                         AND MIF_AmountForm.ValueData      > 0
+                                                                         AND SettingDesc.SelectKindId      = zc_Enum_SelectKind_InAmountForm()
+
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
+                                                                                    AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
+                      LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
+                                                                               AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                      LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                          AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                      LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete ON OL_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                                        AND OL_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                      LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
+                                                                            AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                      LEFT JOIN MovementLinkObject AS MLO_PersonalGroup
+                                                   ON MLO_PersonalGroup.MovementId = MovementItemContainer.MovementId
+                                                  AND MLO_PersonalGroup.DescId = zc_MovementLinkObject_PersonalGroup()
+                      LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
+                                                                                AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
+                      LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
+                                               AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                               AND MovementBoolean_Peresort.ValueData  = TRUE
+                 WHERE MovementBoolean_Peresort.MovementId IS NULL
+                 GROUP BY
+                     MovementItemContainer.OperDate
+                    ,MovementItemContainer.MovementId
+                    ,MovementItemContainer.MovementDescId
+                    ,MovementItemContainer.IsActive
+                    ,MLO_DocumentKind.ObjectId
+                    ,MLO_PersonalGroup.ObjectId
+                    ,MovementItemContainer.ObjectIntId_Analyzer
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectExtId_Analyzer
+                     ELSE MovementItemContainer.WhereObjectId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.WhereObjectId_Analyzer
+                     ELSE MovementItemContainer.ObjectExtId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                     ELSE MovementItemContainer.ObjectId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectId_Analyzer
+                     ELSE Container.ObjectId
+                     END
+
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                           ELSE MovementItemContainer.ObjectIntId_Analyzer
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                           ELSE OL_GoodsKindComplete_master.ChildObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer
+                           ELSE CLO_GoodsKind.ObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId
+                           ELSE OL_GoodsKindComplete.ChildObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = FALSE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END
+                UNION ALL
+                 SELECT
+                     MovementItemContainer.OperDate + INTERVAL '1 DAY' AS OperDate
+                    ,MovementItemContainer.MovementId
+                    ,DATE_PART ('ISODOW', MovementItemContainer.OperDate + INTERVAL '1 DAY')  AS OperDate_num
+                    ,MovementItemContainer.MovementDescId
+                    ,MovementItemContainer.IsActive
+
+                    ,COALESCE (MLO_DocumentKind.ObjectId, 0)  AS DocumentKindId
+                    ,COALESCE (MLO_PersonalGroup.ObjectId, 0) AS PersonalGroupId
+
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectExtId_Analyzer
+                          ELSE MovementItemContainer.WhereObjectId_Analyzer
+                     END AS FromId
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.WhereObjectId_Analyzer
+                          ELSE MovementItemContainer.ObjectExtId_Analyzer
+                     END AS ToId
+
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                          ELSE MovementItemContainer.ObjectId_Analyzer
+                     END AS GoodsId_from
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectId_Analyzer
+                          ELSE Container.ObjectId
+                     END AS GoodsId_to
+
+                    ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
+                                     THEN COALESCE (MIF_AmountForm.ValueData, 0)
+                                ELSE COALESCE (MIF_AmountForm.ValueData, 0)
                           END)::TFloat as Amount
 
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
@@ -469,29 +649,24 @@ BEGIN
 
                  FROM (SELECT DISTINCT
                               Setting.MovementDescId
-                       FROM Setting_Wage_1 as Setting
+                       FROM Setting_Wage_1 AS Setting
                        WHERE Setting.MovementDescId IS NOT NULL
-                         AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
-                                                          zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
-                                                          -- Стикеровка
-                                                        , zc_Enum_SelectKind_MI_MasterSh()
-                                                          -- Значение для клдв.
-                                                        , zc_Enum_SelectKind_MovementCount_Ware(), zc_Enum_SelectKind_MI_MasterCount_Ware(), zc_Enum_SelectKind_MI_Master_Ware()
-                                                          -- Значение возврат на филилал
-                                                        , zc_Enum_SelectKind_MovementCount_WareIn(), zc_Enum_SelectKind_MI_Master_WareIn()
-                                                          -- Значение возврат на Днепр
-                                                        , zc_Enum_SelectKind_MI_Master_WareOut()
-                                                          -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                                        , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc(), zc_Enum_SelectKind_MovementReestrPartner()
-                                                         )
+                         AND Setting.SelectKindId IN (-- формовка 
+                                                      zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm()
+                                                     )
                       ) AS SettingDesc
                       INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
                                                       AND MovementItemContainer.DescId         = zc_MIContainer_Count()
-                                                      AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                      AND MovementItemContainer.OperDate BETWEEN inStartDate - INTERVAL '1 DAY' AND inEndDate - INTERVAL '1 DAY'
                                                       AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
                                                       -- !!!временное решение!!!
                                                       AND MovementItemContainer.MovementId NOT IN (SELECT Movement_Report_Wage_Model_View.Id FROM Movement_Report_Wage_Model_View)
                                                     --AND (MovementItemContainer.MovementId = 15479819 OR inSession <> '5')
+                                                    
+                      -- формовка 
+                      INNER JOIN MovementItemFloat AS MIF_AmountForm ON MIF_AmountForm.MovementItemId = MovementItemContainer.MovementItemId
+                                                                    AND MIF_AmountForm.DescId         = zc_MIFloat_AmountForm()
+                                                                    AND MIF_AmountForm.ValueData      > 0
 
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
