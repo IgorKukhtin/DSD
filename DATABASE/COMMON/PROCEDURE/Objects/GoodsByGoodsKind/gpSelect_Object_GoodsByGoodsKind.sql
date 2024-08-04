@@ -59,6 +59,11 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WmsCodeCalc_Sh    TVarChar 
              , WmsCodeCalc_Nom   TVarChar 
              , WmsCodeCalc_Ves   TVarChar
+             , GoodsCode_basis_old Integer  
+             , GoodsName_basis_old TVarChar 
+             , GoodsCode_main_old  Integer  
+             , GoodsName_main_old  TVarChar 
+             , EndDate_old  TDateTime
               )
 AS
 $BODY$
@@ -285,6 +290,12 @@ BEGIN
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar 
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar 
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Ves  :: TVarChar
+
+           , Object_Goods_basis_old.ObjectCode      ::Integer    AS GoodsCode_basis_old
+           , Object_Goods_basis_old.ValueData       ::TVarChar   AS GoodsName_basis_old
+           , Object_Goods_main_old.ObjectCode       ::Integer    AS GoodsCode_main_old
+           , Object_Goods_main_old.ValueData        ::TVarChar   AS GoodsName_main_old
+           , ObjectDate_End_old.ValueData           ::TDateTime  AS EndDate_old
 
        FROM tmpGoodsByGoodsKind AS Object_GoodsByGoodsKind_View
             /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis
@@ -536,6 +547,19 @@ BEGIN
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindNew.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindNew()
             LEFT JOIN Object AS Object_GoodsKindNew ON Object_GoodsKindNew.Id = ObjectLink_GoodsByGoodsKind_GoodsKindNew.ChildObjectId
 
+            --old
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsBasis_old
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsBasis_old.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsBasis_old.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsBasis_old()
+            LEFT JOIN Object AS Object_Goods_basis_old ON Object_Goods_basis_old.Id = ObjectLink_GoodsByGoodsKind_GoodsBasis_old.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsMain_old
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsMain_old.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsMain_old.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsMain_old()
+            LEFT JOIN Object AS Object_Goods_main_old ON Object_Goods_main_old.Id = ObjectLink_GoodsByGoodsKind_GoodsMain_old.ChildObjectId
+
+            LEFT JOIN ObjectDate AS ObjectDate_End_old
+                                 ON ObjectDate_End_old.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectDate_End_old.DescId = zc_ObjectDate_GoodsByGoodsKind_End_old()
             --
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Receipt
                                  ON ObjectLink_GoodsByGoodsKind_Receipt.ObjectId = Object_GoodsByGoodsKind_View.Id

@@ -279,8 +279,16 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsGroup_UKTZED_new() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsGroup_UKTZED_new'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsGroup(), 'zc_ObjectDate_GoodsGroup_UKTZED_new', 'дата с которой действует новый Код УКТ ЗЕД' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsGroup_UKTZED_new');
+
  
+ CREATE OR REPLACE FUNCTION zc_ObjectDate_GoodsByGoodsKind_End_old() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_End_old'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsByGoodsKind(), 'zc_ObjectDate_GoodsByGoodsKind_End_old', 'Дата до (история)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_GoodsByGoodsKind_End_old');
  
+
+
+
+
  
 
 --!!!FARMACY

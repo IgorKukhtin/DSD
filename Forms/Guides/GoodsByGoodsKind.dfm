@@ -369,6 +369,47 @@ inherited GoodsByGoodsKindForm: TGoodsByGoodsKindForm
             Options.Editing = False
             Width = 120
           end
+          object GoodsCode_basis_old: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1094#1077#1093') ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'GoodsCode_basis_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
+          object GoodsName_basis_old: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1094#1077#1093') ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'GoodsName_basis_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsCode_main_old: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1085#1072' '#1091#1087#1072#1082'.) ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'GoodsCode_main_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
+          object GoodsName_main_old: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1085#1072' '#1091#1087#1072#1082'.) ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'GoodsName_main_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object EndDate_old: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086' ('#1080#1089#1090#1086#1088#1080#1103')'
+            DataBinding.FieldName = 'EndDate_old'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086' '#1082#1072#1082#1086#1081' '#1076#1072#1090#1099' '#1074#1082#1083#1102#1095#1080#1090#1077#1083#1100#1085#1086' '#1076#1077#1081#1089#1090#1074#1086#1074#1072#1083#1080' '
+            Options.Editing = False
+            Width = 69
+          end
           object isCheck_basis: TcxGridDBColumn
             Caption = #1088#1072#1079#1085'. ('#1094#1077#1093')'
             DataBinding.FieldName = 'isCheck_basis'
