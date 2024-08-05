@@ -26,7 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_OrderClient());
      vbUserId := lpGetUserBySession (inSession);
-     
+ 
      vbVATPercent := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_VATPercent());
      
          -- Получаем сохраненные параметры - для расчета в эдит форме
@@ -50,11 +50,10 @@ BEGIN
          END IF;
       */
 
-
-          vbAmount_calc    := (SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_Amount_calc()); --(SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = inId );
-          vbOperPrice_calc := (SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_OperPrice_calc());
-          vbSummMVAT_calc  := (SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummMVAT_calc());
-          vbSummPVAT_calc  := (SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummPVAT_calc());
+          vbAmount_calc    := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_Amount_calc()), 1)::TFloat; --(SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = inId );
+          vbOperPrice_calc := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_OperPrice_calc()), 0)::TFloat;
+          vbSummMVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummMVAT_calc()), 0)::TFloat;
+          vbSummPVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummPVAT_calc()), 0)::TFloat;
         
           outSummVAT := (ioSummPVAT - ioSummMVAT);
          -- ioMVAT
@@ -112,12 +111,14 @@ BEGIN
               
          END IF;      
          
-         --
-           
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount_calc(), inId, inAmount);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_calc(), inId, ioOperPrice);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMVAT_calc(), inId, ioSummMVAT);
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT_calc(), inId, ioSummPVAT);
+         -- 
+         IF COALESCE (inId,0) <> 0
+         THEN
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Amount_calc(), inId, inAmount);
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_calc(), inId, ioOperPrice);
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMVAT_calc(), inId, ioSummMVAT);
+            PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT_calc(), inId, ioSummPVAT);
+         END IF;
 
 END;
 $BODY$
