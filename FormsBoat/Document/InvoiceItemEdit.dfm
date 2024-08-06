@@ -489,6 +489,38 @@
         Component = ceSummа_VAT
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummMVAT'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummMVAT_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPVAT'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummPVAT_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -673,6 +705,42 @@
         Value = 0.000000000000000000
         Component = ceSummа_VAT
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummMVAT_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummMVAT_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummPVAT_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummPVAT_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

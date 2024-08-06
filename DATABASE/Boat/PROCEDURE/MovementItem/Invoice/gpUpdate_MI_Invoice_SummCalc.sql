@@ -2,6 +2,7 @@
 -- Function: gpUpdate_MI_Invoice_SummCalc()
 
 DROP FUNCTION IF EXISTS gpUpdate_MI_Invoice_SummCalc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_Invoice_SummCalc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Invoice_SummCalc(
     IN inId                      Integer   , -- Ключ объекта <Документ>  
@@ -10,7 +11,13 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Invoice_SummCalc(
  INOUT ioOperPrice               TFloat    , -- 
  INOUT ioSummMVAT                TFloat    , -- 
  INOUT ioSummPVAT                TFloat    , -- 
-   OUT outSummVAT                TFloat    , -- 
+   OUT outSummVAT                TFloat    , --
+ --для расчета  
+ INOUT ioAmount_calc             TFloat    , --
+ INOUT ioOperPrice_calc          TFloat    , -- 
+ INOUT ioSummMVAT_calc           TFloat    , -- 
+ INOUT ioSummPVAT_calc           TFloat    , --
+
     IN inSession                 TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -29,32 +36,12 @@ BEGIN
  
      vbVATPercent := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_VATPercent());
      
-         -- Получаем сохраненные параметры - для расчета в эдит форме
-     /*    IF inIsEdit = FALSE
-         THEN
-          vbDiscountTax    := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_DiscountTax());
-          vbDiscountNextTax:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_DiscountNextTax());
-          vbSummTax        := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummTax());
-          
-          vbTotalSumm      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TotalSumm());
-          vbTransportSumm_load      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_TransportSumm_load());
-          vbVATPercent     := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_VATPercent()); 
-          vbisVat          := FALSE;
-          --vbBasis_summ_transport    := (COALESCE (vbTotalSumm,0) - COALESCE (vbSummTax,0) + COALESCE (vbTransportSumm_load,0));
-          --vbBasisWVAT_summ_transport:= zfCalc_SummWVAT (vbBasis_summ_transport, vbVATPercent);
-          --vbSummReal       := (COALESCE (vbTotalSumm,0) - COALESCE (vbSummTax,0));    
-          vbBasis_summ_transport    := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_Basis_summ_transport_calc());
-          vbBasisWVAT_summ_transport:= (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_BasisWVAT_summ_transport_calc());
-          vbSummReal       := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inId AND MF.DescId = zc_MovementFloat_SummReal_calc());
-          vbisVat          := (SELECT MB.ValueData FROM MovementBoolean AS MB WHERE MB.MovementId = inId AND MB.DescId = zc_MovementBoolean_isVat_calc());
-         END IF;
-      */
-
-          vbAmount_calc    := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_Amount_calc()), 1)::TFloat; --(SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = inId );
-          vbOperPrice_calc := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_OperPrice_calc()), 0)::TFloat;
-          vbSummMVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummMVAT_calc()), 0)::TFloat;
-          vbSummPVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummPVAT_calc()), 0)::TFloat;
-        
+     /*
+     vbAmount_calc    := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_Amount_calc()), 1)::TFloat; --(SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = inId );
+     vbOperPrice_calc := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_OperPrice_calc()), 0)::TFloat;
+     vbSummMVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummMVAT_calc()), 0)::TFloat;
+     vbSummPVAT_calc  := COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = inId AND MF.DescId = zc_MIFloat_SummPVAT_calc()), 0)::TFloat;
+     */   
           outSummVAT := (ioSummPVAT - ioSummMVAT);
          -- ioMVAT
   
@@ -64,8 +51,8 @@ BEGIN
           --RAISE EXCEPTION '2 Ошибка. Basis_summ_transport %    .', outSummDiscount_total;   
 
           -- если ничего не поменялось
-         IF vbOperPrice_calc = ioOperPrice AND vbSummMVAT_calc = ioSummMVAT AND vbSummPVAT_calc = ioSummPVAT  
-         AND (vbAmount_calc = inAmount)
+         IF ioOperPrice_calc = ioOperPrice AND ioSummMVAT_calc = ioSummMVAT AND ioSummPVAT_calc = ioSummPVAT  
+         AND (ioAmount_calc = inAmount)
          THEN
              -- !!!выход!!!
              RETURN;
@@ -73,23 +60,17 @@ BEGIN
 
          --vbisVat:= COALESCE (vbisVat,FALSE);
 
-/*
 
-     vbVATPercent := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_VATPercent());
-     vbSummMVAT := (COALESCE (inAmount,0) * COALESCE (inOperPrice, 0));
-     vbSummPVAT := zfCalc_SummWVAT_4 ((COALESCE (inAmount,0) * COALESCE (inOperPrice, 0)) ::TFloat, vbVATPercent);
-
-*/
---RAISE EXCEPTION 'Ошибка. %  %    ', vbOperPrice_calc  , ioOperPrice;      
+   --RAISE EXCEPTION 'Ошибка. %  %    ', vbOperPrice_calc  , ioOperPrice;      
    --  
-         IF (COALESCE (vbOperPrice_calc,0) <> COALESCE (ioOperPrice,0)) OR (vbAmount_calc <> inAmount)
+         IF (COALESCE (ioOperPrice_calc,0) <> COALESCE (ioOperPrice,0)) OR (ioAmount_calc <> inAmount)
          THEN  
          --RAISE EXCEPTION '1 Ошибка.  '; 
              ioSummMVAT := (COALESCE (inAmount,0) * COALESCE (ioOperPrice, 0)); 
              ioSummPVAT := zfCalc_SummWVAT_4 ((COALESCE (inAmount,0) * COALESCE (ioOperPrice, 0)) ::TFloat, vbVATPercent);
              outSummVAT := (ioSummPVAT - ioSummMVAT);
          --
-         ELSEIF COALESCE (vbSummMVAT_calc,0) <> COALESCE (ioSummMVAT,0)
+         ELSEIF COALESCE (ioSummMVAT_calc,0) <> COALESCE (ioSummMVAT,0)
          THEN 
             -- RAISE EXCEPTION '2 Ошибка. ';    
              --
@@ -101,7 +82,7 @@ BEGIN
              --
              --PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isVat_calc(), inId, FALSE);
          --
-         ELSEIF COALESCE (vbSummPVAT_calc,0) <> COALESCE (ioSummPVAT,0)
+         ELSEIF COALESCE (ioSummPVAT_calc,0) <> COALESCE (ioSummPVAT,0)
          THEN 
              --RAISE EXCEPTION '3 Ошибка. ';    
              --
@@ -118,7 +99,12 @@ BEGIN
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice_calc(), inId, ioOperPrice);
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMVAT_calc(), inId, ioSummMVAT);
             PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPVAT_calc(), inId, ioSummPVAT);
-         END IF;
+         END IF; 
+         --
+         ioAmount_calc := inAmount;
+         ioOperPrice_calc := ioOperPrice;
+         ioSummMVAT_calc := ioSummMVAT;
+         ioSummPVAT_calc := ioSummPVAT;
 
 END;
 $BODY$
