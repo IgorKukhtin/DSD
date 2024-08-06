@@ -140,20 +140,20 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+   {
   LoadReportFromFile('Печать паспорта ячейки(строка)', ReportPath + '\Товарный Учет\Печать паспорта ячейки(строка).fr3');
   exit;
   LoadReportFromFile('Печать_ ЯчеекОтбора', ReportPath + '\Справочники\Печать_ ЯчеекОтбора.fr3');
-  {exit;
+  exit;
 
   LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Товарный Учет\Печать паспорта ячейки.fr3');
   exit;
   LoadReportFromFile('Партия учета по Ячейкам хранения(остатки)', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения(остатки).fr3');
   exit;
-  }
+
   LoadReportFromFile('Партия учета по Ячейкам хранения', ReportPath + '\Отчеты (товарные)\Партия учета по Ячейкам хранения.fr3');
   exit;
-  {
+
   LoadReportFromFile('Отчет_Анализ Заявки На Производство', ReportPath + '\Отчеты (производство)\Отчет_Анализ Заявки На Производство.fr3');
   exit;
 
@@ -422,14 +422,14 @@ begin
   exit;
 
   // Отчеты производство
-  }
+
 
   LoadReportFromFile('Отчет_по_выходам', ReportPath + '\Отчеты (производство)\Отчет_по_выходам.fr3');
   LoadReportFromFile('Отчет_по_выходам(цех)', ReportPath + '\Отчеты (производство)\Отчет_по_выходам(цех).fr3');
   LoadReportFromFile('Отчет_по_выходам(термичка)', ReportPath + '\Отчеты (производство)\Отчет_по_выходам(термичка).fr3');
   LoadReportFromFile('Отчет_Производство_Технолог_new', ReportPath + '\Отчеты (производство)\Отчет_Производство_Технолог_new.fr3');
     exit;
-  {
+
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение.fr3');
     exit;
 
@@ -700,9 +700,12 @@ begin
   exit;
 
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
-
-  LoadReportFromFile('PrintMovement_OrderExternalQty', ReportPath + '\Товарный Учет\PrintMovement_OrderExternalQty.fr3');
+  }
+  LoadReportFromFile('PrintMovement_OrderExternal_Cell', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal_Cell.fr3');
   exit;
+  {
+  LoadReportFromFile('PrintMovement_OrderExternalQty', ReportPath + '\Товарный Учет\PrintMovement_OrderExternalQty.fr3');
+
 
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
   exit;

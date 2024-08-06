@@ -95,6 +95,7 @@ BEGIN
                                    AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
      WHERE Movement.Id = inMovementId;
+ 
      
 
 -- if vbUserId = 5
@@ -601,7 +602,16 @@ BEGIN
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
-                           )
+                           )     
+
+            --€чейки отбора               
+          , tmpChoiceCell AS (SELECT tmp.*
+                                   , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
+                                   , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
+                              FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
+                              )
+
+
        -- –езультат
        SELECT
              CASE WHEN vbIsOrderByLine = TRUE THEN row_number() OVER (ORDER BY tmpMI.MovementItemId) ELSE 0 END :: Integer AS LineNum
@@ -666,6 +676,9 @@ BEGIN
                   ELSE 0
              END :: TFloat AS Amount_child_diff
            
+           , tmpChoiceCell.NPP           ::TFloat   AS NPP
+           , tmpChoiceCell.Name          ::TVarChar AS CellName
+           , tmpChoiceCell.CellName_shot ::TVarChar AS CellName_shot 
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -736,6 +749,10 @@ BEGIN
                                                                        THEN tmpMI.GoodsKindId
                                                                   ELSE 0
                                                              END
+
+            LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpMI.GoodsId
+                                   AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0) 
+                                   AND tmpChoiceCell.Ord = 1
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        -- ORDER BY ObjectString_Goods_GroupNameFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
