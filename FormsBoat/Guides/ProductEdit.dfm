@@ -813,6 +813,40 @@ object ProductEditForm: TProductEditForm
         TabOrder = 83
         Width = 57
       end
+      object edBasis_summ1_orig: TcxCurrencyEdit
+        Left = 383
+        Top = 148
+        Hint = 
+          #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
+          ', '#1073#1077#1079' '#1053#1044#1057
+        ParentShowHint = False
+        Properties.Alignment.Horz = taRightJustify
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        Properties.ReadOnly = True
+        ShowHint = True
+        Style.Color = clGradientInactiveCaption
+        TabOrder = 84
+        Visible = False
+        Width = 37
+      end
+      object edBasis_summ2_orig: TcxCurrencyEdit
+        Left = 396
+        Top = 168
+        Hint = 
+          #1041#1077#1079' '#1089#1082#1080#1076#1082#1080', '#1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1073#1072#1079#1086#1074#1086#1081' '#1084#1086#1076#1077#1083#1080' '#1083#1086#1076#1082#1080' + '#1057#1091#1084#1084#1072' '#1074#1089#1077#1093' '#1086#1087#1094#1080#1081 +
+          ', '#1073#1077#1079' '#1053#1044#1057
+        ParentShowHint = False
+        Properties.Alignment.Horz = taRightJustify
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####'
+        Properties.ReadOnly = True
+        ShowHint = True
+        Style.Color = clGradientInactiveCaption
+        TabOrder = 85
+        Visible = False
+        Width = 37
+      end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = 'Invoice'
@@ -3470,6 +3504,20 @@ object ProductEditForm: TProductEditForm
         Component = edBasis_summ_orig
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ1_orig'
+        Value = Null
+        Component = edBasis_summ1_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Basis_summ2_orig'
+        Value = Null
+        Component = edBasis_summ2_orig
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -5175,7 +5223,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inBasis_summ1_orig'
         Value = 0.000000000000000000
-        Component = edBasis_summ_orig
+        Component = edBasis_summ1_orig
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5183,6 +5231,7 @@ object ProductEditForm: TProductEditForm
       item
         Name = 'inBasis_summ2_orig'
         Value = 0.000000000000000000
+        Component = edBasis_summ2_orig
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

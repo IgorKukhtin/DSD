@@ -7,29 +7,29 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFl
 DROP FUNCTION IF EXISTS gpUpdate_Movement_OrderClient_Summ (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_OrderClient_Summ(
-    IN inId                          Integer   , -- Ключ объекта <Документ>
- INOUT ioSummTax                     TFloat    , -- 
- INOUT ioSummReal                    TFloat    , -- 
-    IN inVATPercent                  TFloat    , --
-    IN inDiscountTax                 TFloat    , --
-    IN inDiscountNextTax             TFloat    , -- 
-    IN inTransportSumm_load          TFloat    , --транспорт 
-    IN inTransportSumm               TFloat    , --транспорт 
-    IN inBasis_summ1_orig            TFloat, --для врм. расчета на форме
-    IN inBasis_summ2_orig            TFloat, --для врм. расчета на форме
-   OUT outSummDiscount1              TFloat , 
-   OUT outSummDiscount2              TFloat ,
-   OUT outSummDiscount3              TFloat ,
-   OUT outSummDiscount_total         TFloat ,
-   OUT outBasis_summ                 TFloat ,
+    IN inId                          Integer, -- Ключ объекта <Документ>
+ INOUT ioSummTax                     TFloat,  -- 
+ INOUT ioSummReal                    TFloat,  -- 
+    IN inVATPercent                  TFloat,  --
+    IN inDiscountTax                 TFloat,  --
+    IN inDiscountNextTax             TFloat,  -- 
+    IN inTransportSumm_load          TFloat,  --транспорт 
+    IN inTransportSumm               TFloat,  --транспорт 
+    IN inBasis_summ1_orig            TFloat,  -- Без скидки, Цена продажи базовой модели лодки, без НДС
+    IN inBasis_summ2_orig            TFloat,  -- Без скидки, Сумма опций, без НДС
+   OUT outSummDiscount1              TFloat, 
+   OUT outSummDiscount2              TFloat,
+   OUT outSummDiscount3              TFloat,
+   OUT outSummDiscount_total         TFloat,
+   OUT outBasis_summ                 TFloat,
  INOUT ioBasis_summ_transport        TFloat,
  INOUT ioBasisWVAT_summ_transport    TFloat,
    OUT outTotalSummVAT               TFloat,
-    IN inAmountInBankAccountAll      TFloat,   -- итого оплата для Эдит формы лодки
-   OUT outAmountIn_remAll            TFloat,   --Долг Итого  - для Эдит формы лодки 
-    IN inIsBefore                    Boolean   , -- временный расчет на форме 
-    IN inIsEdit                      Boolean   , 
-    IN inSession                     TVarChar    -- сессия пользователя
+    IN inAmountInBankAccountAll      TFloat,  -- итого оплата для Эдит формы лодки
+   OUT outAmountIn_remAll            TFloat,  -- Долг Итого  - для Эдит формы лодки 
+    IN inIsBefore                    Boolean, -- временный расчет на форме 
+    IN inIsEdit                      Boolean, 
+    IN inSession                     TVarChar -- сессия пользователя
 )
 RETURNS RECORD
 AS

@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Product()
 
- DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Object_Product(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Product(
@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , TransportSumm_load   TFloat 
              , TransportSumm        TFloat 
              , SummDiscount_total TFloat
-             , Basis_summ TFloat , Basis_summ_orig TFloat
+             , Basis_summ TFloat, Basis_summ_orig TFloat, Basis_summ1_orig TFloat, Basis_summ2_orig TFloat
              , isBasicConf Boolean, isReserve Boolean, isProdColorPattern Boolean   --40
 
              , MovementId_Invoice Integer
@@ -128,6 +128,8 @@ BEGIN
            , CAST (0 AS TFloat)        AS SummDiscount_total 
            , CAST (0 AS TFloat)        AS Basis_summ
            , CAST (0 AS TFloat)        AS Basis_summ_orig
+           , CAST (0 AS TFloat)        AS Basis_summ1_orig
+           , CAST (0 AS TFloat)        AS Basis_summ2_orig
 
            , CAST (TRUE AS Boolean)    AS isBasicConf
            , CAST (FALSE AS Boolean)   AS isReserve
@@ -184,9 +186,16 @@ BEGIN
                              , spSelect.VATPercent                      AS VATPercent   
                              , spSelect.TaxKindId                       AS TaxKindId
                              , spSelect.TaxKindName                     AS TaxKindName
-                             , spSelect.Basis_summ_orig                 AS Basis_summ_orig
+                               -- ИТОГО Без скидки, Цена продажи базовой модели лодки, без НДС
+                             , spSelect.Basis_summ1_orig
+                               -- ИТОГО Без скидки, Сумма опций, без НДС
+                             , spSelect.Basis_summ2_orig
+                               -- ИТОГО Без скидки, Цена продажи базовой модели лодки + Сумма всех опций, без НДС
+                             , spSelect.Basis_summ_orig
+                               --
                              , spSelect.TransportSumm_load              AS TransportSumm_load
                              , spSelect.TransportSumm                   AS TransportSumm
+                               --
                              , COALESCE (spSelect.NPP,0)       ::TFloat AS NPP
                              , COALESCE (spSelect.SummReal, 0) ::TFloat AS SummReal
                              , spSelect.SummTax                         AS SummTax
@@ -338,9 +347,11 @@ BEGIN
          , tmpOrderClient.TransportSumm_load  :: TFloat AS TransportSumm_load
          , tmpOrderClient.TransportSumm       :: TFloat AS TransportSumm  
          
-         , COALESCE (tmpOrderClient.SummDiscount_total,0)::TFloat AS SummDiscount_total
-         , (COALESCE (tmpOrderClient.TotalSumm,0) ) ::TFloat AS Basis_summ   
-         , (COALESCE (tmpOrderClient.Basis_summ_orig,0))      :: TFloat AS Basis_summ_orig
+         , COALESCE (tmpOrderClient.SummDiscount_total, 0) :: TFloat AS SummDiscount_total
+         , COALESCE (tmpOrderClient.TotalSumm, 0)          :: TFloat AS Basis_summ   
+         , COALESCE (tmpOrderClient.Basis_summ_orig, 0)    :: TFloat AS Basis_summ_orig
+         , COALESCE (tmpOrderClient.Basis_summ1_orig, 0)   :: TFloat AS Basis_summ1_orig
+         , COALESCE (tmpOrderClient.Basis_summ2_orig, 0)   :: TFloat AS Basis_summ2_orig
          ---, (COALESCE (tmpOrderClient.TotalSumm,0) - COALESCE (tmpOrderClient.SummTax,0) ) ::TFloat AS SummReal 
 
          , COALESCE (ObjectBoolean_BasicConf.ValueData, FALSE) :: Boolean AS isBasicConf

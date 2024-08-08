@@ -24,7 +24,8 @@ uses
   dxBar, cxClasses, Vcl.ExtCtrls, Data.DB, Datasnap.DBClient,
   dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxPC, cxStyles, cxCustomData,
   cxFilter, cxData, cxDataStorage, cxDBData, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxImageComboBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxImageComboBox,
+  dsdCommon;
 
 type
   TProductEditForm = class(TParentForm)
@@ -315,6 +316,8 @@ type
     cxLabel49: TcxLabel;
     edTransportSumm: TcxCurrencyEdit;
     HeaderChangerVAT: THeaderChanger;
+    edBasis_summ1_orig: TcxCurrencyEdit;
+    edBasis_summ2_orig: TcxCurrencyEdit;
   private
     { Private declarations }
   public
