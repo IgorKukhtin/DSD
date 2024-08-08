@@ -287,10 +287,10 @@ $BODY$
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
 
-            /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+            / *LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            */
+            * /
 
      WHERE Movement.Id = 24930561 
      ;
@@ -321,9 +321,9 @@ $BODY$
                                              AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                              AND MovementLinkObject_Contract.ObjectId = 8875106 --vbContractId
 
-                 /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                 / *LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                               ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                             AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()*/
+                                             AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()* /
             WHERE Movement.DescId = zc_Movement_Tax()
               AND Movement.OperDate BETWEEN '01.03.2023' AND '31.03.2023'--vbStartDate AND vbEndDate
               AND Movement.StatusId <> zc_Enum_Status_Erased()

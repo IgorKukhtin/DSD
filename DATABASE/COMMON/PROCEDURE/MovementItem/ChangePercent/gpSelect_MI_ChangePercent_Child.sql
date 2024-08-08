@@ -23,12 +23,12 @@ BEGIN
 
      RETURN QUERY
      WITH
-         tmpMI AS (SELECT MovementItem.Id                 AS Id
+         tmpMI AS (SELECT MAX (MovementItem.Id)                 AS Id
                         , MovementItem.ParentId
                         , MovementItem.ObjectId           AS GoodsId
-                        , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                        , MAX (MILinkObject_GoodsKind.ObjectId) AS GoodsKindId
                         , MILinkObject_Unit.ObjectId      AS UnitId
-                        , MovementItem.Amount             AS Amount
+                        , SUM (MovementItem.Amount)       AS Amount
                         , MovementItem.isErased           AS isErased
                    FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                         INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -42,6 +42,10 @@ BEGIN
                         LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                                         AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                   GROUP BY MovementItem.ParentId
+                          , MovementItem.ObjectId
+                          , MILinkObject_Unit.ObjectId
+                          , MovementItem.isErased
                   )
 
          --сохраненные строки мастера
