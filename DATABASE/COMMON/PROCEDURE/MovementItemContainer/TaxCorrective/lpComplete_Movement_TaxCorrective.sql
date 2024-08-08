@@ -22,6 +22,7 @@ BEGIN
 
      -- Проверка ошибки
      IF '01.01.2017' < (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId)
+         AND vbDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Goods()
      THEN
          outMessageText:= (SELECT tmp.MessageText FROM lpSelect_TaxCorrectiveFromTax (inMovementId) AS tmp);
          -- !!!Выход если ошибка!!!
