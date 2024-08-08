@@ -23,8 +23,7 @@ BEGIN
    -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId = zc_Object_InfoMoney());
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoney());
-   vbUserId:= lpGetUserBySession (inSession);
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoney());
 
 
    -- Если код не установлен, определяем его каи последний+1
