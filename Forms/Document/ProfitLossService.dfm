@@ -1,26 +1,26 @@
 ﻿inherited ProfitLossServiceForm: TProfitLossServiceForm
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
-  ClientHeight = 354
+  ClientHeight = 387
   ClientWidth = 777
   ExplicitWidth = 783
-  ExplicitHeight = 382
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 177
-    Top = 320
+    Top = 355
     Height = 26
     ExplicitLeft = 177
-    ExplicitTop = 320
+    ExplicitTop = 355
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 321
-    Top = 320
+    Top = 355
     Height = 26
     ExplicitLeft = 321
-    ExplicitTop = 320
+    ExplicitTop = 355
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -149,15 +149,15 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [18]
-    Left = 295
-    Top = 257
+    Left = 8
+    Top = 304
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
-    Left = 295
-    Top = 280
+    Left = 8
+    Top = 323
     TabOrder = 11
-    Width = 467
+    Width = 754
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
     Left = 445
@@ -230,7 +230,7 @@
   end
   object ceContractChild: TcxButtonEdit [29]
     Left = 125
-    Top = 280
+    Top = 277
     Properties.Buttons = <
       item
         Default = True
@@ -260,7 +260,7 @@
   end
   object edBranch: TcxButtonEdit [33]
     Left = 8
-    Top = 280
+    Top = 277
     Properties.Buttons = <
       item
         Default = True
@@ -302,7 +302,7 @@
   end
   object cxLabel18: TcxLabel [38]
     Left = 608
-    Top = 205
+    Top = 207
     Caption = #1042#1072#1083#1102#1090#1072' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
   end
   object edCurrency: TcxButtonEdit [39]
@@ -348,6 +348,40 @@
     TabOrder = 43
     Width = 58
   end
+  object edTradeMark: TcxButtonEdit [44]
+    Left = 295
+    Top = 277
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 44
+    Width = 141
+  end
+  object cxLabel20: TcxLabel [45]
+    Left = 295
+    Top = 257
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+  end
+  object edDoc: TcxButtonEdit [46]
+    Left = 445
+    Top = 277
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 46
+    Width = 317
+  end
+  object cxLabel22: TcxLabel [47]
+    Left = 445
+    Top = 257
+    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1042#1074#1086#1076' '#1085#1086#1074#1099#1093' '#1087#1086#1079#1080#1094#1080#1081
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
     Top = 26
@@ -357,8 +391,8 @@
     Top = 281
   end
   inherited ActionList: TActionList
-    Left = 504
-    Top = 280
+    Left = 512
+    Top = 336
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -381,7 +415,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 449
-    Top = 262
+    Top = 334
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService'
@@ -547,14 +581,30 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inTradeMarkId'
+        Value = Null
+        Component = GuidesTradeMark
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_doc'
+        Value = Null
+        Component = GuidesDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsLoad'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 473
-    Top = 164
+    Left = 633
+    Top = 68
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProfitLossService'
@@ -853,9 +903,39 @@
         Component = edAmountCurrency
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TradeMarkId'
+        Value = Null
+        Component = GuidesTradeMark
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TradeMarkName'
+        Value = Null
+        Component = GuidesTradeMark
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_doc'
+        Value = Null
+        Component = GuidesDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_doc'
+        Value = Null
+        Component = GuidesDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 537
-    Top = 164
+    Left = 705
+    Top = 92
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1396,5 +1476,79 @@
       end>
     Left = 664
     Top = 223
+  end
+  object GuidesTradeMark: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTradeMark
+    FormNameParam.Value = 'TTradeMarkForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TTradeMarkForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesTradeMark
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesTradeMark
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 343
+    Top = 264
+  end
+  object GuidesDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDoc
+    FormNameParam.Value = 'TPromo_ServiceGoodsJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPromo_ServiceGoodsJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesDoc
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = Null
+        Component = ceOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        Component = ceOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 605
+    Top = 272
   end
 end

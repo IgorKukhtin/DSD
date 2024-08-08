@@ -8,7 +8,17 @@ uses
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TProfitLossServiceForm = class(TAncestorEditDialogForm)
@@ -67,6 +77,12 @@ type
     cxLabel19: TcxLabel;
     cxLabel21: TcxLabel;
     edParPartnerValue: TcxCurrencyEdit;
+    GuidesTradeMark: TdsdGuides;
+    edTradeMark: TcxButtonEdit;
+    cxLabel20: TcxLabel;
+    edDoc: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    GuidesDoc: TdsdGuides;
   private
     { Private declarations }
   public

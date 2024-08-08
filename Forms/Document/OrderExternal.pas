@@ -23,7 +23,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
@@ -166,6 +166,10 @@ type
     cbIsRemains: TcxCheckBox;
     actPrintSort: TdsdPrintAction;
     bbPrintQty: TdxBarButton;
+    actPrintCell: TdsdPrintAction;
+    bbPrintCell: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
   private
     { Private declarations }
   public

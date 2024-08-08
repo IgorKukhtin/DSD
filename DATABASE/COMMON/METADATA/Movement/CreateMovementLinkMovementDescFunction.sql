@@ -91,10 +91,16 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_BankSecondNum() RETURNS Integ
 INSERT INTO MovementLinkMovementDesc (Code, ItemName)
   SELECT 'zc_MovementLinkMovement_BankSecondNum', 'Документ Приоритет распределения по банкам ЗП - Ф2' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_BankSecondNum');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_Doc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Doc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkMovementDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkMovement_Doc', 'Документ Акция / Ввод новых позиций' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Doc');
+
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А. Шаблий О.В.
+ 07.08.24         * zc_MovementLinkMovement_Doc
  12.03.24         * zc_MovementLinkMovement_BankSecond_num
  28.04.22         * zc_MovementLinkMovement_OrderReturnTare
  21.03.22         * zc_MovementLinkMovement_ReturnIn

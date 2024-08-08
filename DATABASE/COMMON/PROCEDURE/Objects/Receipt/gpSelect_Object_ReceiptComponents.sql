@@ -19,8 +19,24 @@ RETURNS TABLE (
                ReceiptCostId Integer, ReceiptCostCode Integer, ReceiptCostName TVarChar,
                ReceiptKindId Integer, ReceiptKindCode Integer, ReceiptKindName TVarChar,
                MeasureName TVarChar,
-               GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar,
-               isErased Boolean,
+               GoodsGroupNameFull TVarChar, GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
+             , Code_Parent_Receipt           Integer
+             , Name_Parent_Receipt           TVarChar
+             , ReceiptCode_Parent_Receipt    TVarChar
+             , isMain_Parent_Receipt         Boolean
+             , GoodsCode_Parent_Receipt      Integer
+             , GoodsName_Parent_Receipt      TVarChar
+             , MeasureName_Parent_Receipt    TVarChar
+             , GoodsKindName_Parent_Receipt  TVarChar
+             , Code_Parent_old          Integer 
+             , Name_Parent_old          TVarChar
+             , ReceiptCode_Parent_old   TVarChar  
+             , GoodsCode_Parent_old     Integer   
+             , GoodsName_Parent_old     TVarChar  
+             , GoodsKindName_Parent_old TVarChar  
+             , EndDate_Parent_old       TDateTime 
+         
+             , isErased Boolean,
 
                ReceiptChildId Integer, Value_Child TFloat, ValueWeight_Child TFloat, ValueWeight_calc_Child TFloat, isWeightMain_Child Boolean, isTaxExit_Child Boolean, isWeightTotal_Child Boolean, isReal_Child Boolean ,
                StartDate_Child TDateTime, EndDate_Child TDateTime, Comment TVarChar,
@@ -102,6 +118,14 @@ BEGIN
          , Object_Measure_Parent.ValueData             AS MeasureName_Parent
          , Object_GoodsKind_Parent.ValueData           AS GoodsKindName_Parent
          , Object_GoodsKindComplete_Parent.ValueData   AS GoodsKindCompleteName_Parent
+
+         , Object_Receipt_Parent_old.ObjectCode   ::Integer    AS Code_Parent_old
+         , Object_Receipt_Parent_old.ValueData    ::TVarChar   AS Name_Parent_old
+         , ObjectString_Code_Parent_old.ValueData ::TVarChar   AS ReceiptCode_Parent_old
+         , Object_Goods_Parent_old.ObjectCode     ::Integer    AS GoodsCode_Parent_old
+         , Object_Goods_Parent_old.ValueData      ::TVarChar   AS GoodsName_Parent_old
+         , Object_GoodsKind_Parent_old.ValueData  ::TVarChar   AS GoodsKindName_Parent_old
+         , ObjectDate_End_Parent_old.ValueData    ::TDateTime  AS EndDate_Parent_old
 
          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
          , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
@@ -188,6 +212,32 @@ BEGIN
           LEFT JOIN ObjectDate AS ObjectDate_EndDate
                                ON ObjectDate_EndDate.ObjectId = Object_Receipt.Id
                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_Receipt_End()
+
+          --
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_old
+                               ON ObjectLink_Receipt_Parent_old.ObjectId = Object_Receipt.Id
+                              AND ObjectLink_Receipt_Parent_old.DescId = zc_ObjectLink_Receipt_Parent_old()
+          LEFT JOIN Object AS Object_Receipt_Parent_old ON Object_Receipt_Parent_old.Id = ObjectLink_Receipt_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectString AS ObjectString_Code_Parent_old
+                                 ON ObjectString_Code_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                                AND ObjectString_Code_Parent_old.DescId = zc_ObjectString_Receipt_Code()
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_Parent_old
+                               ON ObjectLink_Receipt_Goods_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                              AND ObjectLink_Receipt_Goods_Parent_old.DescId = zc_ObjectLink_Receipt_Goods()
+          LEFT JOIN Object AS Object_Goods_Parent_old ON Object_Goods_Parent_old.Id = ObjectLink_Receipt_Goods_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind_Parent_old
+                               ON ObjectLink_Receipt_GoodsKind_Parent_old.ObjectId = Object_Receipt_Parent_old.Id
+                              AND ObjectLink_Receipt_GoodsKind_Parent_old.DescId = zc_ObjectLink_Receipt_GoodsKind()
+          LEFT JOIN Object AS Object_GoodsKind_Parent_old ON Object_GoodsKind_Parent_old.Id = ObjectLink_Receipt_GoodsKind_Parent_old.ChildObjectId
+
+          LEFT JOIN ObjectDate AS ObjectDate_End_Parent_old
+                               ON ObjectDate_End_Parent_old.ObjectId = Object_Receipt.Id
+                              AND ObjectDate_End_Parent_old.DescId = zc_ObjectDate_Receipt_End_Parent_old()
+          --
+
 
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                   ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
@@ -499,7 +549,25 @@ BEGIN
          , tmpReceipt.GoodsGroupNameFull
          , tmpReceipt.GoodsGroupAnalystName
          , tmpReceipt.GoodsTagName
-         , tmpReceipt.TradeMarkName
+         , tmpReceipt.TradeMarkName  
+         
+         , tmpReceipt.Code_Parent          AS Code_Parent_Receipt
+         , tmpReceipt.Name_Parent          AS Name_Parent_Receipt 
+         , tmpReceipt.ReceiptCode_Parent   AS ReceiptCode_Parent_Receipt
+         , tmpReceipt.isMain_Parent        AS isMain_Parent_Receipt
+         , tmpReceipt.GoodsCode_Parent     AS GoodsCode_Parent_Receipt 
+         , tmpReceipt.GoodsName_Parent     AS GoodsName_Parent_Receipt 
+         , tmpReceipt.MeasureName_Parent   AS MeasureName_Parent_Receipt  
+         , tmpReceipt.GoodsKindName_Parent AS GoodsKindName_Parent_Receipt
+                  
+         , tmpReceipt.Code_Parent_old          ::Integer 
+         , tmpReceipt.Name_Parent_old          ::TVarChar
+         , tmpReceipt.ReceiptCode_Parent_old   ::TVarChar  
+         , tmpReceipt.GoodsCode_Parent_old     ::Integer   
+         , tmpReceipt.GoodsName_Parent_old     ::TVarChar  
+         , tmpReceipt.GoodsKindName_Parent_old ::TVarChar  
+         , tmpReceipt.EndDate_Parent_old       ::TDateTime 
+         
          , tmpReceipt.isErased
 
 
@@ -544,7 +612,8 @@ BEGIN
          , tmpReceiptChild.GoodsName_Parent
          , tmpReceiptChild.MeasureName_Parent
          , tmpReceiptChild.GoodsKindName_Parent
-         , tmpReceiptChild.GoodsKindCompleteName_Parent  
+         , tmpReceiptChild.GoodsKindCompleteName_Parent 
+ 
          , tmpReceiptChild.isErased                         AS isErased_Child
 
    FROM tmpReceipt
@@ -567,5 +636,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ReceiptComponents (353292, FALSE, '2') 
+--   SELECT * FROM gpSelect_Object_ReceiptComponents (353292, FALSE, '2') 
 --ORDER BY GroupNumber

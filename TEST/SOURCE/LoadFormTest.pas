@@ -1285,11 +1285,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournal_byReportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournal_byReportForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
  // exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
   exit;
@@ -3580,6 +3580,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_ServiceGoodsJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromo_ServiceGoodsJournalChoiceForm');
+  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
@@ -3618,6 +3621,7 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
     exit;
@@ -3849,10 +3853,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
 
@@ -4862,14 +4866,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptDialogForm');
   // Рецептуры
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
   exit;
-  {
+
   // Затраты в рецептурах
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptCostForm');

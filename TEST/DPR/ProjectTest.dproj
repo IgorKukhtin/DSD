@@ -5307,6 +5307,10 @@
 				<Form>AmountFormDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo_ServiceGoodsJournalChoice.pas">
+				<Form>Promo_ServiceGoodsJournalChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

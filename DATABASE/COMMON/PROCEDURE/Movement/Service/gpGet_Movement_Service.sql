@@ -29,6 +29,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Invoice Integer, InvNumber_Invoice TVarChar
              , AssetId Integer, AssetName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar
+             , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar
              )
 AS
 $BODY$
@@ -98,7 +100,12 @@ BEGIN
 
            , Object_Currency.Id               AS CurrencyPartnerId
            , Object_Currency.ValueData        AS CurrencyPartnerName
-             
+
+           , 0                                AS TradeMarkId
+           , CAST ('' as TVarChar)            AS TradeMarkName
+           , 0                                AS MovementId_doc
+           , CAST ('' as TVarChar)            AS InvNumber_doc
+           , CAST ('' as TVarChar)            AS InvNumber_full_doc             
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
   
@@ -189,6 +196,11 @@ BEGIN
            , Object_CurrencyPartner.Id           AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData    AS CurrencyPartnerName
 
+           , Object_TradeMark.Id                 AS TradeMarkId
+           , Object_TradeMark.ValueData          AS TradeMarkName
+           , Movement_Doc.Id                     AS MovementId_doc
+           , Movement_Doc.InvNumber              AS InvNumber_doc
+           , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -228,6 +240,18 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
                                      ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
                                     AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_TradeMark
+                                         ON MovementLinkObject_TradeMark.MovementId = Movement.Id
+                                        AND MovementLinkObject_TradeMark.DescId = zc_MovementLinkObject_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = MovementLinkObject_TradeMark.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Doc
+                                           ON MLM_Doc.MovementId = Movement.Id
+                                          AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc()
+            LEFT JOIN Movement AS Movement_Doc ON Movement_Doc.Id = MLM_Doc.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = Movement_Doc.DescId
+
            --
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -297,6 +321,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.08.24         *
  24.02.20         *
  01.08.17         *
  21.07.16         *

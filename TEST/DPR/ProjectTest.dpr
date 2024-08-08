@@ -1516,7 +1516,8 @@ uses
   GoodsNormDiffEdit in '..\..\Forms\Guides\GoodsNormDiffEdit.pas' {GoodsNormDiffEditForm: TParentForm},
   Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm},
   Report_ProductionUnion_TaxExitUpdateDialog in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdateDialog.pas' {Report_ProductionUnion_TaxExitUpdateDialogForm: TParentForm},
-  AmountFormDialog in '..\..\Forms\Document\AmountFormDialog.pas' {AmountFormDialogForm: TParentForm};
+  AmountFormDialog in '..\..\Forms\Document\AmountFormDialog.pas' {AmountFormDialogForm: TParentForm},
+  Promo_ServiceGoodsJournalChoice in '..\..\Forms\Document\Promo_ServiceGoodsJournalChoice.pas' {Promo_ServiceGoodsJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

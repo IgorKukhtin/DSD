@@ -3,7 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1362
-  ExplicitLeft = -485
   ExplicitWidth = 1378
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -87,6 +86,21 @@
               Format = ',0.####'
               Kind = skSum
               Column = AmountRealWeight_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOutMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummInMarket
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -153,6 +167,21 @@
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummOutMarket
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummInMarket
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -575,6 +604,38 @@
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object AmountMarket: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090' ('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
+            DataBinding.FieldName = 'AmountMarket'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SummOutMarket: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1082#1088#1077#1076#1080#1090'('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
+            DataBinding.FieldName = 'SummOutMarket'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1082#1088#1077#1076#1080#1090'('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
+            Width = 80
+          end
+          object SummInMarket: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1082#1088#1077#1076#1080#1090' ('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
+            DataBinding.FieldName = 'SummInMarket'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1082#1088#1077#1076#1080#1090' ('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
+            Width = 80
           end
           object clAmountPlan1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1087#1083#1072#1085' '#1079#1072' 1'
@@ -7540,6 +7601,33 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummOutMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummOutMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummInMarket'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummInMarket'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioGoodsKindId'
         Value = Null
         Component = MasterCDS
@@ -7948,6 +8036,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 110
     Top = 321
@@ -8112,6 +8201,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 254
     Top = 377
@@ -8402,6 +8492,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 446
     Top = 553
@@ -8523,6 +8614,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1272
     Top = 319
@@ -8630,6 +8722,7 @@
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <
       item
         Column = calcTaxRetIn
@@ -8915,6 +9008,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 16
     Top = 423
@@ -9103,6 +9197,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 272
     Top = 567
@@ -9254,6 +9349,7 @@
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <
       item
         Column = ссTaxPromo_Condition
@@ -9742,6 +9838,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1256
     Top = 407
@@ -9983,6 +10080,7 @@
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 1272
     Top = 519
@@ -10342,6 +10440,7 @@
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <
       item
         Column = calcTaxRetIn
@@ -10436,6 +10535,7 @@
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <
       item
         Column = calcTaxRetIn

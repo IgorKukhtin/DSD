@@ -307,6 +307,7 @@
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
   end
@@ -380,8 +381,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 260
-    Top = 49
+    Left = 436
+    Top = 97
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -488,6 +489,38 @@
         Component = ceSummа_VAT
         DataType = ftFloat
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Amount'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummMVAT'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummMVAT_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummPVAT'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummPVAT_calc'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 264
@@ -561,8 +594,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 177
-    Top = 55
+    Left = 169
+    Top = 63
   end
   object HeaderExit: THeaderExit
     ExitList = <
@@ -579,8 +612,8 @@
         Control = ceSummPVAT
       end>
     Action = actUpdate_summ_before
-    Left = 396
-    Top = 52
+    Left = 436
+    Top = 12
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -611,8 +644,8 @@
       item
         Control = cxButtonOK
       end>
-    Left = 28
-    Top = 205
+    Left = 52
+    Top = 197
   end
   object spUpdate_before: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_Invoice_SummCalc'
@@ -672,6 +705,42 @@
         Value = 0.000000000000000000
         Component = ceSummа_VAT
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAmount_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Amount_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioOperPrice_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperPrice_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummMVAT_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummMVAT_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioSummPVAT_calc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummPVAT_calc'
+        DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

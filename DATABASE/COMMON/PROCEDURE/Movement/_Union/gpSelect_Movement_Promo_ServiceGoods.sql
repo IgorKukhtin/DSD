@@ -1,0 +1,175 @@
+-- Function: gpSelect_Movement_Promo_ServiceGoods()
+
+DROP FUNCTION IF EXISTS gpSelect_Movement_Promo_ServiceGoods (TDateTime, TDateTime, Boolean, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Promo_ServiceGoods(
+    IN inStartDate                TDateTime , --
+    IN inEndDate                  TDateTime , --
+    IN inIsErased                 Boolean ,
+    IN inSession                  TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (Id               Integer     --Идентификатор
+             , InvNumber        Integer     --Номер документа 
+             , InvNumber_full   TVarChar    --
+             , OperDate         TDateTime   --Дата документа
+             , StatusCode       Integer     --код статуса
+             , StatusName       TVarChar    --Статус
+             , DescName         TVarChar    --вид документа
+             , PromoKindId      Integer     --Вид акции
+             , PromoKindName    TVarChar    --Вид акции
+             , PromoStateKindId Integer     -- Состояние Акции
+             , PromoStateKindName TVarChar  -- Состояние Акции
+             , PriceListId      Integer     --Прайс лист
+             , PriceListName    TVarChar    --Прайс лист
+             , StartPromo       TDateTime   --Дата начала акции
+             , EndPromo         TDateTime   --Дата окончания акции
+             , StartSale        TDateTime   --Дата начала отгрузки по акционной цене
+             , EndSale          TDateTime   --Дата окончания отгрузки по акционной цене
+             , EndReturn        TDateTime   --Дата окончания возвратов по акционной цене
+             , OperDateStart    TDateTime   --Дата начала расч. продаж до акции
+             , OperDateEnd      TDateTime   --Дата окончания расч. продаж до акции
+             , MonthPromo       TDateTime   --Месяц акции
+             , UnitId           Integer     --Подразделение
+             , UnitName         TVarChar    --Подразделение
+             , PersonalTradeId  Integer     --Ответственный представитель коммерческого отдела
+             , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
+             , PersonalId       Integer     --Ответственный представитель маркетингового отдела
+             , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела
+              )
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- !!!Временно замена!!!
+     IF inEndDate < CURRENT_DATE THEN inEndDate:= CURRENT_DATE; END IF;
+
+
+     -- Результат
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+
+         , tmpMovement AS (SELECT Movement.*
+                           FROM tmpStatus
+                                INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
+                                                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                   AND Movement.DescId IN (zc_Movement_Promo())
+                          )
+
+
+        -- Результат
+        SELECT Movement.Id                                                 --Идентификатор
+             , Movement.InvNumber :: Integer                               --Номер документа  
+             , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) :: TVarChar AS InvNumber_full
+             , Movement.OperDate                                           --Дата документа
+             , Object_Status.ObjectCode        :: Integer  AS StatusCode
+             , Object_Status.ValueData         :: TVarChar AS StatusName 
+             , MovementDesc.ItemName           ::TVarChar  AS DescName
+             , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
+             , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
+             , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
+             , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
+             , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
+             , Object_PriceList.ValueData                  AS PriceListName      --Прайс Лист
+             , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
+             , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции    
+             , MovementDate_StartSale.ValueData            AS StartSale          --Дата начала отгрузки по акционной цене
+             , MovementDate_EndSale.ValueData              AS EndSale            --Дата окончания отгрузки по акционной цене
+             , MovementDate_EndReturn.ValueData            AS EndReturn          --Дата окончания возвратов по акционной цене
+             , MovementDate_OperDateStart.ValueData        AS OperDateStart      --Дата начала расч. продаж до акции
+             , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
+             , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
+             , MovementLinkObject_Unit.ObjectId            AS UnitId             --Подразделение
+             , Object_Unit.ValueData                       AS UnitName           --Подразделение
+             , MovementLinkObject_PersonalTrade.ObjectId   AS PersonalTradeId    --Ответственный представитель коммерческого отдела
+             , Object_PersonalTrade.ValueData              AS PersonalTradeName  --Ответственный представитель коммерческого отдела
+             , MovementLinkObject_Personal.ObjectId        AS PersonalId         --Ответственный представитель маркетингового отдела
+             , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела
+
+        FROM tmpMovement AS Movement
+             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+             LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoKind
+                                          ON MovementLinkObject_PromoKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PromoKind.DescId = zc_MovementLinkObject_PromoKind()
+             LEFT JOIN Object AS Object_PromoKind
+                              ON Object_PromoKind.Id = MovementLinkObject_PromoKind.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+             LEFT JOIN Object AS Object_PriceList
+                              ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
+             LEFT JOIN MovementDate AS MovementDate_StartSale
+                                    ON MovementDate_StartSale.MovementId = Movement.Id
+                                   AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
+             LEFT JOIN MovementDate AS MovementDate_EndSale
+                                    ON MovementDate_EndSale.MovementId = Movement.Id
+                                   AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
+
+             LEFT JOIN MovementDate AS MovementDate_StartPromo
+                                    ON MovementDate_StartPromo.MovementId = Movement.Id
+                                   AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+             LEFT JOIN MovementDate AS MovementDate_EndPromo
+                                    ON MovementDate_EndPromo.MovementId =  Movement.Id
+                                   AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+
+             LEFT JOIN MovementDate AS MovementDate_EndReturn
+                                    ON MovementDate_EndReturn.MovementId = Movement.Id
+                                   AND MovementDate_EndReturn.DescId = zc_MovementDate_EndReturn()
+
+             LEFT JOIN MovementDate AS MovementDate_OperDateStart
+                                    ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                   AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+                                    ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                   AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+
+             LEFT JOIN MovementDate AS MovementDate_Month
+                                    ON MovementDate_Month.MovementId = Movement.Id
+                                   AND MovementDate_Month.DescId = zc_MovementDate_Month()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             LEFT JOIN Object AS Object_Unit
+                              ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalTrade
+                                          ON MovementLinkObject_PersonalTrade.MovementId = Movement.Id
+                                         AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
+             LEFT JOIN Object AS Object_PersonalTrade
+                              ON Object_PersonalTrade.Id = MovementLinkObject_PersonalTrade.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+             LEFT JOIN Object AS Object_Personal
+                              ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
+                                          ON MovementLinkObject_PromoStateKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
+             LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+         ;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.24         *
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_Movement_Promo_ServiceGoods (inStartDate:= '01.01.2024', inEndDate:= '01.01.2024', inIsErased := FALSE, inSession:= '2')
