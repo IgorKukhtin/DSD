@@ -45,13 +45,13 @@ BEGIN
    END IF;
 
 
-   IF COALESCE (inGoodsId,0) = 0 AND vbIsLoad = FALSE
+   IF COALESCE (inGoodsId,0) = 0 AND vbIsLoad = FALSE AND 1=0
    THEN
       RAISE EXCEPTION 'Ошибка. Товар не установлен.';
    END IF;
 
 
-   IF COALESCE (inGoodsKindId,0) = 0 AND vbIsLoad = FALSE
+   IF COALESCE (inGoodsKindId,0) = 0 AND vbIsLoad = FALSE AND 1=0
    THEN
       RAISE EXCEPTION 'Ошибка. Вид Товара не установлен.';
    END IF;
