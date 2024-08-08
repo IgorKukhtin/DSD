@@ -47,7 +47,7 @@ BEGIN
 
      -- IF vbUserId = 5 THEN RAISE EXCEPTION 'Ошибка. % ', vbOperDate; END IF;
 
-     IF vbUserId = 5 THEN vbOperDate:= '01.06.2024'; END IF;
+     IF vbUserId = 5 THEN vbOperDate:= DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '2 MONTH'); END IF;
 
      -- Парсим XML - получили строчную часть
      CREATE TEMP TABLE _tmpItem (PhoneNum TVarChar, TotalSumm TFloat) ON COMMIT DROP;
@@ -118,7 +118,7 @@ BEGIN
             --AND Object_MobileEmployee.isErased = FALSE -- пусть пока ???НЕ??? будут и удаленные тоже
            ;
 
-     IF vbUserId = 5
+     IF vbUserId = 5 AND 1=1
      THEN 
          RAISE EXCEPTION 'Ошибка. %    % '
                         , vbOperDate
