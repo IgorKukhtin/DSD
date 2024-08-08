@@ -24,12 +24,12 @@ BEGIN
      RETURN QUERY
      WITH
          tmpMI AS (SELECT MAX (MovementItem.Id)                 AS Id
-                        , MovementItem.ParentId
-                        , MovementItem.ObjectId           AS GoodsId
+                        , MovementItem.ParentId                 AS ParentId
+                        , MovementItem.ObjectId                 AS GoodsId
                         , MAX (MILinkObject_GoodsKind.ObjectId) AS GoodsKindId
-                        , MILinkObject_Unit.ObjectId      AS UnitId
-                        , SUM (MovementItem.Amount)       AS Amount
-                        , MovementItem.isErased           AS isErased
+                        , MILinkObject_Unit.ObjectId            AS UnitId
+                        , SUM (MovementItem.Amount)             AS Amount
+                        , MovementItem.isErased                 AS isErased
                    FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                         INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                                AND MovementItem.DescId     = zc_MI_Child()
@@ -58,8 +58,8 @@ BEGIN
 
        --
        SELECT
-             tmpMI.Id                   AS Id
-           , tmpMI.ParentId             AS ParentId
+             tmpMI.Id        :: Integer AS Id
+           , tmpMI.ParentId  :: Integer AS ParentId
            , CAST (ROW_NUMBER() OVER (ORDER BY tmpMI_Master.Id) AS Integer) AS LineNum
            , Object_Goods.Id            AS GoodsId
            , Object_Goods.ObjectCode    AS GoodsCode
@@ -70,7 +70,7 @@ BEGIN
            
            , Object_Unit.Id             AS UnitId
            , Object_Unit.ValueData      AS UnitName
-           , tmpMI.Amount               AS Amount
+           , tmpMI.Amount     :: TFloat AS Amount
            , tmpMI_Master.Amount        AS Amount_master 
            , (COALESCE (tmpMI.Amount,0) - COALESCE (tmpMI_Master.Amount,0)) ::TFloat AS Amount_diff
            , tmpMI.isErased             AS isErased
