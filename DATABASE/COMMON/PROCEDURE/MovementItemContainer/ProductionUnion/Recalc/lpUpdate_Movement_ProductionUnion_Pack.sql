@@ -349,10 +349,23 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent
                                     ON ObjectLink_Receipt_Parent.ObjectId = tmpReceipt.ReceiptId
                                    AND ObjectLink_Receipt_Parent.DescId   = zc_ObjectLink_Receipt_Parent()
+
+               LEFT JOIN ObjectLink AS ObjectLink_Receipt_Parent_old
+                                    ON ObjectLink_Receipt_Parent_old.ObjectId = tmpReceipt.ReceiptId
+                                   AND ObjectLink_Receipt_Parent_old.DescId   = zc_ObjectLink_Receipt_Parent_old()
+
+               LEFT JOIN ObjectDate AS ObjectDate_Receipt_End_Parent_old
+                                    ON ObjectDate_Receipt_End_Parent_old.ObjectId = tmpReceipt.ReceiptId
+                                   AND ObjectDate_Receipt_End_Parent_old.DescId   = zc_ObjectDate_Receipt_End_Parent_old()
+
                LEFT JOIN Object AS Object_Receipt_parent ON Object_Receipt_parent.Id       = ObjectLink_Receipt_Parent.ChildObjectId
                                                         AND Object_Receipt_parent.isErased = FALSE
+               LEFT JOIN Object AS Object_Receipt_parent_old ON Object_Receipt_parent_old.Id       = ObjectLink_Receipt_Parent_old.ChildObjectId
+                                                            AND Object_Receipt_parent_old.isErased = FALSE
+                                                            AND ObjectDate_Receipt_End_Parent_old.ValueData <= inStartDate
+
                LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods_parent
-                                    ON ObjectLink_Receipt_Goods_parent.ObjectId = Object_Receipt_parent.Id -- ObjectLink_Receipt_Parent.ChildObjectId
+                                    ON ObjectLink_Receipt_Goods_parent.ObjectId = COALESCE (Object_Receipt_parent_old.Id, Object_Receipt_parent.Id) -- ObjectLink_Receipt_Parent.ChildObjectId
                                    AND ObjectLink_Receipt_Goods_parent.DescId   = zc_ObjectLink_Receipt_Goods()
                                    AND ObjectLink_Receipt_Goods_parent.ChildObjectId > 0
 
@@ -487,7 +500,8 @@ BEGIN
                                  SELECT _tmpResult.* FROM _tmpResult WHERE _tmpResult.DescId_mi = zc_MI_Child()  AND _tmpResult.isDelete = FALSE AND _tmpResult.OperCount > 0)
 
        , tmpReceipt_find_all AS (-- взяли ВСЕ данные - у товара нет прямой ссылки - из чего он делается
-                       SELECT tmpResult_master.OperDate, tmpResult_master.GoodsId, ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
+                       SELECT tmpResult_master.OperDate, tmpResult_master.GoodsId
+                            , ObjectLink_ReceiptChild_Goods.ChildObjectId AS GoodsId_child
                             , tmpResult_master.ReceiptId_in
                             , tmpResult_master.ReceiptId_child
                             , ObjectFloat_Value.ValueData AS Value
@@ -515,10 +529,19 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                                    ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectLink_ReceiptChild_Goods.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+
                               INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -527,8 +550,12 @@ BEGIN
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         -- !!!Рецептура НЕ отключена!!!
                          AND ObjectBoolean_Disabled.ObjectId IS NULL
                          AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
                       )
              -- 
            , tmpReceipt_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
@@ -595,6 +622,13 @@ BEGIN
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -602,7 +636,11 @@ BEGIN
                                                               AND (Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000()             -- Доходы
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
+                       -- !!!Рецептура НЕ отключена!!!
                        WHERE ObjectBoolean_Disabled.ObjectId IS NULL
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
                       )
 
 , tmpReceipt_child_find AS (-- взяли данные - у товара нет прямой ссылки - из чего он делается
@@ -643,6 +681,13 @@ BEGIN
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -651,8 +696,12 @@ BEGIN
                                                                 OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                                   )
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         -- !!!Рецептура НЕ отключена!!!
                          AND ObjectBoolean_Disabled.ObjectId IS NULL
                          AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress()/*, zc_GoodsKind_Basis()*/)
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
                       )
      -- 
    , tmpReceipt_pack_all AS
@@ -693,10 +742,18 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
                                                    ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectLink_ReceiptChild_Goods.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+
                               INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -709,6 +766,9 @@ BEGIN
                          AND ObjectBoolean_Disabled.ObjectId IS NULL
                          -- отбросили ПФ-ГП
                          AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis())
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
 
                       UNION
                        -- если ГП-1 из ГП-2 и ГП-2 из ГП-3, тогда ГП-1 может из ГП-3, т.е. на уровень дальше
@@ -753,6 +813,13 @@ BEGIN
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -790,10 +857,18 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods_two
                                                    ON ObjectLink_ReceiptChild_Goods_two.ObjectId = Object_ReceiptChild_two.Id
                                                   AND ObjectLink_ReceiptChild_Goods_two.DescId   = zc_ObjectLink_ReceiptChild_Goods()
+
                               INNER JOIN ObjectFloat AS ObjectFloat_Value_two
                                                      ON ObjectFloat_Value_two.ObjectId = Object_ReceiptChild_two.Id
                                                     AND ObjectFloat_Value_two.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value_two.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start_two
+                                                        ON ObjectDate_ReceiptChild_Start_two.ObjectId = Object_ReceiptChild_two.Id
+                                                       AND ObjectDate_ReceiptChild_Start_two.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End_two
+                                                        ON ObjectDate_ReceiptChild_End_two.ObjectId = Object_ReceiptChild_two.Id
+                                                       AND ObjectDate_ReceiptChild_End_two.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney_two
                                                    ON ObjectLink_Goods_InfoMoney_two.ObjectId = ObjectLink_ReceiptChild_Goods_two.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney_two.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -808,7 +883,12 @@ BEGIN
                          AND ObjectBoolean_Disabled.ObjectId IS NULL
                          -- отбросили ПФ-ГП
                          AND COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) NOT IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis())
-                       
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start_two.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End_two.ValueData, zc_DateEnd())
                        )
             -- 
           , tmpAll_all AS (-- данные zc_MI_Master, если будут делаться из найденных "главных" товаров
@@ -861,7 +941,7 @@ BEGIN
                      --SELECT DISTINCT tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId_child, tmpReceipt_find.GoodsId,   0 AS Koeff, 0 AS ContainerId FROM tmpReceipt_next AS tmpReceipt_find WHERE tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
                     
                       UNION
-                       -- тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
+                       -- 1.1. тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                        FROM tmpResult_master
                             INNER JOIN ObjectLink AS OL_GoodsMain
@@ -874,11 +954,42 @@ BEGIN
                                                      ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
                                                     AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                                     AND ObjectBoolean_Order.ValueData = TRUE*/
+                            LEFT JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                 ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.ValueData < inStartDate
 
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                          AND tmpResult_master.GoodsId_child > 0
                          AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+                         -- !!!
+                         AND ObjectDate_GoodsByGoodsKind_End_old.ObjectId IS NULL
+
                       UNION
+                       -- 1.2. тоже самое - но заменяем на zc_ObjectLink_GoodsByGoodsKind_GoodsMain
+                       SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId,  OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                       FROM tmpResult_master
+                            INNER JOIN ObjectLink AS OL_GoodsMain
+                                                  ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId_child
+                                                 AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain_old()
+                            INNER JOIN ObjectLink AS OL_Goods
+                                                  ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
+                                                 AND OL_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                            /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                     ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                    AND ObjectBoolean_Order.ValueData = TRUE*/
+                            INNER JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                  ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                 AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                 AND ObjectDate_GoodsByGoodsKind_End_old.ValueData >= inStartDate
+
+                       WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         AND tmpResult_master.GoodsId_child > 0
+                         AND tmpResult_master.GoodsId <> tmpResult_master.GoodsId_child
+
+                      UNION
+                       -- 2.1. 
                        SELECT DISTINCT 0 as ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                        FROM tmpReceipt_find 
                             INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain()
@@ -887,9 +998,32 @@ BEGIN
                                                      ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
                                                     AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                                     AND ObjectBoolean_Order.ValueData = TRUE*/
+                            LEFT JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                 ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.ValueData < inStartDate
                        WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+                         -- !!!
+                         AND ObjectDate_GoodsByGoodsKind_End_old.ObjectId IS NULL
+
                       UNION
-                       -- + могут делаться из самих себя
+                       -- 2.2. 
+                       SELECT DISTINCT 0 as ReceiptId_in, tmpReceipt_find.OperDate,  tmpReceipt_find.GoodsId,   OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                       FROM tmpReceipt_find 
+                            INNER JOIN ObjectLink AS OL_GoodsMain ON OL_GoodsMain.ChildObjectId = tmpReceipt_find.GoodsId_child AND OL_GoodsMain.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsMain_old()
+                            INNER JOIN ObjectLink AS OL_Goods ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId AND OL_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                            /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                     ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                    AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                    AND ObjectBoolean_Order.ValueData = TRUE*/
+                            INNER JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                  ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                 AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                 AND ObjectDate_GoodsByGoodsKind_End_old.ValueData >= inStartDate
+                       WHERE tmpReceipt_find.Ord = 1 AND tmpReceipt_find.GoodsId_child > 0 AND tmpReceipt_find.GoodsId <> tmpReceipt_find.GoodsId_child
+
+                      UNION
+                       -- 3.1 + могут делаться из самих себя
                         SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
                         FROM tmpResult_master
                              INNER JOIN ObjectLink AS OL_GoodsMain
@@ -902,11 +1036,42 @@ BEGIN
                                                       ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
                                                      AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
                                                      AND ObjectBoolean_Order.ValueData = TRUE*/
+                            LEFT JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                 ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                AND ObjectDate_GoodsByGoodsKind_End_old.ValueData < inStartDate
                              LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
                                        ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
                                                AND tmp.ContainerId = tmpResult_master.ContainerId
                         WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
                           AND (ABS (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) >  4)
+                         -- !!!
+                         AND ObjectDate_GoodsByGoodsKind_End_old.ObjectId IS NULL
+
+                      UNION
+                       -- 3.2 + могут делаться из самих себя
+                        SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, OL_Goods.ChildObjectId AS GoodsId_child, 0 AS Koeff, 0 AS ContainerId
+                        FROM tmpResult_master
+                             INNER JOIN ObjectLink AS OL_GoodsMain
+                                                   ON OL_GoodsMain.ChildObjectId = tmpResult_master.GoodsId
+                                                  AND OL_GoodsMain.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsMain_old()
+                             INNER JOIN ObjectLink AS OL_Goods
+                                                   ON OL_Goods.ObjectId = OL_GoodsMain.ObjectId
+                                                  AND OL_Goods.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                             /*INNER JOIN ObjectBoolean AS ObjectBoolean_Order
+                                                      ON ObjectBoolean_Order.ObjectId  = OL_GoodsMain.ObjectId
+                                                     AND ObjectBoolean_Order.DescId    = zc_ObjectBoolean_GoodsByGoodsKind_Order()
+                                                     AND ObjectBoolean_Order.ValueData = TRUE*/
+                             INNER JOIN ObjectDate AS ObjectDate_GoodsByGoodsKind_End_old
+                                                   ON ObjectDate_GoodsByGoodsKind_End_old.ObjectId  = OL_GoodsMain.ObjectId
+                                                  AND ObjectDate_GoodsByGoodsKind_End_old.DescId    = zc_ObjectDate_GoodsByGoodsKind_End_old()
+                                                  AND ObjectDate_GoodsByGoodsKind_End_old.ValueData >= inStartDate
+                             LEFT JOIN (SELECT tmpResult_child.OperDate, tmpResult_child.ContainerId, SUM (tmpResult_child.OperCount) AS OperCount FROM tmpResult_child GROUP BY tmpResult_child.OperDate, tmpResult_child.ContainerId
+                                       ) AS tmp ON tmp.OperDate    = tmpResult_master.OperDate
+                                               AND tmp.ContainerId = tmpResult_master.ContainerId
+                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                          AND (ABS (100 * tmp.OperCount / (tmpResult_master.OperCount + tmpResult_master.OperCount_two)) >  4)
+
                       UNION
                        -- данные zc_MI_Master, еще могут делаться из самих себя
                         SELECT DISTINCT 0 as ReceiptId_in, tmpResult_master.OperDate, tmpResult_master.GoodsId, tmpResult_master.GoodsId AS GoodsId_child, 0 AS Koeff
@@ -951,10 +1116,18 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
                                                    ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectLink_ReceiptChild_GoodsKind.DescId   = zc_ObjectLink_ReceiptChild_GoodsKind()
+
                               INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -977,6 +1150,9 @@ BEGIN
                                                    AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
                        WHERE (tmpResult_master.OperCount + tmpResult_master.OperCount_two) > 0
+                         --
+                         AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                                             AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
                       )
 
           , tmpAll AS (-- данные All
@@ -1452,10 +1628,18 @@ BEGIN
                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
                                                    ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
                                                   AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+
                               INNER JOIN ObjectFloat AS ObjectFloat_Value
                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                                     AND ObjectFloat_Value.ValueData <> 0
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_Start
+                                                        ON ObjectDate_ReceiptChild_Start.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_Start.DescId   = zc_ObjectDate_ReceiptChild_Start()
+                              LEFT JOIN ObjectDate AS ObjectDate_ReceiptChild_End
+                                                        ON ObjectDate_ReceiptChild_End.ObjectId = Object_ReceiptChild.Id
+                                                       AND ObjectDate_ReceiptChild_End.DescId   = zc_ObjectDate_ReceiptChild_End()
+
                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = ObjectLink_ReceiptChild_Goods.ChildObjectId
                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -1499,6 +1683,9 @@ BEGIN
            )
        -- нет Типа документов
        AND ObjectLink_ReceiptLevel_DocumentKind.ChildObjectId IS NULL
+       --
+       AND inStartDate BETWEEN COALESCE (ObjectDate_ReceiptChild_Start.ValueData, zc_DateStart())
+                           AND COALESCE (ObjectDate_ReceiptChild_End.ValueData, zc_DateEnd())
       ;
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -1615,4 +1802,5 @@ END;$BODY$
 -- where (DescId_mi < 0 and GoodsCode in (101, 2207)) or (DescId_mi IN (  1,  zc_MI_Child())   and (GoodsCode in (101, 2207) or GoodsCode_master = 101))
 -- where GoodsCode in (101, 2207) or GoodsCode_master in (101, 2207)
 -- order by DescId_mi desc, GoodsName_master, GoodsKindName_master, GoodsName, GoodsKindName, OperDate
--- select * from gpUpdate_Movement_ProductionUnion_Pack(inStartDate := ('02.02.2021')::TDateTime , inEndDate := ('02.02.2021')::TDateTime , inUnitId := 8451 ,  inSession := '5')
+--
+-- select * from gpUpdate_Movement_ProductionUnion_Pack (inStartDate:= '04.08.2024', inEndDate:= '04.08.2024', inUnitId:= zc_Unit_Pack(), inSession:= '5')
