@@ -154,6 +154,18 @@ BEGIN
                          , BusinessId, BranchId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                           )
+
+        WITH tmpMI_child AS (SELECT MI_Child.ParentId     AS ParentId
+                                  , MI_Child.ObjectId     AS GoodsId
+                                  , SUM (MI_Child.Amount) AS Amount
+                                  , MAX (MI_Child.Id)     AS MovementItemId
+                             FROM MovementItem AS MI_Child
+                             WHERE MI_Child.MovementId = inMovementId
+                               AND MI_Child.DescId     = zc_MI_Child()
+                               AND MI_Child.isErased   = FALSE
+                             GROUP BY MI_Child.ParentId
+                                    , MI_Child.ObjectId
+                            )
         SELECT tmpMI.MovementItemId
              , 0 AS ContainerId_ProfitLoss_10300    -- сформируем позже
              , 0 AS AccountId_To                    -- сформируем позже
@@ -211,7 +223,7 @@ BEGIN
                    , View_InfoMoney_From.InfoMoneyId
 
               FROM (SELECT MovementItem.Id                                        AS MovementItemId
-                         , COALESCE (MI_Child.ObjectId, MovementItem.ObjectId)    AS GoodsId
+                         , COALESCE (MI_Child.GoodsId, MovementItem.ObjectId)     AS GoodsId
                          , COALESCE (MILinkObject_GoodsKind_child.ObjectId, MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                          
                          , COALESCE (ObjectLink_UnitFrom_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
@@ -241,20 +253,16 @@ BEGIN
       
                     FROM Movement
                          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
-                         LEFT JOIN MovementItem AS MI_Child
-                                                ON MI_Child.MovementId = Movement.Id
-                                               AND MI_Child.DescId     = zc_MI_Child()
-                                               AND MI_Child.ParentId   = MovementItem.Id
-                                               AND MI_Child.isErased   = FALSE
+                         LEFT JOIN tmpMI_child AS MI_Child ON MI_Child.ParentId   = MovementItem.Id
       
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_child
-                                                          ON MILinkObject_GoodsKind_child.MovementItemId = MI_Child.Id
+                                                          ON MILinkObject_GoodsKind_child.MovementItemId = MI_Child.MovementItemId
                                                          AND MILinkObject_GoodsKind_child.DescId         = zc_MILinkObject_GoodsKind()
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit_child
-                                                          ON MILinkObject_Unit_child.MovementItemId = MI_Child.Id
+                                                          ON MILinkObject_Unit_child.MovementItemId = MI_Child.MovementItemId
                                                          AND MILinkObject_Unit_child.DescId         = zc_MILinkObject_Unit()
                          LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                               ON ObjectLink_UnitFrom_Branch.ObjectId = MILinkObject_Unit_child.ObjectId
