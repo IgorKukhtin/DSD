@@ -9,7 +9,9 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -29,7 +31,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outAmountPlanMinWeight TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг) вес
     IN inAmountPlanMax        TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
    OUT outAmountPlanMaxWeight TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг) Вес
- INOUT ioTaxRetIn             TFloat    , -- % возвратa
+ INOUT ioTaxRetIn             TFloat    , -- % возвратa  
+    IN inAmountMarket         TFloat    , --Кол-во факт (маркет бюджет)
+    IN inSummOutMarket        TFloat    , --Сумма факт кредит(маркет бюджет)
+    IN inSummInMarket         TFloat    , --Сумма факт дебет(маркет бюджет) 
  INOUT ioGoodsKindId          Integer   , -- ИД обьекта <Вид товара>
    OUT outGoodsKindName       TVarChar  , -- 
  INOUT ioGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
@@ -237,6 +242,9 @@ BEGIN
                                                   , inAmountPlanMin        := inAmountPlanMin
                                                   , inAmountPlanMax        := inAmountPlanMax
                                                   , inTaxRetIn             := ioTaxRetIn
+                                                  , inAmountMarket         := inAmountMarket
+                                                  , inSummOutMarket        := inSummOutMarket
+                                                  , inSummInMarket         := inSummInMarket
                                                   , inGoodsKindId          := ioGoodsKindId
                                                   , inGoodsKindCompleteId  := ioGoodsKindCompleteId
                                                   , inComment              := inComment
@@ -277,6 +285,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 07.08.24         * 
  24.01.18         * inPriceTender
  28.11.17         * ioGoodsKindCompleteId
  25.11.15                                                                         * Comment

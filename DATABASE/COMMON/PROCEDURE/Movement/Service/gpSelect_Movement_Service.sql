@@ -41,6 +41,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ProfitLossDirectionName TVarChar
              , ProfitLossName          TVarChar
              , ProfitLossName_all      TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar
+             , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar, DescName_doc TVarChar
              )
 AS
 $BODY$
@@ -215,7 +217,15 @@ BEGIN
            , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
            , tmpProfitLoss_View.ProfitLossDirectionName ::TVarChar
            , tmpProfitLoss_View.ProfitLossName          ::TVarChar
-           , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar
+           , tmpProfitLoss_View.ProfitLossName_all      ::TVarChar  
+           
+           , Object_TradeMark.Id                    AS TradeMarkId
+           , Object_TradeMark.ValueData             AS TradeMarkName
+           , Movement_Doc.Id                        AS MovementId_doc
+           , Movement_Doc.InvNumber                 AS InvNumber_doc
+           , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
+           , MovementDesc_Doc.ItemName              AS DescName_doc
+
        FROM tmpMovement AS Movement
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -239,6 +249,18 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_TradeMark
+                                         ON MovementLinkObject_TradeMark.MovementId = Movement.Id
+                                        AND MovementLinkObject_TradeMark.DescId = zc_MovementLinkObject_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = MovementLinkObject_TradeMark.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Doc
+                                           ON MLM_Doc.MovementId = Movement.Id
+                                          AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc()
+            LEFT JOIN Movement AS Movement_Doc ON Movement_Doc.Id = MLM_Doc.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = Movement_Doc.DescId
+
             --ProfitLoss
             LEFT JOIN tmpMI—_ProfitLoss ON tmpMI—_ProfitLoss.MovementId = Movement.Id
             LEFT JOIN tmpProfitLoss_View ON tmpProfitLoss_View.ProfitLossId = tmpMI—_ProfitLoss.ProfitLossId
@@ -336,6 +358,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.08.24         *
  20.10.22         * JuridicalBasis
  04.10.21         * ProfitLoss...
  24.02.20         *

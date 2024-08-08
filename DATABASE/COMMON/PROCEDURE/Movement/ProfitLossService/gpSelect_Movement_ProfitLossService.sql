@@ -47,7 +47,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , PersonalId_main Integer, PersonalName_main TVarChar
              , PaidKindId_Child Integer, PaidKindName_Child TVarChar
              , CurrencyPartnerId Integer
-             , CurrencyPartnerName TVarChar
+             , CurrencyPartnerName TVarChar 
+             , TradeMarkId Integer, TradeMarkName TVarChar
+             , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar, DescName_doc TVarChar
              , isLoad Boolean
 
              , ProfitLossGroupName     TVarChar
@@ -275,6 +277,14 @@ BEGIN
            , Object_CurrencyPartner.Id                     AS CurrencyPartnerId
            , Object_CurrencyPartner.ValueData              AS CurrencyPartnerName
 
+           , Object_TradeMark.Id                           AS TradeMarkId
+           , Object_TradeMark.ValueData                    AS TradeMarkName
+           
+           , Movement_Doc.Id                               AS MovementId_doc
+           , Movement_Doc.InvNumber                        AS InvNumber_doc
+           , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
+           , MovementDesc_Doc.ItemName                     AS DescName_doc
+
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
            , tmpProfitLoss_View.ProfitLossGroupName     ::TVarChar
@@ -308,6 +318,17 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_TradeMark
+                                         ON MovementLinkObject_TradeMark.MovementId = Movement.Id
+                                        AND MovementLinkObject_TradeMark.DescId = zc_MovementLinkObject_TradeMark()
+            LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = MovementLinkObject_TradeMark.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Doc
+                                           ON MLM_Doc.MovementId = Movement.Id
+                                          AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc()
+            LEFT JOIN Movement AS Movement_Doc ON Movement_Doc.Id = MLM_Doc.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = Movement_Doc.DescId
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                        ON MovementFloat_TotalSumm.MovementId = Movement.Id
@@ -456,6 +477,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.08.24         * 
  31.08.20         *
  21.05.20         *
  06.10.16         * add inJuridicalBasisId
@@ -467,3 +489,5 @@ $BODY$
 
 -- ÚÂÒÚ
 --SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.09.2021' , inEndDate:= '30.09.2021' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '5')
+
+SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.08.2024' , inEndDate:= '01.08.2024' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '5')

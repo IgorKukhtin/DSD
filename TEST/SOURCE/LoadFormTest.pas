@@ -3580,6 +3580,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromo_ServiceGoodsJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromo_ServiceGoodsJournalChoiceForm');
+  exit;
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroup_GoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroup_GoodsGroupForm');
@@ -3618,6 +3621,7 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+
 {  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_PersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_PersonalForm');
     exit;
@@ -3849,10 +3853,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoManagerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoManagerJournalForm');
 

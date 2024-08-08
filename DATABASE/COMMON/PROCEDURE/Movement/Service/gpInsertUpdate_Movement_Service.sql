@@ -5,10 +5,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDat
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                       , TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                        , TVarChar, TVarChar
-                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -41,6 +45,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inMovementId_Invoice       Integer   , -- документ счет
     IN inAssetId                  Integer   , -- Для ОС
     IN inCurrencyPartnerId        Integer   , -- Валюта (контрагента)
+    IN inTradeMarkId              Integer   , --
+    IN inMovementId_doc           Integer   , --
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -214,6 +220,11 @@ BEGIN
      -- сохранили свойство <Сумма операции (в валюте)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, vbAmountCurrency);
 
+     -- 
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TradeMark(), ioId, inTradeMarkId);
+     -- 
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Doc(), ioId, inMovementId_doc);
+
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
@@ -315,6 +326,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.08.24         *
  24.02.20         *
  01.08.17         *
  27.08.16         * add asset

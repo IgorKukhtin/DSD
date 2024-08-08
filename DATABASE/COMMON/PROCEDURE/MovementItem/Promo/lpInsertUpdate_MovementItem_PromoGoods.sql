@@ -3,7 +3,9 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -21,6 +23,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inAmountPlanMin         TFloat    , -- Минимум планируемого объема продаж на акционный период (в кг)
     IN inAmountPlanMax         TFloat    , -- Максимум планируемого объема продаж на акционный период (в кг)
     IN inTaxRetIn              TFloat    , -- % возврата
+    IN inAmountMarket          TFloat    , --Кол-во факт (маркет бюджет)
+    IN inSummOutMarket         TFloat    , --Сумма факт кредит(маркет бюджет)
+    IN inSummInMarket          TFloat    , --Сумма факт дебет(маркет бюджет) 
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
     IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
     IN inComment               TVarChar  , --Комментарий
@@ -74,6 +79,13 @@ BEGIN
     -- сохранили <Максимум планируемого объема продаж на акционный период (в кг)>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlanMax(), ioId, COALESCE(inAmountPlanMax,0));
 
+    -- сохранили <Кол-во факт (маркет бюджет)>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountMarket(), ioId, inAmountMarket);
+    -- сохранили <Сумма факт дебет(маркет бюджет) >
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummInMarket(), ioId, inSummInMarket);
+    -- сохранили <Сумма факт кредит(маркет бюджет)>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummOutMarket(), ioId, inSummOutMarket);
+
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
     -- сохранили связь с <Вид товара (примечание)> - может быть замена
@@ -102,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 07.08.24         *
  22.10.20         * inTaxRetIn
  14.07.20         * inOperPriceList
  24.01.18         * inPriceTender

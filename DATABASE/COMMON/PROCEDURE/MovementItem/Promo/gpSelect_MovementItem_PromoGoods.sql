@@ -55,6 +55,10 @@ RETURNS TABLE (
 
       , PriceTender         TFloat -- Цена Тендер без учета НДС, с учетом скидки, грн
 
+      , AmountMarket  TFloat     --Кол-во факт (маркет бюджет)
+      , SummOutMarket TFloat     --Сумма факт кредит(маркет бюджет)
+      , SummInMarket  TFloat     --Сумма факт дебет(маркет бюджет)
+
       , GoodsKindId            Integer --ИД обьекта <Вид товара>
       , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
       , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>
@@ -198,6 +202,11 @@ BEGIN
              , MIFloat_Plan7.ValueData                AS AmountPlan7
 
              , MIFloat_PriceTender.ValueData          AS PriceTender
+             --
+             , MIFloat_AmountMarket.ValueData  ::TFloat AS AmountMarket
+             , MIFloat_SummOutMarket.ValueData ::TFloat AS SummOutMarket
+             , MIFloat_SummInMarket.ValueData  ::TFloat AS SummInMarket
+
 
              , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
              , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
@@ -288,6 +297,17 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_MainDiscount
                                          ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id
                                         AND MIFloat_MainDiscount.DescId = zc_MIFloat_MainDiscount()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountMarket
+                                         ON MIFloat_AmountMarket.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountMarket.DescId = zc_MIFloat_AmountMarket()
+             LEFT JOIN MovementItemFloat AS MIFloat_SummOutMarket
+                                         ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
+                                        AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
+             LEFT JOIN MovementItemFloat AS MIFloat_SummInMarket
+                                         ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
+                                        AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
+
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
