@@ -49,6 +49,10 @@ BEGIN
                                    LEFT JOIN MovementItem ON MovementItem.Id       = tmpMILO.MovementItemId
                                                          AND MovementItem.isErased = FALSE
                                    LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
+                                                             ON MovementBoolean_isRePack.MovementId = Movement.Id
+                                                            AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
+                                                            AND MovementBoolean_isRePack.ValueData  = TRUE
                                    LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                                                     ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                                                                    AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -57,6 +61,9 @@ BEGIN
                                                              AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
                               -- Только заполненные
                               WHERE tmpMILO.ObjectId > 0
+                                -- без ПЕРЕПАК
+                                AND MovementBoolean_isRePack.MovementId IS NULL
+                                --
                                 AND tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
                                                      , zc_MILinkObject_PartionCell_2()
                                                      , zc_MILinkObject_PartionCell_3()
