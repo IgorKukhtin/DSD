@@ -9,7 +9,7 @@ AS
 $BODY$
 BEGIN
 
-     RETURN '01.07.2024';
+     RETURN '01.08.2024';
 
 
 END;
