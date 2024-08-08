@@ -180,7 +180,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     vbIsWeighing:= vbUserId = 5;
+     vbIsWeighing:= TRUE; -- vbUserId = 5;
 
 
      -- !!!Только просмотр Аудитор!!!
@@ -325,9 +325,10 @@ BEGIN
                       WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate + INTERVAL '14 DAY'
                         AND Movement.DescId = zc_Movement_WeighingProduction()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                        AND MovementLinkObject_From.ObjectId = zc_Unit_Pack()
+                        AND MovementLinkObject_From.ObjectId IN (zc_Unit_Pack(), zc_Unit_RK_Label())
                         AND MovementLinkObject_To.ObjectId = inUnitId
                         AND vbIsWeighing = TRUE
+                        AND (Movement.Id <> 28931444 OR vbUserId = 5)
 
                      UNION
                       -- или в Ячейке
@@ -352,9 +353,10 @@ BEGIN
                                            )
                         AND Movement.DescId = zc_Movement_WeighingProduction()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                        AND MovementLinkObject_From.ObjectId = zc_Unit_Pack()
+                        AND MovementLinkObject_From.ObjectId IN (zc_Unit_Pack(), zc_Unit_RK_Label())
                         AND MovementLinkObject_To.ObjectId = inUnitId
                         AND vbIsWeighing = TRUE
+                        AND (Movement.Id <> 28931444 OR vbUserId = 5)
                       )
 
        -- Все MI

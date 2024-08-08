@@ -187,6 +187,7 @@ BEGIN
         AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
         --
         AND vbUserId <> 602817 -- Якимчик А.С.
+        --AND inPartionGoodsDate <> '01.07.2024'
      THEN
          IF TRIM (ioPartionCellName_1) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_1() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
                                               OR ioPartionCellId_1 > 0
@@ -1322,7 +1323,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
 
      -- Роль - Переброска любой ячейки в отбор
-     IF inOrd <> 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
+     IF inOrd > 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
         AND zc_PartionCell_RK() IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5
                                   , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
                                   , vbPartionCellId_11, vbPartionCellId_12

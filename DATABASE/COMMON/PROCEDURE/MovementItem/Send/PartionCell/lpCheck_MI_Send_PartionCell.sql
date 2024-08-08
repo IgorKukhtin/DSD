@@ -14,7 +14,7 @@ RETURNS Integer
 AS
 $BODY$
 BEGIN
-     IF COALESCE (inPartionCellId, zc_PartionCell_RK()) IN (0, zc_PartionCell_RK())
+     IF COALESCE (inPartionCellId, 0) IN (0, zc_PartionCell_RK())
      THEN
          RETURN 0;
      ELSE
@@ -91,6 +91,10 @@ BEGIN
                                        , zc_MILinkObject_PartionCell_21(), zc_MILinkObject_PartionCell_22()
                                         )
                    AND MILO.ObjectId = inPartionCellId
+                   -- Перемещение + Взвешивание
+                   AND (Movement.DescId = zc_Movement_Send()
+                     OR (Movement.DescId = zc_Movement_WeighingProduction() AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                       )
                    -- партия открыта
                    AND MIBoolean_PartionCell_Close.MovementItemId IS NULL
                    -- в ячейке другой товар или ....
