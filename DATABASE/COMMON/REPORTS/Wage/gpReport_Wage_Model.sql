@@ -432,9 +432,14 @@ AS  (SELECT
                      END AS GoodsId_to
 
                     ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
+                                     THEN MovementItemContainer.Amount
+                                ELSE -1 * MovementItemContainer.Amount
+                          END)::TFloat as Amount
+
+                    ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
                                      THEN MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
                                 ELSE -1 * MovementItemContainer.Amount - COALESCE (MIF_AmountForm.ValueData, 0)
-                          END)::TFloat as Amount
+                          END)::TFloat as Amount_form
 
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
 
@@ -612,10 +617,12 @@ AS  (SELECT
                           ELSE Container.ObjectId
                      END AS GoodsId_to
 
+                    ,0 ::TFloat as Amount
+
                     ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
                                      THEN COALESCE (MIF_AmountForm.ValueData, 0)
                                 ELSE COALESCE (MIF_AmountForm.ValueData, 0)
-                          END)::TFloat as Amount
+                          END)::TFloat AS Amount_form
 
                     , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
 
@@ -753,6 +760,8 @@ AS  (SELECT
                                              tmpMovement_all.MovementId
                                       FROM tmpMovement_all
                                       WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
+                                        --!!!без формовки
+                                        AND tmpMovement_all.Amount_form = 0
                                      ) AS tmpMovementList
                                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
                                                             AND MovementItem.DescId     = zc_MI_Master()
@@ -771,7 +780,8 @@ AS  (SELECT
                             , tmpMovement_all.ToId
                             , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from) AS GoodsId_from
                             , tmpMovement_all.GoodsId_to
-                            , SUM (tmpMovement_all.Amount) :: TFloat AS Amount
+                            , SUM (tmpMovement_all.Amount)      :: TFloat AS Amount
+                            , SUM (tmpMovement_all.Amount_form) :: TFloat AS Amount_form
                             , tmpMovement_all.GoodsKindId
                             , tmpMovement_all.GoodsKind_FromId
                             , tmpMovement_all.GoodsKindComplete_FromId
@@ -920,7 +930,13 @@ AS  (SELECT
            , CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                   THEN
                       CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN (tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                           THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                                           -- формовка
+                                                           THEN tmpMovement.Amount_form
+                                                      ELSE tmpMovement.Amount
+                                                 END
+                                               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                                )
                                               / ObjectFloat_WeightTotal.ValueData
                                       ELSE 0
                                  END
@@ -935,11 +951,21 @@ AS  (SELECT
 
                                WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                                   THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                   THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                                                         -- формовка
+                                                                         THEN tmpMovement.Amount_form
+                                                                    ELSE tmpMovement.Amount
+                                                               END
+                                                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                                              )
                                                             / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
                                               ELSE 0
                                          END
-                               ELSE tmpMovement.Amount
+                               ELSE CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                              -- формовка
+                                              THEN tmpMovement.Amount_form
+                                         ELSE tmpMovement.Amount
+                                    END
 
                           END)
              END :: TFloat AS Gross
@@ -949,7 +975,13 @@ AS  (SELECT
            * CASE WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                   THEN
                       CAST (SUM (CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                           THEN (tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                           THEN (CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                                           -- формовка
+                                                           THEN tmpMovement.Amount_form
+                                                      ELSE tmpMovement.Amount
+                                                 END
+                                               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                                )
                                               / ObjectFloat_WeightTotal.ValueData
                                       ELSE 0
                                  END
@@ -964,11 +996,21 @@ AS  (SELECT
 
                                WHEN Setting.SelectKindId = zc_Enum_SelectKind_InPack() --  ол-во упаковок приход (расчет)
                                     THEN CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0
-                                                   THEN CAST ((tmpMovement.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END)
+                                                   THEN CAST ((CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                                                         -- формовка
+                                                                         THEN tmpMovement.Amount_form
+                                                                    ELSE tmpMovement.Amount
+                                                               END
+                                                             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END
+                                                              )
                                                             / ObjectFloat_WeightTotal.ValueData AS NUMERIC (16, 0))
                                               ELSE 0
                                          END
-                               ELSE tmpMovement.Amount
+                               ELSE CASE WHEN Setting.SelectKindId IN (zc_Enum_SelectKind_InAmountForm(), zc_Enum_SelectKind_OutAmountForm())
+                                              -- формовка
+                                              THEN tmpMovement.Amount_form
+                                         ELSE tmpMovement.Amount
+                                    END
 
                           END)
              END :: TFloat
