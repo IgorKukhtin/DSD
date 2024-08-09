@@ -123,6 +123,8 @@ type
     ItemName: TcxGridDBColumn;
     isRePack: TcxGridDBColumn;
     spSelectPrintPasportList: TdsdStoredProc;
+    ChoiceCellCode: TcxGridDBColumn;
+    ChoiceCellName: TcxGridDBColumn;
   private
     { Private declarations }
   public

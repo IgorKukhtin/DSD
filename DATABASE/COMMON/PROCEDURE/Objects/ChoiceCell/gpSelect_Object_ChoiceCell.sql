@@ -28,7 +28,7 @@ BEGIN
   
 
      --
-     CREATE TEMP TABLE _tmpPartionCell (PartionCellId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpPartionCell_ful (PartionCellId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
 
      --
      OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() /*AND Object.Id = zc_PartionCell_RK()*/ ORDER BY Object.Id;
@@ -42,7 +42,7 @@ BEGIN
           END IF;
 
           -- Только заполненные ячейки + отбор
-          INSERT INTO _tmpPartionCell (PartionCellId, GoodsId, GoodsKindId, PartionGoodsDate)
+          INSERT INTO _tmpPartionCell_ful (PartionCellId, GoodsId, GoodsKindId, PartionGoodsDate)
              WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
                   , tmpMI AS (SELECT DISTINCT tmpMILO.ObjectId AS PartionCellId, MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId, COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) AS PartionGoodsDate
                               FROM tmpMILO
@@ -102,17 +102,17 @@ BEGIN
        WITH tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                          -- № п/п
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate DESC) AS Ord
-                                  FROM (SELECT DISTINCT _tmpPartionCell.GoodsId, _tmpPartionCell.GoodsKindId, _tmpPartionCell.PartionGoodsDate
-                                        FROM _tmpPartionCell
-                                        WHERE _tmpPartionCell.PartionCellId = zc_PartionCell_RK()
+                                  FROM (SELECT DISTINCT _tmpPartionCell_ful.GoodsId, _tmpPartionCell_ful.GoodsKindId, _tmpPartionCell_ful.PartionGoodsDate
+                                        FROM _tmpPartionCell_ful
+                                        WHERE _tmpPartionCell_ful.PartionCellId = zc_PartionCell_RK()
                                        ) AS tmpMI
                                  )
         , tmpPartionCell_real AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                          -- № п/п
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate ASC) AS Ord
-                                  FROM (SELECT DISTINCT _tmpPartionCell.GoodsId, _tmpPartionCell.GoodsKindId, _tmpPartionCell.PartionGoodsDate
-                                        FROM _tmpPartionCell
-                                        WHERE _tmpPartionCell.PartionCellId <> zc_PartionCell_RK()
+                                  FROM (SELECT DISTINCT _tmpPartionCell_ful.GoodsId, _tmpPartionCell_ful.GoodsKindId, _tmpPartionCell_ful.PartionGoodsDate
+                                        FROM _tmpPartionCell_ful
+                                        WHERE _tmpPartionCell_ful.PartionCellId <> zc_PartionCell_RK()
                                        ) AS tmpMI
                                  )
        
