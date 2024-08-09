@@ -1679,7 +1679,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaskJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaskJournalForm');
 end;
-     procedure TLoadFormTest.LoadReturnKindFormTest;
+
+procedure TLoadFormTest.LoadReturnKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnKindForm');
@@ -2482,6 +2483,11 @@ end;
 
 procedure TLoadFormTest.LoadReportBonusFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
