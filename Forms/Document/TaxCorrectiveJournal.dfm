@@ -24,6 +24,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       inherited cxGrid: TcxGrid
         Width = 1097
         Height = 459
+        ExplicitLeft = 10
+        ExplicitTop = -96
         ExplicitWidth = 1097
         ExplicitHeight = 459
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -259,6 +261,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderHint = #1048#1053#1053' '#1080#1089#1087#1088#1072#1074#1083#1077#1085' '#1076#1083#1103' 1-'#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' ('#1076#1072'/'#1085#1077#1090')'
             Options.Editing = False
             Width = 40
+          end
+          object RetailName_From: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
