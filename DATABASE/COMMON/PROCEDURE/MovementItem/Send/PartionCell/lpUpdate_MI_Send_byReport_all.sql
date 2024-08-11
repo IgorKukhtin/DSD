@@ -227,10 +227,21 @@ BEGIN
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
                                                               AND MovementLinkObject_To.ObjectId   = inUnitId
+                                 LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                                         ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                                        AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                                 LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                                         ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                                        AND MovementFloat_MovementDescNumber.DescId     = zc_MovementFloat_MovementDescNumber()
+                                                        AND MovementFloat_MovementDescNumber.ValueData  = 25 -- Перепак
+                                                        -- !!!
+                                                        AND MovementFloat_BranchCode.ValueData          = 1
                            WHERE Movement.OperDate  = inPartionGoodsDate -- BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId   = zc_Movement_WeighingProduction()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               AND vbIsWeighing = TRUE
+                              -- без Перепак
+                              AND MovementFloat_MovementDescNumber.MovementId IS NULL
                            )
 
           , tmpMI AS (SELECT MovementItem.MovementId        AS MovementId
