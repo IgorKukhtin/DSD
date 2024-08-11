@@ -92,17 +92,30 @@ BEGIN
                            AND Object.isErased = FALSE
                          )
        -- занятые ячейки - показать да/нет
-     , tmpMILO_PartionCell_all_1 AS (SELECT DISTINCT _tmpPartionCell_mi.ObjectId AS PartionCellId
+     , tmpMILO_PartionCell_all_1 AS (SELECT _tmpPartionCell_mi.ObjectId AS PartionCellId, MAX (_tmpPartionCell_mi.MovementItemId) AS MovementItemId_max, MIN (_tmpPartionCell_mi.MovementItemId) AS MovementItemId_min
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
+                                          INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
+                                          INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                      WHERE inIsShowFree = FALSE
+                                        AND (Movement.DescId = zc_Movement_Send()
+                                          OR (Movement.DescId = zc_Movement_WeighingProduction()
+                                          AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                            )
+                                     GROUP BY _tmpPartionCell_mi.ObjectId
                                     )
        -- занятые ячейки - показать MovementItem
      , tmpMILO_PartionCell_all_2 AS (SELECT _tmpPartionCell_mi.*
                                      FROM tmpPartionCell
                                           INNER JOIN _tmpPartionCell_mi ON _tmpPartionCell_mi.ObjectId = tmpPartionCell.Id
+                                          INNER JOIN MovementItem ON MovementItem.Id = _tmpPartionCell_mi.MovementItemId
+                                          INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                                      WHERE inIsShowFree = TRUE
                                        AND _tmpPartionCell_mi.ObjectId <> zc_PartionCell_RK()
+                                        AND (Movement.DescId = zc_Movement_Send()
+                                          OR (Movement.DescId = zc_Movement_WeighingProduction()
+                                          AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                            )
                                     )
        -- занятые ячейки - показать MovementItem
      , tmpMI AS (SELECT MovementItem.*
@@ -128,6 +141,12 @@ BEGIN
                                           JOIN Movement ON Movement.Id       = MovementItem.MovementId
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                        AND Movement.DescId   = zc_Movement_Send()
+                                     WHERE ((Movement.DescId = zc_Movement_Send()
+                                         AND Movement.StatusId = zc_Enum_Status_Complete())
+                                         OR (Movement.DescId = zc_Movement_WeighingProduction()
+                                         AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                                           )
+
                                ) AS tmp
                                -- первый документ
                                -- WHERE tmp.Ord = 1
@@ -164,6 +183,11 @@ BEGIN
             , Object.Name_search
             , CASE WHEN inIsShowFree = FALSE
                         THEN CASE WHEN tmpMILO_PartionCell_all_1.PartionCellId > 0 THEN 'Занято' ELSE 'Свободно' END
+                          || CASE WHEN vbUserId = 5 AND 1=0 AND tmpMILO_PartionCell_all_1.PartionCellId > 0
+                                       THEN '(' || tmpMILO_PartionCell_all_1.MovementItemId_min :: TVarChar || ')'
+                                         || '(' || tmpMILO_PartionCell_all_1.MovementItemId_max :: TVarChar || ')'
+                                  ELSE ''
+                             END
                    ELSE CASE WHEN tmpMILO_PartionCell.PartionCellId > 0 THEN 'Занято' ELSE 'Свободно' END
               END :: TVarChar AS Status
 
