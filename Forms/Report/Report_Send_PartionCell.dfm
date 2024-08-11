@@ -1,29 +1,29 @@
 inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   Caption = '<'#1055#1072#1088#1090#1080#1103' '#1091#1095#1077#1090#1072' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
-  ClientHeight = 384
+  ClientHeight = 408
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1556
-  ExplicitHeight = 423
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 97
     Width = 1540
-    Height = 287
+    Height = 311
     TabOrder = 3
     ExplicitTop = 97
     ExplicitWidth = 1540
     ExplicitHeight = 287
-    ClientRectBottom = 287
+    ClientRectBottom = 311
     ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1540
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
         Width = 1540
-        Height = 287
+        Height = 311
         ExplicitWidth = 1540
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -303,6 +303,23 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             VisibleForCustomization = False
+            Width = 58
+          end
+          object ChoiceCellCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1103#1095'. '#1086#1090#1073#1086#1088#1072
+            DataBinding.FieldName = 'ChoiceCellCode'
+            GroupSummaryAlignment = taRightJustify
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 58
+          end
+          object ChoiceCellName: TcxGridDBColumn
+            Caption = #1071#1095'. '#1086#1090#1073#1086#1088#1072
+            DataBinding.FieldName = 'ChoiceCellName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object isClose_value_min: TcxGridDBColumn
@@ -1525,6 +1542,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         Properties.Strings = (
           'Checked')
       end>
+    Left = 680
+    Top = 368
   end
   inherited ActionList: TActionList
     object actRefreshCell: TdsdDataSetRefresh [0]

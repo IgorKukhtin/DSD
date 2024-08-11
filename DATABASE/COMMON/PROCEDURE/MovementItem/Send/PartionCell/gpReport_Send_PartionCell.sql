@@ -169,6 +169,11 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
 
              , Ord Integer
              , ColorFon_ord Integer
+
+             , NPP_ChoiceCell      TFloat 
+             , ChoiceCellCode      Integer
+             , ChoiceCellName      TVarChar
+             , ChoiceCellName_shot TVarChar
               )
 AS
 $BODY$
@@ -196,11 +201,19 @@ BEGIN
      inUnitId := zc_Unit_RK();
 
 
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpPartionCell'))
+     THEN
+         DELETE FROM _tmpPartionCell;
+     ELSE
+         CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+    END IF;
+
+
    IF inIsShowAll = FALSE
    THEN
 
      --
-     CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     --CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
      --
      OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() ORDER BY Object.Id;
@@ -1246,8 +1259,15 @@ BEGIN
                                                     AND (tmpData_PartionCell.PartionCellId_num  = tmpData_MI.PartionCellId -- ***
                                                       OR tmpData_MI.PartionCellId = 0
                                                       OR inIsCell = FALSE
-                                                        )
+                                                        )      
               )
+
+        --ячейки отбора               
+      , tmpChoiceCell AS (SELECT tmp.*
+                               , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
+                               , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
+                          FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
+                          )
 
    --
    SELECT tmpResult.MovementId
@@ -1472,13 +1492,22 @@ BEGIN
           -- подсвечиваем строчку
         , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
+        --ячейки отбора
+        , tmpChoiceCell.NPP           ::TFloat   AS NPP_ChoiceCell
+        , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
+        , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
+        , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
    FROM tmpResult
+        LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpResult.GoodsId
+                               AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+                               AND tmpChoiceCell.Ord = 1
+
         ;
 
     ELSE
 
      --
-     CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     --CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
      --
      OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() ORDER BY Object.Id;
@@ -2573,6 +2602,11 @@ BEGIN
 
         , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
+        --ячейки отбора
+        , 0     ::TFloat   AS NPP_ChoiceCell     
+        , NULL  ::Integer  AS ChoiceCellCode
+        , NULL  ::TVarChar AS ChoiceCellName     
+        , NULL  ::TVarChar AS ChoiceCellName_shot
    FROM tmpResult
   ;
 

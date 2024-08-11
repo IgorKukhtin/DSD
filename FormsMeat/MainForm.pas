@@ -1499,6 +1499,8 @@ type
     miGoodsNormDiff: TMenuItem;
     actReport_ProductionUnion_TaxExitUpdate: TdsdOpenForm;
     miReport_ProductionUnion_TaxExitUpdate: TMenuItem;
+    actReport_ProfitLossService: TdsdOpenForm;
+    miReport_ProfitLossService: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

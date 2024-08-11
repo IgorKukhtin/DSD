@@ -266,6 +266,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 92
           end
+          object RetailName_From: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
           object FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'

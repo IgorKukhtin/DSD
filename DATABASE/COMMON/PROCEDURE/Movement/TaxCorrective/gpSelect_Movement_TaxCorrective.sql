@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
-             , FromId Integer, FromName_inf TVarChar, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar
+             , FromId Integer, FromName_inf TVarChar, FromName TVarChar, OKPO_From TVarChar, OKPO_Retail TVarChar, INN_From TVarChar , RetailName_From TVarChar
              , ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
@@ -215,7 +215,8 @@ BEGIN
                                       )
                   THEN '100000000000'
                   ELSE COALESCE (MovementString_FromINN.ValueData, ObjectHistory_JuridicalDetails_View.INN)
-             END :: TVarChar AS INN_From 
+             END :: TVarChar AS INN_From
+           , Object_Retail_from.ValueData               AS RetailName_From 
              
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName
@@ -494,11 +495,13 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()     
+            LEFT JOIN Object AS Object_Retail_from ON Object_Retail_from.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
             LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
                                    ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO() 
-
+            
             LEFT JOIN tmpMIDetail_TaxCorrective ON tmpMIDetail_TaxCorrective.MovementId = Movement.Id
             LEFT JOIN tmpMIDetail_tax ON tmpMIDetail_tax.MovementId = MovementLinkMovement_Child.MovementChildId 
            ;

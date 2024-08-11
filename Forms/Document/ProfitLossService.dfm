@@ -1505,7 +1505,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 343
-    Top = 264
+    Top = 272
   end
   object GuidesDoc: TdsdGuides
     KeyField = 'Id'

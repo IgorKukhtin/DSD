@@ -28,7 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
-             , JuridicalName_From TVarChar, OKPO_From TVarChar
+             , JuridicalName_From TVarChar, OKPO_From TVarChar, RetailName_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , PriceListInId Integer, PriceListInName TVarChar
@@ -293,7 +293,8 @@ BEGIN
            , Object_CurrencyDocument.ValueData          AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData           AS CurrencyPartnerName
            , Object_JuridicalFrom.ValueData             AS JuridicalName_From
-           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
+           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From 
+           , Object_Retail_from.ValueData               AS RetailName_From
            , View_InfoMoney.InfoMoneyGroupName          AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName    AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode               AS InfoMoneyCode
@@ -462,7 +463,12 @@ BEGIN
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
             LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id     
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail_From
+                                 ON ObjectLink_Juridical_Retail_From.ObjectId = Object_JuridicalFrom.Id
+                                AND ObjectLink_Juridical_Retail_From.DescId = zc_ObjectLink_Juridical_Retail()
+            LEFT JOIN Object AS Object_Retail_from ON Object_Retail_from.Id = ObjectLink_Juridical_Retail_From.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id

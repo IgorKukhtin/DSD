@@ -24,7 +24,7 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  dsdGuides, cxButtonEdit, dsdInternetAction;
+  dsdGuides, cxButtonEdit, dsdInternetAction, dsdCommon;
 
 type
   TReturnInJournalForm = class(TAncestorJournalForm)

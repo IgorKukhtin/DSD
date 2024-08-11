@@ -1662,10 +1662,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalChoiceForm');
   Exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
   Exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
 
@@ -1678,7 +1679,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaskJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaskJournalForm');
 end;
-     procedure TLoadFormTest.LoadReturnKindFormTest;
+
+procedure TLoadFormTest.LoadReturnKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnKindForm');
@@ -1716,12 +1718,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerForm');
-   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
    exit;
-
+  {
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
@@ -2482,6 +2483,11 @@ end;
 
 procedure TLoadFormTest.LoadReportBonusFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonus_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonus_IncomeForm');
