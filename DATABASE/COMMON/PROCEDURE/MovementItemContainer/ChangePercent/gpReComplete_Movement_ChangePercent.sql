@@ -24,7 +24,7 @@ BEGIN
 
 
      -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
-     PERFORM lpComplete_Movement_CreateTemp();
+     PERFORM lpComplete_Movement_ChangePercent_CreateTemp();
      -- ѕроводим ƒокумент
      outMessageText:= lpComplete_Movement_ChangePercent (inMovementId     := inMovementId
                                                        , inUserId         := vbUserId);
