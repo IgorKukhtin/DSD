@@ -31,7 +31,7 @@ type
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     TaxLossVPR: TcxGridDBColumn;
-    CuterCount: TcxGridDBColumn;
+    CuterCount_inf: TcxGridDBColumn;
     FormParams: TdsdFormParams;
     PartionGoodsDate: TcxGridDBColumn;
     Amount_Humidity: TcxGridDBColumn;

@@ -1514,12 +1514,12 @@ uses
   Report_PartionCell_history in '..\..\Forms\Report\Report_PartionCell_history.pas' {Report_PartionCell_historyForm: TParentForm},
   GoodsNormDiff in '..\..\Forms\Guides\GoodsNormDiff.pas' {GoodsNormDiffForm: TParentForm},
   GoodsNormDiffEdit in '..\..\Forms\Guides\GoodsNormDiffEdit.pas' {GoodsNormDiffEditForm: TParentForm},
-  Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm},
   Report_ProductionUnion_TaxExitUpdateDialog in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdateDialog.pas' {Report_ProductionUnion_TaxExitUpdateDialogForm: TParentForm},
   AmountFormDialog in '..\..\Forms\Document\AmountFormDialog.pas' {AmountFormDialogForm: TParentForm},
   Promo_ServiceGoodsJournalChoice in '..\..\Forms\Document\Promo_ServiceGoodsJournalChoice.pas' {Promo_ServiceGoodsJournalChoiceForm: TParentForm},
   Report_ProfitLossServiceDialog in '..\..\Forms\Report\Report_ProfitLossServiceDialog.pas' {Report_ProfitLossServiceDialogForm: TParentForm},
-  Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm};
+  Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm},
+  Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

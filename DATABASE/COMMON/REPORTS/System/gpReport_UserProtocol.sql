@@ -1,14 +1,16 @@
 -- Function: gpReport_UserProtocol (TDateTime, TDateTime, TVarChar)
 
 DROP FUNCTION IF EXISTS gpReport_UserProtocol (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_UserProtocol (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_UserProtocol (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_UserProtocol (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_UserProtocol(
     IN inStartDate   TDateTime , -- 
     IN inEndDate     TDateTime , --
     IN inBranchId    Integer , --
     IN inUnitId      Integer , --
-    IN inUserId      Integer , --
+    IN inUserId      Integer , -- 
+    IN inPositionId  Integer , --
     IN inIsDay       Boolean , --
     IN inIsShowAll   Boolean , -- Показать все
     IN inDiff        TFloat  , -- на сколько минут отклонение
@@ -48,7 +50,7 @@ BEGIN
     WITH 
     tmpPersonal AS (SELECT View_Personal.MemberId
                           , MAX (View_Personal.PersonalId) AS PersonalId
-                          , MAX (View_Personal.UnitId) AS UnitId
+                          , MAX (View_Personal.UnitId)     AS UnitId
                           , MAX (View_Personal.PositionId) AS PositionId
                     FROM Object_Personal_View AS View_Personal
                     -- WHERE View_Personal.isErased = FALSE
@@ -102,7 +104,8 @@ BEGIN
                 WHERE Object_User.DescId = zc_Object_User()
                   AND (Object_User.Id = inUserId OR inUserId =0)  
                   AND (ObjectLink_Unit_Branch.ChildObjectId = inBranchId OR inBranchId = 0) 
-                  AND (tmpPersonal.UnitId = inUnitId OR inUnitId = 0) 
+                  AND (tmpPersonal.UnitId = inUnitId OR inUnitId = 0)
+                  AND (tmpPersonal.PositionId = inPositionId OR inPositionId = 0)  
                 )
   -- генерируем таблицу дат
   , tmpDay AS (SELECT generate_series (inStartDate, inEndDate, '1 DAY' :: INTERVAL) AS OperDate)
@@ -561,6 +564,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.08.24         * inPositionId
  07.11.16         *
 */
 

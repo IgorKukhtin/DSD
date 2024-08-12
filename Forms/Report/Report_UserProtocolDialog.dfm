@@ -1,22 +1,22 @@
 inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1091' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
-  ClientHeight = 193
-  ClientWidth = 382
-  ExplicitWidth = 388
-  ExplicitHeight = 221
+  ClientHeight = 232
+  ClientWidth = 376
+  ExplicitWidth = 382
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 72
-    Top = 160
-    ExplicitLeft = 72
-    ExplicitTop = 160
+    Left = 92
+    Top = 192
+    ExplicitLeft = 92
+    ExplicitTop = 192
   end
   inherited bbCancel: TcxButton
-    Left = 217
-    Top = 160
-    ExplicitLeft = 217
-    ExplicitTop = 160
+    Left = 237
+    Top = 192
+    ExplicitLeft = 237
+    ExplicitTop = 192
   end
   object cxLabel1: TcxLabel [2]
     Left = 21
@@ -125,14 +125,31 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     Top = 15
     Caption = #1054#1090#1082#1083'. '#1084#1080#1085'.'
   end
+  object cxLabel7: TcxLabel [16]
+    Left = 45
+    Top = 140
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+  end
+  object edPosition: TcxButtonEdit [17]
+    Left = 116
+    Top = 139
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 17
+    Width = 240
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 344
-    Top = 144
+    Left = 332
+    Top = 176
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = UserGuides
+        Component = GuidesUser
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -153,19 +170,19 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
           'Date')
       end
       item
-        Component = UnitGuides
+        Component = GuidesUnit
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = BranchGuides
+        Component = GuidesBranch
         Properties.Strings = (
           'Key'
           'TextValue')
       end>
-    Left = 51
-    Top = 128
+    Left = 71
+    Top = 160
   end
   inherited ActionList: TActionList
     Left = 348
@@ -175,7 +192,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -183,7 +200,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       end
       item
         Name = 'EndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -192,7 +209,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'BranchId'
         Value = Null
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -200,7 +217,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'BranchName'
         Value = Null
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -209,7 +226,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'UnitId'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -217,7 +234,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'UnitName'
         Value = Null
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -226,7 +243,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'UserId'
         Value = Null
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -234,7 +251,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'UserName'
         Value = Null
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -263,9 +280,26 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 19
-    Top = 128
+    Left = 39
+    Top = 160
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -273,7 +307,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     Left = 288
     Top = 112
   end
-  object BranchGuides: TdsdGuides
+  object GuidesBranch: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
     FormNameParam.Value = 'TBranch_ObjectForm'
@@ -285,7 +319,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -293,7 +327,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BranchGuides
+        Component = GuidesBranch
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -302,7 +336,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     Left = 181
     Top = 56
   end
-  object UnitGuides: TdsdGuides
+  object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -314,7 +348,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -322,7 +356,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -331,7 +365,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
     Left = 248
     Top = 80
   end
-  object UserGuides: TdsdGuides
+  object GuidesUser: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
     FormNameParam.Value = 'TUser_ObjectForm'
@@ -343,7 +377,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -351,7 +385,7 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UserGuides
+        Component = GuidesUser
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -362,8 +396,52 @@ inherited Report_UserProtocolDialogForm: TReport_UserProtocolDialogForm
         Value = 'zc_Object_Goods'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 152
     Top = 109
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 217
+    Top = 131
   end
 end

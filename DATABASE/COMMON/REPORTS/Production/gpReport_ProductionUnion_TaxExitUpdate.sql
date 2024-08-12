@@ -38,18 +38,20 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_GP_in TFloat
              , ValueGP TFloat, ValuePF TFloat 
              , ValueGP_diff TFloat, ValuePF_diff TFloat 
-             -- Куттеров факт (расчет)
-             , CuterCount_calcinf  TFloat
-             -- Вес п/ф факт (шпр)
-             , RealWeightShpinf    TFloat
-             -- Вес П/Ф после шприцевания (расчет)
-             , RealWeightShp_calcinf  TFloat
-             -- Факт кол-во
-             , Amountinf     TFloat
-             --Вес П/Ф после массажера (расчет)
-             , RealWeightMsg_calcinf     TFloat
-             -- Переходящий П/Ф (расход), кг
-             , Amount_outinf  TFloat
+             
+             , CuterCount_inf  TFloat  -- Куттеров факт 
+             , CuterCount_calcinf  TFloat -- Куттеров факт (расчет)
+             , RealWeightShpinf    TFloat  -- Вес п/ф факт (шпр)
+             , RealWeightShp_calcinf  TFloat   -- Вес П/Ф после шприцевания (расчет)
+             , Amountinf     TFloat   -- Факт кол-во
+             , RealWeightMsg_inf TFloat  --Вес п/ф факт (мсж)
+             , RealWeightMsg_calcinf     TFloat    --Вес П/Ф после массажера (расчет)
+             , Amount_outinf  TFloat   -- Переходящий П/Ф (расход), кг
+             , RealWeight_inf  TFloat     -- Вес п/ф факт
+             --детальная часть
+             , Amount_main_det     TFloat   --кол-во факт
+             , AmountMain_part_det TFloat   --Переходящий П/Ф (расход), кг
+ 
            )  
 
 AS
@@ -361,7 +363,7 @@ BEGIN
                                                            AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
                                 ) AS tmp
                           GROUP BY tmp.MovementId, tmp.ContainerId 
-                          HAVING SUM (COALESCE (tmp.Amount_part,0)) <> 0
+                          --HAVING SUM (COALESCE (tmp.Amount_part,0)) <> 0
                           )
 
          -- результат - группируется
@@ -392,6 +394,8 @@ BEGIN
                            , MAX (tmp.RealDelicShp)           AS RealDelicShp 
                            , SUM (COALESCE (tmp.Amount_out,0)) AS Amount_out
                            , SUM (COALESCE (tmp.TotalWeight_in,0)) AS TotalWeight_in
+                           , SUM (COALESCE (tmp.Amount_main_det,0)) AS Amount_main_det        
+                           , SUM (COALESCE (tmp.AmountMain_part_det,0)) AS AmountMain_part_det
                       FROM
                      (-- Производство п/ф ГП
                       SELECT tmpMI_WorkProgress_in.GoodsId
@@ -425,7 +429,9 @@ BEGIN
 
                            , SUM ((COALESCE (tmpMI_detail.Amount_main,0) - COALESCE (tmpMI_detail.AmountMain_part,0))/100) AS CuterCount_calc -- Куттеров факт (расчет) 
                            , SUM (COALESCE (tmpMI_WorkProgress_oth.Amount,0) ) AS Amount_out  
-                           , SUM (tmpMI_WorkProgress_in.TotalWeight) AS TotalWeight_in
+                           , SUM (tmpMI_WorkProgress_in.TotalWeight) AS TotalWeight_in  
+                           , SUM (COALESCE (tmpMI_detail.Amount_main,0))  AS Amount_main_det 
+                           , SUM (COALESCE (tmpMI_detail.AmountMain_part,0))  AS AmountMain_part_det 
                       FROM tmpMI_WorkProgress_in_gr AS tmpMI_WorkProgress_in
                            LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
@@ -466,7 +472,9 @@ BEGIN
                            , NUll AS MovementId 
                            , 0 AS CuterCount_calc 
                            , 0 AS Amount_out   
-                           , 0 AS TotalWeight_in
+                           , 0 AS TotalWeight_in 
+                           , 0 AS Amount_main_det 
+                           , 0 AS AmountMain_part_det
                       FROM tmpMI_GP_in
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_GP_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -500,7 +508,9 @@ BEGIN
                            , NULL AS MovementId   
                            , 0 AS CuterCount_calc  
                            , 0 AS Amount_out
-                           , 0 AS TotalWeight_in
+                           , 0 AS TotalWeight_in 
+                           , 0 AS Amount_main_det 
+                           , 0 AS AmountMain_part_det
                       FROM tmpMI_WorkProgress_find
                      ) AS tmp
                       GROUP BY tmp.GoodsId
@@ -643,19 +653,27 @@ BEGIN
             - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff 
           
           ----------------------------------  
+          -- Куттеров факт 
+          , COALESCE (tmpResult.CuterCount,0) ::TFloat AS CuterCount_inf
           -- Куттеров факт (расчет)
           , COALESCE (tmpResult.CuterCount_calc,0) ::TFloat AS CuterCount_calcinf
           -- Вес п/ф факт (шпр)
           , tmpResult.RealWeightShp ::TFloat AS RealWeightShpinf
           -- Вес П/Ф после шприцевания (расчет)
           , tmpResult.RealWeightShp_calc ::TFloat AS RealWeightShp_calcinf
-          --
-          , COALESCE (tmpResult.Amount_WorkProgress_in,0) ::TFloat AS Amountinf
+          -- Факт кол-во
+          , COALESCE (tmpResult.Amount_WorkProgress_in,0) ::TFloat AS Amountinf    
+          --Вес п/ф факт (мсж)
+          , COALESCE (tmpResult.RealWeightMsg,0)  ::TFloat AS RealWeightMsg_inf
           --Вес П/Ф после массажера (расчет)
-          ,  (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))  ::TFloat AS RealWeightMsg_calcinf
+          , (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))  ::TFloat AS RealWeightMsg_calcinf
           -- Переходящий П/Ф (расход), кг
-          , COALESCE (tmpResult.Amount_out,0)  ::TFloat AS Amount_outinf
-          
+          , COALESCE (tmpResult.Amount_out,0)  ::TFloat AS Amount_outinf  
+          -- Вес п/ф факт
+          , COALESCE (tmpResult.RealWeight,0)  ::TFloat AS RealWeight_inf 
+          --детальная часть
+          , tmpResult.Amount_main_det     ::TFloat AS Amount_main_det  --кол-во факт
+          , tmpResult.AmountMain_part_det ::TFloat AS AmountMain_part_det --Переходящий П/Ф (расход), кг
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_Complete
