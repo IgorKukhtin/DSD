@@ -38,6 +38,18 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , Amount_GP_in TFloat
              , ValueGP TFloat, ValuePF TFloat 
              , ValueGP_diff TFloat, ValuePF_diff TFloat 
+             -- Куттеров факт (расчет)
+             , CuterCount_calcinf  TFloat
+             -- Вес п/ф факт (шпр)
+             , RealWeightShpinf    TFloat
+             -- Вес П/Ф после шприцевания (расчет)
+             , RealWeightShp_calcinf  TFloat
+             -- Факт кол-во
+             , Amountinf     TFloat
+             --Вес П/Ф после массажера (расчет)
+             , RealWeightMsg_calcinf     TFloat
+             -- Переходящий П/Ф (расход), кг
+             , Amount_outinf  TFloat
            )  
 
 AS
@@ -65,7 +77,8 @@ BEGIN
                            /*INNER JOIN ContainerLinkObject AS CLO_GoodsKind
                                                           ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
                                                          AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП*/
+                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
+                                                         */
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -534,17 +547,22 @@ BEGIN
          --Рецептура: Вес после шприцевания
          , tmpResult.RealDelicShp :: TFloat        AS RealDelicShp
          -- Производство технолог: Вес П/Ф после шприцевания (расчет) разделить Куттеров факт (расчет) 
-         , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN tmpResult.RealWeightShp_calc / tmpResult.CuterCount_calc ELSE 0 END ::TFloat AS RealWeightShp_calc 
+         , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN tmpResult.RealWeightShp_calc / tmpResult.CuterCount_calc ELSE 0 END ::TFloat AS RealWeightShp_calc
+         --, tmpResult.RealWeightShp_calc  ::TFloat AS RealWeightShp_calc 
          -- отклонение рецептуры и факт
          , (COALESCE (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN tmpResult.RealWeightShp_calc / tmpResult.CuterCount_calc ELSE 0 END, 0) - COALESCE (tmpResult.RealDelicShp,0)) ::TFloat AS AmountShp_diff
+        
+        
          --Отсечение влаги (факт), кг
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 
-                THEN  (COALESCE (tmpResult.RealWeightShp_calc,0) - (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) ) 
-                     / tmpResult.CuterCount_calc 
-                    -  (COALESCE (tmpResult.TotalWeight_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
+                THEN  (COALESCE (tmpResult.RealWeightShp_calc,0) - (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)))
+                      / tmpResult.CuterCount_calc 
+                     - (COALESCE (tmpResult.TotalWeight_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
                     
                 ELSE 0 
            END  :: TFloat AS Amount_Humidity 
+         
+         
           --Рецептура: % впрыска
          , tmpResult.TaxLossVPR :: TFloat
          --Производство технолог: Вес П/Ф после массажера (расчет) разделить Куттеров факт (расчет) минус (Рецептуры: Вес П/Ф (ГП) минус Вес после шприцевания) минус  (Вес П/Ф (ГП) минус % вприска)
@@ -622,7 +640,22 @@ BEGIN
           --- 
           , ( ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END 
            - COALESCE (tmpResult.TotalWeight_in ,0)) )
-            - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff
+            - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff 
+          
+          ----------------------------------  
+          -- Куттеров факт (расчет)
+          , COALESCE (tmpResult.CuterCount_calc,0) ::TFloat AS CuterCount_calcinf
+          -- Вес п/ф факт (шпр)
+          , tmpResult.RealWeightShp ::TFloat AS RealWeightShpinf
+          -- Вес П/Ф после шприцевания (расчет)
+          , tmpResult.RealWeightShp_calc ::TFloat AS RealWeightShp_calcinf
+          --
+          , COALESCE (tmpResult.Amount_WorkProgress_in,0) ::TFloat AS Amountinf
+          --Вес П/Ф после массажера (расчет)
+          ,  (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))  ::TFloat AS RealWeightMsg_calcinf
+          -- Переходящий П/Ф (расход), кг
+          , COALESCE (tmpResult.Amount_out,0)  ::TFloat AS Amount_outinf
+          
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_Complete

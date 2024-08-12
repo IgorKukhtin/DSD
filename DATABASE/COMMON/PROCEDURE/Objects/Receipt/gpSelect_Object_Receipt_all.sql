@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Receipt_all(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueWeight TFloat, ValueCost TFloat, TaxExit TFloat, TaxExitCheck TFloat, TaxLoss TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat,
-               TotalWeightMain TFloat, TotalWeight TFloat,
+               TotalWeightMain TFloat, TotalWeight TFloat, 
+               TaxLossCEH TFloat, TaxLossTRM TFloat, TaxLossVPR TFloat, RealDelicShp TFloat, TaxLossCEHTRM TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain Boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
@@ -71,6 +72,12 @@ BEGIN
          , ObjectFloat_WeightPackage.ValueData AS WeightPackage
          , ObjectFloat_TotalWeightMain.ValueData AS TotalWeightMain
          , ObjectFloat_TotalWeight.ValueData     AS TotalWeight
+
+         , ObjectFloat_TaxLossCEH.ValueData   ::TFloat AS TaxLossCEH
+         , ObjectFloat_TaxLossTRM.ValueData   ::TFloat AS TaxLossTRM
+         , ObjectFloat_TaxLossVPR.ValueData   ::TFloat AS TaxLossVPR
+         , ObjectFloat_RealDelicShp.ValueData ::TFloat AS RealDelicShp
+         , (COALESCE (ObjectFloat_TaxLossCEH.ValueData,0) + COALESCE (ObjectFloat_TaxLossTRM.ValueData,0))   ::TFloat AS TaxLossCEHTRM
 
          , ObjectDate_StartDate.ValueData AS StartDate
          , ObjectDate_EndDate.ValueData   AS EndDate
@@ -335,6 +342,19 @@ BEGIN
                                 ON ObjectFloat_TotalWeight.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossCEH
+                                ON ObjectFloat_TaxLossCEH.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossCEH.DescId = zc_ObjectFloat_Receipt_TaxLossCEH()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossTRM
+                                ON ObjectFloat_TaxLossTRM.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossTRM.DescId = zc_ObjectFloat_Receipt_TaxLossTRM()
+          LEFT JOIN ObjectFloat AS ObjectFloat_TaxLossVPR
+                                ON ObjectFloat_TaxLossVPR.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_TaxLossVPR.DescId = zc_ObjectFloat_Receipt_TaxLossVPR()
+          LEFT JOIN ObjectFloat AS ObjectFloat_RealDelicShp
+                                ON ObjectFloat_RealDelicShp.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_RealDelicShp.DescId = zc_ObjectFloat_Receipt_RealDelicShp()
+                               
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
@@ -404,4 +424,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Object_Receipt_all (0, 0, 0, FALSE, zfCalc_UserAdmin())
 
-select * from gpSelect_Object_Receipt_all(inReceiptId := 0 , inGoodsId := 112643 , inGoodsKindId := 0 , inShowAll := 'False' ,  inSession := '9457');
+--select * from gpSelect_Object_Receipt_all(inReceiptId := 0 , inGoodsId := 112643 , inGoodsKindId := 0 , inShowAll := 'False' ,  inSession := '9457');
