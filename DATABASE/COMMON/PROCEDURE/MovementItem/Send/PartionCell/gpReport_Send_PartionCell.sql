@@ -335,6 +335,16 @@ BEGIN
                                                         ON MovementLinkObject_From.MovementId = Movement.Id
                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
 
+                           LEFT JOIN MovementFloat AS MovementFloat_BranchCode
+                                                   ON MovementFloat_BranchCode.MovementId = Movement.Id
+                                                  AND MovementFloat_BranchCode.DescId     = zc_MovementFloat_BranchCode()
+                           LEFT JOIN MovementFloat AS MovementFloat_MovementDescNumber
+                                                   ON MovementFloat_MovementDescNumber.MovementId =  Movement.Id
+                                                  AND MovementFloat_MovementDescNumber.DescId     = zc_MovementFloat_MovementDescNumber()
+                                                  AND MovementFloat_MovementDescNumber.ValueData  = 25 -- Перепак
+                                                  -- !!!
+                                                  AND MovementFloat_BranchCode.ValueData          = 1
+
                       WHERE Movement.OperDate BETWEEN inStartDate - INTERVAL '14 DAY' AND inEndDate + INTERVAL '14 DAY'
                         AND Movement.DescId = zc_Movement_WeighingProduction()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
@@ -342,6 +352,8 @@ BEGIN
                         AND MovementLinkObject_To.ObjectId = inUnitId
                         AND vbIsWeighing = TRUE
                         AND (Movement.Id <> 28931444 OR vbUserId = 5)
+                        -- без Перепак
+                        AND MovementFloat_MovementDescNumber.MovementId IS NULL
 
                      UNION
                       -- или в Ячейке

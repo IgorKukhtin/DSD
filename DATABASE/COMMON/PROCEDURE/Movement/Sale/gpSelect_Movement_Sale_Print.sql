@@ -52,6 +52,7 @@ $BODY$
     DECLARE vbIsPrice_Pledge_25 Boolean;
 
     DECLARE vbIsOKPO_04544524 Boolean;
+    DECLARE vbIsOKPO_40075815 Boolean;
 
     DECLARE vbIsLongUKTZED Boolean;
 
@@ -130,9 +131,16 @@ BEGIN
                       ELSE FALSE
             END AS isOKPO_04544524
 
+            -- Українська залізниця АТ СТРУКТУРНИЙ ПІДРОЗДІЛ "Запорізьке моторвагонне депо" м. Запоріжжя вул. Аваліані буд.4 Б
+          , CASE WHEN OH_JuridicalDetails_To.OKPO = '40075815'
+                   AND MovementLinkObject_To.ObjectId = 3470516 
+                      THEN TRUE
+                      ELSE FALSE
+            END AS isOKPO_40075815
+
           , OH_JuridicalDetails_To.OKPO
 
-            INTO vbIsGoodsCode, vbIsPrice_Pledge_25, vbIsOKPO_04544524, vbOKPO
+            INTO vbIsGoodsCode, vbIsPrice_Pledge_25, vbIsOKPO_04544524, vbIsOKPO_40075815, vbOKPO
 
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -729,7 +737,12 @@ END IF;
              END :: Boolean AS isBranchBasis
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
-           , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
+           , (ObjectString_ToAddress.ValueData
+              || CASE WHEN isOKPO_40075815 = TRUE
+                           THEN CHR (13) || 'СТРУКТУРНИЙ ПІДРОЗДІЛ "Запорізьке моторвагонне депо"'
+                      ELSE ''
+                 END
+             ) :: TVarChar           AS PartnerAddress_To
 
            , (CASE WHEN ObjectString_PostalCode.ValueData  <> '' THEN ObjectString_PostalCode.ValueData || ' '      ELSE '' END
            || CASE WHEN View_Partner_Address.RegionName    <> '' THEN View_Partner_Address.RegionName   || ' обл., ' ELSE '' END

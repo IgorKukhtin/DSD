@@ -41,6 +41,7 @@ BEGIN
                                    , UnitId_To Integer, MemberId_To Integer, BranchId_To Integer, AccountDirectionId_To Integer, IsPartionDate_UnitTo Boolean, JuridicalId_Basis_To Integer
                                    , WhereObjectId_Analyzer_To Integer, isTo_10900 Boolean
                                    , OperCount_start TFloat, OperCount_ChangePercent_start TFloat, OperCount_Partner_start TFloat
+                                   , tmpOperSumm_PriceList_start TFloat, tmpOperSumm_Partner_start TFloat, tmpOperSumm_PartnerVirt_start TFloat
                                     ) ON COMMIT DROP;
      END IF;
 
