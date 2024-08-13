@@ -18,6 +18,9 @@ RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , PartionGoodsDate TDateTime 
              , PartionCellName TVarChar
              , StoreKeeper TVarChar
+             , ChoiceCellCode      Integer
+             , ChoiceCellName      TVarChar
+             , ChoiceCellName_shot TVarChar
               )
 AS                      
 $BODY$
@@ -191,6 +194,15 @@ BEGIN
                              ) AS tmp
                            )
 
+        --ячейки отбора               
+      , tmpChoiceCell AS (SELECT tmp.*
+                               , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
+                               , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
+                          FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
+                          WHERE tmp.GoodsId = inGoodsId
+                            AND COALESCE (tmp.GoodsKindId,0) = COALESCE (inGoodsKindId,0)
+                          )
+
 
      --
      SELECT Object_Goods.ObjectCode            AS GoodsCode
@@ -199,7 +211,10 @@ BEGIN
           , tmp.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
           , Object_PartionCell.ValueData       AS PartionCellName
           , Object_Member.ValueData ::TVarChar AS StoreKeeper
- 
+          --ячейка отбора
+          , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
+          , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
+          , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
      FROM tmpPartionCell_gr AS tmp
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
@@ -210,6 +225,10 @@ BEGIN
                                    AND tmpProtocolCell.PartionCellName = Object_PartionCell.ValueData
                                    AND tmpProtocolCell.ord = 1
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpProtocolCell.UserId
+          
+          LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmp.GoodsId
+                                 AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmp.GoodsKindId,0)
+                                 AND tmpChoiceCell.Ord = 1
      ORDER BY tmp.DescId
     ;
 
