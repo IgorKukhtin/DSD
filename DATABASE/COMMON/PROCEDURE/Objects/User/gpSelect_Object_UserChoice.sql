@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , BranchName TVarChar
              , UnitCode Integer
              , UnitName TVarChar
-             , PositionName TVarChar
+             , PositionId Integer, PositionName TVarChar
               )
 AS
 $BODY$
@@ -24,7 +24,7 @@ BEGIN
                              , MAX (View_Personal.UnitId) AS UnitId
                              , MAX (View_Personal.PositionId) AS PositionId
                         FROM Object_Personal_View AS View_Personal
-                        WHERE View_Personal.isErased = FALSE
+                        --WHERE View_Personal.isErased = FALSE
                         GROUP BY View_Personal.MemberId
                        )
    SELECT 
@@ -39,6 +39,7 @@ BEGIN
        , Object_Branch.ValueData   AS BranchName
        , Object_Unit.ObjectCode    AS UnitCode
        , Object_Unit.ValueData     AS UnitName
+       , Object_Position.Id        AS PositionId
        , Object_Position.ValueData AS PositionName
 
    FROM Object AS Object_User

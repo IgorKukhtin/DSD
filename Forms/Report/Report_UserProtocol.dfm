@@ -1,30 +1,30 @@
 inherited Report_UserProtocolForm: TReport_UserProtocolForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1091' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081'>'
   ClientHeight = 552
-  ClientWidth = 887
+  ClientWidth = 1115
   ParentFont = True
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 903
+  ExplicitWidth = 1131
   ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 86
-    Width = 887
+    Width = 1115
     Height = 466
     TabOrder = 3
     ExplicitTop = 86
     ExplicitWidth = 887
     ExplicitHeight = 466
     ClientRectBottom = 466
-    ClientRectRight = 887
+    ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 887
       ExplicitHeight = 466
       inherited cxGrid: TcxGrid
-        Width = 887
+        Width = 1115
         Height = 200
         ExplicitWidth = 887
         ExplicitHeight = 200
@@ -346,10 +346,11 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       object grChart: TcxGrid
         Left = 0
         Top = 208
-        Width = 887
+        Width = 1115
         Height = 258
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 887
         object grChartDBChartView1: TcxGridDBChartView
           DataController.DataSource = MasterDS
           DiagramColumn.Active = True
@@ -396,18 +397,21 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 200
-        Width = 887
+        Width = 1115
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = grChart
+        ExplicitWidth = 887
       end
     end
   end
   inherited Panel: TPanel
-    Width = 887
+    Width = 1115
     Height = 60
-    ExplicitWidth = 887
+    ExplicitLeft = 24
+    ExplicitTop = -15
+    ExplicitWidth = 1115
     ExplicitHeight = 60
     inherited deStart: TcxDateEdit
       Left = 118
@@ -493,7 +497,7 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Width = 70
   end
   object cbisShowAll: TcxCheckBox [7]
-    Left = 612
+    Left = 610
     Top = 32
     Action = actRefreshShowAll
     TabOrder = 11
@@ -512,6 +516,23 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
     Properties.DisplayFormat = '0'
     TabOrder = 13
     Width = 56
+  end
+  object cxLabel7: TcxLabel [10]
+    Left = 837
+    Top = 6
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
+  end
+  object edPosition: TcxButtonEdit [11]
+    Left = 908
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 15
+    Width = 199
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -684,6 +705,23 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionId'
+          Value = Null
+          Component = GuidesPosition
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PositionName'
+          Value = Null
+          Component = GuidesPosition
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -830,6 +868,14 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisDay'
         Value = True
         Component = cbisDay
@@ -940,6 +986,9 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       end
       item
         Component = ceDiff
+      end
+      item
+        Component = GuidesPosition
       end>
     Left = 216
     Top = 184
@@ -996,9 +1045,23 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionId'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PositionName'
+        Value = Null
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 704
-    Top = 64
+    Left = 720
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
@@ -1100,5 +1163,32 @@ inherited Report_UserProtocolForm: TReport_UserProtocolForm
       end>
     Left = 488
     Top = 184
+  end
+  object GuidesPosition: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPositionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPosition
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 968
+    Top = 11
   end
 end

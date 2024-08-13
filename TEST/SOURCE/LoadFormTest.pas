@@ -1429,11 +1429,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   exit;
@@ -1443,10 +1443,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_byMessageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_byMessageForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
 
@@ -1949,16 +1950,17 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountFormDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountFormDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-  {exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   //exit;
@@ -1966,17 +1968,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-  {
+
   // 11,12,14 Инна
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   //exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
 
@@ -2522,13 +2524,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
   exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));

@@ -183,6 +183,15 @@ type
     bbsPrint: TdxBarSubItem;
     bbsProtocol: TdxBarSubItem;
     dxBarSeparator2: TdxBarSeparator;
+    spPrint_TaxExitUpdate: TdsdStoredProc;
+    actPrint_ReportTaxExit: TdsdPrintAction;
+    actPrintCEH_rep: TdsdPrintAction;
+    actPrintOUT_rep: TdsdPrintAction;
+    actPrintTRM_rep: TdsdPrintAction;
+    bbPrint_ReportTaxExit: TdxBarButton;
+    bbPrintCEH_rep: TdxBarButton;
+    bbPrintTRM_rep: TdxBarButton;
+    bbPrintOUT_rep: TdxBarButton;
   private
     { Private declarations }
   public

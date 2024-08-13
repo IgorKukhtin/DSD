@@ -110,6 +110,61 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
               Format = ',0.####'
               Kind = skSum
               Column = TaxExit_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShpinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShp_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amountinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_outinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeight_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_main_det
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMain_part_det
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -188,6 +243,61 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
               Format = ',0.####'
               Kind = skSum
               Column = TaxExit_diff
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = CuterCount_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShpinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightShp_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amountinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeightMsg_calcinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_outinf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RealWeight_inf
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_main_det
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountMain_part_det
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -479,17 +589,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object CuterCount: TcxGridDBColumn
-            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
-            DataBinding.FieldName = 'CuterCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 68
-          end
           object ValueGP: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1043#1055', '#1082#1075
             DataBinding.FieldName = 'ValueGP'
@@ -525,6 +624,127 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object CuterCount_inf: TcxGridDBColumn
+            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'CuterCount_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 68
+          end
+          object CuterCount_calcinf: TcxGridDBColumn
+            Caption = #1050#1091#1090#1090#1077#1088#1086#1074' '#1092#1072#1082#1090' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'CuterCount_calcinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object RealWeightShpinf: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1096#1087#1088') '
+            DataBinding.FieldName = 'RealWeightShpinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object RealWeightShp_calcinf: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1055'/'#1060' '#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'RealWeightShp_calcinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object Amountinf: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amountinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object RealWeightMsg_inf: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090' ('#1084#1089#1078')'
+            DataBinding.FieldName = 'RealWeightMsg_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object RealWeightMsg_calcinf: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1055'/'#1060' '#1087#1086#1089#1083#1077' '#1084#1072#1089#1089#1072#1078#1077#1088#1072' ('#1088#1072#1089#1095#1077#1090')'
+            DataBinding.FieldName = 'RealWeightMsg_calcinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object Amount_outinf: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076'), '#1082#1075
+            DataBinding.FieldName = 'Amount_outinf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object RealWeight_inf: TcxGridDBColumn
+            Caption = ' '#1042#1077#1089' '#1087'/'#1092' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'RealWeight_inf'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object Amount_main_det: TcxGridDBColumn
+            Caption = #1082#1086#1083'-'#1074#1086' '#1092#1072#1082#1090' ('#1086#1089#1085'. '#1089#1099#1088#1100#1077')'
+            DataBinding.FieldName = 'Amount_main_det'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
+          object AmountMain_part_det: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076'), '#1082#1075' ('#1086#1089#1085'. '#1089#1099#1088#1100#1077')'
+            DataBinding.FieldName = 'AmountMain_part_det'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
         end
       end
