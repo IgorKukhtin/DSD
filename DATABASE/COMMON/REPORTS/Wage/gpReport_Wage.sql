@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Wage(
     IN inModelServiceId Integer,   --модель начисления
     IN inMemberId       Integer,   --сотрудник
     IN inPositionId     Integer,   --должность
-    IN inDetailDay      Boolean,   --детализировать по дням 
+    IN inDetailDay      Boolean,   --детализировать по дням
     IN inDetailMonth    Boolean,   --детализировать по месяцам
     IN inDetailModelService Boolean,   --детализировать по моделям
     IN inDetailModelServiceItemMaster Boolean,   --детализировать по типам документов в модели
@@ -81,13 +81,21 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbObjectId_Constraint_Branch Integer;
+    DECLARE vbOperDate_Begin1 TDateTime;
+    DECLARE vbScript   TEXT;
+    DECLARE vb1        TEXT;
+    DECLARE vbValue1   Integer;
+    DECLARE vbTime1    INTERVAL;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := lpGetUserBySession (inSession);
 
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
     -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
     PERFORM lpCheck_UserRole_8813637 (vbUserId);
@@ -285,7 +293,7 @@ BEGIN
        , Res_1.GoodsKindComplete_ToName
 
         , CASE WHEN inDetailDay = TRUE THEN Res_1.OperDate
-               WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res_1.OperDate) 
+               WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res_1.OperDate)
                ELSE Res_1.OperDate
          END  ::TDateTime AS OperDate
        , Res_1.Count_Day
@@ -457,10 +465,10 @@ BEGIN
                -- собраны данные из табеля
              , Movement_SheetWorkTime AS
                 (SELECT
-                       CASE WHEN inDetailDay = TRUE THEN Movement.OperDate 
+                       CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
                             ELSE CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
                                       ELSE NULL
-                                 END 
+                                 END
                        END :: TDateTime AS OperDate
                      , MI_SheetWorkTime.ObjectId                      AS MemberId
                      , MIObject_Position.ObjectId                     AS PositionId
@@ -500,10 +508,10 @@ BEGIN
                  WHERE Movement.DescId = zc_Movement_SheetWorkTime()
                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                    AND Movement.StatusId <> zc_Enum_Status_Erased()
-                 GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate 
+                 GROUP BY CASE WHEN inDetailDay = TRUE THEN Movement.OperDate
                                ELSE CASE WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Movement.OperDate)
                                          ELSE NULL
-                                    END 
+                                    END
                           END
                         , MI_SheetWorkTime.ObjectId
                         , MIObject_Position.ObjectId
@@ -673,7 +681,7 @@ BEGIN
                 -- вот товар
                ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ValueData, Res.ModelServiceItemChild_ToName)
-                ELSE NULL::TVarChar END 
+                ELSE NULL::TVarChar END
                 ,CASE WHEN inDetailModelServiceItemChild = TRUE
                      THEN COALESCE (Object_Goods_to.ObjectCode, Res.ModelServiceItemChild_ToCode)
                 ELSE NULL::Integer END
@@ -790,7 +798,7 @@ BEGIN
            ,tmpRes.FromName
            ,tmpRes.ToName
            ,tmpRes.MovementDescName
-           ,tmpRes.ModelServiceItemChild_FromCode 
+           ,tmpRes.ModelServiceItemChild_FromCode
            ,tmpRes.ModelServiceItemChild_FromName
            ,tmpRes.ModelServiceItemChild_ToCode
            ,tmpRes.ModelServiceItemChild_ToName
@@ -945,7 +953,7 @@ BEGIN
 
             -- Отраб. дн. 1 чел (инф.)
            ,0  :: Integer  AS Count_Day
-            -- 
+            --
            ,0  :: Integer  AS Count_MemberInDay
            ,0  :: TFloat   AS Gross
            ,0  :: TFloat   AS GrossOnOneMember
@@ -992,6 +1000,63 @@ BEGIN
 
         WHERE tmpRes.MemberId_find IS NULL AND 1=0
        ;
+
+
+
+      vbValue1:= (SELECT COUNT (*) FROM pg_stat_activity WHERE state = 'active');
+      -- сколько всего выполнялась проц;
+      vbTime1:= CLOCK_TIMESTAMP() - vbOperDate_Begin1;
+
+
+
+      vbScript:= 'INSERT INTO ResourseProtocol (UserId
+                                                , OperDate
+                                                , Value1
+                                                , Time1
+                                                , Time5
+                                                , ProcName
+                                                , ProtocolData
+                                                 )
+
+                       SELECT ' || vbUserId :: TVarChar ||'
+                            , ' || CHR (39) || zfConvert_DateTimeToString (CURRENT_TIMESTAMP) || CHR (39) || ' AS OperDate'
+                         ||', ' || vbValue1 :: TVarChar  || ' AS Value1'
+                         ||', ' || CHR (39) || vbTime1 :: TvarChar || CHR (39) || ' :: INTERVAL AS Time1'
+                         ||', ' || CHR (39) || zfConvert_DateTimeToString (CLOCK_TIMESTAMP()) || CHR (39) || ' AS Time5'
+                         ||', ' || CHR (39) || 'gpSelect_Report_Wage (' || CASE WHEN inUnitId > 0 THEN lfGet_Object_ValueData_sh (inUnitId) ELSE 'inUnitId = 0' END  || ')'|| CHR (39)
+
+
+                              -- ProtocolData
+                         ||', ' || CHR (39)
+                                || zfConvert_DateToString (inStartDate)
+                         ||', ' || zfConvert_DateToString (inEndDate)
+                         ||', ' || inUnitId              :: TVarChar
+                         ||', ' || inModelServiceId      :: TVarChar
+                         ||', ' || inMemberId            :: TVarChar
+                         ||', ' || inPositionId          :: TVarChar
+
+                         ||', ' || inDetailDay           :: TVarChar
+                         ||', ' || inDetailMonth         :: TVarChar
+                         ||', ' || inDetailModelService            :: TVarChar
+                         ||', ' || inDetailModelServiceItemMaster  :: TVarChar
+                         ||', ' || inDetailModelServiceItemChild   :: TVarChar
+                         ||', ' || inSession
+                         || CHR (39)
+                           ;
+
+
+         -- Результат
+         vb1:= (SELECT *
+                FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                                   -- Результат
+                                , vbScript));
+
+    -- информативно
+    --RAISE INFO  '%',vbScript;
+
+    --RAISE EXCEPTION 'ok = %', vb1;
+
+    --RAISE EXCEPTION 'ok';
 
 END;
 $BODY$

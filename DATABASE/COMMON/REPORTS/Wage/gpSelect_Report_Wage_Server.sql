@@ -81,10 +81,19 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbObjectId_Constraint_Branch Integer;
+    DECLARE vbOperDate_Begin1 TDateTime;
 BEGIN
+     -- сразу запомнили время начала выполнения Проц.
+     vbOperDate_Begin1:= CLOCK_TIMESTAMP();
+
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := lpGetUserBySession (inSession);
+    
+if vbUserId in ( 5, 6561986) and coalesce (inDetailModelServiceItemChild, FALSE) = FALSE
+then 
+    RAISE EXCEPTION 'Ошибка. нет детализации по товарам <%>', inDetailModelServiceItemChild;
+end if;
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
@@ -898,10 +907,73 @@ BEGIN
         WHERE tmpRes.MemberId_find IS NULL AND 1=0
        ;
 
+   -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+   INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , (SELECT COUNT (*) FROM tmp_pg WHERE query ILIKE '%vacuum%')                       AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpSelect_Report_Wage_Server (' || CASE WHEN inUnitId > 0 THEN lfGet_Object_ValueData_sh (inUnitId) ELSE 'inUnitId = 0' END || ')'
+               -- ProtocolData
+             , zfConvert_DateToString (inStartDate)
+    || ', ' || zfConvert_DateToString (inEndDate)
+    || ', ' || inUnitId           :: TVarChar
+    || ', ' || inModelServiceId      :: TVarChar
+    || ', ' || inMemberId   :: TVarChar
+    || ', ' || inPositionId     :: TVarChar
+    
+    || ', ' || inDetailDay             :: TVarChar
+    || ', ' || inDetailMonth            :: TVarChar
+    || ', ' || inDetailModelService            :: TVarChar
+    || ', ' || inDetailModelServiceItemMaster            :: TVarChar
+    || ', ' || inDetailModelServiceItemChild            :: TVarChar
+    || ', ' || inSession
+              ;
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
+/*
+SELECT Object.ValueData
+      , Value1, Value2, Value3, Time1
+      , ProcName, ProtocolData
+      , OperDate, Time5, UserId
+FROM ResourseProtocol
+     LEFT JOIN Object ON Object.Id = UserId
+WHERE ProcName ILIKE '%gpSelect_Report_Wage_Server%'
+order by ResourseProtocol.id desc limit 100
+*/
 -- тест
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.04.2017', inEndDate:= '02.04.2017', inUnitId:= 8439, inModelServiceId:= 633116, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
 -- SELECT * FROM gpSelect_Report_Wage_Server (inStartDate:= '01.10.2023', inEndDate:= '31.10.2023', inUnitId:= 0, inModelServiceId:= 1342334, inMemberId:= 0, inPositionId:= 0, inDetailDay:= TRUE, inDetailModelService:= TRUE, inDetailModelServiceItemMaster:= TRUE, inDetailModelServiceItemChild:= TRUE, inSession:= '5');
