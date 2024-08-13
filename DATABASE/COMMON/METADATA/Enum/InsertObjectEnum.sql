@@ -255,6 +255,7 @@ BEGIN
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm_pav(),  inDescId:= zc_Object_PaidKind(), inCode:= 3, inName:= 'БН(павильоны)', inEnumName:= 'zc_Enum_PaidKind_FirstForm_pav');
 
      -- !!! Типы кассовых аппаратов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CashRegisterKind_FP3141(),  inDescId:= zc_Object_CashRegisterKind(), inCode:= 1, inName:= 'Datecs FP 3141', inEnumName:= 'zc_Enum_CashRegisterKind_FP3141');
