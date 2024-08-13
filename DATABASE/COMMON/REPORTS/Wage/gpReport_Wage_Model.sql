@@ -307,7 +307,12 @@ AS  (SELECT
                                    ON ObjectLink_ModelServiceItemMaster_SelectKind.ObjectId = Object_ModelServiceItemMaster.Id
                                   AND ObjectLink_ModelServiceItemMaster_SelectKind.DescId = zc_ObjectLink_ModelServiceItemMaster_SelectKind()
         LEFT OUTER JOIN Object AS Object_SelectKind
-                               ON Object_SelectKind.Id = ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId
+                               ON Object_SelectKind.Id = CASE WHEN 1=0 AND vbUserId = 5 AND ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId = zc_Enum_SelectKind_InAmountForm()
+                                                                   THEN zc_Enum_SelectKind_InAmount()
+                                                              WHEN 1=0 AND vbUserId = 5 AND ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId = zc_Enum_SelectKind_OutAmountForm()
+                                                                   THEN zc_Enum_SelectKind_OutAmount()
+                                                              ELSE ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId
+                                                         END
         --MovementDesc  Тип документа
         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_MovementDesc
                                     ON ObjectFloat_MovementDesc.ObjectId = Object_ModelServiceItemMaster.Id
