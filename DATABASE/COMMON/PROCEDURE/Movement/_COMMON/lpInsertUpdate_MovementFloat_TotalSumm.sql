@@ -103,6 +103,7 @@ $BODY$
   DECLARE vbDocumentTaxKindId Integer;
   DECLARE vbDocumentTaxKindId_tax Integer;
 
+  DECLARE vbPartnerName TVarChar;
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -135,9 +136,12 @@ BEGIN
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
+          
+          , Object_Partner.ValueData AS vbPartnerName
 
             INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
+               , vbPartnerName
 
       FROM Movement
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -165,6 +169,9 @@ BEGIN
            LEFT JOIN MovementLinkObject AS MovementLinkObject_FromTo
                                         ON MovementLinkObject_FromTo.MovementId = Movement.Id
                                        AND MovementLinkObject_FromTo.DescId     = CASE WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() END
+
+           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_FromTo.ObjectId
+
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                 ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_FromTo.ObjectId
                                AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
@@ -587,9 +594,11 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
                                                                 ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                                                               AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+                                                               AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
 
 
                                LEFT JOIN tmpMI_child_ReturnIn ON tmpMI_child_ReturnIn.ParentId = MovementItem.Id

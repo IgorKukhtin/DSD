@@ -90,7 +90,8 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
     vbUserId := lpGetUserBySession (inSession);
     
-if vbUserId in ( 5, 6561986) and coalesce (inDetailModelServiceItemChild, FALSE) = FALSE
+if vbUserId in (5, 6561986) and coalesce (inDetailModelServiceItemChild, FALSE) = FALSE
+AND 1=0
 then 
     RAISE EXCEPTION 'Ошибка. нет детализации по товарам <%>', inDetailModelServiceItemChild;
 end if;
