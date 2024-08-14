@@ -348,7 +348,7 @@ inherited ProductionUnionForm: TProductionUnionForm
             Width = 69
           end
           object AmountNext_out: TcxGridDBColumn [19]
-            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountNext_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -929,6 +929,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     inherited actRefresh: TdsdDataSetRefresh

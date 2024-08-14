@@ -736,7 +736,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             Width = 90
           end
           object AmountMain_part_det: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076'), '#1082#1075' ('#1086#1089#1085'. '#1089#1099#1088#1100#1077')'
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'), '#1082#1075' ('#1086#1089#1085'. '#1089#1099#1088#1100#1077')'
             DataBinding.FieldName = 'AmountMain_part_det'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

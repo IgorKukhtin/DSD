@@ -51,7 +51,7 @@ BEGIN
 
          -- расходы п/ф ГП              --, tmpMI_WorkProgress_out AS
          SELECT tmpMI_WorkProgress_in.MovementItemId  AS Id
-              , SUM (MIContainer.Amount) * (-1)       AS AmountNext_out
+              , SUM (MIContainer.Amount)              AS AmountNext_out
          FROM tmpMI_WorkProgress_in
               INNER JOIN MovementItemContainer AS MIContainer
                                                ON MIContainer.ContainerId = tmpMI_WorkProgress_in.ContainerId
