@@ -34,10 +34,16 @@ BEGIN
                      (SELECT MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                       FROM MovementItemContainer AS MIContainer
+                          LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                    ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                   AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                   AND MovementBoolean_Peresort.ValueData = TRUE
+
                       WHERE MIContainer.MovementId = inMovementId
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                         AND MIContainer.IsActive = TRUE
+                        AND MovementBoolean_Peresort.MovementId IS NULL    -- !!!убрали Пересортицу!!!
                         AND MIContainer.Amount <> 0
                         AND (MIContainer.ObjectIntId_Analyzer IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis()) -- ограничение что это п/ф ГП
                              )
@@ -52,6 +58,10 @@ BEGIN
                                                             ON MIContainer.ContainerId = tmpMI_WorkProgress_in.ContainerId
                                                            AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
                                                            AND MIContainer.IsActive = FALSE
+                           INNER JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                      ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                     AND MovementBoolean_Peresort.ValueData = TRUE
                      GROUP BY MIContainer.ParentId
                             , tmpMI_WorkProgress_in.ContainerId
                      )
@@ -102,5 +112,5 @@ $BODY$
  13.08.24         * 
 */
 
--- тест
---  select * from gpUpdate_MI_ProductionUnion_AmountNext_out(inMovementId := 28988661 ,  inSession := '9457');
+-- тест             28608090 
+--  select * from gpUpdate_MI_ProductionUnion_AmountNext_out(inMovementId := 28608090  ,  inSession := '9457');
