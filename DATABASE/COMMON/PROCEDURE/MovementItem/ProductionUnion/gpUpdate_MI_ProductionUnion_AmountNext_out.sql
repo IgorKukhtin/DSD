@@ -27,17 +27,13 @@ BEGIN
                   AND MLO_From.DescId = zc_MovementLinkObject_From()
                 );
    
-   -- сохранили свойство <кол-во формовка+1день,кг>
+   -- сохранили свойство <Переходящий П/Ф (расход), кг>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountNext_out(), tmp.Id, COALESCE (tmp.AmountNext_out,0)::TFloat)
    FROM (WITH -- приходы п/ф ГП
          tmpMI_WorkProgress_in AS
                      (SELECT MIContainer.MovementItemId              AS MovementItemId
                            , MIContainer.ContainerId                 AS ContainerId
                       FROM MovementItemContainer AS MIContainer
-                           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                                     ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
-                                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-                                                    AND MovementBoolean_Peresort.ValueData = TRUE
                       WHERE MIContainer.MovementId = inMovementId
                         AND MIContainer.DescId = zc_MIContainer_Count()
                         AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
