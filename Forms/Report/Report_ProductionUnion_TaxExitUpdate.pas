@@ -60,6 +60,7 @@ type
     ValueGP_diff: TcxGridDBColumn;
     ValuePF: TcxGridDBColumn;
     ValuePF_diff: TcxGridDBColumn;
+    Part_main_det: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -746,6 +746,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object Part_main_det: TcxGridDBColumn
+            Caption = #1044#1086#1083#1103' ('#1086#1089#1085'. '#1089#1099#1088#1100#1077')'
+            DataBinding.FieldName = 'Part_main_det'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
         end
       end
     end

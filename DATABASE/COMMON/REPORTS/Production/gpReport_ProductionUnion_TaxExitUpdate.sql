@@ -50,7 +50,8 @@ RETURNS TABLE (GoodsGroupNameFull TVarChar
              , RealWeight_inf  TFloat     -- Вес п/ф факт
              --детальная часть
              , Amount_main_det     TFloat   --кол-во факт
-             , AmountMain_part_det TFloat   --Переходящий П/Ф (расход), кг
+             , AmountMain_part_det TFloat   --Переходящий П/Ф (расход), кг  
+             , Part_main_det       TFloat   --доля
  
            )  
 
@@ -76,11 +77,6 @@ BEGIN
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
                            , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
-                           /*INNER JOIN ContainerLinkObject AS CLO_GoodsKind
-                                                          ON CLO_GoodsKind.ContainerId = MIContainer.ContainerId
-                                                         AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                                         AND CLO_GoodsKind.ObjectId = zc_GoodsKind_WorkProgress() -- ограничение что это п/ф ГП
-                                                         */
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -130,9 +126,7 @@ BEGIN
                                                            AND MIContainer.IsActive = FALSE
                                                            AND MIContainer.Amount <> 0
                            LEFT JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                           /*LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.ParentId
-                                                           AND MILinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
+
                       WHERE ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                         AND ObjectDate_PartionGoods_Value.ValueData BETWEEN inStartDate AND inEndDate
                         AND tmpMI_WorkProgress_in.ContainerId IS NULL
@@ -162,16 +156,12 @@ BEGIN
                             , tmpMI_WorkProgress_in_group.GoodsId
                             , tmpMI_WorkProgress_in_group.PartionGoodsId
                      )
+      /*
          -- подразделения из группы 
        , tmpUnit_oth AS (-- "Участок мясного сырья", но исключения - !!!захардкодил!!!
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8439) AS tmpSelect
                          WHERE inFromId NOT IN (951601, 981821) -- ЦЕХ упаковки мясо + ЦЕХ шприц. мясо
                            AND tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
-                           /*AND (tmpSelect.UnitId NOT IN (133049)-- "Склад реализации мясо"
-                             OR (inFromId         = 8448    -- ЦЕХ деликатесов
-                             AND tmpSelect.UnitId = 133049) -- Склад реализации мясо
-                               )*/
-                           
                         UNION
                          -- "ЦЕХ колбаса+дел-сы"
                          SELECT tmpSelect.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmpSelect
@@ -189,6 +179,7 @@ BEGIN
                            INNER JOIN tmpUnit_oth ON tmpUnit_oth.UnitId = MIContainer.WhereObjectId_Analyzer
                      GROUP BY tmpMI_WorkProgress_out.ContainerId
                      )
+        */
          -- приходы ГП в разрезе GoodsId (п/ф ГП) + GoodsKindId_Complete + !!!если "производство ГП"!!!
        , tmpMI_GP_in AS
                      (SELECT tmpMI_WorkProgress_out.GoodsId
@@ -329,7 +320,7 @@ BEGIN
                              , COALESCE (ObjectFloat_TaxExit.ValueData, 0)
                              , COALESCE (ObjectFloat_TotalWeight.ValueData, 0)
                              , tmpMI_WorkProgress_in.MovementId     
-                             , COALESCE (tmpMI_WorkProgress_oth.Amount,0)  
+                             , COALESCE (MIFloat_AmountNext_out.ValueData,0)
                              , (COALESCE (ObjectFloat_RealDelicShp.ValueData,0))
                              , (COALESCE (ObjectFloat_TaxLossVPR.ValueData,0))  
                              , (COALESCE (ObjectFloat_TaxLossCEH.ValueData,0))  
@@ -356,6 +347,7 @@ BEGIN
                                --, SUM (COALESCE (tmp.Amount_part,0)) AS Amount_part
                                , SUM (CASE WHEN tmp.isWeightMain = TRUE THEN COALESCE (tmp.Amount_part,0) ELSE 0 END) AS AmountMain_part
                                , SUM (CASE WHEN tmp.isWeightMain = TRUE THEN COALESCE (tmp.Amount,0) ELSE 0 END)      AS Amount_main
+                               , SUM (CASE WHEN tmp.isWeightMain = TRUE THEN COALESCE (tmp.Part,0) ELSE 0 END)        AS Part_main
                           FROM (
                                 SELECT tmpMI.MovementId, tmpMI.ContainerId, tmpMI.Amount_out, tmpMI.Amount 
                                      , CASE WHEN COALESCE (tmpMI.TotalAmount,0) <> 0 THEN tmpMI.Amount / tmpMI.TotalAmount ELSE 0 END AS Part
@@ -396,26 +388,27 @@ BEGIN
                            , MAX (tmp.TaxLossCEH)             AS TaxLossCEH
                            , MAX (tmp.TaxLossTRM)             AS TaxLossTRM
                            , MAX (tmp.RealDelicShp)           AS RealDelicShp 
-                           , SUM (COALESCE (tmp.Amount_out,0)) AS Amount_out
-                           , SUM (COALESCE (tmp.TotalWeight_in,0)) AS TotalWeight_in
-                           , SUM (COALESCE (tmp.Amount_main_det,0)) AS Amount_main_det        
+                           , SUM (COALESCE (tmp.Amount_out,0))          AS Amount_out
+                           , SUM (COALESCE (tmp.TotalWeight_in,0))      AS TotalWeight_in
+                           , SUM (COALESCE (tmp.Amount_main_det,0))     AS Amount_main_det        
                            , SUM (COALESCE (tmp.AmountMain_part_det,0)) AS AmountMain_part_det
+                           , SUM (COALESCE (tmp.Part_main_det,0))       AS Part_main_det
                       FROM
                      (-- Производство п/ф ГП
                       SELECT tmpMI_WorkProgress_in.GoodsId
                            , tmpMI_WorkProgress_in.PartionGoodsId
                            , tmpMI_WorkProgress_in.GoodsKindId_Complete
                            , SUM (tmpMI_WorkProgress_in.Amount)        AS Amount_WorkProgress_in 
-                           , SUM (COALESCE (tmpMI_WorkProgress_in.Amount,0) - COALESCE (tmpMI_WorkProgress_oth.Amount,0))        AS Amount_WorkProgress_calc
+                           , SUM (COALESCE (tmpMI_WorkProgress_in.Amount,0) - COALESCE (tmpMI_WorkProgress_in.Amount_out,0))        AS Amount_WorkProgress_calc
                            , SUM (tmpMI_WorkProgress_in.CuterCount)    AS CuterCount
                            , SUM (tmpMI_WorkProgress_in.RealWeight)    AS RealWeight
-                           , SUM (COALESCE (tmpMI_WorkProgress_in.RealWeight,0) - COALESCE (tmpMI_WorkProgress_oth.Amount,0))    AS RealWeight_calc 
+                           , SUM (COALESCE (tmpMI_WorkProgress_in.RealWeight,0) - COALESCE (tmpMI_WorkProgress_in.Amount_out,0))    AS RealWeight_calc 
                            
                            , SUM (tmpMI_WorkProgress_in.RealWeightMsg) AS RealWeightMsg 
                            , SUM (tmpMI_WorkProgress_in.RealWeightShp) AS RealWeightShp
-                           , SUM (COALESCE (tmpMI_WorkProgress_in.RealWeightShp,0) - COALESCE (tmpMI_WorkProgress_oth.Amount,0)) AS RealWeightShp_calc   
+                           , SUM (COALESCE (tmpMI_WorkProgress_in.RealWeightShp,0) - COALESCE (tmpMI_WorkProgress_in.Amount_out,0)) AS RealWeightShp_calc   
                            , SUM (CASE WHEN tmpMI_WorkProgress_in.TotalWeight <> 0
-                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_oth.Amount, 0)) * tmpMI_WorkProgress_in.TaxExit / tmpMI_WorkProgress_in.TotalWeight
+                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_in.Amount_out, 0)) * tmpMI_WorkProgress_in.TaxExit / tmpMI_WorkProgress_in.TotalWeight
                                        ELSE 0
                                   END)                                          AS Amount_GP_in_calc 
                            
@@ -432,12 +425,14 @@ BEGIN
                            , MAX (tmpMI_WorkProgress_in.MovementId)    AS MovementId   
 
                            , SUM ((COALESCE (tmpMI_detail.Amount_main,0) - COALESCE (tmpMI_detail.AmountMain_part,0))/100) AS CuterCount_calc -- Куттеров факт (расчет) 
-                           , SUM (COALESCE (tmpMI_WorkProgress_oth.Amount,0) ) AS Amount_out  
+                           , SUM (COALESCE (tmpMI_WorkProgress_in.Amount_out,0) ) AS Amount_out  
                            , SUM (tmpMI_WorkProgress_in.TotalWeight) AS TotalWeight_in  
                            , SUM (COALESCE (tmpMI_detail.Amount_main,0))  AS Amount_main_det 
-                           , SUM (COALESCE (tmpMI_detail.AmountMain_part,0))  AS AmountMain_part_det 
+                           , SUM (COALESCE (tmpMI_detail.AmountMain_part,0))  AS AmountMain_part_det
+                           , SUM (COALESCE (tmpMI_detail.Part_main,0))        AS Part_main_det
+                            
                       FROM tmpMI_WorkProgress_in_gr AS tmpMI_WorkProgress_in
-                           LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
+                           --LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
 
                            /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_WorkProgress_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -479,6 +474,7 @@ BEGIN
                            , 0 AS TotalWeight_in 
                            , 0 AS Amount_main_det 
                            , 0 AS AmountMain_part_det
+                           , 0 AS Part_main_det
                       FROM tmpMI_GP_in
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = tmpMI_GP_in.GoodsId
                                                                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -515,6 +511,7 @@ BEGIN
                            , 0 AS TotalWeight_in 
                            , 0 AS Amount_main_det 
                            , 0 AS AmountMain_part_det
+                           , 0 AS Part_main_det
                       FROM tmpMI_WorkProgress_find
                      ) AS tmp
                       GROUP BY tmp.GoodsId
@@ -676,8 +673,9 @@ BEGIN
           -- Вес п/ф факт
           , COALESCE (tmpResult.RealWeight,0)  ::TFloat AS RealWeight_inf 
           --детальная часть
-          , tmpResult.Amount_main_det     ::TFloat AS Amount_main_det  --кол-во факт
+          , tmpResult.Amount_main_det     ::TFloat AS Amount_main_det     --кол-во факт
           , tmpResult.AmountMain_part_det ::TFloat AS AmountMain_part_det --Переходящий П/Ф (расход), кг
+          , tmpResult.Part_main_det       ::TFloat AS Part_main_det       -- Доля
      FROM tmpResult
           LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpResult.GoodsId
           LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpResult.GoodsKindId_Complete
