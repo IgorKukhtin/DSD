@@ -53,6 +53,7 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS RealWeightMsg  
             , CAST (NULL AS TFloat)                 AS Amount_Remains 
             , CAST (NULL AS TFloat)                 AS AmountForm
+            , CAST (NULL AS TFloat)                 AS AmountNext_out
 
             , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
@@ -153,6 +154,7 @@ BEGIN
             , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg 
             , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
             , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm
+            , MIFloat_AmountNext_out.ValueData ::TFloat AS AmountNext_out
 
             , Object_GoodsKind.Id                 AS GoodsKindId
             , Object_GoodsKind.ObjectCode         AS GoodsKindCode
@@ -271,6 +273,10 @@ BEGIN
                                          ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
 
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
+                                         ON MIFloat_AmountNext_out.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountNext_out.DescId = zc_MIFloat_AmountNext_out()
+
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
@@ -353,7 +359,8 @@ BEGIN
             , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
             , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
             , MIFloat_Remains.ValueData       ::TFloat  AS Amount_Remains
-            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm
+            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm 
+            , MIFloat_AmountNext_out.ValueData ::TFloat AS AmountNext_out
 
             , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -473,6 +480,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountForm
                                          ON MIFloat_AmountForm.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
+
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
+                                         ON MIFloat_AmountNext_out.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountNext_out.DescId = zc_MIFloat_AmountNext_out()
 
              LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
                                          ON MIFloat_MovementItemId.MovementItemId = MovementItem.Id
@@ -687,6 +698,7 @@ ALTER FUNCTION gpSelect_MI_ProductionUnion (Integer, Boolean, Boolean, TVarChar)
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.08.24         * AmountNext_out
  30.07.24         * AmountForm
  19.05.23         *
  13.09.22         *

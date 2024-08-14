@@ -126,6 +126,12 @@ type
     bbsPrint: TdxBarSubItem;
     dxBarSeparator2: TdxBarSeparator;
     actRefreshMI: TdsdDataSetRefresh;
+    AmountNext_out: TcxGridDBColumn;
+    spUpdate_MI_AmountNext_out: TdsdStoredProc;
+    actUpdate_AmountNext_out: TdsdUpdateDataSet;
+    mactUpdate_AmountNext_out: TMultiAction;
+    bbUpdate_AmountNext_out: TdxBarButton;
+    bbsUpdate: TdxBarSubItem;
   private
     { Private declarations }
   public

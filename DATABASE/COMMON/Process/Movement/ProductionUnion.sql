@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech()
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Master() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Master' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Child() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_ProductionUnionTech_Child' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_AmountForm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_AmountForm' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_ProductionUnion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_ProductionUnion' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetUnErased_MI_ProductionUnion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetUnErased_MI_ProductionUnion' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -77,7 +77,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_ProductionU
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProductionUnion())||'(приход)> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_MI_ProductionUnion_AmountForm');
 
-
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 6
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProductionUnion())||'(приход)> - сохранение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_MI_ProductionUnion_AmountNext_out');
+                                  
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_ProductionUnion()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2

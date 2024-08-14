@@ -192,6 +192,10 @@ type
     bbPrintCEH_rep: TdxBarButton;
     bbPrintTRM_rep: TdxBarButton;
     bbPrintOUT_rep: TdxBarButton;
+    spUpdate_MI_AmountNext_out: TdsdStoredProc;
+    actUpdate_AmountNext_out: TdsdUpdateDataSet;
+    mactUpdate_AmountNext_out: TMultiAction;
+    bbUpdate_AmountNext_out: TdxBarButton;
   private
     { Private declarations }
   public

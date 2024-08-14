@@ -270,7 +270,7 @@ BEGIN
 
                            , MAX (COALESCE (MIString_Comment.ValueData, ''))    AS Comment
                            
-                           , COALESCE (tmpMI_WorkProgress_oth.Amount,0) AS Amount_out
+                           , COALESCE (MIFloat_AmountNext_out.ValueData,0) AS Amount_out
 
                       FROM tmpMI_WorkProgress_in
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
@@ -287,6 +287,10 @@ BEGIN
                                                        ON MIFloat_RealWeightShp.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                       AND MIFloat_RealWeightShp.DescId = zc_MIFloat_RealWeightShp()
 
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
+                                                       ON MIFloat_AmountNext_out.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
+                                                      AND MIFloat_AmountNext_out.DescId = zc_MIFloat_AmountNext_out()
+                                        
                            LEFT JOIN MovementItemLinkObject AS MILO_GoodsKindComplete
                                                             ON MILO_GoodsKindComplete.MovementItemId = tmpMI_WorkProgress_in.MovementItemId
                                                            AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
@@ -317,7 +321,7 @@ BEGIN
                                                  ON ObjectFloat_TaxLossTRM.ObjectId = MILO_Receipt.ObjectId
                                                 AND ObjectFloat_TaxLossTRM.DescId = zc_ObjectFloat_Receipt_TaxLossTRM()
 
-                           LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
+                          -- LEFT JOIN tmpMI_WorkProgress_oth ON tmpMI_WorkProgress_oth.ContainerId = tmpMI_WorkProgress_in.ContainerId
                       GROUP BY tmpMI_WorkProgress_in.ContainerId
                              , tmpMI_WorkProgress_in.GoodsId
                              , tmpMI_WorkProgress_in.PartionGoodsId

@@ -402,7 +402,8 @@ BEGIN
             , MIFloat_RealWeightShp.ValueData ::TFloat  AS RealWeightShp
             , MIFloat_RealWeightMsg.ValueData ::TFloat  AS RealWeightMsg
             
-            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm
+            , MIFloat_AmountForm.ValueData    ::TFloat  AS AmountForm 
+            , MIFloat_AmountNext_out.ValueData ::TFloat AS AmountNext_out
 
             , _tmpListMaster.Amount_order
             , _tmpListMaster.CuterCount_order
@@ -526,6 +527,11 @@ BEGIN
                                   ON MIFloat_AmountForm.MovementItemId = _tmpListMaster.MovementItemId
                                  AND MIFloat_AmountForm.DescId = zc_MIFloat_AmountForm()
                                  AND _tmpListMaster.MovementId <> 0
+
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountNext_out
+                                         ON MIFloat_AmountNext_out.MovementItemId = _tmpListMaster.MovementItemId
+                                        AND MIFloat_AmountNext_out.DescId = zc_MIFloat_AmountNext_out()
+                                        AND _tmpListMaster.MovementId <> 0
 
              LEFT JOIN tmpMIFloat AS MIFloat_MovementItemId
                                   ON MIFloat_MovementItemId.MovementItemId = _tmpListMaster.MovementItemId
@@ -925,6 +931,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.08.24         * AmountNext_out
  30.07.24         * AmountForm
  05.10.23         *
  12.06.23         * add Lak
