@@ -112,6 +112,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = AmountForm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNext_out
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -198,6 +203,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
               Format = ',0.####'
               Kind = skSum
               Column = AmountForm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNext_out
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -445,9 +455,11 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Options.Editing = False
             Width = 60
           end
-          object CountReal: TcxGridDBColumn [24]
-            Caption = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
-            DataBinding.FieldName = 'CountReal'
+          object AmountNext_out: TcxGridDBColumn [24]
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')'
+            DataBinding.FieldName = 'AmountNext_out'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -568,6 +580,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
+          end
+          object CountReal: TcxGridDBColumn [37]
+            Caption = #1050#1086#1083'. '#1096#1090'. '#1092#1072#1082#1090' ('#1090#1091#1096#1077#1085#1082#1072')'
+            DataBinding.FieldName = 'CountReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -3114,6 +3134,32 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate_AmountNext_out: TdsdUpdateDataSet
+      Category = 'AmountNext_out'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_AmountNext_out
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_AmountNext_out
+        end>
+      Caption = 'actUpdate_Invnumber'
+    end
+    object mactUpdate_AmountNext_out: TMultiAction
+      Category = 'AmountNext_out'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_AmountNext_out
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')>?'
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')>'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' <'#1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')>'
+      ImageIndex = 80
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ProductionUnionTech'
@@ -3238,6 +3284,10 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           Visible = True
           ItemName = 'bbUpdate_AmountForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_AmountNext_out'
         end
         item
           Visible = True
@@ -3506,6 +3556,10 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     end
     object bbPrintOUT_rep: TdxBarButton
       Action = actPrintOUT_rep
+      Category = 0
+    end
+    object bbUpdate_AmountNext_out: TdxBarButton
+      Action = mactUpdate_AmountNext_out
       Category = 0
     end
   end
@@ -4893,5 +4947,22 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     PackSize = 1
     Left = 832
     Top = 513
+  end
+  object spUpdate_MI_AmountNext_out: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ProductionUnion_AmountNext_out'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 49
+    Top = 424
   end
 end

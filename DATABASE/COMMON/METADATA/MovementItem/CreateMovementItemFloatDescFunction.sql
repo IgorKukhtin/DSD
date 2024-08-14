@@ -1045,7 +1045,14 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
  CREATE OR REPLACE FUNCTION zc_MIFloat_SummInMarket() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummInMarket'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummInMarket', 'Сумма факт дебет(маркет бюджет)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummInMarket');
-      
+    
+ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountNext_out() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountNext_out'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_AmountNext_out', 'Переходящий П/Ф (расход)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountNext_out');
+
+
+
+       
        
 
 ----!!!!!!Farmacy
