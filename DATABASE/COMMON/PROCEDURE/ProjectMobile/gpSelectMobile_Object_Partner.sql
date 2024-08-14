@@ -74,6 +74,10 @@ BEGIN
                                       , CASE WHEN View_Contract_ContractKey.ContractId_Key IN (8679226, 583450)
                                                   -- !!!замена!!!
                                                   THEN 8679226
+                                             WHEN View_Contract_ContractKey.ContractId_Key IN (8318399, 1029784)
+                                                  -- !!!замена!!!
+                                                  THEN 8318399
+                                                  
 
                                              WHEN (Object.ValueData ILIKE '%физобмен%' 
                                                 OR Object.ValueData ILIKE '%обмін%'
@@ -509,7 +513,16 @@ $BODY$
  28.03.17         * add Delivery
  17.02.17                                                         *
 */
-
+/*
+with a as (SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '11121333'))
+, b as (SELECT Id, ContractId FROM a group by Id, ContractId having count(*) > 1)
+select Object2.*, Object .ValueData, *
+from a
+ join b on b.Id = a.Id
+       and b.ContractId  = a.ContractId 
+ LEFT JOIN Object ON Object.Id = a.ContractId 
+ LEFT JOIN Object AS Object2 ON Object2.Id = a.ContractId_Key
+*/
 -- тест
 -- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelectMobile_Object_Partner (inSyncDateIn:= zc_DateStart(), inSession:= '1072129')
