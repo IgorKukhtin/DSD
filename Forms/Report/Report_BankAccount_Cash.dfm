@@ -142,6 +142,14 @@ inherited Report_BankAccount_CashForm: TReport_BankAccount_CashForm
             Options.Editing = False
             Width = 105
           end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'JuridicalName'
