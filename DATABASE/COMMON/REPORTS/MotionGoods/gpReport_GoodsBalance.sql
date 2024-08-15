@@ -161,7 +161,7 @@ BEGIN
 
 
     -- !!!Нет прав!!! - Ограниченние - нет доступа к Отчету по остаткам
-    IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 11086934)
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11086934)
     THEN
         RAISE EXCEPTION 'Ошибка.Нет прав.';
     END IF;
