@@ -27,6 +27,8 @@ object UserForm: TUserForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitLeft = 608
+    ExplicitTop = 363
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -578,6 +580,14 @@ object UserForm: TUserForm
         end
         item
           Visible = True
+          ItemName = 'bbsPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -671,11 +681,34 @@ object UserForm: TUserForm
       Action = actGridToExcel_Role
       Category = 0
     end
+    object bbPrintUser_Badge: TdxBarButton
+      Action = actPrintUser_Badge
+      Category = 0
+    end
+    object bbPrintUser_Badge_list: TdxBarButton
+      Action = macPrintUser_Badge_list
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrintUser_Badge'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintUser_Badge_list'
+        end>
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 64
+    Left = 296
+    Top = 72
     object actRefresh_Role: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1136,6 +1169,45 @@ object UserForm: TUserForm
         #1076#1077#1090' '#1087#1088#1077#1076#1083#1086#1076#1078#1077#1085#1086' '#1086#1090#1089#1082#1072#1085#1080#1088#1086#1074#1072#1090#1100' '#1085#1072' '#1084#1086#1073#1080#1083#1100#1085#1086#1084'  '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1077' '#1057#1077#1082#1088#1077#1090#1085#1099#1081 +
         ' '#1050#1083#1102#1095' '#1076#1083#1103' Google Authenticator.'#1055#1088#1086#1076#1086#1083#1078#1080#1090#1100'?'
     end
+    object actPrintUser_Badge: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPrintUser_Badge
+      StoredProcList = <
+        item
+          StoredProc = spPrintUser_Badge
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintUser_BadgeCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintUser_Badge'
+      ReportNameParam.Value = 'PrintUser_Badge'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
+    end
+    object macPrintUser_Badge_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actPrintUser_Badge
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1087#1080#1089#1082#1072' '#1073#1077#1081#1076#1078#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1087#1080#1089#1082#1072' '#1073#1077#1081#1076#1078#1077#1081' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      ImageIndex = 15
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_User'
@@ -1522,5 +1594,31 @@ object UserForm: TUserForm
     PackSize = 1
     Left = 72
     Top = 272
+  end
+  object PrintUser_BadgeCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 296
+    Top = 136
+  end
+  object spPrintUser_Badge: TdsdStoredProc
+    StoredProcName = 'gpSelect_User_PrintBadge'
+    DataSet = PrintUser_BadgeCDS
+    DataSets = <
+      item
+        DataSet = PrintUser_BadgeCDS
+      end>
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 343
+    Top = 136
   end
 end

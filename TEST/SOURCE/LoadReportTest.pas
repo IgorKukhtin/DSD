@@ -140,6 +140,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 
   LoadReportFromFile('Печать_ЯчеекОтбора_штрихкод', ReportPath + '\Справочники\Печать_ЯчеекОтбора_штрихкод.fr3');
   exit;
