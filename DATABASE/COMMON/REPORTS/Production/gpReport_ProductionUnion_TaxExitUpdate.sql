@@ -261,7 +261,7 @@ BEGIN
 
                            , MAX (COALESCE (MIString_Comment.ValueData, ''))    AS Comment
                            
-                           , COALESCE (MIFloat_AmountNext_out.ValueData,0) AS Amount_out
+                           , COALESCE (MIFloat_AmountNext_out.ValueData,0) * (-1)  AS Amount_out     --изначально был расход - положит.  а затем приход /расход, здесь меняю знак чтоб не менять во всех формулах, в основном запросе снова * (-1) 
 
                       FROM tmpMI_WorkProgress_in
                            LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
@@ -669,7 +669,7 @@ BEGIN
           --Вес П/Ф после массажера (расчет)
           , (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))  ::TFloat AS RealWeightMsg_calcinf
           -- Переходящий П/Ф (расход), кг
-          , COALESCE (tmpResult.Amount_out,0)  ::TFloat AS Amount_outinf  
+          , (COALESCE (tmpResult.Amount_out,0)* (-1) )  ::TFloat AS Amount_outinf  
           -- Вес п/ф факт
           , COALESCE (tmpResult.RealWeight,0)  ::TFloat AS RealWeight_inf 
           --детальная часть

@@ -456,7 +456,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
             Width = 60
           end
           object AmountNext_out: TcxGridDBColumn [24]
-            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1088#1072#1089#1093#1086#1076')'
+            Caption = #1055#1077#1088#1077#1093#1086#1076#1103#1097#1080#1081' '#1055'/'#1060' ('#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076')'
             DataBinding.FieldName = 'AmountNext_out'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
