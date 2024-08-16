@@ -1501,6 +1501,8 @@ type
     miReport_ProductionUnion_TaxExitUpdate: TMenuItem;
     actReport_ProfitLossService: TdsdOpenForm;
     miReport_ProfitLossService: TMenuItem;
+    actReport_Check_Sale_TotalSum: TdsdOpenForm;
+    miReport_Check_Sale_TotalSum: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
