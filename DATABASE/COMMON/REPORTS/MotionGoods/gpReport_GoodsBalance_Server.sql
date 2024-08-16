@@ -472,6 +472,11 @@ BEGIN
                                                         AND CLO_AssetTo.DescId = zc_ContainerLinkObject_AssetTo()
        ;
 
+
+    -- !!!!!!!!!!!!!!!!!!!!!!!
+    ANALYZE _tmpContainer;
+
+
     -- Результат
     RETURN QUERY
    WITH 
