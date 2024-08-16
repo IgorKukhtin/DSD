@@ -28,6 +28,8 @@ object ChoiceCellForm: TChoiceCellForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -144
+    ExplicitTop = 74
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -153,6 +155,15 @@ object ChoiceCellForm: TChoiceCellForm
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 72
+      end
+      object idBarCode: TcxGridDBColumn
+        Caption = #1064#1090#1088#1080#1093#1082#1086#1076
+        DataBinding.FieldName = 'idBarCode'
+        Visible = False
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaBottom
+        Options.Editing = False
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -284,7 +295,15 @@ object ChoiceCellForm: TChoiceCellForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_BarCode'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -358,8 +377,12 @@ object ChoiceCellForm: TChoiceCellForm
       Action = macStartLoad
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrint_BarCode: TdxBarButton
+      Action = actPrint_BarCode
       Category = 0
     end
   end
@@ -550,6 +573,52 @@ object ChoiceCellForm: TChoiceCellForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actPrint_BarCode: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1064#1090#1088#1080#1093#1082#1086#1076#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1064#1090#1088#1080#1093#1082#1086#1076#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100'_'#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072'_'#1096#1090#1088#1080#1093#1082#1086#1076
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072'_'#1096#1090#1088#1080#1093#1082#1086#1076
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actDoLoad: TExecuteImportSettingsAction
       Category = #1047#1072#1075#1088#1091#1079#1082#1072

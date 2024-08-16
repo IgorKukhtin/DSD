@@ -16,17 +16,17 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1165
-    ExplicitHeight = 392
+    ExplicitHeight = 455
     ClientRectBottom = 455
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
-      ExplicitHeight = 392
+      ExplicitHeight = 455
       inherited cxGrid: TcxGrid
         Width = 1165
         Height = 455
         ExplicitWidth = 1165
-        ExplicitHeight = 392
+        ExplicitHeight = 455
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -384,6 +384,15 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
+          end
+          object isTotalSumm_GoodsReal: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1087#1086' '#1089#1093'. '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'isTotalSumm_GoodsReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 85
           end
           object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
@@ -868,7 +877,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitTop = 468
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS

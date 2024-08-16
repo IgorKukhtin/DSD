@@ -5,7 +5,6 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -48
   ExplicitWidth = 1390
   ExplicitHeight = 680
   PixelsPerInch = 96
@@ -694,9 +693,11 @@ inherited SaleJournalForm: TSaleJournalForm
           object isTotalSumm_GoodsReal: TcxGridDBColumn
             Caption = #1056#1072#1089#1095'. '#1087#1086' '#1089#1093'. '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'isTotalSumm_GoodsReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
             Options.Editing = False
-            Width = 70
+            Width = 85
           end
           object IsEDI: TcxGridDBColumn
             Caption = 'EXITE'

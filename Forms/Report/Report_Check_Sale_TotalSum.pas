@@ -42,6 +42,9 @@ type
     actOpenForm: TdsdOpenForm;
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
+    spUpdateTotalSumm_GoodsReal: TdsdStoredProc;
+    actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc;
+    bbUpdateTotalSumm_GoodsReal: TdxBarButton;
   private
     { Private declarations }
   public

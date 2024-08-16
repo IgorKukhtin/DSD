@@ -13,7 +13,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
              , FromName  TVarChar
              , ToCode    Integer
              , ToName    TVarChar
-             , isPriceWithVAT Boolean
+             , isPriceWithVAT Boolean 
+             , isTotalSumm_GoodsReal Boolean
              , VATPercent     TFloat
              , ChangePercent  TFloat
              , TotalSummMVAT   TFloat
@@ -75,7 +76,8 @@ BEGIN
        , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                 FROM MovementBoolean
                                 WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
-                                  AND MovementBoolean.DescId = zc_MovementBoolean_PriceWithVAT()
+                                  AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT() 
+                                                               , zc_MovementBoolean_TotalSumm_GoodsReal())
                                 )
 
         , tmpMLO AS (SELECT MovementLinkObject.*
@@ -94,10 +96,15 @@ BEGIN
                               , MB_PriceWithVAT.ValueData             AS isPriceWithVAT
                               , COALESCE (MF_VATPercent.ValueData,0)  AS VATPercent
                               , MovementFloat_ChangePercent.ValueData AS ChangePercent
+                              , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE) ::Boolean AS isTotalSumm_GoodsReal
                         FROM tmpMov
                            LEFT JOIN tmpMovementBoolean AS MB_PriceWithVAT
                                                         ON MB_PriceWithVAT.MovementId = tmpMov.Id
                                                        AND MB_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                                        ON MovementBoolean_TotalSumm_GoodsReal.MovementId = tmpMov.Id
+                                                       AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
 
                           LEFT JOIN tmpMovementFloat AS MF_VATPercent
                                                      ON MF_VATPercent.MovementId = tmpMov.Id
@@ -131,6 +138,7 @@ BEGIN
                   , Object_To.ValueData    AS ToName
                    
                   , tmpData.isPriceWithVAT ::Boolean
+                  , tmpData.isTotalSumm_GoodsReal ::Boolean
                   , tmpData.VATPercent     ::TFloat
                   , tmpData.ChangePercent  ::TFloat
                  

@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxGridChartView, cxGridDBChartView, cxSplitter;
+  cxGridChartView, cxGridDBChartView, cxSplitter, dsdCommon;
 
 type
   TReport_OrderExternal_UpdateForm = class(TAncestorReportForm)

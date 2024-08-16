@@ -140,6 +140,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('Печать_ЯчеекОтбора_штрихкод', ReportPath + '\Справочники\Печать_ЯчеекОтбора_штрихкод.fr3');
+  exit;
    {
   LoadReportFromFile('Печать паспорта ячейки(строка)', ReportPath + '\Товарный Учет\Печать паспорта ячейки(строка).fr3');
   exit;
