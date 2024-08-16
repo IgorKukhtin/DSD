@@ -222,6 +222,13 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             Options.Editing = False
             Width = 36
           end
+          object isPeresort: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 44
+          end
         end
       end
     end

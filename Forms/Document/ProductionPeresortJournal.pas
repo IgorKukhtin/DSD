@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  ExternalLoad;
+  ExternalLoad, dsdCommon;
 
 type
   TProductionPeresortJournalForm = class(TAncestorJournalForm)
@@ -68,6 +68,7 @@ type
     actGetImportSettingCar: TdsdExecStoredProc;
     macLoadExcelCar: TMultiAction;
     bbLoadExcelCar: TdxBarButton;
+    isPeresort: TcxGridDBColumn;
   private
     { Private declarations }
   public
