@@ -257,11 +257,11 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
                                                                 ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
-                                                               AND vbPartnerName NOT ILIKE '%я╡кэон-тсд рнб%'
+                                                               --AND vbPartnerName NOT ILIKE '%я╡кэон-тсд рнб%'
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
-                                                               AND vbPartnerName NOT ILIKE '%я╡кэон-тсд рнб%'
+                                                               --AND vbPartnerName NOT ILIKE '%я╡кэон-тсд рнб%'
 
 
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner

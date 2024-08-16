@@ -5,6 +5,7 @@ inherited SaleJournalForm: TSaleJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitTop = -48
   ExplicitWidth = 1390
   ExplicitHeight = 680
   PixelsPerInch = 96
@@ -690,6 +691,13 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 36
           end
+          object isTotalSumm_GoodsReal: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1087#1086' '#1089#1093'. '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'isTotalSumm_GoodsReal'
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 70
+          end
           object IsEDI: TcxGridDBColumn
             Caption = 'EXITE'
             DataBinding.FieldName = 'isEDI'
@@ -980,7 +988,8 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 179
+    Left = 539
+    Top = 371
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -5046,6 +5055,19 @@ inherited SaleJournalForm: TSaleJournalForm
         end>
       isShowModal = True
     end
+    object actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTotalSumm_GoodsReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTotalSumm_GoodsReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -5679,6 +5701,10 @@ inherited SaleJournalForm: TSaleJournalForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateMI_Sale_PriceIn'
         end
         item
@@ -5692,6 +5718,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTotalSumm_GoodsReal'
         end>
     end
     object bbsUnLoad: TdxBarSubItem
@@ -5719,6 +5749,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrint_Sale3_TTN_Quality: TdxBarButton
       Action = macPrint_Sale3_TTN_Quality
+      Category = 0
+    end
+    object bbUpdateTotalSumm_GoodsReal: TdxBarButton
+      Action = actUpdateTotalSumm_GoodsReal
       Category = 0
     end
   end
@@ -7923,5 +7957,31 @@ inherited SaleJournalForm: TSaleJournalForm
     PackSize = 1
     Left = 1136
     Top = 224
+  end
+  object spUpdateTotalSumm_GoodsReal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_TotalSumm_GoodsReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisTotalSumm_GoodsReal'
+        Value = True
+        Component = MasterCDS
+        ComponentItem = 'isTotalSumm_GoodsReal'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 968
+    Top = 579
   end
 end

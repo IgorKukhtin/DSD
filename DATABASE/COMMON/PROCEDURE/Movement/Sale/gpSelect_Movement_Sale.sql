@@ -50,7 +50,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isError Boolean
              , isPrinted Boolean
              , isPromo Boolean
-             , isPav Boolean
+             , isPav Boolean 
+             , isTotalSumm_GoodsReal Boolean  --Расчет суммы по схеме - Товар (факт)
              , MovementPromo TVarChar
              , InsertDate TDateTime
              , InsertDate_order TDateTime

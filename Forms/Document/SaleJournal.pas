@@ -387,6 +387,10 @@ type
     actPrint_TTN_copy1_list: TdsdPrintAction;
     actPrint_TTN_copy3_list: TdsdPrintAction;
     macPrint_TTN_Copy3_list: TMultiAction;
+    isTotalSumm_GoodsReal: TcxGridDBColumn;
+    spUpdateTotalSumm_GoodsReal: TdsdStoredProc;
+    actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc;
+    bbUpdateTotalSumm_GoodsReal: TdxBarButton;
   private
     { Private declarations }
   public

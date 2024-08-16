@@ -1,30 +1,30 @@
 inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
-  ClientHeight = 553
+  ClientHeight = 616
   ClientWidth = 1165
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1181
-  ExplicitHeight = 592
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
     Width = 1165
-    Height = 392
+    Height = 455
     TabOrder = 3
     ExplicitTop = 76
     ExplicitWidth = 1165
     ExplicitHeight = 392
-    ClientRectBottom = 392
+    ClientRectBottom = 455
     ClientRectRight = 1165
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1165
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Width = 1165
-        Height = 392
+        Height = 455
         ExplicitWidth = 1165
         ExplicitHeight = 392
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -862,12 +862,13 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
-    Top = 468
+    Top = 531
     Width = 1165
     Height = 85
     Align = alBottom
     TabOrder = 6
     Visible = False
+    ExplicitTop = 468
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -3251,6 +3252,19 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1099' '#1087#1086' '#1055#1088#1072#1081#1089#1091
       ImageIndex = 56
     end
+    object actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTotalSumm_GoodsReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTotalSumm_GoodsReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3740,6 +3754,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         item
           Visible = True
           ItemName = 'bbUpdate_PriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTotalSumm_GoodsReal'
         end>
     end
     object bbsUnLoad: TdxBarSubItem
@@ -3756,6 +3778,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
           Visible = True
           ItemName = 'bbbExportFile_fromMail'
         end>
+    end
+    object bbUpdateTotalSumm_GoodsReal: TdxBarButton
+      Action = actUpdateTotalSumm_GoodsReal
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -5182,5 +5208,31 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     PackSize = 1
     Left = 600
     Top = 496
+  end
+  object spUpdateTotalSumm_GoodsReal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_TotalSumm_GoodsReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisTotalSumm_GoodsReal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTotalSumm_GoodsReal'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 371
   end
 end

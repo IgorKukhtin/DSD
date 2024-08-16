@@ -2,7 +2,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088')>'
   ClientHeight = 490
   ClientWidth = 1370
-  ExplicitLeft = -189
   ExplicitWidth = 1386
   ExplicitHeight = 529
   PixelsPerInch = 96
@@ -22,6 +21,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       inherited cxGrid: TcxGrid
         Width = 1370
         Height = 300
+        ExplicitLeft = 3
         ExplicitWidth = 1370
         ExplicitHeight = 300
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -721,14 +721,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 1273
-      Top = 44
+      Left = 1274
+      Top = 50
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
       Visible = False
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 1274
-      Top = 63
+      Left = 1330
+      Top = 50
       Properties.Buttons = <
         item
           Default = True
@@ -1076,6 +1076,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Properties.ReadOnly = True
       TabOrder = 63
       Width = 120
+    end
+    object cbTotalSumm_GoodsReal: TcxCheckBox
+      Left = 1274
+      Top = 63
+      Hint = 
+        #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
+        #1055#1088#1072#1074
+      Caption = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 64
+      Width = 219
     end
   end
   object cbPromo: TcxCheckBox [2]
@@ -2697,6 +2710,19 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       ImageIndex = 56
     end
+    object actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTotalSumm_GoodsReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTotalSumm_GoodsReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3025,6 +3051,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           Visible = True
           ItemName = 'bbUpdateMaskSend'
+        end
+        item
+          Visible = True
+          ItemName = 'bbsSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTotalSumm_GoodsReal'
         end>
     end
     object bbsShow: TdxBarSubItem
@@ -3158,6 +3192,10 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     object bbUpdate_Currency: TdxBarButton
       Action = mactUpdate_Currency
+      Category = 0
+    end
+    object bbUpdateTotalSumm_GoodsReal: TdxBarButton
+      Action = actUpdateTotalSumm_GoodsReal
       Category = 0
     end
   end
@@ -5943,5 +5981,30 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     PackSize = 1
     Left = 1280
     Top = 339
+  end
+  object spUpdateTotalSumm_GoodsReal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_TotalSumm_GoodsReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisTotalSumm_GoodsReal'
+        Value = False
+        Component = cbTotalSumm_GoodsReal
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1088
+    Top = 371
   end
 end
