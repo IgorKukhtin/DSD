@@ -73,8 +73,14 @@ BEGIN
     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Goods());
     vbUserId:= lpGetUserBySession (inSession);
 
-     -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+    -- !!!Только просмотр Аудитор!!!
+    PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+
+    -- !!!Нет прав!!! - Ограниченние - нет доступа к Отчету по остаткам
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11086934)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+    END IF;
 
     -- !!!определяется!!!
     vbIsBranch:= EXISTS (SELECT BranchId FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND BranchId <> 0 GROUP BY BranchId);

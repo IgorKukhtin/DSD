@@ -33,6 +33,7 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar,
              , GroupId Integer, GroupName TVarChar
              , CashName TVarChar
              , Comment TVarChar
+             , OperDate TDateTime
               )
 AS
 $BODY$
@@ -60,7 +61,7 @@ BEGIN
                                                         , inAccountId    := inAccountId
                                                         , inCashId       := inCashId
                                                         , inCurrencyId   := 0
-                                                        , inisDate       := False
+                                                        , inisDate       := CASE WHEN vbUserId IN (5, 6604558) THEN TRUE ELSE FALSE END
                                                         , inSession      := inSession
                                                                          ) AS gpReport)
         , tmpResult AS (SELECT tmpReport_BankAccount.ContainerId 
@@ -86,6 +87,7 @@ BEGIN
              , tmpReport_BankAccount.DebetSumm_Currency, tmpReport_BankAccount.KreditSumm_Currency
              , tmpReport_BankAccount.EndAmount_Currency, tmpReport_BankAccount.EndAmountD_Currency, tmpReport_BankAccount.EndAmountK_Currency
              , tmpReport_BankAccount.Summ_Currency, tmpReport_BankAccount.Summ_pl AS Summ_Currency_pl
+             , tmpReport_BankAccount.OperDate
              
                         FROM tmpReport_BankAccount 
                        UNION ALL
@@ -111,6 +113,9 @@ BEGIN
              , tmpReport_Cash.DebetSumm_Currency, tmpReport_Cash.KreditSumm_Currency
              , tmpReport_Cash.EndAmount_Currency, tmpReport_Cash.EndAmountD_Currency, tmpReport_Cash.EndAmountK_Currency
              , tmpReport_Cash.Summ_Currency, tmpReport_Cash.Summ_Currency_pl
+
+             , tmpReport_Cash.OperDate
+
                         FROM tmpReport_Cash
          )
 
@@ -156,9 +161,9 @@ BEGIN
              , tmpResult.GroupName 
              , tmpResult.CashName
              , tmpResult.Comment 
+             , CASE WHEN tmpResult.OperDate = zc_DateStart() THEN NULL ELSE tmpResult.OperDate END :: TDateTime AS OperDate
         FROM tmpResult
-
-;
+       ;
 
 END;
 $BODY$
@@ -172,4 +177,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_BankAccount_Cash (inStartDate:= '01.01.2015', inEndDate:= '31.01.2015', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inCashId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_BankAccount_Cash (inStartDate:= '01.09.2024', inEndDate:= '01.09.2024', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inCashId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());

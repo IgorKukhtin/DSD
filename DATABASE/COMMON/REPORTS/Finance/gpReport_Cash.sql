@@ -193,6 +193,8 @@ BEGIN
                                        , SUM (CASE WHEN MIContainer.AccountId          = zc_Enum_Account_40801()  -- Курсовая разница
                                                     AND MIContainer.AccountId_Analyzer = zc_Enum_Account_100301() -- прибыль текущего периода
                                                         THEN -1 * MIContainer.Amount
+                                                   --WHEN MIContainer.AccountId_Analyzer = zc_Enum_Account_100301() -- прибыль текущего периода
+                                                   --     THEN -1 * MIContainer.Amount
                                                    ELSE 0
                                               END) AS Summ_Currency_pl
                                        , MIContainer.isActive
@@ -247,6 +249,7 @@ BEGIN
  
             -- ДЛЯ движение  в валюте операции
         , tmpContainerCurrency AS (SELECT MIContainer.MovementItemId
+                                        , tmpContainer.ContainerId_Currency
                                         , tmpContainer.ObjectId
                                         , tmpContainer.CashId
                                         , tmpContainer.CurrencyId
@@ -260,6 +263,7 @@ BEGIN
                                                                   AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    WHERE tmpContainer.ContainerId_Currency > 0
                                    GROUP BY MIContainer.MovementItemId
+                                          , tmpContainer.ContainerId_Currency
                                           , tmpContainer.ObjectId
                                           , tmpContainer.CashId
                                           , tmpContainer.CurrencyId
@@ -361,7 +365,7 @@ BEGIN
                  
                             UNION ALL
                             -- движение в валюте баланса
-                            SELECT 0                                         AS ContainerId,
+                            SELECT CASE WHEN vbUserId = 5 AND 1=0 THEN  tmpContainer.ContainerId ELSE 0 END AS ContainerId,
                                    tmpContainer.ObjectId                     AS ObjectId,
                                    tmpContainer.CashId                       AS CashId,
                                    tmpContainer.CurrencyId                   AS CurrencyId,
@@ -388,7 +392,8 @@ BEGIN
                                    LEFT JOIN tmpContract_Balance   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
                                    LEFT JOIN tmpUnit_Balance       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
                                    LEFT JOIN tmpInfoMoney_Balance  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
-                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                            GROUP BY CASE WHEN vbUserId = 5 AND 1=0 THEN tmpContainer.ContainerId ELSE 0 END,
+                                     tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
                                      MILO_InfoMoney.ObjectId, 
                                      MILO_Unit.ObjectId,
                                      MILO_MoneyPlace.ObjectId, 
@@ -397,7 +402,7 @@ BEGIN
                                      tmpContainer.OperDate
                             UNION ALL
                             -- движение  в валюте операции
-                            SELECT 0                                         AS ContainerId,
+                            SELECT CASE WHEN vbUserId = 5 AND 1=0 THEN  tmpContainer.ContainerId_Currency ELSE 0 END AS ContainerId,
                                    tmpContainer.ObjectId                     AS ObjectId,
                                    tmpContainer.CashId                       AS CashId,
                                    tmpContainer.CurrencyId                   AS CurrencyId,
@@ -424,7 +429,8 @@ BEGIN
                                    LEFT JOIN tmpContract_Currency   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
                                    LEFT JOIN tmpUnit_Currency       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
                                    LEFT JOIN tmpInfoMoney_Currency  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
-                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                            GROUP BY CASE WHEN vbUserId = 5 AND 1=0 THEN tmpContainer.ContainerId_Currency ELSE 0 END,
+                                     tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
                                      MILO_InfoMoney.ObjectId,
                                      MILO_Unit.ObjectId, 
                                      MILO_MoneyPlace.ObjectId, 
@@ -490,7 +496,7 @@ BEGIN
         Operation.Summ_Currency_pl :: TFloat,  
 
         Operation.Comment          :: TVarChar,
-        Operation.OperDate         :: TDateTime
+        CASE WHEN Operation.OperDate = zc_DateStart() THEN NULL ELSE Operation.OperDate END :: TDateTime AS OperDate
         
      FROM
          (SELECT Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.InfoMoneyId, Operation_all.CurrencyId,
@@ -553,4 +559,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Cash(inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('01.12.2020')::TDateTime , inAccountId := 0 , inCashId := 296540 , inCurrencyId := 0 ,  inisDate:= true, inSession := zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Cash(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inAccountId := 0 , inCashId := 296540 , inCurrencyId := 0 ,  inisDate:= true, inSession := zfCalc_UserAdmin());

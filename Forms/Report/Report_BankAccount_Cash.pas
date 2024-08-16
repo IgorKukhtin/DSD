@@ -80,6 +80,7 @@ type
     cxLabel6: TcxLabel;
     ceCash: TcxButtonEdit;
     GuidesCash: TdsdGuides;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

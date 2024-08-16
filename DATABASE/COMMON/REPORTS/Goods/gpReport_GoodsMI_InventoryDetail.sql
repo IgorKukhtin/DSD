@@ -59,6 +59,13 @@ BEGIN
      vbIsGroup:= (inSession = '');
 
 
+     -- !!!Нет прав!!! - Ограниченние - нет доступа к Отчету по остаткам
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11086934)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав.';
+     END IF;
+
+
      -- Бурмага М.Ф. + Гармаш С.М. + Горб Т.Г.
      IF vbUserId IN (5308086, 651642, 439887)
         AND inUnitId NOT IN (8458) -- Склад База ГП

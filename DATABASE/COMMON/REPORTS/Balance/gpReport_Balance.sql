@@ -85,51 +85,51 @@ end if;*/
        -- некоторые счета делим на Нал/Бн
        WITH tmpAccount AS (SELECT Object_Account_View.* FROM Object_Account_View)
 
-          , tmpAccountDirection AS (SELECT 30100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + покупатели
+          , tmpAccountDirection AS (SELECT 30100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Дебиторы + покупатели
                                    UNION
-                                    SELECT 30200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + наши компании
+                                    SELECT 30200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Дебиторы + наши компании
                                    UNION
-                                    SELECT 30300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + Дебиторы по услугам
+                                    SELECT 30300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Дебиторы + Дебиторы по услугам
                                    UNION
-                                    SELECT 30400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + Прочие дебиторы
+                                    SELECT 30400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Дебиторы + Прочие дебиторы
                                    UNION
-                                    SELECT 30500 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (подотчетные лица)
+                                    SELECT 30500 AS AccountDirectionCode, FALSE AS isFirstForm, FALSE AS isFirstForm_pav, TRUE AS isSecondForm -- -+ сотрудники (подотчетные лица)
                                    UNION
-                                    SELECT 30600 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (недостачи, порча)
+                                    SELECT 30600 AS AccountDirectionCode, FALSE AS isFirstForm, FALSE AS isFirstForm_pav, TRUE AS isSecondForm -- -+ сотрудники (недостачи, порча)
                                    UNION
-                                    SELECT 30700 AS AccountDirectionCode, TRUE AS isFirstForm, FALSE AS isSecondForm -- +- векселя полученные
+                                    SELECT 30700 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, FALSE AS isSecondForm -- +- векселя полученные
 
                                    UNION
-                                    SELECT 70100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + поставщики
+                                    SELECT 70100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Кредиторы + поставщики
                                    UNION
-                                    SELECT 70200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по услугам
+                                    SELECT 70200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по услугам
                                    UNION
-                                    SELECT 70300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по маркетингу
+                                    SELECT 70300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по маркетингу
                                    UNION
-                                    SELECT 70400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Коммунальные услуги
+                                    SELECT 70400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Коммунальные услуги
                                    UNION
-                                    SELECT 70500 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ Сотрудники
+                                    SELECT 70500 AS AccountDirectionCode, FALSE AS isFirstForm, FALSE AS isFirstForm_pav, TRUE AS isSecondForm -- -+ Сотрудники
                                    UNION
-                                    SELECT 70600 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (заготовители)
+                                    SELECT 70600 AS AccountDirectionCode, FALSE AS isFirstForm, FALSE AS isFirstForm_pav, TRUE AS isSecondForm -- -+ сотрудники (заготовители)
                                    UNION
-                                    SELECT 70700 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Административные ОС
+                                    SELECT 70700 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Административные ОС
                                    UNION
-                                    SELECT 70800 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Производственные ОС
+                                    SELECT 70800 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ Производственные ОС
                                    UNION
-                                    SELECT 70900 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ НМА
+                                    SELECT 70900 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm  -- ++ НМА
                                    UNION
-                                    SELECT 71000 AS AccountDirectionCode, TRUE AS isFirstForm, FALSE AS isSecondForm -- +- векселя выданные
+                                    SELECT 71000 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, FALSE AS isSecondForm -- +- векселя выданные
 
                                    UNION
-                                    SELECT 80100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ Кредиты банков
+                                    SELECT 80100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm -- ++ Кредиты банков
                                    UNION
-                                    SELECT 80200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ Прочие кредиты
+                                    SELECT 80200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm -- ++ Прочие кредиты
                                    UNION
-                                    SELECT 80300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ ???
+                                    SELECT 80300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm -- ++ ???
                                    UNION
-                                    SELECT 80400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ проценты по кредитам
+                                    SELECT 80400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isFirstForm_pav, TRUE AS isSecondForm -- ++ проценты по кредитам
                                    )
-          , tmpAccount_two AS (SELECT tmpAccount.*, COALESCE (tmpAccountDirection.AccountDirectionCode, 0) AS AccountDirectionCode_find, isFirstForm, isSecondForm
+          , tmpAccount_two AS (SELECT tmpAccount.*, COALESCE (tmpAccountDirection.AccountDirectionCode, 0) AS AccountDirectionCode_find, isFirstForm, isFirstForm_pav, isSecondForm
                                FROM tmpAccount
                                     LEFT JOIN tmpAccountDirection ON tmpAccountDirection.AccountDirectionCode = tmpAccount.AccountDirectionCode
                               )
@@ -137,9 +137,12 @@ end if;*/
 
           , tmpAccountAll AS (SELECT tmpAccount_two.*, COALESCE (tmpPaidKind.PaidKindId, 0) AS PaidKindId
                               FROM tmpAccount_two
-                                   LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId UNION ALL SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId
-                                             ) AS tmpPaidKind ON tmpAccount_two.AccountDirectionCode_find <> 0 AND ((isFirstForm  = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm())
-                                                                                                                 OR (isSecondForm = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_SecondForm())
+                                   LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm()     AS PaidKindId
+                                    UNION ALL SELECT zc_Enum_PaidKind_SecondForm()    AS PaidKindId
+                                    UNION ALL SELECT zc_Enum_PaidKind_FirstForm_pav() AS PaidKindId
+                                             ) AS tmpPaidKind ON tmpAccount_two.AccountDirectionCode_find <> 0 AND ((isFirstForm      = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm())
+                                                                                                                 OR (isFirstForm_pav  = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm_pav())
+                                                                                                                 OR (isSecondForm     = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_SecondForm())
                                                                                                                    )
                              )
        -- результат
@@ -418,8 +421,9 @@ end if;*/
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
                                   AND (tmpReportOperation.PaidKindId = Object_Account_View.PaidKindId
                                        OR (tmpReportOperation.PaidKindId = 0
-                                           AND ((Object_Account_View.PaidKindId = zc_Enum_PaidKind_FirstForm() AND Object_Account_View.isFirstForm = TRUE)
-                                                OR (Object_Account_View.PaidKindId = zc_Enum_PaidKind_SecondForm() AND Object_Account_View.isFirstForm = FALSE)
+                                           AND ((Object_Account_View.PaidKindId = zc_Enum_PaidKind_FirstForm()     AND Object_Account_View.isFirstForm     = TRUE)
+                                             OR (Object_Account_View.PaidKindId = zc_Enum_PaidKind_FirstForm_pav() AND Object_Account_View.isFirstForm_pav = FALSE)
+                                             OR (Object_Account_View.PaidKindId = zc_Enum_PaidKind_SecondForm()    AND Object_Account_View.isFirstForm     = FALSE)
                                                )
                                           )
                                       )
