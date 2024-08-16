@@ -90,7 +90,8 @@ $BODY$
   DECLARE vbChangePrice TFloat;
   DECLARE vbPaidKindId Integer;
   DECLARE vbIsChangePrice Boolean;
-  DECLARE vbIsDiscountPrice Boolean;
+  DECLARE vbIsDiscountPrice Boolean;  
+  DECLARE vbisTotalSumm_GoodsReal Boolean;
 
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyPartnerId Integer;
@@ -135,13 +136,13 @@ BEGIN
           , COALESCE (MovementFloat_CurrencyValue.ValueData, 0)                               AS CurrencyValue
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
-          , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
-          
-          , Object_Partner.ValueData AS vbPartnerName
+          , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue 
+          , Object_Partner.ValueData AS vbPartnerName  
+          , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE)                   AS isTotalSumm_GoodsReal
 
             INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
-               , vbPartnerName
+               , vbPartnerName, vbisTotalSumm_GoodsReal
 
       FROM Movement
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -150,6 +151,11 @@ BEGIN
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                      ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+           LEFT JOIN MovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                     ON MovementBoolean_TotalSumm_GoodsReal.MovementId =  Movement.Id
+                                    AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
+
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -594,10 +600,12 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
                                                                 ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                                                               AND vbisTotalSumm_GoodsReal = TRUE
                                                                AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+                                                               AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal() 
+                                                               AND vbisTotalSumm_GoodsReal = TRUE
                                                                AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
 
 

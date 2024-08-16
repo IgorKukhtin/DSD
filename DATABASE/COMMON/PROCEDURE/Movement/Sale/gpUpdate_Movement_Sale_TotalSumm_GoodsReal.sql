@@ -24,6 +24,7 @@ BEGIN
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
 
+
      IF vbUserId = 9457 THEN  RAISE EXCEPTION 'TEST.OK.'; END IF;
 END;
 $BODY$
