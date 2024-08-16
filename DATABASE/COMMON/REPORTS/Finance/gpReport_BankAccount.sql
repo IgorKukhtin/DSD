@@ -36,6 +36,7 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
              , GroupId Integer, GroupName TVarChar
              , Comment TVarChar 
              , JuridicalByPrint TVarChar
+             , OperDate TDateTime
               )
 AS
 $BODY$
@@ -269,6 +270,7 @@ BEGIN
                                      , 0                         AS Summ_pl
                                      , 0                         AS MovementId
                                      , ''                        AS Comment
+                                     , zc_DateStart()            AS OperDate
                                 FROM tmpContainer
                                      LEFT JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                    AND MIContainer.OperDate >= inStartDate
@@ -295,6 +297,7 @@ BEGIN
                                      , 0                         AS Summ_pl
                                      , 0                         AS MovementId
                                      , ''                        AS Comment
+                                     , zc_DateStart()            AS OperDate
                                 FROM tmpContainer
                                      LEFT JOIN tmpMI_Currency AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                                             AND MIContainer.OperDate >= inStartDate
@@ -325,6 +328,7 @@ BEGIN
                                      , 0                         AS Summ_pl
                                      , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                                      , COALESCE (MIString_Comment.ValueData, '') AS Comment
+                                     , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END AS OperDate
                                 FROM tmpContainer
                                      INNER JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -354,6 +358,7 @@ BEGIN
                                        , MIContainer.MovementDescId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
                                        , COALESCE (MIString_Comment.ValueData, '')
+                                       , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                UNION ALL
                                 -- 2.2. движение в валюте операции
                                 SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
@@ -376,6 +381,7 @@ BEGIN
                                      , 0                         AS Summ_pl
                                      , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
                                      , COALESCE (MIString_Comment.ValueData, '') AS Comment
+                                     , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END AS OperDate
                                 FROM tmpContainer
                                      INNER JOIN tmpMI_Currency AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
                                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
@@ -405,8 +411,9 @@ BEGIN
                                        , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                                        , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
                                        , COALESCE (MIString_Comment.ValueData, '')
+                                       , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                UNION ALL
-                                -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
+                                -- 2.3. курсовая разница (!!!только не для ввода курса!!!)
                                 SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
                                      , tmpContainer.AccountId
                                      , tmpContainer.BankAccountId
@@ -428,6 +435,7 @@ BEGIN
                                      , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_pl
                                      , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId /*MIReport.MovementId*/ ELSE 0 END AS MovementId
                                      , COALESCE (MIString_Comment.ValueData, '') :: TVarChar AS Comment
+                                     , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END AS OperDate
                                 FROM tmpContainer
                                                                               
                                      INNER JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
@@ -459,11 +467,13 @@ BEGIN
                                        , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
                                        , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
                                        , COALESCE (MIString_Comment.ValueData, '')
+                                       , CASE WHEN inIsDetail = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                )
      , tmpOperation AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
                              , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                              , Operation_all.MovementId
                              , Operation_all.Comment
+                             , Operation_all.OperDate
                              , SUM (Operation_all.StartAmount) AS StartAmount
                              , SUM (Operation_all.DebetSumm)   AS DebetSumm
                              , SUM (Operation_all.KreditSumm)  AS KreditSumm
@@ -478,6 +488,7 @@ BEGIN
                         GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
                                , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
                                , Operation_all.MovementId , Operation_all.Comment
+                               , Operation_all.OperDate
                         HAVING SUM (Operation_all.StartAmount) <> 0 
                              OR SUM (Operation_all.EndAmount) <> 0 
                              OR SUM (Operation_all.DebetSumm) <> 0
@@ -544,8 +555,9 @@ BEGIN
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Operation.Comment :: TVarChar                                                               AS Comment,
         
-        CASE WHEN tmpBankAccount.JuridicalId = zc_Juridical_Basis() THEN tmpBankAccount.JuridicalName ELSE '' END ::TVarChar AS JuridicalByPrint
-        
+        CASE WHEN tmpBankAccount.JuridicalId = zc_Juridical_Basis() THEN tmpBankAccount.JuridicalName ELSE '' END ::TVarChar AS JuridicalByPrint,
+
+        CASE WHEN Operation.OperDate = zc_DateStart() THEN NULL ELSE Operation.OperDate END :: TDateTime AS OperDate
  
      FROM tmpOperation AS Operation
 
@@ -589,18 +601,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');
--- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inJuridicalBasisId := zc_Juridical_Basis(), inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');
-/*
-
-SELECT * FROM gpReport_BankAccount (inStartDate       := ('01.02.2020')::TDateTime
-                                                                       , inEndDate        := ('29.02.2020')::TDateTime 
-                                                                       , inAccountId      := 0
-                                                                       , inJuridicalBasisId :=0
-                                                                       , inBankAccountId  := 0
-                                                                       , inCurrencyId     := 0
-                                                                       , inIsDetail       := True
-                                                                       , inSession        := '973007'
-                                                                                          ) AS gpReport
-                                                                                          
-                                                                                          */
+-- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.09.2024', inEndDate:= '01.09.2024', inJuridicalBasisId:= zc_Juridical_Basis(), inAccountId:= 0, inBankAccountId:= 0, inCurrencyId:= 76965, inIsDetail:= 'True', inSession:= '5');
