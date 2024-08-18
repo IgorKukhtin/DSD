@@ -482,12 +482,17 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_isRePack() RETURNS integer AS $BOD
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_isRePack', 'Перепак'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_isRePack');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_TotalSumm_GoodsReal() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_TotalSumm_GoodsReal'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_TotalSumm_GoodsReal', 'ПереРасчет суммы по схеме - Товар (факт)пак'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_TotalSumm_GoodsReal');
 
+ 
   
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 16.06.24         * zc_MovementBoolean_TotalSumm_GoodsReal
  17.07.24         * zc_MovementBoolean_isRePack
  13.07.24         * zc_MovementBoolean_CurrencyUser
  26.01.23         * zc_MovementBoolean_PrintAuto

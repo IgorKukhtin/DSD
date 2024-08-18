@@ -119,6 +119,13 @@ type
     actUpdate_KeyAuthent: TdsdExecStoredProc;
     actGridToExcel_Role: TdsdGridToExcel;
     bbGridToExcel_Role: TdxBarButton;
+    macPrintUser_Badge_list: TMultiAction;
+    bbPrintUser_Badge: TdxBarButton;
+    bbPrintUser_Badge_list: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    PrintUser_BadgeCDS: TClientDataSet;
+    spPrintUser_Badge: TdsdStoredProc;
+    actPrintUser_Badge: TdsdPrintAction;
   private
     { Private declarations }
   public

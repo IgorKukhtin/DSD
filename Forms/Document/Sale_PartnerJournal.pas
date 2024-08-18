@@ -258,6 +258,9 @@ type
     bbPrintPacklist: TdxBarButton;
     bbsEdit: TdxBarSubItem;
     bbsUnLoad: TdxBarSubItem;
+    spUpdateTotalSumm_GoodsReal: TdsdStoredProc;
+    actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc;
+    bbUpdateTotalSumm_GoodsReal: TdxBarButton;
   private
     { Private declarations }
   public

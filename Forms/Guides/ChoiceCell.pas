@@ -72,7 +72,10 @@ type
     PartionGoodsDate_real: TcxGridDBColumn;
     PrintItemsCDS: TClientDataSet;
     actPrint: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrint: TdxBarButton;
+    idBarCode: TcxGridDBColumn;
+    actPrint_BarCode: TdsdPrintAction;
+    bbPrint_BarCode: TdxBarButton;
   private
     { Private declarations }
   public

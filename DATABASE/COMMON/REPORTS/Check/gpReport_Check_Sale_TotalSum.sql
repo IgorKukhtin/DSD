@@ -13,18 +13,19 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime
              , FromName  TVarChar
              , ToCode    Integer
              , ToName    TVarChar
-             , isPriceWithVAT Boolean
+             , isPriceWithVAT Boolean 
+             , isTotalSumm_GoodsReal Boolean
              , VATPercent     TFloat
              , ChangePercent  TFloat
              , TotalSummMVAT   TFloat
              , TotalSummPVAT   TFloat
              , TotalSumm       TFloat
-             , AmountSummMVAT TFloat
-             , AmountSummPVAT  TFloat
-             , AmountSumm      TFloat
-             , Summ_MVat_calc  TFloat
-             , Summ_PVat_calc  TFloat
-             , Summ_calc       TFloat
+             , Summ_MVat_calc1  TFloat
+             , Summ_PVat_calc1  TFloat
+             , Summ_calc1       TFloat
+             , Summ_MVat_calc2  TFloat
+             , Summ_PVat_calc2  TFloat
+             , Summ_calc2       TFloat
              , isMVat_diff     Boolean
              , isPVat_diff     Boolean
              , isSum_diff      Boolean
@@ -61,13 +62,6 @@ BEGIN
                       AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                    )
    
-       , tmpMI AS (SELECT MovementItem.*
-                   FROM MovementItem
-                   WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
-                     AND MovementItem.DescId     = zc_MI_Master()
-                     AND MovementItem.isErased   = FALSE
-                  )
-
        , tmpMovementFloat AS (SELECT MovementFloat.*
                               FROM MovementFloat
                               WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
@@ -82,7 +76,8 @@ BEGIN
        , tmpMovementBoolean AS (SELECT MovementBoolean.*
                                 FROM MovementBoolean
                                 WHERE MovementBoolean.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
-                                  AND MovementBoolean.DescId = zc_MovementBoolean_PriceWithVAT()
+                                  AND MovementBoolean.DescId IN (zc_MovementBoolean_PriceWithVAT() 
+                                                               , zc_MovementBoolean_TotalSumm_GoodsReal())
                                 )
 
         , tmpMLO AS (SELECT MovementLinkObject.*
@@ -92,18 +87,8 @@ BEGIN
                                          )
 
 
-       , tmpMIFloat AS (SELECT MovementItemFloat.*
-                        FROM MovementItemFloat
-                        WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                          AND MovementItemFloat.DescId IN (zc_MIFloat_Price()
-                                                         , zc_MIFloat_AmountPartner()
-                                                         , zc_MIFloat_ChangePercent() 
-                                                         , zc_MIFloat_CountForPrice()
-                                                          )
-                       )
-
      -- + все свойства Документа
-       , tmpMovement AS (SELECT tmpMov.Id
+       , tmpMovement AS (SELECT tmpMov.Id   AS MovementId
                               , tmpMov.OperDate 
                               , tmpMov.OperDatePartner
                               , tmpMov.InvNumber 
@@ -111,10 +96,15 @@ BEGIN
                               , MB_PriceWithVAT.ValueData             AS isPriceWithVAT
                               , COALESCE (MF_VATPercent.ValueData,0)  AS VATPercent
                               , MovementFloat_ChangePercent.ValueData AS ChangePercent
+                              , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE) ::Boolean AS isTotalSumm_GoodsReal
                         FROM tmpMov
                            LEFT JOIN tmpMovementBoolean AS MB_PriceWithVAT
                                                         ON MB_PriceWithVAT.MovementId = tmpMov.Id
                                                        AND MB_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+                           LEFT JOIN tmpMovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                                        ON MovementBoolean_TotalSumm_GoodsReal.MovementId = tmpMov.Id
+                                                       AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
 
                           LEFT JOIN tmpMovementFloat AS MF_VATPercent
                                                      ON MF_VATPercent.MovementId = tmpMov.Id
@@ -125,138 +115,16 @@ BEGIN
                                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                         )
 
-       , tmpMI_calc AS (
-                        SELECT tmpMovement.Id AS MovementId
-                             , tmpMovement.OperDate
-                             , tmpMovement.InvNumber
-                             , tmpMovement.OperDatePartner
-                             , tmpMovement.PaidKindId
-                             , tmpMovement.isPriceWithVAT
-                             , tmpMovement.VATPercent
-                             , tmpMovement.ChangePercent
-                            
-                             , tmpMI.Id       AS MovementItemId 
-                             
-                             , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND tmpMovement.PaidKindId =  zc_Enum_PaidKind_FirstForm() -- !!!для НАЛ не учитываем!!!
-                                    THEN zfCalc_PriceTruncate (inOperDate     := tmpMovement.OperDatePartner
-                                                             , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                             , inPrice        := MIFloat_Price.ValueData
-                                                             , inIsWithVAT    := COALESCE (tmpMovement.isPriceWithVAT, FALSE)
-                                                              )
-                                     ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                               END AS Price
-                        FROM tmpMovement
-                           INNER JOIN tmpMI ON tmpMI.MovementId = tmpMovement.Id
-
-                           LEFT JOIN tmpMIFloat AS MIFloat_ChangePercent
-                                                ON MIFloat_ChangePercent.MovementItemId = tmpMI.Id
-                                               AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
- 
-                           LEFT JOIN tmpMIFloat AS MIFloat_Price
-                                                ON MIFloat_Price.MovementItemId = tmpMI.Id
-                                               AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-  
-                        ) 
-
-       , tmpData AS (SELECT tmp.MovementId
-                          , tmp.OperDate
-                          , tmp.OperDatePartner
-                          , tmp.InvNumber 
-                          , tmp.PaidKindId
-                          , tmp.isPriceWithVAT
-                          , tmp.VATPercent
-                          , tmp.ChangePercent
-                          , CAST (SUM (tmp.AmountSummNoVAT)AS NUMERIC (16, 2))  AS AmountSummNoVAT
-                          , CAST (SUM ((tmp.AmountSummNoVAT + COALESCE (tmp.OperSumm_VAT,0))) AS NUMERIC (16, 2))  AS AmountSummWVAT
-                          , CAST (SUM (tmp.AmountSumm)     AS NUMERIC (16, 2))  AS AmountSumm 
-                          , CAST (SUM (tmp.OperSumm_VAT)   AS NUMERIC (16, 2))  AS OperSumm_VAT
-                     FROM (SELECT tmpMI.MovementId
-                                , tmpMI.OperDate
-                                , tmpMI.OperDatePartner
-                                , tmpMI.InvNumber 
-                                , tmpMI.PaidKindId
-                                , tmpMI.isPriceWithVAT
-                                , tmpMI.VATPercent
-                                , tmpMI.ChangePercent
-                                , tmpMI.MovementItemId
-                                  -- расчет суммы без НДС, до 2 знаков
-                                , SUM ( (COALESCE (MIFloat_AmountPartner.ValueData,0) * CASE WHEN tmpMI.isPriceWithVAT = TRUE
-                                                                   THEN CAST (tmpMI.Price * (1 - (tmpMI.VATPercent / (tmpMI.VATPercent + 100) ) )AS NUMERIC(16, 2) )
-                                                                   ELSE tmpMI.Price
-                                                              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                                        )) AS AmountSummNoVAT   --SUMM_MVat
-                     
-                                  -- расчет суммы с НДС, до 2 знаков
-                                , SUM ( (COALESCE (MIFloat_AmountPartner.ValueData,0) * CASE WHEN tmpMI.isPriceWithVAT <> TRUE
-                                                                   THEN CAST (tmpMI.Price * (1 + (tmpMI.VATPercent / 100)) AS NUMERIC(16, 2) )
-                                                                   ELSE tmpMI.Price
-                                                              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                                       )) AS AmountSummWVAT    --SUMM_PVat
-      
-                                  -- расчет суммы с НДС и скидкой, до 2 знаков
-                                ,  CAST (
-                                        SUM ( (1 + (COALESCE (tmpMI.ChangePercent,0) / 100))  * 
-                                        (COALESCE (MIFloat_AmountPartner.ValueData,0) * CASE WHEN tmpMI.isPriceWithVAT <> TRUE
-                                                                   THEN CAST (tmpMI.Price * (1 + (tmpMI.VATPercent / 100)) AS NUMERIC(16, 2) )
-                                                                   ELSE tmpMI.Price
-                                                              END / CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                                         ) )
-                                         AS NUMERIC (16, 2)) AS AmountSumm
-
-                                , CAST (
-                                        SUM (CASE WHEN tmpMI.isPriceWithVAT = TRUE OR tmpMI.VATPercent = 0
-                                                       -- если цены с НДС
-                                                       THEN CAST (-- !!!OperSumm_Partner!!!
-                                                                  CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                                                            THEN CAST (COALESCE (MIFloat_AmountPartner.ValueData,0) * tmpMI.Price / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                                                       ELSE CAST (COALESCE (MIFloat_AmountPartner.ValueData,0) * tmpMI.Price AS NUMERIC (16, 2))
-                                                                  END
-                                                                * tmpMI.VATPercent / (100 + tmpMI.VATPercent)
-                                                                  AS NUMERIC (16, 6))
-                                                  WHEN tmpMI.VATPercent > 0
-                                                       -- если цены без НДС
-                                                       THEN CAST (-- !!!OperSumm_Partner!!!
-                                                                  CASE WHEN MIFloat_CountForPrice.ValueData <> 0
-                                                                            THEN CAST (COALESCE (MIFloat_AmountPartner.ValueData,0) * tmpMI.Price / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                                                                       ELSE CAST (COALESCE (MIFloat_AmountPartner.ValueData,0) * tmpMI.Price AS NUMERIC (16, 2))
-                                                                  END
-                                                                * tmpMI.VATPercent / 100
-                                                                  AS NUMERIC (16, 6))
-                                             END)
-                                        AS NUMERIC (16, 2)) AS OperSumm_VAT
-                           FROM tmpMI_calc AS tmpMI
-                              LEFT JOIN tmpMIFloat AS MIFloat_AmountPartner
-                                                   ON MIFloat_AmountPartner.MovementItemId = tmpMI.MovementItemId
-                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                    
-                              LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
-                                                   ON MIFloat_CountForPrice.MovementItemId = tmpMI.MovementItemId
-                                                  AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-                           GROUP BY tmpMI.MovementId
-                                  , tmpMI.OperDate
-                                  , tmpMI.OperDatePartner
-                                  , tmpMI.InvNumber 
-                                  , tmpMI.PaidKindId
-                                  , tmpMI.isPriceWithVAT
-                                  , tmpMI.VATPercent
-                                  , tmpMI.ChangePercent  
-                                  , tmpMI.MovementItemId
-                           ) AS tmp 
-                     GROUP BY tmp.MovementId
-                            , tmp.OperDate
-                            , tmp.OperDatePartner
-                            , tmp.InvNumber 
-                            , tmp.PaidKindId
-                            , tmp.isPriceWithVAT
-                            , tmp.VATPercent
-                            , tmp.ChangePercent
-             )
-
-      , tmpTotal AS (SELECT tmpMov.Id, tmp.*
-                     FROM tmpMov
+        --группировка - MovementItem.ObjectId + MILinkObject_GoodsKind.ObjectId 
+      , tmpTotal1 AS (SELECT tmpMov.Id, tmp.*
+                      FROM tmpMov
+                         LEFT JOIN lpSelect_MovementFloat_TotalSumm1_Sale (tmpMov.Id) AS tmp ON 1=1
+                      )
+        --группировка - COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) +  COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
+      , tmpTotal2 AS (SELECT tmpMov.Id, tmp.*
+                      FROM tmpMov
                          LEFT JOIN lpSelect_MovementFloat_TotalSumm_Sale (tmpMov.Id) AS tmp ON 1=1
-                    )
-
+                     )
 
              SELECT tmpData.MovementId
                   , tmpData.OperDate
@@ -270,6 +138,7 @@ BEGIN
                   , Object_To.ValueData    AS ToName
                    
                   , tmpData.isPriceWithVAT ::Boolean
+                  , tmpData.isTotalSumm_GoodsReal ::Boolean
                   , tmpData.VATPercent     ::TFloat
                   , tmpData.ChangePercent  ::TFloat
                  
@@ -277,19 +146,23 @@ BEGIN
                   , MovementFloat_TotalSummPVAT.ValueData   ::TFloat  AS TotalSummPVAT
                   , MovementFloat_TotalSumm.ValueData       ::TFloat  AS TotalSumm
 
-                  , tmpData.AmountSummNoVAT ::TFloat AS AmountSummMVAT
+                 /* , tmpData.AmountSummNoVAT ::TFloat AS AmountSummMVAT
                   , tmpData.AmountSummWVAT  ::TFloat AS AmountSummPVAT
                   , tmpData.AmountSumm      ::TFloat AS AmountSumm
-                  
-                  , tmpTotal.TotalSummMVAT ::TFloat AS Summ_MVat_calc
-                  , tmpTotal.TotalSummPVAT ::TFloat AS Summ_PVat_calc
-                  , tmpTotal.TotalSumm     ::TFloat AS Summ_calc
-        
-                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpData.AmountSummNoVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal.TotalSummMVAT THEN TRUE ELSE FALSE END AS isMVat_diff
-                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpData.AmountSummWVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal.TotalSummPVAT THEN TRUE ELSE FALSE END  AS isPVat_diff
-                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpData.AmountSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal.TotalSumm THEN TRUE ELSE FALSE END                  AS isSum_diff
+                   */
+                  , tmpTotal1.TotalSummMVAT ::TFloat AS Summ_MVat_calc1
+                  , tmpTotal1.TotalSummPVAT ::TFloat AS Summ_PVat_calc1
+                  , tmpTotal1.TotalSumm     ::TFloat AS Summ_calc1
 
-              FROM tmpData
+                  , tmpTotal2.TotalSummMVAT ::TFloat AS Summ_MVat_calc2
+                  , tmpTotal2.TotalSummPVAT ::TFloat AS Summ_PVat_calc2
+                  , tmpTotal2.TotalSumm     ::TFloat AS Summ_calc2
+        
+                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpTotal1.TotalSummMVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal2.TotalSummMVAT THEN TRUE ELSE FALSE END AS isMVat_diff
+                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpTotal1.TotalSummPVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal2.TotalSummPVAT THEN TRUE ELSE FALSE END  AS isPVat_diff
+                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpTotal1.TotalSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal2.TotalSumm THEN TRUE ELSE FALSE END                  AS isSum_diff
+
+              FROM tmpMovement AS tmpData
 
                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
 
@@ -302,8 +175,10 @@ BEGIN
                LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                           ON MovementFloat_TotalSumm.MovementId = tmpData.MovementId
                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm() 
+
                -- расчет как lpInsertUpdate_MovementFloat_TotalSumm
-               LEFT JOIN tmpTotal ON tmpTotal.Id = tmpData.MovementId  
+               LEFT JOIN tmpTotal1 ON tmpTotal1.Id = tmpData.MovementId  
+               LEFT JOIN tmpTotal2 ON tmpTotal2.Id = tmpData.MovementId
                
                LEFT JOIN tmpMLO AS MovementLinkObject_From
                                 ON MovementLinkObject_From.MovementId = tmpData.MovementId

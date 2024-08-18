@@ -49,7 +49,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isError Boolean
              , isPrinted Boolean
              , isPromo Boolean
-             , isPav Boolean
+             , isPav Boolean    
+             , isTotalSumm_GoodsReal  Boolean  --Расчет суммы по схеме - Товар (факт)
              , MovementPromo TVarChar
              , InsertDate TDateTime 
              , InsertDate_order TDateTime
@@ -306,6 +307,7 @@ end if;
                                                                 , zc_MovementBoolean_Print()
                                                                 , zc_MovementBoolean_Promo() 
                                                                 , zc_MovementBoolean_CurrencyUser()
+                                                                , zc_MovementBoolean_TotalSumm_GoodsReal()
                                                                 )
                                  )
         , tmpMovementDate AS (SELECT MovementDate.*
@@ -828,7 +830,9 @@ end if;
                    END AS Boolean)  :: Boolean AS isError
            , COALESCE (MovementBoolean_Print.ValueData, False)  :: Boolean AS isPrinted
            , COALESCE (MovementBoolean_Promo.ValueData, False)  :: Boolean AS isPromo
-           , CASE WHEN tmpOL_Partner_Unit.ChildObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPav
+           , CASE WHEN tmpOL_Partner_Unit.ChildObjectId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isPav   
+           , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE)         :: Boolean AS isTotalSumm_GoodsReal
+           
            , zfCalc_PromoMovementName (NULL, Movement_Promo.InvNumber :: TVarChar, Movement_Promo.OperDate, MD_StartSale.ValueData, MD_EndSale.ValueData) AS MovementPromo
 
            , MovementDate_Insert.ValueData       AS InsertDate
@@ -888,6 +892,10 @@ end if;
             LEFT JOIN tmpMovementBoolean AS MovementBoolean_CurrencyUser
                                          ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
                                         AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
+ 
+            LEFT JOIN tmpMovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                         ON MovementBoolean_TotalSumm_GoodsReal.MovementId =  Movement.Id
+                                        AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
 
             LEFT JOIN tmpMovementDate AS MovementDate_Insert
                                       ON MovementDate_Insert.MovementId =  Movement.Id
@@ -1131,6 +1139,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.08.24         *
  21.03.22         *
  26.01.22         * 
  09.04.18         *

@@ -254,6 +254,10 @@ type
     actUpdate_Currency: TdsdUpdateDataSet;
     mactUpdate_Currency: TMultiAction;
     bbUpdate_Currency: TdxBarButton;
+    cbTotalSumm_GoodsReal: TcxCheckBox;
+    spUpdateTotalSumm_GoodsReal: TdsdStoredProc;
+    actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc;
+    bbUpdateTotalSumm_GoodsReal: TdxBarButton;
   private
     { Private declarations }
   public

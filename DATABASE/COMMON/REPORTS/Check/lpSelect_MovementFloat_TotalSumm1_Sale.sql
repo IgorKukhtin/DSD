@@ -1,7 +1,7 @@
 
-DROP FUNCTION IF EXISTS lpSelect_MovementFloat_TotalSumm_Sale (Integer);
+DROP FUNCTION IF EXISTS lpSelect_MovementFloat_TotalSumm1_Sale (Integer);
 
-CREATE OR REPLACE FUNCTION lpSelect_MovementFloat_TotalSumm_Sale(
+CREATE OR REPLACE FUNCTION lpSelect_MovementFloat_TotalSumm1_Sale(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
 RETURNS TABLE ( 
@@ -208,8 +208,8 @@ BEGIN
                 tmpMI AS (SELECT Movement.DescId AS MovementDescId
                                , 0 AS MovementItemId
                                , MovementItem.DescId
-                               , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId) AS GoodsKindId
+                               , MovementItem.ObjectId           AS GoodsId
+                               , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
                                , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                            THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
@@ -257,11 +257,11 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
                                                                 ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
-                                                               --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
+                                                               AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
-                                                               --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
+                                                               AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
 
 
                                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
@@ -283,8 +283,8 @@ BEGIN
                           WHERE Movement.Id = inMovementId
                           GROUP BY Movement.DescId
                                  , MovementItem.DescId
-                                 , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)
-                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
+                                 , MovementItem.ObjectId
+                                 , MILinkObject_GoodsKind.ObjectId
                                  , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
                                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
                                                                       , inChangePercent:= MIFloat_ChangePercent.ValueData
@@ -592,4 +592,4 @@ $BODY$
 */
 -- тест
 -- 
-SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28765855) 
+SELECT * from lpSelect_MovementFloat_TotalSumm1_Sale (28765855) 

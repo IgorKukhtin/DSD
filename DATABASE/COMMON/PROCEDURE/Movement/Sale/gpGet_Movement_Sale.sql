@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isCOMDOC Boolean
              , isPrinted Boolean
              , isPromo Boolean
+             , isTotalSumm_GoodsReal Boolean   --Расчет суммы по схеме - Товар (факт)
              , Comment TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar
@@ -107,23 +108,24 @@ BEGIN
              , 0                     			    AS MovementId_Master
              , CAST ('' AS TVarChar) 			    AS InvNumberPartner_Master
              , 0                     			    AS MovementId_Order
-             , 0                   			    AS MovementId_TransportGoods
+             , 0                                    AS MovementId_TransportGoods
              , '' :: TVarChar                     	    AS InvNumber_TransportGoods
              , inOperDate                                   AS OperDate_TransportGoods
-             , 0                   			    AS MovementId_Transport
-             , '' :: TVarChar                     	    AS InvNumber_Transport
-             , 0                   			    AS ReestrKindId
-             , '' :: TVarChar                     	    AS ReestrKindName
-             , FALSE                                        AS isCOMDOC
-             , CAST (FALSE AS Boolean)                      AS isPrinted
-             , CAST (FALSE AS Boolean)                      AS isPromo
-             , CAST ('' as TVarChar) 		            AS Comment
+             , 0                                        AS MovementId_Transport
+             , '' :: TVarChar                           AS InvNumber_Transport
+             , 0                                        AS ReestrKindId
+             , '' :: TVarChar                           AS ReestrKindName
+             , FALSE                                    AS isCOMDOC
+             , CAST (FALSE AS Boolean)                  AS isPrinted
+             , CAST (FALSE AS Boolean)                  AS isPromo   
+             , CAST (FALSE AS Boolean)                  AS isTotalSumm_GoodsReal
+             , CAST ('' as TVarChar)                    AS Comment
 
-             , 0                                            AS MovementId_Production
-             , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
-             , 0                                            AS MovementId_ReturnIn
-             , CAST ('' AS TVarChar)                        AS InvNumber_ReturnInFull
-             , inOperDate                                   AS PartionGoodsDate
+             , 0                                        AS MovementId_Production
+             , CAST ('' AS TVarChar)                    AS InvNumber_ProductionFull
+             , 0                                        AS MovementId_ReturnIn
+             , CAST ('' AS TVarChar)                    AS InvNumber_ReturnInFull
+             , inOperDate                               AS PartionGoodsDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
@@ -277,7 +279,8 @@ BEGIN
 
                , COALESCE (MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
                , COALESCE (MovementBoolean_Print.ValueData, FALSE)            AS isPrinted
-               , COALESCE (MovementBoolean_Promo.ValueData, FALSE)            AS isPromo
+               , COALESCE (MovementBoolean_Promo.ValueData, FALSE)            AS isPromo    
+               , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE) ::Boolean AS isTotalSumm_GoodsReal
                , MovementString_Comment.ValueData       AS Comment
 
                , COALESCE(Movement_Production.Id, -1)                         AS MovementId_Production
@@ -332,6 +335,10 @@ BEGIN
                 LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                           ON MovementBoolean_Promo.MovementId =  Movement.Id
                                          AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+                LEFT JOIN MovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                          ON MovementBoolean_TotalSumm_GoodsReal.MovementId =  Movement.Id
+                                         AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
 
                 LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                         ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -468,6 +475,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.08.24         *
  15.07.24         *
  21.03.22         * 
  26.01.22         *

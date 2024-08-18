@@ -4,7 +4,6 @@ inherited Report_OrderExternal_UpdateForm: TReport_OrderExternal_UpdateForm
   ClientWidth = 1184
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -290
   ExplicitWidth = 1200
   ExplicitHeight = 629
   PixelsPerInch = 96

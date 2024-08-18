@@ -3,7 +3,6 @@ inherited SaleForm: TSaleForm
   ClientHeight = 658
   ClientWidth = 1360
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = -196
   ExplicitWidth = 1376
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -23,8 +22,6 @@ inherited SaleForm: TSaleForm
       inherited cxGrid: TcxGrid
         Width = 1360
         Height = 467
-        ExplicitLeft = -3
-        ExplicitTop = 3
         ExplicitWidth = 1360
         ExplicitHeight = 467
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -596,8 +593,6 @@ inherited SaleForm: TSaleForm
     Width = 1360
     Height = 141
     TabOrder = 3
-    ExplicitLeft = -8
-    ExplicitTop = 1
     ExplicitWidth = 1360
     ExplicitHeight = 141
     inherited edInvNumber: TcxTextEdit
@@ -1113,7 +1108,7 @@ inherited SaleForm: TSaleForm
   end
   object cbReCalcPrice: TcxCheckBox [23]
     Left = 8
-    Top = 121
+    Top = 123
     Hint = 
       #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
       #1055#1088#1072#1074
@@ -1158,6 +1153,19 @@ inherited SaleForm: TSaleForm
     Properties.ReadOnly = True
     TabOrder = 31
     Width = 116
+  end
+  object cbTotalSumm_GoodsReal: TcxCheckBox [28]
+    Left = 1274
+    Top = 62
+    Hint = 
+      #1055#1077#1088#1077#1089#1095#1077#1090' '#1094#1077#1085' '#1080#1079' '#1055#1088#1072#1081#1089#1072' '#1080#1083#1080' '#1040#1082#1094#1080#1081' '#1087#1088#1080' '#1055#1088#1086#1074#1077#1076#1077#1085#1080#1080', '#1089' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077#1084' ' +
+      #1055#1088#1072#1074
+    Caption = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+    ParentShowHint = False
+    Properties.ReadOnly = True
+    ShowHint = True
+    TabOrder = 32
+    Width = 219
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -3165,6 +3173,19 @@ inherited SaleForm: TSaleForm
       Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       ImageIndex = 56
     end
+    object actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTotalSumm_GoodsReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTotalSumm_GoodsReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -3553,6 +3574,14 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbUpdateMaskSend'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTotalSumm_GoodsReal'
         end>
     end
     object bbsPrint: TdxBarSubItem
@@ -3723,6 +3752,10 @@ inherited SaleForm: TSaleForm
       Action = mactUpdate_Currency
       Category = 0
     end
+    object bbUpdateTotalSumm_GoodsReal: TdxBarButton
+      Action = actUpdateTotalSumm_GoodsReal
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnlyEditingCellOnEnter = True
@@ -3884,7 +3917,7 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end>
     Left = 48
-    Top = 96
+    Top = 16
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -4312,6 +4345,13 @@ inherited SaleForm: TSaleForm
         Name = 'isCurrencyUser'
         Value = Null
         Component = cbCurrencyUser
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTotalSumm_GoodsReal'
+        Value = Null
+        Component = cbTotalSumm_GoodsReal
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -6975,5 +7015,30 @@ inherited SaleForm: TSaleForm
     PackSize = 1
     Left = 1024
     Top = 435
+  end
+  object spUpdateTotalSumm_GoodsReal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_TotalSumm_GoodsReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisTotalSumm_GoodsReal'
+        Value = True
+        Component = cbTotalSumm_GoodsReal
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 451
   end
 end

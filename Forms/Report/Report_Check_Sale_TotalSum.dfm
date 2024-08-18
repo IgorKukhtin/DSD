@@ -1,29 +1,29 @@
 inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
   Caption = #1054#1090#1095#1077#1090' <'#1046#1091#1088#1085#1072#1083' '#1087#1088#1086#1076#1072#1078' ('#1087#1088#1086#1074#1077#1088#1082#1072' '#1089#1091#1084#1084#1099')>'
-  ClientHeight = 319
+  ClientHeight = 364
   ClientWidth = 990
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1006
-  ExplicitHeight = 358
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 990
-    Height = 262
+    Height = 307
     TabOrder = 3
     ExplicitWidth = 990
-    ExplicitHeight = 262
-    ClientRectBottom = 262
+    ExplicitHeight = 307
+    ClientRectBottom = 307
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 990
-      ExplicitHeight = 262
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
         Width = 990
-        Height = 262
+        Height = 307
         ExplicitWidth = 990
-        ExplicitHeight = 262
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -44,32 +44,44 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_calc
+              Column = Summ_calc2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_MVat_calc
+              Column = Summ_MVat_calc2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_PVat_calc
+              Column = Summ_PVat_calc2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_MVat_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_PVat_calc1
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -95,32 +107,44 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSummMVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountSummPVAT
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_calc
+              Column = Summ_calc2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_MVat_calc
+              Column = Summ_MVat_calc2
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Summ_PVat_calc
+              Column = Summ_PVat_calc2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_MVat_calc1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_PVat_calc1
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -238,6 +262,15 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object isTotalSumm_GoodsReal: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1087#1086' '#1089#1093'. '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            DataBinding.FieldName = 'isTotalSumm_GoodsReal'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1072#1082#1090')'
+            Options.Editing = False
+            Width = 88
+          end
           object isPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPriceWithVAT'
@@ -246,7 +279,7 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             Width = 61
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -256,7 +289,7 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             Width = 80
           end
           object TotalSummMVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSummMVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -266,7 +299,7 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             Width = 80
           end
           object TotalSummPVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1076#1086#1082'.)'
             DataBinding.FieldName = 'TotalSummPVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -275,9 +308,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object AmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'AmountSumm'
+          object Summ_calc1: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1088#1072#1089#1095'.1)'
+            DataBinding.FieldName = 'Summ_calc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -285,9 +318,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object AmountSummMVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountSummMVAT'
+          object Summ_MVat_calc1: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1088#1072#1089#1095'.1)'
+            DataBinding.FieldName = 'Summ_MVat_calc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -295,9 +328,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object AmountSummPVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'AmountSummPVAT'
+          object Summ_PVat_calc1: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1088#1072#1089#1095'.1)'
+            DataBinding.FieldName = 'Summ_PVat_calc1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -305,9 +338,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Summ_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'Summ_calc'
+          object Summ_calc2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') ('#1088#1072#1089#1095'.2)'
+            DataBinding.FieldName = 'Summ_calc2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -315,9 +348,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Summ_MVat_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-            DataBinding.FieldName = 'Summ_MVat_calc'
+          object Summ_MVat_calc2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057' ('#1088#1072#1089#1095'.2)'
+            DataBinding.FieldName = 'Summ_MVat_calc2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -325,9 +358,9 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object Summ_PVat_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'Summ_PVat_calc'
+          object Summ_PVat_calc2: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1088#1072#1089#1095'.2)'
+            DataBinding.FieldName = 'Summ_PVat_calc2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -444,6 +477,19 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
     end
+    object actUpdateTotalSumm_GoodsReal: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateTotalSumm_GoodsReal
+      StoredProcList = <
+        item
+          StoredProc = spUpdateTotalSumm_GoodsReal
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090' '#1089#1091#1084#1084#1099' '#1087#1086' '#1089#1093#1077#1084#1077' - '#1058#1086#1074#1072#1088' ('#1092#1074#1082#1090')'
+      ImageIndex = 45
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -525,6 +571,22 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateTotalSumm_GoodsReal'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -538,6 +600,10 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
     end
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
+      Category = 0
+    end
+    object bbUpdateTotalSumm_GoodsReal: TdxBarButton
+      Action = actUpdateTotalSumm_GoodsReal
       Category = 0
     end
   end
@@ -608,5 +674,31 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
       end>
     Left = 296
     Top = 200
+  end
+  object spUpdateTotalSumm_GoodsReal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_TotalSumm_GoodsReal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisTotalSumm_GoodsReal'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTotalSumm_GoodsReal'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 776
+    Top = 179
   end
 end

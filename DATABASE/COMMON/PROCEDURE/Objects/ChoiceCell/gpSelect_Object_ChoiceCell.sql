@@ -13,7 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , NPP TFloat, BoxCount TFloat
              , Comment TVarChar
              , PartionGoodsDate_RK   TDateTime
-             , PartionGoodsDate_real TDateTime
+             , PartionGoodsDate_real TDateTime 
+             , idBarCode TVarChar
              , isErased Boolean
               )
 AS
@@ -140,7 +141,9 @@ BEGIN
          , ObjectString_Comment.ValueData  AS Comment
 
          , tmpPartionCell_RK.PartionGoodsDate   :: TDateTime AS PartionGoodsDate_RK
-         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real
+         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real    
+         
+         , (zfFormat_BarCode (zc_BarCodePref_Object(), Object_ChoiceCell.Id)) ::TVarChar AS idBarCode
 
          , Object_ChoiceCell.isErased      AS isErased
        
