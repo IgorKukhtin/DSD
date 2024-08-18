@@ -20,9 +20,13 @@ BEGIN
      ioisTotalSumm_GoodsReal := NOT ioisTotalSumm_GoodsReal;
 
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TotalSumm_GoodsReal(), inId, ioisTotalSumm_GoodsReal);
+     
+
+     -- перемсет сумм
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inId);
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
+     IF vbUserId <> 5 THEN PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE); END IF;
 
 
      IF vbUserId = 9457 THEN  RAISE EXCEPTION 'TEST.OK.'; END IF;

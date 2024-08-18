@@ -245,6 +245,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 105
           end
+          object isPeresort: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
         end
       end
     end

@@ -91,7 +91,7 @@ $BODY$
   DECLARE vbPaidKindId Integer;
   DECLARE vbIsChangePrice Boolean;
   DECLARE vbIsDiscountPrice Boolean;  
-  DECLARE vbisTotalSumm_GoodsReal Boolean;
+  DECLARE vbIsTotalSumm_GoodsReal Boolean;
 
   DECLARE vbCurrencyDocumentId Integer;
   DECLARE vbCurrencyPartnerId Integer;
@@ -142,7 +142,7 @@ BEGIN
 
             INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
-               , vbPartnerName, vbisTotalSumm_GoodsReal
+               , vbPartnerName, vbIsTotalSumm_GoodsReal
 
       FROM Movement
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -600,13 +600,13 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
                                                                 ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
-                                                               AND vbisTotalSumm_GoodsReal = TRUE
-                                                               AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
+                                                               AND vbIsTotalSumm_GoodsReal = TRUE
+                                                               --AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
                                                                 ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal() 
-                                                               AND vbisTotalSumm_GoodsReal = TRUE
-                                                               AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
+                                                               AND vbIsTotalSumm_GoodsReal = TRUE
+                                                               --AND vbPartnerName NOT ILIKE '%—≤À‹œŒ-‘”ƒ “Œ¬%'
 
 
                                LEFT JOIN tmpMI_child_ReturnIn ON tmpMI_child_ReturnIn.ParentId = MovementItem.Id
