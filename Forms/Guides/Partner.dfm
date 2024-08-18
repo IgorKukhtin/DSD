@@ -3,7 +3,7 @@ object PartnerForm: TPartnerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 432
-  ClientWidth = 1011
+  ClientWidth = 1139
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,10 +21,11 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 61
-    Width = 1011
+    Width = 1139
     Height = 371
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 1011
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -845,10 +846,11 @@ object PartnerForm: TPartnerForm
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 1011
+    Width = 1139
     Height = 35
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 1011
     object edRetail: TcxButtonEdit
       Left = 389
       Top = 6
@@ -935,6 +937,24 @@ object PartnerForm: TPartnerForm
     TabOrder = 11
     Width = 176
   end
+  object cxLabel18: TcxLabel
+    Left = 936
+    Top = 191
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+  end
+  object cePersonal_update: TcxButtonEdit
+    Left = 936
+    Top = 214
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Text = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+    Width = 195
+  end
   object DataSource: TDataSource
     DataSet = MasterCDS
     Left = 40
@@ -1019,18 +1039,6 @@ object PartnerForm: TPartnerForm
         item
           BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Category'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic2'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic2'
         end
         item
@@ -1047,15 +1055,7 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateEdiOrdspr'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateEdiInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateEdiDesadv'
+          ItemName = 'bbStartLoad'
         end
         item
           Visible = True
@@ -1063,7 +1063,7 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbStartLoad'
+          ItemName = 'bbsUpdate'
         end
         item
           Visible = True
@@ -1087,19 +1087,19 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdate_BasisCode'
+          ItemName = 'bbPersonal'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bbUpdate_Personal'
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_isIrna'
+          ItemName = 'bbUpdate_PersonalTrade'
         end
         item
           Visible = True
-          ItemName = 'bbUpdateGoodsBox'
+          ItemName = 'bbUpdate_PersonalMerch'
         end
         item
           Visible = True
@@ -1139,11 +1139,11 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExel'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bbGridToExel'
         end>
       OneOnRow = True
       Row = 0
@@ -1270,10 +1270,89 @@ object PartnerForm: TPartnerForm
     end
     object bbUpdate_isIrna: TdxBarButton
       Action = macUpdate_isIrna
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1048#1088#1085#1072'> '#1044#1072'/'#1053#1077#1090
       Category = 0
     end
     object bbUpdateGoodsBox: TdxBarButton
       Action = macUpdateGoodsBox
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1047#1085#1072#1095#1077#1085#1080#1077' <'#1054#1090#1075#1088#1091#1079#1082#1072' '#1074' '#1075#1086#1092#1088#1086'> '#1044#1072'/'#1053#1077#1090
+      Category = 0
+    end
+    object bbsUpdate: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 43
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Category'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateEdiOrdspr'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateEdiInvoice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateEdiDesadv'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdate_BasisCode'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_isIrna'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateGoodsBox'
+        end>
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPersonal: TdxBarControlContainerItem
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+      Category = 0
+      Hint = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+      Visible = ivAlways
+      Control = cePersonal_update
+    end
+    object bbUpdate_Personal: TdxBarButton
+      Action = macUpdate_Personal
+      Category = 0
+    end
+    object bbUpdate_PersonalTrade: TdxBarButton
+      Action = macUpdate_PersonalTrade
+      Category = 0
+    end
+    object bbUpdate_PersonalMerch: TdxBarButton
+      Action = macUpdate_PersonalMerch
       Category = 0
     end
   end
@@ -1281,6 +1360,64 @@ object PartnerForm: TPartnerForm
     Images = dmMain.ImageList
     Left = 232
     Top = 144
+    object actUpdate_PersonalMerch: TdsdExecStoredProc
+      Category = 'Personal'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePersonalMerch
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePersonalMerch
+        end>
+      Caption = 'actUpdate_PersonalMerch'
+      ImageIndex = 76
+    end
+    object actUpdate_PersonalTrade: TdsdExecStoredProc
+      Category = 'Personal'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePersonalTrade
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePersonalTrade
+        end>
+      Caption = 'actUpdate_PersonalTrade'
+      ImageIndex = 76
+    end
+    object actUpdate_Personal: TdsdExecStoredProc
+      Category = 'Personal'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdatePersonal
+      StoredProcList = <
+        item
+          StoredProc = spUpdatePersonal
+        end>
+      Caption = 'actUpdate_Personal'
+      ImageIndex = 76
+    end
+    object macUpdate_PersonaTradel_list: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PersonalTrade
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_PersonaTradel_list'
+      ImageIndex = 76
+    end
+    object macUpdate_PersonalMerch_list: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PersonalMerch
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_PersonalMerch_list'
+      ImageIndex = 76
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1294,6 +1431,69 @@ object PartnerForm: TPartnerForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macUpdate_Personal_list: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Personal
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdate_Personal_list'
+      ImageIndex = 76
+    end
+    object macUpdate_Personal: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_Personal_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1089#1077#1084' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')' +
+        '>?'
+      InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1091#1087#1077#1088#1074#1072#1081#1079#1077#1088')>'
+      ImageIndex = 79
+    end
+    object macUpdate_PersonalTrade: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_PersonaTradel_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1089#1077#1084' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')>?'
+      InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1058#1055')>'
+      ImageIndex = 7
+    end
+    object macUpdate_PersonalMerch: TMultiAction
+      Category = 'Personal'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_PersonalMerch_list
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1089#1077#1084' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084' '#1074#1099#1073#1088#1072#1085#1085#1086#1075#1086' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088 +
+        ')>?'
+      InfoAfterExecute = #1055#1072#1088#1072#1084#1077#1090#1088' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')> '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')>'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1042#1057#1045#1052' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1084#1077#1088#1095#1072#1085#1076#1072#1081#1079#1077#1088')>'
+      ImageIndex = 80
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2518,7 +2718,8 @@ object PartnerForm: TPartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 184
+    Left = 224
+    Top = 65528
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -2792,7 +2993,8 @@ object PartnerForm: TPartnerForm
         Value = '149831'
         MultiSelectSeparator = ','
       end>
-    Left = 911
+    Left = 863
+    Top = 65528
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
@@ -2964,5 +3166,128 @@ object PartnerForm: TPartnerForm
     PackSize = 1
     Left = 536
     Top = 344
+  end
+  object GuidesPersonal_update: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePersonal_update
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal_update
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal_update
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1034
+    Top = 197
+  end
+  object spUpdatePersonal: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner_PersonalParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal_update
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 848
+    Top = 328
+  end
+  object spUpdatePersonalTrade: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner_PersonalParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal_update
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 336
+  end
+  object spUpdatePersonalMerch: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Partner_PersonalParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal_update
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 336
   end
 end

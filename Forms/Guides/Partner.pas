@@ -188,6 +188,27 @@ type
     BranchCode: TcxGridDBColumn;
     BranchJur: TcxGridDBColumn;
     Terminal: TcxGridDBColumn;
+    cxLabel18: TcxLabel;
+    cePersonal_update: TcxButtonEdit;
+    GuidesPersonal_update: TdsdGuides;
+    bbsUpdate: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    bbPersonal: TdxBarControlContainerItem;
+    spUpdatePersonal: TdsdStoredProc;
+    spUpdatePersonalTrade: TdsdStoredProc;
+    spUpdatePersonalMerch: TdsdStoredProc;
+    actUpdate_Personal: TdsdExecStoredProc;
+    actUpdate_PersonalMerch: TdsdExecStoredProc;
+    actUpdate_PersonalTrade: TdsdExecStoredProc;
+    macUpdate_Personal_list: TMultiAction;
+    macUpdate_PersonaTradel_list: TMultiAction;
+    macUpdate_PersonalMerch_list: TMultiAction;
+    macUpdate_Personal: TMultiAction;
+    macUpdate_PersonalTrade: TMultiAction;
+    macUpdate_PersonalMerch: TMultiAction;
+    bbUpdate_Personal: TdxBarButton;
+    bbUpdate_PersonalTrade: TdxBarButton;
+    bbUpdate_PersonalMerch: TdxBarButton;
   private
     { Private declarations }
   public
