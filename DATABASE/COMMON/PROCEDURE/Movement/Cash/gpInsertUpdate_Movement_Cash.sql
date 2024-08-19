@@ -277,8 +277,13 @@ BEGIN
         THEN
              -- запишем оригинал - сумму в валюте
              vbAmountCurrency := inAmountIn;
-             -- сумму в ГРН - посчитаем - кроме обмена
-             vbAmount         := CASE WHEN inAmountSumm > 0 THEN inAmountSumm ELSE CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
+             -- сумму в ГРН - посчитаем ИЛИ подставляется сумма обмена
+             vbAmount         := CASE WHEN inAmountSumm > 0
+                                           -- Cумма грн, обмен
+                                           THEN inAmountSumm
+                                      ELSE -- посчитали
+                                           CAST (inAmountIn * outCurrencyValue / outParValue AS NUMERIC (16, 2))
+                                 END;
              -- это значение в ГРН - сохраним
              vbAmountIn       := vbAmount;
 
@@ -292,8 +297,13 @@ BEGIN
         THEN
              -- запишем оригинал - сумму в валюте
              vbAmountCurrency := -1 * inAmountOut;
-             -- сумму в ГРН - посчитаем - кроме обмена
-             vbAmount         := -1 * CASE WHEN inAmountSumm > 0 THEN inAmountSumm ELSE CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2)) END;
+             -- сумму в ГРН - посчитаем ИЛИ подставляется сумма обмена
+             vbAmount         := -1 * CASE WHEN inAmountSumm > 0
+                                                -- Cумма грн, обмен
+                                                THEN inAmountSumm
+                                           ELSE -- посчитали
+                                                CAST (inAmountOut * outCurrencyValue / outParValue AS NUMERIC (16, 2))
+                                      END;
              -- это значение в ГРН - сохраним
              vbAmountOut      := ABS (vbAmount);
 
@@ -315,10 +325,15 @@ BEGIN
                                          , inInvNumber   := inInvNumber
                                          , inOperDate    := inOperDate
                                          , inServiceDate := inServiceDate
+                                           -- Cумма грн, приход
                                          , inAmountIn    := vbAmountIn
+                                           -- Cумма грн, расход
                                          , inAmountOut   := vbAmountOut
+                                           -- Cумма грн, обмен
                                          , inAmountSumm  := inAmountSumm
+                                           -- Сумма в валюте
                                          , inAmountCurrency := vbAmountCurrency
+                                           -- 
                                          , inComment     := inComment
                                          , inCarId       := inCarId
                                          , inCashId      := inCashId
@@ -356,7 +371,7 @@ BEGIN
          END IF;
      -- END IF;
      
-     IF vbUserId = 5 AND 1=1
+     IF vbUserId = 5 AND 1=0
      THEN
          RAISE EXCEPTION 'Ошибка.Admin Нет прав';
      END IF;
