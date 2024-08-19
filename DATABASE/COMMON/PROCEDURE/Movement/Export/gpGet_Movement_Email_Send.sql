@@ -26,6 +26,12 @@ then
     vbUserId:= 5;
 end if;*/
 
+
+if vbUserId <> 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.Нет прав.';
+END IF;
+
      -- определяется <Контрагент>
      vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementLinkObject_To.ObjectId ELSE MovementLinkObject_From.ObjectId END
                     FROM Movement

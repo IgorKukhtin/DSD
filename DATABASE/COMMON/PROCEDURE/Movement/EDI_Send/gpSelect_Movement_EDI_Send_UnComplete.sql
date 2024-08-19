@@ -111,6 +111,13 @@ BEGIN
                AND Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '1 MIN'
                   )
+                  /*OR Movement_Parent.Id IN (
+29033328
+,29033497
+,29033800
+,29033868
+,29033933
+)*/
                -- test
                /*OR ((Movement_Parent.Id = 26526133 
                 AND Movement.Id        = 26526140

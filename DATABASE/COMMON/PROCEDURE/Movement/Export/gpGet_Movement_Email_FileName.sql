@@ -29,8 +29,10 @@ BEGIN
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
           -- Недавній ФОП- формат XLS
         , tmpExport_XLS AS (SELECT DISTINCT 0 AS PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp WHERE tmp.Id = 7448983 LIMIT 1)
-           --
-        , tmpProtocol AS (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1)
+          --
+        , tmpProtocol_all AS (SELECT MovementProtocol.Id, MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId)
+        , tmpProtocol AS (SELECT tmpProtocol_all.OperDate FROM tmpProtocol_all ORDER BY tmpProtocol_all.Id LIMIT 1)
+
      SELECT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
 
                       THEN COALESCE (ObjectString_GLNCode.ValueData, '')

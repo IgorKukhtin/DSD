@@ -2038,6 +2038,35 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
          IF vbPartionCellId_9  <> 0 THEN RAISE EXCEPTION 'Ошибка.Ячейка № 9 только для просмотра.'; END IF;
          IF vbPartionCellId_10 <> 0 THEN RAISE EXCEPTION 'Ошибка.Ячейка № 10 только для просмотра.'; END IF;*/
 
+
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                    WHERE MovementItem.Id       = inMovementItemId
+                      AND MovementItem.DescId   = zc_MI_Master()
+                      AND MovementItem.isErased = TRUE
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя заполнить место хранения.%Элемент взвешивания удален.%Обновите информацию в отчете.'
+                           , CHR (13), CHR (13)
+                            ;
+         END IF;
+
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                         INNER JOIN Movement ON Movement.Id       = MovementItem.MovementId
+                                            AND Movement.DescId   = zc_Movement_WeighingProduction()
+                                            AND Movement.StatusId <> zc_Enum_Status_UnComplete()
+                    WHERE MovementItem.Id       = inMovementItemId
+                      AND MovementItem.DescId   = zc_MI_Master()
+                      AND MovementItem.isErased = FALSE
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нельзя заполнить место хранения.%Документ взвешивания уже закрыт.%Обновите информацию в отчете.'
+                           , CHR (13), CHR (13)
+                            ;
+         END IF;
+
+
          -- 1. обнулили
          IF COALESCE (vbPartionCellId_1, 0) = 0
          THEN

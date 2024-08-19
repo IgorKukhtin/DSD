@@ -52,8 +52,15 @@ BEGIN
 
      vbPartneFromId := 258612;
 
+if vbUserId <> 5 AND 1=0
+THEN
+    RAISE EXCEPTION 'Ошибка.Нет прав.';
+END IF;
+
      -- параметры
-     vbOperDate_insert:= (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1);
+     vbOperDate_insert:= (WITH tmp AS (SELECT MovementProtocol.Id, MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId)
+                          SELECT tmp.OperDate FROM tmp ORDER BY tmp.Id LIMIT 1
+                         );
      -- параметр из документа
      vbOperDatePartner:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner());
      -- параметры из Взвешивания
@@ -1237,7 +1244,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 27078112 , inSession:=  '378f6845-ef70-4e5b-aeb9-45d91bd5e82e'); -- FETCH ALL "<unnamed portal 1>";
--- SELECT * FROM gpSelect_Movement_Sale_EDI(inMovementId := 27080288 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 29034069  , inSession:=  '5'); -- FETCH ALL "<unnamed portal 1>";
 
  
