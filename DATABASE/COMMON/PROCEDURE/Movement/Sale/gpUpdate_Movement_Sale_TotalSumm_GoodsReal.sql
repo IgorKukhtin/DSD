@@ -22,7 +22,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TotalSumm_GoodsReal(), inId, ioisTotalSumm_GoodsReal);
      
 
-     -- перемсет сумм
+     -- пересчет сумм
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= inId);
 
      -- сохранили протокол
