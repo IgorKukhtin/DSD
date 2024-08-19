@@ -2377,7 +2377,7 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
-  //exit;
+  exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
