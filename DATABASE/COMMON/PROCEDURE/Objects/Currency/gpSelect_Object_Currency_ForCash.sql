@@ -28,19 +28,19 @@ BEGIN
           , tmpMovement AS (SELECT MovementItem.ObjectId          AS CurrencyFromId
                                  , MovementItem.Amount            AS Amount
                                  , MILinkObject_Currency.ObjectId AS CurrencyToId
+                                 , MILinkObject_PaidKind.ObjectId AS PaidKindId
                                  , CASE WHEN MIFloat_ParValue.ValueData > 0
                                              THEN MIFloat_ParValue.ValueData
                                         ELSE 1
                                    END AS ParValue
                                    --  № п/п
-                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_Currency.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
+                                 , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, MILinkObject_Currency.ObjectId, MILinkObject_PaidKind.ObjectId ORDER BY Movement.OperDate DESC) AS Ord
                             FROM Movement
                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                  INNER JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                                    ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_PaidKind.DescId         = zc_MILinkObject_PaidKind()
-                                                                  AND MILinkObject_PaidKind.ObjectId       = zc_Enum_PaidKind_SecondForm() -- !!!НАЛ!!!
                                  INNER JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                    ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
@@ -50,7 +50,7 @@ BEGIN
                                                              ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                             AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                             WHERE Movement.DescId   = zc_Movement_Currency()
-                              AND Movement.OperDate <= inOperDate
+                              AND Movement.OperDate BETWEEN DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 MONTH' AND inOperDate
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )
       , tmpMovementCash AS (SELECT zc_Enum_Currency_Basis()          AS CurrencyFromId
@@ -80,6 +80,7 @@ BEGIN
                             WHERE Movement.DescId   = zc_Movement_Cash()
                               AND Movement.OperDate BETWEEN inOperDate - INTERVAL '1 MONTH' AND inOperDate -- !!!ограничим за 1 Месяц!!!
                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND 1=0
                            )
          , tmpCurrency AS (SELECT tmpMovementCash.CurrencyFromId
                                 , tmpMovementCash.CurrencyToId
@@ -97,9 +98,14 @@ BEGIN
                                   END AS Amount
                                 , tmpMovement.ParValue       AS ParValue
                            FROM tmpMovement
-                                LEFT JOIN tmpMovementCash ON tmpMovementCash.CurrencyToId = CASE WHEN tmpMovement.CurrencyFromId = zc_Enum_Currency_Basis() THEN tmpMovement.CurrencyToId ELSE tmpMovement.CurrencyFromId END
+                                LEFT JOIN tmpMovementCash ON tmpMovementCash.CurrencyToId = CASE WHEN tmpMovement.CurrencyFromId = zc_Enum_Currency_Basis()
+                                                                                                      THEN tmpMovement.CurrencyToId
+                                                                                                 ELSE tmpMovement.CurrencyFromId
+                                                                                            END
                            WHERE tmpMovement.Ord = 1 -- !!!берется Последний!!!
-                            AND  tmpMovementCash.CurrencyToId IS NULL
+                             AND tmpMovementCash.CurrencyToId IS NULL
+                             AND tmpMovement.PaidKindId = zc_Enum_PaidKind_SecondForm() -- !!!НАЛ!!!
+
                           )
       -- Результат
       SELECT Object_Currency_View.Id
