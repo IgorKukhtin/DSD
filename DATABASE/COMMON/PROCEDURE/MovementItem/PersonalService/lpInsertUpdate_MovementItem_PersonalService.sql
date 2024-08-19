@@ -197,14 +197,14 @@ BEGIN
                         -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
                         THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
                         ELSE
-                     lpGetAccessKey ((SELECT ObjectLink_User_Member.ObjectId
-                                      FROM ObjectLink
-                                           INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
-                                                                                          AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
-                                       WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
-                                         AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
-                                       LIMIT 1
-                                     )
+                     lpGetAccessKey (COALESCE ((SELECT ObjectLink_User_Member.ObjectId
+                                                FROM ObjectLink
+                                                     INNER JOIN ObjectLink AS ObjectLink_User_Member ON ObjectLink_User_Member.ChildObjectId = ObjectLink.ChildObjectId
+                                                                                                    AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                                 WHERE ObjectLink.DescId = zc_ObjectLink_PersonalServiceList_Member()
+                                                   AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
+                                                 LIMIT 1
+                                               ), inUserId)
                                    , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
                                     )
                      END;
