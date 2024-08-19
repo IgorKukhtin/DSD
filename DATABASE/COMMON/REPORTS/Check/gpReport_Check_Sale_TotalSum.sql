@@ -137,14 +137,9 @@ BEGIN
 
 
         --группировка - MovementItem.ObjectId + MILinkObject_GoodsKind.ObjectId 
-      , tmpTotal1 AS (SELECT tmpMov.Id, tmp.*
-                      FROM tmpMov
-                         LEFT JOIN lpSelect_MovementFloat_TotalSumm1_Sale (tmpMov.Id) AS tmp ON 1=1
-                      )
-        --группировка - COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) +  COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
-      , tmpTotal2 AS (SELECT tmpMov.Id, tmp.*
-                      FROM tmpMov
-                         LEFT JOIN lpSelect_MovementFloat_TotalSumm_Sale (tmpMov.Id) AS tmp ON 1=1
+      , tmpTotal AS (SELECT tmpMov.Id, tmp.*
+                     FROM tmpMov
+                        LEFT JOIN lpSelect_MovementFloat_TotalSumm_Sale (tmpMov.Id) AS tmp ON 1=1
                      )
 
              SELECT tmpData.MovementId
@@ -169,21 +164,17 @@ BEGIN
                   , MovementFloat_TotalSummPVAT.ValueData   ::TFloat  AS TotalSummPVAT
                   , MovementFloat_TotalSumm.ValueData       ::TFloat  AS TotalSumm
 
-                 /* , tmpData.AmountSummNoVAT ::TFloat AS AmountSummMVAT
-                  , tmpData.AmountSummWVAT  ::TFloat AS AmountSummPVAT
-                  , tmpData.AmountSumm      ::TFloat AS AmountSumm
-                   */
-                  , tmpTotal1.TotalSummMVAT ::TFloat AS Summ_MVat_calc1
-                  , tmpTotal1.TotalSummPVAT ::TFloat AS Summ_PVat_calc1
-                  , tmpTotal1.TotalSumm     ::TFloat AS Summ_calc1
+                  , tmpTotal.TotalSummMVAT ::TFloat AS Summ_MVat_calc1
+                  , tmpTotal.TotalSummPVAT ::TFloat AS Summ_PVat_calc1
+                  , tmpTotal.TotalSumm     ::TFloat AS Summ_calc1
 
-                  , tmpTotal2.TotalSummMVAT ::TFloat AS Summ_MVat_calc2
-                  , tmpTotal2.TotalSummPVAT ::TFloat AS Summ_PVat_calc2
-                  , tmpTotal2.TotalSumm     ::TFloat AS Summ_calc2
+                  , tmpTotal.TotalSummMVAT_real ::TFloat AS Summ_MVat_calc2
+                  , tmpTotal.TotalSummPVAT_real ::TFloat AS Summ_PVat_calc2
+                  , tmpTotal.TotalSumm_real     ::TFloat AS Summ_calc2
         
-                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpTotal1.TotalSummMVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal2.TotalSummMVAT THEN TRUE ELSE FALSE END AS isMVat_diff
-                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpTotal1.TotalSummPVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal2.TotalSummPVAT THEN TRUE ELSE FALSE END  AS isPVat_diff
-                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpTotal1.TotalSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal2.TotalSumm THEN TRUE ELSE FALSE END                  AS isSum_diff
+                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpTotal.TotalSummMVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal.TotalSummMVAT_real THEN TRUE ELSE FALSE END AS isMVat_diff
+                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpTotal.TotalSummPVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal.TotalSummPVAT_real THEN TRUE ELSE FALSE END  AS isPVat_diff
+                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpTotal.TotalSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal.TotalSumm_real THEN TRUE ELSE FALSE END                  AS isSum_diff
 
               FROM tmpMovement AS tmpData
 
@@ -200,8 +191,7 @@ BEGIN
                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm() 
 
                -- расчет как lpInsertUpdate_MovementFloat_TotalSumm
-               LEFT JOIN tmpTotal1 ON tmpTotal1.Id = tmpData.MovementId  
-               LEFT JOIN tmpTotal2 ON tmpTotal2.Id = tmpData.MovementId
+               LEFT JOIN tmpTotal ON tmpTotal.Id = tmpData.MovementId  
                
                LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
                LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId

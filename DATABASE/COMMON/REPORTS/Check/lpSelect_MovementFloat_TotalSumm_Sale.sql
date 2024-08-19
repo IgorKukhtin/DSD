@@ -1,7 +1,7 @@
 
-DROP FUNCTION IF EXISTS lpSelect_MovementFloat_TotalSumm1_Sale (Integer);
+DROP FUNCTION IF EXISTS lpSelect_MovementFloat_TotalSumm_Sale (Integer);
 
-CREATE OR REPLACE FUNCTION lpSelect_MovementFloat_TotalSumm1_Sale(
+CREATE OR REPLACE FUNCTION lpSelect_MovementFloat_TotalSumm_Sale(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
 RETURNS TABLE ( 
@@ -748,8 +748,7 @@ $BODY$
  15.08.24         *
 */
 -- тест
---
-SELECT * from lpSelect_MovementFloat_TotalSumm1_Sale(28785530 ) 
+--SELECT * from lpSelect_MovementFloat_TotalSumm_Sale(28785530 ) 
 
 --  SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28786822) 
---  SELECT * from lpSelect_MovementFloat_TotalSumm1_Sale (28765855) 
+--  SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28765855) 
