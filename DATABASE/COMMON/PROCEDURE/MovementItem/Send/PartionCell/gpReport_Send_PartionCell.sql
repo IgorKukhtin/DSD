@@ -520,6 +520,9 @@ BEGIN
                                                                                               END
                                     LEFT JOIN MovementItemFloat AS MIF_PartionCell_real
                                                                 ON MIF_PartionCell_real.MovementItemId = MovementItemLinkObject.MovementItemId
+                                                               -- !!!!
+                                                               AND MovementItemLinkObject.ObjectId = zc_PartionCell_RK()
+                                                               --
                                                                AND MIF_PartionCell_real.DescId         = CASE WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_1()
                                                                                                                    THEN zc_MIFloat_PartionCell_real_1()
                                                                                                               WHEN MovementItemLinkObject.DescId = zc_MILinkObject_PartionCell_2()

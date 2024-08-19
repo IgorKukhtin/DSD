@@ -496,6 +496,7 @@ BEGIN
          , tmpMI_Summ_group AS (SELECT DISTINCT tmpMI_Summ.MovementId, tmpMI_Summ.MovementItemId, tmpMI_Summ.ContainerId_Analyzer, tmpMI_Summ.isActive
                                 FROM tmpMI_Summ
                                 WHERE tmpMI_Summ.MovementItemId > 0
+                                -- and  1=0
                                 )
          -- , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())
          , tmpMI_SummBranch_group AS (SELECT DISTINCT tmpMI_Summ.MovementItemId FROM tmpMI_Summ WHERE tmpMI_Summ.MovementItemId > 0 AND tmpMI_Summ.MovementDescId = zc_Movement_SendOnPrice())

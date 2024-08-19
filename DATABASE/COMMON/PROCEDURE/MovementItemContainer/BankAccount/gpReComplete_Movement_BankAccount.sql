@@ -12,6 +12,9 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
+     
+     
+     if vbUserId = 5 THEN vbUserId:= zc_Enum_Process_Auto_PrimeCost(); end if;
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId

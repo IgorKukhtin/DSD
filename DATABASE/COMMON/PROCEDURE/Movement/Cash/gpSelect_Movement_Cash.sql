@@ -222,13 +222,14 @@ BEGIN
                       FROM MovementItemContainer
                       WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
-                        AND MovementItemContainer.AccountId         = zc_Enum_Account_40801()    -- 
+                        AND MovementItemContainer.AccountId         = zc_Enum_Account_40801()    -- Êóðñîâàÿ ðàçíèöà
                         --AND vbUserId = 5
                       GROUP BY MovementItemContainer.MovementId
                      )
            -- ïðîâîäêè
          , tmpMIÑ AS (SELECT tmpMIÑ_1.MovementId, tmpMIÑ_1.ContainerId, tmpMIÑ_1.Amount
                       FROM tmpMIÑ_1
+                      WHERE 1=0
                      UNION ALL
                       SELECT tmpMIÑ_2.MovementId, tmpMIÑ_2.ContainerId, tmpMIÑ_2.Amount
                       FROM tmpMIÑ_2
@@ -239,12 +240,12 @@ BEGIN
          , tmpMIÑ_ProfitLoss AS (SELECT CLO_ProfitLoss.ContainerId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
                                  FROM ContainerLinkObject AS CLO_ProfitLoss
-                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMIÑ.ContainerId FROM tmpMIÑ)
+                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMIÑ_1.ContainerId FROM tmpMIÑ_1)
                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT DISTINCT tmpMIÑ_ProfitLoss.ProfitLossId FROM tmpMIÑ_ProfitLoss))
 
-           -- îñòàòîê ñóììû íà äàòó â ÃÐÍ
+           -- îñòàòîê ñóììû íà äàòó â Âàëþòå
          , tmpListContainer_SummCurrency AS
                     (SELECT Container.ParentId AS ContainerId
                           , Container.Id       AS ContainerId_Currency
@@ -407,7 +408,8 @@ BEGIN
                               FROM tmpListContainer_SummCurrency
                                    LEFT JOIN tmpMIContainer_SummCurrency AS tmpMIContainer
                                                                          ON tmpMIContainer.ContainerId = tmpListContainer_SummCurrency.ContainerId_Currency
-                                                                        AND tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                                                                         -- êóðñ íà êîíåö äíÿ 
+                                                                        AND tmpMIContainer.OperDate >= CASE WHEN tmpMovement.OperDate >= '01.08.2024' THEN tmpMovement.OperDate + INTERVAL '1 DAY' ELSE tmpMovement.OperDate - INTERVAL '0 DAY' END
                               GROUP BY tmpListContainer_SummCurrency.ContainerId_Currency, tmpListContainer_SummCurrency.Amount
                              ) AS tmp
                        ) <> 0
@@ -417,7 +419,7 @@ BEGIN
                               FROM tmpListContainer_Summ
                                    LEFT JOIN tmpMIContainer_Summ AS tmpMIContainer
                                                                  ON tmpMIContainer.ContainerId = tmpListContainer_Summ.ContainerId
-                                                                AND tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                                                                AND tmpMIContainer.OperDate >= CASE WHEN tmpMovement.OperDate >= '01.08.2024' THEN tmpMovement.OperDate + INTERVAL '1 DAY' ELSE tmpMovement.OperDate - INTERVAL '0 DAY' END
                               GROUP BY tmpListContainer_Summ.ContainerId, tmpListContainer_Summ.Amount
                              ) AS tmp
                        )
@@ -427,7 +429,7 @@ BEGIN
                               FROM tmpListContainer_SummCurrency
                                    LEFT JOIN tmpMIContainer_SummCurrency AS tmpMIContainer
                                                                          ON tmpMIContainer.ContainerId = tmpListContainer_SummCurrency.ContainerId_Currency
-                                                                        AND tmpMIContainer.OperDate >= tmpMovement.OperDate - INTERVAL '0 DAY'
+                                                                        AND tmpMIContainer.OperDate >= CASE WHEN tmpMovement.OperDate >= '01.08.2024' THEN tmpMovement.OperDate + INTERVAL '1 DAY' ELSE tmpMovement.OperDate - INTERVAL '0 DAY' END
                               GROUP BY tmpListContainer_SummCurrency.ContainerId_Currency, tmpListContainer_SummCurrency.Amount
                              ) AS tmp
                        )

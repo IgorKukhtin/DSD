@@ -64,7 +64,13 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
 
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
+     IF inPaidKindId = zc_Enum_PaidKind_FirstForm_pav()
+     THEN  
+         vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
+         vbAccessKeyId:= zc_Enum_Process_AccessKey_ServicePav();
+     ELSE
+         vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
+    END IF;
 
      -- если валюта выбрана
      IF COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())

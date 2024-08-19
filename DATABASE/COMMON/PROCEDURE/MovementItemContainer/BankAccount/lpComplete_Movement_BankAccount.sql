@@ -385,7 +385,12 @@ BEGIN
                END AS ServiceDateId
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , zc_Enum_PaidKind_FirstForm() AS PaidKindId -- Всегда БН
+
+               --  НЕ Всегда БН
+             , CASE WHEN ObjectLink_BankAccount_Account.ChildObjectId = 10895486 -- 
+                         THEN zc_Enum_PaidKind_FirstForm_pav()
+                    ELSE zc_Enum_PaidKind_FirstForm()
+               END AS PaidKindId
 
              , CASE -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
@@ -410,6 +415,11 @@ BEGIN
              , NOT _tmpItem.IsActive
              , NOT _tmpItem.IsMaster
         FROM _tmpItem
+
+             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Account
+                                  ON ObjectLink_BankAccount_Account.ObjectId = _tmpItem.ObjectId
+                                 AND ObjectLink_BankAccount_Account.DescId   = zc_ObjectLink_BankAccount_Account()
+
              LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = inMovementId
                                                AND MI_Child.DescId = zc_MI_Child()
                                                AND MI_Child.isErased = FALSE

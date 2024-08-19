@@ -337,11 +337,14 @@ BEGIN
            , tmp AS
           (SELECT _tmpLocation.LocationId
                 , _tmpLocation.ContainerDescId
+                  -- всегда ContainerId_count
                 , CASE WHEN _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                             THEN ContainerLinkObject.ContainerId
                        ELSE COALESCE (Container.ParentId, 0)
                   END AS ContainerId_count
+                  -- по нему движение: Count + Summ
                 , ContainerLinkObject.ContainerId AS ContainerId_begin
+                  --
                 , tmpGoods.GoodsId
                 , CASE WHEN _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
                             THEN COALESCE (CLO_Account.ObjectId, 0)
@@ -357,13 +360,17 @@ BEGIN
 
                 , _tmpLocation.DescId    AS Value1_ch
                 , CLO_Member.ContainerId AS Value2_ch
+
            FROM _tmpLocation
+                -- все по месту учета: Count + Summ
                 INNER JOIN ContainerLinkObject ON ContainerLinkObject.ObjectId = _tmpLocation.LocationId
-                                              AND ContainerLinkObject.DescId = _tmpLocation.DescId
+                                              AND ContainerLinkObject.DescId   = _tmpLocation.DescId
+                -- для Суммового нашли товар
                 LEFT JOIN ContainerLinkObject AS CLO_Goods ON CLO_Goods.ContainerId = ContainerLinkObject.ContainerId
-                                                          AND CLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                                          AND CLO_Goods.DescId      = zc_ContainerLinkObject_Goods()
                                                           AND _tmpLocation.ContainerDescId IN (zc_Container_Summ(), zc_Container_SummAsset())
 
+                -- Все: Count + Summ
                 LEFT JOIN Container ON Container.Id     = ContainerLinkObject.ContainerId
                                    AND Container.DescId = _tmpLocation.ContainerDescId
                 -- подключили !!!OLAP!!!
@@ -373,7 +380,11 @@ BEGIN
                                         AND Container_data.VerId     = vbVerId_olap
                                         AND vb_IsContainer_OLAP      = TRUE
 
-                INNER JOIN tmpGoods ON tmpGoods.GoodsId = CASE WHEN _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset()) THEN Container.ObjectId ELSE CLO_Goods.ObjectId END
+                -- ограничили Товаром
+                INNER JOIN tmpGoods ON tmpGoods.GoodsId = CASE WHEN _tmpLocation.ContainerDescId IN (zc_Container_Count(), zc_Container_CountAsset())
+                                                                    THEN Container.ObjectId
+                                                               ELSE CLO_Goods.ObjectId
+                                                          END
                 LEFT JOIN tmpAccount ON tmpAccount.AccountId = Container.ObjectId
                 LEFT JOIN ContainerLinkObject AS CLO_Account ON CLO_Account.ContainerId = Container.Id
                                                             AND CLO_Account.DescId = zc_ContainerLinkObject_Account()

@@ -577,6 +577,11 @@ BEGIN
          -- + НЕТ ограничения у Ведомости
         AND (OB_PersonalServiceList_User.ObjectId IS NULL
           OR vbIsLevelMax01 = TRUE
+          --OR vbUserId = 2573318
+          OR vbUserId = 5
+            )
+        AND (Object_PersonalServiceList.ValueData NOT ILIKE '%Костя%'
+          OR vbUserId NOT IN (5, 9457 , 4467766)
             )
             ;
 
