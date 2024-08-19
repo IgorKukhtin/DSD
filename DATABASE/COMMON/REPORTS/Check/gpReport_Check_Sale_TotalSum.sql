@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Check_Sale_TotalSum (
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, OperDatePartner TDateTime, InvNumber TVarChar
              , PaidKindName TVarChar
+             , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
              , FromCode  Integer
              , FromName  TVarChar
              , ToCode    Integer
@@ -48,15 +49,10 @@ BEGIN
                          , Movement.OperDate             AS OperDate
                          , Movement.InvNumber            AS InvNumber
                          , MD_OperDatePartner.ValueData  AS OperDatePartner 
-                         , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
                     FROM MovementDate AS MD_OperDatePartner
                          INNER JOIN Movement ON Movement.Id = MD_OperDatePartner.MovementId
                                             AND Movement.DescId   = zc_Movement_Sale()
                                             AND Movement.StatusId = zc_Enum_Status_Complete()
-
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                                      ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
 
                     WHERE MD_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                       AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -83,19 +79,26 @@ BEGIN
         , tmpMLO AS (SELECT MovementLinkObject.*
                                          FROM MovementLinkObject
                                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov)
-                                           AND MovementLinkObject.DescId IN (zc_MovementLinkObject_From(), zc_MovementLinkObject_To())
+                                           AND MovementLinkObject.DescId IN (zc_MovementLinkObject_From()
+                                                                           , zc_MovementLinkObject_To()
+                                                                           , zc_MovementLinkObject_CurrencyDocument()
+                                                                           , zc_MovementLinkObject_PaidKind()
+                                                                           )
                                          )
 
 
-     -- + все свойства Документа
+     -- +  свойства Документа
        , tmpMovement AS (SELECT tmpMov.Id   AS MovementId
                               , tmpMov.OperDate 
                               , tmpMov.OperDatePartner
                               , tmpMov.InvNumber 
-                              , tmpMov.PaidKindId
                               , MB_PriceWithVAT.ValueData             AS isPriceWithVAT
                               , COALESCE (MF_VATPercent.ValueData,0)  AS VATPercent
-                              , MovementFloat_ChangePercent.ValueData AS ChangePercent
+                              , MovementFloat_ChangePercent.ValueData AS ChangePercent 
+                              , MovementLinkObject_PaidKind.ObjectId  AS PaidKindId
+                              , MovementLinkObject_From.ObjectId      AS FromId
+                              , MovementLinkObject_To.ObjectId        AS ToId
+                              , MovementLinkObject_CurrencyDocument.ObjectId AS CurrencyDocumentId
                               , COALESCE (MovementBoolean_TotalSumm_GoodsReal.ValueData, FALSE) ::Boolean AS isTotalSumm_GoodsReal
                         FROM tmpMov
                            LEFT JOIN tmpMovementBoolean AS MB_PriceWithVAT
@@ -113,17 +116,30 @@ BEGIN
                           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                                   ON MovementFloat_ChangePercent.MovementId = tmpMov.Id
                                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+                          LEFT JOIN tmpMLO AS MovementLinkObject_PaidKind
+                                           ON MovementLinkObject_PaidKind.MovementId = tmpMov.Id
+                                          AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+                          LEFT JOIN tmpMLO AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = tmpMov.Id
+                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+           
+                          LEFT JOIN tmpMLO AS MovementLinkObject_To
+                                           ON MovementLinkObject_To.MovementId = tmpMov.Id
+                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                          
+                          LEFT JOIN tmpMLO AS MovementLinkObject_CurrencyDocument
+                                           ON MovementLinkObject_CurrencyDocument.MovementId = tmpMov.Id
+                                          AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
                         )
 
+
+
         --группировка - MovementItem.ObjectId + MILinkObject_GoodsKind.ObjectId 
-      , tmpTotal1 AS (SELECT tmpMov.Id, tmp.*
-                      FROM tmpMov
-                         LEFT JOIN lpSelect_MovementFloat_TotalSumm1_Sale (tmpMov.Id) AS tmp ON 1=1
-                      )
-        --группировка - COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) +  COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
-      , tmpTotal2 AS (SELECT tmpMov.Id, tmp.*
-                      FROM tmpMov
-                         LEFT JOIN lpSelect_MovementFloat_TotalSumm_Sale (tmpMov.Id) AS tmp ON 1=1
+      , tmpTotal AS (SELECT tmpMov.Id, tmp.*
+                     FROM tmpMov
+                        LEFT JOIN lpSelect_MovementFloat_TotalSumm_Sale (tmpMov.Id) AS tmp ON 1=1
                      )
 
              SELECT tmpData.MovementId
@@ -131,7 +147,9 @@ BEGIN
                   , tmpData.OperDatePartner
                   , tmpData.InvNumber 
                   , Object_PaidKind.ValueData AS PaidKindName
-                                         
+                  , COALESCE (Object_CurrencyDocument.Id, ObjectCurrencyDocumentInf.Id)                AS CurrencyDocumentId
+                  , COALESCE (Object_CurrencyDocument.ValueData, ObjectCurrencyDocumentInf.ValueData)  AS CurrencyDocumentName
+
                   , Object_From.ObjectCode AS FromCode
                   , Object_From.ValueData  AS FromName
                   , Object_To.ObjectCode   AS ToCode
@@ -146,21 +164,17 @@ BEGIN
                   , MovementFloat_TotalSummPVAT.ValueData   ::TFloat  AS TotalSummPVAT
                   , MovementFloat_TotalSumm.ValueData       ::TFloat  AS TotalSumm
 
-                 /* , tmpData.AmountSummNoVAT ::TFloat AS AmountSummMVAT
-                  , tmpData.AmountSummWVAT  ::TFloat AS AmountSummPVAT
-                  , tmpData.AmountSumm      ::TFloat AS AmountSumm
-                   */
-                  , tmpTotal1.TotalSummMVAT ::TFloat AS Summ_MVat_calc1
-                  , tmpTotal1.TotalSummPVAT ::TFloat AS Summ_PVat_calc1
-                  , tmpTotal1.TotalSumm     ::TFloat AS Summ_calc1
+                  , tmpTotal.TotalSummMVAT ::TFloat AS Summ_MVat_calc1
+                  , tmpTotal.TotalSummPVAT ::TFloat AS Summ_PVat_calc1
+                  , tmpTotal.TotalSumm     ::TFloat AS Summ_calc1
 
-                  , tmpTotal2.TotalSummMVAT ::TFloat AS Summ_MVat_calc2
-                  , tmpTotal2.TotalSummPVAT ::TFloat AS Summ_PVat_calc2
-                  , tmpTotal2.TotalSumm     ::TFloat AS Summ_calc2
+                  , tmpTotal.TotalSummMVAT_real ::TFloat AS Summ_MVat_calc2
+                  , tmpTotal.TotalSummPVAT_real ::TFloat AS Summ_PVat_calc2
+                  , tmpTotal.TotalSumm_real     ::TFloat AS Summ_calc2
         
-                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpTotal1.TotalSummMVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal2.TotalSummMVAT THEN TRUE ELSE FALSE END AS isMVat_diff
-                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpTotal1.TotalSummPVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal2.TotalSummPVAT THEN TRUE ELSE FALSE END  AS isPVat_diff
-                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpTotal1.TotalSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal2.TotalSumm THEN TRUE ELSE FALSE END                  AS isSum_diff
+                  , CASE WHEN MovementFloat_TotalSummMVAT.ValueData <> tmpTotal.TotalSummMVAT OR MovementFloat_TotalSummMVAT.ValueData <> tmpTotal.TotalSummMVAT_real THEN TRUE ELSE FALSE END AS isMVat_diff
+                  , CASE WHEN MovementFloat_TotalSummPVAT.ValueData <> tmpTotal.TotalSummPVAT OR MovementFloat_TotalSummPVAT.ValueData <> tmpTotal.TotalSummPVAT_real THEN TRUE ELSE FALSE END  AS isPVat_diff
+                  , CASE WHEN MovementFloat_TotalSumm.ValueData <> tmpTotal.TotalSumm OR MovementFloat_TotalSumm.ValueData <> tmpTotal.TotalSumm_real THEN TRUE ELSE FALSE END                  AS isSum_diff
 
               FROM tmpMovement AS tmpData
 
@@ -177,18 +191,12 @@ BEGIN
                                          AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm() 
 
                -- расчет как lpInsertUpdate_MovementFloat_TotalSumm
-               LEFT JOIN tmpTotal1 ON tmpTotal1.Id = tmpData.MovementId  
-               LEFT JOIN tmpTotal2 ON tmpTotal2.Id = tmpData.MovementId
+               LEFT JOIN tmpTotal ON tmpTotal.Id = tmpData.MovementId  
                
-               LEFT JOIN tmpMLO AS MovementLinkObject_From
-                                ON MovementLinkObject_From.MovementId = tmpData.MovementId
-                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-               LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-               LEFT JOIN tmpMLO AS MovementLinkObject_To
-                                ON MovementLinkObject_To.MovementId = tmpData.MovementId
-                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-               LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+               LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
+               LEFT JOIN Object AS Object_To ON Object_To.Id = tmpData.ToId
+               LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = tmpData.CurrencyDocumentId
+               LEFT JOIN Object AS ObjectCurrencyDocumentInf ON ObjectCurrencyDocumentInf.Id = zc_Enum_Currency_Basis()
        ;
          
 END;

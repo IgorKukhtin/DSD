@@ -7,7 +7,10 @@ CREATE OR REPLACE FUNCTION lpSelect_MovementFloat_TotalSumm_Sale(
 RETURNS TABLE ( 
                TotalSummMVAT   TFloat
              , TotalSummPVAT   TFloat
-             , TotalSumm       TFloat
+             , TotalSumm       TFloat  
+             , TotalSummMVAT_real   TFloat
+             , TotalSummPVAT_real   TFloat
+             , TotalSumm_real       TFloat
 )
  AS
 $BODY$
@@ -16,11 +19,18 @@ $BODY$
 
   DECLARE vbOperCount_Master TFloat;
    
-  DECLARE vbOperSumm_Partner     TFloat;
+  DECLARE vbOperSumm_Partner       TFloat;
   DECLARE vbOperSumm_MVAT          TFloat;
   DECLARE vbOperSumm_PVAT          TFloat;
-  DECLARE vbOperSumm_PVAT_original TFloat;
-  DECLARE vbOperSumm_VAT_2018      TFloat;
+  DECLARE vbOperSumm_VAT_2018      TFloat; 
+  DECLARE vbOperSumm_Currency      TFloat;
+
+  DECLARE vbOperSumm_Partner_real       TFloat;
+  DECLARE vbOperSumm_MVAT_real          TFloat;
+  DECLARE vbOperSumm_PVAT_real          TFloat;
+  DECLARE vbOperSumm_VAT_2018_real      TFloat; 
+  DECLARE vbOperSumm_Currency_real      TFloat;
+
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -37,10 +47,6 @@ $BODY$
   DECLARE vbParValue TFloat;
   DECLARE vbCurrencyPartnerValue TFloat;
   DECLARE vbParPartnerValue TFloat;
-
-  DECLARE vbIsNPP_calc Boolean;
-  DECLARE vbDocumentTaxKindId Integer;
-  DECLARE vbDocumentTaxKindId_tax Integer;
 
   DECLARE vbPartnerName TVarChar;
 BEGIN
@@ -179,139 +185,167 @@ BEGIN
                   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
             AS NUMERIC (16, 2)) AS OperSumm_PVAT
-            -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
-          , CAST (OperSumm_PVAT_original
-                  -- так переводится в валюту zc_Enum_Currency_Basis
-                -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
-            AS NUMERIC (16, 2)) AS OperSumm_PVAT_original
-
-            -- Сумма НДС
-          , OperSumm_VAT_2018
 
             -- Сумма по Контрагенту
           , CAST (OperSumm_Partner
                   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
             AS NUMERIC (16, 2)) AS OperSumm_Partner
-           
+
+          -- Сумма в валюте
+          , CAST (CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN OperSumm_Partner_Currency ELSE OperSumm_Partner END
+                  -- так переводится в валюту CurrencyPartnerId
+                * CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
+            AS NUMERIC (16, 2)) AS OperSumm_Currency           
+
+
+            -- Сумма без НДС
+          , CAST (OperSumm_MVAT_real AS NUMERIC (16, 2)) AS OperSumm_MVAT_real
+            -- Сумма с НДС
+          , CAST (OperSumm_PVAT_real AS NUMERIC (16, 2)) AS OperSumm_PVAT_real
+            -- Сумма по Контрагенту
+          , CAST (OperSumm_Partner_real AS NUMERIC (16, 2)) AS OperSumm_Partner_real
+          -- Сумма в валюте
+          , CAST (CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN OperSumm_Partner_Currency_real ELSE OperSumm_Partner_real END
+                  -- так переводится в валюту CurrencyPartnerId
+                * CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
+            AS NUMERIC (16, 2)) AS OperSumm_Currency_real
+
 
            INTO  vbOperSumm_MVAT          -- Сумма без НДС
                , vbOperSumm_PVAT          -- Сумма с НДС
-               , vbOperSumm_PVAT_original -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
-               , vbOperSumm_VAT_2018      -- Сумма НДС
                , vbOperSumm_Partner       -- Сумма по Контрагенту
-            
+               , vbOperSumm_Currency      -- Сумма в валюте 
+               --
+               , vbOperSumm_MVAT_real          -- Сумма без НДС
+               , vbOperSumm_PVAT_real          -- Сумма с НДС
+               , vbOperSumm_Partner_real       -- Сумма по Контрагенту
+               , vbOperSumm_Currency_real      -- Сумма в валюте
 
      FROM  -- Расчет Итоговых суммы
           (WITH --tmpMI_child_ReturnIn AS (SELECT MovementItem.ParentId       AS ParentId
-                                             
-                tmpMI AS (SELECT Movement.DescId AS MovementDescId
-                               , 0 AS MovementItemId
-                               , MovementItem.DescId
-                               , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId) AS GoodsKindId
+                tmpMI_all AS (SELECT MovementItem.DescId
+                                   , MovementItem.ObjectId           AS GoodsId
+                                   , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
 
-                               , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                                   , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId) AS GoodsId_real
+                                   , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId) AS GoodsKindId_real
+  
+                                   , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                                   , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS OperCount_calc
+                                   , MovementItem.Amount AS OperCount_Master
+                                   , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS OperCount_Partner -- Количество у контрагента   
+                                   , COALESCE (MIFloat_ChangePercent.ValueData,0)  AS ChangePercent
+
+                            FROM Movement
+                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                        AND MovementItem.isErased = FALSE 
+                                                        AND MovementItem.DescId = zc_MI_Master()
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+  
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
+                                                                  ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
+                                                                 --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
+                                                                  ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
+                                                                 --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
+                                                                                  
+                                 LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                             ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+  
+                                 LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                                             ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+  
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+  
+                                 LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                             ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+  
+                            WHERE Movement.Id = inMovementId
+                          )                             
+ 
+              , tmpMI AS (SELECT tmpMI_all.GoodsId     AS GoodsId
+                               , tmpMI_all.GoodsKindId AS GoodsKindId
+
+                               , CASE WHEN tmpMI_all.ChangePercent <> 0 AND vbIsChangePrice = TRUE
                                            THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                    , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                    , inPrice        := MIFloat_Price.ValueData
+                                                                    , inChangePercent:= tmpMI_all.ChangePercent
+                                                                    , inPrice        := tmpMI_all.Price
                                                                     , inIsWithVAT    := vbPriceWithVAT
                                                                      )
-                                      WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                    , inChangePercent:= -1 * vbDiscountPercent
-                                                                    , inPrice        := MIFloat_Price.ValueData
-                                                                    , inIsWithVAT    := vbPriceWithVAT
-                                                                     )
-                                      WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                           THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                    , inChangePercent:= 1 * vbExtraChargesPercent
-                                                                    , inPrice        := MIFloat_Price.ValueData
-                                                                    , inIsWithVAT    := vbPriceWithVAT
-                                                                     )
-                                      ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                      ELSE COALESCE (tmpMI_all.Price, 0)
                                  END AS Price
-                               , COALESCE (MIFloat_Price.ValueData, 0)         AS Price_original
-                               , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
-
+                               , COALESCE (tmpMI_all.Price, 0)         AS Price_original
+                               , COALESCE (tmpMI_all.CountForPrice, 0) AS CountForPrice
 
                                  -- !!!очень важное кол-во, для него расчет сумм!!!
-                               , SUM (CASE WHEN Movement.DescId IN (zc_Movement_SendOnPrice(), zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI(), zc_Movement_WeighingPartner(), zc_Movement_Income(), zc_Movement_ReturnOut())
-                                            AND MovementItem.DescId IN (zc_MI_Master())
-                                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                           WHEN MovementItem.DescId IN (zc_MI_Master())
-                                                THEN MovementItem.Amount 
-                                           ELSE 0
-                                      END) AS OperCount_calc
+                               , SUM (tmpMI_all.OperCount_calc) AS OperCount_calc
                        
-                               , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS OperCount_Master
-                               , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner -- Количество у контрагента
+                               , SUM (tmpMI_all.OperCount_Master)  AS OperCount_Master
+                               , SUM (tmpMI_all.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
 
-                          FROM Movement
-                               INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.isErased = FALSE
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsReal
-                                                                ON MILinkObject_GoodsReal.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsReal.DescId         = zc_MILinkObject_GoodsReal()
-                                                               --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindReal
-                                                                ON MILinkObject_GoodsKindReal.MovementItemId = MovementItem.Id
-                                                               AND MILinkObject_GoodsKindReal.DescId         = zc_MILinkObject_GoodsKindReal()
-                                                               --AND vbPartnerName NOT ILIKE '%СІЛЬПО-ФУД ТОВ%'
-
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                           ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
-                                                           ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                               LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                           ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                          AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                          WHERE Movement.Id = inMovementId
-                          GROUP BY Movement.DescId
-                                 , MovementItem.DescId
-                                 , COALESCE (MILinkObject_GoodsReal.ObjectId, MovementItem.ObjectId)
-                                 , COALESCE (MILinkObject_GoodsKindReal.ObjectId, MILinkObject_GoodsKind.ObjectId)
-                                 , CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
+                          FROM tmpMI_all
+                          GROUP BY tmpMI_all.GoodsId
+                                 , tmpMI_all.GoodsKindId
+                                 , CASE WHEN tmpMI_all.ChangePercent <> 0 AND vbIsChangePrice = TRUE
                                              THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                      , inChangePercent:= MIFloat_ChangePercent.ValueData
-                                                                      , inPrice        := MIFloat_Price.ValueData
+                                                                      , inChangePercent:= tmpMI_all.ChangePercent
+                                                                      , inPrice        := tmpMI_all.Price
                                                                       , inIsWithVAT    := vbPriceWithVAT
                                                                        )
-                                        WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                      , inChangePercent:= -1 * vbDiscountPercent
-                                                                      , inPrice        := MIFloat_Price.ValueData
-                                                                      , inIsWithVAT    := vbPriceWithVAT
-                                                                       )
-                                        WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = TRUE AND vbMovementDescId NOT IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_OrderExternal()) -- !!!для НАЛ не учитываем!!!
-                                             THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
-                                                                      , inChangePercent:= 1 * vbExtraChargesPercent
-                                                                      , inPrice        := MIFloat_Price.ValueData
-                                                                      , inIsWithVAT    := vbPriceWithVAT
-                                                                       )
-                                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                                        ELSE COALESCE (tmpMI_all.Price, 0)
                                    END
-                                 , MIFloat_Price.ValueData
-                                 , MIFloat_CountForPrice.ValueData
-                                 , MIFloat_ChangePercent.ValueData
+                                 , tmpMI_all.Price
+                                 , tmpMI_all.CountForPrice
+                                 , tmpMI_all.ChangePercent
                          )
-
+              , tmpMI_real AS (SELECT tmpMI_all.GoodsId_real     AS GoodsId
+                                    , tmpMI_all.GoodsKindId_real AS GoodsKindId
+     
+                                    , CASE WHEN tmpMI_all.ChangePercent <> 0 AND vbIsChangePrice = TRUE
+                                                THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                         , inChangePercent:= tmpMI_all.ChangePercent
+                                                                         , inPrice        := tmpMI_all.Price
+                                                                         , inIsWithVAT    := vbPriceWithVAT
+                                                                          )
+                                           ELSE COALESCE (tmpMI_all.Price, 0)
+                                      END AS Price
+                                    , COALESCE (tmpMI_all.Price, 0)         AS Price_original
+                                    , COALESCE (tmpMI_all.CountForPrice, 0) AS CountForPrice
+     
+                                      -- !!!очень важное кол-во, для него расчет сумм!!!
+                                    , SUM (tmpMI_all.OperCount_calc) AS OperCount_calc
+                            
+                                    , SUM (tmpMI_all.OperCount_Master)  AS OperCount_Master
+                                    , SUM (tmpMI_all.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
+     
+                               FROM tmpMI_all
+                               GROUP BY tmpMI_all.GoodsId_real
+                                      , tmpMI_all.GoodsKindId_real
+                                      , CASE WHEN tmpMI_all.ChangePercent <> 0 AND vbIsChangePrice = TRUE
+                                                  THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                                           , inChangePercent:= tmpMI_all.ChangePercent
+                                                                           , inPrice        := tmpMI_all.Price
+                                                                           , inIsWithVAT    := vbPriceWithVAT
+                                                                            )
+                                             ELSE COALESCE (tmpMI_all.Price, 0)
+                                        END
+                                      , tmpMI_all.Price
+                                      , tmpMI_all.CountForPrice
+                                      , tmpMI_all.ChangePercent
+                              )
 -------------------
-           SELECT
+     , tmpCalc1 AS (SELECT
                  
                   -- Сумма без НДС
                   CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
@@ -341,25 +375,7 @@ BEGIN
                             
                   END AS OperSumm_PVAT
 
-                  -- Сумма с НДС + !!!НЕ!!! учтена скидка в цене
-                , CASE -- если цены с НДС
-                       WHEN vbPriceWithVAT OR vbVATPercent = 0
-                            THEN (OperSumm_Partner_original)
-
-                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
-                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
-                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
-                            AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
-                            THEN OperSumm_Partner_original + OperSumm_VAT_2018_original
-
-                       -- если цены без НДС
-                       WHEN vbVATPercent > 0
-                            THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_original) AS NUMERIC (16, 2))
-                  END AS OperSumm_PVAT_original
-
-                , OperSumm_VAT_2018
-
-                  -- Сумма по Контрагенту
+                 -- Сумма по Контрагенту
                 , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                           -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
                           THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
@@ -370,7 +386,7 @@ BEGIN
                        -- если цены без НДС, и новая Схема для НДС - 6 знаков
                        WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
                             AND vbOperDatePartner >= zc_DateStart_Tax_2018()
-                            AND vbMovementDescId IN (zc_Movement_Tax(), zc_Movement_TaxCorrective(), zc_Movement_Sale(), zc_Movement_ReturnIn())
+                            AND vbMovementDescId IN (zc_Movement_Sale())
                             THEN OperSumm_Partner_ChangePrice + OperSumm_VAT_2018
 
                        -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
@@ -387,14 +403,32 @@ BEGIN
                                     ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                                END
                   END AS OperSumm_Partner
-                  
+
+                  -- Сумма по Контрагенту (!!!в валюте!!!)
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    ELSE (OperSumm_Partner_ChangePrice_Currency)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Partner_Currency 
           FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
-                (SELECT SUM (tmpMI.OperCount_Master) AS OperCount_Master
-                      , SUM (tmpMI.OperCount_Partner) AS OperCount_Partner -- Количество у контрагента
-
+                (SELECT 
                         -- новая Схема для суммы НДС - 6 знаков
-                      , CAST (
+                        CAST (
                         SUM (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
                                        -- если цены с НДС
                                        THEN CAST (-- !!!OperSumm_Partner!!!
@@ -416,29 +450,6 @@ BEGIN
                              END)
                         AS NUMERIC (16, 2)) AS OperSumm_VAT_2018
 
-                        -- новая Схема для суммы НДС - 6 знаков + !!!НЕ!!! учтена скидка в цене
-                      , CAST (
-                        SUM (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
-                                       -- если цены с НДС
-                                       THEN CAST (-- !!!OperSumm_Partner!!!
-                                                  CASE WHEN tmpMI.CountForPrice <> 0
-                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
-                                                  END
-                                                * vbVATPercent / (100 + vbVATPercent)
-                                                  AS NUMERIC (16, 6))
-                                  WHEN vbVATPercent > 0
-                                       -- если цены без НДС
-                                       THEN CAST (-- !!!OperSumm_Partner!!!
-                                                  CASE WHEN tmpMI.CountForPrice <> 0
-                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
-                                                  END
-                                                * vbVATPercent / 100
-                                                  AS NUMERIC (16, 6))
-                             END)
-                        AS NUMERIC (16, 2)) AS OperSumm_VAT_2018_original
-
                         -- сумма по Контрагенту - с округлением до 2-х знаков
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                                        THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
@@ -446,24 +457,22 @@ BEGIN
                              END
                           
                              ) AS OperSumm_Partner
-                        -- сумма по Контрагенту - с округлением до 2-х знаков + !!!НЕ!!! учтена скидка в цене
-                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
-                                       THEN CAST (tmpMI.OperCount_calc * tmpMI.Price_original / tmpMI.CountForPrice AS NUMERIC (16, 2))
-                                  ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price_original AS NUMERIC (16, 2))
-                             END) AS OperSumm_Partner_original
 
                          -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
                       , SUM (CASE WHEN tmpMI.CountForPrice <> 0
                                        THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
                                   ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
                              END
-                         
                             ) AS OperSumm_Partner_ChangePrice
-                       
+
+                        -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
+                             END) AS OperSumm_Partner_ChangePrice_Currency                       
                   FROM (SELECT tmpMI.GoodsId
                              , tmpMI.GoodsKindId
-                             , tmpMI.myLevel
-
+                            
                              , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
                                          -- так переводится в валюту zc_Enum_Currency_Basis
                                          THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
@@ -474,19 +483,17 @@ BEGIN
                                          THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
                                     ELSE tmpMI.Price_original
                                END AS Price_original
-                               
+
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         THEN tmpMI.Price
+                                    ELSE 0
+                               END AS Price_Currency
+
                              , tmpMI.CountForPrice
-                             
+
                                -- очень важное кол-во, для него расчет сумм
                              , tmpMI.OperCount_calc
 
-                               -- кол-во Master (!!!без тары с ц=0!!!)
-                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                     AND tmpMI.Price = 0
-                                         THEN 0
-                                    ELSE tmpMI.OperCount_Master
-                               END AS OperCount_Master
-                             
                                -- кол-во Partner (!!!без тары с ц=0!!!)
                              , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                      AND tmpMI.Price = 0
@@ -494,38 +501,7 @@ BEGIN
                                     ELSE tmpMI.OperCount_Partner
                                END AS OperCount_Partner
 
-                        FROM (SELECT tmpMI.MovementDescId
-                                   , tmpMI.MovementItemId
-                                   , tmpMI.DescId
-                                   , tmpMI.GoodsId
-                                   , tmpMI.GoodsKindId
-
-                                     -- !!! ПЕРВАЯ Строка !!!
-                                   , 1 AS myLevel
-                                     -- !!! ПЕРВАЯ Строка !!!
-                                   , tmpMI.Price AS Price
-
-                                   , tmpMI.Price_original
-                                  
-                                   , tmpMI.CountForPrice
-
-                                 
-                                    -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ПЕРВАЯ Строка !!!
-                                   , (tmpMI.OperCount_calc ) AS OperCount_calc
-                                     -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
-                               
-                                     -- !!!важное кол-во, для него zc_MovementFloat_TotalCount !!! - !!! ПЕРВАЯ Строка !!!
-                                   , (tmpMI.OperCount_Master ) AS OperCount_Master
-
-                                   , tmpMI.OperCount_Partner -- Количество у контрагента
-                                  
-                              FROM tmpMI
-                             ) AS tmpMI
-
-                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
-                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                                  AND tmpMI.DescId = zc_MI_Master()
+                        FROM tmpMI
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                   ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
                                                  AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -533,20 +509,204 @@ BEGIN
 
                        ) AS tmpMI
                 ) AS _tmp
-          ) AS _tmp;
+          )
+   , tmpCalc2 AS (SELECT
+                  -- Сумма без НДС
+                  CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
+                            -- если цены без НДС или %НДС=0
+                            THEN (_tmp_real.OperSumm_Partner)
+                       WHEN vbPriceWithVAT AND 1=1
+                            -- если цены c НДС
+                            THEN CAST ( (_tmp_real.OperSumm_Partner) / (1 + vbVATPercent / 100) AS NUMERIC (16, 2))
+                       WHEN vbPriceWithVAT
+                            -- если цены c НДС (Вариант может быть если  первичен расчет НДС =1/6 )
+                            THEN _tmp_real.OperSumm_Partner - CAST ( (_tmp_real.OperSumm_Partner) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
+                  END AS OperSumm_MVAT_real
+
+                  -- Сумма с НДС
+                , CASE
+                       -- если цены с НДС
+                       WHEN vbPriceWithVAT OR vbVATPercent = 0
+                            THEN (_tmp_real.OperSumm_Partner)
+                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
+                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+                            THEN _tmp_real.OperSumm_Partner + _tmp_real.OperSumm_VAT_2018
+
+                       -- если цены без НДС
+                       WHEN vbVATPercent > 0
+                            THEN CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner) AS NUMERIC (16, 2)) 
+                  END AS OperSumm_PVAT_real
+
+                 -- Сумма по Контрагенту
+                , CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                    ELSE (_tmp_real.OperSumm_Partner_ChangePrice)
+                               END
+
+                       -- если цены без НДС, и новая Схема для НДС - 6 знаков
+                       WHEN vbPaidKindId = zc_Enum_PaidKind_FirstForm()
+                            AND vbOperDatePartner >= zc_DateStart_Tax_2018()
+                            AND vbMovementDescId IN (zc_Movement_Sale())
+                            THEN _tmp_real.OperSumm_Partner_ChangePrice + _tmp_real.OperSumm_VAT_2018
+
+                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                       WHEN vbVATPercent > 0
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                               END
+
+                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                       WHEN vbVATPercent > 0
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Partner_real
+
+                  -- Сумма по Контрагенту (!!!в валюте!!!)
+                , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                                    ELSE (_tmp_real.OperSumm_Partner_ChangePrice_Currency)
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN vbIsChangePrice = FALSE AND vbDiscountPercent     > 0 THEN CAST ( (1 - vbDiscountPercent     / 100) * (CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    WHEN vbIsChangePrice = FALSE AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                       WHEN vbVATPercent > 0
+                          -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но для БН и "иногда" НАЛ - скидка/наценка учтена в цене!!!
+                          THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                    ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp_real.OperSumm_Partner_ChangePrice_Currency) AS NUMERIC (16, 2))
+                               END
+                  END AS OperSumm_Partner_Currency_real
+
+          FROM
+                 -- получили 1 запись + !!! перевели в валюту если надо!!!
+                (SELECT 
+                        -- новая Схема для суммы НДС - 6 знаков
+                        CAST (
+                        SUM (CASE WHEN vbPriceWithVAT = TRUE OR vbVATPercent = 0
+                                       -- если цены с НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / (100 + vbVATPercent)
+                                                  AS NUMERIC (16, 6))
+                                  WHEN vbVATPercent > 0
+                                       -- если цены без НДС
+                                       THEN CAST (-- !!!OperSumm_Partner!!!
+                                                  CASE WHEN tmpMI.CountForPrice <> 0
+                                                            THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                                                  END
+                                                * vbVATPercent / 100
+                                                  AS NUMERIC (16, 6))
+                             END)
+                        AS NUMERIC (16, 2)) AS OperSumm_VAT_2018
+
+                        -- сумма по Контрагенту - с округлением до 2-х знаков
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * tmpMI.Price AS NUMERIC (16, 2))
+                             END
+                          
+                             ) AS OperSumm_Partner
+
+                         -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price - vbChangePrice) AS NUMERIC (16, 2))
+                             END
+                            ) AS OperSumm_Partner_ChangePrice
+
+                        -- сумма по Контрагенту с учетом скидки для цены - с округлением до 2-х знаков !!!в валюте!!!
+                      , SUM (CASE WHEN tmpMI.CountForPrice <> 0
+                                       THEN CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                  ELSE CAST (tmpMI.OperCount_calc * (tmpMI.Price_Currency - vbChangePrice) AS NUMERIC (16, 2))
+                             END) AS OperSumm_Partner_ChangePrice_Currency                       
+                  FROM (SELECT tmpMI.GoodsId
+                             , tmpMI.GoodsKindId
+                            
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         -- так переводится в валюту zc_Enum_Currency_Basis
+                                         THEN CAST (tmpMI.Price * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                    ELSE tmpMI.Price
+                               END AS Price
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         -- так переводится в валюту zc_Enum_Currency_Basis
+                                         THEN CAST (tmpMI.Price_original * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END AS NUMERIC (16, 2))
+                                    ELSE tmpMI.Price_original
+                               END AS Price_original
+
+                             , CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis()
+                                         THEN tmpMI.Price
+                                    ELSE 0
+                               END AS Price_Currency
+
+                             , tmpMI.CountForPrice
+
+                               -- очень важное кол-во, для него расчет сумм
+                             , tmpMI.OperCount_calc
+
+                               -- кол-во Partner (!!!без тары с ц=0!!!)
+                             , CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     AND tmpMI.Price = 0
+                                         THEN 0
+                                    ELSE tmpMI.OperCount_Partner
+                               END AS OperCount_Partner
+
+                        FROM tmpMI_real AS tmpMI
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                  ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                       ) AS tmpMI
+                ) AS _tmp_real
+                )
+
+     SELECT tmpCalc1.OperSumm_MVAT
+          , tmpCalc1.OperSumm_PVAT
+          , tmpCalc1.OperSumm_Partner
+          , tmpCalc1.OperSumm_Partner_Currency
+          , tmpCalc2.OperSumm_MVAT_real            
+          , tmpCalc2.OperSumm_PVAT_real            
+          , tmpCalc2.OperSumm_Partner_real         
+          , tmpCalc2.OperSumm_Partner_Currency_real
+     FROM tmpCalc1  
+         LEFT JOIN tmpCalc2 ON 1=1 
+                
+                
+          ) 
+          AS _tmp;
 
      -- !!!меняется значение - переводится в валюту zc_Enum_Currency_Basis!!! - !!!нельзя что б переводился в строчной части!!!
      IF vbCurrencyDocumentId <> zc_Enum_Currency_Basis() AND vbParValue <> 0
      THEN
          vbOperSumm_Partner:= CAST (vbOperSumm_Currency * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
+         vbOperSumm_Partner_real:= CAST (vbOperSumm_Currency_real * vbCurrencyValue / vbParValue AS NUMERIC (16, 2));
          
-         vbOperSumm_PVAT_original:= vbOperSumm_Partner;
          IF vbDiscountPercent = 0 AND vbExtraChargesPercent = 0
-         THEN vbOperSumm_PVAT:= vbOperSumm_Partner;
+         THEN 
+             vbOperSumm_PVAT:= vbOperSumm_Partner;
+             vbOperSumm_PVAT_real:= vbOperSumm_Partner_real;
          END IF;
          IF vbVATPercent = 0
-         THEN vbOperSumm_MVAT:= vbOperSumm_Partner;
-         END IF;
+         THEN 
+             vbOperSumm_MVAT:= vbOperSumm_Partner;
+             vbOperSumm_MVAT_real:= vbOperSumm_Partner_real;
+         END IF; 
+         
+         
      END IF;
 
      -- Тест
@@ -554,12 +714,9 @@ BEGIN
       -- Результат
     RETURN QUERY
 
-     SELECT vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner ;
-     --
-     --IF inMovementId = 24935207
-     --THEN
-     --    RAISE EXCEPTION 'Ошибка.<%>  %', FALSE /*vbIsNPP_calc*/, vbOperSumm_MVAT;
-     --END IF;
+     SELECT vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner
+          , vbOperSumm_MVAT_real, vbOperSumm_PVAT_real, vbOperSumm_Partner_real
+     ;
 
 
      -- Сохранили свойство <Итого сумма по накладной (без НДС)>1
@@ -591,5 +748,7 @@ $BODY$
  15.08.24         *
 */
 -- тест
--- 
-SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28765855) 
+--SELECT * from lpSelect_MovementFloat_TotalSumm_Sale(28785530 ) 
+
+--  SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28786822) 
+--  SELECT * from lpSelect_MovementFloat_TotalSumm_Sale (28765855) 

@@ -266,6 +266,8 @@ type
     isPartionCell_Close_22_ch4: TcxGridDBColumn;
     isErased_ch4: TcxGridDBColumn;
     cxGridLevel_PartionCell: TcxGridLevel;
+    MIProtocolOpenFormCell: TdsdOpenForm;
+    bbMIProtocolOpenFormCell: TdxBarButton;
   private
   public
   end;

@@ -342,14 +342,12 @@ object WeighingProductionForm: TWeighingProductionForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 307
     ClientRectBottom = 475
     ClientRectRight = 1289
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 283
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -357,7 +355,8 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 451
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 283
+        ExplicitLeft = -3
+        ExplicitTop = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -813,8 +812,6 @@ object WeighingProductionForm: TWeighingProductionForm
     object cxTabSheetPartionCell: TcxTabSheet
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1071#1095#1077#1081#1082#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
       ImageIndex = 1
-      ExplicitLeft = 80
-      ExplicitTop = 40
       object cxGrid_PartionCell: TcxGrid
         Left = 0
         Top = 0
@@ -823,8 +820,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1186
-        ExplicitHeight = 516
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -1935,6 +1930,10 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbMIProtocolOpenFormCell'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -2015,6 +2014,10 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object bbPrintStikerKVK: TdxBarButton
       Action = actPrintStikerKVK
+      Category = 0
+    end
+    object bbMIProtocolOpenFormCell: TdxBarButton
+      Action = MIProtocolOpenFormCell
       Category = 0
     end
   end
@@ -2246,8 +2249,41 @@ object WeighingProductionForm: TWeighingProductionForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object MIProtocolOpenFormCell: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetPartionCell
+      MoveParams = <>
+      Enabled = False
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'> '#1103#1095'.'#1086#1090#1073'.'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PartionCellCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object MovementItemProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
