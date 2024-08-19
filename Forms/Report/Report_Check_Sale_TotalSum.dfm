@@ -242,6 +242,14 @@ inherited Report_Check_Sale_TotalSumForm: TReport_Check_Sale_TotalSumForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object CurrencyDocumentName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072' ('#1094#1077#1085#1072')'
+            DataBinding.FieldName = 'CurrencyDocumentName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 54
+          end
           object VATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'

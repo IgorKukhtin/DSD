@@ -46,6 +46,9 @@ $BODY$
     
     DECLARE vbPartneFromId Integer;
 BEGIN
+
+     RETURN;
+
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= lpGetUserBySession (inSession);
