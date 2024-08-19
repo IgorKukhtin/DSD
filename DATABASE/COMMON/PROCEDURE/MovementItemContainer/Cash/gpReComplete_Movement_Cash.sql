@@ -38,4 +38,4 @@ END;$BODY$
 -- тест
 -- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpReComplete_Movement_Cash (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
