@@ -118,6 +118,10 @@ BEGIN
                            SELECT tmpMI.GoodsId                          AS GoodsId
                                 , tmpMI.GoodsKindId                      AS GoodsKindId
                                 , SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
+                                , SUM (tmpMI.AmountIn)                   AS AmountIn
+                                , SUM (tmpMI.AmountOut)                  AS AmountOut
+                                , SUM (tmpMI.AmountP)                    AS AmountP
+                                , SUM (tmpMI.AmountPU_in)                AS AmountPU_in
                            FROM (SELECT MIContainer.ObjectId_Analyzer                  AS GoodsId
                                       , CASE -- !!!временно захардкодил!!!
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
@@ -126,6 +130,10 @@ BEGIN
                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (MIContainer.Amount) AS Amount
+                                      , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
+                                      , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
+                                      , 0 AS AmountP
+                                      , 0 AS AmountPU_in
                                  FROM MovementItemContainer AS MIContainer
                                  WHERE MIContainer.OperDate   = vbOperDate
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
@@ -148,7 +156,19 @@ BEGIN
                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (MIContainer.Amount) AS Amount
+                                     
+                                      , 0 AS AmountIn
+                                      , 0 AS AmountOut
+                                      , SUM (CASE WHEN MovementBoolean_Peresort.ValueData = TRUE THEN MIContainer.Amount ELSE 0 END) AS AmountP
+                                      , SUM (CASE WHEN MovementBoolean_Peresort.ValueData = FALSE
+                                                   AND COALESCE (MIContainer.Amount,0) > 0
+                                                   THEN MIContainer.Amount
+                                                  ELSE 0
+                                             END) AS AmountPU_in
                                  FROM MovementItemContainer AS MIContainer
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                                ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                               AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
                                  WHERE MIContainer.OperDate   = vbOperDate
                                    AND MIContainer.DescId     = zc_MIContainer_Count()
                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
@@ -172,6 +192,7 @@ BEGIN
                             GROUP BY tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
                           )
+
           , tmpRemains AS (SELECT Container.ObjectId     AS GoodsId
                                 , CLO_Unit.ObjectId      AS UnitId
                                 , SUM (Container.Amount) AS Amount
@@ -198,6 +219,8 @@ BEGIN
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_Scale.ValueData   AS GoodsName_old
+           , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData ELSE '' END :: TVarChar AS GoodsName_new
+           , Object_GoodsGroup.ValueData          AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , Object_GoodsKind.Id                  AS GoodsKindId
@@ -214,7 +237,11 @@ BEGIN
 
            , tmpMI.Amount           :: TFloat AS Amount           -- Заказ на склад
            , tmpMI.AmountSecond     :: TFloat AS AmountSecond     -- Дозаказ на склад
-           , tmpMI_Send.Amount      :: TFloat AS AmountSend       -- Приход за "сегодня"
+           , tmpMI_Send.Amount      :: TFloat AS AmountSend_old       -- Приход за "сегодня"  
+           , tmpMI_Send.AmountIn    :: TFloat AS AmountSend
+           , tmpMI_Send.AmountOut   :: TFloat AS AmountSendOut
+           , tmpMI_Send.AmountP     :: TFloat AS AmountP
+           , tmpMI_Send.AmountPU_in :: TFloat AS AmountPU_in
 
            , CASE WHEN tmpMI.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - COALESCE (tmpMI_Send.Amount, 0) ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
 
@@ -243,11 +270,21 @@ BEGIN
            , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
            , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
 
-           , tmpMI.isErased
+           , tmpMI.isErased   
+           
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
 
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
+           , SUM (COALESCE (CASE WHEN (tmpMI.AmountRemains + tmpMI_Send.Amount) < (tmpMI.AmountPartner)
+                                      THEN (tmpMI.AmountPartner - tmpMI.AmountRemains - tmpMI_Send.Amount)
+                                 ELSE 0
+                            END
+                            ,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData)                                               AS PrintGroup_Scan_Pack
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id)                              AS PrintPage_Scan              
+                    
        FROM _tmpMI_master AS tmpMI
             LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpMI.GoodsId
-                                AND tmpMI_Send.GoodsKindId = tmpMI.GoodsKindId
+                                AND COALESCE (tmpMI_Send.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
 
             LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = tmpMI.ReceiptId
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
@@ -296,6 +333,8 @@ BEGIN
                                                                      ELSE 8439 -- Участок мясного сырья
                                                                 END
 
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
       UNION ALL
        SELECT
              0 :: Integer                         AS Id
@@ -303,6 +342,8 @@ BEGIN
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
            , ObjectString_Goods_Scale.ValueData   AS GoodsName_old
+           , CASE WHEN ObjectString_Goods_Scale.ValueData <> '' THEN Object_Goods.ValueData ELSE '' END :: TVarChar AS GoodsName_new 
+           , Object_GoodsGroup.ValueData          AS GoodsGroupName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , 0  :: Integer                        AS GoodsKindId
@@ -319,7 +360,11 @@ BEGIN
 
            , 0                 :: TFloat AS Amount           -- Заказ на склад
            , 0                 :: TFloat AS AmountSecond     -- Дозаказ на склад
-           , tmpMI_Send.Amount :: TFloat AS AmountSend       -- Приход за "сегодня"
+           , tmpMI_Send.Amount :: TFloat AS AmountSend_old       -- Приход за "сегодня"
+           , tmpMI_Send.AmountIn    :: TFloat AS AmountSend
+           , tmpMI_Send.AmountOut   :: TFloat AS AmountSendOut
+           , tmpMI_Send.AmountP     :: TFloat AS AmountP
+           , tmpMI_Send.AmountPU_in :: TFloat AS AmountPU_in
 
            , 0 :: TFloat AS Amount_calc  -- Расчетный заказ
 
@@ -342,10 +387,21 @@ BEGIN
            , zc_Color_GreenL() :: Integer AS ColorB_AmountPartner    -- $00B6EAAA
            , zc_Color_Yelow()  :: Integer AS ColorB_AmountPrognoz    -- $008FF8F2 9435378
 
-           , FALSE :: Boolean AS isErased
+           , FALSE :: Boolean AS isErased 
 
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) AS IdBarCode
+
+           , 0 AS PrintGroup_Scan
+           , 0 AS PrintGroup_Scan_Pack
+           , 0 AS PrintPage_Scan
        FROM tmpRemains
-            LEFT JOIN (SELECT tmpMI_Send.GoodsId, SUM (tmpMI_Send.Amount) AS Amount FROM tmpMI_Send GROUP BY tmpMI_Send.GoodsId
+            LEFT JOIN (SELECT tmpMI_Send.GoodsId
+                            , SUM (tmpMI_Send.Amount)      AS Amount
+                            , SUM (tmpMI_Send.AmountIn)    AS AmountIn
+                            , SUM (tmpMI_Send.AmountOut)   AS AmountOut
+                            , SUM (tmpMI_Send.AmountP)     AS AmountP
+                            , SUM (tmpMI_Send.AmountPU_in) AS AmountPU_in
+                       FROM tmpMI_Send GROUP BY tmpMI_Send.GoodsId
                       ) AS tmpMI_Send
                         ON tmpMI_Send.GoodsId = tmpRemains.GoodsId
 
@@ -373,7 +429,8 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
                                  ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                                AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent() 
+           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
       ;
        RETURN NEXT Cursor1;
@@ -386,6 +443,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.08.24         *
  27.06.15                                        *
 */
 

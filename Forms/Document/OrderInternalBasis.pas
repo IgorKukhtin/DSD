@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TOrderInternalBasisForm = class(TAncestorDocumentForm)
@@ -98,6 +98,17 @@ type
     actPrintScan: TdsdPrintAction;
     AmountPartnerNext: TcxGridDBColumn;
     GoodsName_old: TcxGridDBColumn;
+    actPrintScanGrid: TdsdPrintAction;
+    IdBarCode: TcxGridDBColumn;
+    bbPrintScanGrid: TdxBarButton;
+    PrintGroup_Scan: TcxGridDBColumn;
+    PrintPage_Scan: TcxGridDBColumn;
+    PrintGroup_Scan_Pack: TcxGridDBColumn;
+    spGetbyPrint: TdsdStoredProc;
+    GoodsName_new: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    actPrintGrid: TdsdPrintAction;
+    bbPrintGrid: TdxBarButton;
   private
     { Private declarations }
   public

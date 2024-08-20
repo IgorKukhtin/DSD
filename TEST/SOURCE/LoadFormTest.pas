@@ -1232,7 +1232,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_OrderInternalPackRemainsForm');
   exit;
   //
-   }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
@@ -1241,19 +1241,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalChildForm');
 
 
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalPackJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalPackJournalForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalBasisJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalBasisJournalForm');
-  }
+
 end;
 
 
