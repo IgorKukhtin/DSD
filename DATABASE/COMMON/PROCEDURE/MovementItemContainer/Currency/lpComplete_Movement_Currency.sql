@@ -110,7 +110,10 @@ BEGIN
         -- Расчет Remains и запись его в zc_MI_Child
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), tmp.MovementItemId, tmp.ContainerId)
         FROM
-       (SELECT lpInsertUpdate_MovementItem (COALESCE (MovementItem.Id, 0), zc_MI_Child(), COALESCE (tmpSumm.ObjectId, MovementItem.ObjectId), inMovementId, COALESCE (tmpSumm.OperSumm, 0), NULL) AS MovementItemId
+       (SELECT lpInsertUpdate_MovementItem (COALESCE (MovementItem.Id, 0), zc_MI_Child(), COALESCE (tmpSumm.ObjectId, MovementItem.ObjectId), inMovementId
+                                          , COALESCE (tmpSumm.OperSumm, 0)
+                                          , NULL
+                                           ) AS MovementItemId
              , COALESCE (tmpSumm.ContainerId, MovementItem.ContainerId) AS ContainerId
         FROM -- существующие элементы
              (SELECT MovementItem.Id, MovementItem.ObjectId, MIFloat_ContainerId.ValueData AS ContainerId
@@ -130,13 +133,14 @@ BEGIN
                                     , tmpContainer.AccountId
                                     , tmpContainer.ObjectId
                                     , CAST ((tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0))
-                                             -- так переводится в валюту баланса
+                                             -- так переводится в валюту баланса - ГРН
                                            * CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END
                                       AS NUMERIC (16, 2)) AS OperSumm
                                FROM (SELECT Container.ParentId                       AS ContainerId
                                           , ContainerLinkObject_Currency.ContainerId AS ContainerId_Currency
                                           , Container.ObjectId                       AS AccountId
                                           , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
+                                          , ContainerLinkObject_Cash.ObjectId        AS CashId
                                           , Container.Amount
                                      FROM ContainerLinkObject AS ContainerLinkObject_Currency
                                           INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
@@ -181,13 +185,22 @@ BEGIN
                                         OR (COALESCE (ContainerLinkObject_Juridical.ObjectId, 0) = 0
                                         AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0)   = 0
                                            ))
+                                           
+                                       -- последний день месяца для Кассы
+                                       AND ((ContainerLinkObject_Cash.ObjectId > 0 AND vbOperDate = DATE_TRUNC ('MONTH', vbOperDate))
+                                         OR ContainerLinkObject_Cash.ContainerId IS NULL
+                                           )
+                                       AND ((ContainerLinkObject_Partner.ObjectId > 0 AND vbOperDate = DATE_TRUNC ('MONTH', vbOperDate))
+                                         OR ContainerLinkObject_Partner.ContainerId IS NULL
+                                         OR vbOperDate < '01.08.2024'
+                                           )
 
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                        AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                   AND MIContainer.OperDate >= vbOperDate
+                                                                   AND MIContainer.OperDate    >= vbOperDate
                                GROUP BY tmpContainer.ContainerId
                                       , tmpContainer.ContainerId_Currency
                                       , tmpContainer.AccountId
@@ -203,6 +216,7 @@ BEGIN
                                FROM (SELECT ContainerLinkObject_Currency.ContainerId
                                           , Container.ObjectId AS AccountId
                                           , COALESCE (ContainerLinkObject_Cash.ObjectId, COALESCE (ContainerLinkObject_BankAccount.ObjectId, COALESCE (ContainerLinkObject_Partner.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, 0)))) AS ObjectId
+                                          , ContainerLinkObject_Cash.ObjectId AS CashId
                                           , Container.Amount
                                      FROM ContainerLinkObject AS ContainerLinkObject_Currency
                                           INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
@@ -249,13 +263,17 @@ BEGIN
                                         OR (COALESCE (ContainerLinkObject_Juridical.ObjectId, 0) = 0
                                         AND COALESCE (ContainerLinkObject_Partner.ObjectId, 0)   = 0
                                            ))
+                                       -- последний день месяца для Кассы
+                                       AND ((ContainerLinkObject_Cash.ObjectId > 0 AND vbOperDate = DATE_TRUNC ('MONTH', vbOperDate))
+                                         OR ContainerLinkObject_Cash.ContainerId IS NULL
+                                           )
 
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                        AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                   AND MIContainer.OperDate >= vbOperDate
+                                                                   AND MIContainer.OperDate    >= vbOperDate
                                GROUP BY tmpContainer.ContainerId
                                       , tmpContainer.AccountId
                                       , tmpContainer.ObjectId
@@ -357,8 +375,20 @@ BEGIN
                           )
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.Id     ELSE 0 END AS ObjectId
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.DescId ELSE 0 END AS ObjectDescId
+             , CASE -- Касса Киев + 
+                    WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    --
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.Id
+                    ELSE 0
+               END AS ObjectId
+
+             , CASE -- Касса Киев + 
+                    WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    --
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.DescId
+                    ELSE 0
+               END AS ObjectDescId
+
              , -1 * _tmpItem.OperSumm
              , _tmpItem.MovementItemId
 
@@ -367,8 +397,17 @@ BEGIN
              , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 0 ELSE _tmpItem.ObjectId END AS ObjectIntId_Analyzer
              , 0 AS AccountGroupId
                -- сформируем позже
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_AccountDirection_40800() ELSE 0 END AS AccountDirectionId -- Курсовая разница
-             , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_Account_40801()          ELSE 0 END AS AccountId          -- Курсовая разница
+             , CASE WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    --
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_AccountDirection_40800()  -- Курсовая разница
+                    ELSE 0
+               END AS AccountDirectionId
+
+             , CASE WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    --
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_Account_40801()           -- Курсовая разница
+                    ELSE 0
+               END AS AccountId
 
                -- Группы ОПиУ: не используется
              , 0 AS ProfitLossGroupId
@@ -447,3 +486,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpComplete_Movement_Currency (inMovementId:= 10154, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpReComplete_Movement_Currency (28780605 , zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
