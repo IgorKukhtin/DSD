@@ -252,6 +252,13 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object isEtiketka: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEtiketka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end
@@ -613,8 +620,8 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 136
-    Top = 163
+    Left = 120
+    Top = 171
   end
   inherited BarManager: TdxBarManager
     Left = 224

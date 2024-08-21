@@ -59,6 +59,7 @@ type
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
     isPeresort: TcxGridDBColumn;
+    isEtiketka: TcxGridDBColumn;
   private
     { Private declarations }
   public

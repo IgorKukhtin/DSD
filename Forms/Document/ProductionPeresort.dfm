@@ -21,6 +21,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
+        ExplicitLeft = 3
+        ExplicitTop = 3
         ExplicitWidth = 1128
         ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -468,6 +470,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       Left = 477
       Top = 5
       Caption = #1050#1086#1084#1091
+    end
+    object cbisEtiketka: TcxCheckBox
+      Left = 477
+      Top = 63
+      Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 148
     end
   end
   object cxLabel19: TcxLabel [2]
@@ -1019,6 +1029,21 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end>
       isShowModal = True
     end
+    object actUpdate_Etiketka: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Etiketka
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Etiketka
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Top = 432
@@ -1130,6 +1155,18 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Etiketka'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1142,7 +1179,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1187,6 +1224,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     end
     object bbPartionGoodsAssetChoiceForm: TdxBarButton
       Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
+    object bbUpdate_Etiketka: TdxBarButton
+      Action = actUpdate_Etiketka
       Category = 0
     end
   end
@@ -1364,9 +1405,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'isEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -2177,5 +2219,37 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     PackSize = 1
     Left = 971
     Top = 258
+  end
+  object spUpdate_Etiketka: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProductionUnion_Etiketka'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 236
   end
 end

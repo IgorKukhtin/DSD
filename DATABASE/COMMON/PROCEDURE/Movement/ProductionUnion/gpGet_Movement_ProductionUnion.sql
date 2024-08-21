@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Order Integer, InvNumber_Order TVarChar
              , isPeresort Boolean
              , isClosed Boolean
+             , isEtiketka Boolean
                )
 AS
 $BODY$
@@ -65,7 +66,8 @@ BEGIN
              , 0                                              AS MovementId_Order
              , '' :: TVarChar                                 AS InvNumber_Order
              , FALSE  :: Boolean                              AS isPeresort
-             , FALSE  :: Boolean                              AS isClosed
+             , FALSE  :: Boolean                              AS isClosed 
+             , FALSE  :: Boolean                              AS isEtiketka
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -97,7 +99,8 @@ BEGIN
          , ('π ' || Movement_Order.InvNumber || ' ÓÚ ' || Movement_Order.OperDate  :: Date :: TVarChar) :: TVarChar AS InvNumber_Order
          
          , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
-         , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed
+         , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed  
+         , COALESCE (MovementBoolean_Etiketka.ValueData, False) :: Boolean AS isEtiketka
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -132,6 +135,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_Closed
                                     ON MovementBoolean_Closed.MovementId = Movement.Id
                                    AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_Etiketka
+                                    ON MovementBoolean_Etiketka.MovementId = Movement.Id
+                                   AND MovementBoolean_Etiketka.DescId = zc_MovementBoolean_Etiketka()
 
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
@@ -168,6 +175,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.08.23         * 
  30.10.23         *
  29.03.22         * isClosed
  31.05.17         *

@@ -229,6 +229,13 @@ inherited ProductionPeresortJournalForm: TProductionPeresortJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
+          object isEtiketka: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEtiketka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end

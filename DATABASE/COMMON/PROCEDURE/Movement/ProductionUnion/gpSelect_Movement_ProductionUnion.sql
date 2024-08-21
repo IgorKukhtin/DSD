@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Order Integer, InvNumber_Order_Full TVarChar
              , isPeresort Boolean
              , isClosed Boolean
+             , isEtiketka Boolean
               )
 AS
 $BODY$
@@ -91,6 +92,7 @@ BEGIN
            
            , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
            , COALESCE (MovementBoolean_Closed.ValueData, False)   :: Boolean AS isClosed
+           , COALESCE (MovementBoolean_Etiketka.ValueData, False) :: Boolean AS isEtiketka
 
      FROM (SELECT Movement.id
            FROM tmpStatus
@@ -162,6 +164,10 @@ BEGIN
                                     ON MovementBoolean_Closed.MovementId = Movement.Id
                                    AND MovementBoolean_Closed.DescId = zc_MovementBoolean_Closed()
 
+          LEFT JOIN MovementBoolean AS MovementBoolean_Etiketka
+                                    ON MovementBoolean_Etiketka.MovementId = Movement.Id
+                                   AND MovementBoolean_Etiketka.DescId = zc_MovementBoolean_Etiketka()
+
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id
                                 AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -189,6 +195,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.08.23         * 
  29.03.22         * isClosed
  17.02.20         * SubjectDoc
  31.05.17         * add Movement_Order

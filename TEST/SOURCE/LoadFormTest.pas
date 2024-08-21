@@ -1956,11 +1956,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
-  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
-  exit;
-  }
+  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
   //exit;
@@ -1970,7 +1970,7 @@ begin
   exit;
 
   // 11,12,14 Инна
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   //exit;
@@ -1978,7 +1978,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-  }
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
 
