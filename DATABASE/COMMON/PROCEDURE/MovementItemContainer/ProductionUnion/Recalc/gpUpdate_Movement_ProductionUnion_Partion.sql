@@ -14,11 +14,20 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Partion());
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnion_Partion());
+    vbUserId:= lpGetUserBySession (inSession);
 
     --
     -- IF EXTRACT (MONTH FROM inStartDate) IN (2, 3) THEN RETURN; END IF;
+
+    -- !!!Временно для Акций!!!
+    IF inEndDate = CURRENT_DATE - INTERVAL '1 DAY' AND inFromId = 8447
+    THEN
+        -- Реальная таблица
+        PERFORM zfSelect_Word_Split (inSep:= ',', inIsPromo:= TRUE, inUserId:= vbUserId);
+    END IF;
+
 
     --
     IF 1=1 -- EXTRACT (MONTH FROM inStartDate) IN (2)
