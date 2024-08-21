@@ -21,8 +21,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
-        ExplicitLeft = 3
-        ExplicitTop = 3
+        ExplicitLeft = 488
+        ExplicitTop = -8
         ExplicitWidth = 1128
         ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -60,6 +60,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_et
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -103,6 +108,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_et
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -397,6 +407,40 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object GoodsChildCode_et: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsChildCode_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsChildName_et: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsChildName_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsKindChildName_et: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsKindChildName_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_et: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' '
+            DataBinding.FieldName = 'Amount_et'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

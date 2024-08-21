@@ -597,7 +597,8 @@ BEGIN
                                              , inIsTaxExit              := MIBoolean_TaxExit.ValueData
                                               ) AS GroupNumber
 
-            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto
+            , COALESCE(MIBoolean_isAuto.ValueData, False)  AS isAuto 
+            , COALESCE (MIBoolean_Etiketka.ValueData, False) ::Boolean AS isEtiketka
             , MovementItem.isErased             AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -619,8 +620,12 @@ BEGIN
                                            ON MIBoolean_TaxExit.MovementItemId =  MovementItem.Id
                                           AND MIBoolean_TaxExit.DescId = zc_MIBoolean_TaxExit()
              LEFT JOIN MovementItemBoolean AS MIBoolean_WeightMain
-                                           ON MIBoolean_WeightMain.MovementItemId =  MovementItem.Id
+                                           ON MIBoolean_WeightMain.MovementItemId = MovementItem.Id
                                           AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
+ 
+             LEFT JOIN MovementItemBoolean AS MIBoolean_Etiketka
+                                           ON MIBoolean_Etiketka.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_Etiketka.DescId = zc_MIBoolean_Etiketka()
 
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
