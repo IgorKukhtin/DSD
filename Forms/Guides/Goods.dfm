@@ -103,6 +103,15 @@ object GoodsForm: TGoodsForm
         Options.Editing = False
         Width = 100
       end
+      object GoodsGroupDirectionName: TcxGridDBColumn
+        Caption = #1040#1085#1072#1083#1080#1090'. '#1075#1088'. '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'GoodsGroupDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        Options.Editing = False
+        Width = 104
+      end
       object GoodsTagName: TcxGridDBColumn
         Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsTagName'

@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 601
-  ClientWidth = 338
+  ClientHeight = 373
+  ClientWidth = 643
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 66
-    Top = 573
+    Left = 374
+    Top = 333
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 206
-    Top = 573
+    Left = 514
+    Top = 333
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -72,13 +72,13 @@
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxLabel2: TcxLabel
-    Left = 253
-    Top = 314
+    Left = 557
+    Top = 5
     Caption = #1042#1077#1089
   end
   object ceWeight: TcxCurrencyEdit
-    Left = 253
-    Top = 332
+    Left = 557
+    Top = 23
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
@@ -162,13 +162,13 @@
     Width = 154
   end
   object cxLabel8: TcxLabel
-    Left = 39
-    Top = 314
+    Left = 343
+    Top = 5
     Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
   end
   object edFuel: TcxButtonEdit
-    Left = 40
-    Top = 332
+    Left = 344
+    Top = 23
     Properties.Buttons = <
       item
         Default = True
@@ -196,13 +196,13 @@
     Width = 129
   end
   object cxLabel10: TcxLabel
-    Left = 40
-    Top = 359
+    Left = 343
+    Top = 46
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1090#1086#1074#1072#1088#1072
   end
   object ceGoodsTag: TcxButtonEdit
-    Left = 40
-    Top = 376
+    Left = 344
+    Top = 63
     Enabled = False
     Properties.Buttons = <
       item
@@ -232,13 +232,13 @@
     Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
   end
   object cxLabel12: TcxLabel
-    Left = 40
-    Top = 454
+    Left = 344
+    Top = 150
     Caption = #1044#1072#1090#1072' '#1089' :'
   end
   object edStartDate: TcxDateEdit
-    Left = 87
-    Top = 453
+    Left = 391
+    Top = 149
     EditValue = 42005d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -246,13 +246,13 @@
     Width = 92
   end
   object cxLabel13: TcxLabel
-    Left = 40
-    Top = 404
+    Left = 344
+    Top = 90
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
   end
   object edPriceList: TcxButtonEdit
-    Left = 40
-    Top = 422
+    Left = 344
+    Top = 107
     Properties.Buttons = <
       item
         Default = True
@@ -262,8 +262,8 @@
     Width = 186
   end
   object cePrice: TcxCurrencyEdit
-    Left = 230
-    Top = 453
+    Left = 534
+    Top = 149
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -272,31 +272,31 @@
     Width = 83
   end
   object cxLabel14: TcxLabel
-    Left = 189
-    Top = 454
+    Left = 493
+    Top = 150
     Caption = #1062#1077#1085#1072' :'
   end
   object cxLabel15: TcxLabel
-    Left = 253
-    Top = 359
+    Left = 557
+    Top = 46
     Caption = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080
   end
   object edWeightTare: TcxCurrencyEdit
-    Left = 253
-    Top = 376
+    Left = 557
+    Top = 63
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 33
     Width = 60
   end
   object cxLabel16: TcxLabel
-    Left = 238
-    Top = 405
+    Left = 542
+    Top = 90
     Caption = #1050#1086#1083'. '#1076#1083#1103' '#1042#1077#1089#1072
   end
   object edCountForWeight: TcxCurrencyEdit
-    Left = 238
-    Top = 422
+    Left = 542
+    Top = 107
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 35
@@ -341,13 +341,13 @@
     Width = 190
   end
   object cxLabel20: TcxLabel
-    Left = 39
-    Top = 523
+    Left = 343
+    Top = 222
     Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '
   end
   object edGoodsGroupProperty: TcxButtonEdit
-    Left = 39
-    Top = 542
+    Left = 343
+    Top = 242
     Properties.Buttons = <
       item
         Default = True
@@ -358,13 +358,13 @@
     Width = 273
   end
   object cxLabel21: TcxLabel
-    Left = 39
-    Top = 481
+    Left = 343
+    Top = 176
     Caption = #1043#1088#1091#1087#1087#1072' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1086#1075#1086' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
   end
   object cxButtonEdit1: TcxButtonEdit
-    Left = 39
-    Top = 499
+    Left = 343
+    Top = 195
     Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1072' '#1059#1088#1086#1074#1077#1085#1100' 1'
     ParentShowHint = False
     Properties.Buttons = <
@@ -375,6 +375,23 @@
     Properties.ReadOnly = True
     ShowHint = True
     TabOrder = 45
+    Width = 273
+  end
+  object cxLabel22: TcxLabel
+    Left = 343
+    Top = 269
+    Caption = #1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+  end
+  object edGoodsGroupDirection: TcxButtonEdit
+    Left = 343
+    Top = 289
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 47
     Width = 273
   end
   object ActionList: TActionList
@@ -552,6 +569,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsGroupDirectionId'
+        Value = Null
+        Component = GuidesGoodsGroupDirection
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inPriceListId'
         Value = '0'
         Component = PriceListGuides
@@ -584,8 +609,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 232
-    Top = 48
+    Left = 8
+    Top = 57
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -859,10 +884,25 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupDirectionId'
+        Value = Null
+        Component = GuidesGoodsGroupDirection
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsGroupDirectionName'
+        Value = Null
+        Component = GuidesGoodsGroupDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 16
-    Top = 136
+    Left = 8
+    Top = 112
   end
   object dsdMeasureGuides: TdsdGuides
     KeyField = 'Id'
@@ -957,8 +997,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 160
-    Top = 331
+    Left = 464
+    Top = 22
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 16
@@ -1015,8 +1055,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 40
-    Top = 368
+    Left = 400
+    Top = 59
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1116,8 +1156,8 @@
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 322
+    Left = 408
+    Top = 13
   end
   object GoodsGroupAnalystGuides: TdsdGuides
     KeyField = 'Id'
@@ -1173,8 +1213,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 144
-    Top = 408
+    Left = 448
+    Top = 99
   end
   object GuidesGoodsGroupProperty: TdsdGuides
     KeyField = 'Id'
@@ -1220,8 +1260,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 190
-    Top = 483
+    Left = 494
+    Top = 174
   end
   object GuidesGoodsGroupPropertyParent: TdsdGuides
     KeyField = 'Id'
@@ -1251,7 +1291,37 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 198
-    Top = 525
+    Left = 502
+    Top = 216
+  end
+  object GuidesGoodsGroupDirection: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsGroupDirection
+    FormNameParam.Value = 'TGoodsGroupDirectionForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsGroupDirectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoodsGroupDirection
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoodsGroupDirection
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 478
+    Top = 288
   end
 end

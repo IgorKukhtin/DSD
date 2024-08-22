@@ -10,7 +10,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, Integer, Integer, Integer,Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TFloat, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
@@ -31,7 +32,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inFuelId              Integer   , -- Вид топлива
     IN inGoodsTagId          Integer   , -- ***Признак товара
     IN inGoodsGroupAnalystId Integer   , -- ***Группа аналитики
-    IN inGoodsGroupPropertyId Integer   , --Аналитический классификатор 
+    IN inGoodsGroupPropertyId  Integer   , --Аналитический классификатор 
+    IN inGoodsGroupDirectionId Integer   , --Аналитическая группа Направление
     IN inPriceListId         Integer   , -- прайс
     IN inStartDate           TDateTime , -- дата прайса
     --IN inDate_BUH            TDateTime , -- Дата до которой действует Название товара(бухг.)
@@ -148,8 +150,11 @@ BEGIN
    -- сохранили связь с ***<Группа аналитики>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupAnalyst(), ioId, inGoodsGroupAnalystId); 
    -- сохранили связь с < Аналитический классификатор>              
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupProperty(), ioId, inGoodsGroupPropertyId);
-
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupProperty(), ioId, inGoodsGroupPropertyId); 
+   
+   -- сохранили связь с <>              
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroupDirection(), ioId, inGoodsGroupDirectionId);
+   
    -- изменили свойство ***<Производственная площадка>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsPlatform(), ioId, vbGoodsPlatformId);
    
@@ -186,6 +191,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.08.24         *
  19.12.23         *
  30.06.22         *
  04.08.21         *
