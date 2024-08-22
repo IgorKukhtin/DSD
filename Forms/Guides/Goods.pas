@@ -180,6 +180,10 @@ type
     mactLoad_Scale: TMultiAction;
     bbLoad_Scale: TdxBarButton;
     GoodsGroupDirectionName: TcxGridDBColumn;
+    spGetImportSettingId_Direct: TdsdStoredProc;
+    actImportSettingId_Direct: TdsdExecStoredProc;
+    macStartLoad_Direct: TMultiAction;
+    bbStartLoad_Direct: TdxBarButton;
   private
     { Private declarations }
   public
