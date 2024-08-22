@@ -5327,6 +5327,14 @@
 				<Form>Report_Check_Sale_TotalSumDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupDirection.pas">
+				<Form>GoodsGroupDirectionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupDirectionEdit.pas">
+				<Form>GoodsGroupDirectionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

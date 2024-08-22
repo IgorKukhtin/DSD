@@ -25,7 +25,6 @@ object PartnerForm: TPartnerForm
     Height = 371
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 1011
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -850,7 +849,6 @@ object PartnerForm: TPartnerForm
     Height = 35
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 1011
     object edRetail: TcxButtonEdit
       Left = 389
       Top = 6
@@ -934,7 +932,7 @@ object PartnerForm: TPartnerForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 176
   end
   object cxLabel18: TcxLabel
@@ -3225,8 +3223,8 @@ object PartnerForm: TPartnerForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 848
-    Top = 328
+    Left = 864
+    Top = 312
   end
   object spUpdatePersonalTrade: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Partner_PersonalParam'
