@@ -223,7 +223,7 @@ BEGIN
 
 
      -- Если учет по ячейкам - РАСХОД
-     IF (vbOperDate >= '01.06.2024'
+     IF (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
         AND zc_Unit_RK() = vbUnitId
         )
      THEN
@@ -794,6 +794,7 @@ BEGIN
                                 WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
                                                                         , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                                          )
+                                  AND _tmpItem.OperCount_start > 0
                                ) AS tmpItem_start
                           GROUP BY tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                          ) AS tmpItem_start
