@@ -2037,6 +2037,15 @@ BEGIN
          END IF;*/
 
 
+         IF EXISTS (SELECT 1 FROM lpInsertUpdate_MovementFloat_TotalSumm_check_err() AS lp WHERE lp.MovementId = inMovementId)
+         THEN
+             SELECT lp.S1, lp.S2, lp.S2
+                   INTO vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner
+             FROM lpInsertUpdate_MovementFloat_TotalSumm_check_err() AS lp
+             WHERE lp.MovementId = inMovementId;
+
+         END IF;
+     
          -- Сохранили свойство <Итого сумма по накладной (без НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
          -- Сохранили свойство <Итого сумма по накладной (с НДС)>
