@@ -2,6 +2,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
   ExplicitWidth = 1144
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -738,6 +739,14 @@ inherited ProductionUnionForm: TProductionUnionForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object colChildisEtiketka: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isEtiketka'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
       inherited cxBottomSplitter: TcxSplitter
@@ -854,6 +863,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       Properties.ReadOnly = True
       TabOrder = 18
       Width = 175
+    end
+    object cbisEtiketka: TcxCheckBox
+      Left = 1039
+      Top = 23
+      Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 19
+      Width = 148
     end
   end
   object edIsAuto: TcxCheckBox [2]
@@ -2055,6 +2072,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         Component = GuidesSubjectDoc
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isEtiketka'
+        Value = Null
+        Component = cbisEtiketka
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 328

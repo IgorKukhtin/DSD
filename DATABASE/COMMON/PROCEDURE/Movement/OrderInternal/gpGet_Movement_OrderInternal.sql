@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderInternal(
     IN inToId              Integer ,   -- кому
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, IdBarCode TVarChar , InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateStart TDateTime, OperDateEnd TDateTime
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , DayCount TFloat
@@ -44,7 +44,8 @@ BEGIN
                                         WHERE inFromId = 8451 AND inToId = 8455
                                         )
          SELECT
-               0 AS Id
+               0 AS Id  
+             , ''::TVarChar AS IdBarCode
              , CAST (NEXTVAL ('movement_orderinternal_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
@@ -93,7 +94,8 @@ BEGIN
                                       WHERE inFromId = 8451 AND inToId = 8455
                                       )
        SELECT
-             Movement.Id                                        AS Id
+             Movement.Id                                        AS Id 
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) ::TVarChar AS IdBarCode
            , Movement.InvNumber                                 AS InvNumber
            , Movement.OperDate                                  AS OperDate
            , Object_Status.ObjectCode                           AS StatusCode

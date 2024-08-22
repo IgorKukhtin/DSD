@@ -669,6 +669,8 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitTop = 338
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -793,6 +795,15 @@ object ReceiptForm: TReceiptForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1047#1072#1074#1080#1089#1080#1090' '#1086#1090' '#1082#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
+        Options.Editing = False
+        Width = 80
+      end
+      object isEtiketkaChild: TcxGridDBColumn
+        Caption = #1055#1088'-'#1082' '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+        DataBinding.FieldName = 'isEtiketka'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
         Options.Editing = False
         Width = 80
       end
@@ -1223,6 +1234,10 @@ object ReceiptForm: TReceiptForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateEtiketka'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1445,6 +1460,10 @@ object ReceiptForm: TReceiptForm
     end
     object bbStartLoad_ReceiptCost: TdxBarButton
       Action = macStartLoad_ReceiptCost
+      Category = 0
+    end
+    object bbUpdateEtiketka: TdxBarButton
+      Action = actUpdateEtiketka
       Category = 0
     end
   end
@@ -1869,6 +1888,19 @@ object ReceiptForm: TReceiptForm
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
       Hint = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1088#1077#1094#1077#1087#1090#1091#1088#1091
       ImageIndex = 77
+    end
+    object actUpdateEtiketka: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateisEtiketka
+      StoredProcList = <
+        item
+          StoredProc = spUpdateisEtiketka
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072'"  '#1044#1072'/'#1053#1077#1090'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1088#1080#1079#1085#1072#1082' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072'"  '#1044#1072'/'#1053#1077#1090'"'
+      ImageIndex = 79
     end
     object actUpdateReal: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2777,8 +2809,8 @@ object ReceiptForm: TReceiptForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 11
+    Left = 416
+    Top = 65523
   end
   object spUpdateDisabled_yes: TdsdStoredProc
     StoredProcName = 'gpUpdateObject_isBoolean'
@@ -2939,7 +2971,7 @@ object ReceiptForm: TReceiptForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 850
+    Left = 842
     Top = 453
   end
   object spGetImportSettingId: TdsdStoredProc
@@ -2983,5 +3015,42 @@ object ReceiptForm: TReceiptForm
       end>
     Left = 752
     Top = 200
+  end
+  object spUpdateisEtiketka: TdsdStoredProc
+    StoredProcName = 'gpUpdateObject_isBoolean'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioParam'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'isEtiketka'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDesc'
+        Value = 'zc_ObjectBoolean_ReceiptChild_Etiketka'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 938
+    Top = 445
   end
 end

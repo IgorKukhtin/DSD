@@ -132,6 +132,7 @@ type
     mactUpdate_AmountNext_out: TMultiAction;
     bbUpdate_AmountNext_out: TdxBarButton;
     bbsUpdate: TdxBarSubItem;
+    cbisEtiketka: TcxCheckBox;
   private
     { Private declarations }
   public

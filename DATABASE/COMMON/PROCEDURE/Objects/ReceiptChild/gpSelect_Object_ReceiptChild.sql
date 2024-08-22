@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Value TFloat, ValueWeight TFloat, ValueWeight_calc TFloat,
-               isWeightMain Boolean, isTaxExit Boolean, isWeightTotal Boolean, isReal Boolean,
+               isWeightMain Boolean, isTaxExit Boolean, isWeightTotal Boolean, isReal Boolean, isEtiketka Boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
                ReceiptId Integer, ReceiptName TVarChar, 
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
@@ -45,6 +45,7 @@ BEGIN
          , COALESCE (tmpReceiptChild.isTaxExit,     FALSE) :: Boolean AS isTaxExit
          , COALESCE (tmpReceiptChild.isWeightTotal, FALSE) :: Boolean AS isWeightTotal 
          , COALESCE (tmpReceiptChild.isReal, FALSE)        :: Boolean AS isReal
+         , COALESCE (tmpReceiptChild.isEtiketka, FALSE)    :: Boolean AS isEtiketka
 
          , ObjectDate_StartDate.ValueData     AS StartDate
          , ObjectDate_EndDate.ValueData       AS EndDate
@@ -131,6 +132,7 @@ BEGIN
                 , ObjectBoolean_WeightMain.ValueData AS isWeightMain
                 , ObjectBoolean_TaxExit.ValueData    AS isTaxExit
                 , ObjectBoolean_Real.ValueData       AS isReal
+                , ObjectBoolean_Etiketka.ValueData ::Boolean AS isEtiketka
 
                 , Object_InfoMoney_View.InfoMoneyCode
                 , Object_InfoMoney_View.InfoMoneyGroupName
@@ -166,7 +168,9 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_Real
                                         ON ObjectBoolean_Real.ObjectId = Object_ReceiptChild.Id
                                        AND ObjectBoolean_Real.DescId = zc_ObjectBoolean_ReceiptChild_Real()
-
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Etiketka
+                                        ON ObjectBoolean_Etiketka.ObjectId = Object_ReceiptChild.Id
+                                       AND ObjectBoolean_Etiketka.DescId = zc_ObjectBoolean_ReceiptChild_Etiketka()
                 LEFT JOIN ObjectFloat AS ObjectFloat_Value
                                       ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
                                      AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
@@ -274,6 +278,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.08.24         * isEtiketka
  27.09.22         * isReal
  14.06.21         *
  05.03.19         * 

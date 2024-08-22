@@ -22,7 +22,8 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit,
   cxCurrencyEdit, ExternalLoad, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, dsdGuides;
+  cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, dsdGuides,
+  dsdCommon;
 
 type
   TGoodsForm = class(TParentForm)
@@ -178,6 +179,11 @@ type
     actGetImportSettingId_Scale: TdsdExecStoredProc;
     mactLoad_Scale: TMultiAction;
     bbLoad_Scale: TdxBarButton;
+    GoodsGroupDirectionName: TcxGridDBColumn;
+    spGetImportSettingId_Direct: TdsdStoredProc;
+    actImportSettingId_Direct: TdsdExecStoredProc;
+    macStartLoad_Direct: TMultiAction;
+    bbStartLoad_Direct: TdxBarButton;
   private
     { Private declarations }
   public

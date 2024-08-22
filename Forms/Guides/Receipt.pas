@@ -212,6 +212,9 @@ type
     bbStartLoad_ReceiptCost: TdxBarButton;
     cbSave: TcxCheckBox;
     cbDel: TcxCheckBox;
+    spUpdateisEtiketka: TdsdStoredProc;
+    actUpdateEtiketka: TdsdExecStoredProc;
+    bbUpdateEtiketka: TdxBarButton;
   private
     { Private declarations }
   public

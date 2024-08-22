@@ -1521,7 +1521,9 @@ uses
   Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm},
   Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm},
   Report_Check_Sale_TotalSum in '..\..\Forms\Report\Report_Check_Sale_TotalSum.pas' {Report_Check_Sale_TotalSumForm: TParentForm},
-  Report_Check_Sale_TotalSumDialog in '..\..\Forms\Report\Report_Check_Sale_TotalSumDialog.pas' {Report_Check_Sale_TotalSumDialogForm: TParentForm};
+  Report_Check_Sale_TotalSumDialog in '..\..\Forms\Report\Report_Check_Sale_TotalSumDialog.pas' {Report_Check_Sale_TotalSumDialogForm: TParentForm},
+  GoodsGroupDirection in '..\..\Forms\Guides\GoodsGroupDirection.pas' {GoodsGroupDirectionForm: TParentForm},
+  GoodsGroupDirectionEdit in '..\..\Forms\Guides\GoodsGroupDirectionEdit.pas' {GoodsGroupDirectionEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

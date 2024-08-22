@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ShortName TVarChar, Name
              , GroupStatId Integer, GroupStatName TVarChar
              , GoodsGroupAnalystId Integer, GoodsGroupAnalystName TVarChar
              , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
+             , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar
              , AssetId Integer, AssetName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , TradeMarkName TVarChar
@@ -86,7 +87,10 @@ BEGIN
             
             , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
             , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
-
+             
+            , Object_GoodsGroupDirection.Id        AS GoodsGroupDirectionId
+            , Object_GoodsGroupDirection.ValueData AS GoodsGroupDirectionName
+            
             , Object_Asset.Id        AS AssetId
             , Object_Asset.ValueData AS AssetName
 
@@ -205,6 +209,11 @@ BEGIN
                                  AND ObjectLink_Goods_Asset.DescId = zc_ObjectLink_Goods_Asset()
              LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectLink_Goods_Asset.ChildObjectId
 
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
+                                  ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
+             LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = ObjectLink_Goods_GoodsGroupDirection.ChildObjectId
+
              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                    ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                   AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
@@ -320,6 +329,9 @@ BEGIN
             , 0                   :: Integer  AS GoodsGroupPropertyId_Parent
             , ''                  :: TVarChar AS GoodsGroupPropertyName_Parent
 
+            , 0                   :: Integer  AS GoodsGroupDirectionId
+            , ''                  :: TVarChar AS GoodsGroupDirectionName
+
             , 0                   :: Integer  AS AssetId
             , ''                  :: TVarChar AS AssetName
 
@@ -368,6 +380,7 @@ ALTER FUNCTION gpSelect_Object_Goods (Boolean, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.08.24         *
  17.01.24         *
  19.12.23         *
  22.05.23         *

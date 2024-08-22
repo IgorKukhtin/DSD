@@ -240,7 +240,12 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReceiptChild_Real() RETURNS Integer 
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_ReceiptChild(), 'zc_ObjectBoolean_ReceiptChild_Real', 'Зависит от кол-во факт' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptChild_Real');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_ReceiptChild_Etiketka() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptChild_Etiketka'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ReceiptChild(), 'zc_ObjectBoolean_ReceiptChild_Etiketka', 'признак "Переклейка"' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_ReceiptChild_Etiketka');
 
+
+ 
 
 CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Receipt_Main() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Receipt_Main'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
@@ -1494,6 +1499,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 20.08.24         * zc_ObjectBoolean_ReceiptChild_Etiketka
  13.06.24         * zc_ObjectBoolean_StickerProperty_NormInDays_not
  29.05.24         * zc_ObjectBoolean_Cash_notCurrencyDiff
  16.02.24         * zc_ObjectBoolean_GoodsByGoodsKind_PackLimit

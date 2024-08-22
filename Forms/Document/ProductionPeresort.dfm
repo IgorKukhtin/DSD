@@ -21,6 +21,8 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       inherited cxGrid: TcxGrid
         Width = 1128
         Height = 352
+        ExplicitLeft = 488
+        ExplicitTop = -8
         ExplicitWidth = 1128
         ExplicitHeight = 352
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -58,6 +60,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountIn
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_et
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -101,6 +108,11 @@ inherited ProductionPeresortForm: TProductionPeresortForm
               Format = 'C'#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_et
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -396,6 +408,40 @@ inherited ProductionPeresortForm: TProductionPeresortForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
+          object GoodsChildCode_et: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsChildCode_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsChildName_et: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsChildName_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object GoodsKindChildName_et: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+            DataBinding.FieldName = 'GoodsKindChildName_et'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object Amount_et: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1088#1072#1089#1093#1086#1076') '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' '
+            DataBinding.FieldName = 'Amount_et'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -468,6 +514,14 @@ inherited ProductionPeresortForm: TProductionPeresortForm
       Left = 477
       Top = 5
       Caption = #1050#1086#1084#1091
+    end
+    object cbisEtiketka: TcxCheckBox
+      Left = 477
+      Top = 63
+      Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')'
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 148
     end
   end
   object cxLabel19: TcxLabel [2]
@@ -1019,6 +1073,21 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end>
       isShowModal = True
     end
+    object actUpdate_Etiketka: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Etiketka
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Etiketka
+        end
+        item
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Top = 432
@@ -1130,6 +1199,18 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Etiketka'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -1142,7 +1223,7 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1187,6 +1268,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     end
     object bbPartionGoodsAssetChoiceForm: TdxBarButton
       Action = actPartionGoodsAssetChoiceForm
+      Category = 0
+    end
+    object bbUpdate_Etiketka: TdxBarButton
+      Action = actUpdate_Etiketka
       Category = 0
     end
   end
@@ -1364,9 +1449,10 @@ inherited ProductionPeresortForm: TProductionPeresortForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptUnknown
+        Name = 'isEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -2177,5 +2263,37 @@ inherited ProductionPeresortForm: TProductionPeresortForm
     PackSize = 1
     Left = 971
     Top = 258
+  end
+  object spUpdate_Etiketka: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProductionUnion_Etiketka'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outEtiketka'
+        Value = False
+        Component = cbisEtiketka
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 656
+    Top = 236
   end
 end
