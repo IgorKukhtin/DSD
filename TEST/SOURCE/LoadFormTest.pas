@@ -1966,12 +1966,12 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  exit;
-  {
+  {exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   exit;
@@ -1980,6 +1980,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
 
