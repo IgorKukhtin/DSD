@@ -192,13 +192,17 @@ BEGIN
             , MovementItem.ObjectId                  AS GoodsId
           --, COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
             , MovementItem.Amount                    AS Amount
-       FROM  MovementItem 
-       WHERE MovementItem.ParentId IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster WHERE _tmpListMaster.MovementId <> 0)
-         --AND MovementItem.MovementId IN ( _tmpListMaster.MovementId
-          AND MovementItem.DescId     = zc_MI_Child()
-          AND MovementItem.isErased   = FALSE   
-          AND (MovementItem.ObjectId = inGoodsId_child OR COALESCE (inGoodsId_child,0) = 0)
-          ;
+       FROM _tmpListMaster
+            INNER JOIN MovementItem ON MovementItem.ParentId   = _tmpListMaster.MovementItemId
+                                   AND MovementItem.MovementId = _tmpListMaster.MovementId
+                                   AND MovementItem.DescId     = zc_MI_Child()
+                                   AND MovementItem.isErased   = FALSE  
+          --LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+          --                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+          --                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+       WHERE _tmpListMaster.MovementId <> 0
+         AND (MovementItem.ObjectId = inGoodsId_child OR COALESCE (inGoodsId_child,0) = 0)
+;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpMI_Child_two;
@@ -285,7 +289,7 @@ BEGIN
                      SELECT tmp.GroupNumber AS GroupNum
                      FROM (SELECT DISTINCT tmpData.GroupNumber FROM tmpData) AS tmp
                      WHERE inGroupNum = 3
-                     AND tmp.GroupNumber NOT IN (1,2,3,4,5,6,7) 
+                     AND tmp.GroupNumber NOT IN (1,2,3,4,5,6,7)
                     )
        -- Результат - пр-во расход - строчная часть
        SELECT tmpData.GoodsId
@@ -294,7 +298,8 @@ BEGIN
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode
             , tmpData.GoodsKindName
-            , _tmpRes_cur1.GoodsId AS GoodsId_master
+            , _tmpRes_cur1.GoodsId AS GoodsId_master 
+            , 0                    AS GoodsKindId_Complete_master
             , _tmpRes_cur1.OperDate
               -- итого - Кол-во факт
             , SUM (COALESCE (tmpData.Amount, 0)) AS Amount
@@ -305,7 +310,7 @@ BEGIN
             , _tmpRes_cur1.GoodsGroupName
        FROM tmpData
             INNER JOIN _tmpRes_cur1  ON _tmpRes_cur1.MovementItemId = tmpData.ParentId
-            INNER JOIN tmpGroupPrint ON (tmpGroupPrint.GroupNum = tmpData.GroupNumber OR COALESCE (inGoodsId_child,0) <> 0)  
+            INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum      = tmpData.GroupNumber
        WHERE COALESCE (inGoodsId_child,0) = 0
        GROUP BY tmpData.GoodsId
               , tmpData.GoodsCode
@@ -316,15 +321,16 @@ BEGIN
               , _tmpRes_cur1.GoodsId
               , _tmpRes_cur1.OperDate
               , _tmpRes_cur1.CountReceipt_goods
-              , _tmpRes_cur1.GoodsGroupName 
-       UNION
+              , _tmpRes_cur1.GoodsGroupName
+    UNION
        SELECT tmpData.GoodsId
             , tmpData.GoodsCode
             , tmpData.GoodsName
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode
             , tmpData.GoodsKindName
-            , _tmpRes_cur1.GoodsId AS GoodsId_master
+            , _tmpRes_cur1.GoodsId              AS GoodsId_master 
+            , _tmpRes_cur1.GoodsKindId_Complete AS GoodsKindId_Complete_master
             , _tmpRes_cur1.OperDate
               -- итого - Кол-во факт
             , SUM (COALESCE (tmpData.Amount, 0)) AS Amount
@@ -345,7 +351,8 @@ BEGIN
               , _tmpRes_cur1.GoodsId
               , _tmpRes_cur1.OperDate
               , _tmpRes_cur1.CountReceipt_goods
-              , _tmpRes_cur1.GoodsGroupName
+              , _tmpRes_cur1.GoodsGroupName 
+              , _tmpRes_cur1.GoodsKindId_Complete
       ;
 
     -- Результат - 1
@@ -387,9 +394,7 @@ BEGIN
            -- Кол-во Целых замесов
          , tmp_Res.CuterCount_1 :: TFloat AS CuterCount_1
            -- Хвост от Целых замесов
-         , tmp_Res.CuterCount_0 :: TFloat AS CuterCount_0 
-          -- факт - итого Кол-во пр-во расход
-         , tmp_Res.Amount :: TFloat AS Amount_out
+         , tmp_Res.CuterCount_0 :: TFloat AS CuterCount_0
 
     FROM (
           SELECT tmpRes_cur1.OperDate
@@ -427,6 +432,7 @@ BEGIN
                      , _tmpRes_cur1.GoodsCode
                      , _tmpRes_cur1.GoodsName   
                      , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END          AS GoodsKindName
+                     , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete ELSE 0 END    AS GoodsKindId_Complete
                      , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END AS GoodsKindName_Complete
                      , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END            AS MeasureName
                      , _tmpRes_cur1.CountReceipt_goods
@@ -441,15 +447,16 @@ BEGIN
                        , _tmpRes_cur1.CountReceipt_goods
                        , _tmpRes_cur1.GoodsGroupName  
                        , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName ELSE '' END
+                       , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindId_Complete ELSE 0 END
                        , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
                        , CASE WHEN COALESCE (inGoodsId_child,0) <> 0 THEN _tmpRes_cur1.MeasureName ELSE '' END
                 HAVING SUM (_tmpRes_cur1.CuterCount) > 0
                ) AS tmpRes_cur1
                -- пр-во расход - строчная часть - уже собрана
                INNER JOIN _tmpRes_cur2 AS tmpRes_cur2
-                                       ON tmpRes_cur2.GoodsId_master = tmpRes_cur1.GoodsId
+                                       ON tmpRes_cur2.GoodsId_master = tmpRes_cur1.GoodsId 
+                                      AND tmpRes_cur2.GoodsKindId_Complete_master = tmpRes_cur1.GoodsKindId_Complete
                                       AND tmpRes_cur2.OperDate       = tmpRes_cur1.OperDate
-                                  
 
           ) AS tmp_Res
           LEFT JOIN zfCalc_DayOfWeekName (tmp_Res.OperDate) AS tmpWeekDay ON 1=1    
@@ -474,5 +481,5 @@ $BODY$
 -- тест
 --
 --
---select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.08.2024')::TDateTime , inEndDate := ('23.08.2024')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsId_child:=6850, inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
+--select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
 --FETCH ALL "<unnamed portal 6>";
