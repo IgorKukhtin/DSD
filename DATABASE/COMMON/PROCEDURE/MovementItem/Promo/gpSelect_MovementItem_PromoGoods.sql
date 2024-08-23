@@ -15,7 +15,10 @@ RETURNS TABLE (
       , GoodsCode           Integer --код объекта  <товар>
       , GoodsName           TVarChar --наименование объекта <товар>
       , MeasureName         TVarChar --Единица измерения
-      , TradeMarkName       TVarChar --Торговая марка
+      , TradeMarkId Integer, TradeMarkName       TVarChar --Торговая марка 
+      , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
+      , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar
+
       , Amount              TFloat --% скидки на товар
       , MainDiscount        TFloat -- Общая скидка для покупателя, %
       , Price               TFloat --Цена в прайсе c учетом скидки по договору
@@ -64,7 +67,7 @@ RETURNS TABLE (
       , GoodsKindCompleteId    Integer --ИД обьекта <Вид товара (примечание)>
       , GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
       , GoodsKindName_List     TVarChar --Наименование обьекта <Вид товара (справочно)>
-      , Comment                TVarChar --Комментарий
+      , Comment                TVarChar --Комментарий       
       , isErased               Boolean  --удален
 )
 AS
@@ -140,7 +143,15 @@ BEGIN
              , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
              , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
              , Object_Measure.ValueData               AS Measure             --Единица измерения
-             , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
+             , Object_TradeMark.Id                    AS TradeMarkId
+             , Object_TradeMark.ValueData                AS TradeMark           --Торговая марка   
+             , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+             , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+             , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+             , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
+             , Object_GoodsGroupDirection.Id             AS GoodsGroupDirectionId
+             , Object_GoodsGroupDirection.ValueData      AS GoodsGroupDirectionName
+            
              , MovementItem.Amount                    AS Amount              --% скидки на товар
              , MIFloat_MainDiscount.ValueData ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
              , MIFloat_Price.ValueData                AS Price               --Цена в прайсе с учетом скидки по договору
@@ -329,18 +340,46 @@ BEGIN
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure
                               ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                  ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
-                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-             LEFT JOIN Object AS Object_TradeMark
-                              ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
 
              LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
                                          ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
                                         AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
-
              LEFT JOIN tmpGoodsKind_list ON tmpGoodsKind_list.GoodsId = MovementItem.ObjectId
+
+             --
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
+                                              ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (MILinkObject_TradeMark.ObjectId, ObjectLink_Goods_TradeMark.ChildObjectId)
+             --
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
+                                              ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+             LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, ObjectLink_Goods_GoodsGroupProperty.ChildObjectId)
+             --                                
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupDirection
+                                              ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsGroupDirection.DescId = zc_MILinkObject_GoodsGroupDirection() 
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
+                                  ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
+             LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
         WHERE MovementItem.DescId = zc_MI_Master()
           AND MovementItem.MovementId = inMovementId

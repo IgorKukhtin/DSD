@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxButtonEdit;
+  cxButtonEdit, dsdCommon;
 
 type
   TGoodsGroupProperty_ObjectForm = class(TParentForm)

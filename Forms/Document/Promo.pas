@@ -548,6 +548,9 @@ type
     ccChangePrice: TcxGridDBColumn;
     cxLabel26: TcxLabel;
     edServiceDate: TcxDateEdit;
+    actChoiceTradeMark: TOpenChoiceForm;
+    actChoiceGoodsGroupProperty: TOpenChoiceForm;
+    actChoiceGoodsGroupDirection: TOpenChoiceForm;
   private
     { Private declarations }
   public

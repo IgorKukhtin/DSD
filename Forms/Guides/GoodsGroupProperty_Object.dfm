@@ -3,7 +3,7 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1081' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' ('#1059#1088#1086#1074#1077#1085#1100' 1)>'
   ClientHeight = 302
-  ClientWidth = 562
+  ClientWidth = 559
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,13 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 562
+    Width = 559
     Height = 276
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 608
-    ExplicitHeight = 285
+    ExplicitWidth = 562
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -510,6 +509,7 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 48
     Top = 216

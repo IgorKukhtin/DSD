@@ -669,8 +669,6 @@ object ReceiptForm: TReceiptForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitTop = 338
     object cxGridDBTableViewReceiptChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -799,11 +797,11 @@ object ReceiptForm: TReceiptForm
         Width = 80
       end
       object isEtiketkaChild: TcxGridDBColumn
-        Caption = #1055#1088'-'#1082' '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+        Caption = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
         DataBinding.FieldName = 'isEtiketka'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1055#1088#1080#1079#1085#1072#1082' '#1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
+        HeaderHint = #1055#1077#1088#1077#1082#1083#1077#1081#1082#1072
         Options.Editing = False
         Width = 80
       end

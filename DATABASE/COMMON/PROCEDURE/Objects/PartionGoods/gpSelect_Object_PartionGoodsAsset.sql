@@ -199,10 +199,10 @@ BEGIN
                               AND ObjectLink_Storage_Unit.DescId = zc_ObjectLink_Storage_Unit()
           LEFT JOIN Object AS Object_Unit_Storage ON Object_Unit_Storage.Id = ObjectLink_Storage_Unit.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                               ON ObjectLink_Unit_Branch.ObjectId = Object_Unit_Storage.Id
-                              AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch_st
+                               ON ObjectLink_Unit_Branch_st.ObjectId = Object_Unit_Storage.Id
+                              AND ObjectLink_Unit_Branch_st.DescId = zc_ObjectLink_Unit_Branch()
+          LEFT JOIN Object AS Object_Branch_Storage ON Object_Branch_Storage.Id = ObjectLink_Unit_Branch_st.ChildObjectId
 
           -- модель
           LEFT JOIN ObjectLink AS ObjectLink_PartionModel

@@ -204,6 +204,9 @@ type
     actUpdate_AmountNext_out: TdsdUpdateDataSet;
     mactUpdate_AmountNext_out: TMultiAction;
     bbUpdate_AmountNext_out: TdxBarButton;
+    actPrintDays5: TdsdPrintAction;
+    bbPrintDays5: TdxBarButton;
+    spPrintDays5: TdsdStoredProc;
   private
     { Private declarations }
   public

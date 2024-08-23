@@ -10,7 +10,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
@@ -39,7 +40,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoGoods(
    OUT outGoodsKindName       TVarChar  , -- 
  INOUT ioGoodsKindCompleteId  Integer   , -- ИД обьекта <Вид товара (примечание)>
    OUT outGoodsKindCompleteName TVarChar, -- 
-    IN inComment              TVarChar  , -- Комментарий
+    IN inComment              TVarChar  , -- Комментарий     
+    IN inTradeMarkId                    Integer,  --Торговая марка 
+    IN inGoodsGroupPropertyId           Integer,
+    IN inGoodsGroupDirectionId          Integer,
+   OUT outTradeMarkName                 TVarChar, 
+   OUT outGoodsGroupPropertyName        TVarChar,     
+   OUT outGoodsGroupPropertyName_Parent TVarChar, 
+   OUT outGoodsGroupDirectionName       TVarChar, 
     IN inSession              TVarChar    -- сессия пользователя
 )
 AS
@@ -247,6 +255,9 @@ BEGIN
                                                   , inSummInMarket         := inSummInMarket
                                                   , inGoodsKindId          := ioGoodsKindId
                                                   , inGoodsKindCompleteId  := ioGoodsKindCompleteId
+                                                  , inTradeMarkId          := inTradeMarkId
+                                                  , inGoodsGroupPropertyId := inGoodsGroupPropertyId
+                                                  , inGoodsGroupDirectionId:= inGoodsGroupDirectionId
                                                   , inComment              := inComment
                                                   , inUserId               := vbUserId
                                                    );
@@ -277,6 +288,46 @@ BEGIN
     WHERE MILO_GoodsKindComplete.MovementItemId = ioId
       AND MILO_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete();
 
+    SELECT Object_TradeMark.ValueData                AS TradeMark  
+         , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+         , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
+         , Object_GoodsGroupDirection.ValueData      AS GoodsGroupDirectionName
+   INTO outTradeMarkName, outGoodsGroupPropertyName, outGoodsGroupPropertyName_Parent, outGoodsGroupDirectionName
+    FROM MovementItem
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
+                                              ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (MILinkObject_TradeMark.ObjectId, ObjectLink_Goods_TradeMark.ChildObjectId)
+             --
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
+                                              ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+             LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, ObjectLink_Goods_GoodsGroupProperty.ChildObjectId)
+             --                                
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupDirection
+                                              ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsGroupDirection.DescId = zc_MILinkObject_GoodsGroupDirection() 
+                                             AND COALESCE (MovementItem.ObjectId,0) = 0
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
+                                  ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
+             LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
+
+    WHERE MovementItem.Id = ioId;
 
 END;
 $BODY$
@@ -285,6 +336,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 23.08.24         *
  07.08.24         * 
  24.01.18         * inPriceTender
  28.11.17         * ioGoodsKindCompleteId
