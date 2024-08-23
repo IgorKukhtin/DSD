@@ -140,11 +140,11 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-  LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
+ { LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 
   LoadReportFromFile('Печать_ЯчеекОтбора_штрихкод', ReportPath + '\Справочники\Печать_ЯчеекОтбора_штрихкод.fr3');
   exit;
-   {
+
   LoadReportFromFile('Печать паспорта ячейки(строка)', ReportPath + '\Товарный Учет\Печать паспорта ячейки(строка).fr3');
   exit;
   LoadReportFromFile('Печать_ ЯчеекОтбора', ReportPath + '\Справочники\Печать_ ЯчеекОтбора.fr3');
@@ -504,8 +504,9 @@ begin
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   exit;
   LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
-
-   LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
+   }
+   LoadReportFromFile('Производство (по дням для сырья) в составе', ReportPath + '\Производство\Производство (по дням для сырья) в составе.fr3');
+   {LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
    //LoadReportFromFile('Производство (по дням для специй)', ReportPath + '\Производство\Производство (по дням для специй).fr3');
    //LoadReportFromFile('Производство (по дням для оболочки)', ReportPath + '\Производство\Производство (по дням для оболочки).fr3');
     exit;

@@ -4,7 +4,8 @@
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
@@ -27,7 +28,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoGoods(
     IN inSummOutMarket         TFloat    , --Сумма факт кредит(маркет бюджет)
     IN inSummInMarket          TFloat    , --Сумма факт дебет(маркет бюджет) 
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
-    IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>
+    IN inGoodsKindCompleteId   Integer   , --ИД обьекта <Вид товара (примечание)>  
+    IN inTradeMarkId                    Integer,  --Торговая марка 
+    IN inGoodsGroupPropertyId           Integer,
+    IN inGoodsGroupDirectionId          Integer,
     IN inComment               TVarChar  , --Комментарий
     IN inUserId                Integer     -- пользователь
 )
@@ -91,6 +95,16 @@ BEGIN
     -- сохранили связь с <Вид товара (примечание)> - может быть замена
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKindComplete(), ioId, CASE WHEN inGoodsKindId > 0 THEN inGoodsKindId ELSE inGoodsKindCompleteId END);
 
+    --если товар выбран для inGoodsGroupPropertyId, inGoodsGroupDirectionId, inTradeMarkId - сохраняем знач. NULL
+    --  а показываем свойства товара
+    
+    -- сохранили связь с <Вид товара>
+    PERFORM lpInsertUpdate_MovementemLinkObject (zc_MILinkObject_TradeMark(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inTradeMarkId ELSE NULL END);
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupProperty(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupPropertyId ELSE NULL END);
+    -- сохранили связь с <Вид товара>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsGroupDirection(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inGoodsGroupDirectionId ELSE NULL END);
+    
     -- сохранили <Комментарий>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
@@ -114,6 +128,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 23.08.24         *
  07.08.24         *
  22.10.20         * inTaxRetIn
  14.07.20         * inOperPriceList

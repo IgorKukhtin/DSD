@@ -4,8 +4,9 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print2 (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print2(
     IN inStartDate         TDateTime,
     IN inEndDate           TDateTime,
     IN inFromId            Integer,
@@ -442,5 +443,5 @@ $BODY$
 -- тест
 --
 --
---select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.08.2024')::TDateTime , inEndDate := ('23.08.2024')::TDateTime , inFromId := 8447 , inToId := 8447 , inGoodsId_child:=6850, inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
+--select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
 --FETCH ALL "<unnamed portal 6>";
