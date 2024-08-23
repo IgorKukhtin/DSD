@@ -473,18 +473,180 @@ BEGIN
      END IF;
 
 
+     -- !!!Важно: перед заполннением таблицы - количественные Child(расход)-элементы документа - расход этикетки!!!
+     IF EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Etiketka() AND MB.ValueData = TRUE)
+     THEN
+          PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Etiketka(), tmpMI.MovementItemId, TRUE)
+          FROM
+
+            (SELECT lpInsertUpdate_MI_ProductionUnion_Child (ioId               := tmpMI.MovementItemId
+                                                           , inMovementId       := inMovementId
+                                                           , inGoodsId          := tmpMI.GoodsId_child
+                                                           , inAmount           := tmpMI.OperCount
+                                                           , inParentId         := tmpMI.MovementItemId_parent
+                                                           , inPartionGoodsDate := NULL
+                                                           , inPartionGoods     := NULL
+                                                           , inPartNumber       := NULL
+                                                           , inModel            := NULL
+                                                           , inGoodsKindId      := tmpMI.GoodsKindId_child
+                                                           , inGoodsKindCompleteId := NULL
+                                                           , inStorageId        := NULL
+                                                           , inCount_onCount    := 0
+                                                           , inUserId           := inUserId
+                                                            ) AS MovementItemId
+             FROM (WITH tmpItem_child_all AS (SELECT MovementItem.Id                               AS MovementItemId
+                                                   , MovementItem.ParentId                         AS ParentId
+                                                   , MovementItem.ObjectId                         AS GoodsId
+                                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                                   , COALESCE (MIB_Etiketka.ValueData, FALSE)      AS isEtiketka
+                                              FROM _tmpItem_pr
+                                                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                                          AND MovementItem.DescId     = zc_MI_Child()
+                                                                          AND MovementItem.ParentId   = _tmpItem_pr.MovementItemId
+                                                                          AND MovementItem.isErased   = FALSE
+                                
+                                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                
+                                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                                    ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                                   AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+                                
+                                                   LEFT JOIN MovementItemBoolean AS MIB_Etiketka
+                                                                                 ON MIB_Etiketka.MovementItemId = MovementItem.Id
+                                                                                AND MIB_Etiketka.DescId         = zc_MIBoolean_Etiketka()
+                                             )
+                      , tmpItem_child AS (SELECT tmpItem_child_all.MovementItemId
+                                               , tmpItem_child_all.ParentId
+                                               , tmpItem_child_all.GoodsId
+                                               , tmpItem_child_all.GoodsKindId
+                                                 -- № п/п
+                                               , ROW_NUMBER() OVER (PARTITION BY tmpItem_child_all.ParentId, tmpItem_child_all.GoodsId, tmpItem_child_all.GoodsKindId) AS Ord
+                                          FROM tmpItem_child_all
+                                          WHERE tmpItem_child_all.isEtiketka = TRUE
+                                         )
+                    , tmpReceiptChild AS (SELECT Object_Receipt.Id AS ReceiptId
+                                               , tmpGoods.GoodsId
+                                               , tmpGoods.GoodsKindId
+                                               , ObjectLink_ReceiptChild_Goods.ChildObjectId     AS GoodsId_child
+                                               , ObjectLink_ReceiptChild_GoodsKind.ChildObjectId AS GoodsKindId_child
+                                               , ObjectFloat_Value_Receipt.ValueData             AS Value_Receipt
+                                               , ObjectFloat_Value.ValueData                     AS Value_ReceiptChild
+                                          FROM (SELECT DISTINCT _tmpItem_pr.GoodsId, _tmpItem_pr.GoodsKindId
+                                                FROM _tmpItem_pr
+                                               ) AS tmpGoods
+                                               INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                                     ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
+                                                                    AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                               -- Не удален
+                                               INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_Goods.ObjectId
+                                                                                  AND Object_Receipt.isErased = FALSE
+                                               INNER JOIN ObjectFloat AS ObjectFloat_Value_Receipt
+                                                                      ON ObjectFloat_Value_Receipt.ObjectId = Object_Receipt.Id
+                                                                     AND ObjectFloat_Value_Receipt.DescId = zc_ObjectFloat_Receipt_Value()
+                                                                     AND ObjectFloat_Value_Receipt.ValueData <> 0
+                                               -- Главный
+                                               INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                                        ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                                       AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                                       AND ObjectBoolean_Main.ValueData = TRUE
+                                               LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                                    ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                                   AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+          
+                                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
+                                                                    ON ObjectLink_ReceiptChild_Receipt.ChildObjectId = ObjectLink_Receipt_Goods.ObjectId
+                                                                   AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
+                                               -- Не удален
+                                               INNER JOIN Object AS Object_ReceiptChild ON Object_ReceiptChild.Id       = ObjectLink_ReceiptChild_Receipt.ObjectId
+                                                                                       AND Object_ReceiptChild.isErased = FALSE
+                                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
+                                                                    ON ObjectLink_ReceiptChild_Goods.ObjectId = Object_ReceiptChild.Id
+                                                                   AND ObjectLink_ReceiptChild_Goods.DescId = zc_ObjectLink_ReceiptChild_Goods()
+                                               LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_GoodsKind
+                                                                    ON ObjectLink_ReceiptChild_GoodsKind.ObjectId = Object_ReceiptChild.Id
+                                                                   AND ObjectLink_ReceiptChild_GoodsKind.DescId = zc_ObjectLink_ReceiptChild_GoodsKind()
+                                               INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                                                      ON ObjectFloat_Value.ObjectId = Object_ReceiptChild.Id
+                                                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
+                                                                     AND ObjectFloat_Value.ValueData <> 0
+          
+                                               -- Этикетка
+                                               INNER JOIN ObjectBoolean AS ObjectBoolean_Etiketka
+                                                                        ON ObjectBoolean_Etiketka.ObjectId  = Object_ReceiptChild.Id 
+                                                                       AND ObjectBoolean_Etiketka.DescId    = zc_ObjectBoolean_ReceiptChild_Etiketka()
+                                                                       AND ObjectBoolean_Etiketka.ValueData = TRUE
+          
+                                          WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
+                                         )
+
+               , tmpItem_ReceiptChild AS (SELECT _tmpItem_pr.MovementItemId AS MovementItemId_parent
+                                               , _tmpItem_pr.OperCount
+                                               , tmpReceiptChild.GoodsId_child
+                                               , tmpReceiptChild.GoodsKindId_child
+                                               , tmpReceiptChild.Value_Receipt
+                                               , tmpReceiptChild.Value_ReceiptChild
+                                          FROM _tmpItem_pr
+                                               INNER JOIN tmpReceiptChild ON tmpReceiptChild.GoodsId     = _tmpItem_pr.GoodsId
+                                                                         AND tmpReceiptChild.GoodsKindId = _tmpItem_pr.GoodsKindId
+                                         )
+                   --
+                   SELECT tmpItem_child.MovementItemId                                                  AS MovementItemId
+                        , COALESCE (tmpItem_child.ParentId, tmpItem_ReceiptChild.MovementItemId_parent) AS MovementItemId_parent
+                        , COALESCE (tmpItem_child.GoodsId, tmpItem_ReceiptChild.GoodsId_child)          AS GoodsId_child
+                        , COALESCE (tmpItem_child.GoodsKindId, tmpItem_ReceiptChild.GoodsKindId_child)  AS GoodsKindId_child
+                        , CASE WHEN COALESCE (tmpItem_child.Ord, 0) > 1 OR tmpItem_ReceiptChild.GoodsId_child IS NULL
+                                    THEN 0
+                               ELSE CAST (tmpItem_ReceiptChild.OperCount * tmpItem_ReceiptChild.Value_ReceiptChild / tmpItem_ReceiptChild.Value_Receipt AS NUMERIC (16, 0))
+                          END AS OperCount
+                   FROM tmpItem_ReceiptChild
+                        -- нашли здесь MovementItemId
+                        FULL JOIN tmpItem_child ON tmpItem_child.ParentId    = tmpItem_ReceiptChild.MovementItemId_parent
+                                               AND tmpItem_child.GoodsId     = tmpItem_ReceiptChild.GoodsId_child
+                                               AND tmpItem_child.GoodsKindId = tmpItem_ReceiptChild.GoodsKindId_child
+
+                  ) AS tmpMI
+                  ) AS tmpMI
+                 ;
+
+     ELSE
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= tmpMI.MovementItemId, inUserId:= inUserId)
+         FROM (WITH tmpItem_child_all AS (SELECT MovementItem.Id                               AS MovementItemId
+                                               , COALESCE (MIB_Etiketka.ValueData, FALSE)      AS isEtiketka
+                                          FROM _tmpItem_pr
+                                               INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                                                      AND MovementItem.DescId     = zc_MI_Child()
+                                                                      AND MovementItem.ParentId   = _tmpItem_pr.MovementItemId
+                                                                      AND MovementItem.isErased   = FALSE
+                                               LEFT JOIN MovementItemBoolean AS MIB_Etiketka
+                                                                             ON MIB_Etiketka.MovementItemId = MovementItem.Id
+                                                                            AND MIB_Etiketka.DescId         = zc_MIBoolean_Etiketka()
+                                         )
+                --
+                SELECT tmpItem_child_all.MovementItemId
+                FROM tmpItem_child_all
+                WHERE tmpItem_child_all.isEtiketka = TRUE
+              ) AS tmpMI
+              ;
+     END IF;
+
+
      -- заполняем таблицу - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-      INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
-                               , ContainerId_GoodsFrom, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
-                               , OperCount, OperCountCount
-                               , InfoMoneyDestinationId, InfoMoneyId
-                               , BusinessId_From
-                               , UnitId_Item, PartionGoodsId_container
-                               , isPartionCount, isPartionSumm
-                               , PartionGoodsId
-                               , isAsset_master, ObjectDescId
-                               , OperCount_start
-                               )
+     INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
+                              , ContainerId_GoodsFrom, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
+                              , OperCount, OperCountCount
+                              , InfoMoneyDestinationId, InfoMoneyId
+                              , BusinessId_From
+                              , UnitId_Item, PartionGoodsId_container
+                              , isPartionCount, isPartionSumm
+                              , PartionGoodsId
+                              , isAsset_master, ObjectDescId
+                              , OperCount_start
+                              )
         WITH tmpMI AS
              (SELECT MovementItem.ParentId AS MovementItemId_Parent
                    , MovementItem.Id AS MovementItemId
@@ -2178,6 +2340,7 @@ END IF;
                                      INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                            ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId
                                                           AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                                     -- Главный
                                      INNER JOIN ObjectBoolean AS ObjectBoolean_Main
                                                               ON ObjectBoolean_Main.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                                                              AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
