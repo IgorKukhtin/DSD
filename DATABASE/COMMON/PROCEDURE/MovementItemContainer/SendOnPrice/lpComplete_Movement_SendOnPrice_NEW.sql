@@ -179,9 +179,9 @@ BEGIN
      vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
                          OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_From = zc_Unit_RK()
-                         AND vbOperDate >= '01.06.2024'
+                         AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                             )
-                         OR (vbOperDate >= '01.06.2024'
+                         OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                          AND vbUnitId_From = zc_Unit_RK()
                             )
                            ;
@@ -221,6 +221,7 @@ BEGIN
                          , UnitId_To, MemberId_To, BranchId_To, AccountDirectionId_To, IsPartionDate_UnitTo, JuridicalId_Basis_To
                          , WhereObjectId_Analyzer_To, isTo_10900
                          , OperCount_start, OperCount_ChangePercent_start, OperCount_Partner_start
+                         , tmpOperSumm_PriceList_start, tmpOperSumm_Partner_start, tmpOperSumm_PartnerVirt_start
                           )
 
         WITH
@@ -244,7 +245,10 @@ BEGIN
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
 
+                  , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 0 END AS CountForPrice
                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price
+                  , COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) AS PriceListPrice
+
                     -- количество с остатка
                   , MovementItem.Amount AS OperCount
                     -- количество с учетом % скидки
@@ -252,16 +256,18 @@ BEGIN
                     -- количество у контрагента
                   , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS OperCount_Partner
 
-                    -- промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
-                  , COALESCE (CAST (MIFloat_AmountPartner.ValueData * COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList
-                    -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
+                    -- ***tmpOperSumm_PriceList_start - промежуточная сумма прайс-листа по Контрагенту - с округлением до 2-х знаков
+                  , COALESCE (CAST (MIFloat_AmountPartner.ValueData * COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) AS NUMERIC (16, 2)), 0) AS tmpOperSumm_PriceList_start
+
+                    -- ***tmpOperSumm_Partner_start - промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                   , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                  ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
-                    END AS tmpOperSumm_Partner
-                    -- промежуточная сумма для кол-во с уч. %ск.вес - с округлением до 2-х знаков
+                    END AS tmpOperSumm_Partner_start
+
+                    -- ***tmpOperSumm_PartnerVirt_start - промежуточная сумма для кол-во с уч. %ск.вес - с округлением до 2-х знаков
                   , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountChangePercent.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                  ELSE COALESCE (CAST (MIFloat_AmountChangePercent.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
-                    END AS tmpOperSumm_PartnerVirt
+                    END AS tmpOperSumm_PartnerVirt_start
 
                     -- Управленческие назначения
                   , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
@@ -791,7 +797,7 @@ BEGIN
             , 0 AS MIContainerId_To
 
               -- !!!или подбор партий - ContainerId_Goods !!!
-            , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_GoodsFrom
+            , _tmp.ContainerId_GoodsFrom
               --
             , 0 AS ContainerId_GoodsTo
 
@@ -805,19 +811,13 @@ BEGIN
             , _tmp.PartionGoodsDate
 
               -- количество с остатка - !!!или подбор партий!!!
-            , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
+            , _tmp.OperCount
+
               -- количество с учетом % скидки
-            , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                        THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
-                   ELSE COALESCE (tmpContainer.OperCount_ChangePercent, _tmp.OperCount_ChangePercent) + COALESCE (tmpContainer_diff.OperCount_ChangePercent, 0)
-              END AS OperCount_ChangePercent
+            , _tmp.OperCount_ChangePercent
 
               -- количество у контрагента
-            , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                        THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
-                        -- THEN COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
-                   ELSE COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
-              END AS OperCount_Partner
+            , _tmp.OperCount_Partner
 
               -- промежуточная сумма прайс-листа по Контрагенту !!! без скидки !!! - с округлением до 2-х знаков
             , _tmp.tmpOperSumm_PriceList
@@ -890,17 +890,18 @@ BEGIN
             , _tmp.InfoMoneyId
 
               -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
-            , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_From ELSE _tmp.BusinessId END AS BusinessId_From
+            , _tmp.BusinessId_From
               -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
-            , CASE WHEN _tmp.BusinessId = 0 THEN _tmp.BusinessId_To ELSE _tmp.BusinessId END AS BusinessId_To
+            , _tmp.BusinessId_To
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm
 
               -- !!!или подбор партий - PartionGoodsId !!!
-            , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_From
+            , _tmp.PartionGoodsId_From
+
               -- Партии товара, сформируем позже
-            , 0 AS PartionGoodsId_To
+            , _tmp.PartionGoodsId_To
 
             , _tmp.UnitId_To
             , _tmp.MemberId_To
@@ -909,27 +910,119 @@ BEGIN
             , _tmp.isPartionDate_UnitTo
 
             , _tmp.JuridicalId_Basis_To
-            , CASE WHEN _tmp.UnitId_To <> 0 THEN _tmp.UnitId_To WHEN _tmp.MemberId_To <> 0 THEN _tmp.MemberId_To END AS WhereObjectId_Analyzer_To
+            , _tmp.WhereObjectId_Analyzer_To
             , _tmp.isTo_10900
 
-            , _tmp.OperCount               AS OperCount_start
+            , _tmp.OperCount_start
+            , _tmp.OperCount_ChangePercent_start
+            , _tmp.OperCount_Partner_start
 
-            , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                        THEN _tmp.OperCount
-                   ELSE _tmp.OperCount_ChangePercent
-              END AS OperCount_ChangePercent_start
+            , _tmp.tmpOperSumm_PriceList_start, _tmp.tmpOperSumm_Partner_start, _tmp.tmpOperSumm_PartnerVirt_start
 
-            , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                        THEN _tmp.OperCount
-                   ELSE _tmp.OperCount_Partner
-              END AS OperCount_Partner_start
+        FROM (SELECT _tmp.MovementItemId
 
-        FROM tmpMI AS _tmp
-             LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
-             LEFT JOIN tmpContainer_diff ON tmpContainer_diff.MovementItemId = _tmp.MovementItemId
-                                        -- только одну позицию корректируем
-                                        AND tmpContainer.Ord_amount = 1
-                                       ;
+                     -- !!!или подбор партий - ContainerId_Goods !!!
+                   , COALESCE (tmpContainer.ContainerId, 0) AS ContainerId_GoodsFrom
+                     --
+                   , _tmp.GoodsId
+                   , _tmp.GoodsKindId
+                   , _tmp.AssetId
+                   , _tmp.PartionGoods
+                   , _tmp.PartionGoodsDate
+       
+                     -- количество с остатка - !!!или подбор партий!!!
+                   , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
+
+                     -- количество с учетом % скидки
+                   , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
+                          ELSE COALESCE (tmpContainer.OperCount_ChangePercent, _tmp.OperCount_ChangePercent) + COALESCE (tmpContainer_diff.OperCount_ChangePercent, 0)
+                     END AS OperCount_ChangePercent
+       
+                     -- количество у контрагента
+                   , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
+                               -- THEN COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                          ELSE COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                     END AS OperCount_Partner
+       
+
+                     -- 1.1.***tmpOperSumm_PriceList - промежуточная сумма прайс-листа по Контрагенту !!! без скидки !!! - с округлением до 2-х знаков
+                   , CAST (CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
+                                     -- THEN COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                                ELSE COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                           END
+                         * _tmp.PriceListPrice
+                           AS NUMERIC (16, 2)) AS tmpOperSumm_PriceList
+
+                     -- 1.2.***tmpOperSumm_Partner - промежуточная сумма по Контрагенту !!! без скидки !!! - с округлением до 2-х знаков
+                   , CAST (CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
+                                     -- THEN COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                                ELSE COALESCE (tmpContainer.OperCount_Partner, _tmp.OperCount_Partner) + COALESCE (tmpContainer_diff.OperCount_Partner, 0)
+                           END
+                         * _tmp.Price / _tmp.CountForPrice
+                           AS NUMERIC (16, 2)) AS tmpOperSumm_Partner
+
+                     -- 1.3.***tmpOperSumm_PartnerVirt - промежуточная сумма для кол-во с уч. %ск.вес !!! без скидки !!! - с округлением до 2-х знаков
+                   , CAST (CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                     THEN COALESCE (tmpContainer.Amount, _tmp.OperCount)
+                                ELSE COALESCE (tmpContainer.OperCount_ChangePercent, _tmp.OperCount_ChangePercent) + COALESCE (tmpContainer_diff.OperCount_ChangePercent, 0)
+                           END
+                         * _tmp.Price / _tmp.CountForPrice
+                           AS NUMERIC (16, 2)) AS tmpOperSumm_PartnerVirt
+
+
+                     -- Управленческие назначения
+                   , _tmp.InfoMoneyDestinationId
+                     -- Статьи назначения
+                   , _tmp.InfoMoneyId
+       
+                     -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
+                   , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_From ELSE _tmp.BusinessId END AS BusinessId_From
+                     -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
+                   , CASE WHEN _tmp.BusinessId = 0 THEN _tmp.BusinessId_To ELSE _tmp.BusinessId END AS BusinessId_To
+       
+                   , _tmp.isPartionCount
+                   , _tmp.isPartionSumm
+       
+                     -- !!!или подбор партий - PartionGoodsId !!!
+                   , COALESCE (tmpContainer.PartionGoodsId, 0) AS PartionGoodsId_From
+                     -- Партии товара, сформируем позже
+                   , 0 AS PartionGoodsId_To
+       
+                   , _tmp.UnitId_To
+                   , _tmp.MemberId_To
+                   , _tmp.BranchId_To
+                   , _tmp.AccountDirectionId_To  -- Аналитики счетов - направления !!!обрабатываются только для подразделения!!!
+                   , _tmp.isPartionDate_UnitTo
+       
+                   , _tmp.JuridicalId_Basis_To
+                   , CASE WHEN _tmp.UnitId_To <> 0 THEN _tmp.UnitId_To WHEN _tmp.MemberId_To <> 0 THEN _tmp.MemberId_To END AS WhereObjectId_Analyzer_To
+                   , _tmp.isTo_10900
+       
+                   , _tmp.OperCount               AS OperCount_start
+       
+                   , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               THEN _tmp.OperCount
+                          ELSE _tmp.OperCount_ChangePercent
+                     END AS OperCount_ChangePercent_start
+       
+                   , CASE WHEN _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                               THEN _tmp.OperCount
+                          ELSE _tmp.OperCount_Partner
+                     END AS OperCount_Partner_start
+
+                   , _tmp.tmpOperSumm_PriceList_start, _tmp.tmpOperSumm_Partner_start, _tmp.tmpOperSumm_PartnerVirt_start
+
+              FROM tmpMI AS _tmp
+                   LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = _tmp.MovementItemId
+                   LEFT JOIN tmpContainer_diff ON tmpContainer_diff.MovementItemId = _tmp.MovementItemId
+                                              -- только одну позицию корректируем
+                                              AND tmpContainer.Ord_amount = 1
+             ) AS _tmp
+            ;
 
 
      -- Проверка - 1 - Подбор партий
@@ -1469,6 +1562,7 @@ BEGIN
          WHERE _tmpItem.MovementItemId IN (SELECT MAX (_tmpItem.MovementItemId) FROM _tmpItem WHERE _tmpItem.OperSumm_PriceList IN (SELECT MAX (_tmpItem.OperSumm_PriceList) FROM _tmpItem)
                                           );
      END IF;
+
 
      -- если не равны ДВЕ Итоговые суммы по Контрагенту !!! без скидки !!!
      IF COALESCE (vbOperSumm_Partner, 0) <> COALESCE (vbOperSumm_Partner_byItem, 0)
@@ -2097,7 +2191,7 @@ BEGIN
                                                                                          )
                                                       ELSE 0
                                                       END
-     FROM (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_From, _tmpItemSumm.ContainerId_GoodsFrom FROM _tmpItemSumm) AS _tmpItemSumm_find
+     FROM (SELECT DISTINCT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_GoodsFrom, _tmpItemSumm.ContainerId_From FROM _tmpItemSumm) AS _tmpItemSumm_find
           INNER JOIN _tmpItem ON _tmpItem.MovementItemId        = _tmpItemSumm_find.MovementItemId
                              AND _tmpItem.ContainerId_GoodsFrom = _tmpItemSumm_find.ContainerId_GoodsFrom
                              AND _tmpItem.isLossMaterials       = FALSE -- !!!если НЕ списание!!!
@@ -2124,8 +2218,8 @@ BEGIN
           LEFT JOIN ContainerLinkObject AS CLO_Member ON CLO_Member.ContainerId = _tmpItemSumm_find.ContainerId_From
                                                      AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
      WHERE _tmpItemSumm.MovementItemId        = _tmpItemSumm_find.MovementItemId
-       AND _tmpItemSumm.ContainerId_From      = _tmpItemSumm_find.ContainerId_From
        AND _tmpItemSumm.ContainerId_GoodsFrom = _tmpItemSumm_find.ContainerId_GoodsFrom
+       AND _tmpItemSumm.ContainerId_From      = _tmpItemSumm_find.ContainerId_From
        AND vbAccountId_GoodsTransit_01 <> 0
     ;
 
@@ -2206,12 +2300,13 @@ where _tmpItemSumm.ContainerId_Transit_02 = 0 and _tmpItemSumm.OperSumm_ChangePe
             , _tmpItem.OperSumm_Partner_ChangePercent     - COALESCE (_tmpItemSumm_group.OperSumm_Partner, 0) AS OperSumm_Account_60000
             , _tmpItem.OperSumm_PartnerVirt_ChangePercent - _tmpItem.OperSumm_Partner_ChangePercent - COALESCE (_tmpItemSumm_group.OperSumm_ChangePercent, 0) AS OperSummVirt_Account_60000
         FROM _tmpItem
-             LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
-                        , SUM (_tmpItemSumm.OperSumm_Partner) AS OperSumm_Partner
-                        , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm_ChangePercent
+             LEFT JOIN (SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_GoodsFrom
+                             , SUM (_tmpItemSumm.OperSumm_Partner) AS OperSumm_Partner
+                             , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm_ChangePercent
                         FROM _tmpItemSumm
-                        GROUP BY _tmpItemSumm.MovementItemId
-                       ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem.MovementItemId
+                        GROUP BY _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_GoodsFrom
+                       ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId        = _tmpItem.MovementItemId
+                                              AND _tmpItemSumm_group.ContainerId_GoodsFrom = _tmpItem.ContainerId_GoodsFrom
         WHERE zc_isHistoryCost() = TRUE -- !!!если нужны проводки!!!
           AND _tmpItem.isLossMaterials = FALSE -- !!!если НЕ списание!!!
           AND ((vbBranchId_From = 0                  -- + только если
@@ -3273,7 +3368,13 @@ END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(),          _tmpItem.MovementItemId, _tmpItem.OperSumm_Partner_ChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFrom(),      _tmpItem.MovementItemId, _tmpItem.OperSumm_PartnerVirt_ChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummPriceList(), _tmpItem.MovementItemId, _tmpItem.OperSumm_PriceList)
-     FROM _tmpItem;
+     FROM (SELECT _tmpItem.MovementItemId
+            , SUM (_tmpItem.OperSumm_Partner_ChangePercent)     AS OperSumm_Partner_ChangePercent
+            , SUM (_tmpItem.OperSumm_PartnerVirt_ChangePercent) AS OperSumm_PartnerVirt_ChangePercent
+            , SUM (_tmpItem.OperSumm_PriceList)                 AS OperSumm_PriceList
+           FROM _tmpItem
+           GROUP BY _tmpItem.MovementItemId
+          ) AS _tmpItem;
 
 
 --  RAISE EXCEPTION 'Ошибка.<%>  <%> ', (select count(*) from _tmpItemSumm ), (select count(*) from _tmpMIContainer_insert);

@@ -1,4 +1,4 @@
- -- Function: lpComplete_Movement_Sale (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_Sale (Integer, Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpComplete_Movement_Sale (Integer, Integer, Boolean, Boolean);
@@ -167,6 +167,8 @@ END IF;*/
      IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From() AND MLO.ObjectId = 8459)
   --AND EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind() AND MLO.ObjectId = zc_Enum_PaidKind_FirstForm())
     AND EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.OperDate > '12.12.2022')
+    -- Есть заявка
+    AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
   --AND inUserId <> zfCalc_UserAdmin() :: Integer
   --AND inMovementId <> 24732446 --
     AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
@@ -183,8 +185,8 @@ END IF;*/
            (WITH
             tmpMIOrder AS (SELECT MovementItem.ObjectId AS GoodsId
                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) ) AS Amount
-                                , (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * vbPersent_check AS Amount15
+                                , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) AS Amount
+                                , SUM (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0)) /100 * vbPersent_check AS Amount15
                            FROM MovementLinkMovement AS MovementLinkMovement_Order
                                 INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Order.MovementChildId
                                                       AND MovementItem.DescId = zc_MI_Master()
@@ -198,6 +200,8 @@ END IF;*/
                            WHERE MovementLinkMovement_Order.MovementId = inMovementId       --23791150 --
                              AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
                              AND COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_AmountSecond.ValueData,0) <> 0
+                           GROUP BY MovementItem.ObjectId
+                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                          )
           , tmpMISale AS (SELECT MovementItem.ObjectId AS GoodsId
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -231,7 +235,7 @@ END IF;*/
               FROM tmpMISale
                    LEFT JOIN tmpMIOrder ON tmpMIOrder.GoodsId     = tmpMISale.GoodsId
                                        AND tmpMIOrder.GoodsKindId = tmpMISale.GoodsKindId
-              WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > tmpMIOrder.Amount15
+              WHERE COALESCE (tmpMISale.AmountPartner,0) - COALESCE (tmpMIOrder.Amount,0) > COALESCE (tmpMIOrder.Amount15, 0)
                -- !!! замовлення в яких більше 2,7 кілограма.
                AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 2.7)
                --AND (COALESCE (tmpMIOrder.Amount,0) = 0 OR tmpMIOrder.Amount > 5)
@@ -340,7 +344,12 @@ END IF;*/
                  ELSE 0
             END AS InfoMoneyId_CorporateTo
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END, 0) AS PartnerId_To
-          , COALESCE (ObjectBoolean_isNotRealGoods.ValueData, FALSE) AS isNotRealGoods
+
+          , CASE WHEN MovementBoolean_TotalSumm_GoodsReal.ValueData = TRUE
+                      THEN FALSE
+                 ELSE COALESCE (ObjectBoolean_isNotRealGoods.ValueData, FALSE)
+            END AS isNotRealGoods
+
           , 0 AS MemberId_To -- COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
 
             -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
@@ -380,6 +389,9 @@ END IF;*/
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+          LEFT JOIN MovementBoolean AS MovementBoolean_TotalSumm_GoodsReal
+                                    ON MovementBoolean_TotalSumm_GoodsReal.MovementId =  Movement.Id
+                                   AND MovementBoolean_TotalSumm_GoodsReal.DescId = zc_MovementBoolean_TotalSumm_GoodsReal()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -556,9 +568,9 @@ END IF;*/
      vbIsPartionCell_from:= lfGet_Object_Unit_isPartionCell (vbOperDate, vbUnitId_From)
                          OR (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_From = zc_Unit_RK()
-                         AND vbOperDate >= '01.06.2024'
+                         AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                             )
-                         OR (vbOperDate >= '01.06.2024'
+                         OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                          AND vbUnitId_From = zc_Unit_RK()
                             )
                            ;
@@ -1172,22 +1184,26 @@ end if;
                                           INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                                         AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-                                          INNER JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                          INNER JOIN ObjectDate AS ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
                                                                                    AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
-                                                                                   AND ObjectDate_Value.ValueData < '01.06.2024'
+                                                                                   -- для 04.2024
+                                                                                   AND ObjectDate_Value.ValueData < '01.05.2024'
 
-                                     WHERE MIContainer.MovementId = 28123737 -- '02.05.2024'
+                                     WHERE MIContainer.MovementId = 28123737 -- '02.05.2024' N "14522" - Inventory
                                        AND MIContainer.DescId = 1
-                                       AND vbOperDate < '01.06.2024'
+                                       -- для 04.2024
+                                       AND vbOperDate < '01.05.2024'
                                        --!!!
                                        AND vbIsPartionCell_from = TRUE
+                                       -- для 04.2024
+                                       AND 1=0
                                     )
                       -- !!!
                     , tmp_list_2 AS (SELECT DISTINCT tmp_list_1.ContainerId
                                      FROM tmp_list_1
                                           LEFT JOIN MovementItemContainer AS MIContainer
                                                                           ON MIContainer.ContainerId = tmp_list_1.ContainerId
-                                                                         AND MIContainer.OperDate BETWEEN '01.05.2024' AND '31.05.2024' -- прошлый период?
+                                                                         AND MIContainer.OperDate BETWEEN '01.04.2024' AND '30.04.2024' -- для 04.2024
                                                                          AND MIContainer.Amount > 0
                                      WHERE MIContainer.ContainerId IS NULL
                                     )
@@ -1331,7 +1347,9 @@ end if;
                              -- для РК
                              WHERE vbIsPartionCell_from = TRUE
                              GROUP BY tmpContainer_list.ContainerId
-                             HAVING SUM (COALESCE (MIContainer.Amount, 0)) <> 0
+                             --HAVING SUM (COALESCE (MIContainer.Amount, 0)) <> 0
+                             -- !!! -- select * from gpComplete_All_Sybase(28658170,False,'444873')
+                             HAVING SUM (COALESCE (MIContainer.Amount, 0)) < 0
                             )
   -- будет подбор партий
 , tmpContainer_all AS (SELECT tmpMI.GoodsId
@@ -1584,7 +1602,11 @@ end if;
             , _tmp.GoodsId
             , _tmp.GoodsKindId
             , _tmp.AssetId
+
             , _tmp.PartionGoods
+-- test
+-- , (select  STRING_AGG (tmpContainer_partion.Amount :: TVarChar ';') from tmpContainer_partion where tmpContainer_partion.GoodsId = 2143 and tmpContainer_partion.GoodsKindId = 8344 ) AS PartionGoods
+
             , _tmp.PartionGoodsDate
             , _tmp.ChangePercent
             , _tmp.isChangePrice
@@ -2122,12 +2144,13 @@ end if;
                        , (SELECT zfConvert_DateToString (Movement.OperDate) FROM Movement WHERE Movement.Id = inMovementId)
                        , CHR (13)
                          -- GoodsId
-                       , (SELECT lfGet_Object_ValueData (tmpItem_start.GoodsId)
+                       , (SELECT lfGet_Object_ValueData (tmpItem_start.GoodsId) || ' (' || tmpItem_start.GoodsId :: TVarChar || ') ' || ' (' || tmpItem_start.MovementItemId :: TVarChar || ')'
                           FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                      , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
                                      , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
                                      , SUM (tmpItem_start.OperCount_ChangePercent_start) AS OperCount_ChangePercent_start
                                      , SUM (tmpItem_start.OperCount_Partner_start)       AS OperCount_Partner_start
+                                     , MAX (tmpItem_start.MovementItemId)                AS MovementItemId
 
                                 FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId, _tmpItem.GoodsKindId
                                                     , _tmpItem.OperCount_start, _tmpItem.OperCountCount_start, _tmpItem.OperCount_ChangePercent_start, _tmpItem.OperCount_Partner_start
@@ -2145,6 +2168,7 @@ end if;
                                                , SUM (_tmpItem.OperCountCount)          AS OperCountCount
                                                , SUM (_tmpItem.OperCount_ChangePercent) AS OperCount_ChangePercent
                                                , SUM (_tmpItem.OperCount_Partner)       AS OperCount_Partner
+                                               , MAX (_tmpItem.MovementItemId)          AS MovementItemId
                                           FROM _tmpItem
                                           WHERE _tmpItem.ContainerId_Goods > 0
                                             -- только если был ?подбор?
@@ -2163,7 +2187,7 @@ end if;
                          )
                        , CHR (13)
                          -- GoodsKindId
-                       , (SELECT lfGet_Object_ValueData_sh (tmpItem_start.GoodsKindId)
+                       , (SELECT lfGet_Object_ValueData_sh (tmpItem_start.GoodsKindId) || ' (' || tmpItem_start.GoodsKindId :: TVarChar || ')'
                           FROM (SELECT tmpItem_start.GoodsId, tmpItem_start.GoodsKindId
                                      , SUM (tmpItem_start.OperCount_start)               AS OperCount_start
                                      , SUM (tmpItem_start.OperCountCount_start)          AS OperCountCount_start
@@ -2648,25 +2672,25 @@ end if;
             INTO vbOperSumm_PriceList, vbOperSumm_PriceListJur, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent, vbOperSumm_PartnerVirt_ChangePercent, vbOperSumm_Currency
      FROM
            -- получили 1 запись
-          (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList    ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListPrice    AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList
-                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceListJur ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListJurPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceListJur
+          (SELECT SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_PriceList    ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListPrice    AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList
+                , SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_PriceListJur ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListJurPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceListJur
 
-                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner -- так получаем по каждому товару отдельно (даже если он повторяется)
+                , SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_Partner -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price AS NUMERIC (16, 2))
                         END) AS tmpOperSumm_Partner
 
-                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PartnerVirt -- так получаем по каждому товару отдельно (даже если он повторяется)
+                , SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_PartnerVirt -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_ChangePercent * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_ChangePercent * _tmpItem.Price AS NUMERIC (16, 2))
                         END) AS tmpOperSumm_PartnerVirt
 
-                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner_original -- так получаем по каждому товару отдельно (даже если он повторяется)
+                , SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_Partner_original -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_original / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_original AS NUMERIC (16, 2))
                         END) AS tmpOperSumm_Partner_original
 
-                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner_Currency -- так получаем по каждому товару отдельно (даже если он повторяется)
+                , SUM (CASE WHEN vbOperDatePartner < lfGet_Object_Unit_PartionDate_isPartionCell() THEN _tmpItem.tmpOperSumm_Partner_Currency -- так получаем по каждому товару отдельно (даже если он повторяется)
                             WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_Currency / _tmpItem.CountForPrice AS NUMERIC (16, 2))
                                                              ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price_Currency AS NUMERIC (16, 2))
                         END) AS tmpOperSumm_Partner_Currency

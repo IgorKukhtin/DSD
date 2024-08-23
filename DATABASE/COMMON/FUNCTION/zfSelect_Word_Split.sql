@@ -1,10 +1,12 @@
 -- Function: zfSelect_Word_Split
 
 DROP FUNCTION IF EXISTS zfSelect_Word_Split (TVarChar, Integer);
+DROP FUNCTION IF EXISTS zfSelect_Word_Split (TVarChar, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION zfSelect_Word_Split(
-    IN inSep     TVarChar,
-    IN inUserId  Integer        -- пользователь
+    IN inSep      TVarChar,
+    IN inIsPromo  Boolean DEFAULT FALSE,
+    IN inUserId   Integer DEFAULT 0       -- пользователь
 )
 RETURNS TABLE (Ord Integer, Word TVarChar, WordList TVarChar
               )
@@ -20,6 +22,16 @@ BEGIN
      THEN
          CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
          -- INSERT INTO _tmpWord_Split_from (WordList) SELECT '8347, 8352';
+         
+         IF inIsPromo = TRUE
+         THEN
+            INSERT INTO _tmpWord_Split_from (WordList)
+            SELECT DISTINCT ObjectString_GoodsKind.ValueData AS WordList
+            FROM ObjectString AS ObjectString_GoodsKind
+            WHERE ObjectString_GoodsKind.DescId = zc_ObjectString_GoodsListSale_GoodsKind()
+              AND ObjectString_GoodsKind.ValueData <> '';
+         END IF;
+         
      END IF;
 
      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE LOWER (TABLE_NAME) = LOWER ('_tmpWord_Split_to'))
@@ -46,6 +58,15 @@ BEGIN
 
      END LOOP;
      CLOSE curWord_Split;
+     
+     IF inIsPromo = TRUE
+     THEN
+         -- Реальная таблица
+         TRUNCATE TABLE _tmpWord_Split_to_promo;
+         -- Реальная таблица
+         INSERT INTO _tmpWord_Split_to_promo (Ord, Word, WordList)
+            SELECT _tmpWord_Split_to.Ord, _tmpWord_Split_to.Word, _tmpWord_Split_to.WordList FROM _tmpWord_Split_to;
+     END IF;
 
   
      -- Результат
@@ -65,4 +86,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM zfSelect_Word_Split (inSep:= ',', inUserId:= zfCalc_UserAdmin() :: Integer);
+-- SELECT * FROM zfSelect_Word_Split (inSep:= ',', inIsPromo:= TRUE, inUserId:= zfCalc_UserAdmin() :: Integer);

@@ -111,6 +111,8 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbShowAll Boolean;
+    DECLARE vbScript   TEXT;
+    DECLARE vb1        TEXT;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
@@ -123,8 +125,8 @@ BEGIN
     vbShowAll:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (112322, 876016, 5473256, 296580, zc_Enum_Role_Admin())); -- Документы Маркетинг + Отдел Маркетинг + Маркетинг - Руководитель + Просмотр ВСЕ (управленцы)
 
     -- таблицы для получения Вид товара (справочно) из GoodsListSale
-    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
+/*    CREATE TEMP TABLE _tmpWord_Split_from (WordList TVarChar) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpWord_Split_to (Ord Integer, Word TVarChar, WordList TVarChar) ON COMMIT DROP;
 
     INSERT INTO _tmpWord_Split_from (WordList)
             SELECT DISTINCT ObjectString_GoodsKind.ValueData AS WordList
@@ -134,12 +136,34 @@ BEGIN
 
     PERFORM zfSelect_Word_Split (inSep:= ',', inUserId:= vbUserId);
     --
+*/
+
+    /*IF vbUserId = 5
+    THEN
+        -- Реальная таблица
+        vbScript:= 'TRUNCATE TABLE _tmpWord_Split_to_promo';
+        vb1:= (SELECT *
+               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                                  -- Результат
+                               , vbScript));
+
+        -- Реальная таблица
+        vbScript:= 'INSERT INTO _tmpWord_Split_to_promo (Ord, Word, WordList) SELECT Ord, Word, WordList FROM zfSelect_Word_Split (inSep:= '','', inIsPromo:= TRUE, inUserId:= ' || vbUserId :: TVarChar || ') AS zfSelect';
+        -- Результат
+        vb1:= (SELECT *
+               FROM dblink_exec ('host=192.168.0.219 dbname=project port=5432 user=admin password=vas6ok'
+                                  -- Результат
+                               , vbScript));
+        --
+        RAISE INFO  '%',vb1;
+
+    END IF;*/
 
 
     -- Результат
     RETURN QUERY
      WITH tmpGoodsKind AS (SELECT _tmpWord_Split_to.WordList, Object.ValueData :: TVarChar AS GoodsKindName
-                           FROM _tmpWord_Split_to
+                           FROM _tmpWord_Split_to_promo AS _tmpWord_Split_to
                                 LEFT JOIN Object ON Object.Id = _tmpWord_Split_to.Word :: Integer
                            GROUP BY _tmpWord_Split_to.WordList, Object.ValueData
                            )

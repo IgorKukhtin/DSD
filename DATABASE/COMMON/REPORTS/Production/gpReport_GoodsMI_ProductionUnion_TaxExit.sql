@@ -38,6 +38,14 @@ BEGIN
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
+
+     -- !!!Нет прав!!! - Ограничение - нет доступа к Отчету производства выхода ГП Итоги
+     IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11190560)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав.';
+     END IF;
+
+
     -- Результат
     RETURN QUERY
          
@@ -364,10 +372,10 @@ BEGIN
                              , tmp.PartionGoodsId
                              , tmp.GoodsKindId_Complete
                      )
-
+    -- 
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.ObjectCode                AS GoodsCode
-         , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar                AS GoodsName
+         , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar AS GoodsName
          , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
          , Object_Measure.ValueData               AS MeasureName
          , ObjectDate_PartionGoods.ValueData      AS PartionGoodsDate

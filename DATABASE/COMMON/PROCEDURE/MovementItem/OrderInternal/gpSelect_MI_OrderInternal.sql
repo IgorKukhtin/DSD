@@ -28,6 +28,13 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+    -- !!!Нет прав!!! - Ограничение - нет доступа к Заказ производство цех
+    IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11190562)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав.';
+    END IF;
+
+
      -- определяется
      SELECT Movement.OperDate
           , 1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData)))

@@ -232,18 +232,18 @@ BEGIN
      -- Если учет по ячейкам - РАСХОД - Учет будет для От КОГО
      vbIsPartionCell_from:= (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_From = zc_Unit_RK()
-                         AND vbOperDate >= '01.06.2024'
+                         AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                             )
-                         OR (vbOperDate >= '01.06.2024'
+                         OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                          AND vbUnitId_From = zc_Unit_RK()
                             )
                            ;
      -- Если учет по ячейкам - РАСХОД - Учет будет для От КОГО
      vbIsPartionCell_to:= (inUserId IN (5, zc_Enum_Process_Auto_PrimeCost() :: Integer)
                          AND vbUnitId_To = zc_Unit_RK()
-                         AND vbOperDate >= '01.06.2024'
+                         AND vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                             )
-                         OR (vbOperDate >= '01.06.2024'
+                         OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
                          AND vbUnitId_To = zc_Unit_RK()
                             )
                            ;
@@ -1616,7 +1616,7 @@ END IF;
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      IF inMovementId IN (2296516, 2296563) -- !!!захардкодил исправление ошибки - 31.07.2015!!!
      THEN
-     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_GoodsFrom, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         WITH tmpRemains AS (SELECT _tmpItemChild.ContainerId_GoodsFrom, Container.Id AS ContainerId, Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
                             FROM _tmpItemChild
                                  INNER JOIN Container ON Container.ParentId = _tmpItemChild.ContainerId_GoodsFrom
@@ -1628,6 +1628,7 @@ END IF;
         SELECT
               _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
+            , _tmpItemChild.ContainerId_GoodsFrom
             , Container.Id       AS ContainerId_From
             , Container.ObjectId AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
@@ -1642,10 +1643,11 @@ END IF;
 
      ELSEIF inMovementId IN (27533463) -- !!!захардкодил исправление ошибки - 01.06.2023!!! -- select * from Container where Container.ParentId =  808612
      THEN
-         INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+         INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_GoodsFrom, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
             SELECT
                   _tmpItemChild.MovementItemId_Parent
                 , _tmpItemChild.MovementItemId
+                , _tmpItemChild.ContainerId_GoodsFrom
                 , Container.Id       AS ContainerId_From
                 , Container.ObjectId AS AccountId_From
                 , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
@@ -1664,10 +1666,11 @@ END IF;
            ;
 
      ELSE
-     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
+     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_GoodsFrom, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
+            , _tmpItemChild.ContainerId_GoodsFrom
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId_From
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
@@ -1705,6 +1708,7 @@ END IF;
         GROUP BY
                  _tmpItemChild.MovementItemId_Parent
                , _tmpItemChild.MovementItemId
+               , _tmpItemChild.ContainerId_GoodsFrom
                , Container_Summ.Id
                , Container_Summ.ObjectId
                , lfContainerSumm_20901.ContainerId
@@ -1799,7 +1803,8 @@ END IF;
                                   ON ObjectLink_Account_AccountDirection.ObjectId = _tmpItemSummChild.AccountId_From
                                  AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
 
-             LEFT JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId
+             LEFT JOIN _tmpItemChild ON _tmpItemChild.MovementItemId        = _tmpItemSummChild.MovementItemId
+                                    AND _tmpItemChild.ContainerId_GoodsFrom = _tmpItemSummChild.ContainerId_GoodsFrom
              -- для Asset - не меняется
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                            ON ContainerLinkObject_InfoMoney.ContainerId = _tmpItemSummChild.ContainerId_From
@@ -1817,8 +1822,12 @@ END IF;
                , ObjectLink_InfoMoneyDestination.ChildObjectId, ContainerLinkObject_InfoMoney.ObjectId
                , _tmpItemSummChild.InfoMoneyId_Detail_From;
      END IF;
-
-
+/*
+    RAISE EXCEPTION 'Ошибка.<%>  %  '
+                                   , (select sum (_tmpItemSumm_pr.OperSumm) from _tmpItemSumm_pr where _tmpItemSumm_pr.MovementItemId = 289222842)
+                                   , (select sum (_tmpItemSummChild.OperSumm) from _tmpItemSummChild where _tmpItemSummChild.MovementItemId_Parent = 289222842)
+                                   ;
+*/
      -- для теста - Master - Summ
      -- RETURN QUERY SELECT _tmpItemSumm_pr.AccountId_To, _tmpItemSumm_pr.MovementItemId, _tmpItemSumm_pr.MIContainerId_To, _tmpItemSumm_pr.InfoMoneyId_Detail_To, _tmpItemSumm_pr.OperSumm FROM _tmpItemSumm_pr;
      -- для теста - Child - Summ
@@ -2085,12 +2094,15 @@ END IF;
             , vbOperDate
             , FALSE
        FROM _tmpItemChild
-            JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
+            JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId        = _tmpItemChild.MovementItemId
+                                  -- для партий
+                                  AND _tmpItemSummChild.ContainerId_GoodsFrom = _tmpItemChild.ContainerId_GoodsFrom
             JOIN _tmpItemSumm_pr ON _tmpItemSumm_pr.MovementItemId   = _tmpItemSummChild.MovementItemId_Parent
-                             AND _tmpItemSumm_pr.ContainerId_From = _tmpItemSummChild.ContainerId_From
+                                AND _tmpItemSumm_pr.ContainerId_From = _tmpItemSummChild.ContainerId_From
+
             JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItemSumm_pr.MovementItemId
             LEFT JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = _tmpItem_pr.GoodsId
-       WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
+      ;
 
 
 
@@ -2223,6 +2235,45 @@ END IF;
                ) AS tmp;
 
      END IF; -- if vbIsPeresort = FALSE AND 1=0
+     
+     
+     -- Пересчет только для IsPeresort - переходящий остаток
+     IF vbIsPeresort = TRUE AND vbUnitId_From IN (8447, 8448, 8449) -- ЦЕХ ковбасних виробів + ЦЕХ деликатесов + Цех сирокопчених ковбас
+        AND 1=0
+     THEN
+         PERFORM gpUpdate_MI_ProductionUnion_AmountNext_out (inMovementId:= tmp.MovementId, inSession:= inUserId :: TVarChar)
+         FROM (SELECT DISTINCT Movement.Id AS MovementId
+               FROM _tmpItemChild
+                    INNER JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                   ON CLO_PartionGoods.ContainerId = _tmpItemChild.ContainerId_count
+                                                  AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                    INNER JOIN ObjectDate as ObjectDate_Value ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                             AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+
+                    INNER JOIN MovementItemContainer AS MIContainer
+                                                     ON MIContainer.ContainerId    = _tmpItemChild.ContainerId_count
+                                                    AND MIContainer.DescId         = zc_MIContainer_Count()
+                                                    AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                                                    AND MIContainer.IsActive       = TRUE
+                                                    AND MIContainer.OperDate       = ObjectDate_Value.ValueData
+
+                    INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = MIContainer.MovementId
+                                                             AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                                                             AND MLO_From.ObjectId   = vbUnitId_From
+                    INNER JOIN MovementLinkObject AS MLO_To ON MLO_To.MovementId = MIContainer.MovementId
+                                                           AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                           AND MLO_To.ObjectId   = vbUnitId_From
+
+                    -- без пересортицы
+                    LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                              ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                             AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                             AND MovementBoolean_Peresort.ValueData  = TRUE
+
+               -- !!!убрали Пересортицу!!!
+               WHERE MovementBoolean_Peresort.MovementId IS NULL
+              ) AS tmp;
+     END IF;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
@@ -2298,4 +2349,4 @@ $BODY$
 -- SELECT * FROM lpComplete_Movement_ProductionUnion (inMovementId:= 143712, inIsHistoryCost:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 143712, inSession:= '2')
 -- select * from gpUpdate_Status_ProductionUnion(inMovementId := 25281711 , inStatusCode := 2 ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
--- select gpComplete_All_Sybase (28198708, FALSE, '')
+-- select gpComplete_All_Sybase (28138209, FALSE, '')

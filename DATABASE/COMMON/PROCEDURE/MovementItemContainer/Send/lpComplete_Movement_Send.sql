@@ -36,7 +36,7 @@ BEGIN
     ;
 
      -- Если учет по ячейкам - РАСХОД
-     IF (vbOperDate >= '01.06.2024'
+     IF (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
         AND zc_Unit_RK() = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From())
         )
      THEN
@@ -1336,7 +1336,7 @@ end if;
 
 
      -- Если учет по ячейкам - ПРИХОД
-     IF (vbOperDate >= '01.06.2024'
+     IF (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
      AND vbWhereObjectId_Analyzer_To = zc_Unit_RK()
         )
      THEN
@@ -1370,6 +1370,23 @@ end if;
                                                                                                 , zc_MILinkObject_PartionCell_3()
                                                                                                 , zc_MILinkObject_PartionCell_4()
                                                                                                 , zc_MILinkObject_PartionCell_5()
+                                                                                                , zc_MILinkObject_PartionCell_6()
+                                                                                                , zc_MILinkObject_PartionCell_7()
+                                                                                                , zc_MILinkObject_PartionCell_8()
+                                                                                                , zc_MILinkObject_PartionCell_9()
+                                                                                                , zc_MILinkObject_PartionCell_10()
+                                                                                                , zc_MILinkObject_PartionCell_11()
+                                                                                                , zc_MILinkObject_PartionCell_12()
+                                                                                                , zc_MILinkObject_PartionCell_13()
+                                                                                                , zc_MILinkObject_PartionCell_14()
+                                                                                                , zc_MILinkObject_PartionCell_15()
+                                                                                                , zc_MILinkObject_PartionCell_16()
+                                                                                                , zc_MILinkObject_PartionCell_17()
+                                                                                                , zc_MILinkObject_PartionCell_18()
+                                                                                                , zc_MILinkObject_PartionCell_19()
+                                                                                                , zc_MILinkObject_PartionCell_20()
+                                                                                                , zc_MILinkObject_PartionCell_21()
+                                                                                                , zc_MILinkObject_PartionCell_22()
                                                                                                  )
                                  WHERE _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900() -- Ирна
                                                                          , zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
@@ -1476,7 +1493,7 @@ end if;
 
      -- Если учет по ячейкам - РАСХОД
      ELSEIF lfGet_Object_Unit_isPartionCell (vbOperDate, vbWhereObjectId_Analyzer_From) = TRUE
-        OR (vbOperDate >= '01.06.2024'
+        OR (vbOperDate >= lfGet_Object_Unit_PartionDate_isPartionCell()
         AND vbWhereObjectId_Analyzer_To = zc_Unit_RK()
            )
      THEN
