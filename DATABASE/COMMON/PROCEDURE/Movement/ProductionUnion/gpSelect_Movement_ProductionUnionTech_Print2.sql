@@ -193,15 +193,13 @@ BEGIN
             , MovementItem.ObjectId                  AS GoodsId
           --, COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
             , MovementItem.Amount                    AS Amount
-       FROM _tmpListMaster
-            INNER JOIN MovementItem ON MovementItem.ParentId   = _tmpListMaster.MovementItemId
-                                   AND MovementItem.MovementId = _tmpListMaster.MovementId
-                                   AND MovementItem.DescId     = zc_MI_Child()
-                                   AND MovementItem.isErased   = FALSE  
-          --LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-          --                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-          --                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-       WHERE _tmpListMaster.MovementId <> 0;
+       FROM  MovementItem 
+       WHERE MovementItem.ParentId IN (SELECT DISTINCT _tmpListMaster.MovementItemId FROM _tmpListMaster WHERE _tmpListMaster.MovementId <> 0)
+         --AND MovementItem.MovementId IN ( _tmpListMaster.MovementId
+          AND MovementItem.DescId     = zc_MI_Child()
+          AND MovementItem.isErased   = FALSE   
+          AND (MovementItem.ObjectId = inGoodsId_child OR COALESCE (inGoodsId_child,0) = 0)
+          ;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
     ANALYZE _tmpMI_Child_two;
@@ -308,7 +306,7 @@ BEGIN
             , _tmpRes_cur1.GoodsGroupName
        FROM tmpData
             INNER JOIN _tmpRes_cur1  ON _tmpRes_cur1.MovementItemId = tmpData.ParentId
-            INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum      = tmpData.GroupNumber
+            INNER JOIN tmpGroupPrint ON (tmpGroupPrint.GroupNum = tmpData.GroupNumber OR COALESCE (inGoodsId_child,0) <> 0)
        GROUP BY tmpData.GoodsId
               , tmpData.GoodsCode
               , tmpData.GoodsName
