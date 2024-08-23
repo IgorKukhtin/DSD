@@ -370,7 +370,7 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
                                   ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
                                  AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
-             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, ObjectLink_Goods_GoodsGroupProperty.ChildObjectId)
+             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
              --                                
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupDirection
                                               ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
