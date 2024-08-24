@@ -1,11 +1,16 @@
 -- Function: lpInsertUpdate_MovementItem_ChoiceCell()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ChoiceCell (Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ChoiceCell (Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ChoiceCell(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
     IN inMovementId          Integer   , --  люч объекта <>
     IN inChoiceCellId        Integer   , -- 
+    IN inGoodsId             Integer   ,
+    IN inGoodsKindId         Integer   ,    
+    IN inPartionGoodsDate    TDateTime ,
+    IN inPartionGoodsDate_next TDateTime ,
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -17,6 +22,16 @@ BEGIN
 
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inChoiceCellId, inMovementId, 0, NULL);
+
+
+     -- сохранили св€зь с <товар>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Goods(), ioId, inGoodsId);
+     -- сохранили св€зь с <¬иды товаров>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+     --
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate); 
+     --
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_next(), ioId, inPartionGoodsDate_next); 
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
