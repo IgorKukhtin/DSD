@@ -2,6 +2,11 @@ CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_PartionGoods', 'Партия дата' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods');
 
+CREATE OR REPLACE FUNCTION zc_MIDate_PartionGoods_next() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_next'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemDateDesc (Code, ItemName)
+  SELECT 'zc_MIDate_PartionGoods_next', 'Дата партии (ячейка хранения)' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_PartionGoods_next');
+
+
 CREATE OR REPLACE FUNCTION zc_MIDate_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemDateDesc (Code, ItemName)
   SELECT 'zc_MIDate_OperDate', 'Дата выдачи' WHERE NOT EXISTS (SELECT * FROM MovementItemDateDesc WHERE Code = 'zc_MIDate_OperDate');
@@ -181,6 +186,7 @@ INSERT INTO MovementItemDateDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.  Шаблий О.В. 
+ 24.08.24         * zc_MIDate_PartionGoods_next
  14.05.22                                                                         * zc_MIDate_ReestrDateSP
  05.05.22         * zc_MIDate_Double
                     zc_MIDate_Scan
