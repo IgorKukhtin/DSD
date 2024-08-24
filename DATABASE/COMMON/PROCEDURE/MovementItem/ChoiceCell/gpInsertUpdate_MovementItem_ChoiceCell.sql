@@ -1,16 +1,15 @@
 -- Function: gpInsertUpdate_MovementItem_ChoiceCell()
-
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ChoiceCell (Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ChoiceCell (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ChoiceCell (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ChoiceCell(
- INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
+ --INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
     IN inBarCode             TVarChar  , -- штрихкод €ч. отбора 
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
-RETURNS Integer AS
+RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId Integer; 
+   --DECLARE ioId Integer;
    DECLARE vbChoiceCellId Integer;  
    DECLARE vbMovementId Integer;
    DECLARE vbOperDate TDateTime; 
@@ -18,11 +17,11 @@ $BODY$
    DECLARE vbPartionCellId Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
-    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ChoiceCell())
+    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ChoiceCell());
 
      IF COALESCE (inBarCode,'') <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode) = 13
+         IF CHAR_LENGTH (inBarCode) = 12
          THEN -- по штрих коду
               vbChoiceCellId:= (SELECT Object.Id
                                 FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS ObjectId
@@ -124,15 +123,15 @@ BEGIN
 
    
     -- сохранили
-    ioId:= lpInsertUpdate_MovementItem_ChoiceCell (ioId                := COALESCE(ioId,0)
-                                                , inMovementId         := vbMovementId
-                                                , inChoiceCellId       := tmp.ChoiceCellId
-                                                , inGoodsId            := tmp.GoodsId
-                                                , inGoodsKindId        := tmp.GoodsKindId    
-                                                , inPartionGoodsDate       := tmp.PartionGoodsDate
-                                                , inPartionGoodsDate_next  := tmp.PartionGoodsDate_next
-                                                , inUserId             := vbUserId
-                                                 )
+    PERFORM lpInsertUpdate_MovementItem_ChoiceCell (ioId                 := 0
+                                                  , inMovementId         := vbMovementId
+                                                  , inChoiceCellId       := tmp.ChoiceCellId
+                                                  , inGoodsId            := tmp.GoodsId
+                                                  , inGoodsKindId        := tmp.GoodsKindId    
+                                                  , inPartionGoodsDate       := tmp.PartionGoodsDate
+                                                  , inPartionGoodsDate_next  := tmp.PartionGoodsDate_next
+                                                  , inUserId             := vbUserId
+                                                   )
            FROM (WITH tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                              -- є п/п
                                                  , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate DESC) AS Ord
@@ -151,7 +150,7 @@ BEGIN
                                             )
                  
           
-              -- –езультат
+              -- –езультат  
               SELECT 
                      Object_ChoiceCell.Id                   AS ChoiceCellId
                    , ObjectLink_Goods.ChildObjectId         AS GoodsId
@@ -199,4 +198,5 @@ $BODY$
 */
 
 -- тест
--- 
+--      "  201011041653    "  --SELECT * FROM gpSelect_Object_ChoiceCell (FALSE, zfCalc_UserAdmin())
+

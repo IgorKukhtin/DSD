@@ -1,6 +1,4 @@
 -- Function: gpSelect_Movement_ChoiceCell()
-
-DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCell (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCell (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceCell(
@@ -32,7 +30,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- !!!Только просмотр Аудитор!!!
-     PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     --PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
 
      -- Результат
      RETURN QUERY

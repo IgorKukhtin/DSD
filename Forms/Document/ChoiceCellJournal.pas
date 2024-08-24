@@ -43,7 +43,6 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ChoiceCellName: TcxGridDBColumn;
     ChoiceCellCode: TcxGridDBColumn;
-    GuidesFiller: TGuidesFiller;
     actRefreshGet: TdsdDataSetRefresh;
     cxLabel3: TcxLabel;
     GuidesUser: TdsdGuides;
@@ -51,7 +50,7 @@ type
     spInsertMI_Barcode: TdsdStoredProc;
     edBarCode: TcxTextEdit;
     cxLabel6: TcxLabel;
-    EnterMoveNext1: TEnterMoveNext;
+    EnterMoveNext: TEnterMoveNext;
     actInsertMI_Barcode: TdsdExecStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     spErasedMIMaster: TdsdStoredProc;
@@ -59,6 +58,11 @@ type
     actMISetUnErased: TdsdUpdateErased;
     bbMISetErased: TdxBarButton;
     bbMISetUnErased: TdxBarButton;
+    MIProtocolOpenForm: TdsdOpenForm;
+    bbMIProtocolOpenForm: TdxBarButton;
+    spGet_User: TdsdStoredProc;
+    spBarcode_null: TdsdStoredProc;
+    isErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -31,72 +31,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           DataController.Filter.TranslateBetween = True
           DataController.Filter.TranslateIn = True
           DataController.Filter.TranslateLike = True
-          DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
@@ -222,6 +157,12 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
             Options.Editing = False
             Width = 100
           end
+          object isErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            Width = 70
+          end
         end
       end
     end
@@ -233,7 +174,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     ExplicitHeight = 59
     inherited deStart: TcxDateEdit
       Left = 110
-      EditValue = 42736d
+      EditValue = 45292d
       ExplicitLeft = 110
       ExplicitWidth = 82
       Width = 82
@@ -241,7 +182,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     inherited deEnd: TcxDateEdit
       Left = 110
       Top = 32
-      EditValue = 42736d
+      EditValue = 45292d
       ExplicitLeft = 110
       ExplicitTop = 32
       ExplicitWidth = 82
@@ -313,14 +254,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
   inherited ActionList: TActionList
     Left = 15
     Top = 194
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end
-        item
-        end>
-    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TChoiceCellMovementForm'
       FormNameParam.Value = 'TChoiceCellMovementForm'
@@ -386,7 +319,37 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           MultiSelectSeparator = ','
         end>
     end
-    object actPrint: TdsdPrintAction [21]
+    object MIProtocolOpenForm: TdsdOpenForm [16]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementItemId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ChoiceCellName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrint: TdsdPrintAction [22]
       Category = 'Print'
       MoveParams = <
         item
@@ -435,13 +398,19 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actRefreshGet: TdsdDataSetRefresh [24]
+    object actRefreshGet: TdsdDataSetRefresh [25]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet_UserJuridicalBasis
       StoredProcList = <
         item
           StoredProc = spGet_UserJuridicalBasis
+        end
+        item
+          StoredProc = spGet_User
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -507,6 +476,12 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
       StoredProcList = <
         item
           StoredProc = spInsertMI_Barcode
+        end
+        item
+          StoredProc = spBarcode_null
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actInsertMI_Barcode'
     end
@@ -625,7 +600,11 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbMovementProtocol'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMIProtocolOpenForm'
         end
         item
           Visible = True
@@ -655,6 +634,10 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
       Action = actMISetUnErased
       Category = 0
     end
+    object bbMIProtocolOpenForm: TdxBarButton
+      Action = MIProtocolOpenForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -682,6 +665,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         Component = GuidesJuridicalBasis
       end
       item
+        Component = GuidesUser
       end>
     Left = 400
     Top = 304
@@ -761,48 +745,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     Top = 280
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameOrderExternal'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ReportNameOrderExternalTax'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isPrinted'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end>
     Left = 400
     Top = 200
   end
@@ -896,20 +838,8 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 792
-    Top = 16
-  end
-  object GuidesFiller: TGuidesFiller
-    IdParam.Value = '0'
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    IdParam.MultiSelectSeparator = ','
-    GuidesList = <
-      item
-      end>
-    ActionItemList = <>
-    Left = 512
-    Top = 160
+    Left = 760
+    Top = 32
   end
   object GuidesUser: TdsdGuides
     KeyField = 'Id'
@@ -952,12 +882,13 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
       item
         DataSet = MasterCDS
       end>
+    OutputType = otResult
     Params = <
       item
         Name = 'inBarcode'
         Value = '0'
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
+        Component = edBarCode
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -965,12 +896,11 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     Left = 208
     Top = 171
   end
-  object EnterMoveNext1: TEnterMoveNext
+  object EnterMoveNext: TEnterMoveNext
     EnterMoveNextList = <
       item
         Control = edBarCode
         EnterAction = actInsertMI_Barcode
-        ExitAction = actRefresh
       end>
     Left = 416
     Top = 8
@@ -1032,5 +962,45 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     PackSize = 1
     Left = 846
     Top = 184
+  end
+  object spGet_User: TdsdStoredProc
+    StoredProcName = 'gpGet_Scale_User'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'UserId'
+        Value = '0'
+        Component = GuidesUser
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UserName'
+        Value = ''
+        Component = GuidesUser
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 632
+    Top = 48
+  end
+  object spBarcode_null: TdsdStoredProc
+    StoredProcName = 'gpSelect_BarCode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'BarCode'
+        Value = ''
+        Component = edBarCode
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 552
+    Top = 40
   end
 end
