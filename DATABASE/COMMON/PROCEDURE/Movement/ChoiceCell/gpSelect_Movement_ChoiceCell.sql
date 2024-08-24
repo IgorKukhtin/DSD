@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ChoiceCellId Integer, ChoiceCellCode Integer, ChoiceCellName TVarChar 
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar 
-             , GoodsKindeId Integer, GoodsKindeName TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
@@ -96,8 +96,8 @@ BEGIN
            , Object_Goods.ObjectCode  		      AS GoodsCode
            , Object_Goods.ValueData   		      AS GoodsName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_GoodsKind.Id                  AS GoodsKindeId
-           , Object_GoodsKind.ValueData           AS GoodsKindeName
+           , Object_GoodsKind.Id                  AS GoodsKindId
+           , Object_GoodsKind.ValueData           AS GoodsKindName
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
            , MIDate_PartionGoods_next.ValueData   AS PartionGoodsDate_next
 
