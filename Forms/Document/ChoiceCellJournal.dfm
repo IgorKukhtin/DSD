@@ -1,29 +1,29 @@
 inherited ChoiceCellJournalForm: TChoiceCellJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1052#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072'>'
-  ClientHeight = 396
+  ClientHeight = 403
   ClientWidth = 961
   AddOnFormData.RefreshAction = actRefreshGet
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 977
-  ExplicitHeight = 435
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 85
     Width = 961
-    Height = 311
+    Height = 318
     TabOrder = 3
     ExplicitTop = 85
     ExplicitWidth = 961
     ExplicitHeight = 311
-    ClientRectBottom = 311
+    ClientRectBottom = 318
     ClientRectRight = 961
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 961
       ExplicitHeight = 311
       inherited cxGrid: TcxGrid
         Width = 961
-        Height = 311
+        Height = 318
         ExplicitWidth = 961
         ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -512,39 +512,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           StoredProc = spSelect
         end>
       Caption = 'actInsertMI_Barcode'
-    end
-    object actChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      Params = <
-        item
-          Name = 'Key'
-          Value = Null
-          ComponentItem = 'Id'
-          DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          ComponentItem = 'InvNumber'
-          DataType = ftString
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'OperDate'
-          Value = Null
-          ComponentItem = 'OperDate'
-          DataType = ftDateTime
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      Caption = #1054#1050
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
-      ImageIndex = 80
-      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
