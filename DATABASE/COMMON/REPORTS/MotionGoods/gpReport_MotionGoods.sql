@@ -210,6 +210,9 @@ BEGIN
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
+     
+     -- !!!замена!!!
+     inisPartionCell:= inIsOperDate_Partion;
 
     -- !!!определяется!!!
     vbIsSummIn:= -- Отчеты руководитель сырья
@@ -476,7 +479,7 @@ BEGIN
 
                                        , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE 0 END ::Integer AS PartionGoodsId
 
-                                       , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
+                                       , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell() AND inisPartionCell = TRUE
                                                    THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                      || Object_PartionCell.ValueData || ' '
                                                      || CASE WHEN Object_GoodsKind.ValueData <> '' THEN Object_GoodsKind.ValueData || ' '
@@ -858,7 +861,7 @@ BEGIN
  
                                         , CASE WHEN inisPartionCell = TRUE AND inIsOperDate_Partion = TRUE THEN COALESCE(Object_PartionGoods.Id, 0) ELSE 0 END
 
-                                        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell()
+                                        , CASE WHEN Object_PartionCell.DescId = zc_Object_PartionCell() AND inisPartionCell = TRUE
                                                     THEN CASE WHEN Object_PartionGoods.ValueData <> '' THEN Object_PartionGoods.ValueData || ' ' ELSE '' END
                                                       || Object_PartionCell.ValueData || ' '
                                                       || CASE WHEN Object_GoodsKind.ValueData <> '' THEN Object_GoodsKind.ValueData || ' '
