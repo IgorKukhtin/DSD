@@ -130,7 +130,7 @@ BEGIN
            , Object_Goods.ObjectCode         AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
 
-           , Object_Storage.Id                        AS StorageId
+           , COALESCE (Object_Storage.Id,0) ::Integer AS StorageId
            , Object_Storage.ValueData                 AS StorageName
            , Object_Unit_Storage.ValueData            AS UnitName_Storage
            , Object_Branch_Storage.ValueData          AS BranchName_Storage

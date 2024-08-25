@@ -1523,7 +1523,8 @@ uses
   Report_Check_Sale_TotalSum in '..\..\Forms\Report\Report_Check_Sale_TotalSum.pas' {Report_Check_Sale_TotalSumForm: TParentForm},
   Report_Check_Sale_TotalSumDialog in '..\..\Forms\Report\Report_Check_Sale_TotalSumDialog.pas' {Report_Check_Sale_TotalSumDialogForm: TParentForm},
   GoodsGroupDirection in '..\..\Forms\Guides\GoodsGroupDirection.pas' {GoodsGroupDirectionForm: TParentForm},
-  GoodsGroupDirectionEdit in '..\..\Forms\Guides\GoodsGroupDirectionEdit.pas' {GoodsGroupDirectionEditForm: TParentForm};
+  GoodsGroupDirectionEdit in '..\..\Forms\Guides\GoodsGroupDirectionEdit.pas' {GoodsGroupDirectionEditForm: TParentForm},
+  ChoiceCellJournal in '..\..\Forms\Document\ChoiceCellJournal.pas' {ChoiceCellJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
