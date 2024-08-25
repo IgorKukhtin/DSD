@@ -3,16 +3,16 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ChoiceCell (TVarChar, TVarCh
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ChoiceCell(
  --INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
-    IN inBarCode             TVarChar  , -- штрихкод €ч. отбора 
+    IN inBarCode             TVarChar  , -- штрихкод €ч. отбора
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS VOID AS
 $BODY$
-   DECLARE vbUserId Integer; 
+   DECLARE vbUserId Integer;
    --DECLARE ioId Integer;
-   DECLARE vbChoiceCellId Integer;  
+   DECLARE vbChoiceCellId Integer;
    DECLARE vbMovementId Integer;
-   DECLARE vbOperDate TDateTime; 
+   DECLARE vbOperDate TDateTime;
    DECLARE curPartionCell refcursor;
    DECLARE vbPartionCellId Integer;
 BEGIN
@@ -21,7 +21,18 @@ BEGIN
 
      IF COALESCE (inBarCode,'') <> ''
      THEN
-         IF CHAR_LENGTH (inBarCode) = 12
+         IF CHAR_LENGTH (inBarCode) < 12
+         THEN -- по коду
+              vbChoiceCellId:= (SELECT Object.Id
+                                FROM (SELECT zfConvert_StringToNumber (inBarCode) AS ObjectCode
+                                     ) AS tmp
+                                      INNER JOIN Object ON Object.ObjectCode = tmp.ObjectCode
+                                                       AND Object.DescId = zc_Object_ChoiceCell()
+                                                       AND Object.isErased = FALSE
+                                WHERE tmp.ObjectCode > 0
+                                );
+
+         ELSEIF CHAR_LENGTH (inBarCode) = 12
          THEN -- по штрих коду
               vbChoiceCellId:= (SELECT Object.Id
                                 FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS ObjectId
@@ -31,27 +42,33 @@ BEGIN
                                                        AND Object.isErased = FALSE
                                 );
          END IF;
-         
+
          -- ѕроверка
          IF COALESCE (vbChoiceCellId, 0) = 0
          THEN
-            -- 
-             RAISE EXCEPTION 'ќшибка.ячейка отбора со штрихкодом <%> не нвйдена' , inBarCode;
+            --
+             RAISE EXCEPTION 'ќшибка.ячейка отбора с % <%> не нвйдена.'
+                            , CASE WHEN CHAR_LENGTH (inBarCode) < 12 THEN 'кодом' ELSE 'штрихкодом' END
+                            , inBarCode;
          END IF;
-     END IF;     
-        
-    --пробуем найти жокумент
-    vbMovementId := (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ChoiceCell() AND Movement.OperDate = CURRENT_DATE);
-    
-    IF COALESCE (vbMovementId,0) = 0
-    THEN
-        vbMovementId := lpInsertUpdate_Movement_ChoiceCell (ioId          := 0
-                                                          , inInvNumber   := CAST (NEXTVAL ('movement_ChoiceCell_seq') AS TVarChar)
-                                                          , inOperDate    := CURRENT_DATE
-                                                          , inUserId      := vbUserId
-                                                           )AS tmp;
-    END IF;
+     END IF;
+     
+     
+     --
+     vbOperDate:= gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= 1, inSession:= inSession);
+
+     -- пробуем найти документ
+     vbMovementId:= (SELECT Movement.Id FROM Movement WHERE Movement.DescId = zc_Movement_ChoiceCell() AND Movement.OperDate = vbOperDate AND Movement.StatusId <> zc_Enum_Status_Erased());
  
+     IF COALESCE (vbMovementId,0) = 0
+     THEN
+         vbMovementId := lpInsertUpdate_Movement_ChoiceCell (ioId          := 0
+                                                           , inInvNumber   := CAST (NEXTVAL ('movement_ChoiceCell_seq') AS TVarChar)
+                                                           , inOperDate    := vbOperDate
+                                                           , inUserId      := vbUserId
+                                                            )AS tmp;
+     END IF;
+
       --
      CREATE TEMP TABLE _tmpPartionCell_ful (PartionCellId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
 
@@ -121,13 +138,13 @@ BEGIN
      END LOOP; -- финиш цикла по курсору
      CLOSE curPartionCell; -- закрыли курсор
 
-   
+
     -- сохранили
     PERFORM lpInsertUpdate_MovementItem_ChoiceCell (ioId                 := 0
                                                   , inMovementId         := vbMovementId
                                                   , inChoiceCellId       := tmp.ChoiceCellId
                                                   , inGoodsId            := tmp.GoodsId
-                                                  , inGoodsKindId        := tmp.GoodsKindId    
+                                                  , inGoodsKindId        := tmp.GoodsKindId
                                                   , inPartionGoodsDate       := tmp.PartionGoodsDate
                                                   , inPartionGoodsDate_next  := tmp.PartionGoodsDate_next
                                                   , inUserId             := vbUserId
@@ -148,41 +165,41 @@ BEGIN
                                                    WHERE _tmpPartionCell_ful.PartionCellId <> zc_PartionCell_RK()
                                                   ) AS tmpMI
                                             )
-                 
-          
-              -- –езультат  
-              SELECT 
+
+
+              -- –езультат
+              SELECT
                      Object_ChoiceCell.Id                   AS ChoiceCellId
                    , ObjectLink_Goods.ChildObjectId         AS GoodsId
                    , ObjectLink_GoodsKind.ChildObjectId     AS GoodsKindId
                    , tmpPartionCell_RK.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
-                   , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_next    
-                   
+                   , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_next
+
                    , (zfFormat_BarCode (zc_BarCodePref_Object(), Object_ChoiceCell.Id)) ::TVarChar AS idBarCode
-          
+
                    , Object_ChoiceCell.isErased      AS isErased
-                 
-              FROM Object AS Object_ChoiceCell 
-          
+
+              FROM Object AS Object_ChoiceCell
+
                   LEFT JOIN ObjectLink AS ObjectLink_Goods
                                        ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
                                       AND ObjectLink_Goods.DescId = zc_ObjectLink_ChoiceCell_Goods()
                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
-          
+
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
                                        ON ObjectLink_GoodsKind.ObjectId = Object_ChoiceCell.Id
                                       AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_ChoiceCell_GoodsKind()
                   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKind.ChildObjectId
-          
+
                   LEFT JOIN tmpPartionCell_RK ON tmpPartionCell_RK.GoodsId     = Object_Goods.Id
                                              AND tmpPartionCell_RK.GoodsKindId = Object_GoodsKind.Id
                                              AND tmpPartionCell_RK.ord         = 1
-          
+
                   LEFT JOIN tmpPartionCell_real ON tmpPartionCell_real.GoodsId     = Object_Goods.Id
                                                AND tmpPartionCell_real.GoodsKindId = Object_GoodsKind.Id
                                                AND tmpPartionCell_real.ord         = 1
-          
-              WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()  
+
+              WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
                 AND Object_ChoiceCell.Id = vbChoiceCellId
               ) AS tmp
     ;

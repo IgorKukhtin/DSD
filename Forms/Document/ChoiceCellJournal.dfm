@@ -35,6 +35,11 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -52,7 +57,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 55
+            Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
@@ -61,27 +66,38 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           end
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            Width = 80
           end
           object ChoiceCellCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1103#1095'.'#1086#1090#1073#1086#1088#1072
+            Caption = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080
             DataBinding.FieldName = 'ChoiceCellCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080' '#1086#1090#1073#1086#1088#1072
             Options.Editing = False
             Width = 114
           end
           object ChoiceCellName: TcxGridDBColumn
-            Caption = #1071#1095'. '#1086#1090#1073#1086#1088#1072
+            Caption = #1071#1095#1077#1081#1082#1072' '#1086#1090#1073#1086#1088#1072
             DataBinding.FieldName = 'ChoiceCellName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 117
           end
+          object ChoiceCellName_search: TcxGridDBColumn
+            Caption = '***'#1071#1095#1077#1081#1082#1072' '#1086#1090#1073#1086#1088#1072
+            DataBinding.FieldName = 'ChoiceCellName_search'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -110,7 +126,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
             Width = 90
           end
           object PartionGoodsDate: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1103#1095'.'#1086#1090#1073#1086#1088#1072')'
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1086#1090#1073#1086#1088')'
             DataBinding.FieldName = 'PartionGoodsDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -118,7 +134,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
             Width = 100
           end
           object PartionGoodsDate_next: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1103#1095'.'#1093#1088#1072#1085#1077#1085#1080#1103')'
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1093#1088#1072#1085#1077#1085#1080#1077')'
             DataBinding.FieldName = 'PartionGoodsDate_next'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -181,10 +197,10 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     end
     inherited deEnd: TcxDateEdit
       Left = 110
-      Top = 32
+      Top = 29
       EditValue = 45292d
       ExplicitLeft = 110
-      ExplicitTop = 32
+      ExplicitTop = 29
       ExplicitWidth = 82
       Width = 82
     end
@@ -194,18 +210,18 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     end
     inherited cxLabel2: TcxLabel
       Left = -1
-      Top = 33
+      Top = 30
       ExplicitLeft = -1
-      ExplicitTop = 33
+      ExplicitTop = 30
     end
     object cxLabel3: TcxLabel
-      Left = 480
-      Top = 6
+      Left = 532
+      Top = 30
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100':'
     end
     object edUser: TcxButtonEdit
-      Left = 561
-      Top = 5
+      Left = 615
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
@@ -213,36 +229,40 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 154
+      Width = 200
     end
     object edBarCode: TcxTextEdit
-      Left = 222
-      Top = 32
+      Left = 218
+      Top = 29
       TabOrder = 6
-      Width = 179
+      Width = 206
     end
     object cxLabel6: TcxLabel
-      Left = 222
-      Top = 9
-      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076
+      Left = 218
+      Top = 6
+      Caption = #1057#1082#1072#1085#1080#1088#1091#1077#1090#1089#1103' <BarCode> '#1080#1083#1080' '#1074#1074#1086#1076' '#1050#1086#1076':'
     end
-  end
-  object cxLabel27: TcxLabel [2]
-    Left = 722
-    Top = 6
-    Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
-  end
-  object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 800
-    Top = 5
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 7
-    Width = 150
+    object lbSearchName: TcxLabel
+      Left = 512
+      Top = 4
+      Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 615
+      Top = 5
+      TabOrder = 9
+      DesignSize = (
+        200
+        21)
+      Width = 200
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -255,6 +275,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     Left = 15
     Top = 194
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TChoiceCellMovementForm'
       FormNameParam.Value = 'TChoiceCellMovementForm'
     end
@@ -294,6 +315,7 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
       DataSource = MasterDS
     end
     inherited actUpdate: TdsdInsertUpdateAction
+      Enabled = False
       FormName = 'TChoiceCellMovementForm'
       FormNameParam.Value = 'TChoiceCellMovementForm'
       GuiParams = <
@@ -318,6 +340,15 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           DataType = ftDateTime
           MultiSelectSeparator = ','
         end>
+    end
+    inherited mactReCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactCompleteList: TMultiAction
+      Enabled = False
+    end
+    inherited mactUnCompleteList: TMultiAction
+      Enabled = False
     end
     object MIProtocolOpenForm: TdsdOpenForm [16]
       Category = 'DSDLib'
@@ -348,6 +379,9 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    inherited mactSetErasedList: TMultiAction
+      Enabled = False
     end
     object actPrint: TdsdPrintAction [22]
       Category = 'Print'
@@ -401,11 +435,8 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     object actRefreshGet: TdsdDataSetRefresh [25]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserJuridicalBasis
+      StoredProc = spGet_User
       StoredProcList = <
-        item
-          StoredProc = spGet_UserJuridicalBasis
-        end
         item
           StoredProc = spGet_User
         end
@@ -455,11 +486,8 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserJuridicalBasis
+      StoredProc = spSelect
       StoredProcList = <
-        item
-          StoredProc = spGet_UserJuridicalBasis
-        end
         item
           StoredProc = spSelect
         end>
@@ -484,6 +512,39 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           StoredProc = spSelect
         end>
       Caption = 'actInsertMI_Barcode'
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      Params = <
+        item
+          Name = 'Key'
+          Value = Null
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      Caption = #1054#1050
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1078#1091#1088#1085#1072#1083#1072
+      ImageIndex = 80
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -517,14 +578,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         Value = False
         Component = actShowErased
         DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inJuridicalBasisId'
-        Value = 'False'
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -619,6 +672,10 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      Caption = ''
+      Hint = ''
+    end
     object bbPrint: TdxBarButton
       Caption = #1055#1077#1095#1072#1090#1100
       Category = 0
@@ -646,10 +703,29 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
   inherited PopupMenu: TPopupMenu
     Left = 640
     Top = 152
-    object N13: TMenuItem [12]
-      Caption = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
-      Hint = #1055#1072#1082#1077#1090#1085#1072#1103' '#1087#1077#1095#1072#1090#1100
-      ImageIndex = 3
+    inherited N3: TMenuItem
+      Visible = False
+    end
+    inherited N2: TMenuItem
+      Visible = False
+    end
+    inherited N4: TMenuItem
+      Visible = False
+    end
+    inherited miReComplete: TMenuItem
+      Visible = False
+    end
+    inherited N10: TMenuItem
+      Visible = False
+    end
+    inherited N11: TMenuItem
+      Visible = False
+    end
+    inherited N12: TMenuItem
+      Visible = False
+    end
+    inherited N6: TMenuItem
+      Visible = False
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -660,9 +736,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = GuidesJuridicalBasis
       end
       item
         Component = GuidesUser
@@ -788,59 +861,6 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     Left = 535
     Top = 248
   end
-  object GuidesJuridicalBasis: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edJuridicalBasis
-    Key = '0'
-    FormNameParam.Value = 'TJuridical_BasisForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TJuridical_BasisForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 847
-  end
-  object spGet_UserJuridicalBasis: TdsdStoredProc
-    StoredProcName = 'gpGet_User_JuridicalBasis'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'JuridicalBasisId'
-        Value = '0'
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'JuridicalBasisName'
-        Value = ''
-        Component = GuidesJuridicalBasis
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 760
-    Top = 32
-  end
   object GuidesUser: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
@@ -902,8 +922,8 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
         Control = edBarCode
         EnterAction = actInsertMI_Barcode
       end>
-    Left = 416
-    Top = 8
+    Left = 384
+    Top = 104
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ChoiceCell_SetUnErased'
@@ -1002,5 +1022,17 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     PackSize = 1
     Left = 552
     Top = 40
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = MasterCDS
+    Column = ChoiceCellName_search
+    ColumnList = <
+      item
+        Column = ChoiceCellName_search
+      end>
+    CheckBoxList = <>
+    Left = 464
+    Top = 176
   end
 end

@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, cxCurrencyEdit, dsdCommon, ExternalLoad;
+  DataModul, cxButtonEdit, cxCurrencyEdit, dsdCommon, ExternalLoad, cxContainer,
+  cxTextEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TChoiceCellForm = class(TParentForm)
@@ -50,10 +51,10 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelect: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
+    actChoiceGuides: TdsdChoiceGuides;
     isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     ProtocolOpenForm: TdsdOpenForm;
@@ -76,6 +77,11 @@ type
     idBarCode: TcxGridDBColumn;
     actPrint_BarCode: TdsdPrintAction;
     bbPrint_BarCode: TdxBarButton;
+    Panel2: TPanel;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    Name_search: TcxGridDBColumn;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

@@ -14,22 +14,20 @@ object ChoiceCellForm: TChoiceCellForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 59
     Width = 835
-    Height = 341
+    Height = 308
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -144
-    ExplicitTop = 74
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -69,12 +67,20 @@ object ChoiceCellForm: TChoiceCellForm
         Width = 52
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 104
+      end
+      object Name_search: TcxGridDBColumn
+        Caption = '***'#1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name_search'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -168,6 +174,35 @@ object ChoiceCellForm: TChoiceCellForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 26
+    Width = 835
+    Height = 33
+    Align = alTop
+    TabOrder = 5
+    object lbSearchName: TcxLabel
+      Left = 6
+      Top = 6
+      Caption = #1055#1086#1080#1089#1082' '#1071#1095#1077#1081#1082#1080':'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clBlue
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object edSearchName: TcxTextEdit
+      Left = 112
+      Top = 7
+      TabOrder = 1
+      DesignSize = (
+        200
+        21)
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -356,13 +391,12 @@ object ChoiceCellForm: TChoiceCellForm
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Action = actChoiceGuides
       Category = 0
     end
     object bbProtocolOpenForm: TdxBarButton
@@ -393,10 +427,10 @@ object ChoiceCellForm: TChoiceCellForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -481,7 +515,7 @@ object ChoiceCellForm: TChoiceCellForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
@@ -548,10 +582,10 @@ object ChoiceCellForm: TChoiceCellForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -713,7 +747,7 @@ object ChoiceCellForm: TChoiceCellForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ChoiceCell'
     DataSet = ClientDataSet
     DataSets = <
@@ -742,14 +776,14 @@ object ChoiceCellForm: TChoiceCellForm
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
-        Action = dsdChoiceGuides
+        Action = actChoiceGuides
         ShortCut = 13
       end
       item
@@ -833,5 +867,18 @@ object ChoiceCellForm: TChoiceCellForm
     Params = <>
     Left = 580
     Top = 198
+  end
+  object FieldFilter_Name: TdsdFieldFilter
+    TextEdit = edSearchName
+    DataSet = ClientDataSet
+    Column = Name_search
+    ColumnList = <
+      item
+        Column = Name_search
+      end>
+    ActionNumber1 = actChoiceGuides
+    CheckBoxList = <>
+    Left = 400
+    Top = 184
   end
 end

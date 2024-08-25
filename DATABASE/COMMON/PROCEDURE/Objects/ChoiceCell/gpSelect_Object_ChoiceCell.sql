@@ -6,14 +6,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ChoiceCell(
     IN inShowAll       Boolean , -- показать удаленные Да/нет
     IN inSession       TVarChar  -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar  
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , NPP TFloat, BoxCount TFloat
              , Comment TVarChar
              , PartionGoodsDate_RK   TDateTime
-             , PartionGoodsDate_real TDateTime 
+             , PartionGoodsDate_real TDateTime
              , idBarCode TVarChar
              , isErased Boolean
               )
@@ -26,7 +26,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_ChoiceCell());
      vbUserId:= lpGetUserBySession (inSession);
-  
+
 
      --
      CREATE TEMP TABLE _tmpPartionCell_ful (PartionCellId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
@@ -99,7 +99,7 @@ BEGIN
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
        WITH tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                          -- № п/п
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate DESC) AS Ord
@@ -116,13 +116,14 @@ BEGIN
                                         WHERE _tmpPartionCell_ful.PartionCellId <> zc_PartionCell_RK()
                                        ) AS tmpMI
                                  )
-       
+
 
     -- Результат
-    SELECT 
+    SELECT
            Object_ChoiceCell.Id          AS Id
          , Object_ChoiceCell.ObjectCode  AS Code
          , Object_ChoiceCell.ValueData   AS Name
+         , (Object_ChoiceCell.ValueData ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object_ChoiceCell.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
 
          , Object_Goods.Id         AS GoodsId
          , Object_Goods.ObjectCode AS GoodsCode
@@ -132,7 +133,7 @@ BEGIN
          , Object_GoodsKind.ObjectCode AS GoodsKindCode
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
-         , Object_GoodsGroup.ValueData AS GoodsGroupName 
+         , Object_GoodsGroup.ValueData AS GoodsGroupName
          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
          , ObjectFloat_NPP.ValueData AS NPP
@@ -141,13 +142,13 @@ BEGIN
          , ObjectString_Comment.ValueData  AS Comment
 
          , tmpPartionCell_RK.PartionGoodsDate   :: TDateTime AS PartionGoodsDate_RK
-         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real    
-         
+         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real
+
          , (zfFormat_BarCode (zc_BarCodePref_Object(), Object_ChoiceCell.Id)) ::TVarChar AS idBarCode
 
          , Object_ChoiceCell.isErased      AS isErased
-       
-    FROM Object AS Object_ChoiceCell 
+
+    FROM Object AS Object_ChoiceCell
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods
                              ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
@@ -187,7 +188,7 @@ BEGIN
                                      AND tmpPartionCell_real.GoodsKindId = Object_GoodsKind.Id
                                      AND tmpPartionCell_real.ord         = 1
 
-    WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()  
+    WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
       AND (Object_ChoiceCell.isErased = FALSE OR inShowAll = TRUE)
     ORDER BY Object_ChoiceCell.ObjectCode
     ;
