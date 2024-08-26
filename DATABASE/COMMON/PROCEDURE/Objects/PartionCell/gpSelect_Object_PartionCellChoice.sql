@@ -32,6 +32,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
+     -- ВСЕ заполненные места хранения - ячейки + отбор
      CREATE TEMP TABLE _tmpPartionCell_mi (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
      --
