@@ -874,7 +874,7 @@ BEGIN
                               , tmpAll.GoodsKindId_complete
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.Id ELSE 0 END AS PartionCellId
                               , CASE WHEN inisPartionCell = TRUE THEN Object_PartionCell.ObjectCode ELSE 0 END AS PartionCellCode 
-                              , STRING_AGG (DISTINCT Object_PartionCell.ValueData, ';') ::TVarChar AS PartionCellName
+                              , STRING_AGG (DISTINCT COALESCE (Object_PartionCell.ValueData, ''), ';') ::TVarChar AS PartionCellName
 
                                 -- ไ๋ÿ ะส
                               , CASE WHEN inIsOperDate_Partion = FALSE AND tmpAll.LocationId = zc_Unit_RK() 

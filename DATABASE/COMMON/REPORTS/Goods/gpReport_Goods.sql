@@ -922,11 +922,12 @@ BEGIN
                                         FROM MovementItemLinkObject
                                         WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group)
                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                                         , zc_MILinkObject_PartionCell_2()
-                                                                         , zc_MILinkObject_PartionCell_3()
-                                                                         , zc_MILinkObject_PartionCell_4()
-                                                                         , zc_MILinkObject_PartionCell_5() 
-                                                                          )
+                                                                              , zc_MILinkObject_PartionCell_2()
+                                                                              , zc_MILinkObject_PartionCell_3()
+                                                                              , zc_MILinkObject_PartionCell_4()
+                                                                              , zc_MILinkObject_PartionCell_5() 
+                                                                               )
+                                          AND 1=0
                                        )
 
                       , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
@@ -938,10 +939,11 @@ BEGIN
                                                                              , zc_MIBoolean_PartionCell_Close_4()
                                                                              , zc_MIBoolean_PartionCell_Close_5() 
                                                                               )
+                                            AND 1=0
                                          )
                         
                         SELECT tmp.MovementItemId
-                             , STRING_AGG (Object_PartionCell.ValueData, ';') AS PartionCellName
+                             , STRING_AGG (DISTINCT Object_PartionCell.ValueData, ';') AS PartionCellName
                              , SUM (CASE WHEN Object_PartionCell.Id <> 0 AND COALESCE (MIBoolean_PartionCell_Close.ValueData, FALSE) = TRUE THEN 0 ELSE 1 END ) AS PartionCell_Close
                         FROM (SELECT DISTINCT tmpMIContainer_group.MovementItemId FROM tmpMIContainer_group) AS tmp
                           LEFT JOIN tmpMILO AS MILinkObject_PartionCell
@@ -1152,8 +1154,10 @@ BEGIN
                         
                         , COALESCE (zfCalc_Text_replace (ObjectString_Goods_Scale.ValueData, CHR (39), '`' ), '') :: TVarChar AS Name_Scale
                         
-                        , tmpPartionCell.PartionCellName
-                        , CASE WHEN tmpPartionCell.PartionCell_Close <> 0 THEN FALSE ELSE TRUE END ::Boolean AS isPartionCell_Close
+                      --, tmpPartionCell.PartionCellName
+                      --, CASE WHEN tmpPartionCell.PartionCell_Close <> 0 THEN FALSE ELSE TRUE END ::Boolean AS isPartionCell_Close
+                        , Object_PartionCell.ValueData AS PartionCellName
+                        , FALSE  ::Boolean AS isPartionCell_Close
                    FROM tmpMIContainer_group
                         LEFT JOIN Movement ON Movement.Id = tmpMIContainer_group.MovementId
                         LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -1228,6 +1232,10 @@ BEGIN
                                             AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                         LEFT JOIN Object AS Object_GoodsKind_complete ON Object_GoodsKind_complete.Id = ObjectLink_GoodsKindComplete.ChildObjectId
 
+                        LEFT JOIN ObjectLink AS ObjectLink_PartionCell
+                                             ON ObjectLink_PartionCell.ObjectId = tmpMIContainer_group.PartionGoodsId
+                                            AND ObjectLink_PartionCell.DescId   = zc_ObjectLink_PartionGoods_PartionCell()
+                        LEFT JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = ObjectLink_PartionCell.ChildObjectId                                    
                         --
                         LEFT JOIN ObjectLink AS ObjectLink_Storage
                                              ON ObjectLink_Storage.ObjectId = tmpMIContainer_group.PartionGoodsId
@@ -1275,7 +1283,7 @@ BEGIN
                         LEFT JOIN tmpProtocol ON tmpProtocol.MovementId =  tmpMIContainer_group.MovementId
                         LEFT JOIN tmpProtocolInsert ON tmpProtocolInsert.MovementId =  tmpMIContainer_group.MovementId
                         
-                        LEFT JOIN tmpPartionCell ON tmpPartionCell.MovementItemId = tmpMIContainer_group.MovementItemId
+                        -- LEFT JOIN tmpPartionCell ON tmpPartionCell.MovementItemId = tmpMIContainer_group.MovementItemId
                    )
 
    -- –≈«”À‹“¿“

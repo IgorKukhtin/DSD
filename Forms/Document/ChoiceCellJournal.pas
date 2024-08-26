@@ -33,13 +33,8 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    N13: TMenuItem;
     ExecuteDialog: TExecuteDialog;
     actShowMessage: TShowMessageAction;
-    cxLabel27: TcxLabel;
-    edJuridicalBasis: TcxButtonEdit;
-    GuidesJuridicalBasis: TdsdGuides;
-    spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ChoiceCellName: TcxGridDBColumn;
     ChoiceCellCode: TcxGridDBColumn;
@@ -63,6 +58,10 @@ type
     spGet_User: TdsdStoredProc;
     spBarcode_null: TdsdStoredProc;
     isErased: TcxGridDBColumn;
+    ChoiceCellName_search: TcxGridDBColumn;
+    lbSearchName: TcxLabel;
+    edSearchName: TcxTextEdit;
+    FieldFilter_Name: TdsdFieldFilter;
   private
     { Private declarations }
   public

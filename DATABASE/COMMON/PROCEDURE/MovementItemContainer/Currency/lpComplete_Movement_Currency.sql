@@ -268,6 +268,11 @@ BEGIN
                                          OR ContainerLinkObject_Cash.ContainerId IS NULL
                                            )
 
+                                       AND ((ContainerLinkObject_Partner.ObjectId > 0 AND vbOperDate = DATE_TRUNC ('MONTH', vbOperDate))
+                                         OR ContainerLinkObject_Partner.ContainerId IS NULL
+                                         OR vbOperDate < '01.08.2024'
+                                           )
+
                                        AND COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) <> zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                        AND COALESCE (View_InfoMoney_two.InfoMoneyGroupId, 0)   <> zc_Enum_InfoMoneyGroup_70000()       -- Инвестиции
                                     ) AS tmpContainer

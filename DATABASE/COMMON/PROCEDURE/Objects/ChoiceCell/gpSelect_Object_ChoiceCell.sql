@@ -6,123 +6,56 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ChoiceCell(
     IN inShowAll       Boolean , -- показать удаленные ƒа/нет
     IN inSession       TVarChar  -- сесси€ пользовател€
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Name_search TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar  
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , NPP TFloat, BoxCount TFloat
              , Comment TVarChar
              , PartionGoodsDate_RK   TDateTime
-             , PartionGoodsDate_real TDateTime 
+             , PartionGoodsDate_real TDateTime
              , idBarCode TVarChar
              , isErased Boolean
               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE curPartionCell refcursor;
-   DECLARE vbPartionCellId Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_ChoiceCell());
      vbUserId:= lpGetUserBySession (inSession);
-  
 
-     --
-     CREATE TEMP TABLE _tmpPartionCell_ful (PartionCellId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsDate TDateTime) ON COMMIT DROP;
-
-     --
-     OPEN curPartionCell FOR SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_PartionCell() /*AND Object.Id = zc_PartionCell_RK()*/ ORDER BY Object.Id;
-     -- начало цикла по курсору
-     LOOP
-          -- данные
-          FETCH curPartionCell INTO vbPartionCellId;
-          -- если данных нет, то мы выходим
-          IF NOT FOUND THEN
-             EXIT;
-          END IF;
-
-          -- “олько заполненные €чейки + отбор
-          INSERT INTO _tmpPartionCell_ful (PartionCellId, GoodsId, GoodsKindId, PartionGoodsDate)
-             WITH tmpMILO AS (SELECT * FROM MovementItemLinkObject AS MILO WHERE MILO.ObjectId = vbPartionCellId)
-                  , tmpMI AS (SELECT DISTINCT tmpMILO.ObjectId AS PartionCellId, MovementItem.ObjectId AS GoodsId, MILO_GoodsKind.ObjectId AS GoodsKindId, COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) AS PartionGoodsDate
-                              FROM tmpMILO
-                                   LEFT JOIN MovementItem ON MovementItem.Id       = tmpMILO.MovementItemId
-                                                         AND MovementItem.isErased = FALSE
-                                   LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                   LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
-                                                             ON MovementBoolean_isRePack.MovementId = Movement.Id
-                                                            AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
-                                                            AND MovementBoolean_isRePack.ValueData  = TRUE
-                                   LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
-                                                                    ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-                                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                                             AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
-                              -- “олько заполненные
-                              WHERE tmpMILO.ObjectId > 0
-                                -- без ѕ≈–≈ѕј 
-                                AND MovementBoolean_isRePack.MovementId IS NULL
-                                --
-                                AND tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
-                                                     , zc_MILinkObject_PartionCell_2()
-                                                     , zc_MILinkObject_PartionCell_3()
-                                                     , zc_MILinkObject_PartionCell_4()
-                                                     , zc_MILinkObject_PartionCell_5()
-                                                     , zc_MILinkObject_PartionCell_6()
-                                                     , zc_MILinkObject_PartionCell_7()
-                                                     , zc_MILinkObject_PartionCell_8()
-                                                     , zc_MILinkObject_PartionCell_9()
-                                                     , zc_MILinkObject_PartionCell_10()
-                                                     , zc_MILinkObject_PartionCell_11()
-                                                     , zc_MILinkObject_PartionCell_12()
-                                                     , zc_MILinkObject_PartionCell_13()
-                                                     , zc_MILinkObject_PartionCell_14()
-                                                     , zc_MILinkObject_PartionCell_15()
-                                                     , zc_MILinkObject_PartionCell_16()
-                                                     , zc_MILinkObject_PartionCell_17()
-                                                     , zc_MILinkObject_PartionCell_18()
-                                                     , zc_MILinkObject_PartionCell_19()
-                                                     , zc_MILinkObject_PartionCell_20()
-                                                     , zc_MILinkObject_PartionCell_21()
-                                                     , zc_MILinkObject_PartionCell_22()
-                                                      )
-                             )
-             -- –езультат
-             SELECT tmpMI.PartionCellId, tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
-             FROM tmpMI
-            ;
-          --
-     END LOOP; -- финиш цикла по курсору
-     CLOSE curPartionCell; -- закрыли курсор
 
 
      -- –езультат
-     RETURN QUERY 
-       WITH tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
+     RETURN QUERY
+       WITH -- ¬—≈ заполненные места хранени€ - €чейки + €чейка "ќтбор"
+            tmpPartionCell_mi AS (SELECT DISTINCT lpSelect.PartionCellId, lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.PartionGoodsDate
+                                  FROM lpSelect_Object_PartionCell_mi (inGoodsId:= 0, inGoodsKindId:= 0) AS lpSelect
+                                 )
+            -- найдем последнюю партию в €чейка "ќтбор"
+          , tmpPartionCell_RK AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                          -- є п/п
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate DESC) AS Ord
-                                  FROM (SELECT DISTINCT _tmpPartionCell_ful.GoodsId, _tmpPartionCell_ful.GoodsKindId, _tmpPartionCell_ful.PartionGoodsDate
-                                        FROM _tmpPartionCell_ful
-                                        WHERE _tmpPartionCell_ful.PartionCellId = zc_PartionCell_RK()
-                                       ) AS tmpMI
+                                  FROM tmpPartionCell_mi AS tmpMI
+                                  -- парти€ = €чейка "ќтбор"
+                                  WHERE tmpMI.PartionCellId = zc_PartionCell_RK()
                                  )
-        , tmpPartionCell_real AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
+         -- найдем первую партию в €чейке ’ранени€
+       ,  tmpPartionCell_real AS (SELECT tmpMI.GoodsId, tmpMI.GoodsKindId, tmpMI.PartionGoodsDate
                                          -- є п/п
                                        , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate ASC) AS Ord
-                                  FROM (SELECT DISTINCT _tmpPartionCell_ful.GoodsId, _tmpPartionCell_ful.GoodsKindId, _tmpPartionCell_ful.PartionGoodsDate
-                                        FROM _tmpPartionCell_ful
-                                        WHERE _tmpPartionCell_ful.PartionCellId <> zc_PartionCell_RK()
-                                       ) AS tmpMI
+                                  FROM tmpPartionCell_mi AS tmpMI
+                                  -- парти€ = €чейке ’ранени€
+                                  WHERE tmpMI.PartionCellId <> zc_PartionCell_RK()
                                  )
-       
 
     -- –езультат
-    SELECT 
+    SELECT
            Object_ChoiceCell.Id          AS Id
          , Object_ChoiceCell.ObjectCode  AS Code
          , Object_ChoiceCell.ValueData   AS Name
+         , (Object_ChoiceCell.ValueData ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object_ChoiceCell.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS Name_search
 
          , Object_Goods.Id         AS GoodsId
          , Object_Goods.ObjectCode AS GoodsCode
@@ -132,7 +65,7 @@ BEGIN
          , Object_GoodsKind.ObjectCode AS GoodsKindCode
          , Object_GoodsKind.ValueData  AS GoodsKindName
 
-         , Object_GoodsGroup.ValueData AS GoodsGroupName 
+         , Object_GoodsGroup.ValueData AS GoodsGroupName
          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
          , ObjectFloat_NPP.ValueData AS NPP
@@ -140,14 +73,16 @@ BEGIN
 
          , ObjectString_Comment.ValueData  AS Comment
 
+           -- последн€€ парти€ в €чейка "ќтбор"
          , tmpPartionCell_RK.PartionGoodsDate   :: TDateTime AS PartionGoodsDate_RK
-         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real    
-         
+           -- перва€ парти€ в €чейке ’ранени€
+         , tmpPartionCell_real.PartionGoodsDate :: TDateTime AS PartionGoodsDate_real
+
          , (zfFormat_BarCode (zc_BarCodePref_Object(), Object_ChoiceCell.Id)) ::TVarChar AS idBarCode
 
          , Object_ChoiceCell.isErased      AS isErased
-       
-    FROM Object AS Object_ChoiceCell 
+
+    FROM Object AS Object_ChoiceCell
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods
                              ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
@@ -179,15 +114,16 @@ BEGIN
                                ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
                               AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
+        -- последн€€ парти€ в €чейка "ќтбор"
         LEFT JOIN tmpPartionCell_RK ON tmpPartionCell_RK.GoodsId     = Object_Goods.Id
                                    AND tmpPartionCell_RK.GoodsKindId = Object_GoodsKind.Id
                                    AND tmpPartionCell_RK.ord         = 1
-
+        -- перва€ парти€ в €чейке ’ранени€
         LEFT JOIN tmpPartionCell_real ON tmpPartionCell_real.GoodsId     = Object_Goods.Id
                                      AND tmpPartionCell_real.GoodsKindId = Object_GoodsKind.Id
                                      AND tmpPartionCell_real.ord         = 1
 
-    WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()  
+    WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
       AND (Object_ChoiceCell.isErased = FALSE OR inShowAll = TRUE)
     ORDER BY Object_ChoiceCell.ObjectCode
     ;

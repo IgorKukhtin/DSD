@@ -1,20 +1,21 @@
 -- Function: gpSelect_Movement_ChoiceCell()
+
 DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCell (TDateTime, TDateTime, Boolean, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCell (TDateTime, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceCell(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsErased           Boolean   ,
-    IN inJuridicalBasisId   Integer   ,
     IN inUserId             Integer   ,
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar  
+             , StatusCode Integer, StatusName TVarChar
              , MovementItemId Integer
-             , ChoiceCellId Integer, ChoiceCellCode Integer, ChoiceCellName TVarChar 
+             , ChoiceCellId Integer, ChoiceCellCode Integer, ChoiceCellName TVarChar, ChoiceCellName_search TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar 
+             , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
              , InsertName TVarChar, UpdateName TVarChar
@@ -45,13 +46,13 @@ BEGIN
                            , Movement.OperDate         AS OperDate
                            , Object_Status.ObjectCode  AS StatusCode
                            , Object_Status.ValueData   AS StatusName
-                           
+
                         FROM tmpStatus
                              INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                 AND Movement.DescId = zc_Movement_ChoiceCell()
-                                                AND Movement.StatusId = tmpStatus.StatusId 
+                                                AND Movement.StatusId = tmpStatus.StatusId
                              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-                        ) 
+                        )
 
       , tmpMI AS (SELECT MovementItem.*
                   FROM tmpMovement AS Movement
@@ -60,8 +61,8 @@ BEGIN
                                               AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                   )
       , tmpMIDate AS (SELECT *
-                      FROM MovementItemDate 
-                      WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI) 
+                      FROM MovementItemDate
+                      WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                         AND MovementItemDate.DescId IN (zc_MIDate_PartionGoods()
                                                       , zc_MIDate_PartionGoods_next()
                                                       , zc_MIDate_Insert()
@@ -70,8 +71,8 @@ BEGIN
                       )
 
       , tmpMILO AS (SELECT *
-                    FROM MovementItemLinkObject 
-                    WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI) 
+                    FROM MovementItemLinkObject
+                    WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                       AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Goods()
                                                           , zc_MILinkObject_GoodsKind()
                                                           , zc_MILinkObject_Insert()
@@ -90,8 +91,9 @@ BEGIN
            , MovementItem.Id                      AS MovementItemId
            , Object_ChoiceCell.Id                 AS ChoiceCellId
            , Object_ChoiceCell.ObjectCode         AS ChoiceCellCode
-           , Object_ChoiceCell.ValueData          AS ChoiceCellName 
-           
+           , Object_ChoiceCell.ValueData          AS ChoiceCellName
+           , (Object_ChoiceCell.ValueData ||'@'||REPLACE (REPLACE (REPLACE (REPLACE (REPLACE (Object_ChoiceCell.ValueData, '.', ''), '-', ''), ' ', ''), '=', ''), ',', '')) :: TVarChar AS ChoiceCellName_search
+
            , Object_Goods.Id          		      AS GoodsId
            , Object_Goods.ObjectCode  		      AS GoodsCode
            , Object_Goods.ValueData   		      AS GoodsName
@@ -105,13 +107,13 @@ BEGIN
            , Object_Update.ValueData    AS UpdateName
            , MIDate_Insert.ValueData    AS InsertDate
            , MIDate_Update.ValueData    AS UpdateDate
-           
+
            , MovementItem.isErased                                AS isErased
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
             LEFT JOIN Object AS Object_ChoiceCell ON Object_ChoiceCell.Id = MovementItem.ObjectId
-           
+
             LEFT JOIN tmpMIDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                       AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
@@ -123,7 +125,7 @@ BEGIN
                               ON MILO_Goods.MovementItemId = MovementItem.Id
                              AND MILO_Goods.DescId = zc_MILinkObject_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MILO_Goods.ObjectId
- 
+
             LEFT JOIN tmpMILO AS MILO_GoodsKind
                               ON MILO_GoodsKind.MovementItemId = MovementItem.Id
                              AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -145,11 +147,11 @@ BEGIN
                               ON MILO_Update.MovementItemId = MovementItem.Id
                              AND MILO_Update.DescId = zc_MILinkObject_Update()
             LEFT JOIN Object AS Object_Update ON Object_Update.Id = MILO_Update.ObjectId
-            
+
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()  
-        WHERE ( Object_Insert.Id = inUserId OR COALESCE (inUserId,0) = 0)
+                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+        WHERE (Object_Insert.Id = inUserId OR COALESCE (inUserId,0) = 0)
      ;
 
 END;
@@ -163,4 +165,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ChoiceCell (inStartDate:= '24.08.2024'::TDateTime, inEndDate:= CURRENT_DATE::TDateTime, inIsErased:= TRUE, inJuridicalBasisId:= 0, inUserId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ChoiceCell (inStartDate:= '24.08.2024'::TDateTime, inEndDate:= CURRENT_DATE::TDateTime, inIsErased:= TRUE, inUserId:= 0, inSession:= zfCalc_UserAdmin())
