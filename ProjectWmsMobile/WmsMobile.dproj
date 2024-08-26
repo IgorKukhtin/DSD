@@ -6,10 +6,10 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <TargetedPlatforms>693393</TargetedPlatforms>
+        <TargetedPlatforms>32785</TargetedPlatforms>
         <AppType>Application</AppType>
-        <MainSource>BoatMobile.dpr</MainSource>
-        <ProjectName Condition="'$(ProjectName)'==''">BoatMobile</ProjectName>
+        <MainSource>WmsMobile.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">WmsMobile</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -172,62 +172,62 @@
         <AUP_READ_PHONE_STATE>true</AUP_READ_PHONE_STATE>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
-        <SanitizedProjectName>BoatMobile</SanitizedProjectName>
+        <SanitizedProjectName>WmsMobile</SanitizedProjectName>
         <DCC_DcpOutput>..\DCU</DCC_DcpOutput>
-        <DCC_UnitSearchPath>.\Components;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <FeatureFilesAdded>SQLite</FeatureFilesAdded>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;ZCoreD28;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;ZDbcD28;ZComponentD28;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;ZPlainD28;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;fmxase;dbrtl;ZParseSqlD28;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;DclTKRBarCodeSannerPkgD28;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.10;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>img\Android\BoatMobile_36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>img\Android\BoatMobile_48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>img\Android\BoatMobile_72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>img\Android\BoatMobile_96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>img\Android\BoatMobile_144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>img\Android\BoatMobile_192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>img\Android\BoatMobile_426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>img\Android\BoatMobile_470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>img\Android\BoatMobile_640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>img\Android\BoatMobile_960x720.png</Android_SplashImage960>
-        <Android_NotificationIcon24>img\Android\BoatMobile_24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>img\Android\BoatMobile_36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>img\Android\BoatMobile_48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>img\Android\BoatMobile_72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>img\Android\BoatMobile_96.png</Android_NotificationIcon96>
+        <Android_LauncherIcon36>img\Android\WmsMobile_36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>img\Android\WmsMobile_48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>img\Android\WmsMobile_72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>img\Android\WmsMobile_96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>img\Android\WmsMobile_144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>img\Android\WmsMobile_192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_NotificationIcon24>img\Android\WmsMobile_24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>img\Android\WmsMobile_36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>img\Android\WmsMobile_48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>img\Android\WmsMobile_72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>img\Android\WmsMobile_96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.7.2.dex.jar;annotation-experimental-1.3.0.dex.jar;annotation-jvm-1.6.0.dex.jar;annotations-13.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;billing-6.0.1.dex.jar;biometric-1.1.0.dex.jar;browser-1.4.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;concurrent-futures-1.1.0.dex.jar;core-1.10.1.dex.jar;core-common-2.2.0.dex.jar;core-ktx-1.10.1.dex.jar;core-runtime-2.2.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;error_prone_annotations-2.9.0.dex.jar;exifinterface-1.3.6.dex.jar;firebase-annotations-16.2.0.dex.jar;firebase-common-20.3.1.dex.jar;firebase-components-17.1.0.dex.jar;firebase-datatransport-18.1.7.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-encoders-proto-16.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.1.3.dex.jar;firebase-installations-interop-17.1.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-23.1.2.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;kotlin-stdlib-1.8.22.dex.jar;kotlin-stdlib-common-1.8.22.dex.jar;kotlin-stdlib-jdk7-1.8.22.dex.jar;kotlin-stdlib-jdk8-1.8.22.dex.jar;kotlinx-coroutines-android-1.6.4.dex.jar;kotlinx-coroutines-core-jvm-1.6.4.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.6.1.dex.jar;lifecycle-livedata-2.6.1.dex.jar;lifecycle-livedata-core-2.6.1.dex.jar;lifecycle-runtime-2.6.1.dex.jar;lifecycle-service-2.6.1.dex.jar;lifecycle-viewmodel-2.6.1.dex.jar;lifecycle-viewmodel-savedstate-2.6.1.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;okio-jvm-3.4.0.dex.jar;play-services-ads-22.2.0.dex.jar;play-services-ads-base-22.2.0.dex.jar;play-services-ads-identifier-18.0.0.dex.jar;play-services-ads-lite-22.2.0.dex.jar;play-services-appset-16.0.1.dex.jar;play-services-base-18.1.0.dex.jar;play-services-basement-18.1.0.dex.jar;play-services-cloud-messaging-17.0.1.dex.jar;play-services-location-21.0.1.dex.jar;play-services-maps-18.1.0.dex.jar;play-services-measurement-base-20.1.2.dex.jar;play-services-measurement-sdk-api-20.1.2.dex.jar;play-services-stats-17.0.2.dex.jar;play-services-tasks-18.0.2.dex.jar;print-1.0.0.dex.jar;profileinstaller-1.3.0.dex.jar;room-common-2.2.5.dex.jar;room-runtime-2.2.5.dex.jar;savedstate-1.2.1.dex.jar;sqlite-2.1.0.dex.jar;sqlite-framework-2.1.0.dex.jar;startup-runtime-1.1.1.dex.jar;tracing-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.1.8.dex.jar;transport-runtime-3.1.8.dex.jar;user-messaging-platform-2.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.7.0.dex.jar</EnabledSysJars>
         <VerInfo_Build>1</VerInfo_Build>
         <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
-        <DCC_UnitSearchPath>.\Library\Android\armeabi-v7a;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\SOURCE FMX\Components BarCode\Library\Android\armeabi-v7a;..\SOURCE FMX\Components BarCode;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Android_SplashGravity>fill_horizontal</Android_SplashGravity>
         <Android_BackgroundColor>#FFFFFF</Android_BackgroundColor>
         <Android_DarkBackgroundColor>#000000</Android_DarkBackgroundColor>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
+        <Android_SplashTileMode>mirror</Android_SplashTileMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Android64)'!=''">
         <DCC_UsePackage>fmx;DbxDriver;bindengine;IndyIP;emsclient;IndyProtocols;dbxcds;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;CustomIPTransport;IndySystem;FireDAC;bindcompdbx;rtl;DBXSqliteDriver;DataSnapFireDAC;FireDAC;xmlrtl;dsnap;DataSnapNativeClient;FireDACDriver;IndyIPClient;bindcompfmx;fmxFireDAC;DataSnap;dbrtl;DBXInterBaseDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACDSDriver;tethering;CloudService;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>package=com.agilis.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=3.0.10;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=ua.dp.alan.$(MSBuildProjectName);label=$(MSBuildProjectName);versionCode=1;versionName=1.0.0;persistent=False;restoreAnyVersion=False;installLocation=auto;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Android_LauncherIcon36>img\Android\BoatMobile_36.png</Android_LauncherIcon36>
-        <Android_LauncherIcon48>img\Android\BoatMobile_48.png</Android_LauncherIcon48>
-        <Android_LauncherIcon72>img\Android\BoatMobile_72.png</Android_LauncherIcon72>
-        <Android_LauncherIcon96>img\Android\BoatMobile_96.png</Android_LauncherIcon96>
-        <Android_LauncherIcon144>img\Android\BoatMobile_144.png</Android_LauncherIcon144>
-        <Android_LauncherIcon192>img\Android\BoatMobile_192.png</Android_LauncherIcon192>
-        <Android_SplashImage426>img\Android\BoatMobile_426x320.png</Android_SplashImage426>
-        <Android_SplashImage470>img\Android\BoatMobile_470x320.png</Android_SplashImage470>
-        <Android_SplashImage640>img\Android\BoatMobile_640x480.png</Android_SplashImage640>
-        <Android_SplashImage960>img\Android\BoatMobile_960x720.png</Android_SplashImage960>
-        <Android_NotificationIcon24>img\Android\BoatMobile_24.png</Android_NotificationIcon24>
-        <Android_NotificationIcon36>img\Android\BoatMobile_36.png</Android_NotificationIcon36>
-        <Android_NotificationIcon48>img\Android\BoatMobile_48.png</Android_NotificationIcon48>
-        <Android_NotificationIcon72>img\Android\BoatMobile_72.png</Android_NotificationIcon72>
-        <Android_NotificationIcon96>img\Android\BoatMobile_96.png</Android_NotificationIcon96>
+        <Android_LauncherIcon36>img\Android\WmsMobile_36.png</Android_LauncherIcon36>
+        <Android_LauncherIcon48>img\Android\WmsMobile_48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon72>img\Android\WmsMobile_72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon96>img\Android\WmsMobile_96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon144>img\Android\WmsMobile_144.png</Android_LauncherIcon144>
+        <Android_LauncherIcon192>img\Android\WmsMobile_192.png</Android_LauncherIcon192>
+        <Android_SplashImage426>$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png</Android_SplashImage426>
+        <Android_SplashImage470>$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
+        <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
+        <Android_NotificationIcon24>img\Android\WmsMobile_24.png</Android_NotificationIcon24>
+        <Android_NotificationIcon36>img\Android\WmsMobile_36.png</Android_NotificationIcon36>
+        <Android_NotificationIcon48>img\Android\WmsMobile_48.png</Android_NotificationIcon48>
+        <Android_NotificationIcon72>img\Android\WmsMobile_72.png</Android_NotificationIcon72>
+        <Android_NotificationIcon96>img\Android\WmsMobile_96.png</Android_NotificationIcon96>
         <EnabledSysJars>activity-1.7.2.dex.jar;annotation-experimental-1.3.0.dex.jar;annotation-jvm-1.6.0.dex.jar;annotations-13.0.dex.jar;appcompat-1.2.0.dex.jar;appcompat-resources-1.2.0.dex.jar;billing-6.0.1.dex.jar;biometric-1.1.0.dex.jar;browser-1.4.0.dex.jar;cloud-messaging.dex.jar;collection-1.1.0.dex.jar;concurrent-futures-1.1.0.dex.jar;core-1.10.1.dex.jar;core-common-2.2.0.dex.jar;core-ktx-1.10.1.dex.jar;core-runtime-2.2.0.dex.jar;cursoradapter-1.0.0.dex.jar;customview-1.0.0.dex.jar;documentfile-1.0.0.dex.jar;drawerlayout-1.0.0.dex.jar;error_prone_annotations-2.9.0.dex.jar;exifinterface-1.3.6.dex.jar;firebase-annotations-16.2.0.dex.jar;firebase-common-20.3.1.dex.jar;firebase-components-17.1.0.dex.jar;firebase-datatransport-18.1.7.dex.jar;firebase-encoders-17.0.0.dex.jar;firebase-encoders-json-18.0.0.dex.jar;firebase-encoders-proto-16.0.0.dex.jar;firebase-iid-interop-17.1.0.dex.jar;firebase-installations-17.1.3.dex.jar;firebase-installations-interop-17.1.0.dex.jar;firebase-measurement-connector-19.0.0.dex.jar;firebase-messaging-23.1.2.dex.jar;fmx.dex.jar;fragment-1.2.5.dex.jar;google-play-licensing.dex.jar;interpolator-1.0.0.dex.jar;javax.inject-1.dex.jar;kotlin-stdlib-1.8.22.dex.jar;kotlin-stdlib-common-1.8.22.dex.jar;kotlin-stdlib-jdk7-1.8.22.dex.jar;kotlin-stdlib-jdk8-1.8.22.dex.jar;kotlinx-coroutines-android-1.6.4.dex.jar;kotlinx-coroutines-core-jvm-1.6.4.dex.jar;legacy-support-core-utils-1.0.0.dex.jar;lifecycle-common-2.6.1.dex.jar;lifecycle-livedata-2.6.1.dex.jar;lifecycle-livedata-core-2.6.1.dex.jar;lifecycle-runtime-2.6.1.dex.jar;lifecycle-service-2.6.1.dex.jar;lifecycle-viewmodel-2.6.1.dex.jar;lifecycle-viewmodel-savedstate-2.6.1.dex.jar;listenablefuture-1.0.dex.jar;loader-1.0.0.dex.jar;localbroadcastmanager-1.0.0.dex.jar;okio-jvm-3.4.0.dex.jar;play-services-ads-22.2.0.dex.jar;play-services-ads-base-22.2.0.dex.jar;play-services-ads-identifier-18.0.0.dex.jar;play-services-ads-lite-22.2.0.dex.jar;play-services-appset-16.0.1.dex.jar;play-services-base-18.1.0.dex.jar;play-services-basement-18.1.0.dex.jar;play-services-cloud-messaging-17.0.1.dex.jar;play-services-location-21.0.1.dex.jar;play-services-maps-18.1.0.dex.jar;play-services-measurement-base-20.1.2.dex.jar;play-services-measurement-sdk-api-20.1.2.dex.jar;play-services-stats-17.0.2.dex.jar;play-services-tasks-18.0.2.dex.jar;print-1.0.0.dex.jar;profileinstaller-1.3.0.dex.jar;room-common-2.2.5.dex.jar;room-runtime-2.2.5.dex.jar;savedstate-1.2.1.dex.jar;sqlite-2.1.0.dex.jar;sqlite-framework-2.1.0.dex.jar;startup-runtime-1.1.1.dex.jar;tracing-1.0.0.dex.jar;transport-api-3.0.0.dex.jar;transport-backend-cct-3.1.8.dex.jar;transport-runtime-3.1.8.dex.jar;user-messaging-platform-2.0.0.dex.jar;vectordrawable-1.1.0.dex.jar;vectordrawable-animated-1.1.0.dex.jar;versionedparcelable-1.1.1.dex.jar;viewpager-1.0.0.dex.jar;work-runtime-2.7.0.dex.jar</EnabledSysJars>
-        <DCC_UnitSearchPath>.\Library\Android\arm64-v8a;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\SOURCE FMX\Components BarCode\Library\Android\arm64-v8a;..\SOURCE FMX\Components BarCode;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Build>1</VerInfo_Build>
         <Android_NotificationAccentColor>#000000</Android_NotificationAccentColor>
         <Android_SplashGravity>fill_horizontal</Android_SplashGravity>
@@ -242,26 +242,26 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_BundleId>com.agilis-jettenders.$(ModuleName)</VerInfo_BundleId>
-        <iOS_AppStore1024>img\iPhone\BoatMobile_1024x1024.png</iOS_AppStore1024>
-        <iPhone_AppIcon120>img\iPhone\BoatMobile_120x120.png</iPhone_AppIcon120>
-        <iPhone_AppIcon180>img\iPhone\BoatMobile_180x180.png</iPhone_AppIcon180>
-        <iPhone_Launch2x>img\iPhone\BoatMobile_2x.png</iPhone_Launch2x>
-        <iPhone_LaunchDark2x>img\iPhone\BoatMobile_2x.png</iPhone_LaunchDark2x>
-        <iPhone_Launch3x>img\iPhone\BoatMobile_3x.png</iPhone_Launch3x>
-        <iPhone_LaunchDark3x>img\iPhone\BoatMobile_3x.png</iPhone_LaunchDark3x>
-        <iPhone_Spotlight80>img\iPhone\BoatMobile_80x80.png</iPhone_Spotlight80>
-        <iPhone_Spotlight120>img\iPhone\BoatMobile_120x120.png</iPhone_Spotlight120>
-        <iPhone_Setting58>img\iPhone\BoatMobile_58x58.png</iPhone_Setting58>
-        <iPhone_Setting87>img\iPhone\BoatMobile_87x87.png</iPhone_Setting87>
-        <iPhone_Notification40>img\iPhone\BoatMobile_40x40.png</iPhone_Notification40>
-        <iPhone_Notification60>img\iPhone\BoatMobile_60x60.png</iPhone_Notification60>
-        <iPad_AppIcon152>img\iPad\BoatMobile_152x152.png</iPad_AppIcon152>
-        <iPad_AppIcon167>img\iPad\BoatMobile_167x167.png</iPad_AppIcon167>
-        <iPad_Launch2x>img\iPad\BoatMobile_2x.png</iPad_Launch2x>
-        <iPad_LaunchDark2x>img\iPad\BoatMobile_2x.png</iPad_LaunchDark2x>
-        <iPad_SpotLight80>img\iPad\BoatMobile_80x80.png</iPad_SpotLight80>
-        <iPad_Setting58>img\iPad\BoatMobile_58x58.png</iPad_Setting58>
-        <iPad_Notification40>img\iPad\BoatMobile_40x40.png</iPad_Notification40>
+        <iOS_AppStore1024>img\iPhone\WmsMobile_1024x1024.png</iOS_AppStore1024>
+        <iPhone_AppIcon120>img\iPhone\WmsMobile_120x120.png</iPhone_AppIcon120>
+        <iPhone_AppIcon180>img\iPhone\WmsMobile_180x180.png</iPhone_AppIcon180>
+        <iPhone_Launch2x>img\iPhone\WmsMobile_2x.png</iPhone_Launch2x>
+        <iPhone_LaunchDark2x>img\iPhone\WmsMobile_2x.png</iPhone_LaunchDark2x>
+        <iPhone_Launch3x>img\iPhone\WmsMobile_3x.png</iPhone_Launch3x>
+        <iPhone_LaunchDark3x>img\iPhone\WmsMobile_3x.png</iPhone_LaunchDark3x>
+        <iPhone_Spotlight80>img\iPhone\WmsMobile_80x80.png</iPhone_Spotlight80>
+        <iPhone_Spotlight120>img\iPhone\WmsMobile_120x120.png</iPhone_Spotlight120>
+        <iPhone_Setting58>img\iPhone\WmsMobile_58x58.png</iPhone_Setting58>
+        <iPhone_Setting87>img\iPhone\WmsMobile_87x87.png</iPhone_Setting87>
+        <iPhone_Notification40>img\iPhone\WmsMobile_40x40.png</iPhone_Notification40>
+        <iPhone_Notification60>img\iPhone\WmsMobile_60x60.png</iPhone_Notification60>
+        <iPad_AppIcon152>img\iPad\WmsMobile_152x152.png</iPad_AppIcon152>
+        <iPad_AppIcon167>img\iPad\WmsMobile_167x167.png</iPad_AppIcon167>
+        <iPad_Launch2x>img\iPad\WmsMobile_2x.png</iPad_Launch2x>
+        <iPad_LaunchDark2x>img\iPad\WmsMobile_2x.png</iPad_LaunchDark2x>
+        <iPad_SpotLight80>img\iPad\WmsMobile_80x80.png</iPad_SpotLight80>
+        <iPad_Setting58>img\iPad\WmsMobile_58x58.png</iPad_Setting58>
+        <iPad_Notification40>img\iPad\WmsMobile_40x40.png</iPad_Notification40>
         <DCC_UnitSearchPath>.\Library\iOSDevice;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <PF_DevAdHoc>iPhone Distribution: Agilis Jettenders GmbH (538MKTH9V4)</PF_DevAdHoc>
         <PF_MobileProvisionAdHoc>1593b6bc-2968-4ab4-a7be-d774616a1ee0</PF_MobileProvisionAdHoc>
@@ -301,8 +301,8 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Linux64)'!=''">
         <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
         <Manifest_File>(None)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
@@ -315,8 +315,8 @@
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
         <Manifest_File>(None)</Manifest_File>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_OSXARM64)'!=''">
         <DCC_UsePackage>DataSnapServer;fmx;DbxDriver;bindengine;IndyIP;FireDACODBC;emsclient;IndyProtocols;dbxcds;DBXFirebirdDriver;FireDACSqliteDriver;DbxClientDriver;soapmidas;dbexpress;inet;FireDACDBXDriver;fmxdae;CustomIPTransport;FireDACMSSQLDriver;IndySystem;FireDAC;DataSnapServerMidas;FireDACODBCDriver;bindcompdbx;rtl;FireDACMySQLDriver;DBXSqliteDriver;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;dsnap;DBXOracleDriver;DBXInformixDriver;fmxobj;DataSnapNativeClient;FireDACDriver;IndyIPClient;bindcompfmx;inetdb;FireDACASADriver;fmxFireDAC;DBXMySQLDriver;DataSnap;fmxase;dbrtl;FireDACOracleDriver;DataSnapIndy10ServerTransport;DBXInterBaseDriver;FireDACMongoDBDriver;FireDACTDataDriver;bindcomp;IndyCore;RESTBackendComponents;RESTComponents;IndyIPServer;dsnapxml;DataSnapClient;DataSnapProviderClient;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;tethering;CloudService;DBXSybaseASADriver;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -329,14 +329,14 @@
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.agilis-jettenders.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=ua.dp.alan.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <UWP_DelphiLogo44>img\Windows\BoatMobile_44.png</UWP_DelphiLogo44>
-        <UWP_DelphiLogo150>img\Windows\BoatMobile_150.png</UWP_DelphiLogo150>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <DCC_UnitSearchPath>..\SOURCE FMX\Components BarCode;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>dxPSdxSpreadSheetLnkRS28;vclwinx;DataSnapServer;fmx;vclie;DbxDriver;bindengine;IndyIP;VCLRESTComponents;DBXMSSQLDriver;FireDACODBC;emsclient;cxExportRS28;dxHttpIndyRequestRS28;appanalytics;IndyProtocols;vclx;dxTileControlRS28;dbxcds;vcledge;dxPSdxDBOCLnkRS28;ZCoreD28;cxPivotGridOLAPRS28;dxPSPrVwRibbonRS28;ProjectDesignComponent_D28;dxGDIPlusRS28;DBXFirebirdDriver;dxCoreRS28;cxPivotGridRS28;dxPSCoreRS28;FireDACSqliteDriver;DbxClientDriver;dxSpreadSheetRS28;dxSkinsCoreRS28;soapmidas;dxBarRS28;dxADOServerModeRS28;dxWizardControlRS28;dbexpress;inet;dxServerModeRS28;vcltouch;cxTreeListRS28;ZDbcD28;dxBarDBNavRS28;ZComponentD28;FireDACDBXDriver;fmxdae;dxPScxRS28;dxNavBarRS28;CustomIPTransport;FireDACMSSQLDriver;ProjectComponent_D28;dxSpreadSheetReportDesignerRS28;dxComnRS28;GMLib_D28_VCL;IndySystem;cxVerticalGridRS28;dxmdsRS28;dxRichEditControlRS28;cxSchedulerGridRS28;dxPSdxOCLnkRS28;dxPScxSchedulerLnkRS28;dxPsPrVwAdvRS28;vclFireDAC;FireDAC;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;dxPSdxDBTVLnkRS28;dxRibbonCustomizationFormRS28;bindcompdbx;dxGaugeControlRS28;rtl;FireDACMySQLDriver;dxDockingRS28;dxPDFViewerRS28;DBXSqliteDriver;dxBarExtItemsRS28;dxPSdxFCLnkRS28;dxorgcRS28;DBXSybaseASEDriver;dxSpreadSheetCoreConditionalFormattingDialogsRS28;dxPSRichEditControlLnkRS28;vclimg;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;dsnap;FireDACDb2Driver;GMLib_D28;DBXOracleDriver;DBXInformixDriver;cxSchedulerRibbonStyleEventEditorRS28;dxPScxTLLnkRS28;fmxobj;bindcompvclsmp;DataSnapNativeClient;dxFlowChartRS28;DatasnapConnectorsFreePascal;emshosting;dxPScxVGridLnkRS28;dxPScxPivotGridLnkRS28;FireDACDriver;ZPlainD28;IndyIPClient;dxCloudServiceLibraryRS28;cxLibraryRS28;bindcompvclwinx;emsedge;bindcompfmx;dxPSdxPDFViewerLnkRS28;inetdb;dxSpreadSheetCoreRS28;cxSchedulerTreeBrowserRS28;FireDACASADriver;dxTabbedMDIRS28;vclactnband;fmxFireDAC;dxFireDACServerModeRS28;FireDACInfxDriver;DBXMySQLDriver;VclSmp;dxPSdxLCLnkRS28;DataSnap;fmxase;dxdbtrRS28;DBXOdbcDriver;dbrtl;FireDACOracleDriver;dxPSLnksRS28;FireDACMSAccDriver;DataSnapIndy10ServerTransport;DataSnapConnectors;ZParseSqlD28;vcldsnap;DBXInterBaseDriver;FireDACMongoDBDriver;dxSpreadSheetConditionalFormattingDialogsRS28;FireDACTDataDriver;dxOrgChartAdvancedCustomizeFormRS28;vcldb;dxDBXServerModeRS28;cxSchedulerRS28;dxRibbonRS28;dxFlowChartLayoutsRS28;dxPScxExtRS28;dxdborRS28;dxRichEditControlCoreRS28;bindcomp;dxPScxGridLnkRS28;IndyCore;RESTBackendComponents;cxPivotGridChartRS28;dxBarExtDBItemsRS28;cxTreeListdxBarPopupMenuRS28;dxFlowChartAdvancedCustomizeFormRS28;FireDACADSDriver;RESTComponents;IndyIPServer;vcl;dsnapxml;adortl;dsnapcon;DataSnapClient;DataSnapProviderClient;dxtrmdRS28;DBXDb2Driver;dxPSdxGaugeControlLnkRS28;dxSpellCheckerRS28;cxGridRS28;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;tethering;dxMapControlRS28;bindcompvcl;CloudService;DBXSybaseASADriver;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -363,7 +363,7 @@
         <VerInfo_Build>1</VerInfo_Build>
         <EL_SecureFileSharing>true</EL_SecureFileSharing>
         <AUP_REQUEST_INSTALL_PACKAGES>true</AUP_REQUEST_INSTALL_PACKAGES>
-        <Debugger_DebugSourcePath>C:\DSD\ProjectBoatMobile\Components\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
+        <Debugger_DebugSourcePath>C:\DSD\ProjectWmsMobile\Components\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
         <Android_BackgroundColor>#FFFFFF</Android_BackgroundColor>
         <Android_DarkBackgroundColor>#000000</Android_DarkBackgroundColor>
     </PropertyGroup>
@@ -386,23 +386,22 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Linux64)'!=''">
         <Debugger_Launcher>/usr/bin/gnome-terminal -- &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_OSX64)'!=''">
         <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Debugger_DebugSourcePath>C:\DSD\SOURCE FMX\COMPONENT\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -437,20 +436,19 @@
         <VerInfo_Build>2</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSX64)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
+        <Icns_MainIcns>img\WmsMobile.icns</Icns_MainIcns>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <Icon_MainIcon>img\BoatMobile_64.ico</Icon_MainIcon>
-        <Icns_MainIcns>img\BoatMobile.icns</Icns_MainIcns>
+        <Icon_MainIcon>img\WmsMobile_64.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -463,13 +461,13 @@
             <Form>frmMain</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="..\SOURCE FMX\COMPONENT\FMX.UtilConst.pas"/>
         <DCCReference Include="uDM.pas">
             <Form>DM</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\SOURCE FMX\COMPONENT\FMX.UtilConst.pas"/>
-        <None Include="ModelSupport_BoatMobile\default.txaPackage"/>
+        <None Include="ModelSupport_WmsMobile\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -488,7 +486,7 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">BoatMobile.dpr</Source>
+                    <Source Name="MainSource">WmsMobile.dpr</Source>
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
@@ -623,8 +621,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
+                    <Platform Name="Android64">
+                        <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Release" Class="Android_SplashImage426">
                     <Platform Name="Android">
+                        <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
+                    <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -635,8 +645,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
+                    <Platform Name="Android64">
+                        <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Configuration="Release" Class="Android_SplashImage640">
                     <Platform Name="Android">
+                        <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
+                    <Platform Name="Android64">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -644,6 +666,20 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Configuration="Release" Class="Android_SplashImage960">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo150x150.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets\</RemoteDir>
+                        <RemoteName>Logo44x44.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -755,7 +791,7 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\delphi_PROJECTICNS.icns" Configuration="Debug" Class="ProjectOSXResource">
                     <Platform Name="OSXARM64">
-                        <RemoteName>BoatMobile.icns</RemoteName>
+                        <RemoteName>WmsMobile.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -771,43 +807,43 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi-v7a\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiv7aFile">
                     <Platform Name="Android64">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile">
                     <Platform Name="Android64">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeArmeabiFile">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile">
                     <Platform Name="Android64">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -867,7 +903,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android64\Debug\BoatMobile.classes" Configuration="Debug" Class="AndroidClasses">
+                <DeployFile LocalName="..\BIN\Android64\Debug\WmsMobile.classes" Configuration="Debug" Class="AndroidClasses">
                     <Platform Name="Android64">
                         <Operation>64</Operation>
                         <Overwrite>true</Overwrite>
@@ -884,9 +920,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android64\Debug\libBoatMobile.so" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Android64\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Android64">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -921,7 +957,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\BoatMobile.classes" Configuration="Debug" Class="AndroidClasses">
+                <DeployFile LocalName="..\BIN\Android\Debug\WmsMobile.classes" Configuration="Debug" Class="AndroidClasses">
                     <Platform Name="Android">
                         <Operation>64</Operation>
                         <Overwrite>true</Overwrite>
@@ -938,9 +974,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Debug\libBoatMobile.so" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Android\Debug\libWmsMobile.so" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -976,7 +1012,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\BoatMobile.classes" Configuration="Release" Class="AndroidClasses">
+                <DeployFile LocalName="..\BIN\Android\Release\WmsMobile.classes" Configuration="Release" Class="AndroidClasses">
                     <Platform Name="Android">
                         <Operation>64</Operation>
                         <Overwrite>true</Overwrite>
@@ -987,9 +1023,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Android\Release\libBoatMobile.so" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Android\Release\libWmsMobile.so" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Android">
-                        <RemoteName>libBoatMobile.so</RemoteName>
+                        <RemoteName>libWmsMobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1015,113 +1051,113 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Linux64\Debug\BoatMobile" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Linux64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Linux64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\BoatMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
                     <Platform Name="OSX64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\BoatMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
                     <Platform Name="OSX64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\BoatMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
                     <Platform Name="OSX64">
                         <RemoteName>Info.plist</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSX64\Debug\BoatMobile" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\OSX64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="OSX64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\BoatMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectOSXDebug">
                     <Platform Name="OSXARM64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\BoatMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectOSXEntitlements">
                     <Platform Name="OSXARM64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\BoatMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectOSXInfoPList">
                     <Platform Name="OSXARM64">
                         <RemoteName>Info.plist</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\OSXARM64\Debug\BoatMobile" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\OSXARM64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="OSXARM64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\Win32\Debug\BoatMobile.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\Win32\Debug\WmsMobile.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>BoatMobile.exe</RemoteName>
+                        <RemoteName>WmsMobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.dSYM" Configuration="Debug" Class="ProjectiOSDeviceDebug">
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.dSYM" Configuration="Debug" Class="ProjectiOSDeviceDebug">
                     <Platform Name="iOSDevice64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile.launchscreen" Configuration="Debug" Class="ProjectiOSLaunchScreen">
-                    <Platform Name="iOSDevice64">
-                        <Operation>64</Operation>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\BoatMobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>BoatMobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Info.plist</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile.launchscreen" Configuration="Release" Class="ProjectiOSLaunchScreen">
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile.launchscreen" Configuration="Debug" Class="ProjectiOSLaunchScreen">
                     <Platform Name="iOSDevice64">
                         <Operation>64</Operation>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\iOSDevice64\Release\BoatMobile" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\iOSDevice64\Debug\WmsMobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="iOSDevice64">
-                        <RemoteName>BoatMobile</RemoteName>
+                        <RemoteName>WmsMobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile.launchscreen" Configuration="Release" Class="ProjectiOSLaunchScreen">
+                    <Platform Name="iOSDevice64">
+                        <Operation>64</Operation>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\BIN\iOSDevice64\Release\WmsMobile" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>WmsMobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1139,285 +1175,247 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android64">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="OSXARM64">
                         <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="ModelSupport_BoatMobile\default.txaPackage" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="ModelSupport_WmsMobile\default.txaPackage" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
+                <DeployFile LocalName="img\Android\WmsMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
+                <DeployFile LocalName="img\Android\WmsMobile_144.png" Configuration="Debug" Class="Android_LauncherIcon144">
                     <Platform Name="Android64">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
+                <DeployFile LocalName="img\Android\WmsMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
+                <DeployFile LocalName="img\Android\WmsMobile_192.png" Configuration="Debug" Class="Android_LauncherIcon192">
                     <Platform Name="Android64">
                         <RemoteName>ic_launcher.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
+                <DeployFile LocalName="img\Android\WmsMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
                     <Platform Name="Android">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
+                <DeployFile LocalName="img\Android\WmsMobile_24.png" Configuration="Debug" Class="Android_NotificationIcon24">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
+                <DeployFile LocalName="img\Android\WmsMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
                     <Platform Name="Android">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
+                <DeployFile LocalName="img\Android\WmsMobile_36.png" Configuration="Debug" Class="Android_NotificationIcon36">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
-                    <Platform Name="Android">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
-                    <Platform Name="Android64">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
+                <DeployFile LocalName="img\Android\WmsMobile_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
-                    <Platform Name="Android64">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
-                    <Platform Name="Android64">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
+                <DeployFile LocalName="img\Android\WmsMobile_470x320.png" Configuration="Debug" Class="Android_SplashImage470">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
-                    <Platform Name="Android64">
-                        <RemoteName>splash_image.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
+                <DeployFile LocalName="img\Android\WmsMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
                     <Platform Name="Android">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
+                <DeployFile LocalName="img\Android\WmsMobile_48.png" Configuration="Debug" Class="Android_NotificationIcon48">
                     <Platform Name="Android64">
                         <RemoteName>ic_notification.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
-                    <Platform Name="Android">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
-                    <Platform Name="Android64">
-                        <RemoteName>ic_notification.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
+                <DeployFile LocalName="img\Android\WmsMobile_640x480.png" Configuration="Debug" Class="Android_SplashImage640">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Android\BoatMobile_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
+                <DeployFile LocalName="img\Android\WmsMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
+                    <Platform Name="Android">
+                        <RemoteName>ic_notification.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_72.png" Configuration="Debug" Class="Android_NotificationIcon72">
                     <Platform Name="Android64">
+                        <RemoteName>ic_notification.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
+                    <Platform Name="Android">
+                        <RemoteName>ic_notification.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_96.png" Configuration="Debug" Class="Android_NotificationIcon96">
+                    <Platform Name="Android64">
+                        <RemoteName>ic_notification.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="img\Android\WmsMobile_960x720.png" Configuration="Debug" Class="Android_SplashImage960">
+                    <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\BoatMobile.icns" Configuration="Debug" Class="ProjectOSXResource">
+                <DeployFile LocalName="img\WmsMobile.icns" Configuration="Debug" Class="ProjectOSXResource">
                     <Platform Name="OSX64">
-                        <RemoteName>BoatMobile.icns</RemoteName>
+                        <RemoteName>WmsMobile.icns</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\Windows\BoatMobile_150.png" Configuration="Debug" Class="UWP_DelphiLogo150">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo150x150.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\Windows\BoatMobile_44.png" Configuration="Debug" Class="UWP_DelphiLogo44">
-                    <Platform Name="Win32">
-                        <RemoteDir>Assets\</RemoteDir>
-                        <RemoteName>Logo44x44.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
+                <DeployFile LocalName="img\iPad\WmsMobile_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_167x167.png" Configuration="Debug" Class="iPad_AppIcon167">
+                <DeployFile LocalName="img\iPad\WmsMobile_167x167.png" Configuration="Debug" Class="iPad_AppIcon167">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_2x.png" Configuration="Debug" Class="iPad_LaunchDark2x">
+                <DeployFile LocalName="img\iPad\WmsMobile_2x.png" Configuration="Debug" Class="iPad_LaunchDark2x">
                     <Platform Name="iOSDevice64">
                         <RemoteName>FM_LaunchScreenImage_iPadDark@2x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_40x40.png" Configuration="Debug" Class="iPad_Notification40">
+                <DeployFile LocalName="img\iPad\WmsMobile_40x40.png" Configuration="Debug" Class="iPad_Notification40">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_58x58.png" Configuration="Debug" Class="iPad_Setting58">
+                <DeployFile LocalName="img\iPad\WmsMobile_58x58.png" Configuration="Debug" Class="iPad_Setting58">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPad\BoatMobile_80x80.png" Configuration="Debug" Class="iPad_SpotLight80">
+                <DeployFile LocalName="img\iPad\WmsMobile_80x80.png" Configuration="Debug" Class="iPad_SpotLight80">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_1024x1024.png" Configuration="Debug" Class="iOS_AppStore1024">
+                <DeployFile LocalName="img\iPhone\WmsMobile_1024x1024.png" Configuration="Debug" Class="iOS_AppStore1024">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_120x120.png" Configuration="Debug" Class="iPhone_Spotlight120">
+                <DeployFile LocalName="img\iPhone\WmsMobile_120x120.png" Configuration="Debug" Class="iPhone_Spotlight120">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
+                <DeployFile LocalName="img\iPhone\WmsMobile_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_2x.png" Configuration="Debug" Class="iPhone_LaunchDark2x">
+                <DeployFile LocalName="img\iPhone\WmsMobile_2x.png" Configuration="Debug" Class="iPhone_LaunchDark2x">
                     <Platform Name="iOSDevice64">
                         <RemoteName>FM_LaunchScreenImage_iPhoneDark@2x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_3x.png" Configuration="Debug" Class="iPhone_LaunchDark3x">
+                <DeployFile LocalName="img\iPhone\WmsMobile_3x.png" Configuration="Debug" Class="iPhone_LaunchDark3x">
                     <Platform Name="iOSDevice64">
                         <RemoteName>FM_LaunchScreenImage_iPhoneDark@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_40x40.png" Configuration="Debug" Class="iPhone_Notification40">
+                <DeployFile LocalName="img\iPhone\WmsMobile_40x40.png" Configuration="Debug" Class="iPhone_Notification40">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_58x58.png" Configuration="Debug" Class="iPhone_Setting58">
+                <DeployFile LocalName="img\iPhone\WmsMobile_58x58.png" Configuration="Debug" Class="iPhone_Setting58">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_60x60.png" Configuration="Debug" Class="iPhone_Notification60">
+                <DeployFile LocalName="img\iPhone\WmsMobile_60x60.png" Configuration="Debug" Class="iPhone_Notification60">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80">
+                <DeployFile LocalName="img\iPhone\WmsMobile_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="img\iPhone\BoatMobile_87x87.png" Configuration="Debug" Class="iPhone_Setting87">
+                <DeployFile LocalName="img\iPhone\WmsMobile_87x87.png" Configuration="Debug" Class="iPhone_Setting87">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2396,11 +2394,11 @@
             <Platforms>
                 <Platform value="Android">True</Platform>
                 <Platform value="Android64">True</Platform>
-                <Platform value="iOSDevice64">True</Platform>
-                <Platform value="iOSSimARM64">True</Platform>
-                <Platform value="Linux64">True</Platform>
-                <Platform value="OSX64">True</Platform>
-                <Platform value="OSXARM64">True</Platform>
+                <Platform value="iOSDevice64">False</Platform>
+                <Platform value="iOSSimARM64">False</Platform>
+                <Platform value="Linux64">False</Platform>
+                <Platform value="OSX64">False</Platform>
+                <Platform value="OSXARM64">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
