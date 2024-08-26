@@ -18,7 +18,8 @@ $BODY$
    DECLARE vbGoodsKindId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ChoiceCell());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ChoiceCell());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- если надо найти
      IF COALESCE (inBarCode,'') <> ''
@@ -88,14 +89,14 @@ BEGIN
 
 
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_ChoiceCell (ioId                 := 0
-                                                  , inMovementId         := vbMovementId
-                                                  , inChoiceCellId       := tmp.ChoiceCellId
-                                                  , inGoodsId            := tmp.GoodsId
-                                                  , inGoodsKindId        := tmp.GoodsKindId
+    PERFORM lpInsertUpdate_MovementItem_ChoiceCell (ioId                     := 0
+                                                  , inMovementId             := vbMovementId
+                                                  , inChoiceCellId           := tmp.ChoiceCellId
+                                                  , inGoodsId                := vbGoodsId
+                                                  , inGoodsKindId            := vbGoodsKindId
                                                   , inPartionGoodsDate       := tmp.PartionGoodsDate
                                                   , inPartionGoodsDate_next  := tmp.PartionGoodsDate_next
-                                                  , inUserId             := vbUserId
+                                                  , inUserId                 := vbUserId
                                                    )
            FROM (WITH -- ВСЕ заполненные места хранения - ячейки + ячейка "Отбор"
                       tmpPartionCell_mi AS (SELECT DISTINCT lpSelect.PartionCellId, lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.PartionGoodsDate
@@ -120,8 +121,6 @@ BEGIN
               -- Результат
               SELECT
                      Object_ChoiceCell.Id                   AS ChoiceCellId
-                   , ObjectLink_Goods.ChildObjectId         AS GoodsId
-                   , ObjectLink_GoodsKind.ChildObjectId     AS GoodsKindId
                      -- последняя партия в ячейка "Отбор"
                    , tmpPartionCell_RK.PartionGoodsDate   :: TDateTime AS PartionGoodsDate
                      -- первая партия в ячейке Хранения
@@ -132,29 +131,18 @@ BEGIN
                    , Object_ChoiceCell.isErased      AS isErased
 
               FROM Object AS Object_ChoiceCell
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods
-                                        ON ObjectLink_Goods.ObjectId = Object_ChoiceCell.Id
-                                       AND ObjectLink_Goods.DescId = zc_ObjectLink_ChoiceCell_Goods()
-                   LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods.ChildObjectId
-
-                   LEFT JOIN ObjectLink AS ObjectLink_GoodsKind
-                                        ON ObjectLink_GoodsKind.ObjectId = Object_ChoiceCell.Id
-                                       AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_ChoiceCell_GoodsKind()
-                   LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKind.ChildObjectId
-
                    -- последняя партия в ячейка "Отбор"
-                   LEFT JOIN tmpPartionCell_RK ON tmpPartionCell_RK.GoodsId     = Object_Goods.Id
-                                              AND tmpPartionCell_RK.GoodsKindId = Object_GoodsKind.Id
+                   LEFT JOIN tmpPartionCell_RK ON tmpPartionCell_RK.GoodsId     = vbGoodsId
+                                              AND tmpPartionCell_RK.GoodsKindId = vbGoodsKindId
                                               AND tmpPartionCell_RK.ord         = 1
                    -- первая партия в ячейке Хранения
-                   LEFT JOIN tmpPartionCell_real ON tmpPartionCell_real.GoodsId     = Object_Goods.Id
-                                                AND tmpPartionCell_real.GoodsKindId = Object_GoodsKind.Id
+                   LEFT JOIN tmpPartionCell_real ON tmpPartionCell_real.GoodsId     = vbGoodsId
+                                                AND tmpPartionCell_real.GoodsKindId = vbGoodsKindId
                                                 AND tmpPartionCell_real.ord         = 1
 
               WHERE Object_ChoiceCell.DescId = zc_Object_ChoiceCell()
                 AND Object_ChoiceCell.Id     = vbChoiceCellId
-              ) AS tmp
+             ) AS tmp
     ;
 
 END;
