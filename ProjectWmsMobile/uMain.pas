@@ -61,15 +61,15 @@ type
     sbMain: TStyleBook;
     VertScrollBox8: TVertScrollBox;
     GridPanelLayout3: TGridPanelLayout;
-    bInventoryScan: TButton;
+    bChoiceCellScan: TButton;
     Image1: TImage;
-    Label1: TLabel;
+    lChoiceCel: TLabel;
     bSendScan: TButton;
     Image2: TImage;
     Label5: TLabel;
-    bProductionUnionScan: TButton;
+    bProductionScan: TButton;
     Image4: TImage;
-    lProductionUnion: TLabel;
+    lProduction: TLabel;
     bUpload: TButton;
     Image6: TImage;
     Label7: TLabel;
@@ -121,10 +121,6 @@ type
     ilPartners: TImageList;
     ilButton: TImageList;
     BindingsList1: TBindingsList;
-    BindSourceDB2: TBindSourceDB;
-    BindSourceDB3: TBindSourceDB;
-    BindSourceDB4: TBindSourceDB;
-    BindSourceDB5: TBindSourceDB;
     ppEnterAmount: TPopup;
     pEnterAmount: TPanel;
     lAmount: TLabel;
@@ -144,20 +140,16 @@ type
     bClearAmount: TButton;
     lMeasure: TLabel;
     bMinusAmount: TButton;
-    tiProductionUnionEdit: TTabItem;
+    tiChoiceCelEdit: TTabItem;
     pPassword: TPanel;
     Rectangle1: TRectangle;
-    pOrderInternal: TPanel;
+    pChoiceCelEdit: TPanel;
     Label20: TLabel;
-    edPUInvNumberFull: TEdit;
-    edPUInvNumberFull_OrderClient: TEdit;
+    edCCEPartionGoodsDate_next: TEdit;
+    edCCEPartionGoodsDate: TEdit;
     Label21: TLabel;
-    edPUAmount: TEdit;
-    Label23: TLabel;
-    edPUInvNumberFull_ProductionUnion: TEdit;
+    edCCEGoodsCode: TEdit;
     Label24: TLabel;
-    BindSourceDB7: TBindSourceDB;
-    BindSourceDB8: TBindSourceDB;
     lMain: TLayout;
     lAddConfig: TLayout;
     Label34: TLabel;
@@ -194,57 +186,32 @@ type
     Image9: TImage;
     Layout12: TLayout;
     Layout13: TLayout;
-    BindSourceDB9: TBindSourceDB;
-    BindSourceDB10: TBindSourceDB;
-    BindSourceDB11: TBindSourceDB;
-    tiProductionUnionScan: TTabItem;
-    tiProductionUnionList: TTabItem;
+    tiChoiceCelScan: TTabItem;
+    tiChoiceCelList: TTabItem;
     Panel10: TPanel;
-    bProductionUnionScanSearch: TSpeedButton;
-    bProductionUnionScanMode: TSpeedButton;
-    bViewProductionUnion: TSpeedButton;
-    bProductionUnionScanNull: TSpeedButton;
+    bChoiceCelScanSearch: TSpeedButton;
+    bChoiceCelScanMode: TSpeedButton;
+    bViewChoiceCel: TSpeedButton;
+    bChoiceCelScanNull: TSpeedButton;
     SpeedButton7: TSpeedButton;
-    lwProductionUnionScan: TListView;
-    BindSourceDB12: TBindSourceDB;
-    LinkListControlToField7: TLinkListControlToField;
+    lwChoiceCelScan: TListView;
     Panel11: TPanel;
     pbPULErased: TPopupBox;
     pbPULAllUser: TPopupBox;
     pbPULOrderBy: TPopupBox;
-    llwProductionUnionList: TLabel;
-    lwProductionUnionList: TListView;
-    BindSourceDB13: TBindSourceDB;
-    LinkListControlToField8: TLinkListControlToField;
+    llwChoiceCelList: TLabel;
+    lwChoiceCelList: TListView;
     Label17: TLabel;
-    edPUGoodsCode: TEdit;
-    edPUGoodsName: TMemo;
+    edCCEChoiceCellName: TEdit;
+    edCCEGoodsName: TMemo;
     Label49: TLabel;
-    edPUArticle: TEdit;
+    edCCEChoiceCellCode: TEdit;
     Label50: TLabel;
-    edPUGoodsGroupName: TEdit;
+    edCCEGoodsKindName: TEdit;
     Label22: TLabel;
-    bpProductionUnionCancel: TButton;
-    bpProductionUnion: TButton;
-    edPUToName: TEdit;
-    Label51: TLabel;
-    edPUFromName: TEdit;
-    Label52: TLabel;
-    edPURemains: TEdit;
-    Label53: TLabel;
-    BindSourceDB14: TBindSourceDB;
-    LinkControlToField8: TLinkControlToField;
-    LinkControlToField34: TLinkControlToField;
-    LinkControlToField35: TLinkControlToField;
-    LinkControlToField36: TLinkControlToField;
-    LinkControlToField37: TLinkControlToField;
-    LinkControlToField9: TLinkControlToField;
-    LinkControlToField38: TLinkControlToField;
-    LinkControlToField39: TLinkControlToField;
+    bpChoiceCelCancel: TButton;
+    bpChoiceCel: TButton;
     ScanCamera: TCameraComponent;
-    LinkControlToField7: TLinkControlToField;
-    LinkControlToField6: TLinkControlToField;
-    LinkControlToField10: TLinkControlToField;
     TimerTorchMode: TTimer;
     PanelMain: TPanel;
     iScanBarCodePanel: TPanel;
@@ -252,6 +219,18 @@ type
     WebServerLabel: TLabel;
     WebServerLayout12: TLayout;
     pbWebServer: TPopupBox;
+    BindSourceDB1: TBindSourceDB;
+    LinkControlToField1: TLinkControlToField;
+    LinkControlToField2: TLinkControlToField;
+    LinkControlToField3: TLinkControlToField;
+    LinkControlToField4: TLinkControlToField;
+    LinkControlToField5: TLinkControlToField;
+    LinkControlToField7: TLinkControlToField;
+    LinkControlToField6: TLinkControlToField;
+    BindSourceDB2: TBindSourceDB;
+    LinkListControlToField1: TLinkListControlToField;
+    BindSourceDB3: TBindSourceDB;
+    LinkListControlToField2: TLinkListControlToField;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -264,14 +243,14 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure ShowInformation;
-    procedure ShowProductionUnionScan;
-    procedure ShowProductionUnionList;
-    procedure ShowEditProductionUnionItem(AId: Integer);
+    procedure ShowChoiceCelScan;
+    procedure ShowChoiceCelList;
+    procedure ShowEditChoiceCelItem(AId: Integer);
     procedure bInfoClick(Sender: TObject);
     procedure sbScanClick(Sender: TObject);
     procedure OnScanResultDetails(Sender: TObject; AAction, ASource, ALabel_Type, AData_String: String);
     procedure OnScanResultLogin(Sender: TObject; AData_String: String);
-    procedure OnScanProductionUnion(Sender: TObject; AData_String: String);
+    procedure OnScanChoiceCel(Sender: TObject; AData_String: String);
     procedure bLogInClick(Sender: TObject);
     procedure bUpdateProgramClick(Sender: TObject);
     procedure CameraScanBarCodeSampleBufferReady(Sender: TObject;
@@ -298,7 +277,7 @@ type
     procedure bEnterAmountClick(Sender: TObject);
     procedure bAddAmountClick(Sender: TObject);
     procedure bMinusAmountClick(Sender: TObject);
-    procedure bpProductionUnionClick(Sender: TObject);
+    procedure bpChoiceCelClick(Sender: TObject);
     procedure FormVirtualKeyboardHidden(Sender: TObject;
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure FormVirtualKeyboardShown(Sender: TObject;
@@ -308,19 +287,20 @@ type
     procedure FormFocusChanged(Sender: TObject);
     procedure TimerInfoViewTimer(Sender: TObject);
     procedure sbRefreshClick(Sender: TObject);
-    procedure lwProductionUnionScanDblClick(Sender: TObject);
-    procedure lwProductionUnionScanGesture(Sender: TObject;
+    procedure lwChoiceCelScanDblClick(Sender: TObject);
+    procedure lwChoiceCelScanGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
-    procedure bProductionUnionScanModeClick(Sender: TObject);
-    procedure bViewProductionUnionClick(Sender: TObject);
-    procedure lwProductionUnionListGesture(Sender: TObject;
+    procedure bChoiceCelScanModeClick(Sender: TObject);
+    procedure bViewChoiceCelClick(Sender: TObject);
+    procedure lwChoiceCelListGesture(Sender: TObject;
       const EventInfo: TGestureEventInfo; var Handled: Boolean);
-    procedure lwProductionUnionListDblClick(Sender: TObject);
-    procedure bpProductionUnionCancelClick(Sender: TObject);
+    procedure lwChoiceCelListDblClick(Sender: TObject);
+    procedure bpChoiceCelCancelClick(Sender: TObject);
     procedure pbPULOrderByChange(Sender: TObject);
-    procedure bProductionUnionScanSearchClick(Sender: TObject);
+    procedure bChoiceCelScanSearchClick(Sender: TObject);
     procedure bOrderInternalChoiceClick(Sender: TObject);
     procedure TimerTorchModeTimer(Sender: TObject);
+    procedure bChoiceCellScanClick(Sender: TObject);
   private
     { Private declarations }
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
@@ -367,8 +347,9 @@ type
     // предвдущая страница
     FActiveTabPrew: TTabItem;
 
-    // Заказ производство
-    FProductionUnion: Integer;
+    // Найденное место отбора
+    FChoiceCelId: Integer;
+    FChoiceCelBarCode: String;
 
     {$IF DEFINED(iOS) or DEFINED(ANDROID)}
     procedure CalcContentBoundsProc(Sender: TObject;
@@ -378,12 +359,14 @@ type
     {$ENDIF}
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
-    procedure ProductionUnionInsert(const AResult: TModalResult);
-    procedure ProductionUnionOpen(const AResult: TModalResult);
-    procedure DeleteProductionUnionGoods(const AResult: TModalResult);
-    procedure ErasedProductionUnionList(const AResult: TModalResult);
-    procedure UnErasedProductionUnionList(const AResult: TModalResult);
+    procedure ChoiceCelConfirm(const AResult: TModalResult);
+    procedure ChoiceCelOpen(const AResult: TModalResult);
+    procedure DeleteChoiceCelGoods(const AResult: TModalResult);
+    procedure ErasedChoiceCelList(const AResult: TModalResult);
+    procedure UnErasedChoiceCelList(const AResult: TModalResult);
     procedure NoBarCodeNextScan(const AResult: TModalResult);
+
+    procedure InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
 
     {$IF DEFINED(ANDROID)}
     function HandleAppEvent(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;
@@ -392,7 +375,8 @@ type
     procedure Wait(AWait: Boolean);
   public
     { Public declarations }
-    procedure SetProductionUnionScanButton;
+    procedure SetChoiceCelScanButton;
+    procedure ProcessChoiceCel(ABarCode: String);
 
     procedure NextScan;
 
@@ -847,19 +831,36 @@ procedure TfrmMain.bOrderInternalChoiceClick(Sender: TObject);
 begin
 end;
 
-// Сборка Узла / Лодки
-procedure TfrmMain.bProductionUnionScanModeClick(Sender: TObject);
+// Сканирование Места отбора
+procedure TfrmMain.bChoiceCellScanClick(Sender: TObject);
+begin
+  FScanType := 0;
+  SwitchToForm(tiChoiceCelScan, nil);
+end;
+
+// Сборка Места отбора
+procedure TfrmMain.bChoiceCelScanModeClick(Sender: TObject);
 begin
   FScanType := TSpinEditButton(Sender).Tag;
-  SetProductionUnionScanButton;
+  SetChoiceCelScanButton;
   if FisOpenScanChangingMode then sbScanClick(Sender);
 end;
 
-procedure TfrmMain.bProductionUnionScanSearchClick(Sender: TObject);
+procedure TfrmMain.InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
+  var InvNumber, InvNumberFull: String; ID: Integer;
 begin
-  FisNextScan := False;
-  FisScanOk := False;
-  bProductionUnionScanSearch.Visible := True;
+  if (AResult = mrOk) and (AValues[0] <> '') then
+  begin
+
+    OnScanChoiceCel(Nil, AValues[0]);
+  end;
+end;
+
+
+procedure TfrmMain.bChoiceCelScanSearchClick(Sender: TObject);
+begin
+  //edSSInvNumber_OrderClient.SetFocus;
+  TDialogService.InputQuery('Ввод № док. заказа', ['№ док. заказа'], [''], InputChoiceCel);
 end;
 
 // присвоение количества комплектующих
@@ -882,64 +883,52 @@ begin
 end;
 {$ENDIF}
 
-procedure TfrmMain.ProductionUnionInsert(const AResult: TModalResult);
+procedure TfrmMain.ChoiceCelConfirm(const AResult: TModalResult);
   var ScanId: Integer;
 begin
-//  if (AResult = mrYes) and (FOrderInternal <> 0) then
-//  begin
-//    try
-//      if DM.InsertProductionUnion(FOrderInternal, ScanId) then
-//      begin
-//        if tcMain.ActiveTab = tiProductionUnionEdit then ReturnPriorForm;
-//        if DM.cdsProductionUnionItemEdit.Active then
-//        begin
-//          bpProductionUnion.Visible := False;
-//          if FisNextScan and FisScanOk and not FisZebraScaner then
-//          begin
-//            DM.cdsProductionUnionItemEdit.Close;
-//            NextScan;
-//          end else DM.GetProductionUnionItem(ScanId)
-//        end else if FScanType <> 3 then
-//          ShowEditProductionUnionItem(ScanId);
-//      end;
-//    except
-//      on E : Exception do
-//      begin
-//        TDialogService.ShowMessage('Ошибка создания сборки узла/лодки'+#13#10 + GetTextMessage(E));
-//      end;
-//    end;
-//  end;
+  if (AResult = mrYes) and (FChoiceCelBarCode <> '') and DM.cdsChoiceCelEdit.Active and
+     (DM.cdsChoiceCelEdit.RecordCount = 1) then
+  begin
+    try
+      DM.ConfirmChoiceCel(FChoiceCelBarCode);
+    except
+      on E : Exception do
+      begin
+        TDialogService.ShowMessage('Ошибка подтверждения'+#13#10 + GetTextMessage(E));
+      end;
+    end;
+  end;
 end;
 
-procedure TfrmMain.ProductionUnionOpen(const AResult: TModalResult);
+procedure TfrmMain.ChoiceCelOpen(const AResult: TModalResult);
 begin
-  if (FProductionUnion <> 0) and (FScanType <> 3) then
-    ShowEditProductionUnionItem(FProductionUnion)
-  else NextScan;
+//  if (FChoiceCel <> 0) and (FScanType <> 3) then
+//    ShowEditChoiceCelItem(FChoiceCel)
+//  else NextScan;
 end;
 
-procedure TfrmMain.DeleteProductionUnionGoods(const AResult: TModalResult);
+procedure TfrmMain.DeleteChoiceCelGoods(const AResult: TModalResult);
 begin
 //  if AResult = mrYes then
 //  begin
-//    DM.SetErasedProductionUnion(DM.cdsProductionUnionListTop);
-//    DM.DownloadProductionUnionListTop;
+//    DM.SetErasedChoiceCel(DM.cdsChoiceCelListTop);
+//    DM.DownloadChoiceCelListTop;
 //  end;
 end;
 
-procedure TfrmMain.ErasedProductionUnionList(const AResult: TModalResult);
+procedure TfrmMain.ErasedChoiceCelList(const AResult: TModalResult);
 begin
 //  if AResult = mrYes then
 //  begin
-//    DM.SetErasedProductionUnion(DM.cdsProductionUnionList);
+//    DM.SetErasedChoiceCel(DM.cdsChoiceCelList);
 //  end;
 end;
 
-procedure TfrmMain.UnErasedProductionUnionList(const AResult: TModalResult);
+procedure TfrmMain.UnErasedChoiceCelList(const AResult: TModalResult);
 begin
 //  if AResult = mrYes then
 //  begin
-//    DM.CompleteProductionUnion(DM.cdsProductionUnionList);
+//    DM.CompleteChoiceCel(DM.cdsChoiceCelList);
 //  end;
 end;
 
@@ -949,16 +938,18 @@ begin
 end;
 
 // Формирование документа сборки
-procedure TfrmMain.bpProductionUnionCancelClick(Sender: TObject);
+procedure TfrmMain.bpChoiceCelCancelClick(Sender: TObject);
 begin
-//  DM.cdsProductionUnionItemEdit.Close;
-//  ReturnPriorForm;
+  DM.cdsChoiceCelEdit.Close;
+  ReturnPriorForm;
 end;
 
-procedure TfrmMain.bpProductionUnionClick(Sender: TObject);
+procedure TfrmMain.bpChoiceCelClick(Sender: TObject);
 begin
-  TDialogService.MessageDialog('Формировать документ сборки узла/лодки?',
-    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ProductionUnionInsert)
+  ChoiceCelConfirm(mrYes);
+  ReturnPriorForm;
+//  TDialogService.MessageDialog('Подтвердить?',
+//    TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ChoiceCelConfirm)
 end;
 
 // переход на заданную форму с сохранением её в стэк открываемых форм
@@ -1044,30 +1035,30 @@ begin
   end;
 end;
 
-procedure TfrmMain.SetProductionUnionScanButton;
+procedure TfrmMain.SetChoiceCelScanButton;
 begin
-  bProductionUnionScanMode.ImageIndex := 13;
-  bProductionUnionScanMode.TextSettings.FontColor := bProductionUnionScanSearch.TextSettings.FontColor;
-  bProductionUnionScanMode.TextSettings.Font.Style := bProductionUnionScanSearch.TextSettings.Font.Style;
-  bProductionUnionScanMode.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size;
-  bProductionUnionScanNull.ImageIndex := 13;
-  bProductionUnionScanNull.TextSettings.FontColor := bProductionUnionScanSearch.TextSettings.FontColor;
-  bProductionUnionScanNull.TextSettings.Font.Style := bProductionUnionScanSearch.TextSettings.Font.Style;
-  bProductionUnionScanNull.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size;
+  bChoiceCelScanMode.ImageIndex := 13;
+  bChoiceCelScanMode.TextSettings.FontColor := bChoiceCelScanSearch.TextSettings.FontColor;
+  bChoiceCelScanMode.TextSettings.Font.Style := bChoiceCelScanSearch.TextSettings.Font.Style;
+  bChoiceCelScanMode.TextSettings.Font.Size := bChoiceCelScanSearch.TextSettings.Font.Size;
+  bChoiceCelScanNull.ImageIndex := 13;
+  bChoiceCelScanNull.TextSettings.FontColor := bChoiceCelScanSearch.TextSettings.FontColor;
+  bChoiceCelScanNull.TextSettings.Font.Style := bChoiceCelScanSearch.TextSettings.Font.Style;
+  bChoiceCelScanNull.TextSettings.Font.Size := bChoiceCelScanSearch.TextSettings.Font.Size;
 
 
   case FScanType of
     0 : begin
-          bProductionUnionScanMode.ImageIndex := 12;
-          bProductionUnionScanMode.TextSettings.FontColor := TAlphaColorRec.Peru;
-          bProductionUnionScanMode.TextSettings.Font.Style := [TFontStyle.fsBold];
-          bProductionUnionScanMode.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size + 1;
+          bChoiceCelScanMode.ImageIndex := 12;
+          bChoiceCelScanMode.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bChoiceCelScanMode.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bChoiceCelScanMode.TextSettings.Font.Size := bChoiceCelScanSearch.TextSettings.Font.Size + 1;
         end;
     3 : begin
-          bProductionUnionScanNull.ImageIndex := 12;
-          bProductionUnionScanNull.TextSettings.FontColor := TAlphaColorRec.Peru;
-          bProductionUnionScanNull.TextSettings.Font.Style := [TFontStyle.fsBold];
-          bProductionUnionScanNull.TextSettings.Font.Size := bProductionUnionScanSearch.TextSettings.Font.Size + 1;
+          bChoiceCelScanNull.ImageIndex := 12;
+          bChoiceCelScanNull.TextSettings.FontColor := TAlphaColorRec.Peru;
+          bChoiceCelScanNull.TextSettings.Font.Style := [TFontStyle.fsBold];
+          bChoiceCelScanNull.TextSettings.Font.Size := bChoiceCelScanSearch.TextSettings.Font.Size + 1;
         end;
   end;
 end;
@@ -1080,9 +1071,8 @@ begin
   begin
     bGoods.Enabled := False;
     bInfo.Enabled := False;
-    bInventoryScan.Enabled := False;
     bLogIn.Enabled := False;
-    bProductionUnionScan.Enabled := False;
+    bChoiceCellScan.Enabled := False;
     bRelogin.Enabled := False;
     bSendScan.Enabled := False;
     bUpload.Enabled := False;
@@ -1097,9 +1087,8 @@ begin
         begin
           bGoods.Enabled := True;
           bInfo.Enabled := True;
-          bInventoryScan.Enabled := True;
           bLogIn.Enabled := True;
-          bProductionUnionScan.Enabled := True;
+          bChoiceCellScan.Enabled := True;
           bRelogin.Enabled := True;
           bSendScan.Enabled := True;
           bUpload.Enabled := True;
@@ -1138,7 +1127,7 @@ begin
     end;
 
     if tcMain.ActiveTab = tiMain then
-      lCaption.Text := 'A g i l i s'
+      lCaption.Text := 'Wms Mobile'
     else
     if tcMain.ActiveTab = tiInformation then
     begin
@@ -1159,32 +1148,31 @@ begin
       //Зажгем подсветку с задержкой
       if ScanCamera.HasFlash and isIlluminationMode then TimerTorchMode.Enabled := True;
     end else
-    if tcMain.ActiveTab = tiProductionUnionScan then
+    if tcMain.ActiveTab = tiChoiceCelScan then
     begin
-      lCaption.Text := 'Сборка Узла / Лодки';
-      SetProductionUnionScanButton;
+      lCaption.Text := 'Сканирование "Места отбора"';
+      SetChoiceCelScanButton;
       sbRefresh.Visible := True;
-      //DM.DownloadProductionUnionListTop;
-      FDataWedgeBarCode.OnScanResult := OnScanProductionUnion;
+      DM.DownloadChoiceCelListTop;
+      FDataWedgeBarCode.OnScanResult := OnScanChoiceCel;
       NextScan;
     end else
-    if tcMain.ActiveTab = tiProductionUnionList then
+    if tcMain.ActiveTab = tiChoiceCelList then
     begin
-      lCaption.Text := 'Просмотр призводства - сбороки';
+      lCaption.Text := 'Просмотр док-тов "Места отбора"';
       sbRefresh.Visible := True;
     end  else
-    if tcMain.ActiveTab = tiProductionUnionEdit then
+    if tcMain.ActiveTab = tiChoiceCelEdit then
     begin
-      lCaption.Text := 'Редактирование cборка Узла / Лодки';
-      sbRefresh.Visible := True;
+      lCaption.Text := 'Подтверждение "Места отбора"';
     end;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiProductionUnionScan) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) then
     begin
       sbScan.Visible := FisZebraScaner and not FisCameraScaner and not FisHideScanButton or not FisZebraScaner or FisCameraScaner;
     end else sbScan.Visible := false;
 
-    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiProductionUnionScan) or (tcMain.ActiveTab = tiScanBarCode) then
+    if (tcMain.ActiveTab = tiInformation) or (tcMain.ActiveTab = tiChoiceCelScan) or (tcMain.ActiveTab = tiScanBarCode) then
     begin
       sbIlluminationMode.Visible := not FisHideIlluminationButton  and (FisZebraScaner or FisCameraScaner and ScanCamera.HasFlash or
                                     (tcMain.ActiveTab = tiScanBarCode) and ScanCamera.HasFlash);
@@ -1279,29 +1267,29 @@ begin
 end;
 
 // начитка информации журнала перемещений
-procedure TfrmMain.ShowProductionUnionList;
+procedure TfrmMain.ShowChoiceCelList;
 begin
 
-  //if not DM.DownloadProductionUnionList(pbPULOrderBy.ItemIndex > 0, pbPULAllUser.ItemIndex > 0, pbPULErased.ItemIndex > 0, GetSearshBox(lwProductionUnionList).Text) then Exit;
+  if not DM.DownloadChoiceCelList(pbPULOrderBy.ItemIndex > 0, pbPULAllUser.ItemIndex > 0, pbPULErased.ItemIndex > 0, GetSearshBox(lwChoiceCelList).Text) then Exit;
 
-  if tcMain.ActiveTab <> tiProductionUnionList then SwitchToForm(tiProductionUnionList, nil);
+  if tcMain.ActiveTab <> tiChoiceCelList then SwitchToForm(tiChoiceCelList, nil);
 end;
 
 // открытие на редактирование ранее введенной строки Сборка Узла / Лодки
-procedure TfrmMain.ShowEditProductionUnionItem(AId: Integer);
+procedure TfrmMain.ShowEditChoiceCelItem(AId: Integer);
 begin
   if AID = 0 then Exit;
 
-  bpProductionUnion.Visible := False;
+  bpChoiceCel.Visible := False;
 
-//  if  DM.GetProductionUnionItem(AId) then
-//    SwitchToForm(tiProductionUnionEdit, nil);
+//  if  DM.GetChoiceCelItem(AId) then
+//    SwitchToForm(tiChoiceCelEdit, nil);
 end;
 
 // Сборка Узла / Лодки
-procedure TfrmMain.ShowProductionUnionScan;
+procedure TfrmMain.ShowChoiceCelScan;
 begin
-  SwitchToForm(tiProductionUnionScan, nil);
+  SwitchToForm(tiChoiceCelScan, nil);
 end;
 
 // переход на форму отображения информации
@@ -1327,9 +1315,9 @@ begin
   DM.UpdateProgram(mrYes);
 end;
 
-procedure TfrmMain.bViewProductionUnionClick(Sender: TObject);
+procedure TfrmMain.bViewChoiceCelClick(Sender: TObject);
 begin
-  ShowProductionUnionList;
+  ShowChoiceCelList;
 end;
 
 procedure TfrmMain.OnCloseDialog(const AResult: TModalResult);
@@ -1401,22 +1389,22 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, Svc) then
     if TVirtualKeyboardState.Visible in Svc.VirtualKeyboardState then Svc.HideVirtualKeyboard;
 
-  if tcMain.ActiveTab = tiProductionUnionScan then
+  if tcMain.ActiveTab = tiChoiceCelScan then
   begin
-  //  DM.DownloadProductionUnionListTop;
-  end else if tcMain.ActiveTab = tiProductionUnionList then
+  //  DM.DownloadChoiceCelListTop;
+  end else if tcMain.ActiveTab = tiChoiceCelList then
   begin
-    ShowProductionUnionList;
+    ShowChoiceCelList;
   end;
 end;
 
 // Следующее сканирование
 procedure TfrmMain.NextScan;
 begin
-  FGoodsId := 0;
-  FProductionUnion := 0;
-  if FisNextScan and FisScanOk and not FisZebraScaner then sbScanClick(Nil);
-  FisScanOk := False;
+//  FGoodsId := 0;
+//  FChoiceCel := 0;
+//  if FisNextScan and FisScanOk and not FisZebraScaner then sbScanClick(Nil);
+//  FisScanOk := False;
 end;
 
 // Включить сканер
@@ -1556,7 +1544,7 @@ begin
   {$ENDIF}
 end;
 
-procedure TfrmMain.lwProductionUnionListDblClick(Sender: TObject);
+procedure TfrmMain.lwChoiceCelListDblClick(Sender: TObject);
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
@@ -1564,11 +1552,11 @@ procedure TfrmMain.lwProductionUnionListDblClick(Sender: TObject);
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
-  lwProductionUnionListGesture(Sender, GestureEventInfo, Handled)
+  lwChoiceCelListGesture(Sender, GestureEventInfo, Handled)
   {$ENDIF}
 end;
 
-procedure TfrmMain.lwProductionUnionListGesture(Sender: TObject;
+procedure TfrmMain.lwChoiceCelListGesture(Sender: TObject;
   const EventInfo: TGestureEventInfo; var Handled: Boolean);
 var I: Integer;
 begin
@@ -1580,12 +1568,12 @@ begin
       TButton(Components[I]).Visible := False;
 
   // Редактирование в сканированиях перемещения
-//  if (tcMain.ActiveTab = tiProductionUnionList) and DM.cdsProductionUnionList.Active and not DM.cdsProductionUnionList.IsEmpty then
+//  if (tcMain.ActiveTab = tiChoiceCelList) and DM.cdsChoiceCelList.Active and not DM.cdsChoiceCelList.IsEmpty then
 //  begin
 //    btaCancel.Visible := True;
-//    btaEraseRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger <> 3;
-//    btaUnEraseRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger = 3;
-//    btaEditRecord.Visible := DM.cdsProductionUnionListStatusCode.AsInteger <> 3;
+//    btaEraseRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger <> 3;
+//    btaUnEraseRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger = 3;
+//    btaEditRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger <> 3;
 //    ppActions.Height := 2;
 //    for I := 0 to ComponentCount - 1 do
 //      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
@@ -1597,7 +1585,7 @@ begin
 
 end;
 
-procedure TfrmMain.lwProductionUnionScanDblClick(Sender: TObject);
+procedure TfrmMain.lwChoiceCelScanDblClick(Sender: TObject);
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   var Handled: Boolean;
       GestureEventInfo: TGestureEventInfo;
@@ -1605,11 +1593,11 @@ procedure TfrmMain.lwProductionUnionScanDblClick(Sender: TObject);
 begin
   {$IF not DEFINED(iOS) and not DEFINED(ANDROID)}
   Handled := False;
-  lwProductionUnionScanGesture(Sender, GestureEventInfo, Handled)
+  lwChoiceCelScanGesture(Sender, GestureEventInfo, Handled)
   {$ENDIF}
 end;
 
-procedure TfrmMain.lwProductionUnionScanGesture(Sender: TObject;
+procedure TfrmMain.lwChoiceCelScanGesture(Sender: TObject;
   const EventInfo: TGestureEventInfo; var Handled: Boolean);
 var I: Integer;
 begin
@@ -1621,7 +1609,7 @@ begin
       TButton(Components[I]).Visible := False;
 
   // Редактирование в сканированиях перемещения
-//  if (tcMain.ActiveTab = tiProductionUnionScan) and DM.cdsProductionUnionListTop.Active and not DM.cdsProductionUnionListTop.IsEmpty then
+//  if (tcMain.ActiveTab = tiChoiceCelScan) and DM.cdsChoiceCelListTop.Active and not DM.cdsChoiceCelListTop.IsEmpty then
 //  begin
 //    btaCancel.Visible := True;
 //    btaEraseRecord.Visible := True;
@@ -1793,57 +1781,57 @@ end;
 
 procedure TfrmMain.pbPULOrderByChange(Sender: TObject);
 begin
-//  if DM.cdsProductionUnionList.Active then ShowProductionUnionList;
+  if DM.cdsChoiceCelList.Active then ShowChoiceCelList;
 end;
 
 procedure TfrmMain.btnCancelClick(Sender: TObject);
 begin
   ppActions.IsOpen := False;
 
-  if (tcMain.ActiveTab = tiProductionUnionScan) then
+  if (tcMain.ActiveTab = tiChoiceCelScan) then
   begin
     // Изменить позицию комплектующих
 //    if TButton(Sender).Tag = 1 then
 //    begin
-//      ShowEditProductionUnionItem(DM.cdsProductionUnionListTopId.AsInteger);
+//      ShowEditChoiceCelItem(DM.cdsChoiceCelListTopId.AsInteger);
 //    end else
 //    // Удаление позиции комплектующих
 //    if TButton(Sender).Tag = 2 then
-//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListTopOrdUser.AsString + '>'#13#10 +
-//                                   'документ = <' + DM.cdsProductionUnionListTopInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsProductionUnionListTopAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsProductionUnionListTopGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsProductionUnionListTopArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsProductionUnionListTopGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteProductionUnionGoods)
+//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListTopOrdUser.AsString + '>'#13#10 +
+//                                   'документ = <' + DM.cdsChoiceCelListTopInvNumberFull.AsString + '>'#13#10 +
+//                                   'кол-во = <' + DM.cdsChoiceCelListTopAmount.AsString + '>'#13#10 +
+//                                   'для <' + DM.cdsChoiceCelListTopGoodsCode.AsString + '>'#13#10 +
+//                                   'артикул <' + DM.cdsChoiceCelListTopArticle.AsString + '>'#13#10 +
+//                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
+//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteChoiceCelGoods)
 //    ;
-  end else if (tcMain.ActiveTab = tiProductionUnionList) then
+  end else if (tcMain.ActiveTab = tiChoiceCelList) then
   begin
 //    // Изменить позицию комплектующих
 //    if TButton(Sender).Tag = 1 then
 //    begin
-//      ShowEditProductionUnionItem(DM.cdsProductionUnionListId.AsInteger);
+//      ShowEditChoiceCelItem(DM.cdsChoiceCelListId.AsInteger);
 //    end else
 //    // Удаление позиции комплектующего
 //    if TButton(Sender).Tag = 2 then
-//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
-//                                   'документ = <' + DM.cdsProductionUnionListInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedProductionUnionList)
+//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListOrdUser.AsString +'>'#13#10 +
+//                                   'документ = <' + DM.cdsChoiceCelListInvNumberFull.AsString + '>'#13#10 +
+//                                   'кол-во = <' + DM.cdsChoiceCelListAmount.AsString + '>'#13#10 +
+//                                   'для <' + DM.cdsChoiceCelListGoodsCode.AsString + '>'#13#10 +
+//                                   'артикул <' + DM.cdsChoiceCelListArticle.AsString + '>'#13#10 +
+//                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
+//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedChoiceCelList)
 //    else
 //    // Востановление позиции комплектующего
 //    if TButton(Sender).Tag = 3  then
 //    begin
-//      TDialogService.MessageDialog('Отменить удаление сборки Узла / Лодки'#13#10'№ п/п = <' + DM.cdsProductionUnionListOrdUser.AsString +'>'#13#10 +
-//                                   'документ = <' + DM.cdsProductionUnionListInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsProductionUnionListAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsProductionUnionListGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsProductionUnionListArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsProductionUnionListGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedProductionUnionList)
+//      TDialogService.MessageDialog('Отменить удаление сборки Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListOrdUser.AsString +'>'#13#10 +
+//                                   'документ = <' + DM.cdsChoiceCelListInvNumberFull.AsString + '>'#13#10 +
+//                                   'кол-во = <' + DM.cdsChoiceCelListAmount.AsString + '>'#13#10 +
+//                                   'для <' + DM.cdsChoiceCelListGoodsCode.AsString + '>'#13#10 +
+//                                   'артикул <' + DM.cdsChoiceCelListArticle.AsString + '>'#13#10 +
+//                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
+//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelList)
 //    end;
   end;
 
@@ -1866,30 +1854,51 @@ begin
   pbWebServer.ItemIndex := 0;
 end;
 
+// Создание сборки по Внутреннего заказа
+procedure TfrmMain.ProcessChoiceCel(ABarCode: String);
+begin
+
+  FChoiceCelId := 0;
+  FChoiceCelBarCode := '';
+  if Trim(ABarCode) = '' then Exit;
+
+  if DM.DownloadChoiceCelBarCode(ABarCode) then
+  begin
+
+    if DM.cdsChoiceCelEdit.RecordCount = 0 then
+    begin
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Документ не найден');
+    end else if DM.cdsChoiceCelEdit.RecordCount > 1 then
+    begin
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Найдено более одного документа.');
+    end;
+
+    FChoiceCelId := DM.cdsChoiceCelEditChoiceCellId.AsInteger;
+    FChoiceCelBarCode := Trim(ABarCode);
+
+    if FChoiceCelId <> 0 then
+    begin
+      if FScanType <> 3 then
+      begin
+        SwitchToForm(tiChoiceCelEdit, nil);
+      end else
+      begin
+        ChoiceCelConfirm(mrYes);
+        NextScan;
+      end;
+    end else if FScanType = 3 then NextScan;
+  end;
+end;
+
 // Обрабатываем отсканированный товар для производства
-procedure TfrmMain.OnScanProductionUnion(Sender: TObject; AData_String: String);
+procedure TfrmMain.OnScanChoiceCel(Sender: TObject; AData_String: String);
   var ID: Integer;
 begin
 
   FisScanOk := True;
 
-  if COPY(AData_String, 1, LengTh(FItemBarCodePref)) = FItemBarCodePref then // Если штрих сборки
-  begin
+  ProcessChoiceCel(AData_String);
 
-    if Length(AData_String) > 12 then AData_String := Copy(AData_String, 1, Length(AData_String) - 1);
-
-    if not TryStrToInt(COPY(AData_String, Length(FItemBarCodePref) + 1, 9), Id) then
-    begin
-      TDialogService.MessageDialog('Не правельный штрихкод ' + AData_String,
-        TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes], TMsgDlgBtn.mbYes, 0, ProductionUnionOpen);
-
-      Exit;
-    end;
-
-    //ProcessOrderInternal(ID);
-
-  end else TDialogService.MessageDialog('Не правельный штрихкод ' + AData_String,
-             TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes], TMsgDlgBtn.mbYes, 0, ProductionUnionOpen);
 end;
 
 end.

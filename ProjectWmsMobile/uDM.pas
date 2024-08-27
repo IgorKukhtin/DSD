@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.UITypes, FMX.DialogService,
-  Data.DB, FMX.dsdDB, FMX.Storage, FMX.UnilWin
+  Data.DB, Datasnap.DBClient, FMX.dsdDB, FMX.Storage, FMX.UnilWin
   {$IFDEF MSWINDOWS}
   , Winapi.ActiveX
   {$ENDIF}
@@ -42,8 +42,54 @@ type
 
 
   TDM = class(TDataModule)
+    cdsChoiceCelEdit: TClientDataSet;
+    cdsChoiceCelEditChoiceCellId: TIntegerField;
+    cdsChoiceCelEditGoodsId: TIntegerField;
+    cdsChoiceCelEditChoiceCellCode: TIntegerField;
+    cdsChoiceCelEditChoiceCellName: TStringField;
+    cdsChoiceCelEditGoodsCode: TIntegerField;
+    cdsChoiceCelEditGoodsName: TStringField;
+    cdsChoiceCelEditGoodsKindId: TIntegerField;
+    cdsChoiceCelEditGoodsKindName: TStringField;
+    cdsChoiceCelEditPartionGoodsDate: TDateTimeField;
+    cdsChoiceCelEditPartionGoodsDate_next: TDateTimeField;
+    cdsChoiceCelListTop: TClientDataSet;
+    cdsChoiceCelListTopId: TIntegerField;
+    cdsChoiceCelListTopGoodsId: TIntegerField;
+    cdsChoiceCelListTopGoodsCode: TIntegerField;
+    cdsChoiceCelListTopOperDate: TDateTimeField;
+    cdsChoiceCelList: TClientDataSet;
+    cdsChoiceCelListId: TIntegerField;
+    cdsChoiceCelListGoodsId: TIntegerField;
+    cdsChoiceCelListGoodsCode: TIntegerField;
+    cdsChoiceCelListOperDate: TDateTimeField;
+    cdsChoiceCelListStatusCode: TIntegerField;
+    cdsChoiceCelListTopStatusCode: TIntegerField;
+    cdsChoiceCelListGoodsName: TStringField;
+    cdsChoiceCelListTopGoodsName: TStringField;
+    cdsChoiceCelListMovementItemId: TIntegerField;
+    cdsChoiceCelListTopMovementItemId: TIntegerField;
+    cdsChoiceCelListChoiceCellCode: TIntegerField;
+    cdsChoiceCelListTopChoiceCellCode: TIntegerField;
+    cdsChoiceCelListChoiceCellName: TStringField;
+    cdsChoiceCelListTopChoiceCellName: TStringField;
+    cdsChoiceCelListGoodsKindName: TStringField;
+    cdsChoiceCelListTopGoodsKindName: TStringField;
+    cdsChoiceCelListPartionGoodsDate: TDateTimeField;
+    cdsChoiceCelListTopPartionGoodsDate: TDateTimeField;
+    cdsChoiceCelListPartionGoodsDate_next: TDateTimeField;
+    cdsChoiceCelListTopPartionGoodsDate_next: TDateTimeField;
+    cdsChoiceCelListInsertName: TStringField;
+    cdsChoiceCelListTopInsertName: TStringField;
+    cdsChoiceCelListInsertDate: TDateTimeField;
+    cdsChoiceCelListTopInsertDate: TDateTimeField;
+    cdsChoiceCelListInvNumber: TStringField;
+    cdsChoiceCelListTopInvNumber: TStringField;
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
+    // Ограничение количества строк для справочника
+    FLimitList : Integer;
   public
     { Public declarations }
     function GetCurrentVersion: string;
@@ -54,6 +100,16 @@ type
     procedure UpdateProgram(const AResult: TModalResult);
 
     function DownloadConfig : Boolean;
+
+    { загрузка места отбора по коду}
+    function DownloadChoiceCelBarCode(ABarCode: String) : Boolean;
+    { подтверждение места отбора}
+    function ConfirmChoiceCel(ABarCode: String) : Boolean;
+
+    function DownloadChoiceCelList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+    function DownloadChoiceCelListTop : Boolean;
+
+    property LimitList : Integer read FLimitList write FLimitList default 300;
   end;
 
 var
@@ -320,13 +376,20 @@ begin
   try
     StoredProc.OutputType := otResult;
 
-    StoredProc.StoredProcName := 'gpGetMobile_BoatMobile_Version';
+    StoredProc.StoredProcName := 'gpGetMobile_WmsMobile_Version';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('MajorVersion', ftString, ptOutput, '');
     StoredProc.Params.AddParam('MinorVersion', ftString, ptOutput, '');
 
     try
       StoredProc.Execute(false, false, false);
+
+      if (StoredProc.Params.ParamByName('MajorVersion').Value = '') or
+         (StoredProc.Params.ParamByName('MinorVersion').Value = '') then
+      begin
+        Result := '';
+        Exit;
+      end;
 
       if StoredProc.Params.ParamByName('MajorVersion').Value > 65536 then
         Result := IntToStr(StoredProc.Params.ParamByName('MajorVersion').Value div 65536) + '.'
@@ -356,7 +419,7 @@ begin
   try
     StoredProc.OutputType := otResult;
 
-    StoredProc.StoredProcName := 'gpGetMobile_BoatMobile_Version';
+    StoredProc.StoredProcName := 'gpGetMobile_WmsMobile_Version';
     StoredProc.Params.Clear;
     StoredProc.Params.AddParam('APKFileName', ftString, ptOutput, '');
 
@@ -510,6 +573,141 @@ begin
     end;
   finally
     FreeAndNil(StoredProc);
+  end;
+end;
+
+{ загрузка места отбора по коду}
+procedure TDM.DataModuleCreate(Sender: TObject);
+begin
+  FLimitList := 300;
+end;
+
+function TDM.DownloadChoiceCelBarCode(ABarCode: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if Trim(ABarCode) = '' then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsChoiceCelEdit.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpGet_MovementItem_ChoiceCell';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarCode);
+    StoredProc.DataSet := cdsChoiceCelEdit;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsChoiceCelEdit.Active;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsChoiceCelEdit.EnableControls;
+  end;
+end;
+
+{ подтверждение места отбора}
+function TDM.ConfirmChoiceCel(ABarCode: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+  if Trim(ABarCode) = '' then Exit;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  try
+    StoredProc.OutputType := otResult;
+
+    StoredProc.StoredProcName := 'gpInsertUpdate_MovementItem_ChoiceCell';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inBarCode', ftString, ptInput, ABarCode);
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := True;
+    except
+      on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+    end;
+  finally
+    FreeAndNil(StoredProc);
+  end;
+end;
+
+function TDM.DownloadChoiceCelList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+  nId: Integer;
+begin
+
+  if cdsChoiceCelList.Active and not cdsChoiceCelList.IsEmpty then
+    nID := DM.cdsChoiceCelListId.AsInteger
+  else nID := 0;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsChoiceCelList.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_Movement_ChoiceCellMobile';
+    StoredProc.Params.Clear;
+    StoredProc.Params.AddParam('inIsOrderBy', ftBoolean, ptInput, AIsOrderBy);
+    StoredProc.Params.AddParam('inIsAllUser', ftBoolean, ptInput, AIsAllUser);
+    StoredProc.Params.AddParam('inLimit', ftInteger, ptInput, FLimitList);
+    StoredProc.Params.AddParam('inFilter', ftWideString, ptInput, AFilter);
+    StoredProc.Params.AddParam('inIsErased', ftBoolean, ptInput, AIsErased);
+    StoredProc.DataSet := cdsChoiceCelList;
+
+    try
+      StoredProc.Execute(false, false, false);
+      Result := cdsChoiceCelList.Active;
+      if Result and (nID <> 0) then cdsChoiceCelList.Locate('Id', nId, []);
+      if cdsChoiceCelList.RecordCount >= FLimitList then
+        frmMain.llwChoiceCelList.Text := 'Выборка первых ' + IntToStr(FLimitList) + ' записей'
+      else frmMain.llwChoiceCelList.Text := 'Найдено ' + IntToStr(cdsChoiceCelList.RecordCount) + ' записей';
+    except
+      on E : Exception do
+      begin
+        raise Exception.Create(GetTextMessage(E));
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsChoiceCelList.EnableControls;
+  end;
+end;
+
+function TDM.DownloadChoiceCelListTop : Boolean;
+var
+  StoredProc : TdsdStoredProc;
+begin
+
+  Result := False;
+
+  StoredProc := TdsdStoredProc.Create(nil);
+  cdsChoiceCelListTop.DisableControls;
+  try
+    StoredProc.OutputType := otDataSet;
+
+    StoredProc.StoredProcName := 'gpSelect_Movement_ChoiceCellMobileTop';
+    StoredProc.Params.Clear;
+    StoredProc.DataSet := cdsChoiceCelListTop;
+
+    try
+      StoredProc.Execute(false, false, false, 2);
+      Result := cdsChoiceCelListTop.Active;
+    except
+    end;
+  finally
+    FreeAndNil(StoredProc);
+    cdsChoiceCelListTop.EnableControls;
   end;
 end;
 
