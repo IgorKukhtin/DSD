@@ -13,6 +13,7 @@ begin
   dsdProject := prBoat;
   dsdHTTPCharSet := csUTF_8;
   dsdXML_Version := '1.0';
+  dsdXML_SufixUTF8 := True;
 
   Application.Initialize;
   Application.CreateForm(TDM, DM);

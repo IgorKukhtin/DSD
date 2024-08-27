@@ -12,6 +12,7 @@ var
   dsdProject: TdsdProject = prProject;
   dsdHTTPCharSet: TdsdHTTPCharSet = cswindows_1251;
   dsdXML_Version: String = '1.1';
+  dsdXML_SufixUTF8: Boolean = False;
 
   MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
