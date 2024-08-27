@@ -93,7 +93,10 @@ BEGIN
                                              WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- —ÍÎ‡‰ Ã»Õ”—Œ¬ ¿
                                               -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                   THEN 8338 -- ÏÓÓÊ.
-                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                             WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                  THEN 0
+                                             --ELSE 0
+                                             ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                         END AS GoodsKindId
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) AS AmountIn
                                       , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS AmountOut
@@ -120,7 +123,10 @@ BEGIN
                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- —ÍÎ‡‰ Ã»Õ”—Œ¬ ¿
                                                 -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
                                                     THEN 8338 -- ÏÓÓÊ.
-                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                               WHEN MIContainer.ObjectIntId_Analyzer = zc_GoodsKind_Basis()
+                                                    THEN 0
+                                               --ELSE 0
+                                               ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                           END
                                  HAVING SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = TRUE  THEN      MIContainer.Amount ELSE 0 END) <> 0
                                      OR SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.isActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) <> 0
@@ -332,6 +338,7 @@ BEGIN
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0 OR tmpMI.AmountSend <> 0 OR tmpMI.AmountPartner <> 0 OR tmpMI.AmountPartnerPrior <> 0 OR tmpMI.AmountPartnerSecond <> 0 -- OR tmpMI.Amount_calc <> 0
           OR tmpMI.AmountRemains <> 0
           OR tmpMI.AmountSendOut <> 0
+          --OR vbUserId = 5
        ;
     RETURN NEXT Cursor2;
 
