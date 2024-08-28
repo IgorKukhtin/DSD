@@ -231,6 +231,7 @@ type
     LinkListControlToField1: TLinkListControlToField;
     BindSourceDB3: TBindSourceDB;
     LinkListControlToField2: TLinkListControlToField;
+    TempEdit: TEdit;
 
     procedure OnCloseDialog(const AResult: TModalResult);
     procedure sbBackClick(Sender: TObject);
@@ -298,7 +299,6 @@ type
     procedure bpChoiceCelCancelClick(Sender: TObject);
     procedure pbPULOrderByChange(Sender: TObject);
     procedure bChoiceCelScanSearchClick(Sender: TObject);
-    procedure bOrderInternalChoiceClick(Sender: TObject);
     procedure TimerTorchModeTimer(Sender: TObject);
     procedure bChoiceCellScanClick(Sender: TObject);
   private
@@ -331,7 +331,6 @@ type
     FScanType : Integer;
     FisNextScan : Boolean;
     FisScanOk : Boolean;
-    FGoodsId: Integer;
 
     FIsUpdate: Boolean;
     FOldControl: TControl;
@@ -364,7 +363,6 @@ type
     procedure DeleteChoiceCelGoods(const AResult: TModalResult);
     procedure ErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelList(const AResult: TModalResult);
-    procedure NoBarCodeNextScan(const AResult: TModalResult);
 
     procedure InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
 
@@ -826,11 +824,6 @@ begin
   ppEnterAmount.IsOpen := false;
 end;
 
-procedure TfrmMain.bOrderInternalChoiceClick(Sender: TObject);
-  var Id: Integer;
-begin
-end;
-
 // Сканирование Места отбора
 procedure TfrmMain.bChoiceCellScanClick(Sender: TObject);
 begin
@@ -847,19 +840,23 @@ begin
 end;
 
 procedure TfrmMain.InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
-  var InvNumber, InvNumberFull: String; ID: Integer;
 begin
-  if (AResult = mrOk) and (AValues[0] <> '') then
-  begin
+  try
+    if (AResult = mrOk) and (AValues[0] <> '') then
+    begin
 
-    OnScanChoiceCel(Nil, AValues[0]);
+      OnScanChoiceCel(Nil, AValues[0]);
+    end;
+  finally
+    TempEdit.Visible := False;
   end;
 end;
 
 
 procedure TfrmMain.bChoiceCelScanSearchClick(Sender: TObject);
 begin
-  //edSSInvNumber_OrderClient.SetFocus;
+  TempEdit.Visible := True;
+  TempEdit.SetFocus;
   TDialogService.InputQuery('Ввод № док. заказа', ['№ док. заказа'], [''], InputChoiceCel);
 end;
 
@@ -884,7 +881,6 @@ end;
 {$ENDIF}
 
 procedure TfrmMain.ChoiceCelConfirm(const AResult: TModalResult);
-  var ScanId: Integer;
 begin
   if (AResult = mrYes) and (FChoiceCelBarCode <> '') and DM.cdsChoiceCelEdit.Active and
      (DM.cdsChoiceCelEdit.RecordCount = 1) then
@@ -930,11 +926,6 @@ begin
 //  begin
 //    DM.CompleteChoiceCel(DM.cdsChoiceCelList);
 //  end;
-end;
-
-procedure TfrmMain.NoBarCodeNextScan(const AResult: TModalResult);
-begin
-  NextScan;
 end;
 
 // Формирование документа сборки
@@ -1110,6 +1101,7 @@ begin
   if (tcMain.ActiveTab = tiStart)  then
   begin
     pBack.Visible := false;
+    FDataWedgeBarCode.OnScanResult := OnScanResultLogin;
   end else
   begin
     pBack.Visible := true;
@@ -1727,11 +1719,36 @@ procedure TfrmMain.OnScanResultLogin(Sender: TObject; AData_String: String);
 var
   ErrorMessage, Password: String;
   I, J : Integer;
+  Res: TArray<string>;
 begin
 
   FDataWedgeBarCode.OnScanResult := Nil;
 
   try
+
+    if gc_WebService = '' then
+    begin
+      if not FPermissionState then
+      begin
+        TDialogService.ShowMessage('Необходимые разрешения не предоставлены');
+        exit;
+      end;
+
+      Res := TRegEx.Split(WebServer, ';');
+
+      SetLength(gc_WebServers, High(Res) + 1);
+
+      if pbWebServer.ItemIndex > 0 then
+      begin
+        gc_WebServers[0] := Copy(pbWebServer.Text, Pos('http', pbWebServer.Text), Length(pbWebServer.Text));
+        if High(Res) > 0 then
+          if pbWebServer.ItemIndex = 1 then
+            gc_WebServers[1] :=  Copy(Res[1], Pos('http', Res[1]), Length(Res[1]))
+          else gc_WebServers[1] :=  Copy(Res[0], Pos('http', Res[0]), Length(Res[0]));
+      end else for I := Low(Res) to High(Res) do gc_WebServers[I] := Copy(Res[I], Pos('http', Res[I]), Length(Res[I]));
+
+      gc_WebService := gc_WebServers[0];
+    end;
 
     vsbMain.Enabled := false;
     Password := '';
@@ -1839,8 +1856,7 @@ begin
 end;
 
 procedure TfrmMain.rbWebServerClick(Sender: TObject);
-  var SettingsFile : TIniFile;
-      I: Integer;
+  var I: Integer;
       Res: TArray<string>;
 begin
   ppWebServer.IsOpen := False;
@@ -1892,7 +1908,6 @@ end;
 
 // Обрабатываем отсканированный товар для производства
 procedure TfrmMain.OnScanChoiceCel(Sender: TObject; AData_String: String);
-  var ID: Integer;
 begin
 
   FisScanOk := True;

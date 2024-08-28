@@ -1,13 +1,13 @@
 object DM: TDM
   OnCreate = DataModuleCreate
-  Height = 491
-  Width = 959
-  PixelsPerInch = 144
+  Height = 409
+  Width = 799
+  PixelsPerInch = 120
   object cdsChoiceCelEdit: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 150
-    Top = 84
+    Left = 125
+    Top = 70
     object cdsChoiceCelEditChoiceCellId: TIntegerField
       FieldName = 'ChoiceCellId'
     end
@@ -45,8 +45,9 @@ object DM: TDM
   object cdsChoiceCelListTop: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 328
-    Top = 231
+    OnCalcFields = cdsChoiceCelListTopCalcFields
+    Left = 307
+    Top = 179
     object cdsChoiceCelListTopId: TIntegerField
       FieldName = 'Id'
     end
@@ -97,12 +98,28 @@ object DM: TDM
     object cdsChoiceCelListTopInsertDate: TDateTimeField
       FieldName = 'InsertDate'
     end
+    object cdsChoiceCelListTopErasedCode: TIntegerField
+      FieldName = 'ErasedCode'
+    end
+    object cdsChoiceCelListTopPartionGoodsDateLabel: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDateLabel'
+      Size = 255
+      Calculated = True
+    end
+    object cdsChoiceCelListTopPartionGoodsDate_nextLabel: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDate_nextLabel'
+      Size = 255
+      Calculated = True
+    end
   end
   object cdsChoiceCelList: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 224
+    OnCalcFields = cdsChoiceCelListCalcFields
+    Left = 113
+    Top = 187
     object cdsChoiceCelListId: TIntegerField
       FieldName = 'Id'
     end
@@ -152,6 +169,21 @@ object DM: TDM
     end
     object cdsChoiceCelListInsertDate: TDateTimeField
       FieldName = 'InsertDate'
+    end
+    object cdsChoiceCelListErasedCode: TIntegerField
+      FieldName = 'ErasedCode'
+    end
+    object cdsChoiceCelListPartionGoodsDateLabel: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDateLabel'
+      Size = 255
+      Calculated = True
+    end
+    object cdsChoiceCelListPartionGoodsDate_nextLabel: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'PartionGoodsDate_nextLabel'
+      Size = 255
+      Calculated = True
     end
   end
 end

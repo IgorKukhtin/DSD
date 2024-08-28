@@ -85,7 +85,15 @@ type
     cdsChoiceCelListTopInsertDate: TDateTimeField;
     cdsChoiceCelListInvNumber: TStringField;
     cdsChoiceCelListTopInvNumber: TStringField;
+    cdsChoiceCelListPartionGoodsDateLabel: TStringField;
+    cdsChoiceCelListTopPartionGoodsDateLabel: TStringField;
+    cdsChoiceCelListPartionGoodsDate_nextLabel: TStringField;
+    cdsChoiceCelListTopPartionGoodsDate_nextLabel: TStringField;
+    cdsChoiceCelListErasedCode: TIntegerField;
+    cdsChoiceCelListTopErasedCode: TIntegerField;
     procedure DataModuleCreate(Sender: TObject);
+    procedure cdsChoiceCelListCalcFields(DataSet: TDataSet);
+    procedure cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     // Ограничение количества строк для справочника
@@ -439,6 +447,26 @@ begin
 end;
 
 { проверка необходимо ли обновление программы }
+procedure TDM.cdsChoiceCelListCalcFields(DataSet: TDataSet);
+begin
+  if not DataSet.FieldByName('PartionGoodsDate').IsNull then
+    DataSet.FieldByName('PartionGoodsDateLabel').AsString := 'Отбор: ' + FormatDateTime('dd' + FormatSettings.DateSeparator + 'mm', DataSet.FieldByName('PartionGoodsDate').AsDateTime)
+  else DataSet.FieldByName('PartionGoodsDateLabel').AsString := 'Отбор: ';
+  if not DataSet.FieldByName('PartionGoodsDate_next').IsNull then
+    DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ' + FormatDateTime('dd' + FormatSettings.DateSeparator + 'mm', DataSet.FieldByName('PartionGoodsDate_next').AsDateTime)
+  else DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ';
+end;
+
+procedure TDM.cdsChoiceCelListTopCalcFields(DataSet: TDataSet);
+begin
+  if not DataSet.FieldByName('PartionGoodsDate').IsNull then
+    DataSet.FieldByName('PartionGoodsDateLabel').AsString := 'Отбор: ' + FormatDateTime('dd' + FormatSettings.DateSeparator + 'mm', DataSet.FieldByName('PartionGoodsDate').AsDateTime)
+  else DataSet.FieldByName('PartionGoodsDateLabel').AsString := 'Отбор: ';
+  if not DataSet.FieldByName('PartionGoodsDate_next').IsNull then
+    DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ' + FormatDateTime('dd' + FormatSettings.DateSeparator + 'mm', DataSet.FieldByName('PartionGoodsDate_next').AsDateTime)
+  else DataSet.FieldByName('PartionGoodsDate_nextLabel').AsString := 'Хранение: ';
+end;
+
 procedure TDM.CheckUpdate;
 begin
   if CompareVersion(GetCurrentVersion, GetMobileVersion) > 0 then
@@ -590,6 +618,7 @@ begin
   Result := False;
   if Trim(ABarCode) = '' then Exit;
 
+  cdsChoiceCelEdit.Close;
   StoredProc := TdsdStoredProc.Create(nil);
   cdsChoiceCelEdit.DisableControls;
   try
