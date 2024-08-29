@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , isErased Boolean
+             , isErased Boolean, ErasedCode Integer
               )
 AS
 $BODY$
@@ -42,4 +42,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ChoiceCellMobileTop (inSession := zfCalc_UserAdmin());
+-- 
+SELECT * FROM gpSelect_Movement_ChoiceCellMobileTop (inSession := zfCalc_UserAdmin());

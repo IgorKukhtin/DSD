@@ -601,7 +601,7 @@ object frmMain: TfrmMain
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 0
+        TabIndex = 6
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -625,7 +625,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -760,6 +760,7 @@ object frmMain: TfrmMain
                 Size.Width = 336.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
+                Visible = False
                 TabOrder = 0
                 object WebServerLabel: TLabel
                   Align = Client
@@ -775,10 +776,11 @@ object frmMain: TfrmMain
               end
               object WebServerLayout12: TLayout
                 Align = Top
-                Position.Y = 235.000000000000000000
+                Position.Y = 210.000000000000000000
                 Size.Width = 336.000000000000000000
                 Size.Height = 46.000000000000000000
                 Size.PlatformDefault = False
+                Visible = False
                 TabOrder = 1
                 object pbWebServer: TPopupBox
                   StyledSettings = [Family, Size, Style, FontColor, Other]
@@ -833,7 +835,7 @@ object frmMain: TfrmMain
               end
               object Layout43: TLayout
                 Align = Top
-                Position.Y = 281.000000000000000000
+                Position.Y = 210.000000000000000000
                 Size.Width = 336.000000000000000000
                 Size.Height = 90.000000000000000000
                 Size.PlatformDefault = False
@@ -18613,7 +18615,7 @@ object frmMain: TfrmMain
               object Layout6: TLayout
                 Align = Client
                 Size.Width = 336.000000000000000000
-                Size.Height = 113.000000000000000000
+                Size.Height = 184.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 9
                 object Layout7: TLayout
@@ -19997,6 +19999,16 @@ object frmMain: TfrmMain
               TextSettings.WordWrap = True
               TextSettings.Trimming = None
               OnClick = bChoiceCelScanSearchClick
+              object TempEdit: TEdit
+                Touch.InteractiveGestures = [LongTap, DoubleTap]
+                TabOrder = 12
+                TabStop = False
+                ReadOnly = True
+                Position.X = 32.000000000000000000
+                Position.Y = 8.000000000000000000
+                Opacity = 0.100000001490116100
+                Visible = False
+              end
             end
             object bChoiceCelScanMode: TSpeedButton
               Anchors = [akLeft, akTop, akRight]
@@ -20102,8 +20114,9 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.WordWrap = True
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 55.000000000000000000
                 Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 27.000000000000000000
                 Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
@@ -20145,10 +20158,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 90.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 3.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
+                Appearance.PlaceOffset.X = 83.000000000000000000
+                Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
                 AppearanceObjectName = 'PartionGoodsDate_next'
@@ -20156,10 +20169,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 90.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 65.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
+                Appearance.PlaceOffset.X = 175.000000000000000000
+                Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
                 AppearanceObjectName = 'InsertName'
@@ -20168,9 +20181,9 @@ object frmMain: TfrmMain
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 80.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 136.000000000000000000
+                Appearance.PlaceOffset.X = 61.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
@@ -20181,29 +20194,25 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.TextColor = claBlack
-                Appearance.Width = 95.000000000000000000
+                Appearance.Width = 140.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 219.000000000000000000
+                Appearance.PlaceOffset.X = 163.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
-                AppearanceObjectName = 'OperDate'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 62.000000000000000000
-                Appearance.PlaceOffset.Y = 2.000000000000000000
+                AppearanceObjectName = 'ErasedCode'
+                AppearanceClassName = 'TImageObjectAppearance'
+                Appearance.Width = 40.000000000000000000
+                Appearance.Height = 40.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.Opacity = 0.500000000000000000
               end
               item
                 AppearanceObjectName = 'StatusCode'
                 AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.Width = 50.000000000000000000
-                Appearance.Height = 50.000000000000000000
-                Appearance.Align = Trailing
-                Appearance.Opacity = 0.500000000000000000
+                Appearance.Width = 20.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 1.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -20443,7 +20452,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -20558,8 +20567,9 @@ object frmMain: TfrmMain
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
                 Appearance.WordWrap = True
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 55.000000000000000000
                 Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.X = 27.000000000000000000
                 Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
@@ -20601,9 +20611,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 90.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
+                Appearance.PlaceOffset.X = 83.000000000000000000
+                Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
                 AppearanceObjectName = 'PartionGoodsDate_next'
@@ -20611,10 +20622,10 @@ object frmMain: TfrmMain
                 Appearance.Font.Size = 11.000000000000000000
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 60.000000000000000000
+                Appearance.Width = 90.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 63.000000000000000000
-                Appearance.PlaceOffset.Y = 107.000000000000000000
+                Appearance.PlaceOffset.X = 175.000000000000000000
+                Appearance.PlaceOffset.Y = 2.000000000000000000
               end
               item
                 AppearanceObjectName = 'InsertName'
@@ -20623,9 +20634,9 @@ object frmMain: TfrmMain
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 80.000000000000000000
+                Appearance.Width = 100.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 136.000000000000000000
+                Appearance.PlaceOffset.X = 60.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
@@ -20635,29 +20646,25 @@ object frmMain: TfrmMain
                 Appearance.Font.StyleExt = {00070000000000000004000000}
                 Appearance.TextAlign = Leading
                 Appearance.TextVertAlign = Leading
-                Appearance.Width = 95.000000000000000000
+                Appearance.Width = 140.000000000000000000
                 Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 219.000000000000000000
+                Appearance.PlaceOffset.X = 163.000000000000000000
                 Appearance.PlaceOffset.Y = 107.000000000000000000
               end
               item
-                AppearanceObjectName = 'OperDate'
-                AppearanceClassName = 'TTextObjectAppearance'
-                Appearance.Font.Size = 11.000000000000000000
-                Appearance.TextAlign = Leading
-                Appearance.TextVertAlign = Leading
-                Appearance.Width = 100.000000000000000000
-                Appearance.Height = 20.000000000000000000
-                Appearance.PlaceOffset.X = 61.000000000000000000
-                Appearance.PlaceOffset.Y = 2.000000000000000000
+                AppearanceObjectName = 'ErasedCode'
+                AppearanceClassName = 'TImageObjectAppearance'
+                Appearance.Width = 40.000000000000000000
+                Appearance.Height = 40.000000000000000000
+                Appearance.Align = Trailing
+                Appearance.Opacity = 0.500000000000000000
               end
               item
                 AppearanceObjectName = 'StatusCode'
                 AppearanceClassName = 'TImageObjectAppearance'
-                Appearance.Width = 50.000000000000000000
-                Appearance.Height = 50.000000000000000000
-                Appearance.Align = Trailing
-                Appearance.Opacity = 0.500000000000000000
+                Appearance.Width = 20.000000000000000000
+                Appearance.Height = 20.000000000000000000
+                Appearance.PlaceOffset.Y = 2.000000000000000000
               end>
             ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
               item
@@ -22981,16 +22988,8 @@ object frmMain: TfrmMain
       Control = lwChoiceCelScan
       FillExpressions = <
         item
-          SourceMemberName = 'StatusCode'
-          ControlMemberName = 'StatusCode'
-        end
-        item
           SourceMemberName = 'InvNumber'
           ControlMemberName = 'InvNumber'
-        end
-        item
-          SourceMemberName = 'OperDate'
-          ControlMemberName = 'OperDate'
         end
         item
           SourceMemberName = 'GoodsCode'
@@ -23013,20 +23012,28 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsKindName'
         end
         item
-          SourceMemberName = 'PartionGoodsDate'
-          ControlMemberName = 'PartionGoodsDate'
-        end
-        item
-          SourceMemberName = 'PartionGoodsDate_next'
-          ControlMemberName = 'PartionGoodsDate_next'
-        end
-        item
           SourceMemberName = 'InsertName'
           ControlMemberName = 'InsertName'
         end
         item
           SourceMemberName = 'InsertDate'
           ControlMemberName = 'InsertDate'
+        end
+        item
+          SourceMemberName = 'PartionGoodsDateLabel'
+          ControlMemberName = 'PartionGoodsDate'
+        end
+        item
+          SourceMemberName = 'PartionGoodsDate_nextLabel'
+          ControlMemberName = 'PartionGoodsDate_next'
+        end
+        item
+          SourceMemberName = 'ErasedCode'
+          ControlMemberName = 'ErasedCode'
+        end
+        item
+          SourceMemberName = 'StatusCode'
+          ControlMemberName = 'StatusCode'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
@@ -23041,10 +23048,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsName'
         end
         item
-          SourceMemberName = 'GoodsCode'
-          ControlMemberName = 'GoodsCode'
-        end
-        item
           SourceMemberName = 'InvNumber'
           ControlMemberName = 'InvNumber'
         end
@@ -23061,14 +23064,6 @@ object frmMain: TfrmMain
           ControlMemberName = 'GoodsKindName'
         end
         item
-          SourceMemberName = 'PartionGoodsDate'
-          ControlMemberName = 'PartionGoodsDate'
-        end
-        item
-          SourceMemberName = 'PartionGoodsDate_next'
-          ControlMemberName = 'PartionGoodsDate_next'
-        end
-        item
           SourceMemberName = 'InsertName'
           ControlMemberName = 'InsertName'
         end
@@ -23081,8 +23076,20 @@ object frmMain: TfrmMain
           ControlMemberName = 'StatusCode'
         end
         item
-          SourceMemberName = 'OperDate'
-          ControlMemberName = 'OperDate'
+          SourceMemberName = 'PartionGoodsDateLabel'
+          ControlMemberName = 'PartionGoodsDate'
+        end
+        item
+          SourceMemberName = 'PartionGoodsDate_nextLabel'
+          ControlMemberName = 'PartionGoodsDate_next'
+        end
+        item
+          SourceMemberName = 'ErasedCode'
+          ControlMemberName = 'ErasedCode'
+        end
+        item
+          SourceMemberName = 'GoodsCode'
+          ControlMemberName = 'GoodsCode'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

@@ -41,6 +41,8 @@ BEGIN
 
      -- !!!Нет прав!!! - Ограничение - нет доступа к Отчету производства выхода ГП Итоги
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11190560)
+        -- Дільниця термічної обробки
+        AND (inFromId IN (8450) OR inToId IN (8450))
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав.';
      END IF;

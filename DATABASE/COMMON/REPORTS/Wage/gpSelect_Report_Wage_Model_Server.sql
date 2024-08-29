@@ -760,7 +760,7 @@ BEGIN
                                       FROM tmpMovement_all
                                       WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
                                         --!!!без формовки
-                                        AND tmpMovement_all.Amount_form = 0
+                                        --AND tmpMovement_all.Amount_form = 0
                                      ) AS tmpMovementList
                                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
                                                             AND MovementItem.DescId     = zc_MI_Master()

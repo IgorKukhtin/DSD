@@ -1,4 +1,4 @@
- -- По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
+  -- По штатному расписанию - из Модели + из Табеля - По проводкам кол-во
 -- Function: gpSelect_Report_Wage_Model ()
 
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Model (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
@@ -766,7 +766,7 @@ AS  (SELECT
                                       FROM tmpMovement_all
                                       WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
                                         --!!!без формовки
-                                        AND tmpMovement_all.Amount_form = 0
+                                        --AND tmpMovement_all.Amount_form = 0
                                      ) AS tmpMovementList
                                      INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
                                                             AND MovementItem.DescId     = zc_MI_Master()

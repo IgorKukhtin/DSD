@@ -123,9 +123,10 @@ BEGIN
       ELSE
            -- Результат
            RETURN QUERY
-             SELECT Object_PriceListItem.Id
+             SELECT DISTINCT 
+                    0 :: Integer Id
                   , ObjectLink_PriceListItem_Goods.ChildObjectId            AS GoodsId
-                  , ObjectLink_PriceListItem_GoodsKind.ChildObjectId        AS GoodsKindId
+                  , COALESCE (ObjectLink_PriceListItem_GoodsKind.ChildObjectId, zc_GoodsKind_Basis())        AS GoodsKindId
                   , ObjectLink_PriceListItem_PriceList.ChildObjectId        AS PriceListId
                   , ObjectHistory_PriceListItem_Return.StartDate            AS ReturnStartDate
                   , ObjectHistory_PriceListItem_Return.EndDate              AS ReturnEndDate
