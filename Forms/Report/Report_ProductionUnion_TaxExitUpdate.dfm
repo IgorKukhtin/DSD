@@ -856,7 +856,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -911,7 +911,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -966,7 +966,7 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
           GridView = cxGridDBTableView
         end>
       Params = <

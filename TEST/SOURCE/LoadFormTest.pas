@@ -2528,12 +2528,13 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumDialogForm');
   exit;
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateForm'));

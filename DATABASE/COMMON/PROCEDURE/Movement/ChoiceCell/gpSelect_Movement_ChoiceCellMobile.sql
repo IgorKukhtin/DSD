@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_ChoiceCellMobile()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCellMobile (Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ChoiceCellMobile (Boolean, Boolean, Integer, TVarChar, Boolean, TVarChar, Boolean);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ChoiceCellMobile(
     IN inIsOrderBy        Boolean      , --
@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , isErased Boolean, ErasedCode Integer
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -109,7 +109,6 @@ BEGIN
            , MIDate_Update.ValueData    AS UpdateDate
 
            , MovementItem.isErased                                AS isErased
-           , case when MovementItem.isErased then 10 else -1 end :: integer  AS ErasedCode
         FROM tmpMovement AS Movement
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
@@ -173,5 +172,4 @@ $BODY$
 */
 
 -- тест
-
-SELECT * FROM gpSelect_Movement_ChoiceCellMobile (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ChoiceCellMobile (inIsOrderBy := 'False', inIsAllUser := 'True', inIsErased := 'True', inLimit := 100, inFilter := '', inSession := zfCalc_UserAdmin())

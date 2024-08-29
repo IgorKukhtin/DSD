@@ -190,7 +190,10 @@ begin
   if isArchive then
   begin
     inStream := TBytesStream.Create(InBytes);
-    outStream := TStringStream.Create('', TEncoding.UTF8);
+    if dsdHTTPCharSet = cswindows_1251 then
+      outStream := TStringStream.Create('', TEncoding.ANSI)
+    else outStream := TStringStream.Create('', TEncoding.UTF8);
+
     try
       ZDecompressStream(inStream, outStream);
       Result := outStream.DataString;
@@ -199,8 +202,9 @@ begin
       outStream.Free;
     end;
   end
-  else
-    Result := StringReplace(TEncoding.UTF8.GetString(InBytes), #0, '', [rfReplaceAll]);
+  else if dsdHTTPCharSet = cswindows_1251 then
+    Result := StringReplace(TEncoding.ANSI.GetString(InBytes), #0, '', [rfReplaceAll])
+  else Result := StringReplace(TEncoding.UTF8.GetString(InBytes), #0, '', [rfReplaceAll]);
 end;
 
 function TStorage.PrepareDataSet: TBytes;
@@ -312,10 +316,13 @@ begin
   FCriticalSection.Enter;
   try
     FSendList.Clear;
-    FSendList.Add('XML=' + '<?xml version="' + dsdXML_Version + '" encoding="utf-8"?>' + pData);
-    //FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
 
-    if dsdHTTPCharSet = csUTF_8 then FSendList.Add('ENC=UTF8');
+    if dsdHTTPCharSet = csUTF_8 then
+    begin
+      FSendList.Add('XML=' + '<?xml version="' + dsdXML_Version + '" encoding="utf-8"?>' + pData);
+      if dsdXML_SufixUTF8 then FSendList.Add('ENC=UTF8');
+    end else FSendList.Add('XML=' + '<?xml version="' + dsdXML_Version + '" encoding="windows-1251"?>' + pData);
+
     Logger.AddToLog(pData);
     FReceiveStream.Clear;
     IdHTTPWork.FExecOnServer := pExecOnServer;
@@ -331,10 +338,14 @@ begin
             if CheckReadOnlyProcs(pData) and (Length(gc_WebServers_r) <> 0) and (ReadOnlyCount < 1) then
             begin
               Inc(ReadOnlyCount);
-              idHTTP.Post(gc_WebServers_r[ReadOnlyCount] + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+              if dsdHTTPCharSet = csUTF_8 then
+                idHTTP.Post(gc_WebServers_r[ReadOnlyCount] + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8))
+              else idHTTP.Post(gc_WebServers_r[ReadOnlyCount] + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(1251));
             end else
             begin
-              idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8));
+              if dsdHTTPCharSet = csUTF_8 then
+                idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(encUTF8))
+              else idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, IndyTextEncoding(1251));
             end;
 
             ok := true;

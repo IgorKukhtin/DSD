@@ -424,6 +424,7 @@
             <Form>frmMain</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="..\SOURCE FMX\COMPONENT\FMX.UtilConst.pas"/>
         <None Include="ModelSupport_ProjectMobile\default.txaPackage"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
