@@ -1,7 +1,6 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  ActiveControl = tiChoiceCelList
   ClientHeight = 544
   ClientWidth = 336
   Position = ScreenCenter
@@ -601,7 +600,7 @@ object frmMain: TfrmMain
         Size.Height = 484.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 6
+        TabIndex = 4
         TabOrder = 1
         TabPosition = None
         OnChange = ChangeMainPageUpdate
@@ -19970,7 +19969,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = False
+          IsSelected = True
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False
@@ -20452,7 +20451,7 @@ object frmMain: TfrmMain
             item
             end>
           TextSettings.Trimming = None
-          IsSelected = True
+          IsSelected = False
           Size.Width = 8.000000000000000000
           Size.Height = 8.000000000000000000
           Size.PlatformDefault = False

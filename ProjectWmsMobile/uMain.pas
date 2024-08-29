@@ -359,10 +359,10 @@ type
     procedure SwitchToForm(const TabItem: TTabItem; const Data: TObject);
     procedure ReturnPriorForm(const OmitOnChange: Boolean = False);
     procedure ChoiceCelConfirm(const AResult: TModalResult);
-    procedure ChoiceCelOpen(const AResult: TModalResult);
-    procedure DeleteChoiceCelGoods(const AResult: TModalResult);
+    procedure ErasedChoiceCelTop(const AResult: TModalResult);
     procedure ErasedChoiceCelList(const AResult: TModalResult);
     procedure UnErasedChoiceCelList(const AResult: TModalResult);
+    procedure UnErasedChoiceCelTop(const AResult: TModalResult);
 
     procedure InputChoiceCel(const AResult: TModalResult; const AValues: array of string);
 
@@ -896,36 +896,37 @@ begin
   end;
 end;
 
-procedure TfrmMain.ChoiceCelOpen(const AResult: TModalResult);
+procedure TfrmMain.ErasedChoiceCelTop(const AResult: TModalResult);
 begin
-//  if (FChoiceCel <> 0) and (FScanType <> 3) then
-//    ShowEditChoiceCelItem(FChoiceCel)
-//  else NextScan;
-end;
-
-procedure TfrmMain.DeleteChoiceCelGoods(const AResult: TModalResult);
-begin
-//  if AResult = mrYes then
-//  begin
-//    DM.SetErasedChoiceCel(DM.cdsChoiceCelListTop);
-//    DM.DownloadChoiceCelListTop;
-//  end;
+  if AResult = mrYes then
+  begin
+    DM.SetErasedChoiceCel(DM.cdsChoiceCelListTop);
+    DM.DownloadChoiceCelListTop;
+  end;
 end;
 
 procedure TfrmMain.ErasedChoiceCelList(const AResult: TModalResult);
 begin
-//  if AResult = mrYes then
-//  begin
-//    DM.SetErasedChoiceCel(DM.cdsChoiceCelList);
-//  end;
+  if AResult = mrYes then
+  begin
+    DM.SetErasedChoiceCel(DM.cdsChoiceCelList);
+  end;
 end;
 
 procedure TfrmMain.UnErasedChoiceCelList(const AResult: TModalResult);
 begin
-//  if AResult = mrYes then
-//  begin
-//    DM.CompleteChoiceCel(DM.cdsChoiceCelList);
-//  end;
+  if AResult = mrYes then
+  begin
+    DM.SetUnErasedChoiceCel(DM.cdsChoiceCelList);
+  end;
+end;
+
+procedure TfrmMain.UnErasedChoiceCelTop(const AResult: TModalResult);
+begin
+  if AResult = mrYes then
+  begin
+    DM.SetUnErasedChoiceCel(DM.cdsChoiceCelListTop);
+  end;
 end;
 
 // Формирование документа сборки
@@ -1393,10 +1394,10 @@ end;
 // Следующее сканирование
 procedure TfrmMain.NextScan;
 begin
-//  FGoodsId := 0;
-//  FChoiceCel := 0;
-//  if FisNextScan and FisScanOk and not FisZebraScaner then sbScanClick(Nil);
-//  FisScanOk := False;
+  FChoiceCelId:= 0;
+  FChoiceCelBarCode:= '';
+  if FisNextScan and FisScanOk and not FisZebraScaner then sbScanClick(Nil);
+  FisScanOk := False;
 end;
 
 // Включить сканер
@@ -1414,7 +1415,7 @@ begin
   FisNextScan := not FisZebraScaner or FisCameraScaner;
 
   if FisZebraScaner and not FisCameraScaner then FDataWedgeBarCode.Scan
-  else SwitchToForm(tiScanBarCode, nil);
+  else if tcMain.ActiveTab <> tiScanBarCode then SwitchToForm(tiScanBarCode, nil);
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -1559,21 +1560,20 @@ begin
     if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
       TButton(Components[I]).Visible := False;
 
-  // Редактирование в сканированиях перемещения
-//  if (tcMain.ActiveTab = tiChoiceCelList) and DM.cdsChoiceCelList.Active and not DM.cdsChoiceCelList.IsEmpty then
-//  begin
-//    btaCancel.Visible := True;
-//    btaEraseRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger <> 3;
-//    btaUnEraseRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger = 3;
-//    btaEditRecord.Visible := DM.cdsChoiceCelListStatusCode.AsInteger <> 3;
-//    ppActions.Height := 2;
-//    for I := 0 to ComponentCount - 1 do
-//      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
-//      begin
-//        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
-//      end;
-//    ppActions.IsOpen := True;
-//  end;
+  // Редактирование
+  if (tcMain.ActiveTab = tiChoiceCelList) and DM.cdsChoiceCelList.Active and not DM.cdsChoiceCelList.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := DM.cdsChoiceCelListErasedCode.AsInteger <> 10;
+    btaUnEraseRecord.Visible := not btaEraseRecord.Visible;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
 
 end;
 
@@ -1600,20 +1600,19 @@ begin
     if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
       TButton(Components[I]).Visible := False;
 
-  // Редактирование в сканированиях перемещения
-//  if (tcMain.ActiveTab = tiChoiceCelScan) and DM.cdsChoiceCelListTop.Active and not DM.cdsChoiceCelListTop.IsEmpty then
-//  begin
-//    btaCancel.Visible := True;
-//    btaEraseRecord.Visible := True;
-//    btaEditRecord.Visible := True;
-//    ppActions.Height := 2;
-//    for I := 0 to ComponentCount - 1 do
-//      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
-//      begin
-//        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
-//      end;
-//    ppActions.IsOpen := True;
-//  end;
+  // Редактирование
+  if (tcMain.ActiveTab = tiChoiceCelScan) and DM.cdsChoiceCelListTop.Active and not DM.cdsChoiceCelListTop.IsEmpty then
+  begin
+    btaCancel.Visible := True;
+    btaEraseRecord.Visible := True;
+    ppActions.Height := 2;
+    for I := 0 to ComponentCount - 1 do
+      if (Components[I] is TButton) and TButton(Components[I]).Visible and (TButton(Components[I]).Parent = RectangleActions) then
+      begin
+        ppActions.Height := ppActions.Height + TButton(Components[I]).Height;
+      end;
+    ppActions.IsOpen := True;
+  end;
 end;
 
 procedure TfrmMain.LogInButtonClick(Sender: TObject);
@@ -1807,49 +1806,51 @@ begin
 
   if (tcMain.ActiveTab = tiChoiceCelScan) then
   begin
-    // Изменить позицию комплектующих
-//    if TButton(Sender).Tag = 1 then
-//    begin
-//      ShowEditChoiceCelItem(DM.cdsChoiceCelListTopId.AsInteger);
-//    end else
-//    // Удаление позиции комплектующих
-//    if TButton(Sender).Tag = 2 then
-//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListTopOrdUser.AsString + '>'#13#10 +
-//                                   'документ = <' + DM.cdsChoiceCelListTopInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsChoiceCelListTopAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsChoiceCelListTopGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsChoiceCelListTopArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, DeleteChoiceCelGoods)
-//    ;
+    // Изменить позицию
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditChoiceCelItem(DM.cdsChoiceCelListTopId.AsInteger);
+    end else
+    // Удаление позиции
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListTopChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListTopInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListTopGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedChoiceCelTop);
+    // Востановление позиции
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListTopChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListTopInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListTopGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListTopGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelTop)
+    end;
   end else if (tcMain.ActiveTab = tiChoiceCelList) then
   begin
-//    // Изменить позицию комплектующих
-//    if TButton(Sender).Tag = 1 then
-//    begin
-//      ShowEditChoiceCelItem(DM.cdsChoiceCelListId.AsInteger);
-//    end else
-//    // Удаление позиции комплектующего
-//    if TButton(Sender).Tag = 2 then
-//      TDialogService.MessageDialog('Удалить сборку Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListOrdUser.AsString +'>'#13#10 +
-//                                   'документ = <' + DM.cdsChoiceCelListInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsChoiceCelListAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsChoiceCelListGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsChoiceCelListArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedChoiceCelList)
-//    else
-//    // Востановление позиции комплектующего
-//    if TButton(Sender).Tag = 3  then
-//    begin
-//      TDialogService.MessageDialog('Отменить удаление сборки Узла / Лодки'#13#10'№ п/п = <' + DM.cdsChoiceCelListOrdUser.AsString +'>'#13#10 +
-//                                   'документ = <' + DM.cdsChoiceCelListInvNumberFull.AsString + '>'#13#10 +
-//                                   'кол-во = <' + DM.cdsChoiceCelListAmount.AsString + '>'#13#10 +
-//                                   'для <' + DM.cdsChoiceCelListGoodsCode.AsString + '>'#13#10 +
-//                                   'артикул <' + DM.cdsChoiceCelListArticle.AsString + '>'#13#10 +
-//                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
-//           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelList)
-//    end;
+    // Изменить позицию
+    if TButton(Sender).Tag = 1 then
+    begin
+      ShowEditChoiceCelItem(DM.cdsChoiceCelListId.AsInteger);
+    end else
+    // Удаление позиции
+    if TButton(Sender).Tag = 2 then
+      TDialogService.MessageDialog('Удалить Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, ErasedChoiceCelList)
+    else
+    // Востановление позиции
+    if TButton(Sender).Tag = 3  then
+    begin
+      TDialogService.MessageDialog('Отменить удаление Места отбора'#13#10'Ячейка отбора = <' + DM.cdsChoiceCelListChoiceCellName.AsString + '>'#13#10 +
+                                   'документ = <' + DM.cdsChoiceCelListInvNumber.AsString + '>'#13#10 +
+                                   'вид товара <' + DM.cdsChoiceCelListGoodsKindName.AsString + '>'#13#10 +
+                                   '<' + DM.cdsChoiceCelListGoodsName.AsString + '> ?',
+           TMsgDlgType.mtConfirmation, [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], TMsgDlgBtn.mbNo, 0, UnErasedChoiceCelList)
+    end;
   end;
 
   if (TButton(Sender).Tag = 7) and sbBack.Visible  then sbBackClick(Sender);
@@ -1870,7 +1871,7 @@ begin
   pbWebServer.ItemIndex := 0;
 end;
 
-// Создание сборки по Внутреннего заказа
+// Обработка Места отбора
 procedure TfrmMain.ProcessChoiceCel(ABarCode: String);
 begin
 
@@ -1883,10 +1884,10 @@ begin
 
     if DM.cdsChoiceCelEdit.RecordCount = 0 then
     begin
-      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Документ не найден');
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Место отбора не найден');
     end else if DM.cdsChoiceCelEdit.RecordCount > 1 then
     begin
-      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Найдено более одного документа.');
+      TDialogService.ShowMessage('По коду или штрих коду '#13#10#13#10 + ABarCode + #13#10#13#10'Найдено более одно Место отбора.');
     end;
 
     FChoiceCelId := DM.cdsChoiceCelEditChoiceCellId.AsInteger;
@@ -1900,20 +1901,18 @@ begin
       end else
       begin
         ChoiceCelConfirm(mrYes);
+        DM.DownloadChoiceCelListTop;
         NextScan;
       end;
     end else if FScanType = 3 then NextScan;
   end;
 end;
 
-// Обрабатываем отсканированный товар для производства
+// Обрабатываем отсканированный
 procedure TfrmMain.OnScanChoiceCel(Sender: TObject; AData_String: String);
 begin
-
   FisScanOk := True;
-
   ProcessChoiceCel(AData_String);
-
 end;
 
 end.
