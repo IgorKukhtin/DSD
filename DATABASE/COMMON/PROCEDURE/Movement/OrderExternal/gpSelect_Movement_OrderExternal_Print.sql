@@ -95,8 +95,8 @@ BEGIN
                                    AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
 
      WHERE Movement.Id = inMovementId;
- 
-     
+
+
 
 -- if vbUserId = 5
 -- then
@@ -118,7 +118,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
      END IF;
 
-     
+
     -- таб. документов    -- параметры из документов
     CREATE TEMP TABLE tmpListDoc (MovementId Integer) ON COMMIT DROP;
     INSERT INTO tmpListDoc (MovementId)
@@ -138,11 +138,11 @@ BEGIN
             AND Movement.OperDate = vbOperDate
             AND inIsJuridical = TRUE;
 
-                      
+
       --
      OPEN Cursor1 FOR
        WITH tmpMovement AS (SELECT tmp.MovementId
-                            FROM ( 
+                            FROM (
                                   SELECT Movement_find.Id AS MovementId
                                   FROM (SELECT inMovementId AS MovementId WHERE vbRetailId <> 0) AS tmpMovement
                                        INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
@@ -159,7 +159,7 @@ BEGIN
                                                                     AND MovementLinkObject_Retail_find.ObjectId = vbRetailId
                                  UNION
                                   SELECT inMovementId AS MovementId WHERE vbRetailId = 0
-                                  ) AS tmp 
+                                  ) AS tmp
                             WHERE inisJuridical = FALSE
                            UNION
                             SELECT tmpListDoc.MovementId
@@ -169,7 +169,7 @@ BEGIN
 
           , tmpMF AS (SELECT MovementFloat.*
                       FROM MovementFloat
-                      WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement) 
+                      WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
                          AND MovementFloat.DescId IN (zc_MovementFloat_TotalCount()
                                                     , zc_MovementFloat_TotalCountKg()
                                                     , zc_MovementFloat_TotalCountSh()
@@ -184,7 +184,7 @@ BEGIN
                                        , SUM (COALESCE (MovementFloat_TotalCount.ValueData, 0))         AS TotalCount
                                        , SUM (COALESCE (MovementFloat_TotalCountKg.ValueData, 0))       AS TotalCountKg
                                        , SUM (COALESCE (MovementFloat_TotalCountSh.ValueData, 0))       AS TotalCountSh
-                     
+
                                        , SUM (COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0))      AS TotalSummMVAT
                                        , SUM (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0))      AS TotalSummPVAT
                                        , SUM (COALESCE (MovementFloat_TotalSummPVAT.ValueData) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0)) AS SummVAT
@@ -200,7 +200,7 @@ BEGIN
                                        LEFT JOIN tmpMF AS MovementFloat_TotalCountSh
                                                        ON MovementFloat_TotalCountSh.MovementId =  tmpMovement.MovementId
                                                       AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
-                     
+
                                        LEFT JOIN tmpMF AS MovementFloat_TotalSummMVAT
                                                        ON MovementFloat_TotalSummMVAT.MovementId =  tmpMovement.MovementId
                                                       AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
@@ -290,7 +290,7 @@ BEGIN
 
        FROM tmpMovement_total
             LEFT JOIN Movement ON Movement.Id = tmpMovement_total.MovementId
-                             
+
             LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
@@ -319,11 +319,11 @@ BEGIN
                             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
-            
+
             LEFT JOIN tmpMLO AS MovementLinkObject_Contract
                              ON MovementLinkObject_Contract.MovementId = Movement.Id
                             AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
-           
+
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             -- по контрагенту находим юр.лицо
@@ -520,7 +520,7 @@ BEGIN
                                                                     AND MovementLinkObject_Retail_find.ObjectId = vbRetailId
                                  UNION
                                   SELECT inMovementId AS MovementId WHERE vbRetailId = 0
-                                  ) AS tmp 
+                                  ) AS tmp
                             WHERE inisJuridical = FALSE
                            UNION
                             SELECT tmpListDoc.MovementId
@@ -538,17 +538,17 @@ BEGIN
                   )
   , tmpMI_Float AS (SELECT MovementItemFloat.*
                     FROM MovementItemFloat
-                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.MovementItemId FROM tmpMI_All) 
+                    WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.MovementItemId FROM tmpMI_All)
                       AND MovementItemFloat.DESCId IN ( zc_MIFloat_Price(), zc_MIFloat_AmountSecond(), zc_MIFloat_CountForPrice(), zc_MIFloat_Summ())
                    )
   , tmpMI_LO AS (SELECT MovementItemLinkObject.*
                  FROM MovementItemLinkObject
-                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.MovementItemId FROM tmpMI_All) 
+                 WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.MovementItemId FROM tmpMI_All)
                    AND MovementItemLinkObject.DESCId = zc_MILinkObject_GoodsKind()
                 )
 
   , tmpMI AS (SELECT MAX (tmpMI_All.MovementItemId) AS MovementItemId
-                   , tmpMI_All.GoodsId 
+                   , tmpMI_All.GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , CASE WHEN vbDiscountPercent <> 0
                                THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -573,7 +573,7 @@ BEGIN
                    LEFT JOIN tmpMI_Float AS MIFloat_Summ
                                          ON MIFloat_Summ.MovementItemId = tmpMI_All.MovementItemId
                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
- 
+
                    LEFT JOIN tmpMI_LO AS MILinkObject_GoodsKind
                                       ON MILinkObject_GoodsKind.MovementItemId = tmpMI_All.MovementItemId
                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -589,7 +589,7 @@ BEGIN
                             FROM MovementItem
                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                              ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()  
+                                                            AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()
 
                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                       ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -602,9 +602,9 @@ BEGIN
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = FALSE
                             GROUP BY MovementItem.ParentId
-                           )     
+                           )
 
-            -- ячейки отбора              
+            -- ячейки отбора
           , tmpChoiceCell AS (SELECT gpSelect.NPP           ::Integer   AS NPP
                                    , gpSelect.Code          ::Integer   AS CellCode
                                    , gpSelect.Name          ::TVarChar  AS CellName
@@ -627,18 +627,18 @@ BEGIN
            , CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , COALESCE (tmpObject_GoodsPropertyValue.CodeSticker, '') :: TVarChar  AS CodeSticker
            , COALESCE (tmpObject_GoodsPropertyValue.GoodsBoxName_short, tmpObject_GoodsPropertyValueGroup_GoodsBoxName_short.GoodsBoxName_short) AS GoodsBoxName_short
-           
+
            , CAST (CASE WHEN COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0) > 0
                              THEN CAST ((tmpMI.Amount + tmpMI.AmountSecond) / COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0) AS NUMERIC (16, 4))
                         ELSE 0
                    END AS NUMERIC(16,1)) :: TFloat AS AmountBox
-          
+
            , COALESCE (tmpObject_GoodsPropertyValueGroup_BoxCount.BoxCount, tmpObject_GoodsPropertyValue.BoxCount, 0)     :: TFloat    AS BoxCount
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
 
            , tmpMI.Amount          :: TFloat AS Amount
- 
+
            , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                        THEN tmpMI.Amount * CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
                        ELSE tmpMI.Amount
@@ -658,14 +658,14 @@ BEGIN
            , tmpMI.Summ :: TFloat AS SummPVAT
 
            , COALESCE (tmpRemains.Amount, 0)  :: TFloat AS AmountRemains
-           
+
            , ObjectFloat_WmsCellNum.ValueData  AS WmsCellNum
-           
+
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                        THEN tmpMI_Child.AmountWeight_all / CASE WHEN ObjectFloat_Weight.ValueData > 0 THEN ObjectFloat_Weight.ValueData ELSE 1 END
                        ELSE tmpMI_Child.AmountWeight_all
              END :: TFloat AS Amount_child
-             
+
            , CASE WHEN vbIsRemains = TRUE
                    /*AND COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI.AmountSecond, 0)
                      > CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
@@ -679,13 +679,13 @@ BEGIN
                             END
                   ELSE 0
              END :: TFloat AS Amount_child_diff
-           
+
              -- не ошибка, кто-то напутал
-           , tmpChoiceCell.CellCode      ::Integer  AS NPP
-           , tmpChoiceCell.CellCode      ::Integer  AS CellCode
-           , tmpChoiceCell.NPP           ::Integer  AS NPP_NE_nado
-           , tmpChoiceCell.CellName      ::TVarChar AS CellName
-           , tmpChoiceCell.CellName_shot ::TVarChar AS CellName_shot 
+           , COALESCE (tmpChoiceCell.CellCode, tmpChoiceCell_two.CellCode)           ::Integer  AS NPP
+           , COALESCE (tmpChoiceCell.CellCode, tmpChoiceCell_two.CellCode)           ::Integer  AS CellCode
+           , COALESCE (tmpChoiceCell.NPP, tmpChoiceCell_two.NPP)                     ::Integer  AS NPP_NE_nado
+           , COALESCE (tmpChoiceCell.CellName, tmpChoiceCell_two.CellName)           ::TVarChar AS CellName
+           , COALESCE (tmpChoiceCell.CellName_shot, tmpChoiceCell_two.CellName_shot) ::TVarChar AS CellName_shot
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId
                   , tmpMI.GoodsKindId
@@ -723,6 +723,13 @@ BEGIN
                                   ON ObjectFloat_WmsCellNum.ObjectId = View_GoodsByGoodsKind.Id
                                  AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = View_GoodsByGoodsKind.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSub
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = View_GoodsByGoodsKind.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
+
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
 
@@ -758,8 +765,14 @@ BEGIN
                                                              END
 
             LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpMI.GoodsId
-                                   AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0) 
+                                   AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
                                    AND tmpChoiceCell.Ord = 1
+            LEFT JOIN tmpChoiceCell AS tmpChoiceCell_two
+                                    ON tmpChoiceCell_two.GoodsId = ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
+                                   AND COALESCE (tmpChoiceCell_two.GoodsKindId,0) = COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0)
+                                   AND tmpChoiceCell_two.Ord = 1
+                                   AND tmpChoiceCell.GoodsId IS NULL
+
        WHERE tmpMI.Amount <> 0 OR tmpMI.AmountSecond <> 0
        -- ORDER BY ObjectString_Goods_GroupNameFull.ValueData, Object_Goods.ValueData, Object_GoodsKind.ValueData
        ;
