@@ -161,6 +161,7 @@ type
     procedure LoadPromoKindFormTest;
     procedure LoadPromoStateKindFormTest;
     procedure LoadPromoFormTest;
+    procedure LoadPromoTradeFormTest;
     procedure LoadQualityFormTest;
     procedure LoadQualityParamsFormTest;
     procedure LoadQualityDocFormTest;
@@ -3896,6 +3897,20 @@ begin
   }
 end;
 
+procedure TLoadFormTest.LoadPromoTradeFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoItemEditForm');
+   {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoTradeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoTradeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoTradeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoTradeJournalForm');
+  }
+end;
 procedure TLoadFormTest.LoadPromoKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoKindForm'));

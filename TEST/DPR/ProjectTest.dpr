@@ -1524,7 +1524,9 @@ uses
   Report_Check_Sale_TotalSumDialog in '..\..\Forms\Report\Report_Check_Sale_TotalSumDialog.pas' {Report_Check_Sale_TotalSumDialogForm: TParentForm},
   GoodsGroupDirection in '..\..\Forms\Guides\GoodsGroupDirection.pas' {GoodsGroupDirectionForm: TParentForm},
   GoodsGroupDirectionEdit in '..\..\Forms\Guides\GoodsGroupDirectionEdit.pas' {GoodsGroupDirectionEditForm: TParentForm},
-  ChoiceCellJournal in '..\..\Forms\Document\ChoiceCellJournal.pas' {ChoiceCellJournalForm: TParentForm};
+  ChoiceCellJournal in '..\..\Forms\Document\ChoiceCellJournal.pas' {ChoiceCellJournalForm: TParentForm},
+  PromoItemEdit in '..\..\Forms\Guides\PromoItemEdit.pas' {PromoItemEditForm: TParentForm},
+  PromoItem in '..\..\Forms\Guides\PromoItem.pas' {PromoItemForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

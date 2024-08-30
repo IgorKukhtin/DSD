@@ -596,11 +596,17 @@ CREATE OR REPLACE FUNCTION zc_Movement_ChoiceCell() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_ChoiceCell', 'Места отбора' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ChoiceCell');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoTrade() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoTrade'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoTrade', 'Трейд-маркетинг' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTrade');
+
+
    
 /*-------------------------------------------------------------------------------
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 27.08.24         * zc_Movement_PromoTrade
  24.08.24         * zc_Movement_ChoiceCell
  10.03.24         * zc_Movement_BankSecondNum
  27.02.24         * zc_Movement_PersonalGroupSummAdd
