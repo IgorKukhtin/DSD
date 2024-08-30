@@ -604,12 +604,16 @@ BEGIN
                             GROUP BY MovementItem.ParentId
                            )     
 
-            --ячейки отбора               
-          , tmpChoiceCell AS (SELECT tmp.*
-                                   , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
-                                   , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
-                              FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
-                              )
+            -- ячейки отбора              
+          , tmpChoiceCell AS (SELECT gpSelect.NPP           ::Integer   AS NPP
+                                   , gpSelect.Code          ::Integer   AS CellCode
+                                   , gpSelect.Name          ::TVarChar  AS CellName
+                                   , LEFT (gpSelect.Name, 1)::TVarChar  AS CellName_shot
+                                   , gpSelect.GoodsId
+                                   , gpSelect.GoodsKindId
+                                   , ROW_NUMBER() OVER (PARTITION BY gpSelect.GoodsId, gpSelect.GoodsKindId ORDER BY gpSelect.NPP) AS Ord
+                              FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS gpSelect
+                             )
 
 
        -- Результат
@@ -676,8 +680,11 @@ BEGIN
                   ELSE 0
              END :: TFloat AS Amount_child_diff
            
-           , tmpChoiceCell.NPP           ::TFloat   AS NPP
-           , tmpChoiceCell.Name          ::TVarChar AS CellName
+             -- не ошибка, кто-то напутал
+           , tmpChoiceCell.CellCode      ::Integer  AS NPP
+           , tmpChoiceCell.CellCode      ::Integer  AS CellCode
+           , tmpChoiceCell.NPP           ::Integer  AS NPP_NE_nado
+           , tmpChoiceCell.CellName      ::TVarChar AS CellName
            , tmpChoiceCell.CellName_shot ::TVarChar AS CellName_shot 
        FROM (SELECT tmpMI.MovementItemId
                   , tmpMI.GoodsId

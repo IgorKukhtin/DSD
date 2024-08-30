@@ -98,7 +98,7 @@ BEGIN
                                           -- № п/п
                                         , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId, tmpMI.GoodsKindId ORDER BY tmpMI.PartionGoodsDate ASC) AS Ord
                                    FROM tmpPartionCell_mi AS tmpMI
-                                   -- партия = ячейке Хранения
+                                   -- партия = ячейка Хранения
                                    WHERE tmpMI.PartionCellId <> zc_PartionCell_RK()
                                   )
         -- Результат
