@@ -114,6 +114,9 @@ type
     { подтверждение места отбора}
     function ConfirmChoiceCel(ABarCode: String) : Boolean;
 
+    procedure SetErasedChoiceCel(ADataSet: TClientDataset);
+    procedure SetUnErasedChoiceCel(ADataSet: TClientDataset);
+
     function DownloadChoiceCelList(AIsOrderBy, AIsAllUser, AIsErased: Boolean; AFilter: String) : Boolean;
     function DownloadChoiceCelListTop : Boolean;
 
@@ -737,6 +740,66 @@ begin
   finally
     FreeAndNil(StoredProc);
     cdsChoiceCelListTop.EnableControls;
+  end;
+end;
+
+procedure TDM.SetErasedChoiceCel(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_ChoiceCell_SetErased';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, ADataSet.FieldByName('MovementItemId').AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('ErasedCode').AsInteger := 10;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
+  end;
+end;
+
+procedure TDM.SetUnErasedChoiceCel(ADataSet: TClientDataset);
+  var StoredProc : TdsdStoredProc;
+begin
+
+  if ADataSet.Active and not ADataSet.IsEmpty then
+  begin
+
+    StoredProc := TdsdStoredProc.Create(nil);
+    try
+      StoredProc.OutputType := otResult;
+
+      StoredProc.StoredProcName := 'gpMovementItem_ChoiceCell_SetUnErased';
+      StoredProc.Params.Clear;
+      StoredProc.Params.AddParam('inMovementItemId', ftInteger, ptInput, ADataSet.FieldByName('MovementItemId').AsInteger);
+      StoredProc.Params.AddParam('outIsErased', ftBoolean, ptOutput, False);
+
+      try
+        StoredProc.Execute(false, false, false);
+        ADataSet.Edit;
+        ADataSet.FieldByName('ErasedCode').AsInteger := -1;
+        ADataSet.Post;
+      except
+        on E : Exception do TDialogService.ShowMessage(GetTextMessage(E));
+      end;
+    finally
+      FreeAndNil(StoredProc);
+    end;
   end;
 end;
 

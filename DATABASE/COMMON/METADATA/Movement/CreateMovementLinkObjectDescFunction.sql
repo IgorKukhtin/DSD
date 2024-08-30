@@ -374,6 +374,11 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_TradeMark() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_TradeMark', 'Торговая Марка' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_TradeMark');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PromoItem', 'Статья затрат' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoItem');
+
+
 
 
 

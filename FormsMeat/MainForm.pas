@@ -1508,6 +1508,8 @@ type
     N262: TMenuItem;
     actChoiceCellJournal: TdsdOpenForm;
     miChoiceCellJournal: TMenuItem;
+    actPromoItem: TdsdOpenForm;
+    miPromoItem: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
