@@ -213,9 +213,9 @@ begin
            //Кількість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.###', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Ціна постачання одиниці товару\послуги
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ ("основна ставка")
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ (нульова ставка експорт)
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A19', '0.00');
            inc(i);
@@ -326,9 +326,9 @@ begin
            //Кількість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.###', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Ціна постачання одиниці товару\послуги
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ ("основна ставка")
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ (нульова ставка експорт)
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A19', '0.00');
            inc(i);
@@ -471,12 +471,12 @@ begin
            //Кількість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Ціна постачання одиниці товару\послуги
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Код ставки
            //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Обсяги постачання без урахування ПДВ ("основна ставка")
            //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
@@ -640,7 +640,7 @@ begin
           begin
             ROWNUM := IntToStr(i);
             //Nil_ := false;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
 
           //20
@@ -816,12 +816,12 @@ begin
            //Кількість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Ціна постачання одиниці товару\послуги
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Код ставки
            //CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.00', FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A8', ReplaceStr(FormatFloat('0.###', HeaderDataSet.FieldByName('VatPercent').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A10', ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.'));
 
            //Ознака імпортованого товару
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A132', FieldByName('GoodsCodeTaxImport').AsString);
@@ -1142,7 +1142,7 @@ begin
           with ZVIT.DECLARBODY.RXXXXG6.Add do
           begin
             ROWNUM := i;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -1210,7 +1210,7 @@ begin
           begin
             ROWNUM := i;
             //Nil_ := false;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -1587,7 +1587,7 @@ begin
           with ZVIT.DECLARBODY.RXXXXG6.Add do
           begin
             ROWNUM := i;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -1655,7 +1655,7 @@ begin
           begin
             ROWNUM := i;
             //Nil_ := false;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -2032,7 +2032,7 @@ begin
           with ZVIT.DECLARBODY.RXXXXG6.Add do
           begin
             ROWNUM := i;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -2100,7 +2100,7 @@ begin
           begin
             ROWNUM := i;
             //Nil_ := false;
-            NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
+            NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('AmountSummNoVAT_12').AsFloat), FormatSettings.DecimalSeparator, '.');
           end;
           //
           inc(i);
@@ -2281,7 +2281,7 @@ begin
            //Кількість
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A15', ReplaceStr(FormatFloat('0.####', FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Ціна постачання одиниці товару\послуги
-           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
+           CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A16', ReplaceStr(FormatFloat('0.00##', FieldByName('PriceNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ ("основна ставка")
            CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '1', IntToStr(i), 'TAB1_A17', ReplaceStr(FormatFloat('0.00', FieldByName('AmountSummNoVAT').AsFloat), FormatSettings.DecimalSeparator, '.'));
            //Обсяги постачання без урахування ПДВ (нульова ставка експорт)
@@ -3709,7 +3709,7 @@ begin
            if FieldByName('Price_for_PriceCor').AsFloat <> 0 then
           begin
               //Коригування
-              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              with ZVIT.DECLARBODY.RXXXXG7.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.#####', -1 * FieldByName('Price_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
               //Коригування
               with ZVIT.DECLARBODY.RXXXXG8.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', FieldByName('Amount_for_PriceCor').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end
@@ -3718,7 +3718,7 @@ begin
               //Кількість
               with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', -1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
               //Ціна постачання одиниці товару\послуги
-              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end;
 
           // Код ставки
@@ -3727,7 +3727,7 @@ begin
           with ZVIT.DECLARBODY.RXXXXG009.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
 
           //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
-          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', -1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00##', -1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
 
           //Сума податку на додану вартість
           with ZVIT.DECLARBODY.RXXXXG11_10.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00####', -1 * FieldByName('SummVat').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
@@ -3871,7 +3871,7 @@ begin
               //Кількість
               with ZVIT.DECLARBODY.RXXXXG5.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.####', 1 * FieldByName('Amount').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
               //Ціна постачання одиниці товару\послуги
-              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+              with ZVIT.DECLARBODY.RXXXXG6.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00##', FieldByName('Price').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
           end;
 
           //Код ставки
@@ -3880,7 +3880,7 @@ begin
           with ZVIT.DECLARBODY.RXXXXG009.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
 
           //Обсяги постачання (база оподаткування) без урахування податку на додану вартість
-          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00', 1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
+          with ZVIT.DECLARBODY.RXXXXG010.Add do begin ROWNUM := I; NodeValue := ReplaceStr(FormatFloat('0.00##', 1 * FieldByName('AmountSumm').AsFloat), FormatSettings.DecimalSeparator, '.'); end;
 
 
           with ZVIT.DECLARBODY.RXXXXG011.Add do begin ROWNUM := I; SetAttributeNS('nil', NS_URI, true); end;
