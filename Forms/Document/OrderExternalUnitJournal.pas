@@ -24,7 +24,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TOrderExternalUnitJournalForm = class(TAncestorJournalForm)
@@ -104,6 +104,12 @@ type
     bbOpenFormOrderExternalChild: TdxBarButton;
     actPrintSort: TdsdPrintAction;
     bbPrintSort: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
+    bbSeparator: TdxBarSeparator;
+    actPrintCell_pak: TdsdPrintAction;
+    mactPrint_OrderCell: TMultiAction;
+    bbPrint_OrderCell: TdxBarButton;
+    actPrintCell: TdsdPrintAction;
   private
     { Private declarations }
   public

@@ -1422,6 +1422,50 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end>
       isShowModal = False
     end
+    object actPrintCell: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1086#1090#1073#1086#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP;GoodsName;GoodsKindName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inIsJuridical'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_OrderExternal_Cell'
+      ReportNameParam.Value = 'PrintMovement_OrderExternal_Cell'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actOpenFormOrderExternalChild: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1646,15 +1690,11 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSort'
         end
         item
           Visible = True
@@ -1722,6 +1762,39 @@ inherited OrderExternalUnitForm: TOrderExternalUnitForm
     end
     object bbPrintSort: TdxBarButton
       Action = actPrintSort
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSort'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSeparator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCell'
+        end>
+    end
+    object bbSeparator: TdxBarSeparator
+      Caption = 'Separator'
+      Category = 0
+      Hint = 'Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPrintCell: TdxBarButton
+      Action = actPrintCell
       Category = 0
     end
   end
