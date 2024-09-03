@@ -436,6 +436,7 @@ AS
                                       , '39117799' -- Нордон
                                       , '41805811' -- Гловер
                                       , '34465801' -- ТЕРКАП
+                                      , '45293717' -- був Теркап-став Монблан
                                       , '40145541' -- Амиата
                                       --, '39775097' -- Легион-2015
                                       , '41299013' -- Ф.К.С. ТОВ
@@ -981,7 +982,7 @@ AS
            , CAST ('PrintMovement_TTN_071021' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493', '45041508'
+       AND OH_JuridicalDetails.OKPO NOT IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493', '45041508'
                                           , '44588869' -- Бунар
                                           , '44608319' -- ОЛІВІЯ ТРЕНД
                                           , '45142498' -- на нового клиента Хотей 43233918
@@ -1001,7 +1002,7 @@ AS
            , CAST ('PrintMovement_TTN_43233918' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '42668161', '41360805', '43233918', '33259493'
+       AND OH_JuridicalDetails.OKPO IN ('41201250', '42599711', '41200660', '42465240', '34465801', '45293717', '42668161', '41360805', '43233918', '33259493'
                                       , '44588869' -- Бунар
                                       , '44608319' -- ОЛІВІЯ ТРЕНД
                                       , '45041508'

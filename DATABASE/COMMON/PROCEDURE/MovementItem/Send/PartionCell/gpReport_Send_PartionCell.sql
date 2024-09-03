@@ -170,10 +170,13 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , Ord Integer
              , ColorFon_ord Integer
 
-             , NPP_ChoiceCell      TFloat 
+             , NPP_ChoiceCell      Integer
              , ChoiceCellCode      Integer
              , ChoiceCellName      TVarChar
              , ChoiceCellName_shot TVarChar
+
+             , isChoiceCell_mi       Boolean
+             , PartionGoodsDate_next TDateTime
               )
 AS
 $BODY$
@@ -1268,10 +1271,15 @@ BEGIN
         --ячейки отбора               
       , tmpChoiceCell AS (SELECT tmp.*
                                , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
-                               , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
+                               , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.Code) AS Ord
                           FROM gpSelect_Object_ChoiceCell (FALSE, inSession) AS tmp
                           )
-
+          -- если партия - отмечена для снятия с хранения
+       ,  tmpChoiceCell_mi AS (SELECT lpSelect.GoodsId, lpSelect.GoodsKindId
+                                    , lpSelect.PartionGoodsDate_next
+                                    , ROW_NUMBER() OVER (PARTITION BY lpSelect.GoodsId, lpSelect.GoodsKindId ORDER BY lpSelect.ChoiceCellCode) AS Ord
+                               FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
+                              )
    --
    SELECT tmpResult.MovementId
         , tmpResult.InvNumber
@@ -1495,15 +1503,25 @@ BEGIN
           -- подсвечиваем строчку
         , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
-        --ячейки отбора
-        , tmpChoiceCell.NPP           ::TFloat   AS NPP_ChoiceCell
+          -- Место отбора
+        , tmpChoiceCell.Code          ::Integer  AS NPP_ChoiceCell
         , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
         , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
         , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
+        
+        , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN FALSE WHEN tmpResult.Ord = 1 AND tmpChoiceCell_mi.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isChoiceCell_mi
+        , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL  WHEN tmpResult.Ord = 1 THEN tmpChoiceCell_mi.PartionGoodsDate_next ELSE NULL END ::TDateTime AS PartionGoodsDate_next
+
    FROM tmpResult
+        -- нашли Место отбора
         LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmpResult.GoodsId
                                AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
                                AND tmpChoiceCell.Ord = 1
+        -- нашли партия - отмечена для снятия с хранения
+        LEFT JOIN tmpChoiceCell_mi ON tmpChoiceCell_mi.GoodsId = tmpResult.GoodsId
+                                  AND COALESCE (tmpChoiceCell_mi.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId,0)
+                                  AND tmpChoiceCell.Ord = 1
+                               
 
         ;
 
@@ -2606,10 +2624,14 @@ BEGIN
         , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
         --ячейки отбора
-        , 0     ::TFloat   AS NPP_ChoiceCell     
+        , 0     ::Integer  AS NPP_ChoiceCell     
         , NULL  ::Integer  AS ChoiceCellCode
         , NULL  ::TVarChar AS ChoiceCellName     
         , NULL  ::TVarChar AS ChoiceCellName_shot
+
+        , isChoiceCell_mi :: Boolean   AS isChoiceCell_mi
+        , NULL            :: TDateTime AS PartionGoodsDate_next
+
    FROM tmpResult
   ;
 

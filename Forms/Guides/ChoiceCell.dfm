@@ -131,6 +131,23 @@ object ChoiceCellForm: TChoiceCellForm
         Options.Editing = False
         Width = 70
       end
+      object isChoiceCell_mi: TcxGridDBColumn
+        Caption = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'isChoiceCell_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object PartionGoodsDate_next_mi: TcxGridDBColumn
+        Caption = #1055#1072#1088#1090#1080#1103' ('#1089' '#1093#1088#1072#1085#1077#1085#1080#1103')'
+        DataBinding.FieldName = 'PartionGoodsDate_next_mi'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
       object BoxCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1045'2'
         DataBinding.FieldName = 'BoxCount'
@@ -170,6 +187,36 @@ object ChoiceCellForm: TChoiceCellForm
         HeaderAlignmentVert = vaBottom
         Options.Editing = False
         Width = 80
+      end
+      object GoodsCode_mi: TcxGridDBColumn
+        Caption = '***'#1050#1086#1076' '#1090#1086#1074'.'
+        DataBinding.FieldName = 'GoodsCode_mi'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 55
+      end
+      object GoodsName_mi: TcxGridDBColumn
+        Caption = '***'#1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName_mi'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 70
+      end
+      object GoodsKindName_mi: TcxGridDBColumn
+        Caption = '***'#1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsKindName_mi'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

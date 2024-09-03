@@ -82,6 +82,11 @@ type
     edSearchName: TcxTextEdit;
     Name_search: TcxGridDBColumn;
     FieldFilter_Name: TdsdFieldFilter;
+    isChoiceCell_mi: TcxGridDBColumn;
+    PartionGoodsDate_next_mi: TcxGridDBColumn;
+    GoodsCode_mi: TcxGridDBColumn;
+    GoodsName_mi: TcxGridDBColumn;
+    GoodsKindName_mi: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -631,7 +631,7 @@ BEGIN
                                                   , inisGoodsGroupIn        := FALSE
                                                   , inisGoodsGroupExc       := FALSE
                                                   , inisList                := FALSE
-                                                  , inUserId                := vbUserId
+                                                  , inUserId                := -1 * vbUserId
                                                    )
 
                                           END AS MovementId_begin
@@ -1041,7 +1041,7 @@ BEGIN
                                                         , inUnitId              := NULL
                                                         , inStorageId           := NULL  
                                                         , inPartionModelId      := NULL 
-                                                        , inUserId              := vbUserId
+                                                        , inUserId              := -1 * vbUserId
                                                          )
 
                   END AS tmpId

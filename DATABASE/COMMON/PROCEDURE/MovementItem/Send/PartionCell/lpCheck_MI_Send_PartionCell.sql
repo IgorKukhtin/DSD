@@ -14,7 +14,7 @@ RETURNS Integer
 AS
 $BODY$
 BEGIN
-     IF COALESCE (inPartionCellId, 0) IN (0, zc_PartionCell_RK())
+     IF COALESCE (inPartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
      THEN
          RETURN 0;
      ELSE
