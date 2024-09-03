@@ -56,7 +56,7 @@ RETURNS TABLE(
     ,GoodsKindComplete_FromName     TVarChar
     ,GoodsKind_ToName               TVarChar
     ,GoodsKindComplete_ToName       TVarChar
-    ,OperDate                       TDateTime
+    ,OperDate                       TDateTime -- TVarChar -- TDateTime
     ,Count_Day                      Integer   -- Отраб. дн. 1 чел (инф.)
     ,Count_MemberInDay              Integer   -- Кол-во человек (за 1 д.)
     ,Gross                          TFloat
@@ -596,9 +596,10 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END                         AS GoodsKindComplete_ToName
 
-               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
-                     THEN Res.OperDate
-                ELSE NULL::TDateTime END                  AS OperDate
+               ,CASE WHEN inDetailDay = TRUE THEN Res.OperDate
+                     WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+                     ELSE Res.OperDate
+                END AS OperDate
 
                , MAX (Res.Count_Day) :: Integer           AS Count_Day         -- Отраб. дн. 1 чел (инф.)
 
@@ -706,9 +707,10 @@ BEGIN
                      THEN Res.GoodsKindComplete_ToName
                 ELSE NULL::TVarChar END
 
-               ,CASE WHEN inDetailDay = TRUE OR inDetailMonth = TRUE
-                     THEN Res.OperDate
-                ELSE NULL::TDateTime END
+               ,CASE WHEN inDetailDay = TRUE THEN Res.OperDate
+                     WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
+                     ELSE Res.OperDate
+                END
                ,CASE WHEN inDetailDay = TRUE
                      THEN Res.Count_MemberInDay
                 ELSE NULL::Integer END
@@ -799,9 +801,9 @@ BEGIN
            ,tmpRes.ToName
            ,tmpRes.MovementDescName
            ,tmpRes.ModelServiceItemChild_FromCode
-           ,tmpRes.ModelServiceItemChild_FromName
+           ,CASE WHEN vbUserId IN (-5) THEN '' ELSE tmpRes.ModelServiceItemChild_FromName END :: TVarChar AS ModelServiceItemChild_FromName
            ,tmpRes.ModelServiceItemChild_ToCode
-           ,tmpRes.ModelServiceItemChild_ToName
+           ,CASE WHEN vbUserId IN (-5) THEN '' ELSE tmpRes.ModelServiceItemChild_ToName END :: TVarChar AS ModelServiceItemChild_ToName
 
            ,tmpRes.StorageLineName_From
            ,tmpRes.StorageLineName_To
@@ -811,7 +813,9 @@ BEGIN
            ,tmpRes.GoodsKind_ToName
            ,tmpRes.GoodsKindComplete_ToName
 
-           ,tmpRes.OperDate
+--           ,CASE WHEN vbUserId in (/*5, 6561986*/ 0) THEN NULL :: TVarChar ELSE tmpRes.OperDate :: TVarChar END  :: TVarChar AS OperDate
+           ,CASE WHEN vbUserId in (-6561986) THEN NULL :: TDateTime ELSE tmpRes.OperDate :: TDateTime END  :: TDateTime AS OperDate
+
             -- Отраб. дн. 1 чел (инф.)
            ,tmpRes.Count_Day
             --
@@ -949,6 +953,7 @@ BEGIN
            ,'' :: TVarChar AS GoodsKind_ToName
            ,'' :: TVarChar AS GoodsKindComplete_ToName
 
+--           ,NULL :: TVarChar AS OperDate
            ,NULL :: TDateTime AS OperDate
 
             -- Отраб. дн. 1 чел (инф.)

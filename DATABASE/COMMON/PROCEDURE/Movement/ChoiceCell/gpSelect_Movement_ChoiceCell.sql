@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , GoodsGroupNameFull TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
+             , isChecked Boolean
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
@@ -69,6 +70,11 @@ BEGIN
                                                       , zc_MIDate_Update()
                                                        )
                       )
+      , tmpMIBoolean AS (SELECT *
+                         FROM MovementItemBoolean
+                         WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                           AND MovementItemBoolean.DescId = zc_MIBoolean_Checked()
+                        )
 
       , tmpMILO AS (SELECT *
                     FROM MovementItemLinkObject
@@ -103,6 +109,9 @@ BEGIN
            , MIDate_PartionGoods.ValueData        AS PartionGoodsDate
            , MIDate_PartionGoods_next.ValueData   AS PartionGoodsDate_next
 
+             -- Отметка что ждет по этому товару перемещение из места хранения
+           , COALESCE (MIBoolean_Checked.ValueData, FALSE) :: Boolean AS isChecked
+
            , Object_Insert.ValueData    AS InsertName
            , Object_Update.ValueData    AS UpdateName
            , MIDate_Insert.ValueData    AS InsertDate
@@ -113,6 +122,10 @@ BEGIN
             INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
             LEFT JOIN Object AS Object_ChoiceCell ON Object_ChoiceCell.Id = MovementItem.ObjectId
+
+            LEFT JOIN tmpMIBoolean AS MIBoolean_Checked
+                                   ON MIBoolean_Checked.MovementItemId = MovementItem.Id
+                                  AND MIBoolean_Checked.DescId = zc_MIBoolean_Checked()
 
             LEFT JOIN tmpMIDate AS MIDate_PartionGoods
                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id

@@ -30,7 +30,16 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );*/
-DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+/*DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                 , Integer, Integer, Boolean
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
+                                                 , TVarChar
+                                                  );*/
+                                                  
+DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime, Integer, Integer, Integer, Integer, TDateTime, Boolean
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
                                                  , Integer, Integer, Boolean
@@ -38,7 +47,7 @@ DROP FUNCTION IF EXISTS gpUpdate_MI_Send_byReport (Integer, TDateTime,TDateTime,
                                                  , TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar
                                                  , TVarChar
                                                   );
-                                                  
+
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inUnitId                Integer  , --
     IN inStartDate             TDateTime,
@@ -48,6 +57,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
     IN inGoodsId               Integer,
     IN inGoodsKindId           Integer,
     IN inPartionGoodsDate      TDateTime, --
+ INOUT ioIsChoiceCell_mi       Boolean,
  INOUT ioPartionCellId_1       Integer,
  INOUT ioPartionCellId_2       Integer,
  INOUT ioPartionCellId_3       Integer,
@@ -151,6 +161,29 @@ $BODY$
    DECLARE vbPartionCellId_old_20 Integer;
    DECLARE vbPartionCellId_old_21 Integer;
    DECLARE vbPartionCellId_old_22 Integer;
+
+   DECLARE vbPartionCellId_old_1_real Integer;
+   DECLARE vbPartionCellId_old_2_real Integer;
+   DECLARE vbPartionCellId_old_3_real Integer;
+   DECLARE vbPartionCellId_old_4_real Integer;
+   DECLARE vbPartionCellId_old_5_real Integer;
+   DECLARE vbPartionCellId_old_6_real Integer;
+   DECLARE vbPartionCellId_old_7_real Integer;
+   DECLARE vbPartionCellId_old_8_real Integer;
+   DECLARE vbPartionCellId_old_9_real Integer;
+   DECLARE vbPartionCellId_old_10_real Integer;
+   DECLARE vbPartionCellId_old_11_real Integer;
+   DECLARE vbPartionCellId_old_12_real Integer;
+   DECLARE vbPartionCellId_old_13_real Integer;
+   DECLARE vbPartionCellId_old_14_real Integer;
+   DECLARE vbPartionCellId_old_15_real Integer;
+   DECLARE vbPartionCellId_old_16_real Integer;
+   DECLARE vbPartionCellId_old_17_real Integer;
+   DECLARE vbPartionCellId_old_18_real Integer;
+   DECLARE vbPartionCellId_old_19_real Integer;
+   DECLARE vbPartionCellId_old_20_real Integer;
+   DECLARE vbPartionCellId_old_21_real Integer;
+   DECLARE vbPartionCellId_old_22_real Integer;
 
    DECLARE vbIsClose_1  Boolean;
    DECLARE vbIsClose_2  Boolean;
@@ -358,6 +391,9 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_1 ILIKE '%отбор%' OR TRIM (ioPartionCellName_1) = '0'
      THEN
          vbPartionCellId_1:= zc_PartionCell_RK();
+     ELSEIF TRIM (ioPartionCellName_1) = '1'
+     THEN
+         vbPartionCellId_1:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_1, '')) <> ''
          THEN
@@ -405,6 +441,9 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_2 ILIKE '%отбор%' OR TRIM (ioPartionCellName_2) = '0'
      THEN
          vbPartionCellId_2:= zc_PartionCell_RK();
+     ELSEIF TRIM (ioPartionCellName_2) = '1'
+     THEN
+         vbPartionCellId_2:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_2, '')) <> ''
          THEN
@@ -451,6 +490,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_3 ILIKE '%отбор%' OR TRIM (ioPartionCellName_3) = '0'
      THEN
          vbPartionCellId_3:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_3) = '1'
+     THEN
+         vbPartionCellId_3:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_3, '')) <> ''
          THEN
@@ -496,6 +539,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_4 ILIKE '%отбор%' OR TRIM (ioPartionCellName_4) = '0'
      THEN
          vbPartionCellId_4:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_4) = '1'
+     THEN
+         vbPartionCellId_4:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_4, '')) <> ''
          THEN
@@ -541,6 +588,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_5 ILIKE '%отбор%' OR TRIM (ioPartionCellName_5) = '0'
      THEN
          vbPartionCellId_5:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_5) = '1'
+     THEN
+         vbPartionCellId_5:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_5, '')) <> ''
          THEN
@@ -585,6 +636,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_6 ILIKE '%отбор%' OR TRIM (ioPartionCellName_6) = '0'
      THEN
          vbPartionCellId_6:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_6) = '1'
+     THEN
+         vbPartionCellId_6:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_6, '')) <> ''
          THEN
@@ -629,6 +684,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_7 ILIKE '%отбор%' OR TRIM (ioPartionCellName_7) = '0'
      THEN
          vbPartionCellId_7:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_7) = '1'
+     THEN
+         vbPartionCellId_7:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_7, '')) <> ''
          THEN
@@ -673,6 +732,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_8 ILIKE '%отбор%' OR TRIM (ioPartionCellName_8) = '0'
      THEN
          vbPartionCellId_8:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_8) = '1'
+     THEN
+         vbPartionCellId_8:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_8, '')) <> ''
          THEN
@@ -717,6 +780,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_9 ILIKE '%отбор%' OR TRIM (ioPartionCellName_9) = '0'
      THEN
          vbPartionCellId_9:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_9) = '1'
+     THEN
+         vbPartionCellId_9:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_9, '')) <> ''
          THEN
@@ -761,6 +828,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_10 ILIKE '%отбор%' OR TRIM (ioPartionCellName_10) = '0'
      THEN
          vbPartionCellId_10:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_10) = '1'
+     THEN
+         vbPartionCellId_10:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_10, '')) <> ''
          THEN
@@ -805,6 +876,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_11 ILIKE '%отбор%' OR TRIM (ioPartionCellName_11) = '0'
      THEN
          vbPartionCellId_11:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_11) = '1'
+     THEN
+         vbPartionCellId_11:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_11, '')) <> ''
          THEN
@@ -849,6 +924,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_12 ILIKE '%отбор%' OR TRIM (ioPartionCellName_12) = '0'
      THEN
          vbPartionCellId_12:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_12) = '1'
+     THEN
+         vbPartionCellId_12:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_12, '')) <> ''
          THEN
@@ -892,6 +971,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_13 ILIKE '%отбор%' OR TRIM (ioPartionCellName_13) = '0'
      THEN
          vbPartionCellId_13:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_13) = '1'
+     THEN
+         vbPartionCellId_13:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_13, '')) <> ''
          THEN
@@ -935,6 +1018,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_14 ILIKE '%отбор%' OR TRIM (ioPartionCellName_14) = '0'
      THEN
          vbPartionCellId_14:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_14) = '1'
+     THEN
+         vbPartionCellId_14:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_14, '')) <> ''
          THEN
@@ -978,6 +1065,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_15 ILIKE '%отбор%' OR TRIM (ioPartionCellName_15) = '0'
      THEN
          vbPartionCellId_15:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_15) = '1'
+     THEN
+         vbPartionCellId_15:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_15, '')) <> ''
          THEN
@@ -1021,6 +1112,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_16 ILIKE '%отбор%' OR TRIM (ioPartionCellName_16) = '0'
      THEN
          vbPartionCellId_16:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_16) = '1'
+     THEN
+         vbPartionCellId_16:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_16, '')) <> ''
          THEN
@@ -1064,6 +1159,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_17 ILIKE '%отбор%' OR TRIM (ioPartionCellName_17) = '0'
      THEN
          vbPartionCellId_17:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_17) = '1'
+     THEN
+         vbPartionCellId_17:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_17, '')) <> ''
          THEN
@@ -1108,6 +1207,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_18 ILIKE '%отбор%' OR TRIM (ioPartionCellName_18) = '0'
      THEN
          vbPartionCellId_18:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_18) = '1'
+     THEN
+         vbPartionCellId_18:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_18, '')) <> ''
          THEN
@@ -1152,6 +1255,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_19 ILIKE '%отбор%' OR TRIM (ioPartionCellName_19) = '0'
      THEN
          vbPartionCellId_19:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_19) = '1'
+     THEN
+         vbPartionCellId_19:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_19, '')) <> ''
          THEN
@@ -1196,6 +1303,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_20 ILIKE '%отбор%' OR TRIM (ioPartionCellName_20) = '0'
      THEN
          vbPartionCellId_20:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_20) = '1'
+     THEN
+         vbPartionCellId_20:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_20, '')) <> ''
          THEN
@@ -1239,6 +1350,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_21 ILIKE '%отбор%' OR TRIM (ioPartionCellName_21) = '0'
      THEN
          vbPartionCellId_21:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_21) = '1'
+     THEN
+         vbPartionCellId_21:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_21, '')) <> ''
          THEN
@@ -1282,6 +1397,10 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF ioPartionCellName_22 ILIKE '%отбор%' OR TRIM (ioPartionCellName_22) = '0'
      THEN
          vbPartionCellId_22:= zc_PartionCell_RK();
+
+     ELSEIF TRIM (ioPartionCellName_22) = '1'
+     THEN
+         vbPartionCellId_22:= zc_PartionCell_Err();
      ELSE
          IF TRIM (COALESCE (ioPartionCellName_22, '')) <> ''
          THEN
@@ -1326,7 +1445,9 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      IF inOrd > 1 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
         AND zc_PartionCell_RK() IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5
                                   , vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10
-                                  , vbPartionCellId_11, vbPartionCellId_12
+                                  , vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15
+                                  , vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20
+                                  , vbPartionCellId_21, vbPartionCellId_22
                                    )
         AND vbUserId <> 5
      THEN
@@ -1335,67 +1456,67 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
 
      -- если дублируются ячейки, объединяем
-     IF vbPartionCellId_2 <> zc_PartionCell_RK() AND vbPartionCellId_2 IN (vbPartionCellId_1)
+     IF vbPartionCellId_2 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_2 IN (vbPartionCellId_1)
      THEN vbPartionCellId_2:= NULL; END IF;
 
-     IF vbPartionCellId_3 <> zc_PartionCell_RK() AND vbPartionCellId_3 IN (vbPartionCellId_1, vbPartionCellId_2)
+     IF vbPartionCellId_3 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_3 IN (vbPartionCellId_1, vbPartionCellId_2)
      THEN vbPartionCellId_3:= NULL; END IF;
 
-     IF vbPartionCellId_4 <> zc_PartionCell_RK() AND vbPartionCellId_4 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3)
+     IF vbPartionCellId_4 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_4 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3)
      THEN vbPartionCellId_4:= NULL; END IF;
 
-     IF vbPartionCellId_5 <> zc_PartionCell_RK() AND vbPartionCellId_5 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4)
+     IF vbPartionCellId_5 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_5 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4)
      THEN vbPartionCellId_5:= NULL; END IF;
 
-     IF vbPartionCellId_6 <> zc_PartionCell_RK() AND vbPartionCellId_6 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5)
+     IF vbPartionCellId_6 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_6 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5)
      THEN vbPartionCellId_6:= NULL; END IF;
 
-     IF vbPartionCellId_7 <> zc_PartionCell_RK() AND vbPartionCellId_7 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6)
+     IF vbPartionCellId_7 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_7 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6)
      THEN vbPartionCellId_7:= NULL; END IF;
 
-     IF vbPartionCellId_8 <> zc_PartionCell_RK() AND vbPartionCellId_8 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7)
+     IF vbPartionCellId_8 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_8 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7)
      THEN vbPartionCellId_8:= NULL; END IF;
 
-     IF vbPartionCellId_9 <> zc_PartionCell_RK() AND vbPartionCellId_9 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8)
+     IF vbPartionCellId_9 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_9 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8)
      THEN vbPartionCellId_9:= NULL; END IF;
 
-     IF vbPartionCellId_10 <> zc_PartionCell_RK() AND vbPartionCellId_10 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9)
+     IF vbPartionCellId_10 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_10 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9)
      THEN vbPartionCellId_10:= NULL; END IF;
 
-     IF vbPartionCellId_11 <> zc_PartionCell_RK() AND vbPartionCellId_11 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10)
+     IF vbPartionCellId_11 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_11 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10)
      THEN vbPartionCellId_11:= NULL; END IF;
 
-     IF vbPartionCellId_12 <> zc_PartionCell_RK() AND vbPartionCellId_12 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11)
+     IF vbPartionCellId_12 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_12 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11)
      THEN vbPartionCellId_12:= NULL; END IF;
 
-     IF vbPartionCellId_13 <> zc_PartionCell_RK() AND vbPartionCellId_13 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12)
+     IF vbPartionCellId_13 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_13 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12)
      THEN vbPartionCellId_13:= NULL; END IF;
 
-     IF vbPartionCellId_14 <> zc_PartionCell_RK() AND vbPartionCellId_14 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13)
+     IF vbPartionCellId_14 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_14 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13)
      THEN vbPartionCellId_14:= NULL; END IF;
 
-     IF vbPartionCellId_15 <> zc_PartionCell_RK() AND vbPartionCellId_15 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14)
+     IF vbPartionCellId_15 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_15 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14)
      THEN vbPartionCellId_15:= NULL; END IF;
 
-     IF vbPartionCellId_16 <> zc_PartionCell_RK() AND vbPartionCellId_16 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15)
+     IF vbPartionCellId_16 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_16 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15)
      THEN vbPartionCellId_16:= NULL; END IF;
 
-     IF vbPartionCellId_17 <> zc_PartionCell_RK() AND vbPartionCellId_17 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16)
+     IF vbPartionCellId_17 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_17 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16)
      THEN vbPartionCellId_17:= NULL; END IF;
 
-     IF vbPartionCellId_18 <> zc_PartionCell_RK() AND vbPartionCellId_18 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17)
+     IF vbPartionCellId_18 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_18 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17)
      THEN vbPartionCellId_18:= NULL; END IF;
 
-     IF vbPartionCellId_19 <> zc_PartionCell_RK() AND vbPartionCellId_19 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18)
+     IF vbPartionCellId_19 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_19 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18)
      THEN vbPartionCellId_19:= NULL; END IF;
 
-     IF vbPartionCellId_20 <> zc_PartionCell_RK() AND vbPartionCellId_20 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19)
+     IF vbPartionCellId_20 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_20 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19)
      THEN vbPartionCellId_20:= NULL; END IF;
 
-     IF vbPartionCellId_21 <> zc_PartionCell_RK() AND vbPartionCellId_21 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20)
+     IF vbPartionCellId_21 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_21 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20)
      THEN vbPartionCellId_21:= NULL; END IF;
 
-     IF vbPartionCellId_22 <> zc_PartionCell_RK() AND vbPartionCellId_22 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20, vbPartionCellId_21)
+     IF vbPartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_22 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20, vbPartionCellId_21)
      THEN vbPartionCellId_22:= NULL; END IF;
 
      -- 1. Проверка - для ячейки может быть только одна партия
@@ -2065,8 +2186,8 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
                            , CHR (13), CHR (13)
                             ;
          END IF;
-
-
+         
+         
          -- 1. обнулили
          IF COALESCE (vbPartionCellId_1, 0) = 0
          THEN
@@ -2099,7 +2220,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
                                          );
              END IF;
 
-             -- привязали ячейку - виртуальную
+             -- привязали ячейку - Ячейка Отбор
              PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), inMovementItemId, vbPartionCellId_1);
              -- закрыли
              PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), inMovementItemId, TRUE);
@@ -3349,6 +3470,51 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      ELSEIF COALESCE(ioPartionCellId_22,0)<> COALESCE (vbPartionCellId_22, 0) THEN outPartionCellId_last:= COALESCE (vbPartionCellId_22, 0); 
      END IF;
 
+
+     -- Если поставили Ячейку Отбор
+     IF (COALESCE (ioPartionCellId_1, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_1 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_2, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_2 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_3, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_3 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_4, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_4 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_5, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_5 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_6, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_6 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_7, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_7 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_8, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_8 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_9, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_9 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_10, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_10 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_11, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_11 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_12, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_12 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_13, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_13 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_14, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_14 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_15, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_15 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_16, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_16 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_17, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_17 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_18, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_18 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_19, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_19 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_20, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_20 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_21, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_21 = zc_PartionCell_RK())
+     OR (COALESCE (ioPartionCellId_22, 0) <> COALESCE (vbPartionCellId_1, 0) AND vbPartionCellId_22 = zc_PartionCell_RK())
+     THEN
+         ioIsChoiceCell_mi:= FALSE;
+         --
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), lpSelect.MovementItemId, TRUE)
+                 -- сохранили связь с <>
+               , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), lpSelect.MovementItemId, vbUserId)
+                 -- сохранили свойство <>
+               , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), lpSelect.MovementItemId, CURRENT_TIMESTAMP)
+
+         FROM -- Места отбора для хранения 
+              (SELECT lpSelect.MovementItemId
+                    , lpSelect.PartionGoodsDate
+                    , lpSelect.PartionGoodsDate_next TDateTime
+               FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
+               WHERE lpSelect.GoodsId     = inGoodsId
+                 AND lpSelect.GoodsKindId = inGoodsKindId
+              ) AS lpSelect;
+
+     END IF;
+
+
      -- пареметр для печати
      outisPrint := CASE WHEN COALESCE (outPartionCellId_last,0) IN (0, zc_PartionCell_RK()) THEN FALSE ELSE TRUE END;
 
@@ -3401,7 +3567,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      ioPartionCellName_22 := zfCalc_PartionCell_IsClose ((SELECT /*Object.ObjectCode :: TVarChar || ' ' ||*/ Object.ValueData FROM Object WHERE Object.Id = COALESCE (vbPartionCellId_old_22,vbPartionCellId_22)),vbIsClose_22);
 
 
-     -- сохранили протокол
+   -- сохранили протокол
      --PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
 END;

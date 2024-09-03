@@ -25,9 +25,13 @@ BEGIN
 
      -- !!!Проверка - Инвентаризация - запрет на изменения (разрешено только проведение)!!!
      IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = 11109744)
+        AND inUserId > 0
      THEN
           RAISE EXCEPTION 'Ошибка.Нет прав.';
      END IF;
+     
+     -- !!!замена после Проверки!!!
+     IF inUserId < 0 THEN inUserId:= -1 * inUserId; END IF;
 
 
      -- проверка

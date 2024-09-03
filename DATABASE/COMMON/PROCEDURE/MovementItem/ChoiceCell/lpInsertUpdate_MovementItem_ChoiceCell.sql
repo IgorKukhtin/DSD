@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ChoiceCell (Integer, Integer
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ChoiceCell(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <>
-    IN inChoiceCellId        Integer   , -- 
+    IN inChoiceCellId        Integer   , --
     IN inGoodsId             Integer   ,
-    IN inGoodsKindId         Integer   ,    
+    IN inGoodsKindId         Integer   ,
     IN inPartionGoodsDate    TDateTime ,
     IN inPartionGoodsDate_next TDateTime ,
     IN inUserId              Integer     -- пользователь
@@ -27,9 +27,11 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
      --
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate); 
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
      --
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_next(), ioId, inPartionGoodsDate_next); 
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods_next(), ioId, inPartionGoodsDate_next);
+     -- Отметили что ждет по этому товару перемещение из места хранения
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), ioId, TRUE);
 
      IF vbIsInsert = TRUE
      THEN
@@ -58,4 +60,4 @@ $BODY$
 */
 
 -- тест
--- 
+--

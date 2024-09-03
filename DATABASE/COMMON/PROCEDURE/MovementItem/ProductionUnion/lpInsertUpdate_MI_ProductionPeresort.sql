@@ -36,7 +36,22 @@ BEGIN
    -- поиск
    IF COALESCE (ioId, 0) <> 0
    THEN
-      vbId_child := (SELECT Id FROM MovementItem WHERE MovementId = inMovementId AND ParentId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE);
+      IF 1 < (SELECT COUNT(*) FROM MovementItem WHERE MovementId = inMovementId AND ParentId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE)
+      THEN
+          vbId_child := (SELECT Id
+                         FROM MovementItem
+                              LEFT JOIN MovementItemBoolean AS MIBoolean_Etiketka
+                                                            ON MIBoolean_Etiketka.MovementItemId = MovementItem.Id
+                                                           AND MIBoolean_Etiketka.DescId         = zc_MIBoolean_Etiketka()
+                                                           AND MIBoolean_Etiketka.ValueData      = TRUE
+                                                               
+                         WHERE MovementItem.MovementId = inMovementId AND MovementItem.ParentId = ioId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
+                           AND MIBoolean_Etiketka.MovementItemId IS NULL
+                        );
+      ELSE
+          vbId_child := (SELECT MovementItem.Id FROM MovementItem WHERE MovementId = inMovementId AND ParentId = ioId AND DescId = zc_MI_Child() AND isErased = FALSE);
+      END IF;
+
    END IF;
 
    -- сохранили <Master>
