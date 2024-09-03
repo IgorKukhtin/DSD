@@ -62,6 +62,7 @@ type
     lbSearchName: TcxLabel;
     edSearchName: TcxTextEdit;
     FieldFilter_Name: TdsdFieldFilter;
+    isChecked: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -4,6 +4,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -15,17 +16,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     TabOrder = 3
     ExplicitTop = 97
     ExplicitWidth = 1540
-    ExplicitHeight = 287
+    ExplicitHeight = 311
     ClientRectBottom = 311
     ClientRectRight = 1540
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1540
-      ExplicitHeight = 287
+      ExplicitHeight = 311
       inherited cxGrid: TcxGrid
         Width = 1540
         Height = 311
         ExplicitWidth = 1540
-        ExplicitHeight = 287
+        ExplicitHeight = 311
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -183,6 +184,24 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Options.Editing = False
             Width = 80
           end
+          object isChoiceCell_mi: TcxGridDBColumn
+            Caption = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'isChoiceCell_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object PartionGoodsDate_next: TcxGridDBColumn
+            Caption = '***'#1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate_next'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+            Options.Editing = False
+            Width = 70
+          end
           object PartionGoodsDate: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
             DataBinding.FieldName = 'PartionGoodsDate'
@@ -306,16 +325,17 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             Width = 58
           end
           object ChoiceCellCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1103#1095'. '#1086#1090#1073#1086#1088#1072
+            Caption = #1050#1086#1076' '#1086#1090#1073#1086#1088
             DataBinding.FieldName = 'ChoiceCellCode'
             GroupSummaryAlignment = taRightJustify
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
             Options.Editing = False
             Width = 58
           end
           object ChoiceCellName: TcxGridDBColumn
-            Caption = #1071#1095'. '#1086#1090#1073#1086#1088#1072
+            Caption = #1052#1077#1089#1090#1086' '#1086#1090#1073#1086#1088#1072
             DataBinding.FieldName = 'ChoiceCellName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -3239,6 +3259,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         ComponentItem = 'PartionGoodsDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioIsChoiceCell_mi'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isChoiceCell_mi'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

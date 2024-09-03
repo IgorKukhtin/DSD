@@ -15,17 +15,17 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
     TabOrder = 3
     ExplicitTop = 85
     ExplicitWidth = 961
-    ExplicitHeight = 311
+    ExplicitHeight = 318
     ClientRectBottom = 318
     ClientRectRight = 961
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 961
-      ExplicitHeight = 311
+      ExplicitHeight = 318
       inherited cxGrid: TcxGrid
         Width = 961
         Height = 318
         ExplicitWidth = 961
-        ExplicitHeight = 311
+        ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -67,6 +67,13 @@ inherited ChoiceCellJournalForm: TChoiceCellJournalForm
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 80
+          end
+          object isChecked: TcxGridDBColumn
+            Caption = #1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'isChecked'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object ChoiceCellCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1071#1095#1077#1081#1082#1080

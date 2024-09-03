@@ -125,6 +125,8 @@ type
     spSelectPrintPasportList: TdsdStoredProc;
     ChoiceCellCode: TcxGridDBColumn;
     ChoiceCellName: TcxGridDBColumn;
+    isChoiceCell_mi: TcxGridDBColumn;
+    PartionGoodsDate_next: TcxGridDBColumn;
   private
     { Private declarations }
   public

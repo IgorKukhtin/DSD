@@ -1,6 +1,7 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
+  ExplicitTop = -50
   ExplicitWidth = 1144
   ExplicitHeight = 713
   PixelsPerInch = 96
@@ -543,7 +544,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       inherited cxGridChild: TcxGrid
         Top = 225
         Width = 1128
-        ExplicitTop = 225
+        ExplicitTop = 226
         ExplicitWidth = 1128
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -651,7 +652,6 @@ inherited ProductionUnionForm: TProductionUnionForm
             DataBinding.FieldName = 'Count_onCount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 59
           end
           object colChildAmount: TcxGridDBColumn [9]
@@ -2497,6 +2497,15 @@ inherited ProductionUnionForm: TProductionUnionForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount_onCount'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'Count_onCount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
