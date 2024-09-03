@@ -22,6 +22,8 @@ program ProjectTest;
 
 
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -1526,7 +1528,9 @@ uses
   GoodsGroupDirectionEdit in '..\..\Forms\Guides\GoodsGroupDirectionEdit.pas' {GoodsGroupDirectionEditForm: TParentForm},
   ChoiceCellJournal in '..\..\Forms\Document\ChoiceCellJournal.pas' {ChoiceCellJournalForm: TParentForm},
   PromoItemEdit in '..\..\Forms\Guides\PromoItemEdit.pas' {PromoItemEditForm: TParentForm},
-  PromoItem in '..\..\Forms\Guides\PromoItem.pas' {PromoItemForm: TParentForm};
+  PromoItem in '..\..\Forms\Guides\PromoItem.pas' {PromoItemForm: TParentForm},
+  PromoTradeJournal in '..\..\Forms\Document\PromoTradeJournal.pas' {PromoTradeJournalForm: TParentForm},
+  PromoTrade in '..\..\Forms\Document\PromoTrade.pas' {PromoTradeForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
