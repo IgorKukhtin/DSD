@@ -24,7 +24,7 @@ BEGIN
      END IF;
 
      -- замена
-     inPartionCellId:= 0;
+     --inPartionCellId:= 0;
 
 
      IF inPartionCellId > 0
