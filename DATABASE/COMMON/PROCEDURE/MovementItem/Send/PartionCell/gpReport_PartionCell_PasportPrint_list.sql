@@ -8,30 +8,36 @@ CREATE OR REPLACE FUNCTION gpReport_PartionCell_PasportPrint_list(
     IN inMovementItemId    Integer  ,
     IN inPartionCellId     Integer  , --
     IN inGoodsId           Integer  , --
-    IN inGoodsKindId       Integer  , -- 
+    IN inGoodsKindId       Integer  , --
     IN inPartionGoodsDate  TDateTime ,
     IN inIsCell            Boolean  ,
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
-             , PartionGoodsDate TDateTime 
+             , PartionGoodsDate TDateTime
              , PartionCellName TVarChar
              , StoreKeeper TVarChar
              , ChoiceCellCode      Integer
              , ChoiceCellName      TVarChar
              , ChoiceCellName_shot TVarChar
               )
-AS                      
+AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE curPartionCell refcursor;
    DECLARE vbPartionCellId Integer;
+   DECLARE vbPartionCellName_RK  TVarChar;
+   DECLARE vbPartionCellName_Err TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
-     --выбираем все ячейки
+
+     vbPartionCellName_RK := lfGet_Object_ValueData_sh (zc_PartionCell_RK());
+     vbPartionCellName_Err:= lfGet_Object_ValueData_sh (zc_PartionCell_Err());
+
+     -- выбираем все ячейки по всем партиям и товарам
      CREATE TEMP TABLE _tmpPartionCell (MovementItemId Integer, DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
      --
@@ -53,6 +59,9 @@ BEGIN
              FROM tmpMILO
              -- Только заполненные
              WHERE tmpMILO.ObjectId > 0
+               -- кроме таких ячеек
+               AND tmpMILO.ObjectId NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
+               --
                AND tmpMILO.DescId IN (zc_MILinkObject_PartionCell_1()
                                     , zc_MILinkObject_PartionCell_2()
                                     , zc_MILinkObject_PartionCell_3()
@@ -80,121 +89,136 @@ BEGIN
           --
      END LOOP; -- финиш цикла по курсору
      CLOSE curPartionCell; -- закрыли курсор
-     
-          
+
+
   -- Результат
   RETURN QUERY
     WITH
-    tmpPartionCell AS (
-                       SELECT tmp.*
+    -- нашли ячейки которые надо печатать
+    tmpPartionCell AS (SELECT tmp.*
                        FROM (SELECT DISTINCT
                                     curPartionCell.MovementItemId
                                   , curPartionCell.DescId
                                   , curPartionCell.ObjectId AS PartionCellId
                                   , MovementItem.ObjectId   AS GoodsId
                                   , COALESCE (MILinkObject_GoodsKind.ObjectId,0) AS GoodsKindId
-                                  
-                                 , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
-                                             THEN zc_DateStart()
-                                        ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
-                                   END ::TDateTime AS PartionGoodsDate
+
+                                  , COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) ::TDateTime AS PartionGoodsDate
+
+                             -- все ячейки по всем партиям и товарам
                              FROM _tmpPartionCell AS curPartionCell
                                  INNER JOIN MovementItem ON MovementItem.Id = curPartionCell.MovementItemId
+                                                        -- Ограничение - товар
                                                         AND MovementItem.ObjectId = inGoodsId
                                                         AND MovementItem.DescId = zc_MI_Master()
-                                                        AND MovementItem.isErased = FALSE 
+                                                        AND MovementItem.isErased = FALSE
                                  INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-      
+
                                  LEFT JOIN MovementBoolean AS MovementBoolean_isRePack
                                                            ON MovementBoolean_isRePack.MovementId = Movement.Id
                                                           AND MovementBoolean_isRePack.DescId     = zc_MovementBoolean_isRePack()
-      
+                                                          AND MovementBoolean_isRePack.ValueData  = TRUE
+
                                  LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                             ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                            AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
-      
+
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
-      
-                             WHERE ((curPartionCell.ObjectId = inPartionCellId AND inIsCell = TRUE) OR inIsCell = FALSE) 
-                                AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)  
-                                AND ((COALESCE (inMovementItemId,0) <> 0 AND curPartionCell.MovementItemId = inMovementItemId) OR COALESCE (inMovementItemId,0) = 0 )
+
+                             WHERE -- если есть условие - печать одну Ячейку
+                                   (curPartionCell.ObjectId = inPartionCellId OR inIsCell = FALSE)
+                                 -- Ограничение - вид товара
+                                AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                                 -- Ограничение - элемент
+                                AND (curPartionCell.MovementItemId = inMovementItemId OR COALESCE (inMovementItemId,0) = 0)
+                                -- без перепак
+                                AND MovementBoolean_isRePack.MovementId IS NULL
+
                              ) AS tmp
-                       WHERE tmp.PartionGoodsDate = inPartionGoodsDate    
-                      ) 
+                       -- Ограничение - партия Дата
+                       WHERE tmp.PartionGoodsDate = inPartionGoodsDate
+                      )
 
- , tmpPartionCell_gr AS (
-                       SELECT DISTINCT
-                                    tmpPartionCell.DescId
-                                  , tmpPartionCell.PartionCellId
-                                  , tmpPartionCell.GoodsId
-                                  , tmpPartionCell.GoodsKindId
-                                  , tmpPartionCell.PartionGoodsDate
-                       FROM tmpPartionCell
-                       )
+   -- собрали данные по PartionCellId
+ , tmpPartionCell_gr AS (SELECT DISTINCT
+                                tmpPartionCell.PartionCellId
+                              , tmpPartionCell.GoodsId
+                              , tmpPartionCell.GoodsKindId
+                              , tmpPartionCell.PartionGoodsDate
+                         FROM tmpPartionCell
+                        )
 
-  , tmpProtocolMI AS (SELECT *
-                      FROM (SELECT MovementItemProtocol.MovementItemId
-                           , MovementItemProtocol.UserId
-                           , MovementItemProtocol.OperDate
-                           , ROW_NUMBER () OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.OperDate DESC) AS ord
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-1"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_1
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-2"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_2
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-3"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_3
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-4"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_4
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-5"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_5
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-6"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_6
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-7"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_7
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-8"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_8
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-9"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_9
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-10"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_10
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-11"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_11
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-12"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_12
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-13"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_13
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-14"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_14
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-15"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_15
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-16"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_16
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-17"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_17
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-18"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_18
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-19"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_19
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-20"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_20
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-21"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_21
-                           , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-22"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_22 
-                      FROM MovementItemProtocol
-                      WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpPartionCell.MovementItemId FROM tmpPartionCell) 
-                      ) AS tmp
-                      )  
+        -- весь ппротокол
+      , tmpProtocolMI AS (SELECT *
+                          FROM (SELECT MovementItemProtocol.Id
+                                     , MovementItemProtocol.UserId
+                                     , MovementItemProtocol.OperDate
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-1"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_1
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-2"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_2
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-3"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_3
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-4"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_4
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-5"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_5
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-6"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_6
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-7"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_7
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-8"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_8
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-9"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_9
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-10"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_10
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-11"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_11
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-12"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_12
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-13"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_13
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-14"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_14
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-15"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_15
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-16"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_16
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-17"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_17
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-18"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_18
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-19"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_19
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-20"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_20
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-21"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_21
+                                     , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-22"]  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_22
+                                FROM MovementItemProtocol
+                                WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpPartionCell.MovementItemId FROM tmpPartionCell)
+                                ) AS tmp
+                          WHERE tmp.PartionCell_1  <> '' OR tmp.PartionCell_2  <> ''  OR tmp.PartionCell_3  <> ''  OR tmp.PartionCell_4  <> ''  OR tmp.PartionCell_5  <> ''
+                             OR tmp.PartionCell_5  <> '' OR tmp.PartionCell_6  <> ''  OR tmp.PartionCell_7  <> ''  OR tmp.PartionCell_8  <> ''  OR tmp.PartionCell_10 <> ''
+                             OR tmp.PartionCell_11 <> '' OR tmp.PartionCell_12 <> ''  OR tmp.PartionCell_13 <> ''  OR tmp.PartionCell_14 <> ''  OR tmp.PartionCell_15 <> ''
+                             OR tmp.PartionCell_15 <> '' OR tmp.PartionCell_16 <> ''  OR tmp.PartionCell_17 <> ''  OR tmp.PartionCell_18 <> ''  OR tmp.PartionCell_20 <> ''
+                             OR tmp.PartionCell_21 <> '' OR tmp.PartionCell_22 <> ''
+                          )
 
   , tmpProtocolCell AS (SELECT tmp.*
-                                , ROW_NUMBER() OVER (PARTITION BY  tmp.DescId, tmp.PartionCellName ORDER BY tmp.OperDate desc) AS Ord  --tmp.MovementItemId,
-                           FROM 
-                           (SELECT DISTINCT zc_MILinkObject_PartionCell_1()  AS DescId, tmp.PartionCell_1  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_1, '') <> '' AND COALESCE (tmp.PartionCell_1, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_1, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_2()  AS DescId, tmp.PartionCell_2  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_2, '') <> '' AND COALESCE (tmp.PartionCell_2, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_2, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_3()  AS DescId, tmp.PartionCell_3  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_3, '') <> '' AND COALESCE (tmp.PartionCell_3, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_3, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_4()  AS DescId, tmp.PartionCell_4  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_4, '') <> '' AND COALESCE (tmp.PartionCell_4, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_4, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_5()  AS DescId, tmp.PartionCell_5  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_5, '') <> '' AND COALESCE (tmp.PartionCell_5, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_5, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_6()  AS DescId, tmp.PartionCell_6  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_6, '') <> '' AND COALESCE (tmp.PartionCell_6, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_6, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_7()  AS DescId, tmp.PartionCell_7  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_7, '') <> '' AND COALESCE (tmp.PartionCell_7, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_7, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_8()  AS DescId, tmp.PartionCell_8  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_8, '') <> '' AND COALESCE (tmp.PartionCell_8, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_8, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_9()  AS DescId, tmp.PartionCell_9  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_9, '') <> '' AND COALESCE (tmp.PartionCell_9, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_9, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_10() AS DescId, tmp.PartionCell_10 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_10, '') <> '' AND COALESCE (tmp.PartionCell_10, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_10, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_11() AS DescId, tmp.PartionCell_11 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_11, '') <> '' AND COALESCE (tmp.PartionCell_11, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_11, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_12() AS DescId, tmp.PartionCell_12 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_12, '') <> '' AND COALESCE (tmp.PartionCell_12, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_12, '') <> '"Ячейка отбора"' 
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_13() AS DescId, tmp.PartionCell_13 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_13, '') <> '' AND COALESCE (tmp.PartionCell_13, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_13, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_14() AS DescId, tmp.PartionCell_14 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_14, '') <> '' AND COALESCE (tmp.PartionCell_14, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_14, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_15() AS DescId, tmp.PartionCell_15 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_15, '') <> '' AND COALESCE (tmp.PartionCell_15, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_15, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_16() AS DescId, tmp.PartionCell_16 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_16, '') <> '' AND COALESCE (tmp.PartionCell_16, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_16, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_17() AS DescId, tmp.PartionCell_17 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_17, '') <> '' AND COALESCE (tmp.PartionCell_17, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_17, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_18() AS DescId, tmp.PartionCell_18 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_18, '') <> '' AND COALESCE (tmp.PartionCell_18, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_18, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_19() AS DescId, tmp.PartionCell_19 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_19, '') <> '' AND COALESCE (tmp.PartionCell_19, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_19, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_20() AS DescId, tmp.PartionCell_20 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_20, '') <> '' AND COALESCE (tmp.PartionCell_20, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_20, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_21() AS DescId, tmp.PartionCell_21 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_21, '') <> '' AND COALESCE (tmp.PartionCell_21, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_21, '') <> '"Ячейка отбора"'
-                      UNION SELECT DISTINCT zc_MILinkObject_PartionCell_22() AS DescId, tmp.PartionCell_22 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE COALESCE (tmp.PartionCell_22, '') <> '' AND COALESCE (tmp.PartionCell_22, '') <> '"NULL"' AND COALESCE (tmp.PartionCell_22, '') <> '"Ячейка отбора"'            
+                               -- первая запись для PartionCellName
+                             , ROW_NUMBER() OVER (PARTITION BY tmp.PartionCellName ORDER BY tmp.Id ASC) AS Ord
+                           FROM
+                           (SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_1()  AS DescId, tmp.PartionCell_1  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_1  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_1, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_1, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_2()  AS DescId, tmp.PartionCell_2  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_2  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_2, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_2, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_3()  AS DescId, tmp.PartionCell_3  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_3  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_3, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_3, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_4()  AS DescId, tmp.PartionCell_4  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_4  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_4, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_4, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_5()  AS DescId, tmp.PartionCell_5  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_5  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_5, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_5, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_6()  AS DescId, tmp.PartionCell_6  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_6  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_6, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_6, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_7()  AS DescId, tmp.PartionCell_7  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_7  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_7, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_7, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_8()  AS DescId, tmp.PartionCell_8  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_8  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_8, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_8, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_9()  AS DescId, tmp.PartionCell_9  AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_9  NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_9, '')  NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_9, '')  NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_10() AS DescId, tmp.PartionCell_10 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_10 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_10, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_10, '') NOT ILIKE vbPartionCellName_Err
+
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_11() AS DescId, tmp.PartionCell_11 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_11 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_11, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_11, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_12() AS DescId, tmp.PartionCell_12 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_12 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_12, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_12, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_13() AS DescId, tmp.PartionCell_13 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_13 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_13, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_13, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_14() AS DescId, tmp.PartionCell_14 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_14 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_14, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_14, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_15() AS DescId, tmp.PartionCell_15 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_15 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_15, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_15, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_16() AS DescId, tmp.PartionCell_16 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_16 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_16, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_16, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_17() AS DescId, tmp.PartionCell_17 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_17 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_17, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_17, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_18() AS DescId, tmp.PartionCell_18 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_18 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_18, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_18, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_19() AS DescId, tmp.PartionCell_19 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_19 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_19, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_19, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_20() AS DescId, tmp.PartionCell_20 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_20 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_20, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_20, '') NOT ILIKE vbPartionCellName_Err
+
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_21() AS DescId, tmp.PartionCell_21 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_21 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_21, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_21, '') NOT ILIKE vbPartionCellName_Err
+                      UNION SELECT DISTINCT tmp.Id, zc_MILinkObject_PartionCell_22() AS DescId, tmp.PartionCell_22 AS PartionCellName, tmp.OperDate, tmp.UserId  FROM tmpProtocolMI AS tmp WHERE tmp.PartionCell_22 NOT ILIKE '"NULL"' AND COALESCE (tmp.PartionCell_22, '') NOT ILIKE ('"' || vbPartionCellName_RK || '"') AND COALESCE (tmp.PartionCell_22, '') NOT ILIKE vbPartionCellName_Err
                              ) AS tmp
                            )
 
-        --ячейки отбора               
+        -- ячейки отбора
       , tmpChoiceCell AS (SELECT tmp.*
                                , LEFT (tmp.Name, 1)::TVarChar AS CellName_shot
                                , ROW_NUMBER() OVER (PARTITION BY tmp.GoodsId, tmp.GoodsKindId ORDER BY tmp.NPP) AS Ord
@@ -207,29 +231,33 @@ BEGIN
      --
      SELECT Object_Goods.ObjectCode            AS GoodsCode
           , Object_Goods.ValueData             AS GoodsName
-          , Object_GoodsKind.ValueData         AS GoodsKindName 
-          , tmp.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
+          , Object_GoodsKind.ValueData         AS GoodsKindName
+
+          , tmpPartionCell_gr.PartionGoodsDate :: TDateTime  AS PartionGoodsDate
           , Object_PartionCell.ValueData       AS PartionCellName
           , Object_Member.ValueData ::TVarChar AS StoreKeeper
-          --ячейка отбора
+
+            -- ячейка отбора
           , tmpChoiceCell.Code          ::Integer  AS ChoiceCellCode
           , tmpChoiceCell.Name          ::TVarChar AS ChoiceCellName
           , tmpChoiceCell.CellName_shot ::TVarChar AS ChoiceCellName_shot
-     FROM tmpPartionCell_gr AS tmp
-          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
-          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmp.GoodsKindId
-   
-          INNER JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmp.PartionCellId AND Object_PartionCell.ObjectCode <> 0
 
-          LEFT JOIN tmpProtocolCell ON tmpProtocolCell.DescId = tmp.DescId
-                                   AND tmpProtocolCell.PartionCellName = Object_PartionCell.ValueData
-                                   AND tmpProtocolCell.ord = 1
+     FROM tmpPartionCell_gr
+          LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpPartionCell_gr.GoodsId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpPartionCell_gr.GoodsKindId
+
+          INNER JOIN Object AS Object_PartionCell ON Object_PartionCell.Id = tmpPartionCell_gr.PartionCellId
+
+          -- первая запись для PartionCellName
+          LEFT JOIN tmpProtocolCell ON tmpProtocolCell.PartionCellName = Object_PartionCell.ValueData
+                                   AND tmpProtocolCell.Ord             = 1
           LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpProtocolCell.UserId
-          
-          LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId = tmp.GoodsId
-                                 AND COALESCE (tmpChoiceCell.GoodsKindId,0) = COALESCE (tmp.GoodsKindId,0)
-                                 AND tmpChoiceCell.Ord = 1
-     ORDER BY tmp.DescId
+
+          -- ячейка отбора
+          LEFT JOIN tmpChoiceCell ON tmpChoiceCell.GoodsId                   = tmpPartionCell_gr.GoodsId
+                                 AND COALESCE (tmpChoiceCell.GoodsKindId, 0) = COALESCE (tmpPartionCell_gr.GoodsKindId,0)
+                                 AND tmpChoiceCell.Ord                       = 1
+     ORDER BY Object_PartionCell.ValueData
     ;
 
 END;
@@ -243,5 +271,5 @@ $BODY$
 */
 
 -- тест
---  select * from gpReport_PartionCell_PasportPrint_list(inMovementItemId := 0, inPartionCellId := 10239461 ::Integer, inGoodsId := 112643 ::Integer , inGoodsKindId := 8346 ::Integer, inPartionGoodsDate := ('01.08.2024')::TDateTime  , inisCell := 'false'::Boolean ,  inSession := '9457' ::TVarChar)
+-- select * from gpReport_PartionCell_PasportPrint_list(inMovementItemId := 0, inPartionCellId := 10239461 ::Integer, inGoodsId := 112643 ::Integer , inGoodsKindId := 8346 ::Integer, inPartionGoodsDate := ('01.08.2024')::TDateTime  , inisCell := 'false'::Boolean ,  inSession := '9457' ::TVarChar)
 -- select * from gpReport_PartionCell_PasportPrint_list(inMovementItemId := 297395802 , inPartionCellId := 0 , inGoodsId := 10442608 , inGoodsKindId := 5808945 , inPartionGoodsDate := ('27.07.2024')::TDateTime , inIsCell := 'True' ,  inSession := '9457');
