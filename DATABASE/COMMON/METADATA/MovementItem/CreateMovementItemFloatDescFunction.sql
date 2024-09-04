@@ -1051,8 +1051,12 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountNext_out', 'Переходящий П/Ф (расход)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountNext_out');
 
 
+ CREATE OR REPLACE FUNCTION zc_MIFloat_PartnerCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartnerCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_PartnerCount', 'Количество ТТ' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PartnerCount');
 
-       
+
+      
        
 
 ----!!!!!!Farmacy

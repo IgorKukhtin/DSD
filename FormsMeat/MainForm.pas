@@ -1510,6 +1510,9 @@ type
     miChoiceCellJournal: TMenuItem;
     actPromoItem: TdsdOpenForm;
     miPromoItem: TMenuItem;
+    actPromoTradeJournal: TdsdOpenForm;
+    miPromoTradeJournal: TMenuItem;
+    N263: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

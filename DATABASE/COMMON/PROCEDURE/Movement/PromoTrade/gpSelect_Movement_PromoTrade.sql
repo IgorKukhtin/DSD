@@ -65,7 +65,6 @@ BEGIN
              , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа  
              , ('№ ' || Movement_PromoTrade.InvNumber || ' от ' || zfConvert_DateToString (Movement_PromoTrade.OperDate)  ) :: TVarChar AS InvNumberFull
              , Movement_PromoTrade.OperDate                                           --Дата документа
-             , Object_Status.Id                            AS StatusId           --ид статуса
              , Object_Status.ObjectCode                    AS StatusCode         --код статуса
              , Object_Status.ValueData                     AS StatusName         --Статус
              , MovementLinkObject_Contract.ObjectId        AS ContractId        --

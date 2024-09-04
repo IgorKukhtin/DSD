@@ -3904,12 +3904,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoItemEditForm');
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoTradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoTradeForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoTradeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoTradeJournalForm');
-  }
+
 end;
 procedure TLoadFormTest.LoadPromoKindFormTest;
 begin
