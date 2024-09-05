@@ -488,7 +488,7 @@ inherited PromoTradeForm: TPromoTradeForm
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
             ExplicitTop = 0
-            ExplicitWidth = 903
+            ExplicitWidth = 0
             ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
@@ -499,7 +499,6 @@ inherited PromoTradeForm: TPromoTradeForm
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
-              ExplicitWidth = 903
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -713,7 +712,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
       ExplicitTop = 0
-      ExplicitWidth = 1500
+      ExplicitWidth = 0
       ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
@@ -723,7 +722,6 @@ inherited PromoTradeForm: TPromoTradeForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1500
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -4017,17 +4015,25 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPromoKindId'
+        Name = 'inContractId'
         Value = Null
-        Component = GuidesPromoKind
+        Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceListId'
+        Name = 'inPromoItemId'
         Value = Null
-        Component = GuidesPriceList
+        Component = GuidesPromoItem
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoKindId'
+        Value = Null
+        Component = GuidesPromoKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4049,71 +4055,6 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartSale'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndSale'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndReturn'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateStart'
-        Value = Null
-        Component = deOperDateStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDateEnd'
-        Value = Null
-        Component = deOperDateEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioMonthPromo'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCheckDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChecked'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsPromo'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCostPromo'
         Value = Null
         Component = edCostPromo
@@ -4130,34 +4071,26 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCommentMain'
+        Name = 'outPriceListName'
         Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesContract
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPersonalTradeId'
+        Name = 'outPersonalTradetName'
         Value = Null
         Component = GuidesPersonalTrade
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalId'
+        Name = 'outChangePercent'
         Value = Null
-        Component = GuidesPromoItem
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        Component = edChangePercent
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 282
@@ -4177,10 +4110,6 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       item
         Control = deEndPromo
-      end
-      item
-      end
-      item
       end
       item
         Control = deOperDateStart
@@ -4210,19 +4139,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Control = edComment
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
         Control = edSignInternal
-      end
-      item
       end>
     Left = 256
     Top = 265
