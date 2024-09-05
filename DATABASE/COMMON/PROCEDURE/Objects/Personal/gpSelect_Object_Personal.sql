@@ -49,6 +49,7 @@ $BODY$
    DECLARE vbIsAllUnit Boolean;
    DECLARE vbObjectId_Constraint Integer;
    DECLARE vbPersonalServiceListId_check Integer;
+   DECLARE vbMemberId Integer;
 
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbInfoMoneyName TVarChar;
@@ -61,6 +62,8 @@ BEGIN
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId)
                  OR vbUserId = 343013 -- Нагорная Я.Г.
                    ;
+   --
+   vbMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Member());
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND Object_RoleAccessKeyGuide_View.UserId = vbUserId)
               OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (447972)) -- Просмотр СБ
@@ -306,6 +309,7 @@ BEGIN
          OR Object_Personal_View.PositionId = 8466  -- водитель
          OR Object_Personal_View.PositionId = 12946 -- заготовитель ж/в
          OR ObjectLink_Personal_PersonalServiceList.ChildObjectId = vbPersonalServiceListId_check -- Ведомость коммерческий отдел (руководители)
+         OR Object_Personal_View.MemberId = vbMemberId
            )
        AND (View_RoleAccessKeyGuide.UnitId_PersonalService > 0
             OR vbIsAllUnit = TRUE

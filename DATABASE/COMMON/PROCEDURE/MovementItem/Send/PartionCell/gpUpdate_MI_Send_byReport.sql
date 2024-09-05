@@ -217,9 +217,10 @@ BEGIN
 
      IF vbUserId <> 5
         -- Роль - Переброска любой ячейки в отбор
-        AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
+        --AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
         --
-        AND vbUserId <> 602817 -- Якимчик А.С.
+        AND vbUserId <> 602817  -- Якимчик А.С.
+        AND vbUserId <> 8692657 -- Селезень І.Є.
         --AND inPartionGoodsDate <> '01.07.2024'
      THEN
          IF TRIM (ioPartionCellName_1) = '' AND (EXISTS (SELECT 1 FROM MovementItemLinkObject AS MILO WHERE MILO.DescId = zc_MILinkObject_PartionCell_1() AND MILO.MovementItemId = inMovementItemId AND MILO.ObjectId > 0)
