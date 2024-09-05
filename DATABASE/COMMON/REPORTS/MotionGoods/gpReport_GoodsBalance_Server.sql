@@ -172,6 +172,14 @@ BEGIN
     END IF;
 
 
+    -- !!!Нет прав!!!
+    IF inUnitGroupId = 8432
+        AND inLocationId = 0 AND inGoodsGroupId = 0 AND inGoodsId = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав для <%> Группа товаров = <Все>.', lfGet_Object_ValueData_sh (inUnitGroupId);
+    END IF;
+
+
     -- замена
     IF vbUserId <> 5
     THEN inIsInfoMoney:= FALSE;

@@ -738,7 +738,7 @@ END IF;
 
            , ObjectString_Partner_ShortName.ValueData   AS ShortNamePartner_To
            , (ObjectString_ToAddress.ValueData
-              || CASE WHEN isOKPO_40075815 = TRUE
+              || CASE WHEN vbIsOKPO_40075815 = TRUE
                            THEN CHR (13) || 'СТРУКТУРНИЙ ПІДРОЗДІЛ "Запорізьке моторвагонне депо"'
                       ELSE ''
                  END
@@ -750,7 +750,27 @@ END IF;
            || ObjectString_ToAddress.ValueData
              ) :: TVarChar            AS PartnerAddressAll_To
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
-           , COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) AS JuridicalName_To
+
+           , (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        THEN '' -- inToId := 3470472 , inPartnerId := 11216101
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     THEN COALESCE (OH_JuridicalDetails_To.Name, '')
+                   ELSE COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName) 
+              END
+
+           || CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        -- Укрзалізниця АТ - Условное обозначение
+                        THEN ObjectString_BranchJur.ValueData
+                        
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     -- Укрзалізниця АТ - Условное обозначение
+                   --     THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (ObjectString_ShortName.ValueData, 'підрозділ', 1)))
+                   --        || ' ' || TRIM (SPLIT_PART (SPLIT_PART (ObjectString_ShortName.ValueData, 'філії', 1), 'Структурний', 2)))
+
+                   ELSE ''
+              END
+             ) :: TVarChar AS JuridicalName_To
+
            , Object_Juridical.ValueData                 AS JuridicalName_short_To
            , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
            , OH_JuridicalDetails_To.OKPO                AS OKPO_To
@@ -764,7 +784,27 @@ END IF;
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
            , COALESCE (OH_JuridicalDetails_Invoice.JuridicalId,      OH_JuridicalDetails_To.JuridicalId)         AS JuridicalId_Invoice
-           , COALESCE (OH_JuridicalDetails_Invoice.FullName, COALESCE (Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName)) AS JuridicalName_Invoice
+
+           , (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        THEN '' -- inToId := 3470472 , inPartnerId := 11216101
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     THEN COALESCE (OH_JuridicalDetails_To.Name, '')
+                   ELSE COALESCE (OH_JuridicalDetails_Invoice.FullName, Object_ArticleLoss.ValueData, OH_JuridicalDetails_To.FullName)
+              END
+
+           || CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        -- Укрзалізниця АТ - Условное обозначение
+                        THEN ObjectString_BranchJur.ValueData
+                        
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     -- Укрзалізниця АТ - Условное обозначение
+                   --     THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (ObjectString_ShortName.ValueData, 'підрозділ', 1)))
+                   --        || ' ' || TRIM (SPLIT_PART (SPLIT_PART (ObjectString_ShortName.ValueData, 'філії', 1), 'Структурний', 2)))
+
+                   ELSE ''
+              END
+             ) :: TVarChar AS JuridicalName_Invoice
+
            , COALESCE (OH_JuridicalDetails_Invoice.JuridicalAddress, OH_JuridicalDetails_To.JuridicalAddress)    AS JuridicalAddress_Invoice
            , COALESCE (OH_JuridicalDetails_Invoice.OKPO,             OH_JuridicalDetails_To.OKPO)                AS OKPO_Invoice
            , COALESCE (OH_JuridicalDetails_Invoice.INN,              OH_JuridicalDetails_To.INN)                 AS INN_Invoice
@@ -1013,6 +1053,16 @@ END IF;
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            -- Условное обозначение - Українська залізниця АТ АТ "УКРЗАЛІЗНИЦЯ" Виробничий підрозділ "Служба аварійно-відновлювальних робіт" м. Дніпро пр-кт. Д.Яворницького буд.108
+            -- Українська залізниця АТ АТ "УКРЗАЛІЗНИЦЯ" Виробничий підрозділ "Служба аварійно-відновлювальних робіт" м. Дніпро пр-кт. Д.Яворницького буд.108
+            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                   ON ObjectString_ShortName.ObjectId = 11216101 -- MovementLinkObject_To.ObjectId
+                                  AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+            -- Название юр.лица для филиала
+            LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                   ON ObjectString_BranchJur.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
+
             LEFT JOIN ObjectString AS ObjectString_ToAddress
                                    ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
