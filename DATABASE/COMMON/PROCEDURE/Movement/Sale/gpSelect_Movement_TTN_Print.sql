@@ -337,7 +337,24 @@ BEGIN
                   ELSE OH_JuridicalDetails_To.FullName
              END AS JuridicalName_Basis             --Замовник Алан
 
-           , OH_JuridicalDetails_To.FullName   AS JuridicalName_To
+           , (CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        THEN '' -- inToId := 3470472 , inPartnerId := 11216101
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     THEN COALESCE (OH_JuridicalDetails_To.Name, '')
+                   ELSE OH_JuridicalDetails_To.FullName
+              END
+           || CASE WHEN Object_To.Id IN (11216101) --AND vbUserId = 5
+                        -- Укрзалізниця АТ - Условное обозначение
+                        THEN ObjectString_BranchJur.ValueData
+                        
+                   --WHEN Object_To.Id IN (9840136) AND vbUserId = 5
+                   --     -- Укрзалізниця АТ - Условное обозначение
+                   --     THEN ', ' || TRIM (TRIM (LOWER (SPLIT_PART (ObjectString_ShortName.ValueData, 'підрозділ', 1)))
+                   --        || ' ' || TRIM (SPLIT_PART (SPLIT_PART (ObjectString_ShortName.ValueData, 'філії', 1), 'Структурний', 2)))
+
+                   ELSE ''
+              END
+             ) :: TVarChar AS JuridicalName_To
           
            , CASE WHEN vbDescId = zc_Movement_SendOnPrice() AND ObjectString_Unit_Address_to.ValueData <> '' AND ObjectString_Unit_Address_to.ValueData NOT ILIKE '% - O - %'
                     THEN ObjectString_Unit_Address_to.ValueData
@@ -566,6 +583,14 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_PlaceOf                           
                                    ON ObjectString_PlaceOf.ObjectId = COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
                                   AND ObjectString_PlaceOf.DescId = zc_objectString_Branch_PlaceOf()
+
+            LEFT JOIN ObjectString AS ObjectString_ShortName
+                                   ON ObjectString_ShortName.ObjectId = 11216101 -- MovementLinkObject_To.ObjectId
+                                  AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+            -- Название юр.лица для филиала
+            LEFT JOIN ObjectString AS ObjectString_BranchJur
+                                   ON ObjectString_BranchJur.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectString_BranchJur.DescId = zc_ObjectString_Partner_BranchJur()
 
 -- Contract
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract

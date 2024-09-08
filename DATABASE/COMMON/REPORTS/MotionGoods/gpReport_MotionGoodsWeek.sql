@@ -53,9 +53,9 @@ BEGIN
     END IF; 
 */
     vbEndDate := inStartDate + interval '6 day';
-
+    
     -- Ограничения по товарам
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    /*CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -66,12 +66,21 @@ BEGIN
     END IF;
 
     CREATE TEMP TABLE tmpListDate ON COMMIT DROP
-       AS SELECT generate_series(inStartDate, vbEndDate, '1 DAY'::interval) OperDate;
+       AS SELECT generate_series(inStartDate, vbEndDate, '1 DAY'::interval) OperDate;*/
 
 
    RETURN QUERY
    WITH 
-      tmpContainer AS (SELECT Container.Id                           AS ContainerId
+
+           _tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup 
+                         WHERE inGoodsGroupId <> 0
+                        UNION
+                         SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+                         WHERE COALESCE (inGoodsGroupId, 0) = 0
+                        )
+    , tmpListDate AS (SELECT generate_series(inStartDate, vbEndDate, '1 DAY'::interval) OperDate)
+
+    , tmpContainer AS (SELECT Container.Id                           AS ContainerId
                             , Container.ObjectId                     AS GoodsId
                             , COALESCE (CLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
                             , Container.Amount

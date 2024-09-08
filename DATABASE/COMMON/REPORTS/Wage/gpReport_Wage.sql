@@ -292,9 +292,9 @@ BEGIN
        , Res_1.GoodsKindComplete_ToId
        , Res_1.GoodsKindComplete_ToName
 
-        , CASE WHEN inDetailDay = TRUE THEN Res_1.OperDate
-               WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res_1.OperDate)
-               ELSE Res_1.OperDate
+       , CASE WHEN inDetailDay = TRUE THEN Res_1.OperDate
+              WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res_1.OperDate)
+              ELSE DATE_TRUNC ('MONTH', Res_1.OperDate)
          END  ::TDateTime AS OperDate
        , Res_1.Count_Day
        , Res_1.Count_MemberInDay
