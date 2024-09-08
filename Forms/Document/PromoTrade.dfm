@@ -1,21 +1,22 @@
 inherited PromoTradeForm: TPromoTradeForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
-  ClientHeight = 707
+  ClientHeight = 715
   ClientWidth = 1164
+  ExplicitTop = -84
   ExplicitWidth = 1180
-  ExplicitHeight = 746
+  ExplicitHeight = 754
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
     Width = 1164
-    Height = 568
+    Height = 576
     ExplicitLeft = 8
     ExplicitTop = 147
     ExplicitWidth = 1164
     ExplicitHeight = 568
-    ClientRectBottom = 568
+    ClientRectBottom = 576
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
@@ -23,7 +24,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
         Width = 1164
-        Height = 355
+        Height = 363
         ExplicitWidth = 1164
         ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -313,11 +314,12 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 363
+        Top = 371
         Width = 1164
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 363
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
@@ -331,18 +333,21 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectRight = 567
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
-            Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            object cxGridPartner: TcxGrid
+            Caption = '2.1.'#1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1077' '#1091#1089#1083#1086#1074#1080#1103
+            ExplicitLeft = 2
+            ExplicitTop = 19
+            object cxGridMov1: TcxGrid
               Left = 0
               Top = 0
               Width = 567
               Height = 147
               Align = alClient
-              PopupMenu = pmPartner
               TabOrder = 0
-              object cxGridDBTableViewPartner: TcxGridDBTableView
+              ExplicitLeft = 88
+              ExplicitTop = -5
+              object cxGridDBTableViewMov1: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
-                DataController.DataSource = PartnerDS
+                DataController.DataSource = Mov1DS
                 DataController.Filter.Options = [fcoCaseInsensitive]
                 DataController.Summary.DefaultGroupSummaryItems = <>
                 DataController.Summary.FooterSummaryItems = <>
@@ -362,228 +367,31 @@ inherited PromoTradeForm: TPromoTradeForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object AreaName: TcxGridDBColumn
-                  Caption = #1056#1077#1075#1080#1086#1085
-                  DataBinding.FieldName = 'AreaName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 70
-                end
-                object PartnerCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076
-                  DataBinding.FieldName = 'PartnerCode'
-                  PropertiesClassName = 'TcxCurrencyEditProperties'
-                  Properties.DecimalPlaces = 0
-                  Properties.DisplayFormat = '0.####;-0.####; ;'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 28
-                end
-                object PartnerName: TcxGridDBColumn
-                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-                  DataBinding.FieldName = 'PartnerName'
-                  PropertiesClassName = 'TcxButtonEditProperties'
-                  Properties.Buttons = <
-                    item
-                      Action = actPromoPartnerChoiceForm
-                      Default = True
-                      Kind = bkEllipsis
-                    end>
-                  Properties.ReadOnly = True
-                  Visible = False
+                object StatusCode_ch1: TcxGridDBColumn
+                  Caption = #1057#1090#1072#1090#1091#1089
+                  DataBinding.FieldName = 'StatusCode'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Width = 104
                 end
-                object PartnerDescName: TcxGridDBColumn
-                  Caption = #1069#1083#1077#1084#1077#1085#1090
-                  DataBinding.FieldName = 'PartnerDescName'
+                object InvNumber_ch1: TcxGridDBColumn
+                  Caption = #8470' '#1076#1086#1082'.'
+                  DataBinding.FieldName = 'InvNumber'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 163
+                end
+                object OperDate_ch1: TcxGridDBColumn
+                  Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+                  DataBinding.FieldName = 'OperDate'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
-                  Width = 58
-                end
-                object Juridical_Name: TcxGridDBColumn
-                  Caption = #1070#1088'. '#1083#1080#1094#1086
-                  DataBinding.FieldName = 'Juridical_Name'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 80
-                end
-                object Retail_Name: TcxGridDBColumn
-                  Caption = #1057#1077#1090#1100
-                  DataBinding.FieldName = 'Retail_Name'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 80
-                end
-                object ContractCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractCode'
-                  PropertiesClassName = 'TcxCurrencyEditProperties'
-                  Properties.DecimalPlaces = 0
-                  Properties.DisplayFormat = '0.####;-0.####; ;'
-                  Visible = False
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 70
-                end
-                object RetailName_inf: TcxGridDBColumn
-                  Caption = #1057#1077#1090#1100' ('#1080#1085#1092'.)'
-                  DataBinding.FieldName = 'RetailName_inf'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  HeaderHint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-                  Width = 80
-                end
-                object ContractName: TcxGridDBColumn
-                  Caption = #8470' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractName'
-                  PropertiesClassName = 'TcxButtonEditProperties'
-                  Properties.Buttons = <
-                    item
-                      Action = actContractChoiceForm
-                      Default = True
-                      Kind = bkEllipsis
-                    end>
-                  Properties.ReadOnly = True
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 55
-                end
-                object ContractTagName: TcxGridDBColumn
-                  Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractTagName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 70
-                end
-                object Comment: TcxGridDBColumn
-                  Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-                  DataBinding.FieldName = 'Comment'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 91
-                end
-                object isErased: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-                  DataBinding.FieldName = 'isErased'
-                  Visible = False
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 50
+                  Width = 121
                 end
               end
-              object cxGridLevelPartner: TcxGridLevel
-                GridView = cxGridDBTableViewPartner
-              end
-            end
-          end
-          object tsPromoPartnerList: TcxTabSheet
-            Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
-            ImageIndex = 1
-            object grPartnerList: TcxGrid
-              Left = 0
-              Top = 0
-              Width = 567
-              Height = 147
-              Align = alClient
-              TabOrder = 0
-              LookAndFeel.NativeStyle = True
-              LookAndFeel.SkinName = 'UserSkin'
-              object grtvPartnerList: TcxGridDBTableView
-                Navigator.Buttons.CustomButtons = <>
-                DataController.DataSource = PartnerLisrDS
-                DataController.Filter.Options = [fcoCaseInsensitive]
-                DataController.Summary.DefaultGroupSummaryItems = <>
-                DataController.Summary.FooterSummaryItems = <>
-                DataController.Summary.SummaryGroups = <>
-                Images = dmMain.SortImageList
-                OptionsCustomize.ColumnHiding = True
-                OptionsCustomize.ColumnsQuickCustomization = True
-                OptionsData.Deleting = False
-                OptionsData.DeletingConfirmation = False
-                OptionsData.Editing = False
-                OptionsData.Inserting = False
-                OptionsView.HeaderAutoHeight = True
-                OptionsView.Indicator = True
-                Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object PartnerListRetailName: TcxGridDBColumn
-                  Caption = #1057#1077#1090#1100
-                  DataBinding.FieldName = 'RetailName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 80
-                end
-                object PartnerListJuridicalName: TcxGridDBColumn
-                  Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-                  DataBinding.FieldName = 'JuridicalName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 100
-                end
-                object PartnerListCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076
-                  DataBinding.FieldName = 'Code'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 38
-                end
-                object PartnerListName: TcxGridDBColumn
-                  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-                  DataBinding.FieldName = 'Name'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Options.Editing = False
-                  Width = 182
-                end
-                object PartnerListAreaName: TcxGridDBColumn
-                  Caption = #1056#1077#1075#1080#1086#1085
-                  DataBinding.FieldName = 'AreaName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 98
-                end
-                object PartnerListContractCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractCode'
-                  Visible = False
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 48
-                end
-                object PartnerListContractName: TcxGridDBColumn
-                  Caption = #8470' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 48
-                end
-                object PartnerListContractTagName: TcxGridDBColumn
-                  Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
-                  DataBinding.FieldName = 'ContractTagName'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 80
-                end
-                object PartnerListIsErased: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083#1077#1085
-                  DataBinding.FieldName = 'IsErased'
-                  Visible = False
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 47
-                end
-              end
-              object grlPartnerList: TcxGridLevel
-                GridView = grtvPartnerList
+              object cxGridLevelMov1: TcxGridLevel
+                GridView = cxGridDBTableViewMov1
               end
             end
           end
@@ -601,18 +409,21 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectRight = 587
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
-            Caption = '&4. '#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
-            object grAdvertising: TcxGrid
+            Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1082#1083#1080#1077#1085#1090#1072
+            ExplicitLeft = -2
+            ExplicitTop = 19
+            object cxGridMov2: TcxGrid
               Left = 0
               Top = 0
               Width = 587
               Height = 147
               Align = alClient
-              PopupMenu = pmAdvertising
               TabOrder = 0
-              object grtvAdvertising: TcxGridDBTableView
+              ExplicitLeft = 24
+              ExplicitTop = -5
+              object cxGridDBTableViewMov2: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
-                DataController.DataSource = AdvertisingDS
+                DataController.DataSource = Mov2DS
                 DataController.Filter.Options = [fcoCaseInsensitive]
                 DataController.Summary.DefaultGroupSummaryItems = <>
                 DataController.Summary.FooterSummaryItems = <>
@@ -632,48 +443,31 @@ inherited PromoTradeForm: TPromoTradeForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object AdvertisingCode: TcxGridDBColumn
-                  Caption = #1050#1086#1076
-                  DataBinding.FieldName = 'AdvertisingCode'
-                  PropertiesClassName = 'TcxCurrencyEditProperties'
-                  Properties.DecimalPlaces = 0
-                  Properties.DisplayFormat = '0.####;-0.####; ;'
+                object StatusCode_ch2: TcxGridDBColumn
+                  Caption = #1057#1090#1072#1090#1091#1089
+                  DataBinding.FieldName = 'StatusCode'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
-                  Width = 34
+                  Width = 118
                 end
-                object AdvertisingName: TcxGridDBColumn
-                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-                  DataBinding.FieldName = 'AdvertisingName'
-                  PropertiesClassName = 'TcxButtonEditProperties'
-                  Properties.Buttons = <
-                    item
-                      Action = actAdvertisingChoiceForm
-                      Default = True
-                      Kind = bkEllipsis
-                    end>
-                  Properties.ReadOnly = True
+                object InvNumber_ch2: TcxGridDBColumn
+                  Caption = #8470' '#1076#1086#1082'.'
+                  DataBinding.FieldName = 'InvNumber'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 130
+                  Width = 115
                 end
-                object CommentAdvertising: TcxGridDBColumn
-                  Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-                  DataBinding.FieldName = 'Comment'
+                object OperDate_ch2: TcxGridDBColumn
+                  Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+                  DataBinding.FieldName = 'OperDate'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 80
-                end
-                object IsErasedAdvertising: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083'.'
-                  DataBinding.FieldName = 'IsErased'
-                  Visible = False
-                  Width = 55
+                  Width = 187
                 end
               end
-              object grlAdvertising: TcxGridLevel
-                GridView = grtvAdvertising
+              object cxGridLevelMov2: TcxGridLevel
+                GridView = cxGridDBTableViewMov2
               end
             end
           end
@@ -690,33 +484,37 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 355
+        Top = 363
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitTop = 355
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 536
+        Top = 544
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
+        ExplicitTop = 536
       end
     end
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitHeight = 544
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1164
-        Height = 544
+        Height = 552
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 544
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1273,7 +1071,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = PartnerDS
+      DataSource = Mov1DS
     end
     object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc [10]
       Category = 'Update_MI_Param'
@@ -1517,16 +1315,12 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Id'
           Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'PromoStateKindName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1678,7 +1472,6 @@ inherited PromoTradeForm: TPromoTradeForm
         item
         end>
       Caption = 'actUpdateMainDS'
-      DataSource = ConditionPromoDS
     end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
@@ -1695,7 +1488,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Movement_PromoPartner
+          StoredProc = spSelect_Movement_Mov1
         end
         item
         end
@@ -1808,10 +1601,8 @@ inherited PromoTradeForm: TPromoTradeForm
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_MI_Param
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_MI_Param
         end>
       Caption = 'actInsertUpdate_MI_Param'
     end
@@ -1828,15 +1619,11 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Key'
           Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'PromoStateKindId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = PromoStateKindDCS
-          ComponentItem = 'PromoStateKindName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -1860,7 +1647,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Id'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1868,7 +1655,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerName'
           DataType = ftString
           ParamType = ptInput
@@ -1890,16 +1677,12 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Id'
           Value = Null
-          Component = ConditionPromoCDS
-          ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsName'
           Value = Null
-          Component = ConditionPromoCDS
-          ComponentItem = 'ConditionPromoName'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1920,7 +1703,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Id'
           Value = Null
-          Component = AdvertisingCDS
+          Component = Mov2CDS
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1928,7 +1711,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'GoodsName'
           Value = Null
-          Component = AdvertisingCDS
+          Component = Mov2CDS
           ComponentItem = 'AdvertisingName'
           DataType = ftString
           ParamType = ptInput
@@ -2044,7 +1827,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Category = 'Partner'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      View = cxGridDBTableViewPartner
+      View = cxGridDBTableViewMov1
       Action = actPromoPartnerChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -2054,10 +1837,8 @@ inherited PromoTradeForm: TPromoTradeForm
     object actErasedPartner: TdsdUpdateErased
       Category = 'Partner'
       MoveParams = <>
-      StoredProc = spErasedMIPartner
       StoredProcList = <
         item
-          StoredProc = spErasedMIPartner
         end
         item
         end>
@@ -2066,16 +1847,14 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = PartnerDS
+      DataSource = Mov1DS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
     end
     object actUnErasedPartner: TdsdUpdateErased
       Category = 'Partner'
       MoveParams = <>
-      StoredProc = spUnErasedMIPartner
       StoredProcList = <
         item
-          StoredProc = spUnErasedMIPartner
         end
         item
         end>
@@ -2085,7 +1864,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = PartnerDS
+      DataSource = Mov1DS
     end
     object actPromoPartnerChoiceForm: TOpenChoiceForm
       Category = 'Partner'
@@ -2100,21 +1879,21 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Key'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerCode'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2122,7 +1901,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'DescName'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerDescName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2130,7 +1909,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Juridical_Name'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'Juridical_Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2138,7 +1917,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Retail_Name'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'Retail_Name'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2153,10 +1932,9 @@ inherited PromoTradeForm: TPromoTradeForm
         item
         end
         item
-          StoredProc = spUpdate_PromoPartner_ChangePercent
         end>
       Caption = 'actUpdateMainDS'
-      DataSource = PartnerDS
+      DataSource = Mov1DS
     end
     object actInsertCondition: TInsertRecord
       Category = 'Condition'
@@ -2181,7 +1959,6 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = ConditionPromoDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
     end
     object actUnErasedCondition: TdsdUpdateErased
@@ -2198,7 +1975,6 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = ConditionPromoDS
     end
     object actConditionPromoChoiceForm: TOpenChoiceForm
       Category = 'Condition'
@@ -2213,22 +1989,16 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Key'
           Value = Null
-          Component = ConditionPromoCDS
-          ComponentItem = 'ConditionPromoId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
-          Component = ConditionPromoCDS
-          ComponentItem = 'ConditionPromoCode'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = ConditionPromoCDS
-          ComponentItem = 'ConditionPromoName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2247,7 +2017,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Key'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'ContractId'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2255,14 +2025,14 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Code'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'ContractCode'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'ContractName'
           DataType = ftString
           ParamType = ptInput
@@ -2271,7 +2041,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'ContractTagName'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'ContractTagName'
           DataType = ftString
           ParamType = ptInput
@@ -2280,14 +2050,14 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'MasterJuridicalId'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'MasterJuridicalName'
           Value = Null
-          Component = PartnerCDS
+          Component = Mov1CDS
           ComponentItem = 'PartnerName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2298,7 +2068,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Category = 'Advertising'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      View = grtvAdvertising
+      View = cxGridDBTableViewMov2
       Action = actAdvertisingChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -2320,7 +2090,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = AdvertisingDS
+      DataSource = Mov2DS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
     end
     object actunErasedAdvertising: TdsdUpdateErased
@@ -2339,7 +2109,7 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = AdvertisingDS
+      DataSource = Mov2DS
     end
     object actAdvertisingChoiceForm: TOpenChoiceForm
       Category = 'Advertising'
@@ -2354,21 +2124,21 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'Key'
           Value = Null
-          Component = AdvertisingCDS
+          Component = Mov2CDS
           ComponentItem = 'AdvertisingId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
           Value = Null
-          Component = AdvertisingCDS
+          Component = Mov2CDS
           ComponentItem = 'AdvertisingCode'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = AdvertisingCDS
+          Component = Mov2CDS
           ComponentItem = 'AdvertisingName'
           DataType = ftString
           MultiSelectSeparator = ','
@@ -2385,16 +2155,14 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spInsertUpdateMIAdvertising
         end>
       Caption = 'actUpdateMainDS'
-      DataSource = AdvertisingDS
+      DataSource = Mov2DS
     end
     object actUpdate_Movement_Promo_Data: TdsdExecStoredProc
       Category = 'Update_Promo_Data'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Movement_Promo_Data
       StoredProcList = <
         item
-          StoredProc = spUpdate_Movement_Promo_Data
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1086' '#1072#1082#1094#1080#1080
@@ -2417,10 +2185,8 @@ inherited PromoTradeForm: TPromoTradeForm
       Category = 'Partner'
       MoveParams = <>
       Enabled = False
-      StoredProc = spSelect_MovementItem_PromoPartner
       StoredProcList = <
         item
-          StoredProc = spSelect_MovementItem_PromoPartner
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2490,15 +2256,13 @@ inherited PromoTradeForm: TPromoTradeForm
       Category = 'Partner'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Movement_ChangePercent
       StoredProcList = <
         item
-          StoredProc = spUpdate_Movement_ChangePercent
         end
         item
         end>
       Caption = 'actUpdateChangePercent'
-      DataSource = PartnerDS
+      DataSource = Mov1DS
     end
     object actInsertUpdateMISignYes: TdsdExecStoredProc
       Category = 'Sign'
@@ -2576,16 +2340,12 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Name = 'inRetailId'
           Value = 'Null'
-          Component = PartnerListCDS
-          ComponentItem = 'RetailId'
           ParamType = ptUnknown
           MultiSelectSeparator = ','
         end
         item
           Name = 'inRetailName'
           Value = 'Null'
-          Component = PartnerListCDS
-          ComponentItem = 'RetailName'
           DataType = ftString
           ParamType = ptUnknown
           MultiSelectSeparator = ','
@@ -3257,108 +3017,12 @@ inherited PromoTradeForm: TPromoTradeForm
       Action = InsertRecord
       Category = 0
     end
-    object bbInsertRecordPartner: TdxBarButton
-      Action = actInsertRecordPartner
-      Category = 0
-    end
-    object dxBarButton3: TdxBarButton
-      Action = actErasedPartner
-      Category = 0
-    end
-    object dxBarButton4: TdxBarButton
-      Action = actUnErasedPartner
-      Category = 0
-    end
-    object bbInsertCondition: TdxBarButton
-      Action = actInsertCondition
-      Category = 0
-    end
-    object dxBarButton6: TdxBarButton
-      Action = actUnErasedCondition
-      Category = 0
-    end
-    object dxBarButton7: TdxBarButton
-      Action = actErasedCondition
-      Category = 0
-    end
-    object dxBarButton8: TdxBarButton
-      Action = actInsertRecordAdvertising
-      Category = 0
-    end
-    object dxBarButton9: TdxBarButton
-      Action = actunErasedAdvertising
-      Category = 0
-    end
-    object dxBarButton10: TdxBarButton
-      Action = actErasedAdvertising
-      Category = 0
-    end
-    object dxBarButton11: TdxBarButton
-      Action = mactUpdate_Movement_Promo_Data
-      Category = 0
-    end
-    object dxBarButton12: TdxBarButton
-      Action = mactAddAllPartner
-      Category = 0
-    end
-    object bbPartnerProtocol: TdxBarButton
-      Action = actPartnerProtocolOpenForm
-      Category = 0
-    end
-    object bbPartnerListProtocol: TdxBarButton
-      Action = actConditionPromoProtocolOpenForm
-      Category = 0
-    end
-    object bbAdvertisingProtocol: TdxBarButton
-      Action = actAdvertisingProtocolOpenForm
-      Category = 0
-    end
-    object bbInsertUpdate_MI_Param: TdxBarButton
-      Action = macInsertUpdate_MI_Param
-      Category = 0
-    end
     object bbInsertUpdateMISignYes: TdxBarButton
       Action = mactInsertUpdateMISignYes
       Category = 0
     end
     object bbInsertUpdateMISignNo: TdxBarButton
       Action = mactInsertUpdateMISignNo
-      Category = 0
-    end
-    object bbPrint_Calc: TdxBarButton
-      Action = actPrint_Calc
-      Category = 0
-    end
-    object bbOpenReportForm: TdxBarButton
-      Action = actOpenReportForm
-      Category = 0
-    end
-    object bbInsertRecordPromoStateKind: TdxBarButton
-      Action = actInsertRecordPromoStateKind
-      Category = 0
-    end
-    object bbSetErasedPromoStateKind: TdxBarButton
-      Action = actMISetErasedPromoStateKind
-      Category = 0
-    end
-    object bbSetUnErasedPromoStateKind: TdxBarButton
-      Action = actMISetUnErasedPromoStateKind
-      Category = 0
-    end
-    object bbProtocoPromoStateKind: TdxBarButton
-      Action = actOpenProtocoPromoStateKind
-      Category = 0
-    end
-    object bbPrint_Calc2: TdxBarButton
-      Action = actPrint_Calc2
-      Category = 0
-    end
-    object bbUpdate_Movement_isTaxPromo: TdxBarButton
-      Action = actUpdate_Movement_isTaxPromo
-      Category = 0
-    end
-    object bbOpenReport_SaleReturn_byPromo: TdxBarButton
-      Action = actOpenReport_SaleReturn_byPromo
       Category = 0
     end
     object bsGoods: TdxBarSubItem
@@ -3379,136 +3043,10 @@ inherited PromoTradeForm: TPromoTradeForm
           ItemName = 'bbMovementItemProtocol'
         end>
     end
-    object bsPartner: TdxBarSubItem
-      Caption = #1055#1072#1088#1090#1085#1077#1088
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarButton3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton12'
-        end>
-    end
-    object bsConditionPromo: TdxBarSubItem
-      Caption = '% '#1076#1086#1087'.'#1089#1082#1080#1076#1082#1080
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarButton7'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerListProtocol'
-        end>
-    end
-    object bsAdvertising: TdxBarSubItem
-      Caption = #1056#1077#1082#1083#1072#1084#1085'. '#1087#1086#1076#1076'.'
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarButton10'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton9'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAdvertisingProtocol'
-        end>
-    end
-    object bsPromoStateKind: TdxBarSubItem
-      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbUpdate_SignInternal_One'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_SignInternal_Two'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_SignInternal_Three'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator1'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedPromoStateKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErasedPromoStateKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocoPromoStateKind'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdatePromoStateKind_Return'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdatePromoStateKind_Complete'
-        end>
-    end
-    object bsCalc: TdxBarSubItem
-      Caption = #1056#1072#1089#1095#1077#1090
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdate_MI_Param'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton11'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_MI_ContractCondition'
-        end>
-    end
     object bsSign: TdxBarSubItem
       Caption = #1055#1086#1076#1087#1080#1089#1100
       Category = 0
-      Visible = ivNever
+      Visible = ivAlways
       ItemLinks = <
         item
           Visible = True
@@ -3532,22 +3070,6 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object bbUpdate_SignInternal_Two: TdxBarButton
       Action = actUpdate_SignInternal_Two
-      Category = 0
-    end
-    object bbPrint_CalcAll: TdxBarButton
-      Action = actPrint_CalcAll
-      Category = 0
-    end
-    object bbChangePercent: TdxBarButton
-      Action = macChangePercent
-      Category = 0
-    end
-    object bbUpdate_MI_ContractCondition: TdxBarButton
-      Action = macUpdate_calc
-      Category = 0
-    end
-    object bbOpenFormPromoContractBonus_Detail: TdxBarButton
-      Action = actOpenFormPromoContractBonus_Detail
       Category = 0
     end
     object bbUpdate_SignInternal_Three: TdxBarButton
@@ -3576,60 +3098,6 @@ inherited PromoTradeForm: TPromoTradeForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbInvoice: TdxBarSubItem
-      Caption = #1057#1095#1077#1090#1072
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbUpdateInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCompleteInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnCompleteInvoice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErasedInvoice'
-        end>
-    end
-    object bbInsertInvoice: TdxBarButton
-      Action = actInsertInvoice
-      Category = 0
-    end
-    object bbUpdateInvoice: TdxBarButton
-      Action = actUpdateInvoice
-      Category = 0
-    end
-    object bbCompleteInvoice: TdxBarButton
-      Action = actCompleteInvoice
-      Category = 0
-    end
-    object bbUnCompleteInvoice: TdxBarButton
-      Action = actUnCompleteInvoice
-      Category = 0
-    end
-    object bbSetErasedInvoice: TdxBarButton
-      Action = actSetErasedInvoice
-      Category = 0
-    end
-    object bbInsUpPromoStat_Master_calc: TdxBarButton
-      Action = macInsUpPromoStat_Master_calc
-      Category = 0
-    end
-    object bbInsUpPromoPlan_Master_calc: TdxBarButton
-      Action = macInsUpPromoPlan_Master_calc
-      Category = 0
-    end
-    object bbInsUpPromoPlan_Child_calc: TdxBarButton
-      Action = macInsUpPromoPlan_Child_calc
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -3643,8 +3111,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 361
   end
   inherited PopupMenu: TPopupMenu
-    Left = 32
-    Top = 600
+    Left = 688
+    Top = 328
     object N2: TMenuItem [0]
       Action = InsertRecord
     end
@@ -4415,12 +3883,12 @@ inherited PromoTradeForm: TPromoTradeForm
       end>
     Left = 676
   end
-  object spSelect_Movement_PromoPartner: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PromoPartner'
-    DataSet = PartnerCDS
+  object spSelect_Movement_Mov1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTrade_Mov1'
+    DataSet = Mov1CDS
     DataSets = <
       item
-        DataSet = PartnerCDS
+        DataSet = Mov1CDS
       end>
     Params = <
       item
@@ -4440,74 +3908,24 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 440
+    Left = 160
+    Top = 608
   end
-  object PartnerCDS: TClientDataSet
+  object Mov1CDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 216
-    Top = 480
+    Left = 24
+    Top = 632
   end
-  object PartnerDS: TDataSource
-    DataSet = PartnerCDS
-    Left = 296
-    Top = 488
-  end
-  object spErasedMIPartner: TdsdStoredProc
-    StoredProcName = 'gpMovement_PromoPartner_SetErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Value = Null
-        Component = PartnerCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = PartnerCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 438
-    Top = 392
-  end
-  object spUnErasedMIPartner: TdsdStoredProc
-    StoredProcName = 'gpMovement_PromoPartner_SetUnErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementItemId'
-        Value = Null
-        Component = PartnerCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outIsErased'
-        Value = Null
-        Component = PartnerCDS
-        ComponentItem = 'isErased'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 502
-    Top = 400
+  object Mov1DS: TDataSource
+    DataSet = Mov1CDS
+    Left = 56
+    Top = 600
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableViewPartner
+    View = cxGridDBTableViewMov1
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -4523,47 +3941,15 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 206
     Top = 345
   end
-  object ConditionPromoDS: TDataSource
-    DataSet = ConditionPromoCDS
-    Left = 776
-    Top = 552
-  end
-  object ConditionPromoCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 720
-    Top = 552
-  end
-  object pmPartner: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 96
-    Top = 600
-    object MenuItem1: TMenuItem
-      Action = actInsertRecordPartner
-    end
-    object MenuItem2: TMenuItem
-      Action = actErasedPartner
-    end
-    object MenuItem3: TMenuItem
-      Action = actUnErasedPartner
-    end
-    object MenuItem4: TMenuItem
-      Caption = '-'
-    end
-    object MenuItem5: TMenuItem
-      Action = actRefresh
-    end
-  end
   object PrintHead: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 800
-    Top = 232
+    Left = 768
+    Top = 328
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Promo_Print'
+    StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
     DataSet = PrintHead
     DataSets = <
       item
@@ -4582,37 +3968,17 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 952
     Top = 376
   end
-  object AdvertisingCDS: TClientDataSet
+  object Mov2CDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 1000
-    Top = 472
+    Left = 784
+    Top = 576
   end
-  object AdvertisingDS: TDataSource
-    DataSet = AdvertisingCDS
-    Left = 1064
-    Top = 472
-  end
-  object pmAdvertising: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 1040
-    Top = 584
-    object MenuItem13: TMenuItem
-      Action = actInsertRecordAdvertising
-    end
-    object MenuItem14: TMenuItem
-      Action = actErasedAdvertising
-    end
-    object MenuItem15: TMenuItem
-      Action = actunErasedAdvertising
-    end
-    object MenuItem16: TMenuItem
-      Caption = '-'
-    end
-    object MenuItem17: TMenuItem
-      Action = actRefresh
-    end
+  object Mov2DS: TDataSource
+    DataSet = Mov2CDS
+    Left = 840
+    Top = 568
   end
   object spErasedAdvertising: TdsdStoredProc
     StoredProcName = 'gpMovement_PromoAdvertising_SetErased'
@@ -4622,7 +3988,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4630,7 +3996,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -4647,7 +4013,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'inMovementItemId'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4655,7 +4021,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'outIsErased'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -4672,7 +4038,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'ioId'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -4688,7 +4054,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'inAdvertisingId'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'AdvertisingId'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4696,7 +4062,7 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'inComment'
         Value = Null
-        Component = AdvertisingCDS
+        Component = Mov2CDS
         ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
@@ -4706,12 +4072,12 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 1104
     Top = 432
   end
-  object spSelect_Movement_PromoAdvertising: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PromoAdvertising'
-    DataSet = AdvertisingCDS
+  object spSelect_Movement_Mov2: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTrade_Mov2'
+    DataSet = Mov2CDS
     DataSets = <
       item
-        DataSet = AdvertisingCDS
+        DataSet = Mov2CDS
       end>
     Params = <
       item
@@ -4736,60 +4102,11 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
-    Top = 552
-  end
-  object spUpdate_Movement_Promo_Data: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Promo_Data'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 128
-    Top = 208
-  end
-  object PartnerListCDS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 712
-    Top = 408
-  end
-  object PartnerLisrDS: TDataSource
-    DataSet = PartnerListCDS
-    Left = 336
-    Top = 536
-  end
-  object spSelect_MovementItem_PromoPartner: TdsdStoredProc
-    DataSet = PartnerListCDS
-    DataSets = <
-      item
-        DataSet = PartnerListCDS
-      end>
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 120
-    Top = 432
+    Left = 736
+    Top = 608
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = grtvPartnerList
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -4804,23 +4121,6 @@ inherited PromoTradeForm: TPromoTradeForm
     PropertiesCellList = <>
     Left = 446
     Top = 553
-  end
-  object spInsertUpdate_MI_Param: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_PromoTrade_Param'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 800
-    Top = 288
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
@@ -4999,15 +4299,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 552
-    Top = 603
-  end
-  object PromoStateKindDCS: TClientDataSet
-    Aggregates = <>
-    FilterOptions = [foCaseInsensitive]
-    Params = <>
-    Left = 888
-    Top = 520
+    Left = 1072
+    Top = 83
   end
   object GuidesSignInternal: TdsdGuides
     KeyField = 'Id'
@@ -5154,34 +4447,9 @@ inherited PromoTradeForm: TPromoTradeForm
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
     end
   end
-  object spUpdate_Movement_ChangePercent: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Promo_ChangePercent'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inChangePercent'
-        Value = Null
-        Component = edChangePercent
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 640
-    Top = 272
-  end
   object dsdDBViewAddOnAdvertising: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = grtvAdvertising
+    View = cxGridDBTableViewMov2
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -5196,30 +4464,6 @@ inherited PromoTradeForm: TPromoTradeForm
     PropertiesCellList = <>
     Left = 952
     Top = 335
-  end
-  object spUpdate_PromoPartner_ChangePercent: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_PromoPartner_ChangePercent'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outChangePercent'
-        Value = Null
-        Component = edChangePercent
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 360
-    Top = 616
   end
   object spUpdate_SignInternal_Three: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
