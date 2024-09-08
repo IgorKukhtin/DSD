@@ -1,26 +1,26 @@
--- Function: gpMovementItem_PromoTrade_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_PromoTrade_SetUnErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_PromoTrade_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_PromoTrade_SetUnErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PromoTrade_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_PromoTrade_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
-)
-RETURNS Boolean
+)                              
+  RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbUserId          Integer;
-   DECLARE vbMovementId      Integer;
-   DECLARE vbStatusId  Integer;
+   DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_PromoTrade());
+  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_PromoTrade());
 
   -- устанавливаем новое значение
-  outIsErased := TRUE;
+  outIsErased := FALSE;
 
   -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
+  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
 
   -- определяем <Статус>
@@ -35,8 +35,7 @@ BEGIN
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
   -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
-  -- outIsErased := FALSE;
-
+  -- outIsErased := TRUE;
 
 END;
 $BODY$
@@ -47,3 +46,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  08.09.24         *
 */
+
+-- тест
+--

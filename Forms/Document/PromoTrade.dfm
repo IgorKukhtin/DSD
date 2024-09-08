@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 707
   ClientWidth = 1164
-  ExplicitTop = -76
   ExplicitWidth = 1180
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -12,19 +11,20 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 139
     Width = 1164
     Height = 568
-    ExplicitTop = 139
-    ExplicitWidth = 1161
+    ExplicitLeft = 8
+    ExplicitTop = 147
+    ExplicitWidth = 1164
     ExplicitHeight = 568
     ClientRectBottom = 568
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1161
+      ExplicitWidth = 1164
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
         Width = 1164
         Height = 355
-        ExplicitWidth = 1161
+        ExplicitWidth = 1164
         ExplicitHeight = 355
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -318,7 +318,6 @@ inherited PromoTradeForm: TPromoTradeForm
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 1161
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
@@ -328,13 +327,11 @@ inherited PromoTradeForm: TPromoTradeForm
           TabOrder = 0
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitWidth = 564
           ClientRectBottom = 171
           ClientRectRight = 567
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitWidth = 564
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -343,7 +340,6 @@ inherited PromoTradeForm: TPromoTradeForm
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitWidth = 564
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -492,7 +488,6 @@ inherited PromoTradeForm: TPromoTradeForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitWidth = 564
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -502,7 +497,6 @@ inherited PromoTradeForm: TPromoTradeForm
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
-              ExplicitWidth = 564
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -603,7 +597,6 @@ inherited PromoTradeForm: TPromoTradeForm
           TabOrder = 1
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 573
           ClientRectBottom = 171
           ClientRectRight = 587
           ClientRectTop = 24
@@ -693,7 +686,6 @@ inherited PromoTradeForm: TPromoTradeForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
-          ExplicitLeft = 565
         end
       end
       object cxSplitter4: TcxSplitter
@@ -704,7 +696,6 @@ inherited PromoTradeForm: TPromoTradeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 1161
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -713,13 +704,11 @@ inherited PromoTradeForm: TPromoTradeForm
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
-        ExplicitWidth = 1161
       end
     end
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitWidth = 1161
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -728,7 +717,6 @@ inherited PromoTradeForm: TPromoTradeForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1161
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -816,7 +804,7 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1161
+    ExplicitWidth = 1164
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -3216,14 +3204,6 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
-          ItemName = 'bsCalc'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -3243,27 +3223,7 @@ inherited PromoTradeForm: TPromoTradeForm
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
           BeginGroup = True
-          Visible = True
-          ItemName = 'bbChangePercent'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbOpenReport_SaleReturn_byPromo'
-        end
-        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -4307,6 +4267,7 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -4366,6 +4327,7 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TPersonal_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -4427,11 +4389,11 @@ inherited PromoTradeForm: TPromoTradeForm
     KeyField = 'Id'
     LookupControl = edContract
     Key = 'Null'
-    FormNameParam.Value = 'TContract_ObjectForm'
+    FormNameParam.Value = 'TContractForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TContract_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

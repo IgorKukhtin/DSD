@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_PromoTradeGoods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
@@ -49,10 +48,10 @@ BEGIN
                    AND MovementItem.ObjectId = inGoodsId
                    AND MovementItem.IsErased = FALSE
                    AND MovementItem.DescId = zc_MI_Master()
-                   AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (ioGoodsKindId, 0)
+                   AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
                )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе уже указана есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (ioGoodsKindId);
+        RAISE EXCEPTION 'Ошибка. В документе уже указана есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
     END IF;
 
 

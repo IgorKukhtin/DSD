@@ -49,15 +49,39 @@ BEGIN
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, OL_PersonalTrade.ChildObjectId)
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, tmpCC.ChangePercent)
     FROM Object AS tmp                     
-         LEFT JOIN tmpContractCondition_Value AS tmpCC ON tmpCC.ContractId = tmp.Id  
+         LEFT JOIN (WITH tmpContractCondition_Value_all AS (SELECT * 
+                                          FROM Object_ContractCondition_ValueView AS View_ContractCondition_Value
+                                          WHERE CURRENT_DATE BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
+                                         )
+                       --, tmpContractCondition_Value AS 
+                        (SELECT tmpContractCondition_Value_all.ContractId
+                              , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
+                              , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
+                              , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
+                              
+                              , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
+                              , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
+                              , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
+                                         THEN (MAX (tmpContractCondition_Value_all.DayCalendar) :: Integer) :: TVarChar || ' К.дн.'
+                                     WHEN 0 <> MAX (tmpContractCondition_Value_all.DayBank)
+                                         THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
+                                     ELSE '0 дн.'
+                                END :: TVarChar  AS DelayDay
+                       
+                              , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
+                              , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate
+                         FROM tmpContractCondition_Value_all
+                         GROUP BY tmpContractCondition_Value_all.ContractId
+                        )
+                    ) AS tmpCC ON tmpCC.ContractId = tmp.Id  
          LEFT JOIN ObjectLink AS OL_PersonalTrade
-                              ON OL_PersonalTrade.ObjectId = Object_Contract_View.ContractId 
+                              ON OL_PersonalTrade.ObjectId = tmp.Id
                              AND OL_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade() 
          LEFT JOIN ObjectLink AS OL_PriceList
-                              ON OL_PriceList.ObjectId = Object_Contract_View.ContractId
+                              ON OL_PriceList.ObjectId = tmp.Id
                              AND OL_PriceList.DescId = zc_ObjectLink_Contract_PriceList()
     WHERE tmp.Id = inContractId
-      AND tmp.DescId = zc_Object_ContractId;
+      AND tmp.DescId = zc_Object_Contract();
    
     -- Вид акции
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKind(), ioId, inPromoKindId);
@@ -75,7 +99,7 @@ BEGIN
     --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
     
     --Стоимость участия в акции
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo)
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
 
      -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
