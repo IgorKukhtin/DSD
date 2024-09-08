@@ -2,26 +2,27 @@ inherited PromoTradeForm: TPromoTradeForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 707
-  ClientWidth = 1161
-  ExplicitWidth = 1177
+  ClientWidth = 1164
+  ExplicitTop = -76
+  ExplicitWidth = 1180
   ExplicitHeight = 746
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1161
+    Width = 1164
     Height = 568
     ExplicitTop = 139
     ExplicitWidth = 1161
     ExplicitHeight = 568
     ClientRectBottom = 568
-    ClientRectRight = 1161
+    ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1161
       ExplicitHeight = 544
       inherited cxGrid: TcxGrid
-        Width = 1161
+        Width = 1164
         Height = 355
         ExplicitWidth = 1161
         ExplicitHeight = 355
@@ -313,32 +314,36 @@ inherited PromoTradeForm: TPromoTradeForm
       object Panel1: TPanel
         Left = 0
         Top = 363
-        Width = 1161
+        Width = 1164
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 1161
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 564
+          Width = 567
           Height = 171
           Align = alClient
           TabOrder = 0
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
+          ExplicitWidth = 564
           ClientRectBottom = 171
-          ClientRectRight = 564
+          ClientRectRight = 567
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
+            ExplicitWidth = 564
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 564
+              Width = 567
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
+              ExplicitWidth = 564
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -487,18 +492,17 @@ inherited PromoTradeForm: TPromoTradeForm
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
+            ExplicitWidth = 564
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 564
+              Width = 567
               Height = 147
               Align = alClient
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
+              ExplicitWidth = 564
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -591,7 +595,7 @@ inherited PromoTradeForm: TPromoTradeForm
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 573
+          Left = 576
           Top = 1
           Width = 587
           Height = 171
@@ -599,6 +603,7 @@ inherited PromoTradeForm: TPromoTradeForm
           TabOrder = 1
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 573
           ClientRectBottom = 171
           ClientRectRight = 587
           ClientRectTop = 24
@@ -681,47 +686,49 @@ inherited PromoTradeForm: TPromoTradeForm
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 565
+          Left = 568
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
+          ExplicitLeft = 565
         end
       end
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 355
-        Width = 1161
+        Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitWidth = 1161
       end
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 536
-        Width = 1161
+        Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
+        ExplicitWidth = 1161
       end
     end
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 1161
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1161
+        Width = 1164
         Height = 544
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitWidth = 1161
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -806,7 +813,7 @@ inherited PromoTradeForm: TPromoTradeForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1161
+    Width = 1164
     Height = 113
     TabOrder = 3
     ExplicitWidth = 1161
@@ -4093,8 +4100,8 @@ inherited PromoTradeForm: TPromoTradeForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 282
-    Top = 312
+    Left = 514
+    Top = 240
   end
   inherited GuidesFiller: TGuidesFiller
     Left = 216
@@ -4195,191 +4202,28 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioPrice'
+        Name = 'inSumm'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioOperPriceList'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'OperPriceList'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceSale'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceSale'
+        ComponentItem = 'Summ'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outPriceWithOutVAT'
+        Name = 'inPartnerCount'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceWithOutVAT'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outPriceWithVAT'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceWithVAT'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceTender'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PriceTender'
+        ComponentItem = 'PartnerCount'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioCountForPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountReal'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountReal'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountRealWeight'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountRealWeight'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPlanMin'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMin'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPlanMinWeight'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMinWeight'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountPlanMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMax'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outAmountPlanMaxWeight'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountPlanMaxWeight'
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioTaxRetIn'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'TaxRetIn'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountMarket'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AmountMarket'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummOutMarket'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummOutMarket'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummInMarket'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummInMarket'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioGoodsKindId'
+        Name = 'inGoodsKindId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outGoodsKindName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ioGoodsKindCompleteId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindCompleteId'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outGoodsKindCompleteName'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindCompleteName'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inComment'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -4437,6 +4281,15 @@ inherited PromoTradeForm: TPromoTradeForm
         Component = MasterCDS
         ComponentItem = 'GoodsGroupDirectionName'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 408
@@ -4662,8 +4515,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 430
-    Top = 432
+    Left = 438
+    Top = 392
   end
   object spUnErasedMIPartner: TdsdStoredProc
     StoredProcName = 'gpMovement_PromoPartner_SetUnErased'
@@ -4687,8 +4540,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 454
-    Top = 392
+    Left = 502
+    Top = 400
   end
   object dsdDBViewAddOnPartner: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -4954,7 +4807,6 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 536
   end
   object spSelect_MovementItem_PromoPartner: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PromoPartner'
     DataSet = PartnerListCDS
     DataSets = <
       item

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PromoTradeGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
@@ -10,15 +11,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inAmount                         TFloat    , -- 
     IN inSumm                           TFloat    , -- Cумм грн
     IN inPartnerCount                   TFloat    , -- 
-    IN inGoodsKindId                    Integer   , -- ИД обьекта <Вид товара>
-    IN inComment                        TVarChar  , -- Комментарий     
+    IN inGoodsKindId                    Integer   , -- ИД обьекта <Вид товара>  
     IN inTradeMarkId                    Integer   ,  --Торговая марка 
     IN inGoodsGroupPropertyId           Integer,
     IN inGoodsGroupDirectionId          Integer,
    OUT outTradeMarkName                 TVarChar, 
    OUT outGoodsGroupPropertyName        TVarChar,     
    OUT outGoodsGroupPropertyName_Parent TVarChar, 
-   OUT outGoodsGroupDirectionName       TVarChar, 
+   OUT outGoodsGroupDirectionName       TVarChar,
+    IN inComment                        TVarChar  , -- Комментарий    
     IN inSession                        TVarChar    -- сессия пользователя
 )
 AS
