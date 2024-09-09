@@ -153,11 +153,11 @@ BEGIN
 
            , CAST ('' as TVarChar) AS Street
            , CAST ('' as TVarChar) AS Street_Real
-           , CAST ('' as TVarChar) AS Children1
-           , CAST ('' as TVarChar) AS Children2
-           , CAST ('' as TVarChar) AS Children3
-           , CAST ('' as TVarChar) AS Children4
-           , CAST ('' as TVarChar) AS Children5
+           , CAST ('нет' as TVarChar) AS Children1
+           , CAST ('нет' as TVarChar) AS Children2
+           , CAST ('нет' as TVarChar) AS Children3
+           , CAST ('нет' as TVarChar) AS Children4
+           , CAST ('нет' as TVarChar) AS Children5
            , CAST ('' as TVarChar) AS Law
            , CAST ('' as TVarChar) AS DriverCertificateAdd
            , CAST ('' as TVarChar) AS PSP_S
@@ -284,11 +284,11 @@ BEGIN
             
             , ObjectString_Street.ValueData               AS Street
             , ObjectString_Street_Real.ValueData          AS Street_Real
-            , ObjectString_Children1.ValueData            AS Children1
-            , ObjectString_Children2.ValueData            AS Children2
-            , ObjectString_Children3.ValueData            AS Children3
-            , ObjectString_Children4.ValueData            AS Children4
-            , ObjectString_Children5.ValueData            AS Children5
+            , CASE WHEN COALESCE (ObjectString_Children1.ValueData,'')<> '' THEN ObjectString_Children1.ValueData ELSE 'нет' END ::TVarChar AS Children1
+            , CASE WHEN COALESCE (ObjectString_Children2.ValueData,'')<> '' THEN ObjectString_Children2.ValueData ELSE 'нет' END ::TVarChar AS Children2
+            , CASE WHEN COALESCE (ObjectString_Children3.ValueData,'')<> '' THEN ObjectString_Children3.ValueData ELSE 'нет' END ::TVarChar AS Children3
+            , CASE WHEN COALESCE (ObjectString_Children4.ValueData,'')<> '' THEN ObjectString_Children4.ValueData ELSE 'нет' END ::TVarChar AS Children4
+            , CASE WHEN COALESCE (ObjectString_Children5.ValueData,'')<> '' THEN ObjectString_Children5.ValueData ELSE 'нет' END ::TVarChar AS Children5
             , ObjectString_Law.ValueData                  AS Law
             , ObjectString_DriverCertificateAdd.ValueData AS DriverCertificateAdd
             , ObjectString_PSP_S.ValueData                AS PSP_S
