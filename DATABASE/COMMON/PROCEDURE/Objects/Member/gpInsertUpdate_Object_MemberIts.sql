@@ -49,6 +49,35 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Member());
+
+   --проверка
+   IF COALESCE (inGenderId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Пол>.' ; END IF;
+   IF COALESCE (inBirthday_date, CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнена реквизит <Дата рождения>.' ; END IF;
+   IF COALESCE (inPSP_S,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Паспорт, серия>.' ; END IF;
+   IF COALESCE (inPSP_N,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Паспорт, номер>.' ; END IF;
+   IF COALESCE (inPSP_W,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит<Паспорт, кем выдан>.' ; END IF;
+   IF COALESCE (inPSP_D,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Паспорт, дата выдачи>.' ; END IF;
+   IF COALESCE (inRegionId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнена реквизит <Область, прописка>.' ; END IF;
+   IF COALESCE (inRegionId_Real,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен <Область, проживание>.' ; END IF;
+   IF COALESCE (inCityId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Город/село/пгт, прописка>.' ; END IF;
+   IF COALESCE (inCityId_Real,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Город/село/пгт, проживание>.' ; END IF;
+   IF COALESCE (inStreet,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Улица, номер дома, номер квартиры, прописка>.' ; END IF;
+   IF COALESCE (inStreet_Real,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Улица, номер дома, номер квартиры, проживание>.' ; END IF;
+   
+   IF COALESCE (inChildren1,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 1, ФИО>.' ; END IF;
+   IF COALESCE (inChildren2,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 2, ФИО>.' ; END IF;
+   IF COALESCE (inChildren3,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 3, ФИО>.' ; END IF; 
+   IF COALESCE (inChildren4,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 4, ФИО>.' ; END IF;
+   IF COALESCE (inChildren5,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 5, ФИО>.' ; END IF;
+
+   IF UPPER (TRIM (COALESCE (inChildren1,''))) <> 'НЕТ' AND COALESCE (inChildren1_date,CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 1, Дата рождения>.' ; END IF;
+   IF UPPER (TRIM (COALESCE (inChildren2,''))) <> 'НЕТ' AND COALESCE (inChildren2_date,CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 2, Дата рождения>.' ; END IF;
+   IF UPPER (TRIM (COALESCE (inChildren3,''))) <> 'НЕТ' AND COALESCE (inChildren3_date,CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 3, Дата рождения>.' ; END IF;
+   IF UPPER (TRIM (COALESCE (inChildren4,''))) <> 'НЕТ' AND COALESCE (inChildren4_date,CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 4, Дата рождения>.' ; END IF;
+   IF UPPER (TRIM (COALESCE (inChildren5,''))) <> 'НЕТ' AND COALESCE (inChildren5_date,CURRENT_DATE) = CURRENT_DATE THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Ребенок 5, Дата рождения>.' ; END IF;
+   
+   IF COALESCE (inJobSourceId,0) = 0 THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Источник информации о вакансии>.' ; END IF; 
+
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Street(), inId, inStreet);
@@ -112,6 +141,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region_Real(), inId, inRegionId_Real);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City_Real(), inId, inCityId_Real);
+   
+  -- IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

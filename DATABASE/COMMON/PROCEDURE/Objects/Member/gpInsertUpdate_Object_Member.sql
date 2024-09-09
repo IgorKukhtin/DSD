@@ -69,7 +69,12 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Member());
-   
+    
+   --проверка
+   IF COALESCE (inName,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <ФИО>.' ; END IF;  
+   IF COALESCE (inPhone,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Телефон>.' ; END IF;
+   IF COALESCE (inINN,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <ИНН>.' ; END IF;
+
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
@@ -180,6 +185,7 @@ BEGIN
    outBankSecondTwoName  := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondTwoId);
    outBankSecondDiffName := (SELECT Object.ValueData FROM Object WHERE Object.DescId = zc_Object_Bank() AND Object.Id = inBankSecondDiffId);
     
+   IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
     
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
