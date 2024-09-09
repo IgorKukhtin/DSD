@@ -2913,7 +2913,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
         end>
       Params = <
         item
@@ -2972,7 +2974,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
         end>
       Params = <
         item
@@ -3031,7 +3035,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
         end>
       Params = <
         item
@@ -3090,7 +3096,9 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
         end>
       Params = <
         item
