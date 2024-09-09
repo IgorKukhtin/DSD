@@ -175,32 +175,8 @@ END IF;
 --                             SELECT 8296254   AS GoodsId -- 94183
 --                             SELECT 2365   AS GoodsId -- 135
                             )
-/*            , tmp_new as  (with tmp_1 AS (SELECT Container.*
-                                          FROM Container
-                                               INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                                              ON ContainerLinkObject_Unit.ContainerId = Container.Id
-                                                                             AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                                             --AND ContainerLinkObject_Unit.ObjectId IN (zc_Unit_RK(), 8451, 8458, 8450) -- ЦЕХ пакування + Склад База ГП + Дільниця термічної обробки
-                                                                             --AND ContainerLinkObject_Unit.ObjectId IN (8451) -- 8447
-                                                                           --AND ContainerLinkObject_Unit.ObjectId IN (select ObjectId from ObjectLink where DescId = zc_ObjectLink_Unit_Parent() AND ChildObjectId = 8460) -- Возвраты общие
-                          
-                                               INNER JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = ContainerLinkObject_Unit.ObjectId
-                          
-                                          WHERE Container.DescId = zc_Container_Count()
-                                            AND Container.ObjectId in (3569176  -- 953
-                                                                     , 4026174  -- 202 + 4457
-                                                                     , 3902     -- 2269
-                                                                     , 4507487  -- 1716
-                                                                     , 10442610 -- 2489
-                                                                      )
-                                         )
-                              , tmp_2 AS (SELECT Container.*
-                                          FROM Container
-                                          WHERE Container.DescId = zc_Container_Summ()
-                                            AND Container.ParentId in (SELECT tmp_1.Id FROM tmp_1)
-                                         )
-                           SELECT tmp_2.Id AS ContainerId
-                           FROM tmp_2
+            /*, tmp_new as  (SELECT CLO.ContainerId FROM ContainerLinkObject AS CLO
+                           WHERE CLO.DescId  = zc_ContainerLinkObject_Goods() AND CLO.ObjectId IN (4077)
                           )
 
      , tmpMovContainer AS (SELECT DISTINCT Movement.Id AS MovementId
@@ -217,8 +193,8 @@ END IF;
 
                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                              AND Movement.StatusId = zc_Enum_Status_Complete()
-                          )
-*/
+                          )*/
+
      , tmpInv_main AS (
                        -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
                        SELECT DISTINCT tmpUnit_from.UnitId
@@ -739,7 +715,7 @@ END IF;
     LEFT JOIN Movement ON Movement.Id = tmp.MovementId
     LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-    -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
+    --INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
 
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;
