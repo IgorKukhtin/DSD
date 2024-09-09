@@ -207,6 +207,24 @@ type
     actPrintDays5: TdsdPrintAction;
     bbPrintDays5: TdxBarButton;
     spPrintDays5: TdsdStoredProc;
+    spInsertPrint_byGrid: TdsdStoredProc;
+    actPrint_byGrid: TdsdExecStoredProc;
+    actPrint_byGrid_list: TMultiAction;
+    actPrint_ReportTaxExit_grid: TdsdPrintAction;
+    spPrint_TaxExitUpdate_grid: TdsdStoredProc;
+    macPrint_ReportTaxExit_grid: TMultiAction;
+    bbPrint_ReportTaxExit_grid: TdxBarButton;
+    spDelete_Object_Print: TdsdStoredProc;
+    actDelete_Object_Print: TdsdExecStoredProc;
+    actPrintCEH_rep_grid: TdsdPrintAction;
+    actPrintOUT_rep_grid: TdsdPrintAction;
+    actPrintTRM_rep_grid: TdsdPrintAction;
+    macPrintTRM_rep_grid: TMultiAction;
+    macPrintCEH_rep_grid: TMultiAction;
+    macPrintOUT_rep_grid: TMultiAction;
+    bbPrintCEH_rep_grid: TdxBarButton;
+    bbPrintOUT_rep_grid: TdxBarButton;
+    bbPrintTRM_rep_grid: TdxBarButton;
   private
     { Private declarations }
   public
