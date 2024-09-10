@@ -4,7 +4,6 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -1595,7 +1594,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1084#1077#1089#1090#1072#1084' '#1093#1088#1072#1085#1077#1085#1080#1103
@@ -2387,7 +2386,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       ImageIndex = 67
     end
     object actPrint_Pasport: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2433,7 +2432,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       PreviewWindowMaximized = False
     end
     object actPrint_Pasport_list: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <
         item
           FromParam.Name = 'id'
@@ -2481,7 +2480,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       PreviewWindowMaximized = False
     end
     object mactTestPrint5: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       ActionList = <
         item
@@ -2514,7 +2513,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Continue.MultiSelectSeparator = ','
     end
     object macPrint_New: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       ActionList = <
         item
@@ -2526,7 +2525,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
       Caption = 'macPrint_New'
     end
     object actPrintChoiceCell: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_ChoiceCell
       StoredProcList = <
@@ -2569,6 +2568,56 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end>
       ReportName = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
       ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_ '#1071#1095#1077#1077#1082#1054#1090#1073#1086#1088#1072
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actChoiceCell_Print: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spChoiceCell_Print
+      StoredProcList = <
+        item
+          StoredProc = spChoiceCell_Print
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1085#1103#1090#1080#1077' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1085#1103#1090#1080#1077' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 45474d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCell'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1077#1095#1072#1090#1100'_'#1057#1085#1103#1090#1080#1077' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
+      ReportNameParam.Value = #1055#1077#1095#1072#1090#1100'_'#1057#1085#1103#1090#1080#1077' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103' '#1074' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -2735,6 +2784,14 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceCell_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -2774,6 +2831,10 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     end
     object bbPrintChoiceCell: TdxBarButton
       Action = actPrintChoiceCell
+      Category = 0
+    end
+    object bbChoiceCell_Print: TdxBarButton
+      Action = actChoiceCell_Print
       Category = 0
     end
   end
@@ -3068,8 +3129,8 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     Top = 240
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 80
-    Top = 144
+    Left = 170
+    Top = 0
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -3906,5 +3967,64 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
     PackSize = 1
     Left = 759
     Top = 288
+  end
+  object spChoiceCell_Print: TdsdStoredProc
+    StoredProcName = 'gpReport_PartionCell_ChoiceCellPrint'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 45474d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 45474d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsMovement'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCell'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsShowAll'
+        Value = False
+        Component = FormParams
+        ComponentItem = 'inIsShowAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 304
   end
 end

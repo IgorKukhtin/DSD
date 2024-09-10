@@ -140,6 +140,9 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+
+  LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
+  exit;
  { LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 
   LoadReportFromFile('Печать_ЯчеекОтбора_штрихкод', ReportPath + '\Справочники\Печать_ЯчеекОтбора_штрихкод.fr3');

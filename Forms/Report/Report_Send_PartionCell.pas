@@ -127,6 +127,9 @@ type
     ChoiceCellName: TcxGridDBColumn;
     isChoiceCell_mi: TcxGridDBColumn;
     PartionGoodsDate_next: TcxGridDBColumn;
+    spChoiceCell_Print: TdsdStoredProc;
+    actChoiceCell_Print: TdsdPrintAction;
+    bbChoiceCell_Print: TdxBarButton;
   private
     { Private declarations }
   public

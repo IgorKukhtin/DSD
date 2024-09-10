@@ -4,7 +4,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 951
-  ExplicitHeight = 712
+  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -963,7 +963,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       end
       item
         Name = 'inOperDate'
-        Value = 'NULL'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -1490,10 +1490,14 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ChartList = <>
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    ShowFieldImageList = <>
+    ViewDocumentList = <>
+    PropertiesCellList = <>
     Left = 830
     Top = 449
   end
