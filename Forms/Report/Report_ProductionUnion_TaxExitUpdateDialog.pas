@@ -39,6 +39,7 @@ type
     cxLabel8: TcxLabel;
     edToGroup: TcxButtonEdit;
     ToGroupGuides: TdsdGuides;
+    cbisPartion: TcxCheckBox;
   private
     { Private declarations }
   public

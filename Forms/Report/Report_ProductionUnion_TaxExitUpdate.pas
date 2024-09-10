@@ -61,6 +61,9 @@ type
     ValuePF: TcxGridDBColumn;
     ValuePF_diff: TcxGridDBColumn;
     Part_main_det: TcxGridDBColumn;
+    cbisPartion: TcxCheckBox;
+    actRefresh_Partion: TdsdDataSetRefresh;
+    isPrint: TcxGridDBColumn;
   private
     { Private declarations }
   public

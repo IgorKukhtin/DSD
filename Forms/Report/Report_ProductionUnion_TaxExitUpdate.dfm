@@ -584,7 +584,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -592,7 +591,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           object ValueGP: TcxGridDBColumn
             Caption = #1053#1086#1088#1084#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1043#1055', '#1082#1075
             DataBinding.FieldName = 'ValueGP'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -754,6 +752,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object isPrint: TcxGridDBColumn
+            Caption = #1055#1077#1095#1072#1090#1072#1090#1100' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isPrint'
+            Visible = False
+            Options.Editing = False
+            Width = 70
+          end
         end
       end
     end
@@ -819,6 +824,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       TabOrder = 7
       Width = 169
     end
+    object cbisPartion: TcxCheckBox
+      Left = 519
+      Top = 6
+      Action = actRefresh_Partion
+      TabOrder = 8
+      Width = 138
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -846,6 +858,20 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       end>
   end
   inherited ActionList: TActionList
+    object actRefresh_Partion: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1090#1080#1080
+      Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actPrintOUT: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -1120,6 +1146,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           MultiSelectSeparator = ','
         end
         item
+          Name = 'isPartion'
+          Value = False
+          Component = cbisPartion
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'ToGroupId'
           Value = ''
           Component = ToGroupGuides
@@ -1134,72 +1168,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isGroupMovement'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isGroupPartion'
-          Value = False
-          DataType = ftBoolean
-          ParamType = ptInputOutput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1353,6 +1321,14 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       item
         Name = 'inIsList'
         Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        Component = cbisPartion
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

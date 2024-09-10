@@ -5539,6 +5539,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 736
@@ -5712,6 +5719,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisList'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

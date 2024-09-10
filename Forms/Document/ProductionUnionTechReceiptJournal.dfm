@@ -1,28 +1,28 @@
 inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJournalForm
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1058#1077#1093#1085#1086#1083#1086#1075' ('#1088#1077#1094#1077#1087#1090#1091#1088#1099')'
   ClientHeight = 685
-  ClientWidth = 1164
+  ClientWidth = 1203
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1180
+  ExplicitWidth = 1219
   ExplicitHeight = 724
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
-    Width = 1164
+    Width = 1203
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
     ExplicitWidth = 1164
     ExplicitHeight = 624
     ClientRectBottom = 624
-    ClientRectRight = 1164
+    ClientRectRight = 1203
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1164
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
-        Width = 1164
+        Width = 1203
         Height = 292
         ExplicitWidth = 1164
         ExplicitHeight = 292
@@ -693,7 +693,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       inherited cxGridChild: TcxGrid
         Top = 297
-        Width = 1164
+        Width = 1203
         ExplicitTop = 297
         ExplicitWidth = 1164
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -932,14 +932,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 292
-        Width = 1164
+        Width = 1203
         ExplicitTop = 292
         ExplicitWidth = 1164
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1164
+    Width = 1203
     Height = 35
     ExplicitWidth = 1164
     ExplicitHeight = 35
@@ -5475,6 +5475,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 832
@@ -5660,9 +5667,16 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1088
-    Top = 489
+    Left = 1112
+    Top = 457
   end
 end
