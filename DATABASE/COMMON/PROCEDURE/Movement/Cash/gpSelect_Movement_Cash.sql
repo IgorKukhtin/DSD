@@ -213,34 +213,37 @@ BEGIN
                         AND MovementItemContainer.AccountId         = zc_Enum_Account_100301()   -- прибыль текущего периода
                       --AND MovementItemContainer.ObjectId_Analyzer = zc_Enum_ProfitLoss_80103() -- Курсовая разница
                       --AND inCurrencyId                            <> zc_Enum_Currency_Basis()
-
                       GROUP BY MovementItemContainer.MovementId
                      )
          -- проводки
-       , tmpMIС_2 AS (SELECT MovementItemContainer.MovementId, MAX (MovementItemContainer.ContainerId) AS ContainerId
-                           , SUM (1 *MovementItemContainer.Amount) AS Amount
+       , tmpMIС_2 AS (SELECT MovementItemContainer.MovementId
+                           , MAX (CASE WHEN MovementItemContainer.AccountId = zc_Enum_Account_100301() THEN MovementItemContainer.ContainerId ELSE 0 END) AS ContainerId
+                           , SUM (1 * CASE WHEN MovementItemContainer.AccountId = zc_Enum_Account_40801() THEN 0 * MovementItemContainer.Amount ELSE 0 END) AS Amount
                       FROM MovementItemContainer
                       WHERE MovementItemContainer.MovementId        IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItemContainer.DescId            = zc_MIContainer_Summ()
-                        AND MovementItemContainer.AccountId         = zc_Enum_Account_40801()    -- Курсовая разница
+                        AND MovementItemContainer.AccountId         IN (zc_Enum_Account_40801()    -- Курсовая разница
+                                                                      , zc_Enum_Account_100301()   -- прибыль текущего периода
+                                                                       )
+                        AND MovementItemContainer.ObjectId_Analyzer <> zc_Enum_ProfitLoss_80103() -- Курсовая разница
                         --AND vbUserId = 5
                       GROUP BY MovementItemContainer.MovementId
                      )
            -- проводки
          , tmpMIС AS (SELECT tmpMIС_1.MovementId, tmpMIС_1.ContainerId, tmpMIС_1.Amount
                       FROM tmpMIС_1
-                      WHERE 1=0
+                           LEFT JOIN tmpMIС_2 ON tmpMIС_2.MovementId = tmpMIС_1.MovementId
+                      WHERE tmpMIС_2.MovementId IS NULL
+
                      UNION ALL
                       SELECT tmpMIС_2.MovementId, tmpMIС_2.ContainerId, tmpMIС_2.Amount
                       FROM tmpMIС_2
-                           LEFT JOIN tmpMIС_1 ON tmpMIС_1.MovementId = tmpMIС_2.MovementId
-                      WHERE tmpMIС_1.MovementId IS NULL
                      )
 
          , tmpMIС_ProfitLoss AS (SELECT CLO_ProfitLoss.ContainerId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
                                  FROM ContainerLinkObject AS CLO_ProfitLoss
-                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMIС_1.ContainerId FROM tmpMIС_1)
+                                 WHERE CLO_ProfitLoss.ContainerId IN (SELECT DISTINCT tmpMIС_2.ContainerId FROM tmpMIС_2)
                                    AND CLO_ProfitLoss.DescId      = zc_ContainerLinkObject_ProfitLoss()
                                 )
          , tmpProfitLoss_View AS (SELECT * FROM Object_ProfitLoss_View WHERE Object_ProfitLoss_View.ProfitLossId IN (SELECT DISTINCT tmpMIС_ProfitLoss.ProfitLossId FROM tmpMIС_ProfitLoss))

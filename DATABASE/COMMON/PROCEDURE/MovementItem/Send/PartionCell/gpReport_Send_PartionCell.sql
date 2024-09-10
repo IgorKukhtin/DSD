@@ -808,7 +808,7 @@ BEGIN
                                                                        , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.Ord_all       ELSE 0 END
 
                                                             ORDER BY CASE WHEN tmpData_PartionCell_All_All.PartionGoodsDate = zc_DateStart() THEN 1 ELSE 0 END
-                                                                   , CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK()) THEN 1 ELSE 0 END
+                                                                   , CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
                                                                    , COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
                                                                    , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                                    , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
@@ -836,7 +836,7 @@ BEGIN
                                  , tmpData_PartionCell_All.PartionGoodsDate
                             FROM tmpData_PartionCell_All
                             WHERE tmpData_PartionCell_All.PartionCellId > 0
-                              AND tmpData_PartionCell_All.PartionCellId <> zc_PartionCell_RK()
+                              AND tmpData_PartionCell_All.PartionCellId NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
                            ) AS tmpData_PartionCell_All
                      )
       -- –азвернули по €чейкам - горизонтально
@@ -1279,6 +1279,7 @@ BEGIN
                                     , lpSelect.PartionGoodsDate_next
                                     , ROW_NUMBER() OVER (PARTITION BY lpSelect.GoodsId, lpSelect.GoodsKindId ORDER BY lpSelect.ChoiceCellCode) AS Ord
                                FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
+                               WHERE lpSelect.Ord = 1
                               )
    --
    SELECT tmpResult.MovementId
@@ -1461,7 +1462,7 @@ BEGIN
                     -- если отличаетс€ от даты документа
                     THEN tmpResult.Color_PartionGoodsDate
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK())
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -1477,7 +1478,7 @@ BEGIN
                WHEN tmpResult.NormInDays_tax <= 70
                     THEN zc_Color_Orange() -- zc_Color_Aqua()
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK())
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -1501,7 +1502,7 @@ BEGIN
           -- є п/п дл€ сн€ти€
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
           -- подсвечиваем строчку
-        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
           -- ћесто отбора
         , tmpChoiceCell.Code          ::Integer  AS NPP_ChoiceCell
@@ -1997,7 +1998,7 @@ BEGIN
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.PartionCellId ELSE 0 END --если по €чейкам то все €чейки выводим отдельной строкой
                                                            , CASE WHEN inIsCell = TRUE THEN tmpData_PartionCell_All_All.Ord_all       ELSE 0 END
 
-                                                ORDER BY CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK()) THEN 1 ELSE 0 END
+                                                ORDER BY CASE WHEN COALESCE (tmpData_PartionCell_All_All.PartionCellId, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()) THEN 1 ELSE 0 END
                                                        , COALESCE (tmpData_PartionCell_All_All.DescId_milo, 0)
                                                        , COALESCE (ObjectFloat_Level.ValueData, 0)
                                                        , COALESCE (Object_PartionCell_real.ObjectCode, Object_PartionCell.ObjectCode, 0)
@@ -2344,28 +2345,28 @@ BEGIN
                     , (COALESCE (tmpRemains.Amount,0) * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) ::TFloat AS AmountRemains_Weight
 
                       -- є п/п
-                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN COALESCE (tmpData_PartionCell.PartionCellId_1, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_2, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_3, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_4, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_5, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_6, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_7, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_8, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_9, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_10, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_11, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_12, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_13, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_14, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_15, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_16, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_17, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_18, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_19, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_20, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_21, 0) IN (0, zc_PartionCell_RK())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_22, 0) IN (0, zc_PartionCell_RK())
+                    , ROW_NUMBER() OVER (PARTITION BY Object_Goods.Id, Object_GoodsKind.Id ORDER BY CASE WHEN COALESCE (tmpData_PartionCell.PartionCellId_1, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_2, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_3, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_4, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_5, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_6, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_7, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_8, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_9, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_10, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_11, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_12, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_13, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_14, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_15, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_16, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_17, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_18, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_19, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_20, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_21, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_22, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                          THEN 999
                                                                                                          ELSE 1
                                                                                                     END
@@ -2589,7 +2590,7 @@ BEGIN
           -- цвет дл€ ѕарти€ дата
         , CASE WHEN tmpResult.Color_PartionGoodsDate <> zc_Color_White()
                     THEN tmpResult.Color_PartionGoodsDate
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())  THEN zc_Color_Yelow()
                ELSE tmpResult.Color_PartionGoodsDate
           END :: Integer AS Color_PartionGoodsDate
 
@@ -2621,7 +2622,7 @@ BEGIN
 
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL ELSE tmpResult.Ord END ::Integer AS Ord
 
-        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK() THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
+        , CASE WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) THEN zc_Color_Yelow() ELSE zc_Color_White() END ::Integer AS ColorFon_ord
 
         --€чейки отбора
         , 0     ::Integer  AS NPP_ChoiceCell     

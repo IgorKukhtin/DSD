@@ -15,6 +15,7 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime
              , PartionGoodsDate TDateTime, PartionGoodsDate_next TDateTime
 
              , isChecked Boolean
+             , Ord Integer
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
               )
@@ -131,6 +132,8 @@ BEGIN
 
              -- Отметка что ждет по этому товару перемещение из места хранения
            , tmpMovement.isChecked
+             --
+           , tmpMovement.Ord :: Integer
 
            , tmpMovement.InsertName
            , tmpMovement.UpdateName
@@ -138,7 +141,7 @@ BEGIN
            , tmpMovement.UpdateDate
 
         FROM tmpMovement
-        WHERE tmpMovement.Ord = 1
+        --WHERE tmpMovement.Ord = 1
      ;
 
 END;

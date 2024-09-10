@@ -59,6 +59,7 @@ BEGIN
           -- если партия - отмечена для снятия с хранения
        ,  tmpChoiceCell_mi AS (SELECT lpSelect.ChoiceCellId, lpSelect.PartionGoodsDate_next, lpSelect.GoodsCode, lpSelect.GoodsName, lpSelect.GoodsKindName
                                FROM lpSelect_Movement_ChoiceCell_mi(vbUserId) AS lpSelect
+                               WHERE lpSelect.Ord = 1
                               )
     -- Результат
     SELECT

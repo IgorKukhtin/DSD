@@ -19,7 +19,7 @@ BEGIN
    vbDescId:= (SELECT Object.DescId FROM Object WHERE Object.Id = inObjectId);
 
 
-   IF vbUserId = 5
+   IF vbUserId IN (5, 9457) AND 1=1
    THEN 
        RAISE EXCEPTION 'Ошибка.%Нет прав удалять = <%>.'
                           , CHR (13)
