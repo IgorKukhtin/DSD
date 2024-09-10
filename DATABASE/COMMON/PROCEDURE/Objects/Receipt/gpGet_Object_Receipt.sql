@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Receipt(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ReceiptCode TVarChar, Comment TVarChar,
                Value TFloat, ValueCost TFloat, TaxExit TFloat, PartionValue TFloat, PartionCount TFloat, WeightPackage TFloat, 
-               TaxLossCEH TFloat, TaxLossTRM TFloat, TaxLossVPR TFloat, RealDelicShp TFloat,
+               TaxLossCEH TFloat, TaxLossTRM TFloat, TaxLossVPR TFloat, RealDelicShp TFloat, ValuePF TFloat,
                StartDate TDateTime, EndDate TDateTime,
                isMain boolean,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,                
@@ -47,6 +47,7 @@ BEGIN
            , CAST (NULL as TFloat) AS TaxLossTRM
            , CAST (NULL as TFloat) AS TaxLossVPR
            , CAST (NULL as TFloat) AS RealDelicShp
+           , CAST (NULL AS TFloat) AS ValuePF
 
            , CAST (NULL as TDateTime) AS StartDate
            , CAST (NULL as TDateTime) AS EndDate
@@ -99,6 +100,7 @@ BEGIN
          , ObjectFloat_TaxLossTRM.ValueData   ::TFloat AS TaxLossTRM
          , ObjectFloat_TaxLossVPR.ValueData   ::TFloat AS TaxLossVPR
          , ObjectFloat_RealDelicShp.ValueData ::TFloat AS RealDelicShp
+         , ObjectFloat_ValuePF.ValueData      ::TFloat AS ValuePF
                                                         
          , ObjectDate_StartDate.ValueData AS StartDate
          , ObjectDate_EndDate.ValueData   AS EndDate
@@ -208,6 +210,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_RealDelicShp
                                 ON ObjectFloat_RealDelicShp.ObjectId = Object_Receipt.Id
                                AND ObjectFloat_RealDelicShp.DescId = zc_ObjectFloat_Receipt_RealDelicShp()               
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_ValuePF
+                                ON ObjectFloat_ValuePF.ObjectId = Object_Receipt.Id
+                               AND ObjectFloat_ValuePF.DescId = zc_ObjectFloat_Receipt_ValuePF() 
      WHERE Object_Receipt.Id = CASE WHEN COALESCE (inId, 0) = 0 THEN inMaskId ELSE inId END;
      
   END IF;
@@ -220,6 +226,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 10.09.24         *
  15.03.15         * inMaskId
  14.02.15                                        *all
  19.07.13         * rename zc_ObjectDate_

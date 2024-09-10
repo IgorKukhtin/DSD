@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Receipt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Receipt (Integer, Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TDateTime, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
  INOUT ioId                  Integer   , -- ключ объекта <Составляющие рецептур>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Receipt(
     IN inTaxLossTRM          TFloat    , --
     IN inTaxLossVPR          TFloat    , --
     IN inRealDelicShp        TFloat    , --
+    IN inValuePF             TFloat    ,
     IN inStartDate           TDateTime , -- Начальная дата
     IN inEndDate             TDateTime , -- Конечная дата
     IN inIsMain              Boolean   , -- Признак главный
@@ -110,7 +112,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_TaxLossVPR(), ioId, inTaxLossVPR);
    -- сохранили свойство <Значение >
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_RealDelicShp(), ioId, inRealDelicShp);
-   
+   -- сохранили свойство <Значение >
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_ValuePF(), ioId, inValuePF);
+      
    -- сохранили свойство <Начальная дата>
    -- PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>

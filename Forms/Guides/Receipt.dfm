@@ -305,6 +305,14 @@ object ReceiptForm: TReceiptForm
         Options.Editing = False
         Width = 80
       end
+      object ValuePF: TcxGridDBColumn
+        Caption = '***'#1042#1077#1089' '#1055'/'#1060' ('#1043#1055')'
+        DataBinding.FieldName = 'ValuePF'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object PartionValue: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1082#1091#1090#1077#1088#1077
         DataBinding.FieldName = 'PartionValue'
