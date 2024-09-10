@@ -319,7 +319,7 @@ BEGIN
                                             FROM _tmpPartionCell
                                                  JOIN MovementItem ON MovementItem.Id = _tmpPartionCell.MovementItemId
                                             -- Без отбор
-                                            WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                            WHERE _tmpPartionCell.ObjectId NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
                                            )
                         AND Movement.DescId = zc_Movement_Send()
                         AND MovementLinkObject_To.ObjectId = inUnitId
@@ -377,7 +377,7 @@ BEGIN
                                                  JOIN MovementItem ON MovementItem.Id       = _tmpPartionCell.MovementItemId
                                                                   AND MovementItem.isErased = FALSE
                                             -- Без отбор
-                                            WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                            WHERE _tmpPartionCell.ObjectId NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
                                            )
                         AND Movement.DescId = zc_Movement_WeighingProduction()
                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
@@ -409,7 +409,7 @@ BEGIN
                           INNER JOIN tmpMovement ON tmpMovement.Id = tmpMI_all.MovementId
                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
                                      -- Без отбор
-                                     WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                     WHERE _tmpPartionCell.ObjectId NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
                                     ) AS _tmpPartionCell
                                       ON _tmpPartionCell.MovementItemId = tmpMI_all.MovementItemId
                      WHERE (tmpMovement.OperDate BETWEEN inStartDate AND inEndDate)
