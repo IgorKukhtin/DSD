@@ -856,7 +856,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -911,7 +913,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -966,7 +970,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName_Complete'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1022,7 +1028,9 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       DataSets = <
         item
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupNameFull'
+          IndexFieldNames = 
+            'GoodsGroupNameFull;GoodsCode;GoodsKindName_Complete;PartionGoods' +
+            'Date'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1339,6 +1347,13 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         Value = Null
         Component = ToGroupGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = False
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
