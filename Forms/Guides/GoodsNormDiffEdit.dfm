@@ -154,7 +154,7 @@ object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -205,7 +205,6 @@ object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
       item
         Name = 'Id'
         Value = Null
-        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -277,7 +276,8 @@ object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Top = 40
+    Left = 24
+    Top = 48
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -291,8 +291,8 @@ object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 128
+    Left = 272
+    Top = 152
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -318,8 +318,8 @@ object GoodsNormDiffEditForm: TGoodsNormDiffEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 184
-    Top = 11
+    Left = 200
+    Top = 75
   end
   object GuidesGoodsKind: TdsdGuides
     KeyField = 'Id'
