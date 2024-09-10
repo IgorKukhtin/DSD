@@ -2351,7 +2351,7 @@ BEGIN
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_4, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_5, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_6, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
-                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_7, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err()
+                                                                                                          AND COALESCE (tmpData_PartionCell.PartionCellId_7, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_8, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_9, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
                                                                                                           AND COALESCE (tmpData_PartionCell.PartionCellId_10, 0) IN (0, zc_PartionCell_RK(), zc_PartionCell_Err())
