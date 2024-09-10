@@ -1,4 +1,4 @@
- -- Function: gpSelect_Report_Wage_Server ()
+-- Function: gpSelect_Report_Wage_Server ()
 
 --DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Wage_Server (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
@@ -612,7 +612,7 @@ end if;
 
               , CASE WHEN inDetailDay = TRUE THEN Res.OperDate
                      WHEN inDetailMonth = TRUE THEN DATE_TRUNC ('MONTH', Res.OperDate) 
-                     ELSE Res.OperDate
+                     ELSE DATE_TRUNC ('MONTH', Res.OperDate) 
                 END  ::TDateTime
 
                ,CASE WHEN inDetailDay = TRUE
