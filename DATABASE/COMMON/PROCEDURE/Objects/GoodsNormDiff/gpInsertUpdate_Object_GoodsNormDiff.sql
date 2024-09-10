@@ -6,8 +6,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsNormDiff(
  INOUT ioId              Integer   , -- ключ объекта <Составляющие рецептур>
     IN inGoodsId         Integer   , -- ссылка на Товары
     IN inGoodsKindId     Integer   , --
-    IN inValuePF         TFloat    ,
     IN inValueGP         TFloat    , 
+    IN inValuePF         TFloat    ,
     IN inComment         TVarChar  ,
     IN inSession         TVarChar    -- сессия пользователя
 )
