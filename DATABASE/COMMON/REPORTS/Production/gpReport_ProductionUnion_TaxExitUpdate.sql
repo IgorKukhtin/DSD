@@ -283,7 +283,7 @@ BEGIN
                            , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
 
                            , COALESCE (ObjectFloat_TaxExit.ValueData, 0)        AS TaxExit
-                           , COALESCE (ObjectFloat_TotalWeight.ValueData, 0)    AS TotalWeight
+                           , COALESCE (ObjectFloat_ValuePF.ValueData, 0)    AS ValuePF
 
                            , (COALESCE (ObjectFloat_RealDelicShp.ValueData,0)) AS RealDelicShp 
                            , (COALESCE (ObjectFloat_TaxLossVPR.ValueData,0))   AS TaxLossVPR
@@ -332,9 +332,9 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_TaxExit
                                                  ON ObjectFloat_TaxExit.ObjectId = MILO_Receipt.ObjectId
                                                 AND ObjectFloat_TaxExit.DescId = zc_ObjectFloat_Receipt_TaxExit()
-                           LEFT JOIN ObjectFloat AS ObjectFloat_TotalWeight
-                                                 ON ObjectFloat_TotalWeight.ObjectId = MILO_Receipt.ObjectId
-                                                AND ObjectFloat_TotalWeight.DescId = zc_ObjectFloat_Receipt_TotalWeight()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_ValuePF
+                                                 ON ObjectFloat_ValuePF.ObjectId = MILO_Receipt.ObjectId
+                                                AND ObjectFloat_ValuePF.DescId = zc_ObjectFloat_Receipt_ValuePF()  --zc_ObjectFloat_Receipt_TotalWeight()   --новый параметр   ***Вес П/Ф (ГП)
 
                            LEFT JOIN ObjectFloat AS ObjectFloat_RealDelicShp
                                                  ON ObjectFloat_RealDelicShp.ObjectId = MILO_Receipt.ObjectId
@@ -355,7 +355,7 @@ BEGIN
                              , tmpMI_WorkProgress_in.PartionGoodsId
                              , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis())
                              , COALESCE (ObjectFloat_TaxExit.ValueData, 0)
-                             , COALESCE (ObjectFloat_TotalWeight.ValueData, 0)
+                             , COALESCE (ObjectFloat_ValuePF.ValueData, 0)
                              , tmpMI_WorkProgress_in.MovementId     
                              , COALESCE (MIFloat_AmountNext_out.ValueData,0)
                              , (COALESCE (ObjectFloat_RealDelicShp.ValueData,0))
@@ -426,7 +426,7 @@ BEGIN
                            , MAX (tmp.TaxLossTRM)             AS TaxLossTRM
                            , MAX (tmp.RealDelicShp)           AS RealDelicShp 
                            , SUM (COALESCE (tmp.Amount_out,0))          AS Amount_out
-                           , SUM (COALESCE (tmp.TotalWeight_in,0))      AS TotalWeight_in
+                           , SUM (COALESCE (tmp.ValuePF_in,0))      AS ValuePF_in
                            , SUM (COALESCE (tmp.Amount_main_det,0))     AS Amount_main_det        
                            , SUM (COALESCE (tmp.AmountMain_part_det,0)) AS AmountMain_part_det
                            , SUM (COALESCE (tmp.Part_main_det,0))       AS Part_main_det
@@ -444,14 +444,14 @@ BEGIN
                            , SUM (tmpMI_WorkProgress_in.RealWeightMsg) AS RealWeightMsg 
                            , SUM (tmpMI_WorkProgress_in.RealWeightShp) AS RealWeightShp
                            , SUM (COALESCE (tmpMI_WorkProgress_in.RealWeightShp,0) - COALESCE (tmpMI_WorkProgress_in.Amount_out,0)) AS RealWeightShp_calc   
-                           , SUM (CASE WHEN tmpMI_WorkProgress_in.TotalWeight <> 0
-                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_in.Amount_out, 0)) * tmpMI_WorkProgress_in.TaxExit / tmpMI_WorkProgress_in.TotalWeight
+                           , SUM (CASE WHEN tmpMI_WorkProgress_in.ValuePF <> 0
+                                            THEN (tmpMI_WorkProgress_in.Amount - COALESCE (tmpMI_WorkProgress_in.Amount_out, 0)) * tmpMI_WorkProgress_in.TaxExit / tmpMI_WorkProgress_in.ValuePF
                                        ELSE 0
                                   END)                                          AS Amount_GP_in_calc 
                            
                            , AVG (tmpMI_WorkProgress_in.TaxExit)  AS TaxExit
                            , SUM (tmpMI_WorkProgress_in.CuterCount * tmpMI_WorkProgress_in.TaxExit)     AS calcIn
-                           , SUM (tmpMI_WorkProgress_in.CuterCount * tmpMI_WorkProgress_in.TotalWeight) AS calcOut
+                           , SUM (tmpMI_WorkProgress_in.CuterCount * tmpMI_WorkProgress_in.ValuePF) AS calcOut
                            , MAX (tmpMI_WorkProgress_in.Comment)  AS Comment
                            , 0                                    AS Amount_GP_in
                            , 0                                    AS AmountReceipt_out 
@@ -463,7 +463,7 @@ BEGIN
 
                            , SUM ((COALESCE (tmpMI_detail.Amount_main,0) - COALESCE (tmpMI_detail.AmountMain_part,0))/100) AS CuterCount_calc -- Куттеров факт (расчет) 
                            , SUM (COALESCE (tmpMI_WorkProgress_in.Amount_out,0) ) AS Amount_out  
-                           , SUM (tmpMI_WorkProgress_in.TotalWeight) AS TotalWeight_in  
+                           , SUM (tmpMI_WorkProgress_in.ValuePF) AS ValuePF_in  
                            , SUM (COALESCE (tmpMI_detail.Amount_main,0))  AS Amount_main_det 
                            , SUM (COALESCE (tmpMI_detail.AmountMain_part,0))  AS AmountMain_part_det
                            , SUM (COALESCE (tmpMI_detail.Part_main,0))        AS Part_main_det
@@ -508,7 +508,7 @@ BEGIN
                            , NUll AS MovementId 
                            , 0 AS CuterCount_calc 
                            , 0 AS Amount_out   
-                           , 0 AS TotalWeight_in 
+                           , 0 AS ValuePF_in 
                            , 0 AS Amount_main_det 
                            , 0 AS AmountMain_part_det
                            , 0 AS Part_main_det
@@ -545,7 +545,7 @@ BEGIN
                            , NULL AS MovementId   
                            , 0 AS CuterCount_calc  
                            , 0 AS Amount_out
-                           , 0 AS TotalWeight_in 
+                           , 0 AS ValuePF_in 
                            , 0 AS Amount_main_det 
                            , 0 AS AmountMain_part_det
                            , 0 AS Part_main_det
@@ -605,7 +605,7 @@ BEGIN
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 
                 THEN  (COALESCE (tmpResult.RealWeightShp_calc,0) - (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)))
                       / tmpResult.CuterCount_calc 
-                     - (COALESCE (tmpResult.TotalWeight_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
+                     - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0))
                     
                 ELSE 0 
            END  :: TFloat AS Amount_Humidity 
@@ -615,7 +615,7 @@ BEGIN
          , tmpResult.TaxLossVPR :: TFloat
          --Производство технолог: Вес П/Ф после массажера (расчет) разделить Куттеров факт (расчет) минус (Рецептуры: Вес П/Ф (ГП) минус Вес после шприцевания) минус  (Вес П/Ф (ГП) минус % вприска)
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / COALESCE (tmpResult.CuterCount_calc,0) 
-                                                                      - (COALESCE (tmpResult.TotalWeight_in ,0) - COALESCE (tmpResult.RealDelicShp,0)) 
+                                                                      - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0)) 
                                                                       - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
                                                                        )
                 ELSE 0 
@@ -623,7 +623,7 @@ BEGIN
          -- % впрыска отклонение                                          
          , ( CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN ((COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0))
                                                                         / COALESCE (tmpResult.CuterCount_calc,0) 
-                                                                      - (COALESCE (tmpResult.TotalWeight_in ,0) - COALESCE (tmpResult.RealDelicShp,0)) 
+                                                                      - (COALESCE (tmpResult.ValuePF_in ,0) - COALESCE (tmpResult.RealDelicShp,0)) 
                                                                       - (COALESCE (tmpResult.RealDelicShp,0) - COALESCE (tmpResult.TaxLossVPR ,0))
                                                                        )
                 ELSE 0 
@@ -631,12 +631,12 @@ BEGIN
            - COALESCE (tmpResult.TaxLossVPR,0)
            )  :: TFloat AS TaxLoss_diff
          --Рецептуры: Вес П/Ф (ГП)
-         , COALESCE (tmpResult.TotalWeight_in ,0) ::TFloat AS AmountReceipt
+         , COALESCE (tmpResult.ValuePF_in ,0) ::TFloat AS AmountReceipt
          --Производство технолог: Вес П/Ф после массажера (расчет) разделить Куттеров факт (расчет)
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END ::TFloat AS RealWeightMsg_calc
          -- отклонение
          , (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END 
-           - COALESCE (tmpResult.TotalWeight_in ,0)) ::TFloat AS AmountMsg_diff
+           - COALESCE (tmpResult.ValuePF_in ,0)) ::TFloat AS AmountMsg_diff
            
          -- Рецептуры: % потерь (цех)
          , tmpResult.TaxLossCEH :: TFloat
@@ -645,10 +645,10 @@ BEGIN
           - COALESCE (tmpResult.TaxLossCEH,0)) ::TFloat AS TaxLossCEH_diff 
           
          --
-         , (COALESCE (tmpResult.TotalWeight_in, 0) - (COALESCE (tmpResult.TotalWeight_in ,0) * tmpResult.TaxLossCEH / 100)) ::TFloat AS AmountTRM_befor_plan
+         , (COALESCE (tmpResult.ValuePF_in, 0) - (COALESCE (tmpResult.ValuePF_in ,0) * tmpResult.TaxLossCEH / 100)) ::TFloat AS AmountTRM_befor_plan
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc ELSE 0 END ::TFloat AS AmountTRM_befor_fact
          , (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN COALESCE (tmpResult.RealWeight,0) / tmpResult.CuterCount_calc ELSE 0 END
-           - (COALESCE (tmpResult.TotalWeight_in, 0) - (COALESCE (tmpResult.TotalWeight_in ,0) * tmpResult.TaxLossCEH / 100)) ) :: TFloat AS  AmountTRM_befor_diff
+           - (COALESCE (tmpResult.ValuePF_in, 0) - (COALESCE (tmpResult.ValuePF_in ,0) * tmpResult.TaxLossCEH / 100)) ) :: TFloat AS  AmountTRM_befor_diff
            
          --Рецептуры: % потерь (термичка)
          , tmpResult.TaxLossTRM :: TFloat
@@ -687,7 +687,7 @@ BEGIN
             - COALESCE (tmpGoodsNormDiff.ValueGP,0)) ::TFloat AS ValueGP_diff
           --- 
           , ( ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END 
-           - COALESCE (tmpResult.TotalWeight_in ,0)) )
+           - COALESCE (tmpResult.ValuePF_in ,0)) )
             - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff 
           
           ----------------------------------  
