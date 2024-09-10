@@ -215,6 +215,7 @@ type
     spUpdateisEtiketka: TdsdStoredProc;
     actUpdateEtiketka: TdsdExecStoredProc;
     bbUpdateEtiketka: TdxBarButton;
+    ValuePF: TcxGridDBColumn;
   private
     { Private declarations }
   public

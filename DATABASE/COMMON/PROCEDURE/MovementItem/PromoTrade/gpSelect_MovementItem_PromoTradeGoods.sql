@@ -78,11 +78,6 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                              ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-             LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
-
              LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                 ON MIString_Comment.MovementItemId = MovementItem.ID
                                                AND MIString_Comment.DescId = zc_MIString_Comment()

@@ -130,12 +130,12 @@
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object cxLabel11: TcxLabel
-    Left = 140
+    Left = 138
     Top = 80
     Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1090#1088#1072#1090#1099')'
   end
   object ceValueCost: TcxCurrencyEdit
-    Left = 141
+    Left = 138
     Top = 97
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -288,53 +288,67 @@
   end
   object edTaxLossCEH: TcxCurrencyEdit
     Left = 32
-    Top = 177
+    Top = 176
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 38
-    Width = 140
+    Width = 87
   end
   object cxLabel9: TcxLabel
-    Left = 32
-    Top = 203
+    Left = 250
+    Top = 160
     Caption = '% '#1074#1087#1088#1080#1089#1082#1072
   end
   object edTaxLossVPR: TcxCurrencyEdit
-    Left = 32
-    Top = 220
+    Left = 250
+    Top = 176
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 40
-    Width = 140
+    Width = 85
   end
   object cxLabel19: TcxLabel
-    Left = 195
+    Left = 128
     Top = 160
     Caption = '% '#1087#1086#1090#1077#1088#1100' ('#1090#1077#1088#1084#1080#1095#1082#1072')'
   end
   object edTaxLossTRM: TcxCurrencyEdit
-    Left = 195
+    Left = 128
     Top = 176
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 42
-    Width = 140
+    Width = 113
   end
   object cxLabel20: TcxLabel
-    Left = 195
+    Left = 32
     Top = 203
     Caption = #1042#1077#1089' '#1087#1086#1089#1083#1077' '#1096#1087#1088#1080#1094#1077#1074#1072#1085#1080#1103
   end
   object edRealDelicShp: TcxCurrencyEdit
-    Left = 196
+    Left = 32
     Top = 220
     EditValue = 0.000000000000000000
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 44
+    Width = 140
+  end
+  object cxLabel21: TcxLabel
+    Left = 195
+    Top = 203
+    Caption = '***'#1042#1077#1089' '#1055'/'#1060' ('#1043#1055')'
+  end
+  object ceValuePF: TcxCurrencyEdit
+    Left = 195
+    Top = 220
+    EditValue = 0.000000000000000000
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 46
     Width = 140
   end
   object ActionList: TActionList
@@ -489,6 +503,14 @@
         Name = 'inRealDelicShp'
         Value = Null
         Component = edRealDelicShp
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValuePF'
+        Value = Null
+        Component = ceValuePF
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -786,6 +808,13 @@
         Name = 'RealDelicShp'
         Value = Null
         Component = edRealDelicShp
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ValuePF'
+        Value = Null
+        Component = ceValuePF
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

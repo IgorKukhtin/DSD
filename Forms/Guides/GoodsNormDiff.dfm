@@ -22,7 +22,6 @@ inherited GoodsNormDiffForm: TGoodsNormDiffForm
       inherited cxGrid: TcxGrid
         Width = 892
         Height = 362
-        ExplicitTop = 2
         ExplicitWidth = 892
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -190,6 +189,7 @@ inherited GoodsNormDiffForm: TGoodsNormDiffForm
       ShortCut = 0
       FormName = 'TGoodsNormDiffEditForm'
       FormNameParam.Value = 'TGoodsNormDiffEditForm'
+      isShowModal = True
     end
     inherited actUpdate: TdsdInsertUpdateAction
       ShortCut = 0

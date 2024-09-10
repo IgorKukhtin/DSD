@@ -1,13 +1,14 @@
 -- Function: gpReport_ProductionUnion_TaxExitUpdate () - <Производство и процент выхода (итоги) or (детально)>
 
-DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_TaxExitUpdate (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inFromId       Integer   , 
     IN inToId         Integer   , 
-   -- IN inIsDetail     Boolean   , -- 
+    IN inIsList       Boolean   , -- 
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
@@ -102,6 +103,40 @@ BEGIN
                           /*OR (MIContainer.WhereObjectId_Analyzer = 951601 -- ЦЕХ упаковки мясо
                           AND MIContainer.AnalyzerId             = 951601 -- ЦЕХ упаковки мясо
                             )*/)
+                        AND inIsList = FALSE
+                            
+                    UNION
+                      SELECT MIContainer.MovementId                  AS MovementId
+                           , MIContainer.MovementItemId              AS MovementItemId
+                           , MIContainer.ContainerId                 AS ContainerId
+                           , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                           , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
+                      FROM MovementItemContainer AS MIContainer  
+                           INNER JOIN (SELECT OP.ObjectId AS MovementId FROM Object_Print AS OP WHERE OP.UserId = vbUserId) AS tmpOP ON tmpOP.MovementId = MIContainer.MovementId
+                           LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                         ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
+                                                        AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
+                           LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                     ON MovementBoolean_Peresort.MovementId = MIContainer.MovementId
+                                                    AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
+                                                    AND MovementBoolean_Peresort.ValueData = TRUE
+                      WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                        AND MIContainer.DescId = zc_MIContainer_Count()
+                        --
+                        AND MIContainer.WhereObjectId_Analyzer = inFromId
+                        -- еще условие
+                        AND MIContainer.ObjectExtId_Analyzer   = inFromId
+                        --
+                        AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
+                        AND MIContainer.IsActive = TRUE
+                        AND MIContainer.Amount <> 0
+                        -- !!!убрали Пересортицу!!!
+                        AND MovementBoolean_Peresort.MovementId IS NULL
+                        --
+                        AND (MIContainer.ObjectIntId_Analyzer IN (zc_GoodsKind_WorkProgress(), zc_GoodsKind_Basis()) -- ограничение что это п/ф ГП
+                            )
+                        AND inIsList = TRUE        
                       )
          -- расходы п/ф ГП - что б отловить партии которых нет в tmpMI_WorkProgress_in
        , tmpMI_WorkProgress_find AS
@@ -129,7 +164,9 @@ BEGIN
 
                       WHERE ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
                         AND ObjectDate_PartionGoods_Value.ValueData BETWEEN inStartDate AND inEndDate
-                        AND tmpMI_WorkProgress_in.ContainerId IS NULL
+                        AND tmpMI_WorkProgress_in.ContainerId IS NULL 
+                        --если печать только по гриду то без этого
+                        AND inIsList = FALSE
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
                              , CLO_PartionGoods.ObjectId

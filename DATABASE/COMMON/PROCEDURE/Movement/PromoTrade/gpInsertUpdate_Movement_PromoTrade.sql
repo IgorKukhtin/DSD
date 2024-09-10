@@ -34,22 +34,22 @@ BEGIN
                                         );
 
      -- сохранили <Документ>
-     ioId := PERFORM lpInsertUpdate_Movement_PromoTrade (ioId             := ioId
-                                                       , inInvNumber      := inInvNumber
-                                                       , inOperDate       := inOperDate 
-                                                       , inContractId     := inContractId
-                                                       , inPromoItemId    := inPromoItemId
-                                                       , inPromoKindId    := inPromoKindId     --Вид акции
-                                                       , inStartPromo     := inStartPromo      --Дата начала акции
-                                                       , inEndPromo       := inEndPromo        --Дата окончания акции
-                                                       , inCostPromo      := inCostPromo       --Стоимость участия в акции
-                                                       , inComment        := inComment         --Примечание
-                                                       , inUserId         := vbUserId
-                                                       ) AS tmp;  
+     ioId := lpInsertUpdate_Movement_PromoTrade (ioId             := ioId
+                                               , inInvNumber      := inInvNumber
+                                               , inOperDate       := inOperDate 
+                                               , inContractId     := inContractId
+                                               , inPromoItemId    := inPromoItemId
+                                               , inPromoKindId    := inPromoKindId     --Вид акции
+                                               , inStartPromo     := inStartPromo      --Дата начала акции
+                                               , inEndPromo       := inEndPromo        --Дата окончания акции
+                                               , inCostPromo      := inCostPromo       --Стоимость участия в акции
+                                               , inComment        := inComment         --Примечание
+                                               , inUserId         := vbUserId
+                                               ) AS tmp;  
 
-     outPriceListName      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PriceList() AND MLO.MovementId = ioId);
-     outPersonalTradetName := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PersonalTrade() AND MLO.MovementId = ioId);
-     outChangePercent      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.DescId = zc_MovementFloat_ChangePercent() AND MF.MovementId = ioId);
+     outPriceListName      := (SELECT lfGet_Object_ValueData (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PriceList() AND MLO.MovementId = ioId)     ::TVarChar;
+     outPersonalTradetName := (SELECT lfGet_Object_ValueData (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PersonalTrade() AND MLO.MovementId = ioId) ::TVarChar;
+     outChangePercent      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.DescId = zc_MovementFloat_ChangePercent() AND MF.MovementId = ioId) ::TFloat;
 
 END;
 $BODY$

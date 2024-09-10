@@ -381,6 +381,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Receipt_RealDelicShp() RETURNS Integer
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Receipt(), 'zc_ObjectFloat_Receipt_RealDelicShp', 'Вес после шприцевания' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Receipt_RealDelicShp');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Receipt_ValuePF() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Receipt_ValuePF'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Receipt(), 'zc_ObjectFloat_Receipt_ValuePF', '***Вес П/Ф (ГП)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Receipt_ValuePF');
+
+
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffList_HoursPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_HoursPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

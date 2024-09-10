@@ -84,6 +84,8 @@ type
     edTaxLossTRM: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
     edRealDelicShp: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
+    ceValuePF: TcxCurrencyEdit;
   private
     { Private declarations }
   public
