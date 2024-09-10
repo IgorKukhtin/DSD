@@ -3498,7 +3498,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
      THEN
          ioIsChoiceCell_mi:= FALSE;
          --
-         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), lpSelect.MovementItemId, TRUE)
+         PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), lpSelect.MovementItemId, FALSE)
                  -- сохранили связь с <>
                , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), lpSelect.MovementItemId, vbUserId)
                  -- сохранили свойство <>
@@ -3506,8 +3506,6 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
          FROM -- Места отбора для хранения 
               (SELECT lpSelect.MovementItemId
-                    , lpSelect.PartionGoodsDate
-                    , lpSelect.PartionGoodsDate_next TDateTime
                FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
                WHERE lpSelect.GoodsId     = inGoodsId
                  AND lpSelect.GoodsKindId = inGoodsKindId
