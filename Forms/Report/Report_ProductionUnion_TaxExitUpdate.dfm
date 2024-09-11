@@ -1536,14 +1536,6 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1627,10 +1619,12 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     object bbPrintCEH_Group: TdxBarButton
       Action = actPrintCEH_Group
       Category = 0
+      ImageIndex = 17
     end
     object bbPrintTRM_Group: TdxBarButton
       Action = actPrintTRM_Group
       Category = 0
+      ImageIndex = 16
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
