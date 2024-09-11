@@ -727,8 +727,8 @@ BEGIN
            -- ФАКТ Вес после массажера, кг - Производство технолог: Вес П/Ф после массажера (расчет) разделить Куттеров факт (расчет)
          , CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END ::TFloat AS RealWeightMsg_calc
            -- отклонение
-         , (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END
-           - COALESCE (tmpResult.ValuePF_in ,0)) ::TFloat AS AmountMsg_diff
+         , CAST (CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END
+           - COALESCE (tmpResult.ValuePF_in ,0) AS NUMERIC (16,2)) ::TFloat AS AmountMsg_diff
 
          -- Рецептуры: % потерь (цех)
          , tmpResult.TaxLossCEH :: TFloat
@@ -763,24 +763,24 @@ BEGIN
           , tmpResult.TaxExit :: TFloat  AS TaxExit  --Выход ГП , кг план
 
           , CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END ::TFloat  AS TaxExit_fact    --Выход ГП , кг факт
-          , (CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END
-            - COALESCE (tmpResult.TaxExit,0) ) :: TFloat  AS TaxExit_diff
+          , (CAST (CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END
+            - COALESCE (tmpResult.TaxExit,0) AS NUMERIC (16,2)))  :: TFloat  AS TaxExit_diff
 
           -- Выход ГП факт
           , tmpResult.Amount_GP_in :: TFloat             AS Amount_GP_in
 
           --
-          , tmpGoodsNormDiff.ValueGP ::TFloat    --Норма отклонения ГП, кг
-          , tmpGoodsNormDiff.ValuePF ::TFloat    --Норма отклонения П/Ф (ГП), кг
+          , (CAST (tmpGoodsNormDiff.ValueGP AS NUMERIC (16,2))) ::TFloat  AS ValueGP  --Норма отклонения ГП, кг
+          , (CAST (tmpGoodsNormDiff.ValuePF AS NUMERIC (16,2))) ::TFloat  AS ValuePF  --Норма отклонения П/Ф (ГП), кг
 
-          , ( ((CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END
+          , (CAST( ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc ,0) <> 0 THEN COALESCE (tmpResult.Amount_GP_in,0)/tmpResult.CuterCount_calc ELSE 0 END
             - COALESCE (tmpResult.TaxExit,0) )
-                 )
-            - COALESCE (tmpGoodsNormDiff.ValueGP,0)) ::TFloat AS ValueGP_diff
+                 ) AS NUMERIC (16,2) )
+            - CAST (COALESCE (tmpGoodsNormDiff.ValueGP,0) AS NUMERIC (16,2))) ::TFloat AS ValueGP_diff
           ---
-          , (  ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END
+          , (CAST( ABS ((CASE WHEN COALESCE (tmpResult.CuterCount_calc,0) <> 0 THEN (COALESCE (tmpResult.Amount_WorkProgress_in,0) - COALESCE (tmpResult.Amount_out,0)) / tmpResult.CuterCount_calc ELSE 0 END
            - COALESCE (tmpResult.ValuePF_in ,0)) )
-            - COALESCE (tmpGoodsNormDiff.ValuePF,0) ) ::TFloat AS ValuePF_diff
+            - COALESCE (tmpGoodsNormDiff.ValuePF,0) AS NUMERIC (16,2))) ::TFloat AS ValuePF_diff
 
           ----------------------------------
           -- Куттеров факт
