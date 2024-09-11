@@ -70,6 +70,9 @@ type
     bbxBarSeparator: TdxBarSeparator;
     bbPrintCEH_Group: TdxBarButton;
     bbPrintTRM_Group: TdxBarButton;
+    PrintItemsCDS: TClientDataSet;
+    spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
   private
     { Private declarations }
   public

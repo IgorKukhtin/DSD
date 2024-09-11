@@ -4191,19 +4191,23 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintCEH_Group'
-        end
-        item
-          Visible = True
           ItemName = 'bbPrintTRM_rep'
         end
         item
           Visible = True
-          ItemName = 'bbPrintTRM_Group'
+          ItemName = 'bbPrintOUT_rep'
         end
         item
           Visible = True
-          ItemName = 'bbPrintOUT_rep'
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintCEH_Group'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTRM_Group'
         end
         item
           Visible = True

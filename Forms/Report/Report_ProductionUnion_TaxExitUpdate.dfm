@@ -1,30 +1,30 @@
 inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxExitUpdateForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1044#1077#1083#1080#1082#1072#1090#1077#1089#1099')'
-  ClientHeight = 426
+  ClientHeight = 651
   ClientWidth = 1298
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1314
-  ExplicitHeight = 465
+  ExplicitHeight = 690
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 84
     Width = 1298
-    Height = 342
+    Height = 567
     TabOrder = 3
     ExplicitTop = 84
     ExplicitWidth = 1298
     ExplicitHeight = 342
-    ClientRectBottom = 342
+    ClientRectBottom = 567
     ClientRectRight = 1298
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1298
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 1298
-        Height = 342
+        Height = 567
         ExplicitWidth = 1298
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -934,7 +934,11 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     object actPrintCEH_Group: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spPrint_TaxExitUpdate_groupCeh
+      StoredProcList = <
+        item
+          StoredProc = spPrint_TaxExitUpdate_groupCeh
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       ImageIndex = 3
@@ -1060,7 +1064,11 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
     object actPrintTRM_Group: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spPrint_TaxExitUpdate_groupTRM
+      StoredProcList = <
+        item
+          StoredProc = spPrint_TaxExitUpdate_groupTRM
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       ImageIndex = 3
@@ -1746,5 +1754,139 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
       end>
     Left = 464
     Top = 24
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 772
+    Top = 206
+  end
+  object spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc
+    StoredProcName = 'gpReport_ProductionUnion_TaxExitUpdate'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43831d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43831d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 209
+  end
+  object spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc
+    StoredProcName = 'gpReport_ProductionUnion_TaxExitUpdate'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43831d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43831d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = FromGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = ToGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 257
   end
 end
