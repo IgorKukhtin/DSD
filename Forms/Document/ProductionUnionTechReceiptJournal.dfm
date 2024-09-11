@@ -14,17 +14,17 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     Height = 624
     TabOrder = 2
     ExplicitTop = 61
-    ExplicitWidth = 1164
+    ExplicitWidth = 1203
     ExplicitHeight = 624
     ClientRectBottom = 624
     ClientRectRight = 1203
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1164
+      ExplicitWidth = 1203
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid
         Width = 1203
         Height = 292
-        ExplicitWidth = 1164
+        ExplicitWidth = 1203
         ExplicitHeight = 292
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -695,7 +695,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         Top = 297
         Width = 1203
         ExplicitTop = 297
-        ExplicitWidth = 1164
+        ExplicitWidth = 1203
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -934,14 +934,14 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         Top = 292
         Width = 1203
         ExplicitTop = 292
-        ExplicitWidth = 1164
+        ExplicitWidth = 1203
       end
     end
   end
   inherited DataPanel: TPanel
     Width = 1203
     Height = 35
-    ExplicitWidth = 1164
+    ExplicitWidth = 1203
     ExplicitHeight = 35
     inherited edInvNumber: TcxTextEdit
       Left = 989
@@ -3011,6 +3011,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PageNum'
+          Value = '1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1074#1099#1093#1086#1076#1072#1084'('#1094#1077#1093')'
@@ -3131,6 +3137,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           Component = GuidesTo
           ComponentItem = 'TextValue'
           DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PageNum'
+          Value = '2'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

@@ -64,6 +64,12 @@ type
     cbisPartion: TcxCheckBox;
     actRefresh_Partion: TdsdDataSetRefresh;
     isPrint: TcxGridDBColumn;
+    actPrintCEH_Group: TdsdPrintAction;
+    actPrintTRM_Group: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    bbxBarSeparator: TdxBarSeparator;
+    bbPrintCEH_Group: TdxBarButton;
+    bbPrintTRM_Group: TdxBarButton;
   private
     { Private declarations }
   public
