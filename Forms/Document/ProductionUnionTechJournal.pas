@@ -229,7 +229,8 @@ type
     bbPrintCEH_Group: TdxBarButton;
     actPrintTRM_Group: TdsdPrintAction;
     bbPrintTRM_Group: TdxBarButton;
-    spPrint_TaxExitUpdate_group: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
   private
     { Private declarations }
   public

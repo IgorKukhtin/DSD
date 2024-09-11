@@ -217,6 +217,12 @@ type
     bbPrintCEH_rep_grid: TdxBarButton;
     bbPrintOUT_rep_grid: TdxBarButton;
     bbPrintTRM_rep_grid: TdxBarButton;
+    spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
+    actPrintCEH_Group: TdsdPrintAction;
+    actPrintTRM_Group: TdsdPrintAction;
+    bbPrintTRM_Group: TdxBarButton;
+    bbPrintCEH_Group: TdxBarButton;
   private
     { Private declarations }
   public

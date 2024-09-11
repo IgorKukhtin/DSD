@@ -1549,10 +1549,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actPrintCEH_Group: TdsdPrintAction [7]
       Category = 'Print_rep'
       MoveParams = <>
-      StoredProc = spPrint_TaxExitUpdate_group
+      StoredProc = spPrint_TaxExitUpdate_groupCeh
       StoredProcList = <
         item
-          StoredProc = spPrint_TaxExitUpdate_group
+          StoredProc = spPrint_TaxExitUpdate_groupCeh
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093') '#1089' %'#1086#1090#1082#1083'.'
       Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093') '#1089' %'#1086#1090#1082#1083'.'
@@ -1731,10 +1731,10 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object actPrintTRM_Group: TdsdPrintAction [10]
       Category = 'Print_rep'
       MoveParams = <>
-      StoredProc = spPrint_TaxExitUpdate_group
+      StoredProc = spPrint_TaxExitUpdate_groupTRM
       StoredProcList = <
         item
-          StoredProc = spPrint_TaxExitUpdate_group
+          StoredProc = spPrint_TaxExitUpdate_groupTRM
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1090#1077#1088#1084#1080#1095#1082#1072') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
@@ -4298,10 +4298,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       Action = actPrintCEH_Group
       Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090' '#1087#1086' '#1074#1099#1093#1086#1076#1072#1084' ('#1094#1077#1093') '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072
       Category = 0
+      ImageIndex = 16
     end
     object bbPrintTRM_Group: TdxBarButton
       Action = actPrintTRM_Group
       Category = 0
+      ImageIndex = 17
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -5709,6 +5711,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isParam'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisList'
         Value = False
         DataType = ftBoolean
@@ -5892,6 +5900,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isParam'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisList'
         Value = True
         DataType = ftBoolean
@@ -5918,7 +5932,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     Left = 840
     Top = 547
   end
-  object spPrint_TaxExitUpdate_group: TdsdStoredProc
+  object spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc
     StoredProcName = 'gpReport_ProductionUnion_TaxExitUpdate'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -5959,6 +5973,12 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisList'
         Value = False
         DataType = ftBoolean
@@ -5973,7 +5993,71 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 720
-    Top = 465
+    Left = 872
+    Top = 457
+  end
+  object spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc
+    StoredProcName = 'gpReport_ProductionUnion_TaxExitUpdate'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43831d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43831d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPartion'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 872
+    Top = 505
   end
 end

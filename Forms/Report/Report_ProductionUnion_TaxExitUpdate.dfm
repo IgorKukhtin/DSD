@@ -1459,6 +1459,12 @@ inherited Report_ProductionUnion_TaxExitUpdateForm: TReport_ProductionUnion_TaxE
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inParam'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsList'
         Value = False
         DataType = ftBoolean
