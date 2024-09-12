@@ -245,6 +245,7 @@ BEGIN
                                      , FALSE :: Boolean AS isTop
                                      , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindId ELSE 0 END PaidKindId
                                      , CASE WHEN inisPaidKind = TRUE THEN tmp.PaidKindName ELSE '' END PaidKindName
+
                                 FROM (SELECT Object_JuridicalGroup.ValueData AS JuridicalGroupName
                                            , Object_Branch.Id                               AS BranchId
                                            , Object_Branch.ObjectCode                       AS BranchCode
@@ -368,6 +369,9 @@ BEGIN
                                                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
                                           LEFT JOIN Object AS Object_BranchPersonal ON Object_BranchPersonal.Id = ObjectLink_Unit_Branch.ChildObjectId
                                      ) AS tmp
+                                 WHERE (tmp.PaidKindId  = inPaidKindId  OR inPaidKindId  = 0)
+                                   AND (tmp.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+                                   AND (tmp.RetailId    = inRetailId    OR inRetailId   = 0)
                                 )
 
           , tmpData AS (SELECT * FROM tmpReport
