@@ -1,6 +1,7 @@
- -- Function: gpSelect_SheetWorkTime_Period()
+-- Function: gpSelect_SheetWorkTime_Period()
+-- не так названо
 
-DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period - не так названо (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
     IN inStartDate   TDateTime , --
