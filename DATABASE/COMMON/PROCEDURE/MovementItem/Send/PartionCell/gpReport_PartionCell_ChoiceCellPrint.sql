@@ -18,7 +18,7 @@ RETURNS TABLE (FromName TVarChar
              , GoodsKindId Integer, GoodsKindName  TVarChar
              , PartionGoodsDate TDateTime
 
-             , PartionCellName   TVarChar
+             , PartionCellName   Text
 
              , Amount TFloat, Amount_Weight TFloat
 
@@ -40,7 +40,7 @@ BEGIN
 -- выводим товар + вид + партию, в какое место отбора, какие ячейки в местах хранения  (в одной колонке)+ пустая колонка "примечание" - данные для отчета - SELECT ..... FROM gpReport_Send_PartionCell  WHERE isChoiceCell_mi = TRUE
 
    -- Результат
-     RETURN QUERY  
+     RETURN QUERY
    --
    SELECT tmpResult.FromName
         , tmpResult.ToName
@@ -50,42 +50,64 @@ BEGIN
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName
         , tmpResult.PartionGoodsDate
           --
-                               
+       /* , tmpResult.PartionCellCode_1
+        , tmpResult.PartionCellCode_2
+        , tmpResult.PartionCellCode_3
+        , tmpResult.PartionCellCode_4
+        , tmpResult.PartionCellCode_5
+        , tmpResult.PartionCellCode_6
+        , tmpResult.PartionCellCode_7
+        , tmpResult.PartionCellCode_8
+        , tmpResult.PartionCellCode_9
+        , tmpResult.PartionCellCode_10
+        , tmpResult.PartionCellCode_11                                      sh(13)
+        , tmpResult.PartionCellCode_12
+        , tmpResult.PartionCellCode_13
+        , tmpResult.PartionCellCode_14
+        , tmpResult.PartionCellCode_15
+        , tmpResult.PartionCellCode_16
+        , tmpResult.PartionCellCode_17
+        , tmpResult.PartionCellCode_18
+        , tmpResult.PartionCellCode_19
+        , tmpResult.PartionCellCode_20
+        , tmpResult.PartionCellCode_21
+        , tmpResult.PartionCellCode_22
+         */
          --chr(13)
-         
-        , CASE WHEN COALESCE (tmpResult.PartionCellName_1,'') <> '' THEN tmpResult.PartionCellName_1 ELSE '' END 
-          CASE WHEN COALESCE (tmpResult.PartionCellName_2,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END  
-          CASE WHEN COALESCE (tmpResult.PartionCellName_3,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_4,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_5,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_6,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_7,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_8,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_9,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_10,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_11,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_12,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_13,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_14,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_15,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_16,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_17,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_18,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_19,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_20,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_21,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_22,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END
-          CASE WHEN COALESCE (tmpResult.PartionCellName_ets,'') <> '' THEN ||chr(13)||tmpResult.PartionCellName_2ELSE '' END ::TVarChar AS PartionCellName
+
+        , (CASE WHEN COALESCE (tmpResult.PartionCellName_1,'') <> '' AND tmpResult.PartionCellName_1 NOT ILIKE '%Отбор%' THEN tmpResult.PartionCellName_1 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_2,'') <> '' AND tmpResult.PartionCellName_2 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_2 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_3,'') <> '' AND tmpResult.PartionCellName_3 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_3 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_4,'') <> '' AND tmpResult.PartionCellName_4 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_4 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_5,'') <> '' AND tmpResult.PartionCellName_5 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_5 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_6,'') <> '' AND tmpResult.PartionCellName_6 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_6 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_7,'') <> '' AND tmpResult.PartionCellName_7 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_7 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_8,'') <> '' AND tmpResult.PartionCellName_8 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_8 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_9,'') <> '' AND tmpResult.PartionCellName_9 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_9 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_10,'') <> '' AND tmpResult.PartionCellName_10 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_10 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_11,'') <> '' AND tmpResult.PartionCellName_11 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_11 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_12,'') <> '' AND tmpResult.PartionCellName_12 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_12 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_13,'') <> '' AND tmpResult.PartionCellName_13 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_13 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_14,'') <> '' AND tmpResult.PartionCellName_14 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_14 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_15,'') <> '' AND tmpResult.PartionCellName_15 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_15 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_16,'') <> '' AND tmpResult.PartionCellName_16 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_16 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_17,'') <> '' AND tmpResult.PartionCellName_17 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_17 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_18,'') <> '' AND tmpResult.PartionCellName_18 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_18 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_19,'') <> '' AND tmpResult.PartionCellName_19 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_19 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_20,'') <> '' AND tmpResult.PartionCellName_20 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_20 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_21,'') <> '' AND tmpResult.PartionCellName_21 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_21 ELSE '' END
+         ||CASE WHEN COALESCE (tmpResult.PartionCellName_22,'') <> '' AND tmpResult.PartionCellName_22 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_22 ELSE '' END
+          ) ::Text AS PartionCellName
 
         , tmpResult.Amount, tmpResult.Amount_Weight
 
         --ячейки отбора
-        , tmpResult.NPP_ChoiceCell     
+        , tmpResult.NPP_ChoiceCell
         , tmpResult.ChoiceCellCode
-        , tmpResult.ChoiceCellName     
+        , tmpResult.ChoiceCellName
         , tmpResult.ChoiceCellName_shot
 
-   FROM gpReport_Send_PartionCell (inStartDate, inEndDate, inUnitId, inIsMovement, inIsCell, inIsShowAll, inSession) AS tmpResult
+   FROM gpReport_Send_PartionCell (inStartDate, inEndDate, inUnitId, inIsMovement, inIsCell, inIsShowAll, inSession) AS tmpresult
    WHERE tmpResult.isChoiceCell_mi = TRUE
   ;
 
@@ -101,5 +123,5 @@ $BODY$
 */
 
 -- тест
--- 
- select * from gpReport_PartionCell_ChoiceCellPrint(inStartDate := ('25.08.2024')::TDateTime , inEndDate := ('26.08.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'false' , inIsShowAll := 'False' ,  inSession := '9457') --where GoodsCode = 41;
+--
+-- SELECT * FROM gpReport_PartionCell_ChoiceCellPrint(inStartDate := ('25.08.2024')::TDateTime , inEndDate := ('26.08.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'false' , inIsShowAll := 'False' ,  inSession := '9457') --where GoodsCode = 41;
