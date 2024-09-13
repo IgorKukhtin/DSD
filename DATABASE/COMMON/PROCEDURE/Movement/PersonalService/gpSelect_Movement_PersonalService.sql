@@ -328,7 +328,8 @@ BEGIN
                                        , Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
        FROM tmpMovement
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

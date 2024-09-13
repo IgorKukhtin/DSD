@@ -972,11 +972,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournalForm');
 
-  exit;
-  {
+  ///exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadPersonalTransportFormTest;
