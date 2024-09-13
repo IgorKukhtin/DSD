@@ -1530,7 +1530,9 @@ uses
   PromoItemEdit in '..\..\Forms\Guides\PromoItemEdit.pas' {PromoItemEditForm: TParentForm},
   PromoItem in '..\..\Forms\Guides\PromoItem.pas' {PromoItemForm: TParentForm},
   PromoTradeJournal in '..\..\Forms\Document\PromoTradeJournal.pas' {PromoTradeJournalForm: TParentForm},
-  PromoTrade in '..\..\Forms\Document\PromoTrade.pas' {PromoTradeForm: TParentForm};
+  PromoTrade in '..\..\Forms\Document\PromoTrade.pas' {PromoTradeForm: TParentForm},
+  RouteNum in '..\..\Forms\Guides\RouteNum.pas' {RouteNumForm: TParentForm},
+  RouteNumEdit in '..\..\Forms\Guides\RouteNumEdit.pas' {RouteNumEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

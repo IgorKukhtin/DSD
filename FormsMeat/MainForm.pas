@@ -1513,6 +1513,8 @@ type
     actPromoTradeJournal: TdsdOpenForm;
     miPromoTradeJournal: TMenuItem;
     N263: TMenuItem;
+    actRouteNum: TdsdOpenForm;
+    N264: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
