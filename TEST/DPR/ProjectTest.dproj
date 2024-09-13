@@ -5363,6 +5363,10 @@
 				<Form>RouteNumEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Movement_DateDialog_PersonalService.pas">
+				<Form>Movement_DateDialog_PersonalServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

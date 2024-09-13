@@ -950,6 +950,9 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_DateDialog_PersonalServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_DateDialog_PersonalServiceForm');
+  //exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceNalogDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceNalogDialogForm');
@@ -957,13 +960,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
-  exit;
+ // exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceItemJournalForm');

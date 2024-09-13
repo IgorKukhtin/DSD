@@ -1532,7 +1532,8 @@ uses
   PromoTradeJournal in '..\..\Forms\Document\PromoTradeJournal.pas' {PromoTradeJournalForm: TParentForm},
   PromoTrade in '..\..\Forms\Document\PromoTrade.pas' {PromoTradeForm: TParentForm},
   RouteNum in '..\..\Forms\Guides\RouteNum.pas' {RouteNumForm: TParentForm},
-  RouteNumEdit in '..\..\Forms\Guides\RouteNumEdit.pas' {RouteNumEditForm: TParentForm};
+  RouteNumEdit in '..\..\Forms\Guides\RouteNumEdit.pas' {RouteNumEditForm: TParentForm},
+  Movement_DateDialog_PersonalService in '..\..\Forms\Document\Movement_DateDialog_PersonalService.pas' {Movement_DateDialog_PersonalServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

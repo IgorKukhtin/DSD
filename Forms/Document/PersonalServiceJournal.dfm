@@ -2301,6 +2301,21 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Component = cbIsServiceDate
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceInvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber_full'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end

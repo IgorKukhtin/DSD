@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdInternetAction, Vcl.StdCtrls;
+  dsdInternetAction, Vcl.StdCtrls, dsdCommon;
 
 type
   TPersonalServiceJournalForm = class(TAncestorJournalForm)
