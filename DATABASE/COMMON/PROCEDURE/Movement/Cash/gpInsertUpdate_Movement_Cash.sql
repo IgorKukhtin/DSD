@@ -204,6 +204,11 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Значение <Cумма грн, обмен> не определено.';
      END IF;
 
+
+-- if inUserId = 5 then
+--     RAISE EXCEPTION 'Ошибка.inCurrencyPartnerValue = <%>', inCurrencyPartnerValue;
+-- end if;
+
      -- курса для баланса и Клиента - почти НЕТ расчета
      IF inCurrencyId <> zc_Enum_Currency_Basis()
      THEN

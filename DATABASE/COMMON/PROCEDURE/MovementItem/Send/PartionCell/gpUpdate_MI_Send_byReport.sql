@@ -109,7 +109,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_Send_byReport(
  INOUT ioPartionCellName_21     TVarChar,
  INOUT ioPartionCellName_22     TVarChar,
 
-   OUT outisPrint              Boolean,
+   OUT outIsPrint              Boolean,
     IN inSession               TVarChar  -- сессия пользователя
 )
 RETURNS RECORD
@@ -216,8 +216,8 @@ BEGIN
 
 
      IF vbUserId <> 5
-        -- Роль - Переброска любой ячейки в отбор
-        --AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11056843)
+        -- Роль - Все права для изменений ячейки хранения
+        AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
         --
         AND vbUserId <> 602817  -- Якимчик А.С.
         AND vbUserId <> 8692657 -- Селезень І.Є.
@@ -1519,6 +1519,39 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
      IF vbPartionCellId_22 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err()) AND vbPartionCellId_22 IN (vbPartionCellId_1, vbPartionCellId_2, vbPartionCellId_3, vbPartionCellId_4, vbPartionCellId_5, vbPartionCellId_6, vbPartionCellId_7, vbPartionCellId_8, vbPartionCellId_9, vbPartionCellId_10, vbPartionCellId_11, vbPartionCellId_12, vbPartionCellId_13, vbPartionCellId_14, vbPartionCellId_15, vbPartionCellId_16, vbPartionCellId_17, vbPartionCellId_18, vbPartionCellId_19, vbPartionCellId_20, vbPartionCellId_21)
      THEN vbPartionCellId_22:= NULL; END IF;
+
+
+     -- Проверка - ячейку Ошибка нельзя менять
+     IF ((ioPartionCellId_1  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_1,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_2  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_2,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_3  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_3,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_4  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_4,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_5  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_5,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_6  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_6,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_7  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_7,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_8  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_8,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_9  = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_9,  0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_10 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_10, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_11 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_11, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_12 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_12, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_13 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_13, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_14 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_14, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_15 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_15, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_16 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_16, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_17 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_17, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_18 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_18, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_19 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_19, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_20 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_20, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_21 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_21, 0) <> zc_PartionCell_Err())
+      OR (ioPartionCellId_22 = zc_PartionCell_Err() AND COALESCE (vbPartionCellId_22, 0) <> zc_PartionCell_Err())
+       )
+     -- Роль - Все права для изменений ячейки хранения
+     AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11278315)
+     AND vbUserId <> 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав заменять ячейку <%>.', lfGet_Object_ValueData_sh(zc_PartionCell_Err());
+     END IF;
+
 
      -- 1. Проверка - для ячейки может быть только одна партия
      IF vbPartionCellId_1 > 0
@@ -3515,7 +3548,7 @@ if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNum
 
 
      -- пареметр для печати
-     outisPrint := CASE WHEN COALESCE (outPartionCellId_last,0) IN (0, zc_PartionCell_RK()) THEN FALSE ELSE TRUE END;
+     outIsPrint := CASE WHEN COALESCE (outPartionCellId_last,0) IN (0, zc_PartionCell_RK(), zc_PartionCell_RK(), zc_PartionCell_Err()) THEN FALSE ELSE TRUE END;
 
      -- вернули Id
      ioPartionCellId_1 := CASE WHEN vbPartionCellId_old_1 > 0 THEN vbPartionCellId_old_1 ELSE vbPartionCellId_1 END;
