@@ -1,9 +1,11 @@
 -- Function: gpInsertUpdate_Object_MemberIts(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
+                                                         TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, 
+                                                         TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar); */
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberIts (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, 
                                                          TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, 
                                                          TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberIts(
     IN inId	             Integer   ,    -- ключ объекта <Физические лица> 
@@ -13,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberIts(
     IN inRegionId            Integer   ,    --
     IN inRegionId_Real       Integer   ,    --
     IN inCityId              Integer   ,    --
-    IN inCityId_Real         Integer   ,    --
+    IN inCityId_Real         Integer   ,    -- 
+    IN inRouteNumId          Integer   ,
 
     IN inBirthday_date       TDateTime ,
     IN inChildren1_date      TDateTime ,
@@ -141,8 +144,11 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_Region_Real(), inId, inRegionId_Real);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_City_Real(), inId, inCityId_Real);
-   
-  -- IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Member_RouteNum(), inId, inRouteNumId);
+
+   -- IF vbUserId = 9457 THEN RAISE EXCEPTION 'Test. OK'; END IF;
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

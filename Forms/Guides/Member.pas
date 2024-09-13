@@ -22,7 +22,7 @@ uses
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
   DataModul, cxButtonEdit, cxContainer, cxTextEdit, cxMaskEdit, cxLabel,
-  dsdGuides, ExternalLoad, cxCalendar, Vcl.ExtCtrls;
+  dsdGuides, ExternalLoad, cxCalendar, Vcl.ExtCtrls, dsdCommon;
 
 type
   TMemberForm = class(TParentForm)
@@ -194,6 +194,7 @@ type
     actGetImportSettingId_Phone: TdsdExecStoredProc;
     macStartLoadPhone: TMultiAction;
     bbStartLoadPhone: TdxBarButton;
+    RouteNumName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -4244,7 +4244,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberGLNDialogForm');
 
-   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberGLNEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberGLNEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberReportEditForm'));

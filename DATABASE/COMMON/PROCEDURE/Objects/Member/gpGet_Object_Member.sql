@@ -40,7 +40,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CityId Integer
              , CityName TVarChar
              , CityId_Real Integer
-             , CityName_Real TVarChar
+             , CityName_Real TVarChar    
+             , RouteNumId Integer, RouteNumName TVarChar
              , Birthday_Date TDateTime
              , Children1_Date TDateTime
              , Children2_Date TDateTime
@@ -139,6 +140,9 @@ BEGIN
            , CAST ('' as TVarChar) AS CityName
            , CAST (0 as Integer)   AS CityId_Real
            , CAST ('' as TVarChar) AS CityName_Real
+
+           , CAST (0 as Integer)   AS RouteNumId
+           , CAST ('' as TVarChar) AS RouteNumName
 
            , CAST (Null as TDateTime) AS Birthday_Date
            , CAST (Null as TDateTime) AS Children1_Date
@@ -270,7 +274,10 @@ BEGIN
             , Object_City.ValueData         AS CityName
             , Object_City_Real.Id           AS CityId_Real
             , Object_City_Real.ValueData    AS CityName_Real
-            
+
+            , Object_RouteNum.Id            AS RouteNumId
+            , Object_RouteNum.ValueData     AS RouteNumName
+
             , COALESCE(ObjectDate_Birthday.ValueData, Null)   ::TDateTime  AS Birthday_Date
             , COALESCE(ObjectDate_Children1.ValueData, Null)  ::TDateTime  AS Children1_Date
             , COALESCE(ObjectDate_Children2.ValueData, Null)  ::TDateTime  AS Children2_Date
@@ -419,6 +426,11 @@ BEGIN
                               ON ObjectLink_Member_City_Real.ObjectId = Object_Member.Id
                              AND ObjectLink_Member_City_Real.DescId = zc_ObjectLink_Member_City_Real()
          LEFT JOIN Object AS Object_City_Real ON Object_City_Real.Id = ObjectLink_Member_City_Real.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Member_RouteNum
+                              ON ObjectLink_Member_RouteNum.ObjectId = Object_Member.Id
+                             AND ObjectLink_Member_RouteNum.DescId = zc_ObjectLink_Member_RouteNum()
+         LEFT JOIN Object AS Object_RouteNum ON Object_RouteNum.Id = ObjectLink_Member_RouteNum.ChildObjectId
 
          LEFT JOIN ObjectLink AS ObjectLink_Member_UnitMobile
                               ON ObjectLink_Member_UnitMobile.ObjectId = Object_Member.Id
