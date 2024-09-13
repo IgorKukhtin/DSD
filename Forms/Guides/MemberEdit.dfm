@@ -827,6 +827,23 @@
         TabOrder = 7
         Width = 303
       end
+      object cxLabel57: TcxLabel
+        Left = 10
+        Top = 199
+        Caption = #1052#1072#1088#1096#1088#1091#1090#1082#1072
+      end
+      object edRouteNum: TcxButtonEdit
+        Left = 10
+        Top = 216
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 9
+        Width = 303
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1655,9 +1672,24 @@
         Component = edPhone
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteNumId'
+        Value = Null
+        Component = GuidesRouteNum
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'RouteNumName'
+        Value = Null
+        Component = GuidesRouteNum
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 40
+    Left = 360
+    Top = 136
   end
   object spInsertUpdateContact: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_MemberContact'
@@ -2093,6 +2125,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inRouteNumId'
+        Value = Null
+        Component = GuidesRouteNum
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBirthday_date'
         Value = Null
         Component = edBirthday
@@ -2399,5 +2439,35 @@
       end>
     Left = 448
     Top = 383
+  end
+  object GuidesRouteNum: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRouteNum
+    FormNameParam.Value = 'TRouteNumForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TRouteNumForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRouteNum
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRouteNum
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 141
+    Top = 238
   end
 end

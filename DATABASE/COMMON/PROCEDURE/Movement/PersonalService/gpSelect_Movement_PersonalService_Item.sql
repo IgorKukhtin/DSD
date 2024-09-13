@@ -1,11 +1,13 @@
  -- Function: gpSelect_Movement_PersonalService_Item()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
-    IN inJuridicalBasisId  Integer , -- гл. юр.лицо
+    IN inJuridicalBasisId  Integer , -- гл. юр.лицо  
+    IN inPersonalServiceId Integer ,
     IN inIsServiceDate     Boolean ,
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
@@ -249,7 +251,58 @@ BEGIN
                                , MovementDate_ServiceDate.ValueData              AS ServiceDate
                                , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
                           FROM tmpStatus
-                               INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_PersonalService() AND Movement.StatusId = tmpStatus.StatusId
+                               INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND Movement.DescId = zc_Movement_PersonalService()
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                               LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+
+                               LEFT JOIN MovementDate AS MovementDate_ServiceDate
+                                                      ON MovementDate_ServiceDate.MovementId = Movement.Id
+                                                     AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                          WHERE inIsServiceDate = FALSE AND COALESCE (inPersonalServiceId,0) = 0
+                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
+                            -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
+                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0) 
+
+                         UNION ALL
+                          SELECT MovementDate_ServiceDate.MovementId             AS Id
+                               , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                               , MovementDate_ServiceDate.ValueData              AS ServiceDate
+                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
+                          FROM MovementDate AS MovementDate_ServiceDate
+                               JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId
+                                            AND Movement.DescId = zc_Movement_PersonalService()
+                                            
+                               JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                               LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+                          WHERE inIsServiceDate = TRUE AND COALESCE (inPersonalServiceId,0) = 0 
+                            AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                            AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
+                            -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
+                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                                 
+                         UNION ALL
+                          SELECT Movement.Id
+                               , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
+                               , MovementDate_ServiceDate.ValueData              AS ServiceDate
+                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
+                          FROM tmpStatus
+                               INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                                  AND Movement.DescId = zc_Movement_PersonalService()
+                                                  AND Movement.StatusId = tmpStatus.StatusId
+                                                  AND Movement.Id = inPersonalServiceId
                                LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
@@ -260,31 +313,8 @@ BEGIN
                                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
                                                      AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                           WHERE inIsServiceDate = FALSE
-                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
-                            -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
-                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            
-                         UNION ALL
-                          SELECT MovementDate_ServiceDate.MovementId             AS Id
-                               , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
-                               , MovementDate_ServiceDate.ValueData              AS ServiceDate
-                               , lpInsertFind_Object_ServiceDate (MovementDate_ServiceDate.ValueData) AS ServiceDateId
-                          FROM MovementDate AS MovementDate_ServiceDate
-                               JOIN Movement ON Movement.Id = MovementDate_ServiceDate.MovementId AND Movement.DescId = zc_Movement_PersonalService()
-                               JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                                                            ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
-                                                           AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
-                               LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
-                          WHERE inIsServiceDate = TRUE
-                            AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
-                            AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
-                            -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
-                            -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND tmpMemberPersonalServiceList.PersonalServiceListId > 0  
+                            AND COALESCE (inPersonalServiceId,0) > 0
                          )
                          
         , tmpSign AS (SELECT tmpMovement.Id

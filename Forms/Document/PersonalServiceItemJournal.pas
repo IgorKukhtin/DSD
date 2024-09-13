@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  dsdInternetAction;
+  dsdInternetAction, dsdCommon;
 
 type
   TPersonalServiceItemJournalForm = class(TAncestorJournalForm)
@@ -111,6 +111,9 @@ type
     bbSeparate: TdxBarSeparator;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    cxLabel30: TcxLabel;
+    edInvNumberPersonalService: TcxButtonEdit;
+    GuidesPersonalService: TdsdGuides;
   private
     { Private declarations }
   public

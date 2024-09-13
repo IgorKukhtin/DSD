@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
     IN inIsErased          Boolean ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
              , StartBeginDate TDateTime, EndBeginDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
@@ -220,7 +220,8 @@ BEGIN
        -- Результат
        SELECT
              Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
+           , Movement.InvNumber                         AS InvNumber  
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) ::TVarChar AS InvNumber_Full
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
@@ -327,7 +328,8 @@ BEGIN
                                        , Movement_BankSecondNum.OperDate) ::TVarChar AS InvNumber_BankSecondNum
 
        FROM tmpMovement
-            LEFT JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 

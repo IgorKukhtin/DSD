@@ -28,8 +28,6 @@ object MemberForm: TMemberForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 96
-    ExplicitTop = 16
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -661,6 +659,14 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 80
       end
+      object RouteNumName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090#1082#1072
+        DataBinding.FieldName = 'RouteNumName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -691,7 +697,6 @@ object MemberForm: TMemberForm
     Height = 70
     Align = alTop
     TabOrder = 7
-    ExplicitWidth = 925
     object cxLabel13: TcxLabel
       Left = 193
       Top = 9

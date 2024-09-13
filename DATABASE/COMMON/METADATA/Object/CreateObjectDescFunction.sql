@@ -1085,18 +1085,24 @@ INSERT INTO ObjectDesc (Code, ItemName)
   CREATE OR REPLACE FUNCTION zc_Object_GoodsGroupDirection() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroupDirection'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsGroupDirection', 'Аналитическая группа Направление' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroupDirection');
-       
-             
+
   CREATE OR REPLACE FUNCTION zc_Object_PromoItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PromoItem'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PromoItem', 'Статья затрат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PromoItem');
-        
-   
  
+  CREATE OR REPLACE FUNCTION zc_Object_RouteNum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_RouteNum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_RouteNum', 'Маршрутка' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RouteNum');
+        
+
+
+
+
 
 
 --!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 --!!! Аптека
+
 
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)

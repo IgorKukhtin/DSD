@@ -10,19 +10,20 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 89
     Width = 1221
-    Height = 648
+    Height = 616
     TabOrder = 3
     ExplicitWidth = 1221
     ExplicitHeight = 648
-    ClientRectBottom = 648
+    ClientRectBottom = 616
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
       ExplicitHeight = 648
       inherited cxGrid: TcxGrid
         Width = 1221
-        Height = 563
+        Height = 531
         ExplicitWidth = 1221
         ExplicitHeight = 563
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1855,12 +1856,13 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       end
       object ExportXmlGrid: TcxGrid
         Left = 0
-        Top = 563
+        Top = 531
         Width = 1221
         Height = 85
         Align = alBottom
         TabOrder = 1
         Visible = False
+        ExplicitTop = 563
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1892,7 +1894,10 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   end
   inherited Panel: TPanel
     Width = 1221
+    Height = 63
+    ExplicitTop = 5
     ExplicitWidth = 1221
+    ExplicitHeight = 63
     inherited deStart: TcxDateEdit
       EditValue = 45292d
     end
@@ -1901,19 +1906,36 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     end
     object cbIsServiceDate: TcxCheckBox
       Left = 401
-      Top = 2
+      Top = 5
       Action = actIsServiceDate
       TabOrder = 4
       Width = 200
     end
+    object cxLabel30: TcxLabel
+      Left = 8
+      Top = 35
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
+    end
+    object edInvNumberPersonalService: TcxButtonEdit
+      Left = 138
+      Top = 34
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 6
+      Width = 257
+    end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 722
+    Left = 750
     Top = 6
     Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 800
+    Left = 829
     Top = 5
     Properties.Buttons = <
       item
@@ -2261,8 +2283,8 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1078#1091#1088#1085#1072#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       ImageIndex = 35
-      FormName = 'TMovement_DateDialogForm'
-      FormNameParam.Value = 'TMovement_DateDialogForm'
+      FormName = 'TMovement_DateDialog_PersonalServiceForm'
+      FormNameParam.Value = 'TMovement_DateDialog_PersonalServiceForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2287,6 +2309,23 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
           Value = False
           Component = cbIsServiceDate
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceId'
+          Value = Null
+          Component = GuidesPersonalService
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceInvNumber'
+          Value = Null
+          Component = GuidesPersonalService
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2623,6 +2662,14 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPersonalServiceId'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inIsServiceDate'
         Value = False
         Component = cbIsServiceDate
@@ -2638,8 +2685,8 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 120
-    Top = 131
+    Left = 112
+    Top = 187
   end
   inherited BarManager: TdxBarManager
     Left = 224
@@ -2877,6 +2924,9 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       end
       item
         Component = JuridicalBasisGuides
+      end
+      item
+        Component = GuidesPersonalService
       end>
     Left = 392
     Top = 304
@@ -2986,6 +3036,23 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         Value = Null
         Component = cbIsServiceDate
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceId'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceInvNumber'
+        Value = Null
+        Component = GuidesPersonalService
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -3500,5 +3567,36 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     PackSize = 1
     Left = 80
     Top = 376
+  end
+  object GuidesPersonalService: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberPersonalService
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalService
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesPersonalService
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 260
+    Top = 16
   end
 end
