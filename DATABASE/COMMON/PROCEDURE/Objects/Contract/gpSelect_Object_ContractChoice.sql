@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , StartDate TDateTime, EndDate TDateTime
              , ContractTagId Integer, ContractTagName TVarChar, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
@@ -122,6 +123,8 @@ BEGIN
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
+       , Object_Retail.Id              AS RetailId
+       , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
 
@@ -172,7 +175,7 @@ BEGIN
               
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
- 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	    LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -193,6 +196,11 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
@@ -281,6 +289,8 @@ BEGIN
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
+       , Object_Retail.Id              AS RetailId
+       , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
 
@@ -334,7 +344,7 @@ BEGIN
               
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
- 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	    LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -350,11 +360,16 @@ BEGIN
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
- 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+ 	    LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
@@ -422,6 +437,8 @@ BEGIN
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
+       , Object_Retail.Id              AS RetailId
+       , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
 
@@ -472,7 +489,7 @@ BEGIN
               
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
- 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+ 	    LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                         , ObjectFloat_Value.ValueData AS ChangePercent
                    FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                         INNER JOIN ObjectFloat AS ObjectFloat_Value
@@ -488,11 +505,16 @@ BEGIN
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
- 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+ 	    LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId
@@ -558,6 +580,8 @@ BEGIN
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
+       , Object_Retail.Id              AS RetailId
+       , Object_Retail.ValueData       AS RetailName
        , _tmpPaidKind.PaidKindId
        , _tmpPaidKind.PaidKindName
 
@@ -614,11 +638,16 @@ BEGIN
 
       --LEFT JOIN tmpObject_ContractCondition_PercentView AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
 
- 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+ 	   LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Currency
                              ON ObjectLink_Contract_Currency.ObjectId = Object_Contract_View.ContractId

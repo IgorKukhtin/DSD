@@ -16,6 +16,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusName       TVarChar    --Статус
              , ContractId       Integer     --Договора
              , ContractName     TVarChar    --Договора
+             , ContractTagId Integer, ContractTagName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
+             , RetailId Integer, RetailName TVarChar
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoItemId      Integer     -- Статья затрат
@@ -71,7 +74,13 @@ BEGIN
           , Object_Status.Code               	              AS StatusCode
           , Object_Status.Name              		          AS StatusName  
           , NULL ::Integer                                    AS ContractId
-          , NULL ::TVarChar                                   AS ContractName
+          , NULL ::TVarChar                                   AS ContractName 
+          , NULL ::Integer                                    AS ContractTagId
+          , NULL ::TVarChar                                   AS ContractTagName   
+          , NULL ::Integer                                    AS JuridicalId
+          , NULL ::TVarChar                                   AS JuridicalName
+          , NULL ::Integer                                    AS RetailId
+          , NULL ::TVarChar                                   AS RetailNamе
           , NULL::Integer                                     AS PromoKindId         --Вид акции
           , NULL::TVarChar                                    AS PromoKindName       --Вид акции
           , 0                                                 AS PromoItemId        --
@@ -105,7 +114,13 @@ BEGIN
       , Object_Status.ObjectCode                    AS StatusCode         --код статуса
       , Object_Status.ValueData                     AS StatusName         --Статус
       , MovementLinkObject_Contract.ObjectId        AS ContractId        --
-      , Object_Contract.ValueData                   AS ContractName      --  
+      , Object_Contract.ValueData                   AS ContractName      --     
+      , Object_ContractTag.Id                       AS ContractTagId
+      , Object_ContractTag.ValueData                AS ContractTagName   
+      , Object_Juridical.Id                         AS JuridicalId
+      , Object_Juridical.ValueData                  AS JuridicalName
+      , Object_Retail.Id                            AS RetailId
+      , Object_Retail.ValueData                     AS RetailNamе
       , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
       , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции      
       , Object_PromoItem.Id                         AS PromoItemId        --
@@ -190,6 +205,22 @@ BEGIN
                                      ON MovementLinkObject_Insert.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MovementLinkObject_Insert.ObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                             ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                            AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+        LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                             ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId       
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
 
     WHERE Movement_PromoTrade.DescId = zc_Movement_PromoTrade()
       AND Movement_PromoTrade.Id =  inMovementId

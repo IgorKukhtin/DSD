@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PromoTradeGoods()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inPartnerCount                   TFloat    , -- 
     IN inGoodsKindId                    Integer   , -- ИД обьекта <Вид товара>  
     IN inTradeMarkId                    Integer   ,  --Торговая марка 
-    IN inGoodsGroupPropertyId           Integer,
+    IN inGoodsGroupPropertyId           Integer,  
+    IN inGoodsGroupPropertyId_Parent    Integer,
     IN inGoodsGroupDirectionId          Integer,
    OUT outTradeMarkName                 TVarChar, 
    OUT outGoodsGroupPropertyName        TVarChar,     
@@ -54,7 +55,9 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. В документе уже указана есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
     END IF;
 
-
+    -- переопределяем  если inGoodsGroupPropertyId заполнено берем его , если нет то группу
+    inGoodsGroupPropertyId := CASE WHEN COALESCE (inGoodsGroupPropertyId,0) <> 0 THEN inGoodsGroupPropertyId ELSE inGoodsGroupPropertyId_Parent END;
+    
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
                                                        , inMovementId           := inMovementId

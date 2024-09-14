@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoTradeGoods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (
-        Id                  Integer --идентификатор
+        Ord                 Integer
+      , Id                  Integer --идентификатор
       , MovementId          Integer --ИД документа <Акция>
       , GoodsId             Integer --ИД объекта <товар>
       , GoodsCode           Integer --код объекта  <товар>
@@ -40,7 +41,8 @@ BEGIN
 
     RETURN QUERY
 
-        SELECT MovementItem.Id                        AS Id                  --идентификатор
+        SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
+             , MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
              , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
              , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>

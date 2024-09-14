@@ -420,15 +420,26 @@ inherited ContractChoiceForm: TContractChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Value = Null
-          ParamType = ptUnknown
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'ContractKindName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

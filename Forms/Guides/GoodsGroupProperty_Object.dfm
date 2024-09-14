@@ -26,7 +26,6 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 562
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -351,6 +350,16 @@ object GoodsGroupProperty_ObjectForm: TGoodsGroupProperty_ObjectForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupPropertyId'
+          Value = '0'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupPropertyName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
