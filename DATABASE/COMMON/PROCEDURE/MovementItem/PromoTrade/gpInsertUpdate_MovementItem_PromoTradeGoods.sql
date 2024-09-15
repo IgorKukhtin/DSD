@@ -50,6 +50,7 @@ BEGIN
                    AND MovementItem.IsErased = FALSE
                    AND MovementItem.DescId = zc_MI_Master()
                    AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                   AND MovementItem.Id <> ioId
                )
     THEN
         RAISE EXCEPTION 'Ошибка. В документе уже указана есть товар = <%> и вид = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
