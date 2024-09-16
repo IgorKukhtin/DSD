@@ -826,8 +826,8 @@ BEGIN
              , SUM (tmpFuel.DistanceFuel)    :: TFloat AS DistanceFuel
              , MAX (tmpFuel.RateFuelKindTax) :: TFloat AS RateFuelKindTax
 
-             , MAX (tmpFuel.Weight)          :: TFloat AS Weight
-             , MAX (tmpFuel.WeightTransport) :: TFloat AS WeightTransport
+             , SUM (tmpFuel.Weight)          :: TFloat AS Weight
+             , SUM (tmpFuel.WeightTransport) :: TFloat AS WeightTransport
              , MAX (tmpFuel.StartOdometre)   :: TFloat AS StartOdometre
              , MAX (tmpFuel.EndOdometre)     :: TFloat AS EndOdometre
 
@@ -847,31 +847,33 @@ BEGIN
              , SUM (tmpFuel.Amount_ColdHour_calc)     :: TFloat AS Amount_ColdHour_calc
              , SUM (tmpFuel.Amount_ColdDistance_calc) :: TFloat AS Amount_ColdDistance_calc
 
-             , MAX (tmpFuel.SumTransportAdd)          :: TFloat AS SumTransportAdd
-             , MAX (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
-             , MAX (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
-             , MAX (tmpFuel.SumRateExp)               :: TFloat AS SumRateExp
+             , SUM (tmpFuel.SumTransportAdd)          :: TFloat AS SumTransportAdd
+             , SUM (tmpFuel.SumTransportAddLong)      :: TFloat AS SumTransportAddLong
+             , SUM (tmpFuel.SumTransportTaxi)         :: TFloat AS SumTransportTaxi
+             , SUM (tmpFuel.SumRateExp)               :: TFloat AS SumRateExp
 
-             , MAX (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
-             , MAX (COALESCE (tmpDataReestr.CountDoc_zp, 0))        :: TFloat   AS CountDoc_Reestr_zp
-             , MAX (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
+             , SUM (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
+             , SUM (COALESCE (tmpDataReestr.CountDoc_zp, 0))        :: TFloat   AS CountDoc_Reestr_zp
+             , SUM (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
            --, MAX (CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE COALESCE (tmpDataReestr.TotalCountKg, 0) END) :: TFloat AS TotalCountKg_Reestr_zp
-             , MAX (COALESCE (tmpDataReestr.TotalCountKg_Reestr_zp, 0)) :: TFloat AS TotalCountKg_Reestr_zp
+             , SUM (COALESCE (tmpDataReestr.TotalCountKg_Reestr_zp, 0)) :: TFloat AS TotalCountKg_Reestr_zp
 
              , MAX (COALESCE (tmpDataReestr.InvNumber, ''))         :: TVarChar AS InvNumber_Reestr
              , MAX (COALESCE (tmpDataReestr.RouteName_order, ''))   :: TVarChar AS RouteName_order
 
 
-             , SUM (CAST (MovementFloat_PartnerCount.ValueData AS TFloat))       ::TFloat                                                      AS PartnerCount
-             , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
-             , CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat)                                                  AS HoursStop
-             , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat) AS HoursMove
-             , (SUM(COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
+             , SUM (CAST (MovementFloat_PartnerCount.ValueData AS TFloat))       ::TFloat                                        AS PartnerCount
+             --часы по маршрутам так же проссумировать как и точки
+             , SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat)) ::TFloat AS HoursWork
+             , SUM (CAST (COALESCE (MovementFloat_HoursStop.ValueData, 0) AS TFloat))                                                  ::TFloat AS HoursStop
+             , SUM (CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)  AS TFloat)) ::TFloat AS HoursMove
+             ,  (SUM (COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST(COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60  AS NUMERIC (16,2))) :: TFloat AS HoursPartner_all  -- общее время в точках
              , CAST((COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 )  AS NUMERIC (16,2))           :: TFloat AS HoursPartner      -- время в точке, часов
-             , CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+
+             , CASE WHEN ( SUM (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0) )
                         - ( SUM (COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                          ) <> 0
-                    THEN SUM (tmpFuel.DistanceFuel) / (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
+                    THEN SUM (tmpFuel.DistanceFuel) / ( SUM (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0))
                                                      - (SUM (COALESCE (MovementFloat_PartnerCount.ValueData,0)) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                                                       )
                     ELSE 0
@@ -961,8 +963,8 @@ BEGIN
                , ViewObject_Unit.Name
 
            --  , MovementFloat_PartnerCount.ValueData
-             , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) )
-             , (COALESCE (MovementFloat_HoursStop.ValueData, 0) )
+            -- , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) )
+           --  , (COALESCE (MovementFloat_HoursStop.ValueData, 0) )
              /*, CASE WHEN (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) - COALESCE (MovementFloat_HoursStop.ValueData, 0)
                         - (COALESCE (MovementFloat_PartnerCount.ValueData,0) * CAST (COALESCE (ObjectFloat_PartnerMin.ValueData,20) / 60 AS NUMERIC (16,2)))
                          ) <> 0
