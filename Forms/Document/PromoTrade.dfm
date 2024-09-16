@@ -1910,6 +1910,26 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1058#1056#1045#1061' '#1087#1086#1076#1087#1080#1089#1072#1085#1090#1086#1074' '#1074' '#1040#1082#1094#1080#1080
       ImageIndex = 49
     end
+    object actUpdate_PromoTradeHistory: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PromoTradeHistory
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PromoTradeHistory
+        end
+        item
+          StoredProc = spUpdate_PromoTradeHistory
+        end>
+      Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077#1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080
+      Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077#1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080
+      ImageIndex = 45
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077 +
+        #1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080'?'
+      InfoAfterExecute = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1099#1093' '#1074#1099#1087#1086#1083#1085#1077#1085
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -1989,6 +2009,10 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PromoTradeHistory'
         end
         item
           BeginGroup = True
@@ -2104,11 +2128,15 @@ inherited PromoTradeForm: TPromoTradeForm
       Visible = ivAlways
     end
     object dxBarSeparator3: TdxBarSeparator
-      Caption = 'New Item'
+      Caption = 'Separator'
       Category = 0
-      Hint = 'New Item'
+      Hint = 'Separator'
       Visible = ivAlways
       ShowCaption = False
+    end
+    object bbUpdate_PromoTradeHistory: TdxBarButton
+      Action = actUpdate_PromoTradeHistory
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -2561,7 +2589,6 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     Left = 514
-    Top = 240
   end
   inherited GuidesFiller: TGuidesFiller
     Left = 216
@@ -3667,8 +3694,8 @@ inherited PromoTradeForm: TPromoTradeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 496
-    Top = 265
+    Left = 624
+    Top = 241
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
@@ -3795,5 +3822,22 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 224
     Top = 568
+  end
+  object spUpdate_PromoTradeHistory: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_PromoTradeHistory'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 368
   end
 end

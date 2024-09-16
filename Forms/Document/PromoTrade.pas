@@ -171,6 +171,9 @@ type
     Ord: TcxGridDBColumn;
     actChoiceGoodsGroupProperty: TOpenChoiceForm;
     spInsertUpdate_PromoTradeCondition: TdsdStoredProc;
+    spUpdate_PromoTradeHistory: TdsdStoredProc;
+    actUpdate_PromoTradeHistory: TdsdExecStoredProc;
+    bbUpdate_PromoTradeHistory: TdxBarButton;
   private
     { Private declarations }
   public
