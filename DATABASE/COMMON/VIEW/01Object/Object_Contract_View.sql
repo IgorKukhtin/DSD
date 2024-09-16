@@ -27,6 +27,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                                       FROM tmpContractCondition_Value_all
                                       GROUP BY tmpContractCondition_Value_all.ContractId
                                      )
+
   SELECT Object_Contract_InvNumber_View.ContractId
        , Object_Contract_InvNumber_View.ContractCode  
        , Object_Contract_InvNumber_View.InvNumber

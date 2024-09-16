@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitTop = -99
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -12,23 +11,20 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 179
     Width = 1164
     Height = 536
-    ExplicitTop = 139
+    ExplicitTop = 179
     ExplicitWidth = 1164
-    ExplicitHeight = 576
+    ExplicitHeight = 536
     ClientRectBottom = 536
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1164
-      ExplicitHeight = 552
+      ExplicitHeight = 512
       inherited cxGrid: TcxGrid
-        Top = 2
         Width = 1164
-        Height = 323
-        Align = alNone
-        ExplicitTop = 2
+        Height = 285
         ExplicitWidth = 1164
-        ExplicitHeight = 323
+        ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -325,22 +321,21 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 331
+        Top = 293
         Width = 1164
-        Height = 173
+        Height = 219
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 371
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
           Width = 567
-          Height = 171
+          Height = 217
           Align = alClient
           TabOrder = 0
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 171
+          ClientRectBottom = 217
           ClientRectRight = 567
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
@@ -349,7 +344,7 @@ inherited PromoTradeForm: TPromoTradeForm
               Left = 0
               Top = 0
               Width = 567
-              Height = 147
+              Height = 193
               Align = alClient
               TabOrder = 0
               object cxGridDBTableViewMov1: TcxGridDBTableView
@@ -374,27 +369,20 @@ inherited PromoTradeForm: TPromoTradeForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object StatusCode_ch1: TcxGridDBColumn
-                  Caption = #1057#1090#1072#1090#1091#1089
-                  DataBinding.FieldName = 'StatusCode'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 104
-                end
-                object InvNumber_ch1: TcxGridDBColumn
-                  Caption = #8470' '#1076#1086#1082'.'
-                  DataBinding.FieldName = 'InvNumber'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 163
-                end
-                object OperDate_ch1: TcxGridDBColumn
-                  Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-                  DataBinding.FieldName = 'OperDate'
+                object Name_ch1: TcxGridDBColumn
+                  Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+                  DataBinding.FieldName = 'Name'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
-                  Width = 121
+                  Width = 236
+                end
+                object Value_ch1: TcxGridDBColumn
+                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                  DataBinding.FieldName = 'Value'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Width = 241
                 end
               end
               object cxGridLevelMov1: TcxGridLevel
@@ -407,12 +395,12 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 576
           Top = 1
           Width = 587
-          Height = 171
+          Height = 217
           Align = alRight
           TabOrder = 1
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ClientRectBottom = 171
+          ClientRectBottom = 217
           ClientRectRight = 587
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
@@ -421,7 +409,7 @@ inherited PromoTradeForm: TPromoTradeForm
               Left = 0
               Top = 0
               Width = 587
-              Height = 147
+              Height = 193
               Align = alClient
               TabOrder = 0
               object cxGridDBTableViewMov2: TcxGridDBTableView
@@ -446,27 +434,20 @@ inherited PromoTradeForm: TPromoTradeForm
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object StatusCode_ch2: TcxGridDBColumn
-                  Caption = #1057#1090#1072#1090#1091#1089
-                  DataBinding.FieldName = 'StatusCode'
+                object Name_ch2: TcxGridDBColumn
+                  Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+                  DataBinding.FieldName = 'Name'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
-                  Width = 118
+                  Width = 229
                 end
-                object InvNumber_ch2: TcxGridDBColumn
-                  Caption = #8470' '#1076#1086#1082'.'
-                  DataBinding.FieldName = 'InvNumber'
+                object Value_ch2: TcxGridDBColumn
+                  Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+                  DataBinding.FieldName = 'Value'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 115
-                end
-                object OperDate_ch2: TcxGridDBColumn
-                  Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
-                  DataBinding.FieldName = 'OperDate'
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 187
+                  Width = 217
                 end
               end
               object cxGridLevelMov2: TcxGridLevel
@@ -479,7 +460,7 @@ inherited PromoTradeForm: TPromoTradeForm
           Left = 568
           Top = 1
           Width = 8
-          Height = 171
+          Height = 217
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
@@ -487,29 +468,17 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 323
+        Top = 285
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitLeft = -3
-        ExplicitTop = 291
-      end
-      object cxSplitter2: TcxSplitter
-        Left = 0
-        Top = 504
-        Width = 1164
-        Height = 8
-        HotZoneClassName = 'TcxMediaPlayer8Style'
-        AlignSplitter = salBottom
-        ExplicitTop = 544
       end
     end
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitHeight = 552
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -518,7 +487,6 @@ inherited PromoTradeForm: TPromoTradeForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 552
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -677,7 +645,7 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxLabel5: TcxLabel
       Left = 360
       Top = 74
-      Caption = #1040#1082#1094#1080#1103' '#1089
+      Caption = #1044#1072#1090#1072' '#1089
     end
     object deStartPromo: TcxDateEdit
       Left = 360
@@ -689,9 +657,9 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 102
     end
     object cxLabel6: TcxLabel
-      Left = 471
-      Top = 68
-      Caption = #1040#1082#1094#1080#1103' '#1087#1086
+      Left = 473
+      Top = 74
+      Caption = #1044#1072#1090#1072' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
       Left = 473
@@ -1118,16 +1086,21 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdateCalcDS2: TdsdUpdateDataSet [8]
-      Category = 'DSDLib'
+    object actUpdateMov1DS: TdsdUpdateDataSet [8]
+      Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spGet
+      StoredProc = spInsertUpdate_PromoTradeCondition
       StoredProcList = <
         item
-          StoredProc = spGet
+          StoredProc = spInsertUpdate_PromoTradeCondition
+        end
+        item
+          StoredProc = spSelect_Movement_PromoTradeCondition
         end>
-      Caption = 'actUpdateCalcDS'
+      Caption = 'actUpdateMov1DS'
+      Hint = 'PromoTradeCondition'
+      DataSource = Mov1DS
     end
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
@@ -1136,6 +1109,9 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_Movement_PromoTradeCondition
         end
         item
           StoredProc = spSelectMISign
@@ -1343,7 +1319,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Movement_Mov1
+          StoredProc = spSelect_Movement_PromoTradeCondition
         end
         item
         end
@@ -2778,8 +2754,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 248
+    Left = 400
+    Top = 264
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
     Left = 456
@@ -2977,8 +2953,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 284
     Top = 80
   end
-  object spSelect_Movement_Mov1: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PromoTrade_Mov1'
+  object spSelect_Movement_PromoTradeCondition: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
     DataSet = Mov1CDS
     DataSets = <
       item
@@ -2992,18 +2968,10 @@ inherited PromoTradeForm: TPromoTradeForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 160
-    Top = 608
+    Top = 600
   end
   object Mov1CDS: TClientDataSet
     Aggregates = <>
@@ -3801,5 +3769,39 @@ inherited PromoTradeForm: TPromoTradeForm
       end>
     Left = 280
     Top = 5
+  end
+  object spInsertUpdate_PromoTradeCondition: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_PromoTradeCondition'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOrd'
+        Value = Null
+        Component = Mov1CDS
+        ComponentItem = 'Ord'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue'
+        Value = Null
+        Component = Mov1CDS
+        ComponentItem = 'Value'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 224
+    Top = 568
   end
 end

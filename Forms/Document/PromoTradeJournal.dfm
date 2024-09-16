@@ -51,20 +51,21 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
           inherited colOperDate: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
           end
-          object PromoItemName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'PromoItemName'
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 111
+            Width = 80
           end
-          object PromoKindName: TcxGridDBColumn
-            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103
-            DataBinding.FieldName = 'PromoKindName'
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 173
+            Options.Editing = False
+            Width = 100
           end
           object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
@@ -80,12 +81,28 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 97
           end
+          object PromoItemName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'PromoItemName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 111
+          end
+          object PromoKindName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103
+            DataBinding.FieldName = 'PromoKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 173
+          end
           object ChangePercent: TcxGridDBColumn
             Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
@@ -102,13 +119,13 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
             Width = 74
           end
           object StartPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103' '#1089
+            Caption = #1044#1072#1090#1072' '#1089
             DataBinding.FieldName = 'StartPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
           object EndPromo: TcxGridDBColumn
-            Caption = #1040#1082#1094#1080#1103' '#1087#1086
+            Caption = #1044#1072#1090#1072' '#1087#1086
             DataBinding.FieldName = 'EndPromo'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -132,6 +149,7 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
           object PriceListName: TcxGridDBColumn
             Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
             DataBinding.FieldName = 'PriceListName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95

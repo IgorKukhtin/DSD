@@ -62,10 +62,9 @@ type
     bbInsertRecord: TdxBarButton;
     cxGridMov1: TcxGrid;
     cxGridDBTableViewMov1: TcxGridDBTableView;
-    OperDate_ch1: TcxGridDBColumn;
-    StatusCode_ch1: TcxGridDBColumn;
+    Name_ch1: TcxGridDBColumn;
     cxGridLevelMov1: TcxGridLevel;
-    spSelect_Movement_Mov1: TdsdStoredProc;
+    spSelect_Movement_PromoTradeCondition: TdsdStoredProc;
     Mov1CDS: TClientDataSet;
     Mov1DS: TDataSource;
     dsdDBViewAddOnPartner: TdsdDBViewAddOn;
@@ -88,14 +87,14 @@ type
     tsAdvertising: TcxTabSheet;
     cxGridMov2: TcxGrid;
     cxGridDBTableViewMov2: TcxGridDBTableView;
-    StatusCode_ch2: TcxGridDBColumn;
+    Name_ch2: TcxGridDBColumn;
     cxGridLevelMov2: TcxGridLevel;
     cxSplitter3: TcxSplitter;
     Comment: TcxGridDBColumn;
     Summ: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     TradeMarkName: TcxGridDBColumn;
-    InvNumber_ch1: TcxGridDBColumn;
+    Value_ch1: TcxGridDBColumn;
     dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
     actPartnerProtocolOpenForm: TdsdOpenForm;
     actConditionPromoProtocolOpenForm: TdsdOpenForm;
@@ -122,11 +121,10 @@ type
     actOpenReportForm: TdsdOpenForm;
     actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     cxSplitter4: TcxSplitter;
-    cxSplitter2: TcxSplitter;
     spInsertUpdateMIMessage: TdsdStoredProc;
     actUserChoice: TOpenChoiceForm;
     actUpdateDataSetMessage: TdsdUpdateDataSet;
-    actUpdateCalcDS2: TdsdUpdateDataSet;
+    actUpdateMov1DS: TdsdUpdateDataSet;
     cxLabel25: TcxLabel;
     edSignInternal: TcxButtonEdit;
     GuidesSignInternal: TdsdGuides;
@@ -159,8 +157,7 @@ type
     actChoiceTradeMark: TOpenChoiceForm;
     actChoiceGoodsGroupPropertyParent: TOpenChoiceForm;
     actChoiceGoodsGroupDirection: TOpenChoiceForm;
-    InvNumber_ch2: TcxGridDBColumn;
-    OperDate_ch2: TcxGridDBColumn;
+    Value_ch2: TcxGridDBColumn;
     cxLabel20: TcxLabel;
     edContractTag: TcxButtonEdit;
     GuidesContractTag: TdsdGuides;
@@ -173,6 +170,7 @@ type
     GuidesRetail: TdsdGuides;
     Ord: TcxGridDBColumn;
     actChoiceGoodsGroupProperty: TOpenChoiceForm;
+    spInsertUpdate_PromoTradeCondition: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,0 +1,73 @@
+-- Function: gpInsertUpdate_Movement_PromoTradeCondition()
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoTradeCondition (Integer, Integer, TVarChar, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoTradeCondition(
+    IN inMovementId            Integer    , -- Ключ объекта <Документ Трейд маркетинг>
+    IN inOrd                   Integer    , -- Номер строки, по ней определим какое значение
+    IN inValue                 TVarChar   , -- значение 
+    IN inSession               TVarChar     -- сессия пользователя
+)
+RETURNS VOID
+AS
+$BODY$
+   DECLARE vbUserId Integer;  
+   DECLARE vbMovementId_PromoTradeCondition Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PromoTrade());
+
+    --проверка данные из шапки не корректируются
+    IF inOrd <= 3
+    THEN 
+      RAISE EXCEPTION 'Ошибка. Выбранный параметр не вводится, а берется из Договора.';
+    END IF;
+
+
+    vbMovementId_PromoTradeCondition := (SELECT Movement.Id
+                                         FROM Movement
+                                         WHERE Movement.DescId = zc_Movement_PromoTradeCondition()
+                                           AND Movement.ParentId =  inMovementId
+                                         );
+    IF COALESCE (vbMovementId_PromoTradeCondition,0)  
+    THEN
+        --создаем документ
+        SELECT lpInsertUpdate_Movement (ioId, zc_Movement_PromoTradeCondition(), Movement.InvNumber, MovementOperDate, Movement.Id, 0) 
+      INTO vbMovementId_PromoTradeCondition
+        FROM Movement
+        WHERE Movement.Id = inMovementId;
+    END IF;
+    
+    IF inOrd = 4
+    THEN 
+        --RetroBonus
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_RetroBonus(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+
+    IF inOrd = 5
+    THEN 
+        --Market
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Market(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+    
+    IF inOrd = 6
+    THEN 
+        --ReturnIn
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ReturnIn(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+    
+    IF inOrd = 7
+    THEN 
+        --Logist
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Logist(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;
+    
+    
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.24         *
+*/

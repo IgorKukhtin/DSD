@@ -61,6 +61,8 @@ type
     bbAllPartner: TdxBarButton;
     actRefreshPartner: TdsdDataSetRefresh;
     actInsertMaskMulti: TMultiAction;
+    JuridicalName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public
