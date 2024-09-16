@@ -756,12 +756,17 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_Logist() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_Logist', 'Логистический бонус' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Logist');  
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DebtDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DebtDay', 'Просроченная дебиторская задолженность, дней' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtDay');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DebtSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DebtSumm', 'Просроченная дебиторская задолженность, грн' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtSumm');  
 
 
 
-
-
-
+ 
              
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -770,7 +775,9 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
                     zc_MovementFloat_RetroBonus
                     zc_MovementFloat_Market
                     zc_MovementFloat_ReturnIn
-                    zc_MovementFloat_Logist
+                    zc_MovementFloat_Logist  
+                    zc_MovementFloat_DebtSumm 
+                    zc_MovementFloat_DebtDay
                     
  11.03.24         * zc_MovementFloat_TotalSumm_BankSecond_num
                     zc_MovementFloat_TotalSumm_BankSecondTwo_num

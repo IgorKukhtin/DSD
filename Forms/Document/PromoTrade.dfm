@@ -3,6 +3,7 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
+  ExplicitTop = -124
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -440,14 +441,15 @@ inherited PromoTradeForm: TPromoTradeForm
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
                   Options.Editing = False
-                  Width = 229
+                  Width = 310
                 end
                 object Value_ch2: TcxGridDBColumn
                   Caption = #1047#1085#1072#1095#1077#1085#1080#1077
                   DataBinding.FieldName = 'Value'
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 217
+                  Options.Editing = False
+                  Width = 196
                 end
               end
               object cxGridLevelMov2: TcxGridLevel
@@ -1096,7 +1098,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spInsertUpdate_PromoTradeCondition
         end
         item
-          StoredProc = spSelect_Movement_PromoTradeCondition
+          StoredProc = spSelect_PromoTradeCondition
         end>
       Caption = 'actUpdateMov1DS'
       Hint = 'PromoTradeCondition'
@@ -1111,7 +1113,10 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Movement_PromoTradeCondition
+          StoredProc = spSelect_PromoTradeCondition
+        end
+        item
+          StoredProc = spSelect_PromoTradeHistory
         end
         item
           StoredProc = spSelectMISign
@@ -1319,7 +1324,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spSelect_Movement_PromoTradeCondition
+          StoredProc = spSelect_PromoTradeCondition
         end
         item
         end
@@ -2953,7 +2958,7 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 284
     Top = 80
   end
-  object spSelect_Movement_PromoTradeCondition: TdsdStoredProc
+  object spSelect_PromoTradeCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
     DataSet = Mov1CDS
     DataSets = <
@@ -3134,8 +3139,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Left = 1104
     Top = 432
   end
-  object spSelect_Movement_Mov2: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PromoTrade_Mov2'
+  object spSelect_PromoTradeHistory: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTradeHistory'
     DataSet = Mov2CDS
     DataSets = <
       item
@@ -3149,22 +3154,9 @@ inherited PromoTradeForm: TPromoTradeForm
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
+    Left = 696
     Top = 608
   end
   object dsdDBViewAddOnPartnerList: TdsdDBViewAddOn

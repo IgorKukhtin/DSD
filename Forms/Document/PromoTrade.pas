@@ -64,7 +64,7 @@ type
     cxGridDBTableViewMov1: TcxGridDBTableView;
     Name_ch1: TcxGridDBColumn;
     cxGridLevelMov1: TcxGridLevel;
-    spSelect_Movement_PromoTradeCondition: TdsdStoredProc;
+    spSelect_PromoTradeCondition: TdsdStoredProc;
     Mov1CDS: TClientDataSet;
     Mov1DS: TDataSource;
     dsdDBViewAddOnPartner: TdsdDBViewAddOn;
@@ -82,7 +82,7 @@ type
     spErasedAdvertising: TdsdStoredProc;
     spUnErasedAdvertising: TdsdStoredProc;
     spInsertUpdateMIAdvertising: TdsdStoredProc;
-    spSelect_Movement_Mov2: TdsdStoredProc;
+    spSelect_PromoTradeHistory: TdsdStoredProc;
     cxPageControl3: TcxPageControl;
     tsAdvertising: TcxTabSheet;
     cxGridMov2: TcxGrid;
