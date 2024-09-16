@@ -3,28 +3,32 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
+  ExplicitTop = -99
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 139
+    Top = 179
     Width = 1164
-    Height = 576
+    Height = 536
     ExplicitTop = 139
     ExplicitWidth = 1164
     ExplicitHeight = 576
-    ClientRectBottom = 576
+    ClientRectBottom = 536
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1164
       ExplicitHeight = 552
       inherited cxGrid: TcxGrid
+        Top = 2
         Width = 1164
-        Height = 363
+        Height = 323
+        Align = alNone
+        ExplicitTop = 2
         ExplicitWidth = 1164
-        ExplicitHeight = 363
+        ExplicitHeight = 323
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -321,11 +325,12 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 371
+        Top = 331
         Width = 1164
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 371
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
@@ -482,33 +487,38 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 363
+        Top = 323
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitLeft = -3
+        ExplicitTop = 291
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 544
+        Top = 504
         Width = 1164
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
+        ExplicitTop = 544
       end
     end
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+      ExplicitHeight = 552
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1164
-        Height = 552
+        Height = 512
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 552
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -594,18 +604,18 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   inherited DataPanel: TPanel
     Width = 1164
-    Height = 113
+    Height = 153
     TabOrder = 3
     ExplicitWidth = 1164
-    ExplicitHeight = 113
+    ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 18
       TabStop = False
       ExplicitLeft = 8
       ExplicitTop = 18
-      ExplicitWidth = 75
-      Width = 75
+      ExplicitWidth = 169
+      Width = 169
     end
     inherited cxLabel1: TcxLabel
       Left = 8
@@ -614,42 +624,46 @@ inherited PromoTradeForm: TPromoTradeForm
       ExplicitTop = 4
     end
     inherited edOperDate: TcxDateEdit
-      Left = 89
-      Top = 18
+      Left = 8
+      Top = 54
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      ExplicitLeft = 89
-      ExplicitTop = 18
-      ExplicitWidth = 88
-      Width = 88
+      ExplicitLeft = 8
+      ExplicitTop = 54
+      ExplicitWidth = 169
+      Width = 169
     end
     inherited cxLabel2: TcxLabel
-      Left = 89
-      Top = 4
-      ExplicitLeft = 89
-      ExplicitTop = 4
-    end
-    inherited cxLabel15: TcxLabel
+      Left = 8
       Top = 38
+      ExplicitLeft = 8
       ExplicitTop = 38
     end
+    inherited cxLabel15: TcxLabel
+      Left = 7
+      Top = 74
+      ExplicitLeft = 7
+      ExplicitTop = 74
+    end
     inherited ceStatus: TcxButtonEdit
-      Top = 54
+      Left = 7
+      Top = 90
       TabStop = False
       TabOrder = 12
-      ExplicitTop = 54
+      ExplicitLeft = 7
+      ExplicitTop = 90
       ExplicitWidth = 170
       ExplicitHeight = 22
       Width = 170
     end
     object cxLabel4: TcxLabel
-      Left = 380
+      Left = 473
       Top = 38
       Caption = #1059#1089#1083#1086#1074#1080#1103' '#1091#1095#1072#1089#1090#1080#1103' '
     end
     object edPromoKind: TcxButtonEdit
-      Left = 380
+      Left = 473
       Top = 54
       Properties.Buttons = <
         item
@@ -658,44 +672,44 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 151
+      Width = 110
     end
     object cxLabel5: TcxLabel
-      Left = 191
-      Top = 4
+      Left = 360
+      Top = 74
       Caption = #1040#1082#1094#1080#1103' '#1089
     end
     object deStartPromo: TcxDateEdit
-      Left = 191
-      Top = 18
+      Left = 360
+      Top = 90
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
-      Width = 81
+      Width = 102
     end
     object cxLabel6: TcxLabel
-      Left = 285
-      Top = 4
+      Left = 471
+      Top = 68
       Caption = #1040#1082#1094#1080#1103' '#1087#1086
     end
     object deEndPromo: TcxDateEdit
-      Left = 281
-      Top = 18
+      Left = 473
+      Top = 90
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 3
-      Width = 87
+      Width = 110
     end
     object cxLabel9: TcxLabel
-      Left = 191
-      Top = 38
+      Left = 593
+      Top = 4
       Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1089
     end
     object deOperDateStart: TcxDateEdit
-      Left = 191
-      Top = 54
+      Left = 593
+      Top = 18
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -703,13 +717,13 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 81
     end
     object cxLabel10: TcxLabel
-      Left = 281
-      Top = 38
+      Left = 683
+      Top = 4
       Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1086
     end
     object deOperDateEnd: TcxDateEdit
-      Left = 281
-      Top = 54
+      Left = 683
+      Top = 18
       EditValue = 42132d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -717,40 +731,40 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 87
     end
     object edCostPromo: TcxCurrencyEdit
-      Left = 708
+      Left = 360
       Top = 54
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
       Properties.UseThousandSeparator = True
       TabOrder = 9
-      Width = 156
+      Width = 102
     end
     object cxLabel12: TcxLabel
-      Left = 706
-      Top = 38
+      Left = 360
+      Top = 40
       Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
     end
     object cxLabel13: TcxLabel
-      Left = 870
-      Top = 38
-      Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+      Left = 360
+      Top = 109
+      Caption = #1054#1087#1080#1089#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 870
-      Top = 54
+      Left = 360
+      Top = 126
       Properties.MaxLength = 255
       TabOrder = 8
-      Width = 139
+      Width = 223
     end
     object cxLabel14: TcxLabel
-      Left = 8
-      Top = 74
+      Left = 7
+      Top = 111
       Caption = #1060#1048#1054' ('#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1081' '#1086#1090#1076#1077#1083')'
     end
     object edPersonalTrade: TcxButtonEdit
-      Left = 8
-      Top = 90
+      Left = 7
+      Top = 126
       Properties.Buttons = <
         item
           Default = True
@@ -763,13 +777,13 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 170
     end
     object cxLabel16: TcxLabel
-      Left = 544
-      Top = 38
+      Left = 360
+      Top = 4
       Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
     end
     object edPromoItem: TcxButtonEdit
-      Left = 544
-      Top = 54
+      Left = 360
+      Top = 18
       Properties.Buttons = <
         item
           Default = True
@@ -778,11 +792,11 @@ inherited PromoTradeForm: TPromoTradeForm
       Properties.ReadOnly = True
       Style.BorderColor = 13041606
       TabOrder = 11
-      Width = 156
+      Width = 223
     end
     object edContract: TcxButtonEdit
-      Left = 708
-      Top = 18
+      Left = 190
+      Top = 90
       Properties.Buttons = <
         item
           Default = True
@@ -793,18 +807,18 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 156
     end
     object cxLabel17: TcxLabel
-      Left = 708
-      Top = 4
+      Left = 191
+      Top = 74
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel20: TcxLabel
-      Left = 870
-      Top = 4
+      Left = 190
+      Top = 111
       Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edContractTag: TcxButtonEdit
-      Left = 870
-      Top = 18
+      Left = 190
+      Top = 126
       Properties.Buttons = <
         item
           Default = True
@@ -813,16 +827,16 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 139
+      Width = 156
     end
     object cxLabel3: TcxLabel
-      Left = 544
-      Top = 4
+      Left = 190
+      Top = 40
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
     object ceJuridical: TcxButtonEdit
-      Left = 544
-      Top = 18
+      Left = 190
+      Top = 54
       Properties.Buttons = <
         item
           Default = True
@@ -833,12 +847,12 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 156
     end
     object cxLabel7: TcxLabel
-      Left = 380
+      Left = 190
       Top = 4
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
     end
     object ceRetail: TcxButtonEdit
-      Left = 380
+      Left = 190
       Top = 18
       Properties.Buttons = <
         item
@@ -847,35 +861,35 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 151
+      Width = 156
     end
   end
   object cxLabel21: TcxLabel [2]
-    Left = 191
-    Top = 74
+    Left = 593
+    Top = 109
     Caption = #1045#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object edStrSign: TcxTextEdit [3]
-    Left = 191
-    Top = 90
+    Left = 593
+    Top = 126
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 177
   end
   object edStrSignNo: TcxTextEdit [4]
-    Left = 380
-    Top = 90
+    Left = 593
+    Top = 54
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 151
+    Width = 177
   end
   object cxLabel22: TcxLabel [5]
-    Left = 380
-    Top = 74
+    Left = 593
+    Top = 40
     Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object cxLabel25: TcxLabel [6]
-    Left = 544
+    Left = 593
     Top = 74
     Hint = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
     Caption = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
@@ -883,7 +897,7 @@ inherited PromoTradeForm: TPromoTradeForm
     ShowHint = True
   end
   object edSignInternal: TcxButtonEdit [7]
-    Left = 544
+    Left = 593
     Top = 90
     Properties.Buttons = <
       item
@@ -893,7 +907,7 @@ inherited PromoTradeForm: TPromoTradeForm
       end>
     Properties.ReadOnly = True
     TabOrder = 11
-    Width = 320
+    Width = 177
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
@@ -904,8 +918,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 288
   end
   inherited ActionList: TActionList
-    Left = 239
-    Top = 191
+    Left = 287
+    Top = 335
     object actChoiceTradeMark: TOpenChoiceForm [0]
       Category = 'Goods'
       MoveParams = <>
@@ -2803,8 +2817,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 452
-    Top = 48
+    Left = 516
+    Top = 24
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -2864,8 +2878,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 580
-    Top = 32
+    Left = 476
+    Top = 65528
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -2960,8 +2974,8 @@ inherited PromoTradeForm: TPromoTradeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 772
-    Top = 8
+    Left = 284
+    Top = 80
   end
   object spSelect_Movement_Mov1: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Mov1'
@@ -3253,13 +3267,13 @@ inherited PromoTradeForm: TPromoTradeForm
   object SignCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 992
-    Top = 192
+    Left = 1064
+    Top = 144
   end
   object SignDS: TDataSource
     DataSet = SignCDS
-    Left = 1020
-    Top = 214
+    Left = 1100
+    Top = 142
   end
   object dsdDBViewAddOnSign: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3379,7 +3393,7 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1072
+    Left = 888
     Top = 83
   end
   object GuidesSignInternal: TdsdGuides
@@ -3462,8 +3476,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 136
+    Left = 888
+    Top = 24
   end
   object spUpdate_SignInternal_Two: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
@@ -3514,8 +3528,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
-    Top = 136
+    Left = 896
+    Top = 40
   end
   object cxEditRepository1: TcxEditRepository
     Left = 1112
@@ -3594,8 +3608,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 928
-    Top = 136
+    Left = 880
+    Top = 16
   end
   object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
@@ -3624,8 +3638,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 915
-    Top = 4
+    Left = 275
+    Top = 108
   end
   object GuidesContractJuridical: TdsdGuides
     KeyField = 'Id'
@@ -3754,8 +3768,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 612
-    Top = 17
+    Left = 300
+    Top = 49
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -3785,7 +3799,7 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 472
+    Left = 280
     Top = 5
   end
 end
