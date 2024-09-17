@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitTop = -124
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -733,7 +732,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1060#1048#1054' ('#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1081' '#1086#1090#1076#1077#1083')'
     end
     object edPersonalTrade: TcxButtonEdit
-      Left = 7
+      Left = 8
       Top = 126
       Properties.Buttons = <
         item
@@ -1920,7 +1919,7 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spUpdate_PromoTradeHistory
         end
         item
-          StoredProc = spUpdate_PromoTradeHistory
+          StoredProc = spSelect_PromoTradeHistory
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077#1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077#1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080
@@ -2982,8 +2981,8 @@ inherited PromoTradeForm: TPromoTradeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 284
-    Top = 80
+    Left = 236
+    Top = 96
   end
   object spSelect_PromoTradeCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
@@ -3755,7 +3754,7 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 300
+    Left = 276
     Top = 49
   end
   object GuidesRetail: TdsdGuides

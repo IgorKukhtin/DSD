@@ -17,7 +17,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoTrade(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert      Boolean; 
+   DECLARE vbOperDateStart TDateTime;
+   DECLARE vbOperDateEnd   TDateTime;
 BEGIN
     -- проверка
     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
@@ -41,6 +43,10 @@ BEGIN
                       , zfConvert_DateToString (inOperDate)
                        ;
     END IF;
+
+    --определяем даты расчпета продаж
+    vbOperDateEnd := inStartPromo - INTERVAL '1 Day';
+    vbOperDateStart := vbOperDateEnd - INTERVAL '3 Month';
  
     -- сохранили связь с <договор>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
@@ -95,9 +101,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndPromo(), ioId, inEndPromo); 
     
     -- Дата начала расч. продаж до акции
-    --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, inOperDateStart);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), ioId, vbOperDateStart);
     -- Дата окончания расч. продаж до акции
-    --PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, inOperDateEnd);
+    PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, vbOperDateEnd);
     
     --Стоимость участия в акции
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
