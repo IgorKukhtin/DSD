@@ -446,12 +446,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionPartnerValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionPartnerValueForm');
    exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
 
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
    //exit;
@@ -632,10 +632,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupProperty_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupProperty_ObjectForm');
- // exit;
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupPropertyEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupPropertyParentEditForm'));

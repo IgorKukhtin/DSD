@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar, INN TVarChar
              , SheetWorkTimeId Integer, SheetWorkTimeName TVarChar
              , DateIn TDateTime, DateOut TDateTime, DateSend TDateTime
              , isDateOut Boolean, isDateSend Boolean, isMain Boolean, isOfficial Boolean
-             , MemberId Integer, ScalePSW TVarChar, ScalePSW_forPrint TFloat
+             , MemberId Integer, UserId Integer
+             , ScalePSW TVarChar, ScalePSW_forPrint TFloat
              , isErased Boolean
              , isPastMain Boolean
              , isIrna Boolean
@@ -66,7 +67,7 @@ BEGIN
    vbMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Member());
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND Object_RoleAccessKeyGuide_View.UserId = vbUserId)
-              OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (447972)) -- Просмотр СБ
+              OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND RoleId IN (447972)) -- Просмотр СБ
               OR vbUserId = 80830   -- Кисличная Т.А.
               OR vbUserId = 343013  -- Нагорная Я.Г.
               OR vbUserId = 2573318 -- Любарский Г.О.
@@ -176,7 +177,8 @@ BEGIN
          , Object_Personal_View.isMain
          , Object_Personal_View.isOfficial
          
-         , Object_Personal_View.MemberId                                                    AS MemberId
+         , Object_Personal_View.MemberId                                                    AS MemberId  
+         , ObjectLink_User_Member.ObjectId                                                  AS UserId
          , REPEAT ('*', LENGTH (CASE WHEN COALESCE (ObjectFloat_ScalePSW.ValueData, 0) = 0 THEN '' ELSE '12345' /*(ObjectFloat_ScalePSW.ValueData :: Integer) :: TVarChar*/ END)) :: TVarChar AS ScalePSW
          , COALESCE (ObjectFloat_ScalePSW.ValueData, 0) ::TFloat                            AS ScalePSW_forPrint
          , Object_Personal_View.isErased
@@ -236,6 +238,10 @@ BEGIN
                               AND ObjectLink_Member_BankSecond.DescId = zc_ObjectLink_Member_BankSecond()
           LEFT JOIN Object AS Object_BankSecond ON Object_BankSecond.Id = ObjectLink_Member_BankSecond.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                               ON ObjectLink_User_Member.ChildObjectId = Object_Personal_View.MemberId          --ObjectLink_User_Member.ObjectId
+                              AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        
           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
                                ON ObjectLink_Unit_Branch.ObjectId = Object_Personal_View.UnitId
                               AND ObjectLink_Unit_Branch.DescId   = zc_ObjectLink_Unit_Branch()
@@ -382,7 +388,8 @@ BEGIN
          , FALSE                    AS isDateSend
          , FALSE                    AS isMain
          , FALSE                    AS isOfficial
-         , 0                        AS MemberId
+         , 0                        AS MemberId  
+         , 0                        AS UserId
          , CAST ('' as TVarChar)    AS ScalePSW
          , CAST (Null as TFloat)    AS ScalePSW_forPrint
          , FALSE                    AS isErased

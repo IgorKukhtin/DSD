@@ -736,12 +736,49 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSumm_BankSecondDiff_num() RETUR
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSumm_BankSecondDiff_num', 'Карта Банк - 2ф.(личный, по приоритету)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSumm_BankSecondDiff_num');  
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DelayDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DelayDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DelayDay', 'Отсрочка по договору' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DelayDay');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_RetroBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RetroBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_RetroBonus', 'Ретро бонус' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_RetroBonus');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Market() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Market'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Market', 'Маркетинговый бюджет' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Market');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_ReturnIn', 'Компенсация возвратов' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_ReturnIn');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Logist() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Logist'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Logist', 'Логистический бонус' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Logist');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DebtDay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtDay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DebtDay', 'Просроченная дебиторская задолженность, дней' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtDay');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DebtSumm() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtSumm'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_DebtSumm', 'Просроченная дебиторская задолженность, грн' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtSumm');  
 
 
+
+ 
              
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 16.09.24         * zc_MovementFloat_DelayDay
+                    zc_MovementFloat_RetroBonus
+                    zc_MovementFloat_Market
+                    zc_MovementFloat_ReturnIn
+                    zc_MovementFloat_Logist  
+                    zc_MovementFloat_DebtSumm 
+                    zc_MovementFloat_DebtDay
+                    
  11.03.24         * zc_MovementFloat_TotalSumm_BankSecond_num
                     zc_MovementFloat_TotalSumm_BankSecondTwo_num
                     zc_MovementFloat_TotalSumm_BankSecondDiff_num

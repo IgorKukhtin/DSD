@@ -47,7 +47,9 @@ BEGIN
   
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, OL_PriceList.ChildObjectId)
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, OL_PersonalTrade.ChildObjectId)
+          , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractConditionKind(), ioId, tmpCC.ContractConditionKindId)
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, tmpCC.ChangePercent)
+          , lpInsertUpdate_MovementFloat (zc_MovementFloat_DelayDay(), ioId, (COALESCE (tmpCC.DayCalendar,0) + COALESCE (tmpCC.DayBank,0))::TFloat )
     FROM Object AS tmp                     
          LEFT JOIN (WITH tmpContractCondition_Value_all AS (SELECT * 
                                           FROM Object_ContractCondition_ValueView AS View_ContractCondition_Value
@@ -56,17 +58,16 @@ BEGIN
                        --, tmpContractCondition_Value AS 
                         (SELECT tmpContractCondition_Value_all.ContractId
                               , MAX (tmpContractCondition_Value_all.ChangePercent)        :: TFloat AS ChangePercent
-                              , MAX (tmpContractCondition_Value_all.ChangePercentPartner) :: TFloat AS ChangePercentPartner
-                              , MAX (tmpContractCondition_Value_all.ChangePrice)          :: TFloat AS ChangePrice
-                              
+                                                            
                               , MAX (tmpContractCondition_Value_all.DayCalendar) :: TFloat AS DayCalendar
                               , MAX (tmpContractCondition_Value_all.DayBank)     :: TFloat AS DayBank
+                              
                               , CASE WHEN 0 <> MAX (tmpContractCondition_Value_all.DayCalendar)
-                                         THEN (MAX (tmpContractCondition_Value_all.DayCalendar) :: Integer) :: TVarChar || ' К.дн.'
+                                         THEN (MAX (zc_Enum_ContractConditionKind_DelayDayCalendar()) :: Integer) 
                                      WHEN 0 <> MAX (tmpContractCondition_Value_all.DayBank)
-                                         THEN (MAX (tmpContractCondition_Value_all.DayBank)     :: Integer) :: TVarChar || ' Б.дн.'
-                                     ELSE '0 дн.'
-                                END :: TVarChar  AS DelayDay
+                                         THEN MAX(zc_Enum_ContractConditionKind_DelayDayBank()      :: Integer)
+                                     ELSE 0
+                                END :: Integer  AS ContractConditionKindId
                        
                               , MAX (tmpContractCondition_Value_all.StartDate) :: TDateTime AS StartDate
                               , MAX (tmpContractCondition_Value_all.EndDate)   :: TDateTime AS EndDate

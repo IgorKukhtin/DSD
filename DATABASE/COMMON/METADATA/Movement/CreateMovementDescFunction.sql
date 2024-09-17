@@ -600,8 +600,16 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoTrade() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoTrade', 'Трейд-маркетинг' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTrade');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoTradeCondition() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeCondition'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoTradeCondition', 'Коммерческие условия' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeCondition');
 
-   
+CREATE OR REPLACE FUNCTION zc_Movement_PromoTradeHistory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeHistory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoTradeHistory', 'История клиента' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeHistory');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР

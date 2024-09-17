@@ -22,7 +22,7 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
   TPersonal_ObjectForm = class(TParentForm)
@@ -83,6 +83,12 @@ type
     spGet_ScalePSW: TdsdStoredProc;
     mactMember_UpdateDialog: TMultiAction;
     actGet_ScalePSW: TdsdExecStoredProc;
+    spPrintUser_Badge: TdsdStoredProc;
+    actPrintUser_Badge: TdsdPrintAction;
+    bbsPrint: TdxBarSubItem;
+    bbPrintUser_Badge: TdxBarButton;
+    UserId: TcxGridDBColumn;
+    PrintUser_BadgeCDS: TClientDataSet;
   private
     { Private declarations }
   public
