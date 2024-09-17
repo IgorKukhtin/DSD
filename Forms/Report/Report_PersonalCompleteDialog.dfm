@@ -54,7 +54,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPosition: TcxButtonEdit
     Left = 98
-    Top = 129
+    Top = 167
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_PersonalCompleteDialogForm: TReport_PersonalCompleteDialogForm
   end
   object edPersonal: TcxButtonEdit
     Left = 98
-    Top = 167
+    Top = 132
     Properties.Buttons = <
       item
         Default = True
