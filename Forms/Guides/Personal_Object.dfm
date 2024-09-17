@@ -3,7 +3,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
   ClientHeight = 358
-  ClientWidth = 808
+  ClientWidth = 798
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,13 +21,15 @@ object Personal_ObjectForm: TPersonal_ObjectForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 808
+    Width = 798
     Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 18
+    ExplicitWidth = 808
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -208,6 +210,12 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         VisibleForCustomization = False
         Width = 30
       end
+      object UserId: TcxGridDBColumn
+        DataBinding.FieldName = 'UserId'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -369,7 +377,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -445,6 +453,25 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintUser_Badge'
+        end>
+    end
+    object bbPrintUser_Badge: TdxBarButton
+      Action = actPrintUser_Badge
       Category = 0
     end
   end
@@ -701,6 +728,33 @@ object Personal_ObjectForm: TPersonal_ObjectForm
         end>
       Caption = 'actGet_ScalePSW'
     end
+    object actPrintUser_Badge: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spPrintUser_Badge
+      StoredProcList = <
+        item
+          StoredProc = spPrintUser_Badge
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1073#1077#1081#1076#1078#1080#1082#1072' '#1076#1083#1103' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080' '#1074' '#1084#1086#1073#1080#1083#1100#1085#1086#1084' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1080
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintUser_BadgeCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintUser_Badge'
+      ReportNameParam.Value = 'PrintUser_Badge'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+      PreviewWindowMaximized = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Personal'
@@ -775,6 +829,7 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 328
     Top = 264
@@ -817,5 +872,31 @@ object Personal_ObjectForm: TPersonal_ObjectForm
     PackSize = 1
     Left = 168
     Top = 224
+  end
+  object spPrintUser_Badge: TdsdStoredProc
+    StoredProcName = 'gpSelect_User_PrintBadge'
+    DataSet = PrintUser_BadgeCDS
+    DataSets = <
+      item
+        DataSet = PrintUser_BadgeCDS
+      end>
+    Params = <
+      item
+        Name = 'inUserId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 120
+  end
+  object PrintUser_BadgeCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 680
+    Top = 176
   end
 end
