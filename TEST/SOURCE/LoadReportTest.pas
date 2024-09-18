@@ -140,10 +140,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+  {
   LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
   exit;
- { LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
+  LoadReportFromFile('PrintUser_Badge', ReportPath + '\Справочники\PrintUser_Badge.fr3');
 
   LoadReportFromFile('Печать_ЯчеекОтбора_штрихкод', ReportPath + '\Справочники\Печать_ЯчеекОтбора_штрихкод.fr3');
   exit;
@@ -430,14 +430,14 @@ begin
   exit;
 
   // Отчеты производство
-  }
+
 
   LoadReportFromFile('Отчет_по_выходам', ReportPath + '\Отчеты (производство)\Отчет_по_выходам.fr3');
   LoadReportFromFile('Отчет_по_выходам(цех)', ReportPath + '\Отчеты (производство)\Отчет_по_выходам(цех).fr3');
   LoadReportFromFile('Отчет_по_выходам(термичка)', ReportPath + '\Отчеты (производство)\Отчет_по_выходам(термичка).fr3');
   LoadReportFromFile('Отчет_Производство_Технолог_new', ReportPath + '\Отчеты (производство)\Отчет_Производство_Технолог_new.fr3');
     exit;
-   {
+
   LoadReportFromFile('Отчет_Приход_Расход_производство_разделение', ReportPath + '\Отчеты (производство)\Отчет_Приход_Расход_производство_разделение.fr3');
     exit;
 
@@ -507,9 +507,9 @@ begin
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   exit;
   LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
-   }
+
    LoadReportFromFile('Производство (по дням для сырья) в составе', ReportPath + '\Производство\Производство (по дням для сырья) в составе.fr3');
-   {LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
+   LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
    //LoadReportFromFile('Производство (по дням для специй)', ReportPath + '\Производство\Производство (по дням для специй).fr3');
    //LoadReportFromFile('Производство (по дням для оболочки)', ReportPath + '\Производство\Производство (по дням для оболочки).fr3');
     exit;
@@ -709,10 +709,10 @@ begin
   exit;
 
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
-  }
+
   LoadReportFromFile('PrintMovement_OrderExternal_Cell', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal_Cell.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_OrderExternalQty', ReportPath + '\Товарный Учет\PrintMovement_OrderExternalQty.fr3');
 
 

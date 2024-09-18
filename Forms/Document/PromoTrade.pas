@@ -174,6 +174,9 @@ type
     spUpdate_PromoTradeHistory: TdsdStoredProc;
     actUpdate_PromoTradeHistory: TdsdExecStoredProc;
     bbUpdate_PromoTradeHistory: TdxBarButton;
+    AmountSale: TcxGridDBColumn;
+    SummSale: TcxGridDBColumn;
+    AmountReturnIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

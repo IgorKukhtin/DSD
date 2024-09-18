@@ -86,6 +86,31 @@ inherited PromoTradeForm: TPromoTradeForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = SummSale
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = AmountReturnIn
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = Summ
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -152,6 +177,31 @@ inherited PromoTradeForm: TPromoTradeForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = SummSale
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = AmountReturnIn
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = '0.####'
+              Kind = skSum
+              Column = Summ
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -316,6 +366,41 @@ inherited PromoTradeForm: TPromoTradeForm
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+          end
+          object AmountSale: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' (3'#1084'.)'
+            DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
+            Width = 80
+          end
+          object SummSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' (3'#1084'.)'
+            DataBinding.FieldName = 'SummSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1057#1091#1084#1084#1072#1087#1088#1086#1076#1072#1078' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
+            Width = 80
+          end
+          object AmountReturnIn: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1084' '#1074#1086#1079#1074#1088#1072#1090#1099' (3'#1084'.)'
+            DataBinding.FieldName = 'AmountReturnIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1098#1077#1084' '#1074#1086#1079#1074#1088#1072#1090#1099' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
+            Width = 80
           end
         end
       end
@@ -575,6 +660,7 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
+    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -1919,6 +2005,9 @@ inherited PromoTradeForm: TPromoTradeForm
           StoredProc = spUpdate_PromoTradeHistory
         end
         item
+          StoredProc = spSelect
+        end
+        item
           StoredProc = spSelect_PromoTradeHistory
         end>
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' '#1087#1088#1086#1076#1072#1078', '#1074#1086#1079#1074#1088#1072#1090#1072', '#1087#1088#1086#1089#1088#1086#1095'. '#1076#1077#1073#1077#1090'.'#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080
@@ -2230,8 +2319,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 200
-    Top = 392
+    Left = 584
+    Top = 320
   end
   inherited StatusGuides: TdsdGuides
     Left = 152
@@ -2617,6 +2706,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Control = edContract
       end
       item
+        Control = ceJuridical
       end
       item
         Control = edCostPromo
@@ -3223,8 +3313,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
-    Top = 211
+    Left = 856
+    Top = 259
   end
   object spInsertUpdateMISign_Yes: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
@@ -3307,8 +3397,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 956
-    Top = 216
+    Left = 932
+    Top = 256
   end
   object spInsertUpdateMIMessage: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Message'
