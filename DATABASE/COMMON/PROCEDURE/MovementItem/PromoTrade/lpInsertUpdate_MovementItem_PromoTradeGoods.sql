@@ -1,11 +1,12 @@
 -- Function: lpInsertUpdate_MovementItem_PromoTradeGoods()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
-
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId            Integer   , -- Ключ объекта <Документ>
+    IN inMovementId            Integer   , -- Ключ объекта <Документ>   
+    IN inPartnerId             Integer   ,
     IN inGoodsId               Integer   , -- Товары
     IN inAmount                TFloat    , -- 
     IN inSumm                  TFloat    , --
@@ -33,8 +34,10 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
     -- сохранили <>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartnerCount(), ioId, inPartnerCount);
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
     
+    -- сохранили связь с <>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_TradeMark(), ioId, CASE WHEN COALESCE (inGoodsId,0) = 0 THEN inTradeMarkId ELSE NULL END ::Integer);
     -- сохранили связь с <Вид товара>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
   
@@ -62,5 +65,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.09.24         *
  03.09.24         *
  */

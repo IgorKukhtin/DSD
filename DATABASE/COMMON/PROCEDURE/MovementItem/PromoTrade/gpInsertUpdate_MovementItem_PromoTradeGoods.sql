@@ -2,10 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                     Integer   , -- Ключ объекта <Документ>
+    IN inPartnerId                      Integer   , -- 
     IN inGoodsId                        Integer   , -- Товары
     IN inAmount                         TFloat    , -- 
     IN inSumm                           TFloat    , -- Cумм грн
@@ -61,7 +63,8 @@ BEGIN
     
     -- сохранили
     ioId := lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
-                                                       , inMovementId           := inMovementId
+                                                       , inMovementId           := inMovementId 
+                                                       , inPartnerId            := inPartnerId
                                                        , inGoodsId              := inGoodsId
                                                        , inAmount               := inAmount
                                                        , inSumm                 := inSumm
