@@ -2,6 +2,7 @@ inherited PersonalServiceForm: TPersonalServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1079#1072#1088#1087#1083#1072#1090#1099'>'
   ClientHeight = 759
   ClientWidth = 1474
+  ExplicitLeft = -310
   ExplicitWidth = 1490
   ExplicitHeight = 798
   PixelsPerInch = 96
@@ -354,6 +355,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_BankSecondDiff_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalog_print
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -690,6 +696,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = Summ_BankSecondDiff_num
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummNalog_print
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1956,6 +1967,13 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object SummNalog_print: TcxGridDBColumn
+            Caption = '*'#1053#1072#1083#1086#1075#1080' - '#1091#1076#1077#1088#1078#1072#1085#1080#1103' '#1089' '#1047#1055
+            DataBinding.FieldName = 'SummNalog_print'
+            Visible = False
+            Options.Editing = False
+            Width = 70
           end
         end
       end

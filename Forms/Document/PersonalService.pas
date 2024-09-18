@@ -391,6 +391,7 @@ type
     bbPrint_Grid: TdxBarButton;
     Amount_avance_ret: TcxGridDBColumn;
     AmountCash_print: TcxGridDBColumn;
+    SummNalog_print: TcxGridDBColumn;
   private
     { Private declarations }
   public
