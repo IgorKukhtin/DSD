@@ -23,6 +23,8 @@ inherited PromoTradeForm: TPromoTradeForm
       inherited cxGrid: TcxGrid
         Width = 1164
         Height = 285
+        ExplicitLeft = 3
+        ExplicitTop = -86
         ExplicitWidth = 1164
         ExplicitHeight = 285
         inherited cxGridDBTableView: TcxGridDBTableView

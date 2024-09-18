@@ -1533,7 +1533,9 @@ uses
   PromoTrade in '..\..\Forms\Document\PromoTrade.pas' {PromoTradeForm: TParentForm},
   RouteNum in '..\..\Forms\Guides\RouteNum.pas' {RouteNumForm: TParentForm},
   RouteNumEdit in '..\..\Forms\Guides\RouteNumEdit.pas' {RouteNumEditForm: TParentForm},
-  Movement_DateDialog_PersonalService in '..\..\Forms\Document\Movement_DateDialog_PersonalService.pas' {Movement_DateDialog_PersonalServiceForm: TParentForm};
+  Movement_DateDialog_PersonalService in '..\..\Forms\Document\Movement_DateDialog_PersonalService.pas' {Movement_DateDialog_PersonalServiceForm: TParentForm},
+  Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
+  Report_ProfitLossService_bySaleDialog in '..\..\Forms\Report\Report_ProfitLossService_bySaleDialog.pas' {Report_ProfitLossService_bySaleDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
