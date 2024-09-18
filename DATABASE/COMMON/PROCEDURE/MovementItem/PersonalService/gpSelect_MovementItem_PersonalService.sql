@@ -698,7 +698,16 @@ BEGIN
                           GROUP BY tmpMIContainer_all.PersonalId 
 
                           ) 
-
+     , tmpNoNalog_print AS (SELECT tmpMIContainer_all.PersonalId
+                                 , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0)) AS SummNalog
+                            FROM tmpAll
+                                 INNER JOIN tmpMIContainer_all ON tmpMIContainer_all.MovementItemId = tmpAll.MovementItemId 
+                                                              AND tmpMIContainer_all.PersonalId <> tmpAll.PersonalId
+                                 LEFT JOIN MIFloat AS MIFloat_SummNalog
+                                                   ON MIFloat_SummNalog.MovementItemId = tmpMIContainer_all.MovementItemId
+                                                  AND MIFloat_SummNalog.DescId = zc_MIFloat_SummNalog() 
+                            GROUP BY tmpMIContainer_all.PersonalId 
+                            )
        -- Результат
        SELECT tmpAll.MovementItemId                         AS Id
             , Object_Personal.Id                            AS PersonalId
@@ -802,7 +811,7 @@ BEGIN
               ) :: TFloat AS AmountCash_rem   
 
             --к выплате из кассы для печати  
-            , (COALESCE (MIFloat_SummToPay.ValueData, 0)
+            , ((COALESCE (MIFloat_SummToPay.ValueData, 0)
              - COALESCE (tmpMIContainer_all.SummNalog, 0)    + COALESCE (MIFloat_SummNalog.ValueData,0)
              + COALESCE (tmpMIContainer_all.SummNalogRet, 0) - COALESCE (MIFloat_SummNalogRet.ValueData,0)
              - COALESCE (MIFloat_SummCard.ValueData, 0)
@@ -812,7 +821,8 @@ BEGIN
                                                                + COALESCE (MIFloat_SummAvCardSecond.ValueData, 0) + COALESCE (MIFloat_SummAvCardSecondRecalc.ValueData, 0))
              - COALESCE (tmpMIContainer_pay.Amount_avance_ret, 0)
              - COALESCE (tmpMIContainer_pay.Amount_service, 0)
-              ) :: TFloat AS AmountCash_print
+             ) - CASE WHEN tmpAll.PersonalId <> Object_PersonalTo.Id THEN -1 * COALESCE (tmpNoNalog_print.SummNalog,0) ELSE COALESCE (tmpNoNalog_print.SummNalog,0) END  --налог за другого сотрудника
+             ) :: TFloat AS AmountCash_print
               
               -- выдадано из кассы
             , (COALESCE (tmpMIContainer_pay.Amount_avance_all, 0) + COALESCE (tmpMIContainer_pay.Amount_service, 0)) :: TFloat AS AmountCash_pay
@@ -1257,6 +1267,7 @@ BEGIN
                                               AND tmpMI_SummCardSecondRecalc.PositionId = tmpAll.PositionId 
 
           LEFT JOIN tmpNalog_print ON tmpNalog_print.PersonalId = tmpAll.PersonalId
+          LEFT JOIN tmpNoNalog_print ON tmpNoNalog_print.PersonalId = tmpMIContainer_all.PersonalId
       ;
 
  END;
