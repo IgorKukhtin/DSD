@@ -2500,7 +2500,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_ContractChildForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_ContractChildForm');
   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceDialogForm'));
@@ -3844,6 +3848,7 @@ end;
 
 procedure TLoadFormTest.LoadProfitLossServiceFormTest;
 begin
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');

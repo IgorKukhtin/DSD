@@ -35,6 +35,11 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
              , PersonalId       Integer     --Ответственный представитель маркетингового отдела
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела
+             --
+             , ContractId       Integer     --Договора
+             , ContractName     TVarChar    --Договора
+             , JuridicalId Integer, JuridicalName TVarChar
+             , RetailId Integer, RetailName TVarChar
               )
 AS
 $BODY$
@@ -59,7 +64,7 @@ BEGIN
                            FROM tmpStatus
                                 INNER JOIN Movement ON Movement.StatusId = tmpStatus.StatusId
                                                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND Movement.DescId IN (zc_Movement_Promo())
+                                                   AND Movement.DescId IN (zc_Movement_Promo(),zc_Movement_PromoTrade())
                           )
 
 
@@ -91,6 +96,13 @@ BEGIN
              , Object_PersonalTrade.ValueData              AS PersonalTradeName  --Ответственный представитель коммерческого отдела
              , MovementLinkObject_Personal.ObjectId        AS PersonalId         --Ответственный представитель маркетингового отдела
              , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела
+
+             , MovementLinkObject_Contract.ObjectId        AS ContractId        --
+             , Object_Contract.ValueData                   AS ContractName      --
+             , Object_Juridical.Id                         AS JuridicalId
+             , Object_Juridical.ValueData                  AS JuridicalName
+             , Object_Retail.Id                            AS RetailId
+             , Object_Retail.ValueData                     AS RetailNamе         
 
         FROM tmpMovement AS Movement
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -159,7 +171,22 @@ BEGIN
                                           ON MovementLinkObject_PromoStateKind.MovementId = Movement.Id
                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
-         ;
+             --PromoTrade
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                  ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                                 AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId       
+
+             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                  ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+             LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+        ;
 
 END;
 $BODY$

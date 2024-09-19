@@ -1348,8 +1348,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 199
-    Top = 260
+    Left = 159
+    Top = 284
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'

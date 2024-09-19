@@ -22,6 +22,7 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 478
+        ExplicitTop = 3
         ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -100,6 +101,13 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             Width = 55
+          end
+          object DescName: TcxGridDBColumn [1]
+            Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'DescName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           inherited colInvNumber: TcxGridDBColumn
             GroupSummaryAlignment = taCenter
