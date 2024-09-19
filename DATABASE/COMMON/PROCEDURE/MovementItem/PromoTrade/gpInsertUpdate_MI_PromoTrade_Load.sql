@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MI_PromoTrade_Load()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PromoTrade_Load (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_PromoTrade_Load (Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PromoTrade_Load(
     IN inMovementId             Integer   , -- Ключ объекта <Документ>
@@ -10,7 +11,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_PromoTrade_Load(
     IN inPartnerName            TVarChar  ,
     IN inAmount                 TFloat    , 
     IN inSumm                   TFloat    ,
-    IN inPartnerCount           TFloat    ,
+    IN inPartnerCount           TFloat    , 
+    IN inAmountPlan             TFloat    , --
+    IN inPriceWithVAT           TFloat    , --
     IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
@@ -75,7 +78,9 @@ BEGIN
                                                         , inGoodsId              := vbGoodsId    ::Integer
                                                         , inAmount               := inAmount     ::TFloat
                                                         , inSumm                 := inSumm       ::TFloat
-                                                        , inPartnerCount         := inPartnerCount ::TFloat
+                                                        , inPartnerCount         := inPartnerCount ::TFloat   
+                                                        , inAmountPlan           := inAmountPlan
+                                                        , inPriceWithVAT         := inPriceWithVAT
                                                         , inGoodsKindId          := vbGoodsKindId  ::Integer
                                                         , inTradeMarkId          := 0  ::Integer
                                                         , inGoodsGroupPropertyId := 0  ::Integer

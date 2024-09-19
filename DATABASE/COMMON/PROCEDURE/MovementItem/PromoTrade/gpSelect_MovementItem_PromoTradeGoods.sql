@@ -26,7 +26,12 @@ RETURNS TABLE (
 
       , Amount             TFloat --Кол-во кг
       , Summ               TFloat --Сумма, грн
-      , PartnerCount       TFloat --Количество ТТ   
+      , PartnerCount       TFloat --Количество ТТ  
+      , AmountPlan         TFloat -- 
+      , PriceWithOutVAT    TFloat
+      , PriceWithVAT       TFloat
+      , SummWithOutVATPlan TFloat
+      , SummWithVATPlan    TFloat
       
       , AmountSale         TFloat -- Объем продаж (статистика за 3м.)    
       , SummSale           TFloat --
@@ -69,7 +74,14 @@ BEGIN
             
              , MovementItem.Amount            ::TFloat AS Amount           --% скидки на товар
              , MIFloat_Summ.ValueData         ::TFloat AS Summ             -- Общая скидка для покупателя, %
-             , MIFloat_PartnerCount.ValueData ::TFloat AS PartnerCount     -- Цена в прайсе 
+             , MIFloat_PartnerCount.ValueData ::TFloat AS PartnerCount     -- Цена в прайсе    
+             
+             , MIFloat_AmountPlan.ValueData      ::TFloat AS AmountPlan
+             , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
+             , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
+             , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithOutVAT.ValueData)  ::TFloat AS SummWithOutVATPlan
+             , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithVAT.ValueData)     ::TFloat AS SummWithVATPlan
+             
              , MIFloat_AmountSale.ValueData     ::TFloat AS AmountSale             --
              , MIFloat_SummSale.ValueData       ::TFloat AS SummSale             --
              , MIFloat_AmountReturnIn.ValueData ::TFloat AS AmountReturnIn
@@ -94,6 +106,15 @@ BEGIN
                                          ON MIFloat_AmountReturnIn.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountReturnIn.DescId = zc_MIFloat_AmountReturnIn()  
 
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
+                                         ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPlan.DescId = zc_MIFloat_AmountPlan()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithOutVAT
+                                         ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 

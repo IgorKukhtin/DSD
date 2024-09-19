@@ -1,4 +1,4 @@
-unit Report_ProfitLossService_bySale;
+unit ProfitLossService_ContractChild;
 
 interface
 
@@ -26,34 +26,21 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TReport_ProfitLossService_bySaleForm = class(TAncestorReportForm)
-    InvNumber: TcxGridDBColumn;
-    ContractChildName: TcxGridDBColumn;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    OperDate: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
+  TProfitLossService_ContractChildForm = class(TAncestorReportForm)
+    JuridicalName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractInvNumber: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    JuridicalName: TcxGridDBColumn;
-    actGetForm: TdsdExecStoredProc;
-    actGetFormPromo: TdsdExecStoredProc;
     getMovementForm: TdsdStoredProc;
     getMovementFormPromo: TdsdStoredProc;
     FormParams: TdsdFormParams;
-    actOpenForm: TdsdOpenForm;
-    actOpenFormPromo: TdsdOpenForm;
-    mactOpenDocument: TMultiAction;
-    mactOpenDocumentPromo: TMultiAction;
     bbOpenDocument: TdxBarButton;
     bbOpenDocumentPromo: TdxBarButton;
-    cxLabel6: TcxLabel;
-    ceJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
-    actOpenFormProfitLossService_ContractChild: TdsdOpenForm;
-    bbOpenFormProfitLossService_ContractChild: TdxBarButton;
-    ContractChildCode: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    JuridicalCode_Child: TcxGridDBColumn;
+    JuridicalName_Child: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -64,6 +51,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_ProfitLossService_bySaleForm);
+  RegisterClass(TProfitLossService_ContractChildForm);
 
 end.

@@ -30,6 +30,7 @@ type
   TPromo_ServiceGoodsJournalChoiceForm = class(TAncestorJournalForm)
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
+    DescName: TcxGridDBColumn;
   private
     { Private declarations }
   public

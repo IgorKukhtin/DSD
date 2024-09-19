@@ -12,18 +12,19 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
     Width = 990
     Height = 260
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 990
-    ExplicitHeight = 262
+    ExplicitHeight = 260
     ClientRectBottom = 260
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 990
-      ExplicitHeight = 262
+      ExplicitHeight = 260
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 260
         ExplicitWidth = 990
-        ExplicitHeight = 262
+        ExplicitHeight = 260
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -115,6 +116,14 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             Options.Editing = False
             Width = 40
           end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -122,6 +131,13 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 134
+          end
+          object ContractChildCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractChildCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object ContractChildName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072')'
@@ -163,6 +179,24 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderHint = #1050#1088#1077#1076#1080#1090' ('#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084')'
             Width = 70
           end
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
@@ -188,6 +222,23 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 72
+          end
+          object MeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object TradeMarkName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+            DataBinding.FieldName = 'TradeMarkName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
           end
           object Sale_Summ: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1078#1072', '#1075#1088#1085
@@ -250,6 +301,8 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+          end
         end
       end
     end
@@ -286,6 +339,25 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
       TabOrder = 5
       Width = 304
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesJuridical
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object ExecuteDialog: TExecuteDialog
@@ -357,6 +429,36 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
           StoredProc = getMovementForm
         end>
       Caption = 'actGetForm'
+    end
+    object actOpenFormProfitLossService_ContractChild: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072') '#1076#1083#1103' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
+      ImageIndex = 76
+      FormName = 'TProfitLossService_ContractChildForm'
+      FormNameParam.Value = 'TProfitLossService_ContractChildForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = Null
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = Null
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -533,6 +635,14 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
         end
         item
           Visible = True
+          ItemName = 'bbOpenFormProfitLossService_ContractChild'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -554,9 +664,15 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103
       Category = 0
     end
+    object bbOpenFormProfitLossService_ContractChild: TdxBarButton
+      Action = actOpenFormProfitLossService_ContractChild
+      Caption = '<'#1044#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072') '#1076#1083#1103' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 368
+    Left = 360
+    Top = 240
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80
@@ -570,8 +686,8 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
       item
         Component = GuidesJuridical
       end>
-    Left = 184
-    Top = 136
+    Left = 208
+    Top = 216
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -661,7 +777,7 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
       end
       item
         Name = 'FormName'
-        Value = 'TProfitLossServiceForm'
+        Value = 'TProfitLossService_ContractChildForm'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -673,8 +789,8 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 200
+    Left = 432
+    Top = 248
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'

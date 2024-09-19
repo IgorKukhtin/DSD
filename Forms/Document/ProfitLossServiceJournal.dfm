@@ -27,6 +27,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 221
+        ExplicitLeft = 80
+        ExplicitTop = 24
         ExplicitWidth = 990
         ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1082,8 +1084,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 472
-    Top = 248
+    Left = 320
+    Top = 224
   end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [1]
