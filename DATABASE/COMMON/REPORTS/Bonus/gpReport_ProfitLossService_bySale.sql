@@ -10,10 +10,14 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLossService_bySale (
     IN inSession           TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
+             , RetailId Integer, RetailName TVarChar
              , JuridicalId Integer,  JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , ContractChildCode Integer, ContractChildName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , MeasureName TVarChar
+             , TradeMarkId Integer, TradeMarkName TVarChar
+             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , Sale_Summ TFloat
              , Return_Summ Tfloat
@@ -136,8 +140,7 @@ BEGIN
                                                                   ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                                  AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()  
                                     INNER JOIN (SELECT DISTINCT tmpMovement.JuridicalId , tmpMovement.ContractChildId FROM tmpMovement) AS tmp ON tmp.JuridicalId = ContainerLO_Juridical.ObjectId
-                                                                                                                                                              AND tmp.ContractChildId = ContainerLinkObject_Contract.ObjectId
-                            -- WHERE (COALESCE (tmp.PartnerId,0) = 0 OR tmp.PartnerId = ContainerLO_Partner.ObjectId)                                                                                                  
+
                              GROUP BY ContainerLO_Juridical.ObjectId
                                     , MIContainer.ObjectExtId_Analyzer
                                     , MIContainer.ObjectId_analyzer
@@ -160,7 +163,7 @@ BEGIN
                        GROUP BY tmp.JuridicalId
                               , tmp.ContractId
                               , tmp.GoodsId  
-                              , tmp.GoodsKindId  
+                              , tmp.GoodsKindId 
                        )
 
     , tmpData AS (SELECT tmpMovement.MovementId
@@ -169,7 +172,7 @@ BEGIN
                        , tmpMovement.InvNumber
                        , tmpMovement.JuridicalId
                        , tmpMovement.PartnerId 
-                       , tmpMovement.ContractChildId
+                       , tmpMovement.ContractChildId 
                        , COALESCE (tmpContainer.GoodsId, tmpContainer_partner.GoodsId) AS GoodsId  
                        , COALESCE (tmpContainer.GoodsKindId, tmpContainer_partner.GoodsKindId, 0) AS GoodsKindId 
                        , tmpMovement.AmountIn
@@ -191,22 +194,21 @@ BEGIN
                    LEFT JOIN tmpContainer_partner ON tmpContainer_partner.JuridicalId = tmpMovement.JuridicalId
                                                  AND tmpContainer_partner.ContractId = tmpMovement.ContractChildId
                                                  AND (tmpContainer_partner.PartnerId = tmpMovement.PartnerId AND COALESCE (tmpMovement.PartnerId,0) <> 0)
-             )
- 
+                  )
 
 
              SELECT tmpData.MovementId
                   , tmpData.OperDate
                   , tmpData.InvNumber
-                  
+                  , Object_Retail.Id            AS RetailId
+                  , Object_Retail.ValueData     AS RetailNamå 
+             
                   , Object_Juridical.Id         AS JuridicalId
                   , Object_Juridical.ValueData  AS JuridicalName
                   , Object_Partner.Id           AS PartnerId
                   , Object_Partner.ValueData    AS PartnerName
                   , Object_ContractChild.ObjectCode AS ContractChildCode
                   , Object_ContractChild.ValueData  AS ContractChildName 
-                  , Object_Juridical_Child.ObjectCode  AS JuridicalCode_Child
-                  , Object_Juridical_Child.ValueData   AS JuridicalName_Child
 
                   , Object_Goods.Id             AS GoodsId
                   , Object_Goods.ObjectCode     AS GoodsCode
@@ -236,25 +238,30 @@ BEGIN
                 
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
+
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                     ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                                    AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
                 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (ObjectLink_Goods_TradeMark.ChildObjectId, tmpOperationGroup.TradeMarkId)
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                               ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                               ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-
-          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
-                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
-                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                     ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+      
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                     ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+      
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+      
+                LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                       ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                      AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
        ;
          
 END;
