@@ -12,6 +12,8 @@ RETURNS TABLE (
         Ord                 Integer
       , Id                  Integer --идентификатор
       , MovementId          Integer --ИД документа <Акция>
+      , PartnerId           Integer
+      , PartnerName         TVarChar
       , GoodsId             Integer --ИД объекта <товар>
       , GoodsCode           Integer --код объекта  <товар>
       , GoodsName           TVarChar --наименование объекта <товар>
@@ -20,13 +22,14 @@ RETURNS TABLE (
       , GoodsKindName          TVarChar --Наименование обьекта <Вид товара>      
       , TradeMarkId Integer, TradeMarkName       TVarChar --Торговая марка 
       , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
-      , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar
+      , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar  
 
       , Amount             TFloat --Кол-во кг
       , Summ               TFloat --Сумма, грн
       , PartnerCount       TFloat --Количество ТТ   
       
-      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)
+      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)    
+      , SummSale           TFloat --
       , AmountReturnIn     TFloat -- Объем возвраты  даж (статистика за 3м.)
 
       , Comment            TVarChar --Комментарий       
@@ -47,13 +50,15 @@ BEGIN
         SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id) ::Integer AS Ord
              , MovementItem.Id                        AS Id                  --идентификатор
              , MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
+             , Object_Partner.Id                      AS PartnerId
+             , Object_Partner.ValueData               AS PartnerName
              , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
              , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
              , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
              , Object_Measure.ValueData               AS Measure             --Единица измерения   
              , MILinkObject_GoodsKind.ObjectId        AS GoodsKindId                 --ИД обьекта <Вид товара>
              , Object_GoodsKind.ValueData             AS GoodsKindName               --Наименование обьекта <Вид товара>
-             , Object_TradeMark.Id                    AS TradeMarkId
+             , Object_TradeMark.Id                       AS TradeMarkId
              , Object_TradeMark.ValueData                AS TradeMark           --Торговая марка   
              , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
              , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
@@ -66,7 +71,8 @@ BEGIN
              , MIFloat_Summ.ValueData         ::TFloat AS Summ             -- Общая скидка для покупателя, %
              , MIFloat_PartnerCount.ValueData ::TFloat AS PartnerCount     -- Цена в прайсе 
              , MIFloat_AmountSale.ValueData     ::TFloat AS AmountSale             --
-             , MIFloat_AmountReturnIn.ValueData ::TFloat AS AmountReturnIn             --
+             , MIFloat_SummSale.ValueData       ::TFloat AS SummSale             --
+             , MIFloat_AmountReturnIn.ValueData ::TFloat AS AmountReturnIn
 
              , MIString_Comment.ValueData              AS Comment                     -- Примечание
              , MovementItem.isErased                   AS isErased                    -- Удален
@@ -81,9 +87,12 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
                                          ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
+             LEFT JOIN MovementItemFloat AS MIFloat_SummSale
+                                         ON MIFloat_SummSale.MovementItemId = MovementItem.Id
+                                        AND MIFloat_SummSale.DescId = zc_MIFloat_SummSale()                
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReturnIn
                                          ON MIFloat_AmountReturnIn.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountReturnIn.DescId = zc_MIFloat_AmountReturnIn()
+                                        AND MIFloat_AmountReturnIn.DescId = zc_MIFloat_AmountReturnIn()  
 
 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -93,6 +102,11 @@ BEGIN
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
              LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Partner
+                                              ON MILinkObject_Partner.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Partner.DescId = zc_MILinkObject_Partner()
+             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MILinkObject_Partner.ObjectId
+
              LEFT OUTER JOIN MovementItemString AS MIString_Comment
                                                 ON MIString_Comment.MovementItemId = MovementItem.ID
                                                AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -101,7 +115,6 @@ BEGIN
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure
                               ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
              --
              LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
                                               ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id

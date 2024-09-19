@@ -63,7 +63,7 @@ BEGIN
      END IF;   
 
      -- сохранили протокол
-     PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+     PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
 
 END;
 $BODY$

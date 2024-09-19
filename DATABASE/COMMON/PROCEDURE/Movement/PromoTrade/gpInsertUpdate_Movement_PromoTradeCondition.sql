@@ -13,7 +13,7 @@ $BODY$
    DECLARE vbUserId Integer;  
    DECLARE vbMovementId_PromoTradeCondition Integer;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
+   -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PromoTrade());
 
     --проверка данные из шапки не корректируются
@@ -28,15 +28,17 @@ BEGIN
                                          WHERE Movement.DescId = zc_Movement_PromoTradeCondition()
                                            AND Movement.ParentId =  inMovementId
                                          );
-    IF COALESCE (vbMovementId_PromoTradeCondition,0)  
+
+    IF COALESCE (vbMovementId_PromoTradeCondition,0) = 0 
     THEN
         --создаем документ
-        SELECT lpInsertUpdate_Movement (ioId, zc_Movement_PromoTradeCondition(), Movement.InvNumber, MovementOperDate, Movement.Id, 0) 
+        SELECT lpInsertUpdate_Movement (0, zc_Movement_PromoTradeCondition(), Movement.InvNumber, Movement.OperDate, Movement.Id, 0) 
       INTO vbMovementId_PromoTradeCondition
         FROM Movement
         WHERE Movement.Id = inMovementId;
     END IF;
     
+
     IF inOrd = 4
     THEN 
         --RetroBonus
@@ -60,8 +62,7 @@ BEGIN
         --Logist
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Logist(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
-    
-    
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -24,7 +24,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, cxEditRepositoryItems, cxImageComboBox, dsdCommon;
+  cxCheckBox, cxEditRepositoryItems, cxImageComboBox, dsdCommon, ExternalLoad;
 
 type
   TPromoTradeForm = class(TAncestorDocumentForm)
@@ -60,14 +60,14 @@ type
     InsertRecord: TInsertRecord;
     actGoodsKindChoiceForm: TOpenChoiceForm;
     bbInsertRecord: TdxBarButton;
-    cxGridMov1: TcxGrid;
-    cxGridDBTableViewMov1: TcxGridDBTableView;
-    Name_ch1: TcxGridDBColumn;
-    cxGridLevelMov1: TcxGridLevel;
+    cxGridMov3: TcxGrid;
+    cxGridDBTableViewMov3: TcxGridDBTableView;
+    Name_ch3: TcxGridDBColumn;
+    cxGridLevelMov3: TcxGridLevel;
     spSelect_PromoTradeCondition: TdsdStoredProc;
     Mov1CDS: TClientDataSet;
     Mov1DS: TDataSource;
-    dsdDBViewAddOnPartner: TdsdDBViewAddOn;
+    dsdDBViewAddOnMov1: TdsdDBViewAddOn;
     Panel1: TPanel;
     cxPageControl1: TcxPageControl;
     tsPartner: TcxTabSheet;
@@ -94,8 +94,7 @@ type
     Summ: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     TradeMarkName: TcxGridDBColumn;
-    Value_ch1: TcxGridDBColumn;
-    dsdDBViewAddOnPartnerList: TdsdDBViewAddOn;
+    Value_ch3: TcxGridDBColumn;
     actPartnerProtocolOpenForm: TdsdOpenForm;
     actConditionPromoProtocolOpenForm: TdsdOpenForm;
     actAdvertisingProtocolOpenForm: TdsdOpenForm;
@@ -144,7 +143,7 @@ type
     cxEditRepository1: TcxEditRepository;
     cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
     cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
-    dsdDBViewAddOnAdvertising: TdsdDBViewAddOn;
+    dsdDBViewAddOnMov2: TdsdDBViewAddOn;
     actRefreshCalc: TdsdDataSetRefresh;
     actOpenFormPromoContractBonus_Detail: TdsdOpenForm;
     actUpdate_SignInternal_Three: TdsdExecStoredProc;
@@ -174,6 +173,31 @@ type
     spUpdate_PromoTradeHistory: TdsdStoredProc;
     actUpdate_PromoTradeHistory: TdsdExecStoredProc;
     bbUpdate_PromoTradeHistory: TdxBarButton;
+    AmountSale: TcxGridDBColumn;
+    SummSale: TcxGridDBColumn;
+    AmountReturnIn: TcxGridDBColumn;
+    cxSplitter1: TcxSplitter;
+    cxPageControl2: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxGridMov1: TcxGrid;
+    cxGridDBTableViewMov1: TcxGridDBTableView;
+    Name_ch1: TcxGridDBColumn;
+    Value_ch1: TcxGridDBColumn;
+    cxGridLeveMov1: TcxGridLevel;
+    Mov3DS: TDataSource;
+    Mov3CDS: TClientDataSet;
+    dsdDBViewAddOnMov3: TdsdDBViewAddOn;
+    spSelect_PromoTradeSign: TdsdStoredProc;
+    actChoiceMember: TOpenChoiceForm;
+    actUpdateMov3DS: TdsdUpdateDataSet;
+    spInsertUpdate_PromoTradeSign: TdsdStoredProc;
+    PartnerName: TcxGridDBColumn;
+    actChoicePartner: TOpenChoiceForm;
+    spGetImportSetting: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

@@ -951,21 +951,22 @@ end;
 
 procedure TLoadFormTest.LoadPersonalServiceFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_DateDialog_PersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovement_DateDialog_PersonalServiceForm');
   //exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceNalogDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceNalogDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalService_RecalcForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalService_RecalcForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
  // exit;
@@ -2495,7 +2496,11 @@ end;
 
 procedure TLoadFormTest.LoadReportBonusFormTest;
 begin
- 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleDialogForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceDialogForm'));
@@ -2541,15 +2546,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumDialogForm');
   exit;
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
  // exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellForm'));
@@ -2560,7 +2565,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PartionCellRemainsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PartionCellRemainsForm');
   exit;
-  {
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalGroupSummAddForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalGroupSummAddForm');
@@ -3202,13 +3207,13 @@ begin
       TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserDialogForm');
 exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersDialogForm'));
@@ -3220,19 +3225,19 @@ exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageDialogForm');
   exit;
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteForm');
    exit;
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_InternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_InternalForm');
 
@@ -4641,17 +4646,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReasonOutEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReasonOutEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   exit;
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ChoiceForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   exit;

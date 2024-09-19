@@ -63,28 +63,28 @@ BEGIN
 
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (tmpMI_Master.AmountSale/3) ::TVarChar AS Value
+          , CAST (tmpMI_Master.AmountSale/3 AS NUMERIC (16,3)) ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN tmpMI_Master ON 1=1
     WHERE tmpText.Ord = 1
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (tmpMI_Master.SummSale/3) ::TVarChar AS Value
+          , CAST (tmpMI_Master.SummSale/3 AS NUMERIC (16,2)) ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN tmpMI_Master ON 1=1
     WHERE tmpText.Ord = 2
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (CASE WHEN COALESCE (tmpMI_Master.AmountSale,0) <> 0 THEN tmpMI_Master.AmountReturnIn * 100 / tmpMI_Master.AmountSale ELSE 0 END) ::TVarChar AS Value                                               
+          , CAST (CASE WHEN COALESCE (tmpMI_Master.AmountSale,0) <> 0 THEN tmpMI_Master.AmountReturnIn * 100 / tmpMI_Master.AmountSale ELSE 0 END AS NUMERIC (16,1)) ::TVarChar AS Value                                               
     FROM tmpText
          LEFT JOIN tmpMI_Master ON 1=1
     WHERE tmpText.Ord = 3
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (MovementFloat_DebtDay.ValueData) ::TVarChar AS Value
+          , CAST (MovementFloat_DebtDay.ValueData AS NUMERIC (16,2)) ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN MovementFloat AS MovementFloat_DebtDay 
                                  ON MovementFloat_DebtDay.MovementId = vbMovementId_PromoTradeHistory
@@ -93,7 +93,7 @@ BEGIN
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , zfConvert_FloatToString (MovementFloat_DebtSumm.ValueData) ::TVarChar AS Value
+          , CAST (MovementFloat_DebtSumm.ValueData AS NUMERIC (16,2)) ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN MovementFloat AS MovementFloat_DebtSumm 
                                  ON MovementFloat_DebtSumm.MovementId = vbMovementId_PromoTradeHistory

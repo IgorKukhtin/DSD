@@ -1450,7 +1450,6 @@ type
     miReport_ProductionUnionTech_Analys: TMenuItem;
     actReport_Sale_BankAccount: TdsdOpenForm;
     miReport_Sale_BankAccount: TMenuItem;
-    N256: TMenuItem;
     actReport_Goods_Partion: TdsdOpenForm;
     miReport_Goods_Partion: TMenuItem;
     actCarProperty: TdsdOpenForm;
@@ -1515,6 +1514,9 @@ type
     N263: TMenuItem;
     actRouteNum: TdsdOpenForm;
     N264: TMenuItem;
+    actReport_ProfitLossService_bySale: TdsdOpenForm;
+    miReport_ProfitLossService_bySale: TMenuItem;
+    N266: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -608,12 +608,17 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoTradeHistory() RETURNS Integer AS $B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoTradeHistory', 'История клиента' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeHistory');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PromoTradeSign() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeSign'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PromoTradeSign', 'Согласование' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoTradeSign');
 
+ 
 
 /*-------------------------------------------------------------------------------
  ИСТОР
  ИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 18,09,24         * zc_Movement_PromoTradeSign
  27.08.24         * zc_Movement_PromoTrade
  24.08.24         * zc_Movement_ChoiceCell
  10.03.24         * zc_Movement_BankSecondNum
