@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TReport_Sale_BankAccountForm = class(TAncestorReportForm)
@@ -63,6 +63,7 @@ type
     Summ_calc: TcxGridDBColumn;
     Ord: TcxGridDBColumn;
     Ord_ReturnIn: TcxGridDBColumn;
+    TotalSumm_debt_end: TcxGridDBColumn;
   private
     { Private declarations }
   public
