@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, ChoicePeriod;
+  cxImageComboBox, ChoicePeriod, dsdCommon;
 
 type
   TSendForm = class(TParentForm)
@@ -185,6 +185,7 @@ type
     macInsertUpdate_Price: TMultiAction;
     ExecuteDialogPriceTax: TExecuteDialog;
     bbInsertUpdate_Price: TdxBarButton;
+    CurrencyName: TcxGridDBColumn;
   private
   public
   end;

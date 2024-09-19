@@ -95,7 +95,15 @@ uses
   GoogleOTP in '..\SOURCE\GoogleOTP.pas',
   GoogleOTPDialogPsw in '..\SOURCE\GoogleOTPDialogPsw.pas' {GoogleOTPDialogPswForm},
   GoogleOTPRegistration in '..\SOURCE\GoogleOTPRegistration.pas' {GoogleOTPRegistrationForm},
-  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm};
+  PriorityPause in '..\SOURCE\PriorityPause.pas' {PriorityPauseForm},
+  dsdCommon in '..\SOURCE\COMPONENT\dsdCommon.pas',
+  PdfiumCore in '..\SOURCE\Pdfium\PdfiumCore.pas',
+  PdfiumCtrl in '..\SOURCE\Pdfium\PdfiumCtrl.pas',
+  PdfiumLib in '..\SOURCE\Pdfium\PdfiumLib.pas',
+  DOCUMENTINVOICE_DRN_XML in '..\SOURCE\EDI\fozzy\DOCUMENTINVOICE_DRN_XML.pas',
+  UAECMRXML in '..\SOURCE\EDI\UAECMRXML.pas',
+  EUSignCP in '..\SOURCE\EUSignCP\EUSignCP.pas',
+  EUSignCPOwnUI in '..\SOURCE\EUSignCP\EUSignCPOwnUI.pas';
 
 {$R *.res}
 
