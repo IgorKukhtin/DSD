@@ -8,12 +8,12 @@ CREATE OR REPLACE FUNCTION gpReport_PartionCell_history (
     IN inPartionGoodsDate         TDateTime ,
     IN inGoodsId                  Integer   ,
     IN inGoodsKindId              Integer   ,
-    IN inUnitId                   Integer   , 
+    IN inUnitId                   Integer   ,
     IN inisDetail                 Boolean   , -- отображать  по строкам
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate_old TDateTime, OperDate_new TDateTime
-             , MovementItemId Integer  
+             , MovementItemId Integer
              , UserName_old TVarChar, UserName_new TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , GoodsKindName  TVarChar
@@ -36,20 +36,20 @@ BEGIN
 
      vbGoodsKindName = (SELECT Object.ValueData FROM Object WHERE Object.Id = inGoodsKindId );
 
-RETURN QUERY 
-WITH 
+RETURN QUERY
+WITH
 tmpMI AS (SELECT DISTINCT tmp.Id
           FROM (
                 --запрос по партии сохр. в документе
                 SELECT MovementItem.Id
-                FROM MovementItemDate  
+                FROM MovementItemDate
                      INNER JOIN MovementItem ON MovementItem.Id = MovementItemDate.MovementItemId
                                             AND MovementItem.DescId = zc_MI_Master()
-                                            AND MovementItem.isErased = FALSE  
+                                            AND MovementItem.isErased = FALSE
                                            -- AND MovementItem.MovementId = 28742039
                      INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                        AND Movement.DescId = zc_Movement_Send()    
-                                      --  AND Movement.Id = 28742039     
+                                        AND Movement.DescId = zc_Movement_Send()
+                                      --  AND Movement.Id = 28742039
                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -69,12 +69,12 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                   AND MovementLinkObject_To.ObjectId = inUnitId
-       
+
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.DescId = zc_MI_Master()
                                             AND MovementItem.isErased = FALSE
                                             AND MovementItem.ObjectId = inGoodsId
-       
+
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -83,34 +83,34 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
               UNION
-                --запрос по партиям из проводок    
+                --запрос по партиям из проводок
                 SELECT DISTINCT MIContainer.MovementItemId AS Id
                 FROM ObjectDate AS ObjectDate_Value
                      INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                     ON CLO_PartionGoods.ObjectId = ObjectDate_Value.ObjectId --CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                      INNER JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.ContainerId = CLO_PartionGoods.ContainerId 
-                                                     AND MIContainer.DescId = zc_MIContainer_Count() 
+                                                      ON MIContainer.ContainerId = CLO_PartionGoods.ContainerId
+                                                     AND MIContainer.DescId = zc_MIContainer_Count()
                                                      AND MIContainer.ObjectId_Analyzer = inGoodsId
                                                      AND MIContainer.WhereObjectId_analyzer = inUnitId
                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                    ON CLO_GoodsKind.ContainerId = CLO_PartionGoods.ContainerId
-                                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()                                              
+                                                  AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
                      INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                        AND Movement.DescId = zc_Movement_Send() 
-                                      --  AND Movement.Id = 28742039 
+                                        AND Movement.DescId = zc_Movement_Send()
+                                      --  AND Movement.Id = 28742039
                 WHERE --ObjectDate_Value.ObjectId = Object_PartionGoods.Id
                       ObjectDate_Value.ValueData = inPartionGoodsDate  --'2024-07-15'
                   AND ObjectDate_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                   AND COALESCE (CLO_GoodsKind.ObjectId,0) = COALESCE (inGoodsKindId,0)
-              ) AS tmp 
+              ) AS tmp
          )
-         
-      , tmpProtocol_All AS (SELECT *  
+
+      , tmpProtocol_All AS (SELECT *
                                   -- № п/п
                                  --, ROW_NUMBER() OVER (PARTITION BY tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindName ORDER BY tmp.OperDate desc) AS Ord
-                            FROM (SELECT 
+                            FROM (SELECT
                                    REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ключ объекта"]            /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','') ::integer   AS GoodsId
                                  , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Объект"]                  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')     AS GoodsName
                                  , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Виды товаров"]            /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')     AS GoodsKindName
@@ -129,19 +129,19 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                                  , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-10"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_10
                                  , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-11"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_11
                                  , REPLACE(REPLACE(CAST (XPATH ('/XML/Field[@FieldName = "Ячейка-12"] /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_12
-     
+
                                  --, REPLACE(REPLACE(CAST (XPATH ('/XML/Field[12]                  /@FieldValue', MovementItemProtocol.ProtocolData :: XML) AS TEXT), '{', ''), '}','')   AS PartionCell_88
-     
+
                                  , CASE WHEN inisDetail = TRUE THEN MovementItemProtocol.MovementItemId ELSE 0 END AS MovementItemId
                                  , MovementItemProtocol.OperDate
                                  , MovementItemProtocol.UserId
-     
+
                              FROM MovementItemProtocol
                              WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                             ) AS tmp                    
+                             ) AS tmp
                      --      WHERE tmp.GoodsId = inGoodsId AND COALESCE (tmp.GoodsKindName, '') = COALESCE (vbGoodsKindName,'')
                             )
-                             
+
 , tmpCell_1 AS (SELECT DISTINCT ROW_NUMBER() OVER (PARTITION BY tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindName ORDER BY tmp.OperDate desc) AS Ord
                      , 1 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, CASE WHEN COALESCE (tmp.PartionCell_1, '') = '' OR COALESCE (tmp.PartionCell_1, '') = '"NULL"' THEN '' ELSE tmp.PartionCell_1 END AS PartionCellName,  tmp.OperDate, tmp.MovementItemId, tmp.UserId  FROM tmpProtocol_All AS tmp
           UNION SELECT DISTINCT ROW_NUMBER() OVER (PARTITION BY tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindName ORDER BY tmp.OperDate desc) AS Ord
@@ -165,18 +165,18 @@ tmpMI AS (SELECT DISTINCT tmp.Id
           UNION SELECT DISTINCT ROW_NUMBER() OVER (PARTITION BY tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindName ORDER BY tmp.OperDate desc) AS Ord
                      , 11 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, CASE WHEN COALESCE (tmp.PartionCell_11, '') = '' OR COALESCE (tmp.PartionCell_11, '') = '"NULL"' THEN '' ELSE tmp.PartionCell_11 END AS PartionCellName, tmp.OperDate, tmp.MovementItemId, tmp.UserId  FROM tmpProtocol_All AS tmp
           UNION SELECT DISTINCT ROW_NUMBER() OVER (PARTITION BY tmp.MovementItemId, tmp.GoodsId, tmp.GoodsKindName ORDER BY tmp.OperDate desc) AS Ord
-                     , 12 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, CASE WHEN COALESCE (tmp.PartionCell_12, '') = '' OR COALESCE (tmp.PartionCell_12, '') = '"NULL"' THEN '' ELSE tmp.PartionCell_12 END AS PartionCellName, tmp.OperDate, tmp.MovementItemId, tmp.UserId  FROM tmpProtocol_All AS tmp                
+                     , 12 AS CellNum, tmp.GoodsId, tmp.GoodsName, tmp.GoodsKindName, tmp.Amount, CASE WHEN COALESCE (tmp.PartionCell_12, '') = '' OR COALESCE (tmp.PartionCell_12, '') = '"NULL"' THEN '' ELSE tmp.PartionCell_12 END AS PartionCellName, tmp.OperDate, tmp.MovementItemId, tmp.UserId  FROM tmpProtocol_All AS tmp
                 )
 
     SELECT DISTINCT tmpCell_old.OperDate AS OperDate_old
                   , tmpCell_new.OperDate AS OperDate_new
-                  , tmpCell_old.MovementItemId 
+                  , tmpCell_old.MovementItemId
                   , Object_User_old.ValueData AS UserName_old
                   , Object_User_new.ValueData AS UserName_new
                   , tmpCell_old.GoodsId
                   , tmpCell_old.GoodsName     ::TVarChar
                   , tmpCell_old.GoodsKindName ::TVarChar
-                  , inPartionGoodsDate        AS PartionGoodsDate     
+                  , inPartionGoodsDate        AS PartionGoodsDate
                   , Object_PartionCell_old.ObjectCode          AS PartionCellCode_old
                   , tmpCell_old.PartionCellName ::TVarChar     AS PartionCellName_old
                   , Object_PartionCell_new.ObjectCode          AS PartionCellCode_new
@@ -186,24 +186,26 @@ tmpMI AS (SELECT DISTINCT tmp.Id
                   , tmpCell_old.Amount        ::TFloat
                   , ROW_NUMBER() OVER (PARTITION BY tmpCell_old.CellNum, tmpCell_old.MovementItemId ORDER BY tmpCell_old.OperDate ) ::Integer AS Ord --tmpCell_old.ord           ::Integer
                   , tmpCell_old.CellNum       ::Integer
-    FROM tmpCell_1 AS tmpCell_old
-         LEFT JOIN tmpCell_1 AS tmpCell_new ON tmpCell_old.GoodsId = tmpCell_new.GoodsId
-                                           AND COALESCE (tmpCell_old.GoodsKindName,'') = COALESCE (tmpCell_new.GoodsKindName, '') 
+    FROM tmpCell_1 AS tmpCell_new
+         LEFT JOIN tmpCell_1 AS tmpCell_old ON tmpCell_old.GoodsId = tmpCell_new.GoodsId
+                                           AND COALESCE (tmpCell_old.GoodsKindName,'') = COALESCE (tmpCell_new.GoodsKindName, '')
                                            AND tmpCell_old.CellNum = tmpCell_new.CellNum
-                                           AND tmpCell_old.Ord = tmpCell_new.Ord+1    -- and 1=0
-                                           AND tmpCell_old.MovementItemId = tmpCell_new.MovementItemId   
-         LEFT JOIN Object AS Object_PartionCell_old ON TRIM (Object_PartionCell_old.ValueData) = tmpCell_old.PartionCellName  
+                                           AND tmpCell_old.Ord = tmpCell_new.Ord-1    -- and 1=0
+                                           AND tmpCell_old.MovementItemId = tmpCell_new.MovementItemId
+         LEFT JOIN Object AS Object_PartionCell_old
+                          ON TRIM (Object_PartionCell_old.ValueData) = tmpCell_old.PartionCellName
                          AND Object_PartionCell_old.DescId = zc_Object_PartionCell()
 
-         LEFT JOIN Object AS Object_PartionCell_new ON TRIM (Object_PartionCell_new.ValueData) = tmpCell_new.PartionCellName  
+         LEFT JOIN Object AS Object_PartionCell_new
+                          ON TRIM (Object_PartionCell_new.ValueData) = tmpCell_new.PartionCellName
                          AND Object_PartionCell_new.DescId = zc_Object_PartionCell()
-        
+
          LEFT JOIN Object AS Object_User_old ON Object_User_old.Id = tmpCell_old.UserId
          LEFT JOIN Object AS Object_User_new ON Object_User_new.Id = tmpCell_new.UserId
-         
-    Where (tmpCell_new.PartionCellName <> tmpCell_old.PartionCellName OR tmpCell_new.GoodsId IS NULL)
-        AND (COALESCE (tmpCell_new.PartionCellName, '') <> '' OR COALESCE (tmpCell_old.PartionCellName,'')<>'') 
-        AND tmpCell_new.OperDate IS NOT NULL
+
+    Where (tmpCell_new.PartionCellName <> tmpCell_old.PartionCellName OR tmpCell_old.GoodsId IS NULL)
+        AND (COALESCE (tmpCell_new.PartionCellName, '') <> '' OR COALESCE (tmpCell_old.PartionCellName,'')<>'')
+        --AND tmpCell_new.OperDate IS NOT NULL
 
     ;
 --select * from tmpCell_1
