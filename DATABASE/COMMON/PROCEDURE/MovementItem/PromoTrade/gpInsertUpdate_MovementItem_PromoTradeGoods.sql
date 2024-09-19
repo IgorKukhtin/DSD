@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                             Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inAmount                         TFloat    , -- 
     IN inSumm                           TFloat    , -- Cумм грн
     IN inPartnerCount                   TFloat    , -- 
+    IN inAmountPlan                     TFloat    , --
+    IN inPriceWithVAT                   TFloat    , --
+   OUT outPriceWithOutVAT               TFloat    ,
+   OUT outSummWithOutVATPlan            TFloat    ,
+   OUT outSummWithVATPlan               TFloat    ,
     IN inGoodsKindId                    Integer   , -- ИД обьекта <Вид товара>  
     IN inTradeMarkId                    Integer   ,  --Торговая марка 
     IN inGoodsGroupPropertyId           Integer,  
@@ -62,20 +68,24 @@ BEGIN
     inGoodsGroupPropertyId := CASE WHEN COALESCE (inGoodsGroupPropertyId,0) <> 0 THEN inGoodsGroupPropertyId ELSE inGoodsGroupPropertyId_Parent END;
     
     -- сохранили
-    ioId := lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
-                                                       , inMovementId           := inMovementId 
-                                                       , inPartnerId            := inPartnerId
-                                                       , inGoodsId              := inGoodsId
-                                                       , inAmount               := inAmount
-                                                       , inSumm                 := inSumm
-                                                       , inPartnerCount         := inPartnerCount
-                                                       , inGoodsKindId          := inGoodsKindId
-                                                       , inTradeMarkId          := inTradeMarkId
-                                                       , inGoodsGroupPropertyId := inGoodsGroupPropertyId
-                                                       , inGoodsGroupDirectionId:= inGoodsGroupDirectionId
-                                                       , inComment              := inComment
-                                                       , inUserId               := vbUserId
-                                                        );
+    SELECT tmp.ioId, tmp.outPriceWithOutVAT
+     INTO   ioId, outPriceWithOutVAT
+    FROM lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
+                                                    , inMovementId           := inMovementId 
+                                                    , inPartnerId            := inPartnerId
+                                                    , inGoodsId              := inGoodsId
+                                                    , inAmount               := inAmount
+                                                    , inSumm                 := inSumm
+                                                    , inPartnerCount         := inPartnerCount
+                                                    , inAmountPlan           := inAmountPlan
+                                                    , inPriceWithVAT         := inPriceWithVAT
+                                                    , inGoodsKindId          := inGoodsKindId
+                                                    , inTradeMarkId          := inTradeMarkId
+                                                    , inGoodsGroupPropertyId := inGoodsGroupPropertyId
+                                                    , inGoodsGroupDirectionId:= inGoodsGroupDirectionId
+                                                    , inComment              := inComment
+                                                    , inUserId               := vbUserId
+                                                     ) AS tmp;
 
     SELECT Object_TradeMark.ValueData                AS TradeMark  
          , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
@@ -116,7 +126,10 @@ BEGIN
                                  AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
              LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
 
-    WHERE MovementItem.Id = ioId;
+    WHERE MovementItem.Id = ioId;     
+    
+    outSummWithOutVATPlan:= (inAmountPlan * outPriceWithOutVAT) ::TFloat;
+    outSummWithVATPlan   := (inAmountPlan * inPriceWithVAT)     ::TFloat;
 
 END;
 $BODY$

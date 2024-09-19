@@ -198,6 +198,11 @@ type
     actGetImportSetting: TdsdExecStoredProc;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    AmountPlan: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
+    PriceWithOutVAT: TcxGridDBColumn;
+    SummWithOutVATPlan: TcxGridDBColumn;
+    SummWithVATPlan: TcxGridDBColumn;
   private
     { Private declarations }
   public

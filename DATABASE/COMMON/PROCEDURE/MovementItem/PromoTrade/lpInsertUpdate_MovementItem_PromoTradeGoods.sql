@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PromoTradeGoods (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
  INOUT ioId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -11,17 +12,21 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PromoTradeGoods(
     IN inAmount                TFloat    , -- 
     IN inSumm                  TFloat    , --
     IN inPartnerCount          TFloat    , -- Цена на полке
+    IN inAmountPlan            TFloat    , --
+    IN inPriceWithVAT          TFloat    , --   
+   OUT outPriceWithOutVAT      TFloat    ,
     IN inGoodsKindId           Integer   , --ИД обьекта <Вид товара>
-    IN inTradeMarkId           Integer   ,  --Торговая марка 
+    IN inTradeMarkId           Integer   , --Торговая марка 
     IN inGoodsGroupPropertyId  Integer,
     IN inGoodsGroupDirectionId Integer,
     IN inComment               TVarChar  , --Комментарий
     IN inUserId                Integer     -- пользователь
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
+   DECLARE vbIsInsert Boolean;  
+   DECLARE vbVat TFloat;
 BEGIN
  
     -- определяется признак Создание/Корректировка
@@ -32,7 +37,26 @@ BEGIN
     
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
-
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartnerCount(), ioId, inPartnerCount);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPlan(), ioId, inAmountPlan);
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithVAT(), ioId, inPriceWithVAT);
+    
+   --НДС из прайса договора 
+    vbVat := COALESCE( (SELECT ObjectFloat_VATPercent.ValueData
+                        FROM MovementLinkObject AS MLO
+                             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
+                                                   ON ObjectFloat_VATPercent.ObjectId = MLO.ObjectId
+                                                  AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
+                        WHERE MLO.DescId = zc_MovementLinkObject_PriceList()
+                          AND MLO.MovementId = inMovementId)
+                      , 20)::TFloat;
+    outPriceWithOutVAT:= ROUND ((inPriceWithVAT - inPriceWithVAT * (vbVAT / (vbVAT + 100))) , 2)::TFloat ; 
+    -- сохранили <>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceWithOutVAT(), ioId, outPriceWithOutVAT);     
+    
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Partner(), ioId, inPartnerId);
     
