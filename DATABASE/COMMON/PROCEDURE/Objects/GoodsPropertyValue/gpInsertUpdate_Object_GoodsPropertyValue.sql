@@ -6,7 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarC
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVargpInsertUpdate_Object_GoodsPropertyValueChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue (Integer, TVarChar, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION (
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
  INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора>
     IN inName                TVarChar  ,    -- Название товара(покупателя)
     IN inAmount              TFloat    ,    -- Кол-во штук при сканировании
@@ -33,6 +33,12 @@ $BODY$
  BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_GoodsPropertyValue());
+
+   -- проверка - Изменение значения св-в товаров
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.RoleId IN (11288675, 624406, zc_Enum_Role_Admin())  AND ObjectLink_UserRole_View.UserId = vbUserId)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Нет прав для изменения данных.';
+   END IF;
 
    -- проверка
    IF COALESCE (inGoodsPropertyId, 0) = 0
