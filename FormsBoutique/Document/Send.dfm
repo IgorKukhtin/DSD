@@ -400,9 +400,18 @@ object SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083'. '#1074#1093'.'
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object CurrencyName_pl: TcxGridDBColumn
             Caption = #1042#1072#1083'. ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088'.)'
             DataBinding.FieldName = 'CurrencyName_pl'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1072#1083#1102#1090#1072' '#1087#1088#1072#1081#1089#1072' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086
@@ -2640,6 +2649,7 @@ object SendForm: TSendForm
         DataSummaryItemIndex = 6
       end>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 347
     Top = 337

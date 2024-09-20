@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
+             , CurrencyName TVarChar, CurrencyName_pl TVarChar
              , BrandName    TVarChar
              , PeriodName   TVarChar
              , PeriodYear   Integer
@@ -143,6 +144,7 @@ BEGIN
                              , Object_PartionGoods.LineFabricaId
                              , Object_PartionGoods.LabelId
                              , COALESCE (CLO_GoodsSize.ObjectId , Object_PartionGoods.GoodsSizeId) AS GoodsSizeId
+                             , Object_PartionGoods.CurrencyId
                              , Object_PartionGoods.BrandId
                              , Object_PartionGoods.PeriodId
                              , Object_PartionGoods.PeriodYear
@@ -263,13 +265,15 @@ BEGIN
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                , Object_Measure.ValueData       AS MeasureName
-    
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId  
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_Currency.ValueData      AS CurrencyName
+               , Object_Currency_pl.ValueData   AS CurrencyName_pl
+
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , tmpPartion.PeriodYear          AS PeriodYear
@@ -324,6 +328,8 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpPartion.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = tmpPartion.BrandId
                 LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = tmpPartion.PeriodId
+                LEFT JOIN Object AS Object_Currency    ON Object_Currency.Id    = tmpPartion.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = zc_Currency_Basis()
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpPartion.GoodsId
@@ -360,6 +366,9 @@ BEGIN
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_Currency.ValueData      AS CurrencyName
+               , Object_Currency_pl.ValueData   AS CurrencyName_pl
+
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
@@ -420,6 +429,8 @@ BEGIN
                 LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = COALESCE (Container_From.GoodsSizeId, Object_PartionGoods.GoodsSizeId)
+                LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl      ON Object_Currency_pl.Id      = zc_Currency_Basis()
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
@@ -582,6 +593,9 @@ BEGIN
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_Currency.ValueData      AS CurrencyName
+               , Object_Currency_pl.ValueData   AS CurrencyName_pl
+
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
@@ -639,6 +653,8 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = COALESCE (Container_From.GoodsSizeId, Object_PartionGoods.GoodsSizeId)
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+                LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl      ON Object_Currency_pl.Id      = zc_Currency_Basis()
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
