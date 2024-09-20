@@ -14,6 +14,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , JuridicalId Integer,  JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , ContractChildCode Integer, ContractChildName TVarChar
+             , PersonalName      TVarChar
+             , PersonalTradeName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -114,7 +116,9 @@ BEGIN
                             , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSummReturn
                           --  , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSumm_partner
                            -- , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSummSale_partner
-                           -- , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSummReturn_partner
+                           -- , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSummReturn_partner 
+                              , Object_Personal.ValueData       AS PersonalName
+                              , Object_PersonalTrade.ValueData  AS PersonalTradeName
                        FROM (SELECT ContainerLO_Juridical.ObjectId   AS JuridicalId
                                   , MIContainer.ObjectExtId_Analyzer AS PartnerId 
                                   , ContainerLinkObject_Contract.ObjectId AS ContractId
@@ -147,6 +151,15 @@ BEGIN
                                     , MIContainer.ObjectIntId_analyzer
                                     , ContainerLinkObject_Contract.ObjectId
                              ) AS tmp
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
+                                                 ON ObjectLink_Partner_Personal.ObjectId = tmp.PartnerId
+                                                AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
+                            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Partner_Personal.ChildObjectId
+                  
+                            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
+                                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = tmp.PartnerId
+                                                AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
+                            LEFT JOIN Object AS Object_PersonalTrade ON Object_PersonalTrade.Id = ObjectLink_Partner_PersonalTrade.ChildObjectId
                       )
 
     , tmpContainer AS (SELECT tmp.JuridicalId
@@ -158,7 +171,9 @@ BEGIN
                             , SUM (tmp.Return_Summ) AS Return_Summ
                             , SUM (SUM (tmp.SummAmount))  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSumm
                             , SUM (SUM (tmp.Sale_Summ))   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummSale
-                            , SUM (SUM (tmp.Return_Summ)) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummReturn
+                            , SUM (SUM (tmp.Return_Summ)) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummReturn 
+                            , STRING_AGG (DISTINCT tmp.PersonalName, ';')      AS PersonalName
+                            , STRING_AGG (DISTINCT tmp.PersonalTradeName, ';') AS PersonalTradeName 
                        FROM tmpContainer_partner AS tmp
                        GROUP BY tmp.JuridicalId
                               , tmp.ContractId
@@ -185,7 +200,10 @@ BEGIN
                        , COALESCE (tmpContainer.Return_Summ, tmpContainer_partner.Return_Summ ,0)     AS Return_Summ
                        , COALESCE (tmpContainer.SummAmount, tmpContainer_partner.SummAmount,0)        AS SummAmount 
                        
-                       , CASE WHEN COALESCE (tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm,0) <> 0 THEN COALESCE (tmpContainer.SummAmount, tmpContainer_partner.SummAmount,0) * 100 / COALESCE (tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm,0) ELSE 0 END AS PartPersent            
+                       , CASE WHEN COALESCE (tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm,0) <> 0 THEN COALESCE (tmpContainer.SummAmount, tmpContainer_partner.SummAmount,0) * 100 / COALESCE (tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm,0) ELSE 0 END AS PartPersent
+                       
+                       , COALESCE (tmpContainer.PersonalName, tmpContainer_partner.PersonalName, '') AS PersonalName
+                       , COALESCE (tmpContainer.PersonalTradeName, tmpContainer_partner.PersonalTradeName, '') AS PersonalTradeName            
                   FROM tmpMovement
                   
                    LEFT JOIN tmpContainer ON tmpContainer.JuridicalId = tmpMovement.JuridicalId
@@ -209,6 +227,9 @@ BEGIN
                   , Object_Partner.ValueData    AS PartnerName
                   , Object_ContractChild.ObjectCode AS ContractChildCode
                   , Object_ContractChild.ValueData  AS ContractChildName 
+                  
+                  , tmpData.PersonalName      ::TVarChar
+                  , tmpData.PersonalTradeName ::TVarChar
 
                   , Object_Goods.Id             AS GoodsId
                   , Object_Goods.ObjectCode     AS GoodsCode

@@ -1,9 +1,7 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
   ClientWidth = 1128
-  ExplicitTop = -50
   ExplicitWidth = 1144
-  ExplicitHeight = 713
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -544,7 +542,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       inherited cxGridChild: TcxGrid
         Top = 225
         Width = 1128
-        ExplicitTop = 226
+        ExplicitTop = 225
         ExplicitWidth = 1128
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -763,6 +761,10 @@ inherited ProductionUnionForm: TProductionUnionForm
     ExplicitWidth = 1128
     ExplicitHeight = 96
     inherited ceStatus: TcxButtonEdit
+      Left = 10
+      Top = 66
+      ExplicitLeft = 10
+      ExplicitTop = 66
       ExplicitWidth = 200
       ExplicitHeight = 22
       Width = 200

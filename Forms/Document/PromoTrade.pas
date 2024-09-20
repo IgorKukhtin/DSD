@@ -116,7 +116,6 @@ type
     dsdDBViewAddOnSign: TdsdDBViewAddOn;
     spSelectMISign: TdsdStoredProc;
     actUpdateCalcDS: TdsdUpdateDataSet;
-    actPrint_Calc: TdsdPrintAction;
     actOpenReportForm: TdsdOpenForm;
     actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     cxSplitter4: TcxSplitter;
@@ -127,7 +126,6 @@ type
     cxLabel25: TcxLabel;
     edSignInternal: TcxButtonEdit;
     GuidesSignInternal: TdsdGuides;
-    actPrint_Calc2: TdsdPrintAction;
     actUpdate_Movement_isTaxPromo: TdsdExecStoredProc;
     actOpenReport_SaleReturn_byPromo: TdsdOpenForm;
     bsGoods: TdxBarSubItem;
@@ -203,6 +201,9 @@ type
     PriceWithOutVAT: TcxGridDBColumn;
     SummWithOutVATPlan: TcxGridDBColumn;
     SummWithVATPlan: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
   private
     { Private declarations }
   public

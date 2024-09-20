@@ -1,3 +1,4 @@
+
 -- Function: gpSelect_Movement_PromoTradeHistory()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PromoTradeHistory (Integer, TVarChar);
