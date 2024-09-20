@@ -72,7 +72,7 @@ BEGIN
            , GoodsKind.Id            AS GoodsKindId
            , GoodsKind.ValueData     AS GoodsKindName
            , GoodsBox.Id             AS GoodsBoxId
-           , GoodsBox.ValueData      AS GoodsBoxName
+           , ('(' || GoodsBox.ObjectCode :: TVarChar || ') '  || GoodsBox.ValueData) :: TVarChar AS GoodsBoxName
            , Object_GoodsKindSub.Id         AS GoodsKindSubId
            , Object_GoodsKindSub.ValueData  AS GoodsKindSubName  
            , COALESCE (ObjectBoolean_isGoodsKind.ValueData, FALSE) :: Boolean AS isGoodsKind         
