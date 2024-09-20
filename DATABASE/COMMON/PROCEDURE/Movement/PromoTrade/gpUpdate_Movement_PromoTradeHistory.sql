@@ -141,6 +141,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReturnIn(), _tmpMI_promotrade.Id, COALESCE (_tmpData.ReturnAmount, 0))
      FROM _tmpMI_promotrade
          LEFT JOIN (SELECT MIN (_tmpMI_promotrade.Id) AS Id FROM _tmpMI_promotrade) AS _tmpMI_promotrade_check ON _tmpMI_promotrade_check.Id = _tmpMI_promotrade.Id
+         -- временно - только в первую строчку
          LEFT JOIN _tmpData ON _tmpMI_promotrade_check.Id > 0
      ;
 

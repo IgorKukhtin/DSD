@@ -73,9 +73,10 @@ BEGIN
                 TO_CHAR(Movement_Promo.StartSale, 'DD.MM.YYYY')||' - '||TO_CHAR(Movement_Promo.EndSale, 'DD.MM.YYYY')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
-        UNION ALL
+
+       UNION ALL
         SELECT
-            '4' :: TVarChar AS LineNo,
+            '4.1.' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
             'Стоимость участия, грн'::TVarChar as LineName,
             (SELECT 
@@ -83,7 +84,19 @@ BEGIN
                 -- REPLACE(TO_CHAR(Movement_Promo.CostPromo, 'FM9990D99')||' ',', ','')
              FROM Movement_Promo_View AS Movement_Promo
              WHERE Movement_Promo.Id = inMovementId)::TEXT AS LineValue
+       UNION ALL
+        SELECT
+            '4.2.' :: TVarChar AS LineNo,
+            ''::TVarChar as GroupName,
+            'Компенсация, грн'::TVarChar as LineName,
+            (SELECT zfConvert_FloatToString (SUM (MI_PromoGoods.SummOutMarket))
+             FROM MovementItem_PromoGoods_View AS MI_PromoGoods
+             WHERE MI_PromoGoods.MovementId = inMovementId
+               AND MI_PromoGoods.IsErased = FALSE
+               AND MI_PromoGoods.SummOutMarket <> 0
+            )::TEXT AS LineValue
         UNION ALL
+
         SELECT
             '5' :: TVarChar AS LineNo,
             ''::TVarChar as GroupName,
