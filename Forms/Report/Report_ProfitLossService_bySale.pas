@@ -53,7 +53,6 @@ type
     actOpenFormProfitLossService_ContractChild: TdsdOpenForm;
     bbOpenFormProfitLossService_ContractChild: TdxBarButton;
     ContractChildCode: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

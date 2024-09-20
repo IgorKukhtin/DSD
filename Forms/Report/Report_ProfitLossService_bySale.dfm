@@ -116,6 +116,15 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             Options.Editing = False
             Width = 40
           end
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
           object RetailName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
@@ -147,6 +156,15 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
             Width = 79
+          end
+          object PaidKindName_Child: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1076#1086#1075'. '#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'PaidKindName_Child'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -316,8 +334,6 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
           end
         end
       end
