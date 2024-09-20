@@ -834,6 +834,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
+    ExplicitLeft = -1
+    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -1535,116 +1537,6 @@ inherited PromoTradeForm: TPromoTradeForm
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [19]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
-      ImageIndex = 15
-      DataSets = <
-        item
-          UserName = 'frxHead'
-          IndexFieldNames = 'GoodsName;Num'
-        end>
-      Params = <
-        item
-          Name = 'InvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Comment'
-          Value = ''
-          Component = edComment
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CommentMain'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTaxPromo'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTaxPromo_Condition'
-          Value = Null
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      ReportNameParam.Value = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actPrint_Calc2: TdsdPrintAction [20]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - % '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
-      ImageIndex = 15
-      DataSets = <
-        item
-          UserName = 'frxHead'
-          IndexFieldNames = 'GoodsName;Num'
-        end>
-      Params = <
-        item
-          Name = 'InvNumber'
-          Value = ''
-          Component = edInvNumber
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Comment'
-          Value = ''
-          Component = edComment
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CommentMain'
-          Value = ''
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTaxPromo'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isTaxPromo_Condition'
-          Value = False
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      ReportNameParam.Value = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       StoredProcList = <
@@ -1687,7 +1579,7 @@ inherited PromoTradeForm: TPromoTradeForm
         item
         end>
     end
-    object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [25]
+    object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [23]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1041#1086#1085#1091#1089' '#1089#1077#1090#1080
@@ -1731,15 +1623,21 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spSelect_Movement_Promo_Print
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelect_Movement_Promo_Print
+          StoredProc = spSelectPrint
         end>
       DataSets = <
         item
-          DataSet = PrintHead
-          UserName = 'frxHead'
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'LineNo'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Ord'
         end>
       Params = <
         item
@@ -1757,19 +1655,36 @@ inherited PromoTradeForm: TPromoTradeForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'CommentMain'
+          Name = 'PromoItemName'
           Value = Null
+          Component = GuidesPromoItem
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = edOperDate
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalTradeName'
+          Value = Null
+          Component = GuidesPersonalTrade
+          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1094#1080#1103
-      ReportNameParam.Value = #1040#1082#1094#1080#1103
+      ReportName = 'PrintMovement_PromoTrade'
+      ReportNameParam.Value = 'PrintMovement_PromoTrade'
     end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [34]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [32]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -1799,7 +1714,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [35]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [33]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -1825,7 +1740,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [36]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [34]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -2435,6 +2350,18 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -2645,12 +2572,13 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 320
   end
   inherited StatusGuides: TdsdGuides
-    Left = 152
-    Top = 240
+    Left = 64
+    Top = 80
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PromoTrade'
-    Top = 272
+    Left = 120
+    Top = 80
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoTrade'
@@ -3286,8 +3214,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 516
-    Top = 24
+    Left = 276
+    Top = 480
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -3318,7 +3246,7 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     Left = 100
-    Top = 72
+    Top = 16
   end
   object GuidesPromoItem: TdsdGuides
     KeyField = 'Id'
@@ -4406,5 +4334,41 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 1064
     Top = 16
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 908
+    Top = 137
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 836
+    Top = 142
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 743
+    Top = 152
   end
 end

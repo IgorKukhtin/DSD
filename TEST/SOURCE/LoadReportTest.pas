@@ -140,6 +140,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintMovement_PromoTrade', ReportPath + '\Товарный Учет\PrintMovement_PromoTrade.fr3');
+  exit;
   {
   LoadReportFromFile('Печать_Снятие с хранения в места отбора', ReportPath + '\Отчеты (товарные)\Печать_Снятие с хранения в места отбора.fr3');
   exit;
