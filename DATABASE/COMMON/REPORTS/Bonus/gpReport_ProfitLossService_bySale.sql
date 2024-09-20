@@ -15,18 +15,26 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , ContractChildCode Integer, ContractChildName TVarChar
              , PersonalName TVarChar, PersonalTradeName TVarChar
-             , PaidKindName TVarChar, PaidKindName_Child TVarChar
+             , PaidKindName TVarChar, PaidKindName_Child TVarChar 
+             , InfoMoneyName TVarChar, InfoMoneyName_Child TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , AmountIn TFloat, AmountOut TFloat
+             , AmountIn TFloat, AmountOut TFloat, Amount TFloat
              , Sale_Summ TFloat
              , Return_Summ Tfloat
              , SummAmount  Tfloat
              , AmountIn_calc  Tfloat
              , AmountOut_calc  Tfloat
+             , Amount_calc     Tfloat
              , Persent TFloat
+             , Amount_501 TFloat
+             , Amount_502 TFloat
+             , Amount_503 TFloat
+             , Amount_512 TFloat
+             , Amount_601 TFloat
+             , Amount_504 TFloat
              ) 
 
 AS
@@ -69,15 +77,14 @@ BEGIN
                                  THEN -1 * MovementItem.Amount
                             ELSE 0
                        END::TFloat                                    AS AmountOut
+                     , MovementItem.Amount                            AS Amount
                 FROM MovementItem
                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull) 
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.isErased = FALSE
                   AND COALESCE (MovementItem.Amount,0) <> 0
                 ) 
-                
-                
-            
+       
     --
     , tmpMovement AS (SELECT Movement.Id              AS MovementId
                            , Movement.DescId          AS MovementDescId
@@ -86,9 +93,11 @@ BEGIN
                            , MILinkObject_PaidKind.ObjectId AS PaidKindId
                            , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0)             AS JuridicalId
                            , CASE WHEN Object_Partner.DescId = zc_Object_Partner() THEN MovementItem.ObjectId ELSE 0 END AS PartnerId
-                           , MILinkObject_ContractChild.ObjectId  AS ContractChildId    
+                           , MILinkObject_ContractChild.ObjectId  AS ContractChildId 
+                           , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId   
                            , MovementItem.AmountIn
                            , MovementItem.AmountOut
+                           , MovementItem.Amount
                       FROM tmpMovementFull AS Movement
                           INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id 
 
@@ -104,6 +113,18 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                                            ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+
+                          INNER JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                                            ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()  
+                                                           AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentSale()
+                                                                                                             , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
+                                                                                                             , zc_Enum_ContractConditionKind_BonusPercentSalePart()) 
+
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+           
 
                       WHERE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0) = inJuridicalId OR inJuridicalId = 0
           --  LEFT JOIN tmpObject_Contract AS View_Contract_InvNumber_child ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
@@ -195,10 +216,12 @@ BEGIN
                        , tmpMovement.PartnerId 
                        , tmpMovement.ContractChildId 
                        , tmpMovement.PaidKindId
+                       , tmpMovement.InfoMoneyId
                        , COALESCE (tmpContainer.GoodsId, tmpContainer_partner.GoodsId) AS GoodsId  
                        , COALESCE (tmpContainer.GoodsKindId, tmpContainer_partner.GoodsKindId, 0) AS GoodsKindId 
                        , tmpMovement.AmountIn
-                       , tmpMovement.AmountOut
+                       , tmpMovement.AmountOut 
+                       , tmpMovement.Amount
                        , COALESCE (tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm,0)             AS TotalSumm
                        , COALESCE (tmpContainer.TotalSummSale, tmpContainer_partner.TotalSummSale,0)     AS TotalSummSale
                        , COALESCE (tmpContainer.TotalSummReturn, tmpContainer_partner.TotalSummReturn,0) AS TotalSummReturn
@@ -241,6 +264,9 @@ BEGIN
                   , Object_PaidKind.ValueData       ::TVarChar AS PaidKindName
                   , Object_PaidKind_Child.ValueData ::TVarChar AS PaidKindName_Child
 
+                  , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
+                  , Object_InfoMoneyChild_View.InfoMoneyName_all AS InfoMoneyName_Child
+
                   , Object_Goods.Id             AS GoodsId
                   , Object_Goods.ObjectCode     AS GoodsCode
                   , Object_Goods.ValueData      AS GoodsName
@@ -254,19 +280,44 @@ BEGIN
 
                   , tmpData.AmountIn
                   , tmpData.AmountOut 
-
+                  , tmpData.Amount
+                  
                   , COALESCE (tmpData.Sale_Summ,0)   ::TFloat    AS Sale_Summ
                   , COALESCE (tmpData.Return_Summ,0) ::TFloat    AS Return_Summ
                   , COALESCE (tmpData.SummAmount,0)  ::TFloat    AS SummAmount   
                   
                   , CAST (tmpData.PartPersent * tmpData.AmountIn / 100 AS NUMERIC (16,2))  ::TFloat AS AmountIn_calc
                   , CAST (tmpData.PartPersent * tmpData.AmountOut / 100 AS NUMERIC (16,2)) ::TFloat AS AmountOut_calc
-                  , tmpData.PartPersent ::TFloat AS Persent
+                  , CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ::TFloat AS Amount_calc
+                  , tmpData.PartPersent ::TFloat AS Persent  
+                  
+                  --по InfoMoneyId
+                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21501() THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_501
+                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21502() THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_502
+                  , CASE WHEN tmpData.InfoMoneyId = 8952                      THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_503
+                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21512() THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_512
+                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_80601() THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_601
+                  , CASE WHEN tmpData.InfoMoneyId = 8953                      THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_504 
              FROM tmpData 
                 LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
                 LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpData.PartnerId
-                LEFT JOIN Object AS Object_ContractChild ON Object_ContractChild.Id = tmpData.ContractChildId
-                
+                LEFT JOIN Object AS Object_ContractChild ON Object_ContractChild.Id = tmpData.ContractChildId 
+                LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpData.InfoMoneyId
+
+                 --ФО документ нач.
+                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
+                --ФО договор база
+                LEFT JOIN ObjectLink AS ObjectLink_ContractChild_PaidKind
+                                     ON ObjectLink_ContractChild_PaidKind.ObjectId = tmpData.ContractChildId
+                                    AND ObjectLink_ContractChild_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = ObjectLink_ContractChild_PaidKind.ChildObjectId
+
+                LEFT JOIN ObjectLink AS ObjectLink_ContractChild_InfoMoney
+                                     ON ObjectLink_ContractChild_InfoMoney.ObjectId = tmpData.ContractChildId
+                                    AND ObjectLink_ContractChild_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
+                LEFT JOIN Object_InfoMoney_View AS Object_InfoMoneyChild_View ON Object_InfoMoneyChild_View.InfoMoneyId = ObjectLink_ContractChild_InfoMoney.ChildObjectId
+
+
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
 
@@ -293,13 +344,8 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                        ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                       AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
-                 --ФО документ нач.
-                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
-                --ФО договор база
-                LEFT JOIN ObjectLink AS ObjectLink_ContractChild_PaidKind
-                                     ON ObjectLink_ContractChild_PaidKind.ObjectId = tmpData.ContractChildId
-                                    AND ObjectLink_ContractChild_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-                LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = ObjectLink_ContractChild_PaidKind.ChildObjectId
+
+
 
        ;
          
@@ -316,4 +362,14 @@ $BODY$
 -- тест
 --SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.09.2024', inEndDate:= '15.09.2024', inSession:= zfCalc_UserAdmin());
 --
-SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.09.2024', inEndDate:= '01.010.2024', inJuridicalId:= 5388644, inSession:= zfCalc_UserAdmin());
+SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.08.2024', inEndDate:= '01.10.2024', inJuridicalId:= 5388644, inSession:= zfCalc_UserAdmin());
+
+/*
+
+zc_Enum_InfoMoney_21501(), --1)Бонус за продукцию
+zc_Enum_InfoMoney_21502(), --2)Бонус за мясное сырье
+zc_Enum_InfoMoney_21512(), --4) Маркетинговый бюджет
+zc_Enum_InfoMoney_80601(), --3)Расходы учредителей
+8952 /*zc_Enum_InfoMoney_21503()*/  --5)Реклама
+8953 /*zc_Enum_InfoMoney_21504()*/ --6) услуги акции
+*/

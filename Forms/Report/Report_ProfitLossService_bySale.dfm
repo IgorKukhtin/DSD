@@ -51,6 +51,60 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
               Format = ',0.####'
               Kind = skSum
               Column = AmountOut_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_501
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_502
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_503
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_512
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_601
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_504
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -77,6 +131,60 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
               Format = ',0.####'
               Kind = skSum
               Column = AmountOut_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_501
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_502
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_503
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_512
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_601
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_504
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -85,16 +193,6 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object MovementDescName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'MovementDescName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1080#1076' '#1076#1086#1082'. <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')>'
-            Options.Editing = False
-            Width = 79
-          end
           object InvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
@@ -190,12 +288,25 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             Options.Editing = False
             Width = 110
           end
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' ('#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084')'
+            Options.Editing = False
+            Width = 70
+          end
           object AmountIn: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1077#1073#1077#1090' ('#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084')'
@@ -208,6 +319,7 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1088#1077#1076#1080#1090' ('#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084')'
@@ -305,12 +417,23 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             HeaderHint = #1055#1088#1086#1076#1072#1078#1072' '#1084#1080#1085#1091#1089' '#1074#1086#1079#1074#1088#1072#1090#1099' '
             Width = 80
           end
+          object Amount_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'Amount_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
           object AmountIn_calc: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090' ('#1088#1072#1089#1087#1088#1077#1076'.)'
             DataBinding.FieldName = 'AmountIn_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -321,8 +444,75 @@ inherited Report_ProfitLossService_bySaleForm: TReport_ProfitLossService_bySaleF
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object Amount_501: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'. ('#1087#1088#1086#1076'.)'
+            DataBinding.FieldName = 'Amount_501'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1073#1086#1085#1091#1089' '#1079#1072' '#1087#1088#1086#1076#1091#1082#1094#1080#1102')'
+            Width = 80
+          end
+          object Amount_502: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'.  ('#1084#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+            DataBinding.FieldName = 'Amount_502'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1073#1086#1085#1091#1089' '#1079#1072' '#1084#1103#1089#1085#1086#1077' '#1089#1099#1088#1100#1077')'
+            Width = 80
+          end
+          object Amount_503: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'.  ('#1088#1077#1082#1083#1072#1084#1072')'
+            DataBinding.FieldName = 'Amount_503'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1073#1086#1085#1091#1089' '#1079#1072' '#1088#1077#1082#1083#1072#1084#1091')'
+            Width = 80
+          end
+          object Amount_512: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'. ('#1084#1072#1088#1082#1077#1090#1080#1085#1075')'
+            DataBinding.FieldName = 'Amount_512'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1084#1072#1088#1082#1077#1090#1080#1085#1075#1086#1074#1099#1081' '#1073#1102#1076#1078#1077#1090')'
+            Width = 80
+          end
+          object Amount_601: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'. ('#1088#1072#1089#1093'. '#1091#1095'.)'
+            DataBinding.FieldName = 'Amount_601'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1088#1072#1089#1093#1086#1076#1099' '#1091#1095#1088#1077#1076#1080#1090#1077#1076#1077#1081')'
+            Width = 80
+          end
+          object Amount_504: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076'. ('#1059#1089#1083#1091#1075#1080' - '#1040#1082#1094#1080#1080')'
+            DataBinding.FieldName = 'Amount_504'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' ('#1059#1089#1083#1091#1075#1080' - '#1040#1082#1094#1080#1080')'
             Width = 80
           end
           object Persent: TcxGridDBColumn
