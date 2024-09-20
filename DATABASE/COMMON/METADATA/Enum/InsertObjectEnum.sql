@@ -779,6 +779,12 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80301, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80301');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80401');
 
+     -- 80502; Собственный капитал - Прочие - "Расходы учредителей";
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80502, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80502');
+     
+     -- 80601; Собственный капитал - Представительские, пакеты, подарки - "Расходы учредителей";
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80601, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80601');
+
      -- !!!
      -- !!! ОПиУ: 1-уровень (Группа ОПиУ)
      -- !!!
