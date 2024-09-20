@@ -21,8 +21,6 @@ inherited ProfitLossService_ContractChildForm: TProfitLossService_ContractChildF
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 262
-        ExplicitLeft = -160
-        ExplicitTop = 3
         ExplicitWidth = 990
         ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
