@@ -106,8 +106,8 @@ BEGIN
                                                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) 
                               INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
-                                                            AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                            AND ContainerLO_Juridical.ObjectId = vbJuridicalId  --15412  -- 14866 --vbJuridicalId inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                                            AND ContainerLO_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
+                                                            AND ContainerLO_Juridical.ObjectId    = vbJuridicalId  --15412  -- 14866 --vbJuridicalId inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                                    
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = MIContainer.MovementId
