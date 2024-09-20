@@ -44,8 +44,7 @@ $BODY$
   DECLARE vbSignInternalId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PromoTrade());
-    -- vbUserId:= lpGetUserBySession (inSession);
+    vbUserId:= lpGetUserBySession (inSession);
 
     --IF NOT EXISTS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId
      -- создаем док по маске

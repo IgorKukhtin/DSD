@@ -30,12 +30,12 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH 
-    tmpText AS (    SELECT  1 ::Integer  AS Ord, 'Отвественный сотрудник коммерческого отдела:'  ::TVarChar AS Name
-              UNION SELECT  2 ::Integer  AS Ord, 'Отвественный сотрудник экономического отдела:' ::TVarChar AS Name   --
-              UNION SELECT  3 ::Integer  AS Ord, 'Региональнай менеджер / Директор филиала:'     ::TVarChar AS Name
-              UNION SELECT  4 ::Integer  AS Ord, 'Руководитель отдела продаж:'                   ::TVarChar AS Name
-              UNION SELECT  5 ::Integer  AS Ord, 'Отвественный сотрудник отдела маркетинга:'     ::TVarChar AS Name
-              UNION SELECT  6 ::Integer  AS Ord, 'Коммерческий директор:'                        ::TVarChar AS Name
+    tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Отвественный сотрудник коммерческого отдела:'  ::TVarChar AS Name
+              UNION SELECT  2 ::Integer  AS Ord, '2.Отвественный сотрудник экономического отдела:' ::TVarChar AS Name   --
+              UNION SELECT  3 ::Integer  AS Ord, '3.Региональнай менеджер / Директор филиала:'     ::TVarChar AS Name
+              UNION SELECT  4 ::Integer  AS Ord, '4.Руководитель отдела продаж:'                   ::TVarChar AS Name
+              UNION SELECT  5 ::Integer  AS Ord, '5.Отвественный сотрудник отдела маркетинга:'     ::TVarChar AS Name
+              UNION SELECT  6 ::Integer  AS Ord, '6.Коммерческий директор:'                        ::TVarChar AS Name
                  )
 
   , tmpData AS (SELECT MovementLinkObject_Member1.ObjectId   AS Member1Id
