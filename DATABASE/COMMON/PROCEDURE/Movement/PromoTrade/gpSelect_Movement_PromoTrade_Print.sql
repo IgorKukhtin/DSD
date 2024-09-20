@@ -115,13 +115,13 @@ BEGIN
         SELECT
             10 ::Integer AS LineNo,
             'Плановий об''єм продажів в місяць, кг'::TVarChar as LineName,
-            (SELECT CAST (SUM (_tmpMI.AmountSale / 3) AS NUMERIC (16,2))
+            (SELECT CAST (SUM (_tmpMI.AmountPlan) AS NUMERIC (16,2))
              FROM _tmpMI)::TEXT AS LineValue
         UNION ALL
         SELECT
             11 ::Integer AS LineNo,
             'Плановий об''єм продажів в місяць, грн'::TVarChar as LineName,
-            (SELECT CAST (SUM (_tmpMI.SummSale / 3) AS NUMERIC (16,2))
+            (SELECT CAST (SUM (_tmpMI.SummWithVATPlan) AS NUMERIC (16,2))
              FROM _tmpMI)::TEXT AS LineValue
         UNION ALL
         SELECT

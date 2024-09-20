@@ -348,10 +348,10 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
     object actPrint: TdsdPrintAction [21]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spSelect_Movement_PromoTrade_Print
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelect_Movement_PromoTrade_Print
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -359,8 +359,14 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHead
-          UserName = 'frxHead'
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+          IndexFieldNames = 'LineNo'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Ord'
         end>
       Params = <
         item
@@ -380,15 +386,31 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'CommentMain'
+          Name = 'PromoItemName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'CommentMain'
+          ComponentItem = 'PromoItemName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalTradeName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalTradeName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
-      ReportName = #1040#1082#1094#1080#1103
-      ReportNameParam.Value = #1040#1082#1094#1080#1103
+      ReportName = 'PrintMovement_PromoTrade'
+      ReportNameParam.Value = 'PrintMovement_PromoTrade'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -703,6 +725,14 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -918,5 +948,41 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
     PackSize = 1
     Left = 864
     Top = 243
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 740
+    Top = 182
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 812
+    Top = 177
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 735
+    Top = 256
   end
 end

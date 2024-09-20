@@ -361,8 +361,7 @@ $BODY$
 
 -- тест
 --SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.09.2024', inEndDate:= '15.09.2024', inSession:= zfCalc_UserAdmin());
---
-SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.08.2024', inEndDate:= '01.10.2024', inJuridicalId:= 5388644, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_ProfitLossService_bySale (inStartDate:= '01.08.2024', inEndDate:= '01.10.2024', inJuridicalId:= 5388644, inSession:= zfCalc_UserAdmin());
 
 /*
 

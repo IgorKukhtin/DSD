@@ -63,6 +63,9 @@ type
     actInsertMaskMulti: TMultiAction;
     JuridicalName: TcxGridDBColumn;
     RetailName: TcxGridDBColumn;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
   private
     { Private declarations }
   public
