@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbOperDateEnd   TDateTime;
    DECLARE vbJuridicalId   Integer;
    DECLARE vbContractId    Integer;
+   DECLARE vbMovementId_PromoTradeHistory Integer;
   -- DECLARE vbRetailId      Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -50,6 +51,22 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Документ не проведен.';
      END IF;*/
 
+    vbMovementId_PromoTradeHistory := (SELECT Movement.Id
+                                       FROM Movement
+                                       WHERE Movement.DescId = zc_Movement_PromoTradeHistory()
+                                         AND Movement.ParentId =  inMovementId
+                                       );
+                                       
+    -- проверка на существование док. История клиента
+    IF COALESCE (vbMovementId_PromoTradeHistory,0) = 0
+    THEN
+        --создаем документ
+        SELECT lpInsertUpdate_Movement (0, zc_Movement_PromoTradeHistory(), Movement.InvNumber, Movement.OperDate, Movement.Id, 0) 
+      INTO vbMovementId_PromoTradeHistory
+        FROM Movement
+        WHERE Movement.Id = inMovementId
+        ;
+    END IF;
 
 
      -- данные по акциям
@@ -135,14 +152,12 @@ BEGIN
         FROM tmpContainer
         ;
 
+     
      -- Результат - 
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSale(), _tmpMI_promotrade.Id, COALESCE (_tmpData.SaleAmount, 0))
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummSale(), _tmpMI_promotrade.Id, COALESCE (_tmpData.SaleSumm, 0))
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReturnIn(), _tmpMI_promotrade.Id, COALESCE (_tmpData.ReturnAmount, 0))
-     FROM _tmpMI_promotrade
-         LEFT JOIN (SELECT MIN (_tmpMI_promotrade.Id) AS Id FROM _tmpMI_promotrade) AS _tmpMI_promotrade_check ON _tmpMI_promotrade_check.Id = _tmpMI_promotrade.Id
-         -- временно - только в первую строчку
-         LEFT JOIN _tmpData ON _tmpMI_promotrade_check.Id > 0
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountSale(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.SaleAmount, 0))
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummSale(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.SaleSumm, 0))
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountReturnIn(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.ReturnAmount, 0))
+     FROM _tmpData
      ;
 
 END;

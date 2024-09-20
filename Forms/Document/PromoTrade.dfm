@@ -90,17 +90,14 @@ inherited PromoTradeForm: TPromoTradeForm
             item
               Format = '0.####'
               Kind = skSum
-              Column = AmountSale
             end
             item
               Format = '0.####'
               Kind = skSum
-              Column = SummSale
             end
             item
               Format = '0.####'
               Kind = skSum
-              Column = AmountReturnIn
             end
             item
               Format = '0.####'
@@ -196,17 +193,14 @@ inherited PromoTradeForm: TPromoTradeForm
             item
               Format = '0.####'
               Kind = skSum
-              Column = AmountSale
             end
             item
               Format = '0.####'
               Kind = skSum
-              Column = SummSale
             end
             item
               Format = '0.####'
               Kind = skSum
-              Column = AmountReturnIn
             end
             item
               Format = '0.####'
@@ -413,41 +407,6 @@ inherited PromoTradeForm: TPromoTradeForm
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-          end
-          object AmountSale: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' (3'#1084'.)'
-            DataBinding.FieldName = 'AmountSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1054#1073#1098#1077#1084' '#1087#1088#1086#1076#1072#1078' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
-            Width = 80
-          end
-          object SummSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' (3'#1084'.)'
-            DataBinding.FieldName = 'SummSale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            HeaderHint = #1057#1091#1084#1084#1072#1087#1088#1086#1076#1072#1078' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
-            Width = 80
-          end
-          object AmountReturnIn: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1084' '#1074#1086#1079#1074#1088#1072#1090#1099' (3'#1084'.)'
-            DataBinding.FieldName = 'AmountReturnIn'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1073#1098#1077#1084' '#1074#1086#1079#1074#1088#1072#1090#1099' ('#1089#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 3'#1084'.)'
-            Width = 80
           end
           object AmountPlan: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' ('#1084#1077#1089'.)'
@@ -4099,35 +4058,54 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ContractId'
         Value = Null
-        ParamType = ptUnknown
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ContractName'
         Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
+        Component = GuidesContract
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ContractId'
         Value = Null
-        ParamType = ptUnknown
+        Component = GuidesContractTag
+        ComponentItem = 'Key'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ContractName'
         Value = Null
+        Component = GuidesContractTag
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptUnknown
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = GuidesRetail
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 276

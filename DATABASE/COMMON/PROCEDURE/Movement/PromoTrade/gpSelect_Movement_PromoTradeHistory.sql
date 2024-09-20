@@ -25,7 +25,12 @@ BEGIN
   union select sum(zc_MI_Master.zc_MIFloat_AmountReturnIn) 
   union select % возврата- расчет 
   union select zc_MovementFloat_DebtDay 
-  union select zc_MovementFloat_DebtSumm    
+  union select zc_MovementFloat_DebtSumm  
+  
+      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)    
+      , SummSale           TFloat --
+      , AmountReturnIn     TFloat -- Объем возвраты  даж (статистика за 3м.)
+  
  */
 
     vbMovementId_PromoTradeHistory := (SELECT Movement.Id
@@ -44,43 +49,41 @@ BEGIN
               UNION SELECT  4 ::Integer  AS Ord, '4.Просроченная дебиторская задолженность, грн:'   ::TVarChar AS Name
               UNION SELECT  5 ::Integer  AS Ord, '5.Просроченная дебиторская задолженность, дней:'  ::TVarChar AS Name
                  )
-  , tmpMI_Master AS (SELECT SUM (COALESCE (MIFloat_AmountSale.ValueData,0))     AS AmountSale
-                          , SUM (COALESCE (MIFloat_AmountReturnIn.ValueData,0)) AS AmountReturnIn
-                          , SUM (COALESCE (MIFloat_SummSale.ValueData,0))       AS SummSale
-                     FROM MovementItem
-                          LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
-                                                      ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
-                          LEFT JOIN MovementItemFloat AS MIFloat_SummSale
-                                                      ON MIFloat_SummSale.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_SummSale.DescId = zc_MIFloat_SummSale()                
-                          LEFT JOIN MovementItemFloat AS MIFloat_AmountReturnIn
-                                                      ON MIFloat_AmountReturnIn.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_AmountReturnIn.DescId = zc_MIFloat_AmountReturnIn()                          
-                     WHERE MovementItem. MovementId = inMovementId
-                       AND MovementItem.DescId = zc_MI_Master()
-                       AND MovementItem.isErased = FALSE
-                     )
+  , tmpMovement AS (SELECT SUM (COALESCE (MF_AmountSale.ValueData,0))     AS AmountSale
+                         , SUM (COALESCE (MF_AmountReturnIn.ValueData,0)) AS AmountReturnIn
+                         , SUM (COALESCE (MF_SummSale.ValueData,0))       AS SummSale
+                    FROM Movement
+                         LEFT JOIN MovementFloat AS MF_AmountSale
+                                                 ON MF_AmountSale.MovementId = Movement.Id
+                                                AND MF_AmountSale.DescId = zc_MovementFloat_AmountSale()
+                         LEFT JOIN MovementFloat AS MF_SummSale
+                                                 ON MF_SummSale.MovementId = Movement.Id
+                                                AND MF_SummSale.DescId = zc_MovementFloat_SummSale()
+                         LEFT JOIN MovementFloat AS MF_AmountReturnIn
+                                                 ON MF_AmountReturnIn.MovementId = Movement.Id
+                                                AND MF_AmountReturnIn.DescId = zc_MovementFloat_AmountReturnIn()
+                    WHERE Movement.Id = vbMovementId_PromoTradeHistory
+                    )
 
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (CAST (tmpMI_Master.AmountSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
+          ,  (CAST (tmpMovement.AmountSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
     FROM tmpText
-         LEFT JOIN tmpMI_Master ON 1=1
+         LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 1
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (CAST (tmpMI_Master.SummSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
+          ,  (CAST (tmpMovement.SummSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
     FROM tmpText
-         LEFT JOIN tmpMI_Master ON 1=1
+         LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 2
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (CAST (CASE WHEN COALESCE (tmpMI_Master.AmountSale,0) <> 0 THEN tmpMI_Master.AmountReturnIn * 100 / tmpMI_Master.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value                                               
+          ,  (CAST (CASE WHEN COALESCE (tmpMovement.AmountSale,0) <> 0 THEN tmpMovement.AmountReturnIn * 100 / tmpMovement.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value                                               
     FROM tmpText
-         LEFT JOIN tmpMI_Master ON 1=1
+         LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 3
  UNION
     SELECT  tmpText.Ord             ::Integer
@@ -103,7 +106,6 @@ BEGIN
     
     ORDER by 1  
     ;
-
 
 END;
 $BODY$

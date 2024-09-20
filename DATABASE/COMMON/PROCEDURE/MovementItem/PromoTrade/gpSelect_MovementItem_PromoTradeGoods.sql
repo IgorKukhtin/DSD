@@ -33,10 +33,6 @@ RETURNS TABLE (
       , SummWithOutVATPlan TFloat
       , SummWithVATPlan    TFloat
       
-      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)    
-      , SummSale           TFloat --
-      , AmountReturnIn     TFloat -- Объем возвраты  даж (статистика за 3м.)
-
       , Comment            TVarChar --Комментарий       
       , isErased           Boolean  --удален
 )
@@ -47,7 +43,6 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoTradeGoods());
     vbUserId:= lpGetUserBySession (inSession);
-
 
 
     RETURN QUERY
@@ -81,10 +76,6 @@ BEGIN
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithOutVAT.ValueData)  ::TFloat AS SummWithOutVATPlan
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithVAT.ValueData)     ::TFloat AS SummWithVATPlan
-             
-             , MIFloat_AmountSale.ValueData     ::TFloat AS AmountSale             --
-             , MIFloat_SummSale.ValueData       ::TFloat AS SummSale             --
-             , MIFloat_AmountReturnIn.ValueData ::TFloat AS AmountReturnIn
 
              , MIString_Comment.ValueData              AS Comment                     -- Примечание
              , MovementItem.isErased                   AS isErased                    -- Удален
@@ -95,16 +86,6 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                          ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                         AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
-                                         ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
-             LEFT JOIN MovementItemFloat AS MIFloat_SummSale
-                                         ON MIFloat_SummSale.MovementItemId = MovementItem.Id
-                                        AND MIFloat_SummSale.DescId = zc_MIFloat_SummSale()                
-             LEFT JOIN MovementItemFloat AS MIFloat_AmountReturnIn
-                                         ON MIFloat_AmountReturnIn.MovementItemId = MovementItem.Id
-                                        AND MIFloat_AmountReturnIn.DescId = zc_MIFloat_AmountReturnIn()  
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPlan
                                          ON MIFloat_AmountPlan.MovementItemId = MovementItem.Id

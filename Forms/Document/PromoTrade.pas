@@ -171,9 +171,6 @@ type
     spUpdate_PromoTradeHistory: TdsdStoredProc;
     actUpdate_PromoTradeHistory: TdsdExecStoredProc;
     bbUpdate_PromoTradeHistory: TdxBarButton;
-    AmountSale: TcxGridDBColumn;
-    SummSale: TcxGridDBColumn;
-    AmountReturnIn: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     cxPageControl2: TcxPageControl;
     cxTabSheet1: TcxTabSheet;

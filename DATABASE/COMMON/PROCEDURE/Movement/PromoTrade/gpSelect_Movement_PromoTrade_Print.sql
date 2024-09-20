@@ -47,10 +47,27 @@ BEGIN
          RAISE EXCEPTION 'ќшибка.ƒокумент <%>.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId);
      END IF;
   */
-
+    --
     CREATE TEMP TABLE _tmpMI ON COMMIT DROP AS
       SELECT tmp.*
       FROM gpSelect_MovementItem_PromoTradeGoods (inMovementId, FALSE, inSession) AS tmp;
+    --
+    CREATE TEMP TABLE _tmpHistory ON COMMIT DROP AS
+      SELECT SUM (COALESCE (MF_AmountSale.ValueData,0))     AS AmountSale
+           , SUM (COALESCE (MF_AmountReturnIn.ValueData,0)) AS AmountReturnIn
+           , SUM (COALESCE (MF_SummSale.ValueData,0))       AS SummSale
+      FROM Movement
+           LEFT JOIN MovementFloat AS MF_AmountSale
+                                   ON MF_AmountSale.MovementId = Movement.Id
+                                  AND MF_AmountSale.DescId = zc_MovementFloat_AmountSale()
+           LEFT JOIN MovementFloat AS MF_SummSale
+                                   ON MF_SummSale.MovementId = Movement.Id
+                                  AND MF_SummSale.DescId = zc_MovementFloat_SummSale()
+           LEFT JOIN MovementFloat AS MF_AmountReturnIn
+                                   ON MF_AmountReturnIn.MovementId = Movement.Id
+                                  AND MF_AmountReturnIn.DescId = zc_MovementFloat_AmountReturnIn()
+      WHERE Movement.DescId = zc_Movement_PromoTradeHistory()
+        AND Movement.ParentId = inMovementId;
 
      --               
      OPEN Cursor1 FOR
@@ -132,20 +149,20 @@ BEGIN
         SELECT
             13 ::Integer AS LineNo,
             '‘актичний об''Їм продаж≥в в м≥с€ць, кг'::TVarChar as LineName,
-            (SELECT CAST (SUM (_tmpMI.AmountSale / 3) AS NUMERIC (16,2))
-             FROM _tmpMI)::TEXT AS LineValue
+            (SELECT CAST (SUM (_tmpHistory.AmountSale / 3) AS NUMERIC (16,2))
+             FROM _tmpHistory)::TEXT AS LineValue
         UNION ALL
         SELECT
             14 ::Integer AS LineNo,
             '‘актичний об''Їм продаж≥в в м≥с€ць, грн'::TVarChar as LineName,
-            (SELECT CAST (SUM (_tmpMI.SummSale / 3) AS NUMERIC (16,2))
-             FROM _tmpMI)::TEXT AS LineValue
+            (SELECT CAST (SUM (_tmpHistory.SummSale / 3) AS NUMERIC (16,2))
+             FROM _tmpHistory)::TEXT AS LineValue
         UNION ALL
         SELECT
             15 ::Integer AS LineNo,
             '% повернень'::TVarChar as LineName,
-            (SELECT CAST (CASE WHEN COALESCE (_tmpMI.AmountSale,0) <> 0 THEN _tmpMI.AmountReturnIn * 100 / _tmpMI.AmountSale ELSE 0 END AS NUMERIC (16,1))
-             FROM _tmpMI)::TEXT AS LineValue
+            (SELECT CAST (CASE WHEN COALESCE (_tmpHistory.AmountSale,0) <> 0 THEN _tmpHistory.AmountReturnIn * 100 / _tmpHistory.AmountSale ELSE 0 END AS NUMERIC (16,1))
+             FROM _tmpHistory)::TEXT AS LineValue
         UNION ALL
         SELECT
             16 ::Integer AS LineNo,

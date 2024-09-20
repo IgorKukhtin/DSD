@@ -764,6 +764,18 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_DebtSumm() RETURNS Integer AS $BODY$
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_DebtSumm', 'Просроченная дебиторская задолженность, грн' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_DebtSumm');  
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountSale', ' 	Объем продаж (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountSale');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummSale() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummSale'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummSale', 'Сумма продаж (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummSale');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_AmountReturnIn', 'Объем возвраты (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountReturnIn');  
+
 
 
  
@@ -771,6 +783,9 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 20.09.24         * zc_MovementFloat_AmountSale
+                    zc_MovementFloat_SummSale
+                    zc_MovementFloat_AmountReturnIn
  16.09.24         * zc_MovementFloat_DelayDay
                     zc_MovementFloat_RetroBonus
                     zc_MovementFloat_Market
