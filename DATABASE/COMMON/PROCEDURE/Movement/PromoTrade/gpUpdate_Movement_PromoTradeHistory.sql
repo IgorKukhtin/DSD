@@ -106,8 +106,8 @@ BEGIN
                                                               AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) 
                               INNER JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
-                                                            AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                                            AND ContainerLO_Juridical.ObjectId = vbJuridicalId  --15412  -- 14866 --vbJuridicalId inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
+                                                            AND ContainerLO_Juridical.DescId      = zc_ContainerLinkObject_Juridical()
+                                                            AND ContainerLO_Juridical.ObjectId    = vbJuridicalId  --15412  -- 14866 --vbJuridicalId inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                                                    
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                             ON MovementLinkObject_Contract.MovementId = MIContainer.MovementId
@@ -141,6 +141,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReturnIn(), _tmpMI_promotrade.Id, COALESCE (_tmpData.ReturnAmount, 0))
      FROM _tmpMI_promotrade
          LEFT JOIN (SELECT MIN (_tmpMI_promotrade.Id) AS Id FROM _tmpMI_promotrade) AS _tmpMI_promotrade_check ON _tmpMI_promotrade_check.Id = _tmpMI_promotrade.Id
+         -- временно - только в первую строчку
          LEFT JOIN _tmpData ON _tmpMI_promotrade_check.Id > 0
      ;
 

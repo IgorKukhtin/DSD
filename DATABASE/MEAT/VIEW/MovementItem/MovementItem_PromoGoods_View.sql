@@ -54,6 +54,9 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
       , MIFloat_MainDiscount.ValueData   ::TFloat AS MainDiscount       -- Общая скидка для покупателя, %
       , (MIFloat_OperPriceList.ValueData / CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END)  ::TFloat AS OperPriceList      -- Цена в прайсе
       , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
+
+      , (COALESCE (MIFloat_SummOutMarket.ValueData, 0) - COALESCE (MIFloat_SummInMarket.ValueData, 0)) :: TFloat AS SummOutMarket
+
     FROM MovementItem
         LEFT JOIN MovementItemFloat AS MIFloat_Price
                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -99,6 +102,13 @@ CREATE OR REPLACE VIEW MovementItem_PromoGoods_View AS
         LEFT JOIN MovementItemFloat AS MIFloat_MainDiscount
                                     ON MIFloat_MainDiscount.MovementItemId = MovementItem.Id 
                                    AND MIFloat_MainDiscount.DescId = zc_MIFloat_MainDiscount()
+
+        LEFT JOIN MovementItemFloat AS MIFloat_SummOutMarket
+                                    ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
+                                   AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
+        LEFT JOIN MovementItemFloat AS MIFloat_SummInMarket
+                                    ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
+                                   AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
