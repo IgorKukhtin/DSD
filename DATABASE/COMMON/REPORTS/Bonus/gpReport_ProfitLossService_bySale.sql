@@ -14,8 +14,8 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , JuridicalId Integer,  JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , ContractChildCode Integer, ContractChildName TVarChar
-             , PersonalName      TVarChar
-             , PersonalTradeName TVarChar
+             , PersonalName TVarChar, PersonalTradeName TVarChar
+             , PaidKindName TVarChar, PaidKindName_Child TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
@@ -82,7 +82,8 @@ BEGIN
     , tmpMovement AS (SELECT Movement.Id              AS MovementId
                            , Movement.DescId          AS MovementDescId
                            , Movement.OperDate
-                           , Movement.InvNumber
+                           , Movement.InvNumber 
+                           , MILinkObject_PaidKind.ObjectId AS PaidKindId
                            , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0)             AS JuridicalId
                            , CASE WHEN Object_Partner.DescId = zc_Object_Partner() THEN MovementItem.ObjectId ELSE 0 END AS PartnerId
                            , MILinkObject_ContractChild.ObjectId  AS ContractChildId    
@@ -99,6 +100,11 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
                                                               ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
                                                              AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()  
+ 
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                           ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+
                       WHERE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0) = inJuridicalId OR inJuridicalId = 0
           --  LEFT JOIN tmpObject_Contract AS View_Contract_InvNumber_child ON View_Contract_InvNumber_child.ContractId = MILinkObject_ContractChild.ObjectId
 --                          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId)
@@ -188,6 +194,7 @@ BEGIN
                        , tmpMovement.JuridicalId
                        , tmpMovement.PartnerId 
                        , tmpMovement.ContractChildId 
+                       , tmpMovement.PaidKindId
                        , COALESCE (tmpContainer.GoodsId, tmpContainer_partner.GoodsId) AS GoodsId  
                        , COALESCE (tmpContainer.GoodsKindId, tmpContainer_partner.GoodsKindId, 0) AS GoodsKindId 
                        , tmpMovement.AmountIn
@@ -230,6 +237,9 @@ BEGIN
                   
                   , tmpData.PersonalName      ::TVarChar
                   , tmpData.PersonalTradeName ::TVarChar
+                  
+                  , Object_PaidKind.ValueData       ::TVarChar AS PaidKindName
+                  , Object_PaidKind_Child.ValueData ::TVarChar AS PaidKindName_Child
 
                   , Object_Goods.Id             AS GoodsId
                   , Object_Goods.ObjectCode     AS GoodsCode
@@ -274,7 +284,7 @@ BEGIN
                                      ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
                 LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-      
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                      ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -283,6 +293,14 @@ BEGIN
                 LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                        ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                       AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+                 --ФО документ нач.
+                LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpData.PaidKindId
+                --ФО договор база
+                LEFT JOIN ObjectLink AS ObjectLink_ContractChild_PaidKind
+                                     ON ObjectLink_ContractChild_PaidKind.ObjectId = tmpData.ContractChildId
+                                    AND ObjectLink_ContractChild_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = ObjectLink_ContractChild_PaidKind.ChildObjectId
+
        ;
          
 END;
