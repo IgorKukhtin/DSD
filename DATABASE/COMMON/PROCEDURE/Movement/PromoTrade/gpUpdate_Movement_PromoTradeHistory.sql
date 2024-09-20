@@ -157,6 +157,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountSale(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.SaleAmount, 0))
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummSale(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.SaleSumm, 0))
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountReturnIn(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.ReturnAmount, 0))
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_SummReturnIn(), vbMovementId_PromoTradeHistory, COALESCE (_tmpData.ReturnSumm, 0))
      FROM _tmpData
      ;
 

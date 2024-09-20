@@ -52,6 +52,7 @@ BEGIN
   , tmpMovement AS (SELECT SUM (COALESCE (MF_AmountSale.ValueData,0))     AS AmountSale
                          , SUM (COALESCE (MF_AmountReturnIn.ValueData,0)) AS AmountReturnIn
                          , SUM (COALESCE (MF_SummSale.ValueData,0))       AS SummSale
+                         , SUM (COALESCE (MF_SummReturnIn.ValueData,0))   AS SummReturnIn
                     FROM Movement
                          LEFT JOIN MovementFloat AS MF_AmountSale
                                                  ON MF_AmountSale.MovementId = Movement.Id
@@ -62,6 +63,9 @@ BEGIN
                          LEFT JOIN MovementFloat AS MF_AmountReturnIn
                                                  ON MF_AmountReturnIn.MovementId = Movement.Id
                                                 AND MF_AmountReturnIn.DescId = zc_MovementFloat_AmountReturnIn()
+                         LEFT JOIN MovementFloat AS MF_SummReturnIn
+                                                 ON MF_SummReturnIn.MovementId = Movement.Id
+                                                AND MF_SummReturnIn.DescId = zc_MovementFloat_SummReturnIn()
                     WHERE Movement.Id = vbMovementId_PromoTradeHistory
                     )
 

@@ -123,6 +123,16 @@ inherited PromoTradeForm: TPromoTradeForm
               Format = ',0.####'
               Kind = skSum
               Column = SummWithVATPlan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -226,6 +236,16 @@ inherited PromoTradeForm: TPromoTradeForm
               Format = ',0.####'
               Kind = skSum
               Column = SummWithVATPlan
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountPlan_weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_weight
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -371,12 +391,22 @@ inherited PromoTradeForm: TPromoTradeForm
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Summ: TcxGridDBColumn [11]
+          object Amount_weight: TcxGridDBColumn [11]
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'Amount_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Summ: TcxGridDBColumn [12]
             Caption = #1057#1091#1084#1084#1072', '#1075#1088#1085
             DataBinding.FieldName = 'Summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -386,7 +416,7 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             Width = 94
           end
-          object PartnerCount: TcxGridDBColumn [12]
+          object PartnerCount: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1058#1058
             DataBinding.FieldName = 'PartnerCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -396,7 +426,7 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Comment: TcxGridDBColumn [13]
+          object Comment: TcxGridDBColumn [14]
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             Visible = False
@@ -417,6 +447,16 @@ inherited PromoTradeForm: TPromoTradeForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1083#1072#1085' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
             Width = 70
+          end
+          object AmountPlan_weight: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1087#1083#1072#1085' ('#1084#1077#1089'.)'
+            DataBinding.FieldName = 'AmountPlan_weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1077#1089' '#1087#1083#1072#1085' ('#1089#1088#1077#1076#1085#1077#1084#1077#1089#1103#1095#1085#1099#1081')'
+            Options.Editing = False
           end
           object PriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1083#1072#1085' ('#1084#1077#1089'.), '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057
@@ -839,15 +879,12 @@ inherited PromoTradeForm: TPromoTradeForm
       ExplicitTop = 74
     end
     inherited ceStatus: TcxButtonEdit
-      Left = 7
       Top = 90
-      TabStop = False
-      TabOrder = 12
-      ExplicitLeft = 7
+      TabOrder = 15
       ExplicitTop = 90
-      ExplicitWidth = 170
+      ExplicitWidth = 169
       ExplicitHeight = 22
-      Width = 170
+      Width = 169
     end
     object cxLabel4: TcxLabel
       Left = 473
@@ -933,8 +970,8 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 102
     end
     object cxLabel12: TcxLabel
-      Left = 360
-      Top = 40
+      Left = 361
+      Top = 38
       Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
     end
     object cxLabel13: TcxLabel
@@ -950,7 +987,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 223
     end
     object cxLabel14: TcxLabel
-      Left = 7
+      Left = 8
       Top = 111
       Caption = #1060#1048#1054' ('#1082#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1081' '#1086#1090#1076#1077#1083')'
     end
@@ -962,11 +999,12 @@ inherited PromoTradeForm: TPromoTradeForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       Style.BorderColor = 16764159
       Style.Color = clWindow
       TabOrder = 10
-      Width = 170
+      Width = 169
     end
     object cxLabel16: TcxLabel
       Left = 360
@@ -1023,7 +1061,7 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object cxLabel3: TcxLabel
       Left = 190
-      Top = 40
+      Top = 38
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
     end
     object ceJuridical: TcxButtonEdit
@@ -1077,7 +1115,7 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   object cxLabel22: TcxLabel [5]
     Left = 593
-    Top = 40
+    Top = 38
     Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object cxLabel25: TcxLabel [6]
@@ -2205,6 +2243,19 @@ inherited PromoTradeForm: TPromoTradeForm
       ImageIndex = 41
       WithoutNext = True
     end
+    object actGet_OperDate: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGet_OperDate
+      StoredProcList = <
+        item
+          StoredProc = spGet_OperDate
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1099
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -2534,13 +2585,13 @@ inherited PromoTradeForm: TPromoTradeForm
     Top = 320
   end
   inherited StatusGuides: TdsdGuides
-    Left = 64
+    Left = 32
     Top = 80
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PromoTrade'
-    Left = 120
-    Top = 80
+    Left = 88
+    Top = 72
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoTrade'
@@ -2595,6 +2646,7 @@ inherited PromoTradeForm: TPromoTradeForm
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -2669,6 +2721,13 @@ inherited PromoTradeForm: TPromoTradeForm
         Name = 'StartPromo'
         Value = Null
         Component = deStartPromo
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndPromo'
+        Value = Null
+        Component = deEndPromo
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
@@ -2886,6 +2945,20 @@ inherited PromoTradeForm: TPromoTradeForm
         Name = 'outChangePercent'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateStart'
+        Value = Null
+        Component = deOperDateStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateEnd'
+        Value = Null
+        Component = deOperDateEnd
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 514
@@ -3797,8 +3870,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 24
+    Left = 968
+    Top = 40
   end
   object spUpdate_SignInternal_Two: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
@@ -3849,8 +3922,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 896
-    Top = 40
+    Left = 1008
+    Top = 56
   end
   object cxEditRepository1: TcxEditRepository
     Left = 1112
@@ -3929,8 +4002,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 880
-    Top = 16
+    Left = 976
+    Top = 65520
   end
   object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
@@ -4351,5 +4424,44 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 743
     Top = 152
+  end
+  object HeaderExit: THeaderExit
+    ExitList = <
+      item
+      end>
+    Action = actGet_OperDate
+    Left = 792
+    Top = 8
+  end
+  object spGet_OperDate: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PromoTrade_OperDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = Null
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateStart'
+        Value = Null
+        Component = deOperDateStart
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDateEnd'
+        Value = Null
+        Component = deOperDateEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 56
   end
 end

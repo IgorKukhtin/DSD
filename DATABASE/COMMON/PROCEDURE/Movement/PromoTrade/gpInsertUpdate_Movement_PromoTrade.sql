@@ -14,7 +14,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoTrade(
     IN inComment               TVarChar   , -- Примечание 
    OUT outPriceListName        TVarChar ,
    OUT outPersonalTradetName   TVarChar ,
-   OUT outChangePercent        TFloat   ,
+   OUT outChangePercent        TFloat   ,    
+   OUT outOperDateStart        TDateTime ,
+   OUT outOperDateEnd          TDateTime ,
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS RECORD
@@ -51,6 +53,8 @@ BEGIN
      outPersonalTradetName := (SELECT lfGet_Object_ValueData (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PersonalTrade() AND MLO.MovementId = ioId) ::TVarChar;
      outChangePercent      := (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.DescId = zc_MovementFloat_ChangePercent() AND MF.MovementId = ioId) ::TFloat;
 
+     outOperDateEnd := inOperDate - INTERVAL '1 Day';
+     outOperDateStart := outOperDateEnd - INTERVAL '3 Month' + INTERVAL '1 Day';
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

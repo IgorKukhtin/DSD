@@ -24,10 +24,12 @@ RETURNS TABLE (
       , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar, GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
       , GoodsGroupDirectionId Integer, GoodsGroupDirectionName TVarChar  
 
-      , Amount             TFloat --Кол-во кг
+      , Amount             TFloat --Кол-во 
+      , Amount_weight      TFloat -- вес
       , Summ               TFloat --Сумма, грн
       , PartnerCount       TFloat --Количество ТТ  
       , AmountPlan         TFloat -- 
+      , AmountPlan_weight  TFloat
       , PriceWithOutVAT    TFloat
       , PriceWithVAT       TFloat
       , SummWithOutVATPlan TFloat
@@ -67,11 +69,13 @@ BEGIN
              , Object_GoodsGroupDirection.Id             AS GoodsGroupDirectionId
              , Object_GoodsGroupDirection.ValueData      AS GoodsGroupDirectionName
             
-             , MovementItem.Amount            ::TFloat AS Amount           --% скидки на товар
-             , MIFloat_Summ.ValueData         ::TFloat AS Summ             -- Общая скидка для покупателя, %
-             , MIFloat_PartnerCount.ValueData ::TFloat AS PartnerCount     -- Цена в прайсе    
+             , MovementItem.Amount            ::TFloat AS Amount           
+             , (MovementItem.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS Amount_weight
+             , MIFloat_Summ.ValueData         ::TFloat AS Summ             
+             , MIFloat_PartnerCount.ValueData ::TFloat AS PartnerCount         
              
              , MIFloat_AmountPlan.ValueData      ::TFloat AS AmountPlan
+             , (MIFloat_AmountPlan.ValueData * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) ::TFloat AS AmountPlan_weight
              , MIFloat_PriceWithOutVAT.ValueData ::TFloat AS PriceWithOutVAT
              , MIFloat_PriceWithVAT.ValueData    ::TFloat AS PriceWithVAT 
              , (MIFloat_AmountPlan.ValueData * MIFloat_PriceWithOutVAT.ValueData)  ::TFloat AS SummWithOutVATPlan
@@ -117,6 +121,10 @@ BEGIN
                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
              LEFT JOIN Object AS Object_Measure
                               ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
              --
              LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
                                               ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id

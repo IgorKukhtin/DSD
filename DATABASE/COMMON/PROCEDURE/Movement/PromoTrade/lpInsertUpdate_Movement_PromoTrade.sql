@@ -45,8 +45,10 @@ BEGIN
     END IF;
 
     --определяем даты расчпета продаж
-    vbOperDateEnd := inStartPromo - INTERVAL '1 Day';
-    vbOperDateStart := vbOperDateEnd - INTERVAL '3 Month';
+    --vbOperDateEnd := inStartPromo - INTERVAL '1 Day';
+    --vbOperDateStart := vbOperDateEnd - INTERVAL '3 Month'; 
+    vbOperDateEnd := inOperDate - INTERVAL '1 Day';
+    vbOperDateStart := vbOperDateEnd - INTERVAL '3 Month' + INTERVAL '1 Day';
  
     -- сохранили связь с <договор>
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);

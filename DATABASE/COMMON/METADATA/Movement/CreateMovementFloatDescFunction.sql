@@ -776,8 +776,11 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_AmountReturnIn() RETURNS Integer AS 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_AmountReturnIn', 'Объем возвраты (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_AmountReturnIn');  
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummReturnIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummReturnIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummReturnIn', 'Сумма возвратов (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummReturnIn');  
 
-
+    
  
              
 /*-------------------------------------------------------------------------------
@@ -786,6 +789,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
  20.09.24         * zc_MovementFloat_AmountSale
                     zc_MovementFloat_SummSale
                     zc_MovementFloat_AmountReturnIn
+                    zc_MovementFloat_SummReturnIn
  16.09.24         * zc_MovementFloat_DelayDay
                     zc_MovementFloat_RetroBonus
                     zc_MovementFloat_Market

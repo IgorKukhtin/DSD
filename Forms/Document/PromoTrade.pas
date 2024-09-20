@@ -201,6 +201,11 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    Amount_weight: TcxGridDBColumn;
+    AmountPlan_weight: TcxGridDBColumn;
+    HeaderExit: THeaderExit;
+    spGet_OperDate: TdsdStoredProc;
+    actGet_OperDate: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
