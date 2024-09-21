@@ -113,6 +113,13 @@ BEGIN
      -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+    -- модель подписи
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, (SELECT DISTINCT tmp.SignInternalId
+                                                                                            FROM lpSelect_Object_SignInternalItem ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = ioId AND MLO.DescId = zc_MovementLinkObject_SignInternal())
+                                                                                                                                 , (SELECT Movement.DescId FROM Movement WHERE Movement.Id = ioId)
+                                                                                                                                 , 0, 0) AS tmp
+                                                                                           )
+                                              );
         
      IF vbIsInsert = TRUE
      THEN

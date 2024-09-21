@@ -35,6 +35,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Comment          TVarChar    --Примечание
              , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
+             , SignInternalId   Integer
+             , SignInternalName TVarChar
              , InsertDate TDateTime
              , InsertName TVarChar
              )
@@ -52,7 +54,7 @@ BEGIN
      THEN
      inMovementId := gpInsert_Movement_PromoTrade_Mask (ioId        := inMovementId
                                                  , inOperDate  := inOperDate
-                                                 , inSession   := inSession); 
+                                                 , inSession   := inSession);
      END IF;
 
     IF COALESCE (inMovementId, 0) < 0
@@ -63,6 +65,13 @@ BEGIN
 
     IF COALESCE (inMovementId, 0) = 0
     THEN
+        -- данные из Модели для данного документа
+        vbSignInternalId := (SELECT DISTINCT tmp.SignInternalId
+                             FROM lpSelect_Object_SignInternalItem ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SignInternal())
+                                                                  , (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId)
+                                                                  , 0, 0) AS tmp
+                            );
+
         -- Результат
         RETURN QUERY
         SELECT
@@ -71,11 +80,11 @@ BEGIN
           , ''  :: TVarChar                                   AS InvNumberFull
           , inOperDate	                                      AS OperDate
           , Object_Status.Code               	              AS StatusCode
-          , Object_Status.Name              		          AS StatusName  
+          , Object_Status.Name              		          AS StatusName
           , NULL ::Integer                                    AS ContractId
-          , NULL ::TVarChar                                   AS ContractName 
+          , NULL ::TVarChar                                   AS ContractName
           , NULL ::Integer                                    AS ContractTagId
-          , NULL ::TVarChar                                   AS ContractTagName   
+          , NULL ::TVarChar                                   AS ContractTagName
           , NULL ::Integer                                    AS JuridicalId
           , NULL ::TVarChar                                   AS JuridicalName
           , NULL ::Integer                                    AS RetailId
@@ -96,32 +105,36 @@ BEGIN
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::Integer                                     AS PersonalTradeId     --Ответственный представитель коммерческого отдела
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
+          , Object_SignInternal.Id                            AS SignInternalId
+          , Object_SignInternal.ValueData                     AS SignInternalName
           , CURRENT_TIMESTAMP      ::TDateTime                AS InsertDate
           , Object_User.ValueData  ::TVarChar                 AS InsertName
+
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
+            LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
         ;
     ELSE
         RETURN QUERY
-        
-    SELECT       
+
+    SELECT
         Movement_PromoTrade.Id                                                 --Идентификатор
-      , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа  
+      , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа
       , ('№ ' || Movement_PromoTrade.InvNumber || ' от ' || zfConvert_DateToString (Movement_PromoTrade.OperDate)  ) :: TVarChar AS InvNumberFull
       , Movement_PromoTrade.OperDate                                           --Дата документа
       , Object_Status.ObjectCode                    AS StatusCode         --код статуса
       , Object_Status.ValueData                     AS StatusName         --Статус
       , MovementLinkObject_Contract.ObjectId        AS ContractId        --
-      , Object_Contract.ValueData                   AS ContractName      --     
+      , Object_Contract.ValueData                   AS ContractName      --
       , Object_ContractTag.Id                       AS ContractTagId
-      , Object_ContractTag.ValueData                AS ContractTagName   
+      , Object_ContractTag.ValueData                AS ContractTagName
       , Object_Juridical.Id                         AS JuridicalId
       , Object_Juridical.ValueData                  AS JuridicalName
       , Object_Retail.Id                            AS RetailId
       , Object_Retail.ValueData                     AS RetailNamе
       , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
-      , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции      
+      , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
       , Object_PromoItem.Id                         AS PromoItemId        --
       , Object_PromoItem.ValueData                  AS PromoItemName      --
       , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
@@ -130,27 +143,29 @@ BEGIN
       , MovementDate_EndPromo.ValueData             AS EndPromo           --Дата окончания акции
       , MovementDate_OperDateStart.ValueData        AS OperDateStart      --Дата начала расч. продаж до акции
       , MovementDate_OperDateEnd.ValueData          AS OperDateEnd        --Дата окончания расч. продаж до акции
-      , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции    
-      , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору 
+      , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
+      , MovementFloat_ChangePercent.ValueData       AS ChangePercent      --(-)% Скидки (+)% Наценки по договору
       , MovementString_Comment.ValueData            AS Comment            --Примечание
       , MovementLinkObject_PersonalTrade.ObjectId   AS PersonalTradeId    --Ответственный представитель коммерческого отдела
       , Object_PersonalTrade.ValueData              AS PersonalTradeName  --Ответственный представитель коммерческого отдела
+      , Object_SignInternal.Id                      AS SignInternalId
+      , Object_SignInternal.ValueData               AS SignInternalName
       , MovementDate_Insert.ValueData               AS InsertDate
       , Object_Insert.ValueData                     AS InsertName
 
-    FROM Movement AS Movement_PromoTrade 
+    FROM Movement AS Movement_PromoTrade
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_PromoTrade.StatusId
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                      ON MovementLinkObject_Contract.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-        LEFT JOIN Object AS Object_Contract 
+        LEFT JOIN Object AS Object_Contract
                          ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-     
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoKind
                                      ON MovementLinkObject_PromoKind.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_PromoKind.DescId = zc_MovementLinkObject_PromoKind()
-        LEFT JOIN Object AS Object_PromoKind 
+        LEFT JOIN Object AS Object_PromoKind
                          ON Object_PromoKind.Id = MovementLinkObject_PromoKind.ObjectId
 
 
@@ -159,14 +174,14 @@ BEGIN
                                     AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
         LEFT JOIN Object AS Object_PriceList
                          ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
-     
+
         LEFT JOIN MovementDate AS MovementDate_StartPromo
                                 ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
                                AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
         LEFT JOIN MovementDate AS MovementDate_EndPromo
                                 ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
                                AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                               
+
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
                                 ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
                                AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
@@ -189,7 +204,7 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalTrade
                                      ON MovementLinkObject_PersonalTrade.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_PersonalTrade.DescId = zc_MovementLinkObject_PersonalTrade()
-        LEFT JOIN Object AS Object_PersonalTrade 
+        LEFT JOIN Object AS Object_PersonalTrade
                          ON Object_PersonalTrade.Id = MovementLinkObject_PersonalTrade.ObjectId
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoItem
@@ -213,13 +228,17 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                              ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
                             AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId       
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
+                                     ON MovementLinkObject_SignInternal.MovementId = Movement_PromoTrade.Id
+                                    AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
+        LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
 
     WHERE Movement_PromoTrade.DescId = zc_Movement_PromoTrade()
       AND Movement_PromoTrade.Id =  inMovementId

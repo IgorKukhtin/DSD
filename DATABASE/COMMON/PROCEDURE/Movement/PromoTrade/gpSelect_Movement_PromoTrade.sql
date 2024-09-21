@@ -36,6 +36,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Comment          TVarChar    --Примечание
              , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
+             , SignInternalId   Integer
+             , SignInternalName TVarChar
              , InsertDate TDateTime
              , InsertName TVarChar
               )
@@ -93,6 +95,8 @@ BEGIN
              , MovementString_Comment.ValueData            AS Comment            --Примечание
              , MovementLinkObject_PersonalTrade.ObjectId   AS PersonalTradeId    --Ответственный представитель коммерческого отдела
              , Object_PersonalTrade.ValueData              AS PersonalTradeName  --Ответственный представитель коммерческого отдела
+             , Object_SignInternal.Id                      AS SignInternalId
+             , Object_SignInternal.ValueData               AS SignInternalName
              , MovementDate_Insert.ValueData               AS InsertDate
              , Object_Insert.ValueData                     AS InsertName
 
@@ -177,12 +181,17 @@ BEGIN
                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
+                                     ON MovementLinkObject_SignInternal.MovementId = Movement_PromoTrade.Id
+                                    AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
+        LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
+
        ;
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_PromoTrade (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
