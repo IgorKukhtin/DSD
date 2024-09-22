@@ -1,8 +1,8 @@
-object PromoManagerDialogForm: TPromoManagerDialogForm
+object PromoTradeDialogForm: TPromoTradeDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1089#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080
+  Caption = #1055#1086#1076#1090#1074#1077#1088#1076#1080#1090#1100' '#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 218
   ClientWidth = 799
   Color = clBtnFace
@@ -200,13 +200,13 @@ object PromoManagerDialogForm: TPromoManagerDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PromoStateKindId'
+        Name = 'PromoTradeStateKindId'
         Value = Null
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PromoStateKindName'
+        Name = 'PromoTradeStateKindName'
         Value = Null
         Component = edPromoStateKindName
         DataType = ftString

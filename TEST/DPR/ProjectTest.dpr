@@ -1152,7 +1152,7 @@ uses
   MovementPromo_DateDialog in '..\..\Forms\Document\MovementPromo_DateDialog.pas' {MovementPromo_DateDialogForm: TParentForm},
   PromoManager in '..\..\Forms\Document\PromoManager.pas' {PromoManagerForm: TParentForm},
   PromoManagerJournal in '..\..\Forms\Document\PromoManagerJournal.pas' {PromoManagerJournalForm: TParentForm},
-  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
+  PromoTradeDialog in '..\..\Forms\Document\PromoTradeDialog.pas' {PromoTradeDialogForm: TParentForm},
   Report_ProductionOrderDialog in '..\..\Forms\Report\Report_ProductionOrderDialog.pas' {Report_ProductionOrderDialogForm: TParentForm},
   Report_Promo_Result in '..\..\Forms\Report\Report_Promo_Result.pas' {Report_Promo_ResultForm: TParentForm},
   Report_Promo_Result_Trade in '..\..\Forms\Report\Report_Promo_Result_Trade.pas' {Report_Promo_Result_TradeForm: TParentForm},
@@ -1536,7 +1536,8 @@ uses
   Movement_DateDialog_PersonalService in '..\..\Forms\Document\Movement_DateDialog_PersonalService.pas' {Movement_DateDialog_PersonalServiceForm: TParentForm},
   Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
   Report_ProfitLossService_bySaleDialog in '..\..\Forms\Report\Report_ProfitLossService_bySaleDialog.pas' {Report_ProfitLossService_bySaleDialogForm: TParentForm},
-  ProfitLossService_ContractChild in '..\..\Forms\Document\ProfitLossService_ContractChild.pas' {ProfitLossService_ContractChildForm: TParentForm};
+  ProfitLossService_ContractChild in '..\..\Forms\Document\ProfitLossService_ContractChild.pas' {ProfitLossService_ContractChildForm: TParentForm},
+  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

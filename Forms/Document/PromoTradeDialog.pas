@@ -1,4 +1,4 @@
-unit PromoManagerDialog;
+unit PromoTradeDialog;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue, dsdCommon;
 
 type
-  TPromoManagerDialogForm = class(TParentForm)
+  TPromoTradeDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -63,6 +63,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPromoManagerDialogForm);
+  RegisterClass(TPromoTradeDialogForm);
 
 end.

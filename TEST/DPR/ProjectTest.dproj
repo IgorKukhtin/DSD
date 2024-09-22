@@ -3906,8 +3906,8 @@
 				<Form>PromoManagerJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PromoManagerDialog.pas">
-				<Form>PromoManagerDialogForm</Form>
+			<DCCReference Include="..\..\Forms\Document\PromoTradeDialog.pas">
+				<Form>PromoTradeDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProductionOrderDialog.pas">
@@ -5377,6 +5377,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProfitLossService_ContractChild.pas">
 				<Form>ProfitLossService_ContractChildForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PromoManagerDialog.pas">
+				<Form>PromoManagerDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

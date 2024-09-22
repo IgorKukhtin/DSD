@@ -3915,6 +3915,8 @@ end;
 
 procedure TLoadFormTest.LoadPromoTradeFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoTradeDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoTradeDialogForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoItemForm');

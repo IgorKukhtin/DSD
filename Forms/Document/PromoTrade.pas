@@ -67,7 +67,7 @@ type
     spSelect_PromoTradeCondition: TdsdStoredProc;
     Mov1CDS: TClientDataSet;
     Mov1DS: TDataSource;
-    dsdDBViewAddOnMov1: TdsdDBViewAddOn;
+    DBViewAddOnMov1: TdsdDBViewAddOn;
     Panel1: TPanel;
     cxPageControl1: TcxPageControl;
     tsPartner: TcxTabSheet;
@@ -96,12 +96,8 @@ type
     actPartnerProtocolOpenForm: TdsdOpenForm;
     actConditionPromoProtocolOpenForm: TdsdOpenForm;
     actAdvertisingProtocolOpenForm: TdsdOpenForm;
-    spInsertUpdateMISign_No: TdsdStoredProc;
-    spInsertUpdateMISign_Yes: TdsdStoredProc;
     actInsertUpdateMISignNo: TdsdExecStoredProc;
     actInsertUpdateMISignYes: TdsdExecStoredProc;
-    bbInsertUpdateMISignYes: TdxBarButton;
-    bbInsertUpdateMISignNo: TdxBarButton;
     cxLabel21: TcxLabel;
     edStrSign: TcxTextEdit;
     edStrSignNo: TcxTextEdit;
@@ -128,23 +124,12 @@ type
     actOpenReport_SaleReturn_byPromo: TdsdOpenForm;
     bsGoods: TdxBarSubItem;
     bsSign: TdxBarSubItem;
-    dxBarSeparator1: TdxBarSeparator;
-    actUpdate_SignInternal_One: TdsdExecStoredProc;
-    actUpdate_SignInternal_Two: TdsdExecStoredProc;
-    bbUpdate_SignInternal_One: TdxBarButton;
-    bbUpdate_SignInternal_Two: TdxBarButton;
-    spUpdate_SignInternal_One: TdsdStoredProc;
     spUpdate_SignInternal_Two: TdsdStoredProc;
     actPrint_CalcAll: TdsdPrintAction;
     cxEditRepository1: TcxEditRepository;
     cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
     cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
-    dsdDBViewAddOnMov2: TdsdDBViewAddOn;
-    actOpenFormPromoContractBonus_Detail: TdsdOpenForm;
-    actUpdate_SignInternal_Three: TdsdExecStoredProc;
-    spUpdate_SignInternal_Three: TdsdStoredProc;
-    bbUpdate_SignInternal_Three: TdxBarButton;
-    dxBarSeparator2: TdxBarSeparator;
+    DBViewAddOnMov2: TdsdDBViewAddOn;
     bbUpdatePromoStateKind_Complete: TdxBarButton;
     bbUpdatePromoStateKind_Return: TdxBarButton;
     dxBarSeparator3: TdxBarSeparator;
@@ -178,7 +163,7 @@ type
     cxGridLeveMov1: TcxGridLevel;
     Mov3DS: TDataSource;
     Mov3CDS: TClientDataSet;
-    dsdDBViewAddOnMov3: TdsdDBViewAddOn;
+    DBViewAddOnMov3: TdsdDBViewAddOn;
     spSelect_PromoTradeSign: TdsdStoredProc;
     actChoiceMember: TOpenChoiceForm;
     actUpdateMov3DS: TdsdUpdateDataSet;
@@ -206,7 +191,6 @@ type
     cxGridPromoStateKind: TcxGrid;
     cxGridDBTableViewPromoStateKind: TcxGridDBTableView;
     psOrd: TcxGridDBColumn;
-    psisQuickly: TcxGridDBColumn;
     psPromoStateKindName: TcxGridDBColumn;
     psComment: TcxGridDBColumn;
     psInsertName: TcxGridDBColumn;
@@ -216,6 +200,19 @@ type
     PromoStateKindDCS: TClientDataSet;
     PromoStateKindDS: TDataSource;
     spSelectMIPromoStateKind: TdsdStoredProc;
+    DBViewAddOnPromoStateKind: TdsdDBViewAddOn;
+    spUpdate_PromoStateKind: TdsdStoredProc;
+    spGetPromoTradeStateKind: TdsdStoredProc;
+    actUpdateMovement_PromoTradeStateKind: TdsdExecStoredProc;
+    actPromoTradeDialog: TExecuteDialog;
+    actGetPromoStateKind_Return: TdsdDataSetRefresh;
+    actGetPromoStateKind_Complete: TdsdDataSetRefresh;
+    macUpdatePromoTradeStateKind_Return: TMultiAction;
+    macUpdatePromoTradeStateKind_Complete: TMultiAction;
+    cxSplitter2: TcxSplitter;
+    dxBarButton1: TdxBarButton;
+    spUpdate_PromoStateKind_del: TdsdStoredProc;
+    actUpdateMovement_PromoTradeStateKind_del: TdsdExecStoredProc;
   private
     { Private declarations }
   public
