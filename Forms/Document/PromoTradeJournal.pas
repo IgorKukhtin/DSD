@@ -66,6 +66,9 @@ type
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    PromoTradeStateKindName: TcxGridDBColumn;
+    Checked: TcxGridDBColumn;
+    CheckDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

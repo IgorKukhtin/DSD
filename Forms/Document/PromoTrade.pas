@@ -79,9 +79,7 @@ type
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     Mov2CDS: TClientDataSet;
     Mov2DS: TDataSource;
-    spErasedAdvertising: TdsdStoredProc;
     spUnErasedAdvertising: TdsdStoredProc;
-    spInsertUpdateMIAdvertising: TdsdStoredProc;
     spSelect_PromoTradeHistory: TdsdStoredProc;
     cxPageControl3: TcxPageControl;
     tsAdvertising: TcxTabSheet;
@@ -142,7 +140,6 @@ type
     cxEditRepository1CurrencyItem1: TcxEditRepositoryCurrencyItem;
     cxEditRepository1CurrencyItem2: TcxEditRepositoryCurrencyItem;
     dsdDBViewAddOnMov2: TdsdDBViewAddOn;
-    actRefreshCalc: TdsdDataSetRefresh;
     actOpenFormPromoContractBonus_Detail: TdsdOpenForm;
     actUpdate_SignInternal_Three: TdsdExecStoredProc;
     spUpdate_SignInternal_Three: TdsdStoredProc;
@@ -206,6 +203,19 @@ type
     HeaderExit: THeaderExit;
     spGet_OperDate: TdsdStoredProc;
     actGet_OperDate: TdsdDataSetRefresh;
+    cxGridPromoStateKind: TcxGrid;
+    cxGridDBTableViewPromoStateKind: TcxGridDBTableView;
+    psOrd: TcxGridDBColumn;
+    psisQuickly: TcxGridDBColumn;
+    psPromoStateKindName: TcxGridDBColumn;
+    psComment: TcxGridDBColumn;
+    psInsertName: TcxGridDBColumn;
+    psInsertDate: TcxGridDBColumn;
+    psIsErased: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    PromoStateKindDCS: TClientDataSet;
+    PromoStateKindDS: TDataSource;
+    spSelectMIPromoStateKind: TdsdStoredProc;
   private
     { Private declarations }
   public
