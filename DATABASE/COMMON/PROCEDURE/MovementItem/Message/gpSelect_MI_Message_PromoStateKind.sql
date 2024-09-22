@@ -88,5 +88,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_Promo_Message (inMovementId:= 4135607, inIsErased:= TRUE,  inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MI_Promo_Message (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Message_PromoStateKind (inMovementId:= 4135607, inIsErased:= TRUE,  inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Message_PromoStateKind (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

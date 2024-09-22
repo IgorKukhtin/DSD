@@ -41,7 +41,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Message()
        AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
-       AND Object_PromoStateKind.DescId = zc_Object_PromoStateKind()
+       AND Object_PromoStateKind.DescId IN (zc_Object_PromoStateKind(), zc_Object_PromoTradeStateKind())
      ORDER BY 2 DESC
      ;
 
@@ -56,3 +56,4 @@ $BODY$
 */
 
 -- тест
+-- SELECT * FROM gpSelect_MI_Message_PromoStateKind_byDialog (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

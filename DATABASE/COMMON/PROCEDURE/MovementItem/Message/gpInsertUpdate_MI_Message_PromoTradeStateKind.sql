@@ -14,7 +14,7 @@ RETURNS Integer AS
 $BODY$
   DECLARE vbUserId   Integer;
   DECLARE vbIsInsert Boolean;
-  DECLARE vbAmount   TFloat;
+  DECLARE vbAmount_sign TFloat;
   DECLARE vbIsChange Boolean;
   DECLARE vbStrIdSignNo TVarChar;
 BEGIN
@@ -24,9 +24,6 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-     -- определяется
-     vbAmount := 0; -- (CASE WHEN inIsQuickly = TRUE THEN 1 ELSE 0 END);
-
 
      -- Проверка
      IF COALESCE (inPromoTradeStateKindId, 0) = 0
@@ -34,8 +31,29 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Состояние не может быть пустым.';
      END IF;
 
+
+     -- кто последний подтвердил
+     vbAmount_sign:= COALESCE ((SELECT MAX (gpSelect.Ord) FROM gpSelect_MI_Sign (inMovementId, FALSE, inSession) AS gpSelect WHERE gpSelect.isSign = TRUE), 0);
+
+
      -- Проверка
-     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = zc_Enum_PromoTradeStateKind_Start())
+     IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для согласования.', lfGet_Object_ValueData_sh (vbUserId);
+     END IF;
+
+     -- Проверка
+     IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId AND lpSelect.Num = vbAmount_sign + 1)
+      -- кроме первого
+      --AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Complete_1()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для согласования раньше чем <%>.'
+                       , (SELECT gpSelect.UserName FROM gpSelect_MI_Sign (inMovementId, FALSE, inSession) AS gpSelect WHERE gpSelect.Ord = vbAmount_sign + 1);
+     END IF;
+
+
+     -- Проверка
+     /*IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = zc_Enum_PromoTradeStateKind_Start())
         AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
      THEN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh (zc_Enum_PromoTradeStateKind_Start()), lfGet_Object_ValueData_sh (inPromoTradeStateKindId);
@@ -46,26 +64,15 @@ BEGIN
         AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = inPromoTradeStateKindId)
      THEN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId)), lfGet_Object_ValueData_sh (inPromoTradeStateKindId);
-     END IF;
+     END IF;*/
 
 
      -- определили
-     vbIsChange:= inPromoTradeStateKindId <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
+     -- vbIsChange:= inPromoTradeStateKindId <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
 
      -- сохранили <Элемент документа>
      ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Message(), inPromoTradeStateKindId, inMovementId
-                                       , COALESCE ((SELECT MI.Amount
-                                                    FROM MovementItem AS MI
-                                                         JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
-                                                    WHERE MI.MovementId = inMovementId
-                                                      AND MI.DescId     = zc_MI_Message()
-                                                      AND MI.isErased   = FALSE
-                                                      AND (MI.Id        < ioId
-                                                        OR ioId         = 0
-                                                          )
-                                                    ORDER BY MI.Id DESC
-                                                    LIMIT 1
-                                                   ), vbAmount)
+                                       , 0
                                        , NULL
                                        );
 
@@ -82,36 +89,23 @@ BEGIN
      END IF;
 
 
-     IF vbIsChange = TRUE
-     THEN
-         -- если последний
-         IF ioId = (SELECT MAX (MI.Id)
-                    FROM MovementItem AS MI
-                         JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
-                    WHERE MI.MovementId = inMovementId
-                      AND MI.DescId     = zc_MI_Message()
-                      AND MI.isErased   = FALSE
-                   )
-         THEN
-             -- !!!пересчитали кто подписал/отменил + изменение модели!!!
-             PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, inPromoTradeStateKindId, vbUserId);
-         END IF;
+     -- !!!пересчитали кто подписал/отменил + изменение модели!!!
+     PERFORM lpInsertUpdate_MI_Sign_all (inMovementId     := inMovementId
+                                       , inSignInternalId := 11307029 -- Трейд-маркетинг
+                                       , inAmount         := vbAmount_sign + 1
+                                       , inUserId         := vbUserId
+                                        );
 
-
-     END IF;
-
-     -- данные - кто подписал/не подписал - MovementItemId
-     vbStrIdSignNo:= (SELECT tmp.StrIdSignNo FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp);
 
      -- нашли последний - и сохранили в шапку
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, tmp.ObjectId)
               -- сохранили свойство <Дата согласования>
            , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
-                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() AND vbStrIdSignNo = '' THEN CURRENT_DATE ELSE NULL END
+                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() THEN CURRENT_DATE ELSE NULL END
                                          )
               -- сохранили свойство <Согласовано>
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
-                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() AND vbStrIdSignNo = '' THEN TRUE ELSE FALSE END
+                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() THEN TRUE ELSE FALSE END
                                             )
      FROM (SELECT MI.ObjectId, MI.Amount
            FROM MovementItem AS MI
@@ -122,21 +116,8 @@ BEGIN
            ORDER BY MI.Id DESC
            LIMIT 1
           ) AS tmp;
-          
+
      --
-     IF (vbStrIdSignNo = '') AND inPromoTradeStateKindId IN (zc_Enum_PromoTradeStateKind_Complete_1(), zc_Enum_PromoTradeStateKind_Complete_2(), zc_Enum_PromoTradeStateKind_Complete_3(), zc_Enum_PromoTradeStateKind_Complete_4(), zc_Enum_PromoTradeStateKind_Complete_5(), zc_Enum_PromoTradeStateKind_Complete_6(), zc_Enum_PromoTradeStateKind_Complete_7())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Документ уже подписан.Нельзя установить <%>.', CHR (13), lfGet_Object_ValueData_sh (inPromoTradeStateKindId);
-     END IF;
-
-/*
-    RAISE EXCEPTION 'Ошибка.<%>  %', (SELECT zfCalc_WordNumber_Split (tmp.strIdSign,   ',', lfGet_User_Session (vbUserId))
-                            || '  _  ' || zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', lfGet_User_Session (vbUserId))
-                                   FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp)
-                                , (SELECT count(*) FROM MovementItem WHERE MovementId = inMovementId and DescId = zc_MI_Sign())
-                                   ;
-*/
-
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

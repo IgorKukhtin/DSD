@@ -95,7 +95,9 @@ BEGIN
           , COALESCE (tmpMI.isErased, FALSE) AS isErased
      FROM tmpObject
           FULL JOIN tmpMI ON tmpMI.SignInternalId = tmpObject.SignInternalId
-                         AND tmpMI.UserId         = tmpObject.UserId
+                         AND ((tmpMI.UserId = tmpObject.UserId AND vbMovementDescId <> zc_Movement_PromoTrade())
+                           OR (tmpMI.Ord    = tmpObject.Ord    AND vbMovementDescId = zc_Movement_PromoTrade())
+                             )
                          AND tmpMI.isErased       = FALSE
           LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
           LEFT JOIN Object AS Object_User ON Object_User.Id                 = COALESCE (tmpObject.UserId, tmpMI.UserId)

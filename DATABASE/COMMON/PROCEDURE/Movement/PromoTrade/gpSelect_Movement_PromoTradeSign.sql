@@ -24,18 +24,19 @@ BEGIN
                                      FROM Movement
                                      WHERE Movement.DescId = zc_Movement_PromoTradeSign()
                                        AND Movement.ParentId = inMovementId
-                                     );
+                                    );
 
 
     -- Результат
     RETURN QUERY
     WITH 
-    tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Отвественный сотрудник коммерческого отдела:'  ::TVarChar AS Name
-              UNION SELECT  2 ::Integer  AS Ord, '2.Отвественный сотрудник экономического отдела:' ::TVarChar AS Name   --
-              UNION SELECT  3 ::Integer  AS Ord, '3.Региональнай менеджер / Директор филиала:'     ::TVarChar AS Name
-              UNION SELECT  4 ::Integer  AS Ord, '4.Руководитель отдела продаж:'                   ::TVarChar AS Name
-              UNION SELECT  5 ::Integer  AS Ord, '5.Отвественный сотрудник отдела маркетинга:'     ::TVarChar AS Name
-              UNION SELECT  6 ::Integer  AS Ord, '6.Коммерческий директор:'                        ::TVarChar AS Name
+    tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Автор документа:'                              ::TVarChar AS Name
+              UNION SELECT  2 ::Integer  AS Ord, '2.Отвественный сотрудник коммерческого отдела:'  ::TVarChar AS Name
+              UNION SELECT  3 ::Integer  AS Ord, '3.Отвественный сотрудник экономического отдела:' ::TVarChar AS Name   --
+              UNION SELECT  4 ::Integer  AS Ord, '4.Региональнай менеджер / Директор филиала:'     ::TVarChar AS Name
+              UNION SELECT  5 ::Integer  AS Ord, '5.Руководитель отдела продаж:'                   ::TVarChar AS Name
+              UNION SELECT  6 ::Integer  AS Ord, '6.Отвественный сотрудник отдела маркетинга:'     ::TVarChar AS Name
+              UNION SELECT  7 ::Integer  AS Ord, '7.Коммерческий директор:'                        ::TVarChar AS Name
                  )
 
   , tmpData AS (SELECT MovementLinkObject_Member1.ObjectId   AS Member1Id
@@ -68,12 +69,20 @@ BEGIN
 
     SELECT  tmpText.Ord              ::Integer
           , tmpText.Name             ::TVarChar
-          , Object_Member.Id         ::Integer  AS ValueId
-          , Object_Member.ValueData  ::TVarChar AS Value
+          , COALESCE (Object_Member.Id, Object_User.Id)                ::Integer  AS ValueId
+          , COALESCE (Object_Member.ValueData, Object_User.ValueData)  ::TVarChar AS Value
     FROM tmpText
-         LEFT JOIN tmpData ON 1=1
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member1Id           
+            LEFT JOIN MovementLinkObject AS MLO_User
+                                         ON MLO_User.MovementId = inMovementId
+                                        AND MLO_User.DescId     = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id     = MLO_User.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                 ON ObjectLink_User_Member.ObjectId = MLO_User.ObjectId
+                                AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+            LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
     WHERE tmpText.Ord = 1
+
  UNION
     SELECT  tmpText.Ord              ::Integer
           , tmpText.Name             ::TVarChar
@@ -81,7 +90,7 @@ BEGIN
           , Object_Member.ValueData  ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN tmpData ON 1=1
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member2Id           
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member1Id           
     WHERE tmpText.Ord = 2
  UNION
     SELECT  tmpText.Ord              ::Integer
@@ -90,8 +99,17 @@ BEGIN
           , Object_Member.ValueData  ::TVarChar AS Value
     FROM tmpText
          LEFT JOIN tmpData ON 1=1
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member3Id           
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member2Id           
     WHERE tmpText.Ord = 3
+ UNION
+    SELECT  tmpText.Ord              ::Integer
+          , tmpText.Name             ::TVarChar
+          , Object_Member.Id         ::Integer  AS ValueId
+          , Object_Member.ValueData  ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN tmpData ON 1=1
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member3Id           
+    WHERE tmpText.Ord = 4
   UNION
     SELECT  tmpText.Ord              ::Integer
           , tmpText.Name             ::TVarChar
@@ -100,7 +118,7 @@ BEGIN
     FROM tmpText
          LEFT JOIN tmpData ON 1=1
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member4Id           
-    WHERE tmpText.Ord = 4
+    WHERE tmpText.Ord = 5
    UNION
     SELECT  tmpText.Ord              ::Integer
           , tmpText.Name             ::TVarChar
@@ -109,7 +127,7 @@ BEGIN
     FROM tmpText
          LEFT JOIN tmpData ON 1=1
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member5Id           
-    WHERE tmpText.Ord = 5
+    WHERE tmpText.Ord = 6
     UNION
     SELECT  tmpText.Ord              ::Integer
           , tmpText.Name             ::TVarChar
@@ -118,7 +136,7 @@ BEGIN
     FROM tmpText
          LEFT JOIN tmpData ON 1=1
          LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpData.Member6Id           
-    WHERE tmpText.Ord = 6    
+    WHERE tmpText.Ord = 7    
     ORDER by 1  
     ;
 

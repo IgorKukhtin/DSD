@@ -33,32 +33,39 @@ BEGIN
         WHERE Movement.Id = inMovementId;
     END IF;
     
+
     IF inOrd = 1
+    THEN 
+        RAISE EXCEPTION 'Ошибка.Нет прав менять Автора документа';
+    END IF;
+
+
+    IF inOrd = 2
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_1(), vbMovementId_PromoTradeSign, inValueId);
     END IF;
-    IF inOrd = 2
+    IF inOrd = 3
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_2(), vbMovementId_PromoTradeSign, inValueId);
     END IF;
-    IF inOrd = 3
+    IF inOrd = 4
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_3(), vbMovementId_PromoTradeSign, inValueId);
     END IF;
-    IF inOrd = 4
+    IF inOrd = 5
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_4(), vbMovementId_PromoTradeSign, inValueId);
     END IF;
-    IF inOrd = 5
+    IF inOrd = 6
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_5(), vbMovementId_PromoTradeSign, inValueId);
     END IF;
-    IF inOrd = 6
+    IF inOrd = 7
     THEN 
         --
         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Member_6(), vbMovementId_PromoTradeSign, inValueId);

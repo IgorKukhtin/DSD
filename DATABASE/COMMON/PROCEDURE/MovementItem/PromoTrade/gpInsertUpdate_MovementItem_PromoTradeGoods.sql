@@ -129,8 +129,10 @@ BEGIN
     WHERE MovementItem.Id = ioId;
 
      -- сохранили <Элемент> - Состояние Акции
-     IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message())
+     IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message() AND MI.isErased = FALSE)
      THEN
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
+         --
          PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
                                                               , inMovementId            := inMovementId
                                                               , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
