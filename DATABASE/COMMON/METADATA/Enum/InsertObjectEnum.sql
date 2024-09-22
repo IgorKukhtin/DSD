@@ -1107,12 +1107,12 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Canceled(),  inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 9, inName:= 'Отменен', inEnumName:= 'zc_Enum_PromoTradeStateKind_Canceled');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Return(),    inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 10, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoTradeStateKind_Return');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_1(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 2, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_1');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_2(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 3, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_2');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_3(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 4, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_3');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_4(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 5, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_4');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_5(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 6, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_5');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_6(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 7, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_6');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_7(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 8, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_7');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_2(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 3, inName:= 'Согласован Экономист', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_2');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_3(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 4, inName:= 'Согласован Отвественный сотрудник коммерческого отдела', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_3');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_4(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 5, inName:= 'Согласован Автор Региональнай менеджер / Директор филиала', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_4');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_5(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 6, inName:= 'Согласован Руководитель отдела продаж', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_5');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_6(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 7, inName:= 'Согласован Отвественный сотрудник отдела маркетинга', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_6');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_7(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 8, inName:= 'Согласован Коммерческий директор', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_7');
 END $$;
 
 DO $$
