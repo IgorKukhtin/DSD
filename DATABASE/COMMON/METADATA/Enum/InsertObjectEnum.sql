@@ -1101,6 +1101,21 @@ END $$;
 
 
 DO $$
+BEGIN
+   -- !!! состояние акций 
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Start(),     inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 1, inName:= 'В работе Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Start');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Canceled(),  inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 9, inName:= 'Отменен', inEnumName:= 'zc_Enum_PromoTradeStateKind_Canceled');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Return(),    inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 10, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoTradeStateKind_Return');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_1(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 2, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_1');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_2(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 3, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_2');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_3(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 4, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_3');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_4(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 5, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_4');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_5(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 6, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_5');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_6(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 7, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_6');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoTradeStateKind_Complete_7(), inDescId:= zc_Object_PromoTradeStateKind(), inCode:= 8, inName:= 'Согласован Автор документа', inEnumName:= 'zc_Enum_PromoTradeStateKind_Complete_7');
+END $$;
+
+DO $$
 BEGIN 
      -- !!!  Типы выгрузки ведомости в банк
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PSLExportKind_XML(),   inDescId:= zc_Object_PSLExportKind(), inCode:= 1, inName:= 'XML', inEnumName:= 'zc_Enum_PSLExportKind_XML');

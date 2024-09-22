@@ -700,6 +700,10 @@ CREATE OR REPLACE FUNCTION zc_Object_PromoStateKind() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PromoStateKind', 'Состояние Акции' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PromoStateKind');
 
+CREATE OR REPLACE FUNCTION zc_Object_PromoTradeStateKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PromoTradeStateKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_PromoTradeStateKind', 'Трейд-маркетинг' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PromoTradeStateKind');
+
 CREATE OR REPLACE FUNCTION zc_Object_Advertising() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Advertising'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Advertising', 'Рекламная поддержка' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Advertising');

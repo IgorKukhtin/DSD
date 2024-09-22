@@ -145,10 +145,10 @@ BEGIN
           , Movement_Promo.StatusName         --Статус
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
-          , Movement_Promo.PromoStateKindId        --Состояние акции
-          , Movement_Promo.PromoStateKindName      --Состояние акции
-          , Movement_Promo.PriceListId        --Вид акции
-          , Movement_Promo.PriceListName      --Вид акции
+          , Movement_Promo.PromoStateKindId   --Состояние акции
+          , Movement_Promo.PromoStateKindName --Состояние акции
+          , Movement_Promo.PriceListId        --
+          , Movement_Promo.PriceListName      --
           , Movement_Promo.StartPromo         --Дата начала акции
           , Movement_Promo.EndPromo           --Дата окончания акции
           , Movement_Promo.StartSale          --Дата начала отгрузки по акционной цене

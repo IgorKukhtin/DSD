@@ -35,8 +35,14 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Comment          TVarChar    --Примечание
              , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
+
              , SignInternalId   Integer
              , SignInternalName TVarChar
+             , PromoTradeStateKindId Integer     -- Состояние Акции
+             , PromoTradeStateKindName TVarChar  -- Состояние Акции
+             , CheckDate        TDateTime   -- Дата Согласования  
+             , isPromoStateKind   Boolean   -- Приоритет для состояния
+
              , InsertDate TDateTime
              , InsertName TVarChar
              )
@@ -105,8 +111,14 @@ BEGIN
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::Integer                                     AS PersonalTradeId     --Ответственный представитель коммерческого отдела
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
+
           , Object_SignInternal.Id                            AS SignInternalId
           , Object_SignInternal.ValueData                     AS SignInternalName
+          , NULL::Integer                                     AS PromoTradeStateKindId   -- Состояние акции
+          , NULL::TVarChar                                    AS PromoTradeStateKindName -- Состояние акции
+          , NULL::TDateTime                                   AS CheckDate          -- Дата Согласования
+          , FALSE::Boolean                                    AS Checked            -- согласовано
+
           , CURRENT_TIMESTAMP      ::TDateTime                AS InsertDate
           , Object_User.ValueData  ::TVarChar                 AS InsertName
 
@@ -148,8 +160,14 @@ BEGIN
       , MovementString_Comment.ValueData            AS Comment            --Примечание
       , MovementLinkObject_PersonalTrade.ObjectId   AS PersonalTradeId    --Ответственный представитель коммерческого отдела
       , Object_PersonalTrade.ValueData              AS PersonalTradeName  --Ответственный представитель коммерческого отдела
-      , Object_SignInternal.Id                      AS SignInternalId
-      , Object_SignInternal.ValueData               AS SignInternalName
+
+      , Object_SignInternal.Id                                         AS SignInternalId
+      , Object_SignInternal.ValueData                                  AS SignInternalName
+      , Object_PromoTradeStateKind.Id                                  AS PromoTradeStateKindId   -- Состояние акции
+      , Object_PromoTradeStateKind.ValueData                           AS PromoTradeStateKindName -- Состояние акции
+      , MovementDate_CheckDate.ValueData                               AS CheckDate          -- Дата Согласования
+      , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked            -- согласовано
+
       , MovementDate_Insert.ValueData               AS InsertDate
       , Object_Insert.ValueData                     AS InsertName
 
@@ -239,6 +257,17 @@ BEGIN
                                      ON MovementLinkObject_SignInternal.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
         LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                  ON MovementBoolean_Checked.MovementId = Movement_PromoTrade.Id
+                                 AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+        LEFT JOIN MovementDate AS MovementDate_CheckDate
+                               ON MovementDate_CheckDate.MovementId = Movement_PromoTrade.Id
+                              AND MovementDate_CheckDate.DescId = zc_MovementDate_Check()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoTradeStateKind
+                                     ON MovementLinkObject_PromoTradeStateKind.MovementId = Movement_PromoTrade.Id
+                                    AND MovementLinkObject_PromoTradeStateKind.DescId = zc_MovementLinkObject_PromoTradeStateKind()
+        LEFT JOIN Object AS Object_PromoTradeStateKind ON Object_PromoTradeStateKind.Id = MovementLinkObject_PromoTradeStateKind.ObjectId
 
     WHERE Movement_PromoTrade.DescId = zc_Movement_PromoTrade()
       AND Movement_PromoTrade.Id =  inMovementId
