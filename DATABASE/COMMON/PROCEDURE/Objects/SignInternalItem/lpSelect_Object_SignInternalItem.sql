@@ -25,9 +25,9 @@ BEGIN
              , Object_SignInternal.Id             AS SignInternalId
              , Object_SignInternal.ValueData      AS SignInternalName
       
-             , Object_User.Id                     AS UserId
-             , Object_User.ObjectCode             AS UserCode
-             , Object_User.ValueData              AS UserName
+             , CASE WHEN ObjectFloat_MovementDesc.ValueData = zc_Movement_PromoTrade() THEN Object_SignInternalItem.Id         ELSE Object_User.Id         END :: Integer  AS UserId
+             , CASE WHEN ObjectFloat_MovementDesc.ValueData = zc_Movement_PromoTrade() THEN Object_SignInternalItem.ObjectCode ELSE Object_User.ObjectCode END :: Integer  AS UserCode
+             , CASE WHEN ObjectFloat_MovementDesc.ValueData = zc_Movement_PromoTrade() THEN Object_SignInternalItem.ValueData  ELSE Object_User.ValueData  END :: TVarChar AS UserName
              , COALESCE (ObjectBoolean_Main.ValueData, FALSE) :: Boolean AS isMain
              
          FROM Object AS Object_SignInternal
