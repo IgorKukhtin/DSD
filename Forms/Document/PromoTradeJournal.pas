@@ -69,6 +69,10 @@ type
     PromoTradeStateKindName: TcxGridDBColumn;
     Checked: TcxGridDBColumn;
     CheckDate: TcxGridDBColumn;
+    PrintSignCDS: TClientDataSet;
+    spGet_SignPrint: TdsdStoredProc;
+    actGet_SignPrint: TdsdExecStoredProc;
+    macPrint: TMultiAction;
   private
     { Private declarations }
   public

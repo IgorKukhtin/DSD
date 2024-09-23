@@ -13,6 +13,7 @@ $BODY$
 
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
 
     DECLARE vbDescId Integer;
     DECLARE vbStatusId Integer;
@@ -215,6 +216,19 @@ BEGIN
        ;
     RETURN NEXT Cursor2;
 
+     OPEN Cursor3 FOR
+      WITH
+       tmpSign AS (SELECT tmp.*
+                       FROM  gpSelect_Movement_PromoTradeSign (inMovementId, inSession) AS tmp
+                       )
+
+        SELECT
+            tmpSign.Ord     ::Integer  AS LineNo
+          , tmpSign.Name    ::TVarChar AS LineName
+          , tmpSign.Value   ::TVarChar AS LineValue
+        FROM tmpSign
+      ;
+    RETURN NEXT Cursor3;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

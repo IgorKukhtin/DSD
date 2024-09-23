@@ -3,7 +3,7 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitTop = -227
+  ExplicitTop = -122
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -850,9 +850,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1690,6 +1687,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
     end
     inherited actPrint: TdsdPrintAction
+      Category = 'Print'
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -1705,6 +1703,11 @@ inherited PromoTradeForm: TPromoTradeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'Ord'
+        end
+        item
+          DataSet = PrintSignCDS
+          UserName = 'frxDBDSign'
+          IndexFieldNames = 'LineNo'
         end>
       Params = <
         item
@@ -1741,6 +1744,14 @@ inherited PromoTradeForm: TPromoTradeForm
           Value = Null
           Component = GuidesPersonalTrade
           ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextSign'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'TextSign'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -2429,6 +2440,31 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
     end
+    object actGet_SignPrint: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_SignPrint
+      StoredProcList = <
+        item
+          StoredProc = spGet_SignPrint
+        end>
+      Caption = 'actGet_SignPrint'
+    end
+    object macPrint: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_SignPrint
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Top = 272
@@ -2567,6 +2603,9 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = ''
       Hint = ''
       ShowCaption = False
+    end
+    inherited bbPrint: TdxBarButton
+      Action = macPrint
     end
     inherited bbShowAll: TdxBarButton
       Visible = ivNever
@@ -4318,14 +4357,14 @@ inherited PromoTradeForm: TPromoTradeForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 908
+    Left = 948
     Top = 137
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 836
-    Top = 142
+    Left = 884
+    Top = 134
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
@@ -4336,6 +4375,9 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintSignCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -4589,5 +4631,36 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 82
     Top = 656
+  end
+  object PrintSignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 852
+    Top = 182
+  end
+  object spGet_SignPrint: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PromoTrade_SignByPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextSign'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'TextSign'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1008
+    Top = 120
   end
 end
