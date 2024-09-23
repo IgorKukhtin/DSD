@@ -47,8 +47,13 @@ BEGIN
      RETURN QUERY 
      
      WITH -- данные из Модели для данного документа
-          tmpObject AS (SELECT *
+          tmpObject AS (SELECT tmp.Ord, tmp.SignInternalId, tmp.SignInternalName
+                             , COALESCE (lpSelect.UserId, tmp.UserId) AS UserId
+                             , COALESCE (lpSelect.UserName, tmp.UserName) AS UserName
+                             , tmp.isMain
                         FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, vbObjectDescId, 0) AS tmp
+                             LEFT JOIN lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect
+                                                                                       ON lpSelect.Num = tmp.Ord
                        )
           -- данные из уже сохраненных элементов подписи
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
@@ -87,6 +92,7 @@ BEGIN
                                                  AND tmpMI.SignInternalId = tmpObject.SignInternalId
                              WHERE tmpMI.UserId IS NULL
                              ORDER BY tmpObject.Ord
+                             LIMIT CASE WHEN vbMovementDescId = zc_Movement_PromoTrade() THEN 1 ELSE 1000 END
                              ) AS tmp
                        GROUP BY tmp.SignInternalId
                       )

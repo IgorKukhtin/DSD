@@ -79,7 +79,7 @@ BEGIN
                               , tmpSign.SignInternalId
                          FROM tmpMovement
                               LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
-                         )
+                        )
         -- Результат
         SELECT Movement_PromoTrade.Id                                                 --Идентификатор
              , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа

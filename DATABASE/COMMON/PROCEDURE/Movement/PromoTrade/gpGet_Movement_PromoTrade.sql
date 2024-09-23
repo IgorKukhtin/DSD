@@ -43,6 +43,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , CheckDate        TDateTime   -- Дата Согласования  
              , isPromoStateKind   Boolean   -- Приоритет для состояния
 
+             , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
+             , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
+
              , InsertDate TDateTime
              , InsertName TVarChar
              )
@@ -119,6 +122,9 @@ BEGIN
           , NULL::TDateTime                                   AS CheckDate          -- Дата Согласования
           , FALSE::Boolean                                    AS Checked            -- согласовано
 
+          , '' :: TVarChar AS strSign
+          , '' :: TVarChar AS strSignNo
+
           , CURRENT_TIMESTAMP      ::TDateTime                AS InsertDate
           , Object_User.ValueData  ::TVarChar                 AS InsertName
 
@@ -130,6 +136,12 @@ BEGIN
     ELSE
         RETURN QUERY
 
+        WITH tmpSign AS (SELECT tmpSign.Id AS MovementId
+                              , tmpSign.strSign
+                              , tmpSign.strSignNo
+                              , tmpSign.SignInternalId
+                         FROM lpSelect_MI_Sign (inMovementId:= inMovementId ) AS tmpSign
+                        )
     SELECT
         Movement_PromoTrade.Id                                                 --Идентификатор
       , Movement_PromoTrade.InvNumber :: Integer         AS InvNumber          --Номер документа
@@ -168,10 +180,15 @@ BEGIN
       , MovementDate_CheckDate.ValueData                               AS CheckDate          -- Дата Согласования
       , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked            -- согласовано
 
+      , tmpSign.strSign
+      , tmpSign.strSignNo
+
       , MovementDate_Insert.ValueData               AS InsertDate
       , Object_Insert.ValueData                     AS InsertName
 
     FROM Movement AS Movement_PromoTrade
+        LEFT JOIN tmpSign ON tmpSign.MovementId = Movement_PromoTrade.Id
+
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_PromoTrade.StatusId
 
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
