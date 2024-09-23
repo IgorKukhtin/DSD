@@ -1517,6 +1517,8 @@ type
     actReport_ProfitLossService_bySale: TdsdOpenForm;
     miReport_ProfitLossService_bySale: TMenuItem;
     N266: TMenuItem;
+    actSale_Pay: TdsdOpenForm;
+    miSale_Pay: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

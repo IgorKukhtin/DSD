@@ -1588,6 +1588,11 @@ end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_PayForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PayJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_PayJournalForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');

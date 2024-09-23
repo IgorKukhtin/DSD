@@ -1537,7 +1537,9 @@ uses
   Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
   Report_ProfitLossService_bySaleDialog in '..\..\Forms\Report\Report_ProfitLossService_bySaleDialog.pas' {Report_ProfitLossService_bySaleDialogForm: TParentForm},
   ProfitLossService_ContractChild in '..\..\Forms\Document\ProfitLossService_ContractChild.pas' {ProfitLossService_ContractChildForm: TParentForm},
-  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm};
+  PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
+  Sale_Pay in '..\..\Forms\Document\Sale_Pay.pas' {Sale_PayForm: TParentForm},
+  Sale_PayJournal in '..\..\Forms\Document\Sale_PayJournal.pas' {Sale_PayJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
