@@ -4,6 +4,7 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ExplicitLeft = -190
   ExplicitWidth = 1100
   ExplicitHeight = 454
   PixelsPerInch = 96
@@ -175,6 +176,13 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
+          end
+          object SignInternalName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' '#1076#1083#1103' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'SignInternalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object strSign: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
