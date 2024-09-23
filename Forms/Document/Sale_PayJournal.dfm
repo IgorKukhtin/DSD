@@ -1,32 +1,32 @@
 inherited Sale_PayJournalForm: TSale_PayJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1086#1087#1083#1072#1090')>'
-  ClientHeight = 551
+  ClientHeight = 550
   ClientWidth = 1370
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1386
-  ExplicitHeight = 590
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 81
     Width = 1370
-    Height = 385
+    Height = 384
     TabOrder = 3
     ExplicitTop = 81
     ExplicitWidth = 1370
-    ExplicitHeight = 385
-    ClientRectBottom = 385
+    ExplicitHeight = 384
+    ClientRectBottom = 384
     ClientRectRight = 1370
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1370
-      ExplicitHeight = 385
+      ExplicitHeight = 384
       inherited cxGrid: TcxGrid
         Width = 1370
-        Height = 385
+        Height = 384
         ExplicitWidth = 1370
-        ExplicitHeight = 385
+        ExplicitHeight = 384
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -84,6 +84,26 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummChange
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -145,6 +165,26 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = ToName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_2
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -196,20 +236,6 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object InvNumberPartner_Master: TcxGridDBColumn
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Master'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object DocumentTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
-            DataBinding.FieldName = 'DocumentTaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object InvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
@@ -217,41 +243,6 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
-          end
-          object InvNumber_TransportGoods: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1058#1058#1053
-            DataBinding.FieldName = 'InvNumber_TransportGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object OperDate_TransportGoods: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1058#1058#1053
-            DataBinding.FieldName = 'OperDate_TransportGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object PersonalDriverName_TTN: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1058#1058#1053
-            DataBinding.FieldName = 'PersonalDriverName_TTN'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalName_4_TTN: TcxGridDBColumn
-            Caption = #1050#1083#1072#1076#1086#1074#1097#1080#1080#1082' '#1058#1058#1053
-            DataBinding.FieldName = 'PersonalName_4_TTN'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
           end
           object InvNumber_ReturnInFull: TcxGridDBColumn
             Caption = #1053#1072' '#1086#1089#1085'. '#8470' ('#1074#1086#1079#1074#1088#1072#1090')'
@@ -444,6 +435,101 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object DatePay_1: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-1'
+            DataBinding.FieldName = 'DatePay_1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-1'
+            Options.Editing = False
+            Width = 60
+          end
+          object DatePay_2: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-2'
+            DataBinding.FieldName = 'DatePay_2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-2'
+            Options.Editing = False
+            Width = 60
+          end
+          object DateReturn_1: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-1'
+            DataBinding.FieldName = 'DateReturn_1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-1'
+            Options.Editing = False
+            Width = 60
+          end
+          object DateReturn_2: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
+            DataBinding.FieldName = 'DateReturn_2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
+            Options.Editing = False
+            Width = 60
+          end
+          object SumPay1: TcxGridDBColumn
+            Caption = '1-'#1072#1103' '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'SumPay1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object SumPay2: TcxGridDBColumn
+            Caption = '2-'#1072#1103' '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'SumPay2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099'-2 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object SumReturn_1: TcxGridDBColumn
+            Caption = '1-'#1099#1081' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SumReturn_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object SumReturn_2: TcxGridDBColumn
+            Caption = '2-'#1086#1081' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SumReturn_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-2 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Width = 80
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -535,71 +621,6 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object RouteGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1084'. / '#1052#1072#1088#1096#1088#1091#1090
-            DataBinding.FieldName = 'RouteGroupName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object RouteName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1096#1088#1091#1090
-            DataBinding.FieldName = 'RouteName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object InvNumber_Transport: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'InvNumber_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 61
-          end
-          object OperDate_Transport: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1055'.'#1083'.'
-            DataBinding.FieldName = 'OperDate_Transport'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
-            Options.Editing = False
-            Width = 70
-          end
-          object CarModelName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-            DataBinding.FieldName = 'CarModelName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
-            Options.Editing = False
-            Width = 89
-          end
-          object CarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
-            Options.Editing = False
-            Width = 80
-          end
-          object PersonalDriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'PersonalDriverName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1091#1090#1077#1074#1086#1081' '#1051#1080#1089#1090
-            Options.Editing = False
-            Width = 70
-          end
           object isCurrencyUser: TcxGridDBColumn
             Caption = #1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
             DataBinding.FieldName = 'isCurrencyUser'
@@ -674,76 +695,6 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 36
-          end
-          object IsEDI: TcxGridDBColumn
-            Caption = 'EXITE'
-            DataBinding.FieldName = 'isEDI'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 30
-          end
-          object IsElectron: TcxGridDBColumn
-            Caption = #1069#1083#1077#1082#1090#1088'.'
-            DataBinding.FieldName = 'isElectron'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 30
-          end
-          object IsMedoc: TcxGridDBColumn
-            Caption = #1052#1077#1076#1086#1082
-            DataBinding.FieldName = 'IsMedoc'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object EdiInvoice: TcxGridDBColumn
-            Caption = 'EDI - '#1057#1095#1077#1090
-            DataBinding.FieldName = 'EdiInvoice'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object isEdiInvoice_partner: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1057#1095#1077#1090
-            DataBinding.FieldName = 'isEdiInvoice_partner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object EdiOrdspr: TcxGridDBColumn
-            Caption = 'EDI - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-            DataBinding.FieldName = 'EdiOrdspr'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object isEdiOrdspr_partner: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
-            DataBinding.FieldName = 'isEdiOrdspr_partner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object EdiDesadv: TcxGridDBColumn
-            Caption = 'EDI - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'EdiDesadv'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object isEdiDesadv_partner: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' - '#1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'isEdiDesadv_partner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object InsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076#1072#1085#1080#1077' '#1101#1082#1089#1087'.)'
@@ -891,7 +842,7 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
   end
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
-    Top = 466
+    Top = 465
     Width = 1370
     Height = 85
     Align = alBottom
@@ -4926,7 +4877,7 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale'
+    StoredProcName = 'gpSelect_Movement_Sale_Pay'
     Params = <
       item
         Name = 'instartdate'

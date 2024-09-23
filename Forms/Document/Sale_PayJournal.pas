@@ -56,8 +56,6 @@ type
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    InvNumberPartner_Master: TcxGridDBColumn;
-    DocumentTaxKindName: TcxGridDBColumn;
     OKPO_To: TcxGridDBColumn;
     JuridicalName_To: TcxGridDBColumn;
     InvNumberPartner: TcxGridDBColumn;
@@ -94,8 +92,6 @@ type
     spChecked: TdsdStoredProc;
     bbactChecked: TdxBarButton;
     actChecked: TdsdExecStoredProc;
-    IsEDI: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
     CurrencyDocumentName: TcxGridDBColumn;
     CurrencyPartnerName: TcxGridDBColumn;
     actPrint_ExpInvoice: TdsdPrintAction;
@@ -117,13 +113,9 @@ type
     actPrint_Spec: TdsdPrintAction;
     bbPrint_Pack21: TdxBarButton;
     bbPrint_Pack22: TdxBarButton;
-    IsMedoc: TcxGridDBColumn;
     spSelectPrint_TTN: TdsdStoredProc;
     actPrint_TTN: TdsdPrintAction;
     bbPrint_TTN: TdxBarButton;
-    EdiOrdspr: TcxGridDBColumn;
-    EdiInvoice: TcxGridDBColumn;
-    EdiDesadv: TcxGridDBColumn;
     spSelectPrint_Quality: TdsdStoredProc;
     actPrint_QualityDoc: TdsdPrintAction;
     bbPrint_Quality: TdxBarButton;
@@ -132,8 +124,6 @@ type
     actDialog_TTN: TdsdOpenForm;
     actGet_TTN: TdsdExecStoredProc;
     spGet_TTN: TdsdStoredProc;
-    InvNumber_TransportGoods: TcxGridDBColumn;
-    OperDate_TransportGoods: TcxGridDBColumn;
     PaymentDate: TcxGridDBColumn;
     InsertDate: TcxGridDBColumn;
     actDialog_QualityDoc: TdsdOpenForm;
@@ -173,7 +163,6 @@ type
     actPrintSaleOrder: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     spSelectSale_EDI: TdsdStoredProc;
-    RouteGroupName: TcxGridDBColumn;
     spSelectPrintReturnInDay: TdsdStoredProc;
     actPrintReturnInDay: TdsdPrintAction;
     bbPrintReturnInDay: TdxBarButton;
@@ -257,8 +246,6 @@ type
     actUpdate_isMail: TdsdExecStoredProc;
     macExportAll: TMultiAction;
     bbmacExportAll: TdxBarButton;
-    PersonalDriverName_TTN: TcxGridDBColumn;
-    PersonalName_4_TTN: TcxGridDBColumn;
     spGetReporNameTTN: TdsdStoredProc;
     actSPPrintTTNProcName: TdsdExecStoredProc;
     PrintSignCDS: TClientDataSet;
