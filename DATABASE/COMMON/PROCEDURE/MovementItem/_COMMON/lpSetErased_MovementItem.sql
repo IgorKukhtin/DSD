@@ -35,6 +35,9 @@
    IF vbStatusId           <> zc_Enum_Status_UnComplete()
       AND vbDescId         <> zc_MI_Sign()
       AND vbMovementDescId <> zc_Movement_PromoPartner()
+      AND (vbMovementDescId <> zc_Movement_PromoTrade()
+        OR vbDescId         <> zc_MI_Message()
+          )
       -- AND inUserId <> 5 -- !!!временно для загрузки из Sybase!!!
    THEN
        /*IF AND vbStatusId = zc_Enum_Status_Erased() 
