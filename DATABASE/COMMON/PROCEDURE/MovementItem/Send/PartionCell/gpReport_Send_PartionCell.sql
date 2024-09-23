@@ -2596,12 +2596,15 @@ BEGIN
 
           -- цвет для Остаток в днях и Остаток в %
         , CASE WHEN tmpResult.NormInDays_tax < 50
+                AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN zc_Color_Red()
 
                WHEN tmpResult.NormInDays_tax <= 70
+                AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN zc_Color_Orange() -- zc_Color_Aqua()
 
                WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+              --AND tmpResult.PartionGoodsDate > zc_DateStart()
                     -- если надо подсветить
                     THEN zc_Color_Yelow()
 
@@ -2609,9 +2612,11 @@ BEGIN
           END :: Integer AS Color_NormInDays
 
         , CASE WHEN tmpResult.NormInDays_tax < 50
+                AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN 2
 
                WHEN tmpResult.NormInDays_tax <= 70
+                AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN 1
 
                ELSE 0
