@@ -69,6 +69,7 @@ type
     PromoTradeStateKindName: TcxGridDBColumn;
     Checked: TcxGridDBColumn;
     CheckDate: TcxGridDBColumn;
+    SignInternalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

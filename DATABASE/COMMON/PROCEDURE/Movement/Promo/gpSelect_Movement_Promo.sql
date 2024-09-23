@@ -178,7 +178,7 @@ BEGIN
                          FROM tmpMovement
                               LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id
                          )
-
+        -- Результат
         SELECT Movement_Promo.Id                                                 --Идентификатор
              , Movement_Promo.InvNumber :: Integer                               --Номер документа
              , Movement_Promo.OperDate                                           --Дата документа
