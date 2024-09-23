@@ -849,9 +849,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -960,9 +957,9 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     inherited cxLabel1: TcxLabel
       Left = 8
-      Top = 4
+      Top = 2
       ExplicitLeft = 8
-      ExplicitTop = 4
+      ExplicitTop = 2
     end
     inherited edOperDate: TcxDateEdit
       Left = 8
@@ -1042,8 +1039,8 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object cxLabel9: TcxLabel
       Left = 593
-      Top = 4
-      Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1089
+      Top = 2
+      Caption = #1057#1090#1072#1090'. 3 '#1084#1077#1089'. '#1089
     end
     object deOperDateStart: TcxDateEdit
       Left = 593
@@ -1056,8 +1053,8 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object cxLabel10: TcxLabel
       Left = 683
-      Top = 4
-      Caption = #1040#1085#1072#1083#1086#1075#1080#1095#1085#1099#1081' '#1087#1086
+      Top = 2
+      Caption = #1057#1090#1072#1090'. 3 '#1084#1077#1089'. '#1087#1086
     end
     object deOperDateEnd: TcxDateEdit
       Left = 683
@@ -1117,7 +1114,7 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object cxLabel16: TcxLabel
       Left = 360
-      Top = 4
+      Top = 2
       Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
     end
     object edPromoItem: TcxButtonEdit
@@ -1187,7 +1184,7 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object cxLabel7: TcxLabel
       Left = 190
-      Top = 4
+      Top = 2
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
     end
     object ceRetail: TcxButtonEdit
