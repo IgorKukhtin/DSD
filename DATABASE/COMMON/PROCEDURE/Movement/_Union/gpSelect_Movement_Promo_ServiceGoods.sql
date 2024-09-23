@@ -40,6 +40,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ContractName     TVarChar    --Договора
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar
+             , PromoItemName TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -66,6 +68,25 @@ BEGIN
                                                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                    AND Movement.DescId IN (zc_Movement_Promo(),zc_Movement_PromoTrade())
                           )
+
+         , tmpAdvertising AS (SELECT Movement.ParentId 
+                                   , Object_Advertising.Id            AS AdvertisingId
+                                   , Object_Advertising.ValueData     AS AdvertisingName
+                                   , MovementString_Comment.ValueData AS Comment
+                              FROM Movement
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_Advertising
+                                                           ON MovementLinkObject_Advertising.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Advertising.DescId = zc_MovementLinkObject_Advertising()
+                              LEFT JOIN Object AS Object_Advertising ON Object_Advertising.Id = MovementLinkObject_Advertising.ObjectId
+                              LEFT OUTER JOIN MovementString AS MovementString_Comment
+                                                             ON MovementString_Comment.MovementId = Movement.Id
+                                                            AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                              WHERE Movement.ParentId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
+                                AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                AND Movement.DescId = zc_Movement_PromoAdvertising()
+                              )
+
+
 
 
         -- Результат
@@ -102,7 +123,10 @@ BEGIN
              , Object_Juridical.Id                         AS JuridicalId
              , Object_Juridical.ValueData                  AS JuridicalName
              , Object_Retail.Id                            AS RetailId
-             , Object_Retail.ValueData                     AS RetailNamе         
+             , Object_Retail.ValueData                     AS RetailNamе
+             
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE tmpAdvertising.AdvertisingName END ::TVarChar AS PromoItemName      --Стаья затрат
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementString_Comment.ValueData ELSE tmpAdvertising.Comment END   ::TVarChar AS Comment            --Примечание затрат
 
         FROM tmpMovement AS Movement
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -186,6 +210,20 @@ BEGIN
                                   ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
                                  AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
              LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+             
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoItem
+                                          ON MovementLinkObject_PromoItem.MovementId = Movement.Id
+                                         AND MovementLinkObject_PromoItem.DescId = zc_MovementLinkObject_PromoItem()
+                                         AND Movement.DescId = zc_Movement_PromoTrade()
+             LEFT JOIN Object AS Object_PromoItem ON Object_PromoItem.Id = MovementLinkObject_PromoItem.ObjectId
+
+             LEFT JOIN MovementString AS MovementString_Comment
+                                      ON MovementString_Comment.MovementId = Movement.Id
+                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                     AND Movement.DescId = zc_Movement_PromoTrade()
+             
+             LEFT JOIN tmpAdvertising ON tmpAdvertising.ParentId = Movement.Id
+                                     AND Movement.DescId = zc_Movement_Promo()
         ;
 
 END;
@@ -199,4 +237,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Promo_ServiceGoods (inStartDate:= '01.01.2024', inEndDate:= '01.01.2024', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Promo_ServiceGoods (inStartDate:= '19.09.2024', inEndDate:= '19.09.2024', inIsErased := FALSE, inSession:= '2')
