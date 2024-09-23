@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitTop = -227
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -2267,6 +2266,9 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spSelectMISign
         end>
       Caption = 'actUpdateMovement_PromoTradeStateKind'
     end
@@ -2425,6 +2427,9 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           StoredProc = spSelectMIPromoStateKind
+        end
+        item
+          StoredProc = spSelectMISign
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
