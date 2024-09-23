@@ -376,7 +376,7 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
     inherited mactSimpleCompleteList: TMultiAction [20]
     end
     object actPrint: TdsdPrintAction [21]
-      Category = 'DSDLib'
+      Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -397,6 +397,11 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'Ord'
+        end
+        item
+          DataSet = PrintSignCDS
+          UserName = 'frxDBDSign'
+          IndexFieldNames = 'LineNo'
         end>
       Params = <
         item
@@ -436,6 +441,14 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalTradeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextSign'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'TextSign'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -638,6 +651,31 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object actGet_SignPrint: TdsdExecStoredProc
+      Category = 'Print'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_SignPrint
+      StoredProcList = <
+        item
+          StoredProc = spGet_SignPrint
+        end>
+      Caption = 'actGet_SignPrint'
+    end
+    object macPrint: TMultiAction
+      Category = 'Print'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_SignPrint
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -786,7 +824,7 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
       Action = actInsertMaskMulti
     end
     object dxBarButton1: TdxBarButton
-      Action = actPrint
+      Action = macPrint
       Category = 0
     end
     object bbInsertUpdateMISignYesList: TdxBarButton
@@ -1000,6 +1038,9 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintSignCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1014,5 +1055,36 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
     PackSize = 1
     Left = 735
     Top = 256
+  end
+  object PrintSignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 780
+    Top = 150
+  end
+  object spGet_SignPrint: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PromoTrade_SignByPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextSign'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TextSign'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 864
+    Top = 136
   end
 end
