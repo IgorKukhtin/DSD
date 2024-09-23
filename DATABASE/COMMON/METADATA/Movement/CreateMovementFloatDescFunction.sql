@@ -780,12 +780,29 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_SummReturnIn() RETURNS Integer AS $B
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_SummReturnIn', 'Сумма возвратов (статистика за 3м.)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummReturnIn');  
 
-    
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Pay_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Pay_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Pay_1', 'Сумма оплаты-1 по накладной' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Pay_1');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Pay_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Pay_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Pay_2', 'Сумма оплаты-2 по накладной' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Pay_2');  
  
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Return_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Return_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Return_1', 'Сумма возврат-1 по накладной' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Return_1');  
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_Return_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Return_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_Return_2', 'Сумма возврат-2 по накладной' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_Return_2');  
              
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 23.09.24         * zc_MovementFloat_Pay_1  
+                    zc_MovementFloat_Pay_2
+                    zc_MovementFloat_Return_1
+                    zc_MovementFloat_Return_2                
  20.09.24         * zc_MovementFloat_AmountSale
                     zc_MovementFloat_SummSale
                     zc_MovementFloat_AmountReturnIn

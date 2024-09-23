@@ -3,7 +3,6 @@ inherited PromoTradeForm: TPromoTradeForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 715
   ClientWidth = 1164
-  ExplicitTop = -122
   ExplicitWidth = 1180
   ExplicitHeight = 754
   PixelsPerInch = 96
@@ -945,6 +944,7 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
+    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -1703,6 +1703,11 @@ inherited PromoTradeForm: TPromoTradeForm
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
           IndexFieldNames = 'Ord'
+        end
+        item
+          DataSet = PrintSignCDS
+          UserName = 'frxDBDSign'
+          IndexFieldNames = 'LineNo'
         end>
       Params = <
         item
@@ -3648,8 +3653,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 768
-    Top = 328
+    Left = 784
+    Top = 320
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
@@ -4364,8 +4369,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 884
-    Top = 134
+    Left = 852
+    Top = 158
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTrade_Print'
@@ -4632,5 +4637,36 @@ inherited PromoTradeForm: TPromoTradeForm
     PackSize = 1
     Left = 82
     Top = 656
+  end
+  object spGet_SignPrint: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_PromoTrade_SignByPrint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextSign'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TextSign'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 936
+    Top = 24
+  end
+  object PrintSignCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 860
+    Top = 22
   end
 end

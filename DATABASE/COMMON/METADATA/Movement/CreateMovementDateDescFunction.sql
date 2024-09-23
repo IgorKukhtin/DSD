@@ -271,9 +271,32 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_OffsetVIP() RETURNS Integer AS $BODY$
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_OffsetVIP', 'Дата зачет ВИПам' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OffsetVIP');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Pay_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Pay_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Pay_1', 'Месяц оплаты-1' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Pay_1');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_Pay_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Pay_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Pay_2', 'Месяц оплаты-2' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Pay_2');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_Return_1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Return_1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Return_1', 'Месяц возврат-1' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Return_1');
+
+CREATE OR REPLACE FUNCTION zc_MovementDate_Return_2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Return_2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Return_2', 'Месяц возврат-2' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Return_2');
+
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 23.09.24         * zc_MovementDate_Pay_1
+                    zc_MovementDate_Pay_2  
+                    zc_MovementDate_Return_1
+                    zc_MovementDate_Return_2 
  02.07.23                                                                                                        * zc_MovementDate_OffsetVIP
  23.06.23                                                                                                        * zc_MovementDate_SignConsignor, zc_MovementDate_SignCarrier
  19.04.23         * zc_MovementDate_StatusInsert

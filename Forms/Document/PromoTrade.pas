@@ -213,10 +213,10 @@ type
     dxBarButton1: TdxBarButton;
     spUpdate_PromoStateKind_del: TdsdStoredProc;
     actUpdateMovement_PromoTradeStateKind_del: TdsdExecStoredProc;
-    PrintSignCDS: TClientDataSet;
-    spGet_SignPrint: TdsdStoredProc;
     actGet_SignPrint: TdsdExecStoredProc;
     macPrint: TMultiAction;
+    spGet_SignPrint: TdsdStoredProc;
+    PrintSignCDS: TClientDataSet;
   private
     { Private declarations }
   public
