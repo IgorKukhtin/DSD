@@ -91,6 +91,7 @@
   object ceOperDate: TcxDateEdit [10]
     Left = 184
     Top = 24
+    EditValue = 45558d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 2
@@ -425,7 +426,7 @@
   object cxLabel25: TcxLabel [55]
     Left = 8
     Top = 362
-    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1042#1074#1086#1076' '#1085#1086#1074#1099#1093' '#1087#1086#1079#1080#1094#1080#1081
+    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
   end
   object cxLabel27: TcxLabel [56]
     Left = 447
@@ -1749,9 +1750,17 @@
         Component = ceOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoItemName_full'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 209
-    Top = 420
+    Left = 177
+    Top = 388
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'

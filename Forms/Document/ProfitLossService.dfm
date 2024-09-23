@@ -380,7 +380,7 @@
   object cxLabel22: TcxLabel [47]
     Left = 445
     Top = 257
-    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1042#1074#1086#1076' '#1085#1086#1074#1099#1093' '#1087#1086#1079#1080#1094#1080#1081
+    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -1474,8 +1474,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 664
-    Top = 223
+    Left = 656
+    Top = 199
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
@@ -1547,8 +1547,16 @@
         Component = ceOperDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoItemName_full'
+        Value = Null
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 605
-    Top = 272
+    Left = 565
+    Top = 288
   end
 end
