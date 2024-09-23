@@ -763,14 +763,6 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object IsError: TcxGridDBColumn
-            Caption = #1054#1096#1080#1073#1082#1072
-            DataBinding.FieldName = 'isError'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 44
-          end
         end
       end
     end

@@ -29,27 +29,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar, RetailName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             --, RouteGroupName TVarChar, RouteName TVarChar
              , PersonalName TVarChar
              , RetailName_order TVarChar
              , PartnerName_order TVarChar
              , PriceListName TVarChar
              , PriceListInName TVarChar
              , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
-             --, DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
-             --, MovementId_Master Integer, InvNumberPartner_Master TVarChar
-             --, MovementId_TransportGoods Integer
-             --, InvNumber_TransportGoods TVarChar
-             --, OperDate_TransportGoods TDateTime
-             --, OperDate_TransportGoods_calc TDateTime
-             --, MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
-             --, CarName TVarChar, CarModelName TVarChar, PersonalDriverName TVarChar, PersonalDriverName_TTN TVarChar, PersonalName_4_TTN TVarChar
-             --, isEDI Boolean
-             --, isElectron Boolean
-             --, isMedoc Boolean
-             --, EdiOrdspr Boolean, EdiInvoice Boolean, EdiDesadv Boolean
-             --, isEdiOrdspr_partner Boolean, isEdiInvoice_partner Boolean, isEdiDesadv_partner Boolean
-             --, isError Boolean
+
              , isPrinted Boolean
              , isPromo Boolean
              , isPav Boolean    
@@ -60,7 +46,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDatediff_min TFloat
              , Comment TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
-            -- , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_ReturnIn Integer, InvNumber_ReturnInFull TVarChar   
              
              , SumPay1     TFloat
@@ -523,8 +508,6 @@ BEGIN
            , tmpContract_InvNumber.InfoMoneyCode            AS InfoMoneyCode
            , tmpContract_InvNumber.InfoMoneyName            AS InfoMoneyName
 
- --          , Object_RouteGroup.ValueData                    AS RouteGroupName
- --          , Object_Route.ValueData                         AS RouteName
            , Object_Personal.ValueData                      AS PersonalName
            , Object_Retail_order.ValueData                  AS RetailName_order
            , Object_Partner_order.ValueData                 AS PartnerName_order
@@ -614,7 +597,6 @@ BEGIN
                                       ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                      AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-
             LEFT JOIN tmpMovementDate AS MovementDate_Pay_1
                                       ON MovementDate_Pay_1.MovementId =  Movement.Id
                                      AND MovementDate_Pay_1.DescId = zc_MovementDate_Pay_1()
@@ -627,7 +609,6 @@ BEGIN
             LEFT JOIN tmpMovementDate AS MovementDate_Return_2
                                       ON MovementDate_Return_2.MovementId =  Movement.Id
                                      AND MovementDate_Return_2.DescId = zc_MovementDate_Return_2()
-
 
             LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                         ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -693,7 +674,6 @@ BEGIN
                                        ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                       AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
-
             LEFT JOIN tmpMovementFloat AS MovementFloat_Pay_1
                                        ON MovementFloat_Pay_1.MovementId = Movement.Id
                                       AND MovementFloat_Pay_1.DescId = zc_MovementFloat_Pay_1()
@@ -745,49 +725,11 @@ BEGIN
                                                            AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
-            /*LEFT JOIN tmpMovement_Master AS Movement_DocumentMaster ON Movement_DocumentMaster.MovementId = Movement.Id
-
-            LEFT JOIN tmpMS_InvNumberPartner AS MS_InvNumberPartner_Master
-                                             ON MS_InvNumberPartner_Master.MovementId = Movement_DocumentMaster.Id -- Movement_DocumentMaster.Id
-            LEFT JOIN Object AS Object_StatusMaster ON Object_StatusMaster.Id = Movement_DocumentMaster.Id
-
-            -- ““Ќ
-            LEFT JOIN tmpMovement_TransportGoods AS Movement_TransportGoods ON Movement_TransportGoods.MovementId = Movement.Id
-            LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver_TTN ON Object_PersonalDriver_TTN.MovementId =  Movement_TransportGoods.Id
-            LEFT JOIN tmpPersonal_4     AS Object_Personal_4_TTN     ON Object_Personal_4_TTN.MovementId     =  Movement_TransportGoods.Id
-            */
-
             LEFT JOIN tmpMovementLinkObject_ReestrKind AS MovementLinkObject_ReestrKind
                                                        ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
                                                       AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-          /*  LEFT JOIN tmpMB_MLM AS MovementBoolean_Electron
-                                ON MovementBoolean_Electron.MovementId = Movement_DocumentMaster.Id
-                               AND MovementBoolean_Electron.DescId = zc_MovementBoolean_Electron()
-            LEFT JOIN tmpMB_MLM AS MovementBoolean_Medoc
-                                ON MovementBoolean_Medoc.MovementId =  Movement_DocumentMaster.Id
-                               AND MovementBoolean_Medoc.DescId = zc_MovementBoolean_Medoc()
-            LEFT JOIN tmpMLO_To AS MovementLinkObject_To_Master
-                                ON MovementLinkObject_To_Master.MovementId = Movement_DocumentMaster.Id
-                               AND MovementLinkObject_To_Master.DescId = zc_MovementLinkObject_To()
-
-            LEFT JOIN tmpMLO_Contract AS MovementLinkObject_Contract_Master
-                                      ON MovementLinkObject_Contract_Master.MovementId = Movement_DocumentMaster.Id
-                                     AND MovementLinkObject_Contract_Master.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN tmpMLO_Partner AS MovementLinkObject_Partner_Master
-                                     ON MovementLinkObject_Partner_Master.MovementId = Movement_DocumentMaster.Id
-                                    AND MovementLinkObject_Partner_Master.DescId = zc_MovementLinkObject_Partner()
-
-            LEFT JOIN tmpMLO_DocumentTaxKind AS MovementLinkObject_DocumentTaxKind_Master
-                                             ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id -- MovementLinkMovement_Master.MovementChildId
-                                            AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
-            LEFT JOIN Object AS Object_TaxKind_Master
-                             ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
-                            AND Movement_DocumentMaster.StatusId = zc_Enum_Status_Complete() -- <> zc_Enum_Status_Erased()
-        */
             LEFT JOIN tmpMLM AS MovementLinkMovement_Sale
                              ON MovementLinkMovement_Sale.MovementId = Movement.Id
                             AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
@@ -800,12 +742,6 @@ BEGIN
 
             LEFT JOIN tmpPersonal AS Object_Personal ON Object_Personal.MovementId = MovementLinkMovement_Order.MovementChildId
 
-            /*LEFT JOIN tmpOL_Route_RouteGroup AS ObjectLink_Route_RouteGroup
-                                             ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
-                                            AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
-
-            LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
-            */
             LEFT JOIN tmpPartner AS Object_Partner_order ON Object_Partner_order.MovementId = MovementLinkMovement_Order.MovementChildId
 
             LEFT JOIN tmpRetail AS Object_Retail_order ON Object_Retail_order.MovementId = MovementLinkMovement_Order.MovementChildId
@@ -814,18 +750,6 @@ BEGIN
                                             ON MovementDate_Insert_order.MovementId = MovementLinkMovement_Order.MovementChildId
                                            AND MovementDate_Insert_order.DescId = zc_MovementDate_Insert()
 
-        /*    LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiOrdspr
-                                          ON ObjectBoolean_EdiOrdspr.ObjectId = Object_To.Id
-                                         AND ObjectBoolean_EdiOrdspr.DescId = zc_ObjectBoolean_Partner_EdiOrdspr()
-
-            LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiInvoice
-                                          ON ObjectBoolean_EdiInvoice.ObjectId = Object_To.Id
-                                         AND ObjectBoolean_EdiInvoice.DescId = zc_ObjectBoolean_Partner_EdiInvoice()
-
-            LEFT JOIN tmpObjectBoolean_To AS ObjectBoolean_EdiDesadv
-                                          ON ObjectBoolean_EdiDesadv.ObjectId = Object_To.Id
-                                         AND ObjectBoolean_EdiDesadv.DescId = zc_ObjectBoolean_Partner_EdiDesadv()
-           */
             LEFT JOIN tmpMovement_Promo AS Movement_Promo ON Movement_Promo.MovementId = Movement.Id
 
             LEFT JOIN tmpMovementDate_Promo AS MD_StartSale
@@ -836,31 +760,8 @@ BEGIN
                                             ON MD_EndSale.MovementId = Movement_Promo.Id
                                            AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
-           /* LEFT JOIN tmpMovement_Production AS Movement_Production ON Movement_Production.MovementId = Movement.Id
-
-            LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
-
-            LEFT JOIN tmpMB_MLM AS MovementBoolean_Peresort
-                                ON MovementBoolean_Peresort.MovementId = Movement_Production.Id
-                               AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
-           */
             LEFT JOIN tmpMovement_ReturnIn AS Movement_ReturnIn ON Movement_ReturnIn.MovementId = Movement.Id
 
-/*
-            -- ѕутевой лист
-            LEFT JOIN tmpMovement_Transport AS Movement_Transport ON Movement_Transport.MovementId = Movement.Id
-
-            LEFT JOIN tmpCar AS Object_Car ON Object_Car.MovementId = Movement_Transport.Id
-
-            LEFT JOIN tmpCarModel AS Object_CarModel ON Object_CarModel.CarId = Object_Car.Id
-
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarType
-                                 ON ObjectLink_Car_CarType.ObjectId = Object_Car.Id
-                                AND ObjectLink_Car_CarType.DescId = zc_ObjectLink_Car_CarType()
-            LEFT JOIN Object AS Object_CarType ON Object_CarType.Id = ObjectLink_Car_CarType.ChildObjectId
-
-            LEFT JOIN tmpPersonalDriver AS Object_PersonalDriver ON Object_PersonalDriver.MovementId =  Movement_Transport.Id 
-            */
 
             LEFT JOIN tmpRetail_JuridicalTo ON tmpRetail_JuridicalTo.JuridicalId_To = Object_JuridicalTo.Id
     ;
@@ -877,9 +778,9 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Movement_Sale_Pay (inStartDate:= '10.01.2022', inEndDate:= '10.01.2022', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_Pay (inStartDate:= '10.01.2022', inEndDate:= '10.01.2022', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек
 
---SELECT * FROM gpSelect_Movement_Sale_Pay (inStartDate:= '10.09.2024', inEndDate:= '10.09.2024', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_Pay (inStartDate:= '10.09.2024', inEndDate:= '10.09.2024', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
 
