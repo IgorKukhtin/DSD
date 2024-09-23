@@ -89,35 +89,20 @@ BEGIN
      END IF;
 
 
-     -- !!!пересчитали кто подписал/отменил + изменение модели!!!
+     -- !!!пересчитали кто подписал/отменил!!!
      PERFORM lpInsertUpdate_MI_Sign_all (inMovementId     := inMovementId
                                        , inSignInternalId := 11307029 -- Трейд-маркетинг
-                                       , inAmount         := vbAmount_sign + 1
+                                       , inAmount         := CASE inPromoTradeStateKindId
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 1
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 2
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 3
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 4
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 5
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 6
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_7() THEN 7
+                                                             END
                                        , inUserId         := vbUserId
                                         );
-
-
-     -- нашли последний - и сохранили в шапку
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, tmp.ObjectId)
-              -- сохранили свойство <Дата согласования>
-           , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
-                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() THEN CURRENT_DATE ELSE NULL END
-                                         )
-              -- сохранили свойство <Согласовано>
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
-                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoTradeStateKind_Complete_7() THEN TRUE ELSE FALSE END
-                                            )
-     FROM (SELECT MI.ObjectId, MI.Amount
-           FROM MovementItem AS MI
-                JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
-           WHERE MI.MovementId = inMovementId
-             AND MI.DescId     = zc_MI_Message()
-             AND MI.isErased   = FALSE
-           ORDER BY MI.Id DESC
-           LIMIT 1
-          ) AS tmp;
-
-     --
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
