@@ -57,6 +57,7 @@ BEGIN
       SELECT SUM (COALESCE (MF_AmountSale.ValueData,0))     AS AmountSale
            , SUM (COALESCE (MF_AmountReturnIn.ValueData,0)) AS AmountReturnIn
            , SUM (COALESCE (MF_SummSale.ValueData,0))       AS SummSale
+           , SUM (COALESCE (MovementFloat_DebtSumm.ValueData,0)) AS DebtSumm
       FROM Movement
            LEFT JOIN MovementFloat AS MF_AmountSale
                                    ON MF_AmountSale.MovementId = Movement.Id
@@ -67,6 +68,9 @@ BEGIN
            LEFT JOIN MovementFloat AS MF_AmountReturnIn
                                    ON MF_AmountReturnIn.MovementId = Movement.Id
                                   AND MF_AmountReturnIn.DescId = zc_MovementFloat_AmountReturnIn()
+           LEFT JOIN MovementFloat AS MovementFloat_DebtSumm 
+                                   ON MovementFloat_DebtSumm.MovementId =  Movement.Id
+                                  AND MovementFloat_DebtSumm.DescId = zc_MovementFloat_DebtSumm()
       WHERE Movement.DescId = zc_Movement_PromoTradeHistory()
         AND Movement.ParentId = inMovementId;
 
@@ -168,7 +172,8 @@ BEGIN
         SELECT
             16 ::Integer AS LineNo,
             'Просрочена дебіторська заборгованність, грн'::TVarChar as LineName,
-            ('')::TEXT AS LineValue
+            (SELECT CAST (_tmpHistory.DebtSumm AS NUMERIC (16,2))
+             FROM _tmpHistory)::TEXT AS LineValue
       ;
     RETURN NEXT Cursor1;
 

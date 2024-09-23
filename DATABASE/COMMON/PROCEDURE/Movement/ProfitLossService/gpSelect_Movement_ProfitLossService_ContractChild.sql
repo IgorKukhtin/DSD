@@ -20,6 +20,8 @@ RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , InfoMoneyCode_Child        Integer
              , InfoMoneyName_Child        TVarChar
              , InfoMoneyName_all_Child    TVarChar
+             , PaidKindId_Child           Integer
+             , PaidKindName_Child         TVarChar
              ) 
 
 AS
@@ -105,7 +107,9 @@ BEGIN
                   , Object_InfoMoneyChild_View.InfoMoneyId              AS InfoMoneyId_Child
                   , Object_InfoMoneyChild_View.InfoMoneyCode            AS InfoMoneyCode_Child
                   , Object_InfoMoneyChild_View.InfoMoneyName            AS InfoMoneyName_Child
-                  , Object_InfoMoneyChild_View.InfoMoneyName_all        AS InfoMoneyName_all_Child
+                  , Object_InfoMoneyChild_View.InfoMoneyName_all        AS InfoMoneyName_all_Child 
+                  , Object_PaidKind_Child.Id                   AS PaidKindId_Child
+                  , Object_PaidKind_Child.ValueData ::TVarChar AS PaidKindName_Child
              FROM tmpData 
                 LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
                -- LEFT JOIN Object AS Object_Juridical_Child ON Object_Juridical_Child.Id = tmpData.JuridicalId_child
@@ -127,7 +131,11 @@ BEGIN
                                      ON ObjectLink_ContractChild_InfoMoney.ObjectId = Object_ContractChild.Id
                                     AND ObjectLink_ContractChild_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                 LEFT JOIN Object_InfoMoney_View AS Object_InfoMoneyChild_View ON Object_InfoMoneyChild_View.InfoMoneyId = ObjectLink_ContractChild_InfoMoney.ChildObjectId
-                
+
+                LEFT JOIN ObjectLink AS ObjectLink_ContractChild_PaidKind
+                                     ON ObjectLink_ContractChild_PaidKind.ObjectId = Object_ContractChild.Id
+                                    AND ObjectLink_ContractChild_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                LEFT JOIN Object AS Object_PaidKind_Child ON Object_PaidKind_Child.Id = ObjectLink_ContractChild_PaidKind.ChildObjectId
              WHERE tmpData.Ord = 1
             ;
          
