@@ -640,6 +640,18 @@ inherited PromoTradeForm: TPromoTradeForm
                   Options.Editing = False
                   Width = 130
                 end
+                object Value_2_ch2: TcxGridDBColumn
+                  Caption = #1042#1086#1079#1074#1088#1072#1090
+                  DataBinding.FieldName = 'Value_2'
+                  PropertiesClassName = 'TcxCurrencyEditProperties'
+                  Properties.DecimalPlaces = 4
+                  Properties.DisplayFormat = ',0.####'
+                  Visible = False
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 55
+                end
               end
               object cxGridLevelMov2: TcxGridLevel
                 GridView = cxGridDBTableViewMov2
@@ -3452,7 +3464,6 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalTrade
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TPersonal_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -3507,8 +3518,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 476
-    Top = 65528
+    Left = 420
+    Top = 8
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -3603,8 +3614,8 @@ inherited PromoTradeForm: TPromoTradeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 236
-    Top = 96
+    Left = 220
+    Top = 72
   end
   object spSelect_PromoTradeCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
@@ -3875,6 +3886,7 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesSignInternal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edSignInternal
+    DisableGuidesOpen = True
     Key = 'Null'
     FormNameParam.Value = 'TSignInternalForm'
     FormNameParam.DataType = ftString
@@ -3900,8 +3912,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 588
-    Top = 64
+    Left = 572
+    Top = 96
   end
   object spUpdate_SignInternal_Two: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_SignInternal'
@@ -3986,6 +3998,7 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesContractTag: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractTag
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TContractTagForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -4085,6 +4098,7 @@ inherited PromoTradeForm: TPromoTradeForm
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

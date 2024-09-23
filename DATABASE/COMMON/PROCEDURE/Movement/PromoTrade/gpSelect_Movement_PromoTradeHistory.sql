@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PromoTradeHistory(
 RETURNS TABLE (Ord              Integer
              , Name             TVarChar    --имя параметра
              , Value            TFloat      --значение параметра 
+             , Value_2          TFloat      --значение параметра 
               )
 
 AS
@@ -72,27 +73,31 @@ BEGIN
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           ,  (CAST (tmpMovement.AmountSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
+          ,  (CAST (tmpMovement.AmountReturnIn/3 AS NUMERIC (16,1))) ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 1
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (CAST (tmpMovement.SummSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
+          , (CAST (tmpMovement.SummSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
+          , (CAST (tmpMovement.SummReturnIn/3 AS NUMERIC (16,1))) ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 2
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (CAST (CASE WHEN COALESCE (tmpMovement.AmountSale,0) <> 0 THEN tmpMovement.AmountReturnIn * 100 / tmpMovement.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value                                               
+          , (CAST (CASE WHEN COALESCE (tmpMovement.AmountSale,0) <> 0 THEN tmpMovement.AmountReturnIn * 100 / tmpMovement.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value                                               
+          , 0 ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 3
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (MovementFloat_DebtDay.ValueData) ::TFloat AS Value
+          , MovementFloat_DebtDay.ValueData ::TFloat AS Value
+          , 0 ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN MovementFloat AS MovementFloat_DebtDay 
                                  ON MovementFloat_DebtDay.MovementId = vbMovementId_PromoTradeHistory
@@ -101,7 +106,8 @@ BEGIN
  UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          ,  (MovementFloat_DebtSumm.ValueData) ::TFloat AS Value
+          , MovementFloat_DebtSumm.ValueData ::TFloat AS Value
+          , 0 ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN MovementFloat AS MovementFloat_DebtSumm 
                                  ON MovementFloat_DebtSumm.MovementId = vbMovementId_PromoTradeHistory

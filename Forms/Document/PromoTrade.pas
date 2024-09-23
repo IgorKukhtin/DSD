@@ -217,6 +217,7 @@ type
     macPrint: TMultiAction;
     spGet_SignPrint: TdsdStoredProc;
     PrintSignCDS: TClientDataSet;
+    Value_2_ch2: TcxGridDBColumn;
   private
     { Private declarations }
   public
