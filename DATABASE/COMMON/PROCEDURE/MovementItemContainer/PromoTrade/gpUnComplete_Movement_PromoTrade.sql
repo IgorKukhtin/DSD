@@ -18,6 +18,27 @@ BEGIN
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
 
+     -- Если последний = Вернули для исправлений
+     IF zc_Enum_PromoTradeStateKind_Return() = (SELECT MI.ObjectId
+                                                FROM MovementItem AS MI
+                                                     JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
+                                                WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message() AND MI.isErased = FALSE
+                                                ORDER BY MI.Id DESC
+                                                LIMIT 1
+                                               )
+     THEN
+         -- сохранили <В работе Автор документа>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
+         -- сохранили <В работе Автор документа>
+         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
+                                                              , inMovementId            := inMovementId
+                                                              , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
+                                                              , inIsQuickly             := FALSE
+                                                              , inComment               := ''
+                                                              , inSession               := inSession
+                                                               );
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

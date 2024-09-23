@@ -31,6 +31,22 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Состояние не может быть пустым.';
      END IF;
 
+     -- Проверка
+     IF inPromoTradeStateKindId IN (zc_Enum_PromoTradeStateKind_Complete_1()
+                                  , zc_Enum_PromoTradeStateKind_Complete_2()
+                                  , zc_Enum_PromoTradeStateKind_Complete_3()
+                                  , zc_Enum_PromoTradeStateKind_Complete_4()
+                                  , zc_Enum_PromoTradeStateKind_Complete_5()
+                                  , zc_Enum_PromoTradeStateKind_Complete_6()
+                                  , zc_Enum_PromoTradeStateKind_Complete_7()
+                                   )
+        AND zc_Enum_Status_Complete() <> (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ должен быть в статусе<%>.Согласование заблокировано.'
+                       , (SELECT lfGet_Object_ValueData_sh (zc_Enum_Status_Complete()) FROM Movement WHERE Movement.Id = inMovementId)
+                     --, (SELECT lfGet_Object_ValueData_sh (Movement.StatusId) FROM Movement WHERE Movement.Id = inMovementId)
+                        ;
+     END IF;
 
      -- кто последний подтвердил
      vbAmount_sign:= COALESCE ((SELECT MAX (gpSelect.Ord) FROM gpSelect_MI_Sign (inMovementId, FALSE, inSession) AS gpSelect WHERE gpSelect.isSign = TRUE), 0);
@@ -48,6 +64,7 @@ BEGIN
      IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId AND lpSelect.Num = vbAmount_sign + 1)
       -- кроме первого
       AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
+      AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Return()
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для согласования раньше чем <%>.'
                        , (SELECT gpSelect.UserName FROM gpSelect_MI_Sign (inMovementId, FALSE, inSession) AS gpSelect WHERE gpSelect.Ord = vbAmount_sign + 1);
@@ -91,7 +108,7 @@ BEGIN
      END IF;
 
 
-     IF inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
+     IF inPromoTradeStateKindId NOT IN (zc_Enum_PromoTradeStateKind_Start(), zc_Enum_PromoTradeStateKind_Return())
      THEN
          -- !!!пересчитали кто подписал/отменил!!!
          PERFORM lpInsertUpdate_MI_Sign_all (inMovementId     := inMovementId
@@ -107,6 +124,17 @@ BEGIN
                                                                  END
                                            , inUserId         := vbUserId
                                             );
+
+     ELSEIF inPromoTradeStateKindId = zc_Enum_PromoTradeStateKind_Return()
+     THEN
+         -- сняли ВСЕ подписи
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= vbUserId)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Sign()
+           AND MovementItem.isErased   = FALSE
+          ;
+
      END IF;
 
      -- сохранили протокол

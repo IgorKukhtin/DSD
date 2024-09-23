@@ -87,6 +87,8 @@ BEGIN
                                WHERE tmpMI.UserId_insert  = vbUserId
                                  AND tmpMI.MovementItemId > (SELECT MAX (tmpMI.MovementItemId) FROM tmpMI WHERE tmpMI.PromoTradeStateKindId = zc_Enum_PromoTradeStateKind_Start())
                                  AND tmpMI.PromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Complete_1()
+                                 -- без поиска для пользовател + БЕЗ исправлений
+                                 AND 1=0
                                ORDER BY tmpMI.MovementItemId DESC
                                LIMIT 1
                               )
@@ -103,14 +105,17 @@ BEGIN
            LIMIT 1
           ) AS tmp;
           
+
+    --RAISE EXCEPTION 'Ошибка. <%>   <%>' , vbMovementItemId, vbPromoTradeStateKindId;
+
      -- Проверка
-     /*IF (vbIsUserSigning1 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoTradeStateKind_Start(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
-     OR (vbIsUserSigning2 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
-     OR (vbIsUserSigning3 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Return()))
+     /*IF (vbIsUserSigning1 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoTradeStateKind_Start(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoTradeStateKind_Return()))
+     OR (vbIsUserSigning2 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoTradeStateKind_Return()))
+     OR (vbIsUserSigning3 = TRUE AND COALESCE (vbPromoTradeStateKindId, 0) NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoTradeStateKind_Return()))
      THEN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть переведено в состояние <%>'
                        , lfGet_Object_ValueData_sh (vbPromoTradeStateKindId)
-                       , lfGet_Object_ValueData_sh (CASE WHEN inIsComplete = TRUE THEN zc_Enum_PromoStateKind_Complete() ELSE zc_Enum_PromoStateKind_Return() END)
+                       , lfGet_Object_ValueData_sh (CASE WHEN inIsComplete = TRUE THEN zc_Enum_PromoStateKind_Complete() ELSE zc_Enum_PromoTradeStateKind_Return() END)
                         ;
      END IF;*/
 
@@ -119,7 +124,7 @@ BEGIN
      RETURN QUERY 
         SELECT CASE WHEN vbUserId_insert = vbUserId
                          THEN vbMovementItemId
-                    WHEN vbPromoTradeStateKindId = CASE WHEN inIsComplete = TRUE THEN zc_Enum_PromoStateKind_Complete() ELSE zc_Enum_PromoStateKind_Return() END
+                    WHEN vbPromoTradeStateKindId = CASE WHEN inIsComplete = TRUE THEN zc_Enum_PromoStateKind_Complete() ELSE zc_Enum_PromoTradeStateKind_Return() END
                          THEN 0 -- vbMovementItemId
                     ELSE 0
                END :: Integer AS MovementItemId
@@ -136,6 +141,7 @@ BEGIN
                                                         THEN CASE COALESCE (vbPromoTradeStateKindId, 0)
                                                                   -- получили следующий
                                                                   WHEN 0                                        THEN zc_Enum_PromoTradeStateKind_Start()
+                                                                  WHEN zc_Enum_PromoTradeStateKind_Return()     THEN zc_Enum_PromoTradeStateKind_Start()
                                                                   WHEN zc_Enum_PromoTradeStateKind_Start()      THEN zc_Enum_PromoTradeStateKind_Complete_1()
                                                                   WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN zc_Enum_PromoTradeStateKind_Complete_2()
                                                                   WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN zc_Enum_PromoTradeStateKind_Complete_3()
@@ -145,7 +151,7 @@ BEGIN
                                                                   WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN zc_Enum_PromoTradeStateKind_Complete_7()
                                                                   WHEN zc_Enum_PromoTradeStateKind_Complete_7() THEN zc_Enum_PromoTradeStateKind_Complete_7()
                                                              END
-                                                        ELSE zc_Enum_PromoStateKind_Return()
+                                                        ELSE zc_Enum_PromoTradeStateKind_Return()
                                               END
        ;
 
