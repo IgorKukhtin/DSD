@@ -41,7 +41,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar
              , PromoItemName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar 
+             , PromoItemName_full TVarChar
               )
 AS
 $BODY$
@@ -127,6 +128,11 @@ BEGIN
              
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE tmpAdvertising.AdvertisingName END ::TVarChar AS PromoItemName      --Стаья затрат
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementString_Comment.ValueData ELSE tmpAdvertising.Comment END   ::TVarChar AS Comment            --Примечание затрат
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN COALESCE (Object_PromoItem.ValueData,'')
+                        || CASE WHEN COALESCE (MovementString_Comment.ValueData,'') <> '' THEN ' ;'||COALESCE (MovementString_Comment.ValueData,'') ELSE '' END
+                    ELSE COALESCE (tmpAdvertising.AdvertisingName,'') 
+                        || CASE WHEN COALESCE (tmpAdvertising.Comment,'') <> '' THEN ' ;'||COALESCE (tmpAdvertising.Comment,'') ELSE '' END
+               END ::TVarChar AS PromoItemName_full
 
         FROM tmpMovement AS Movement
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId

@@ -8230,8 +8230,8 @@
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 110
-    Top = 321
+    Left = 182
+    Top = 297
   end
   object ConditionPromoDS: TDataSource
     DataSet = ConditionPromoCDS

@@ -27,8 +27,6 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 221
-        ExplicitLeft = 80
-        ExplicitTop = 24
         ExplicitWidth = 990
         ExplicitHeight = 221
         inherited cxGridDBTableView: TcxGridDBTableView
