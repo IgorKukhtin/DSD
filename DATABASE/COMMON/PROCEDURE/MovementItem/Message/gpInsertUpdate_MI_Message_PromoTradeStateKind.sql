@@ -38,6 +38,8 @@ BEGIN
 
      -- Проверка
      IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId)
+      -- кроме первого
+      AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
      THEN
          RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для согласования.', lfGet_Object_ValueData_sh (vbUserId);
      END IF;
@@ -45,7 +47,7 @@ BEGIN
      -- Проверка
      IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId AND lpSelect.Num = vbAmount_sign + 1)
       -- кроме первого
-      --AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Complete_1()
+      AND inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав для согласования раньше чем <%>.'
                        , (SELECT gpSelect.UserName FROM gpSelect_MI_Sign (inMovementId, FALSE, inSession) AS gpSelect WHERE gpSelect.Ord = vbAmount_sign + 1);
@@ -89,20 +91,23 @@ BEGIN
      END IF;
 
 
-     -- !!!пересчитали кто подписал/отменил!!!
-     PERFORM lpInsertUpdate_MI_Sign_all (inMovementId     := inMovementId
-                                       , inSignInternalId := 11307029 -- Трейд-маркетинг
-                                       , inAmount         := CASE inPromoTradeStateKindId
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 1
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 2
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 3
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 4
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 5
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 6
-                                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_7() THEN 7
-                                                             END
-                                       , inUserId         := vbUserId
-                                        );
+     IF inPromoTradeStateKindId <> zc_Enum_PromoTradeStateKind_Start()
+     THEN
+         -- !!!пересчитали кто подписал/отменил!!!
+         PERFORM lpInsertUpdate_MI_Sign_all (inMovementId     := inMovementId
+                                           , inSignInternalId := 11307029 -- Трейд-маркетинг
+                                           , inAmount         := CASE inPromoTradeStateKindId
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 1
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 2
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 3
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 4
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 5
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 6
+                                                                      WHEN zc_Enum_PromoTradeStateKind_Complete_7() THEN 7
+                                                                 END
+                                           , inUserId         := vbUserId
+                                            );
+     END IF;
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
