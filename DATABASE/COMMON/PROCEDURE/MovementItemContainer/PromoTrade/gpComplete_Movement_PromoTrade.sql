@@ -14,14 +14,15 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PromoTrade());
 
-     -- создаютс€ временные таблицы - дл€ формирование данных дл€ проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
-
      -- проводим ƒокумент + сохранили протокол
      PERFORM lpComplete_Movement_PromoTrade (inMovementId := inMovementId
-                                             , inUserId     := vbUserId
-                                             );
-
+                                           , inUserId     := vbUserId
+                                            );
+                                             
+     -- проводим ƒокумент + сохранили протокол
+     PERFORM gpUpdate_Movement_PromoTradeHistory (inMovementId := inMovementId
+                                                , inSession    := inSession
+                                                 );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -33,7 +33,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoTradeGoods(
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbIsInsert Boolean;
    DECLARE vbPriceList Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -69,7 +68,7 @@ BEGIN
 
     -- сохранили
     SELECT tmp.ioId, tmp.outPriceWithOutVAT
-     INTO   ioId, outPriceWithOutVAT
+           INTO ioId, outPriceWithOutVAT
     FROM lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := ioId
                                                     , inMovementId           := inMovementId
                                                     , inPartnerId            := inPartnerId
@@ -128,11 +127,12 @@ BEGIN
 
     WHERE MovementItem.Id = ioId;
 
-     -- сохранили <Элемент> - Состояние
+     -- Если не заполнено, надо поставить стартовый
      IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message() AND MI.isErased = FALSE)
      THEN
+         -- сохранили <В работе Автор документа>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
-         --
+         -- сохранили <В работе Автор документа>
          PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
                                                               , inMovementId            := inMovementId
                                                               , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()

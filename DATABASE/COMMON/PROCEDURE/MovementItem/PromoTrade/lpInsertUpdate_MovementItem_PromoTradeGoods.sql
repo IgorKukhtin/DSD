@@ -26,9 +26,15 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbIsInsert Boolean;  
+   DECLARE vbIsUpdate_general Boolean;
    DECLARE vbVat TFloat;
 BEGIN
  
+    -- признак - изменение "важных" параметров
+    vbIsUpdate_general:= inGoodsId <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId), 0)
+                      OR inSumm    <> COALESCE ((SELECT MF.ValueData FROM MovementItemFloat AS MF WHERE MF.MovementItemId = ioId AND MF.DescId = zc_MIFloat_Summ()), 0)
+                        ;
+
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -81,6 +87,38 @@ BEGIN
     ELSE
       PERFORM lpInsert_MovementItemProtocol (ioId, zc_Enum_Process_Auto_ReComplete(), vbIsInsert);
     END IF;
+
+
+     -- если была корректировка + последний не zc_Enum_PromoTradeStateKind_Start
+     IF vbIsUpdate_general = TRUE
+            AND zc_Enum_PromoTradeStateKind_Start() <> (SELECT MI.ObjectId
+                                                        FROM MovementItem AS MI
+                                                             JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
+                                                        WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message() AND MI.isErased = FALSE
+                                                        ORDER BY MI.Id DESC
+                                                        LIMIT 1
+                                                       )
+     THEN
+         -- сняли ВСЕ подписи
+         PERFORM lpSetErased_MovementItem (inMovementItemId:= MovementItem.Id, inUserId:= inUserId)
+         FROM MovementItem
+         WHERE MovementItem.MovementId = inMovementId
+           AND MovementItem.DescId     = zc_MI_Sign()
+           AND MovementItem.isErased   = FALSE
+          ;
+
+         -- сохранили <В работе Автор документа>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoTradeStateKind(), inMovementId, zc_Enum_PromoTradeStateKind_Start());
+         -- сохранили <В работе Автор документа>
+         PERFORM gpInsertUpdate_MI_Message_PromoTradeStateKind (ioId                    := 0
+                                                              , inMovementId            := inMovementId
+                                                              , inPromoTradeStateKindId := zc_Enum_PromoTradeStateKind_Start()
+                                                              , inIsQuickly             := FALSE
+                                                              , inComment               := ''
+                                                              , inSession               := inUserId :: TVarChar
+                                                               );
+
+     END IF;
 
 END;
 $BODY$

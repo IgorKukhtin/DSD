@@ -944,7 +944,6 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
-    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -1203,31 +1202,31 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   object cxLabel21: TcxLabel [2]
     Left = 593
-    Top = 109
+    Top = 74
     Caption = #1045#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object edStrSign: TcxTextEdit [3]
     Left = 593
-    Top = 126
+    Top = 90
     Properties.ReadOnly = True
     TabOrder = 7
     Width = 177
   end
   object edStrSignNo: TcxTextEdit [4]
     Left = 593
-    Top = 54
+    Top = 126
     Properties.ReadOnly = True
     TabOrder = 8
     Width = 177
   end
   object cxLabel22: TcxLabel [5]
     Left = 593
-    Top = 38
+    Top = 109
     Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object cxLabel25: TcxLabel [6]
     Left = 593
-    Top = 74
+    Top = 38
     Hint = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
     Caption = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
     ParentShowHint = False
@@ -1235,7 +1234,7 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   object edSignInternal: TcxButtonEdit [7]
     Left = 593
-    Top = 90
+    Top = 54
     Properties.Buttons = <
       item
         Default = True
@@ -2578,6 +2577,14 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdatePromoStateKind_Return'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbStartLoad'
         end
         item
@@ -3862,8 +3869,8 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 83
+    Left = 448
+    Top = 555
   end
   object GuidesSignInternal: TdsdGuides
     KeyField = 'Id'

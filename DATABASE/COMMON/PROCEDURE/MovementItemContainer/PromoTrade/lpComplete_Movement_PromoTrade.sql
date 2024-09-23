@@ -10,16 +10,6 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
-     -- !!!обязательно!!! очистили таблицу проводок
-     DELETE FROM _tmpMIContainer_insert;
-     DELETE FROM _tmpMIReport_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     DELETE FROM _tmpItem;
-
-     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
-     PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
-                                        , inUserId     := inUserId);
-
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_PromoTrade()
