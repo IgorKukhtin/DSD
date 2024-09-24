@@ -179,7 +179,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 22
-    Width = 138
+    Width = 142
   end
   object edInvNumberPartner: TcxTextEdit [23]
     Left = 447
@@ -421,12 +421,12 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 54
-    Width = 423
+    Width = 273
   end
   object cxLabel25: TcxLabel [55]
     Left = 8
-    Top = 362
-    Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' - '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
+    Top = 361
+    Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
   end
   object cxLabel27: TcxLabel [56]
     Left = 447
@@ -444,6 +444,22 @@
     Properties.ReadOnly = True
     TabOrder = 57
     Width = 152
+  end
+  object cxLabel28: TcxLabel [58]
+    Left = 293
+    Top = 362
+    Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072')'
+  end
+  object ceContractChild: TcxButtonEdit [59]
+    Left = 293
+    Top = 382
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 59
+    Width = 142
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 14
@@ -1758,9 +1774,26 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractId'
+        Value = Null
+        Component = GuidesContractChild
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractName'
+        Value = Null
+        Component = GuidesContractChild
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 177
-    Top = 388
+    Left = 161
+    Top = 380
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
@@ -1791,5 +1824,63 @@
       end>
     Left = 495
     Top = 369
+  end
+  object GuidesContractChild: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContractChild
+    DisableGuidesOpen = True
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesContractChild
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesContractChild
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = ''
+        Component = GuidesCurrencyPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 319
+    Top = 378
   end
 end

@@ -42,7 +42,31 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
-     
+ 
+ 
+      --проверка договор должен быть в Promo, иначе выдавать ошибку  
+     IF COALESCE (inMovementId_doc,0) <> 0 
+      AND NOT EXISTS (--Акция
+                      --Траде маркетинг
+                      SELECT MovementLinkObject_Contract.ObjectId AS ContractId
+                      FROM Movement 
+                          --для Промо договор из zc_Movement_PromoPartner  
+                          LEFT JOIN Movement AS Movement_PromoPartner
+                                             ON Movement_PromoPartner.ParentId = Movement.Id
+                                            AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                            AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner() 
+             
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                       ON MovementLinkObject_Contract.MovementId = CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Movement.Id ELSE Movement_PromoPartner.Id END
+                                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                      WHERE Movement.Id = inMovementId_doc
+                        AND COALESCE (MovementLinkObject_Contract.ObjectId,0) <> 0
+                      LIMIT 1)
+     THEN
+          RAISE EXCEPTION 'Ошибка. Для документа Распред. затрат Акция / Трейд-маркетинг должен быть установлен Договор база.';
+     END IF;
+        
+        
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
 

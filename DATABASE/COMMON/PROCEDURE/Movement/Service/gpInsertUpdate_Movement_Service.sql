@@ -46,7 +46,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inAssetId                  Integer   , -- Для ОС
     IN inCurrencyPartnerId        Integer   , -- Валюта (контрагента)
     IN inTradeMarkId              Integer   , --
-    IN inMovementId_doc           Integer   , --
+    IN inMovementId_doc           Integer   , -- Распред. затрат Акция / Трейд-маркетинг
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS
@@ -171,6 +171,27 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);
      END IF;
 
+     --проверка договор должен быть в Promo, иначе выдавать ошибку  
+     IF COALESCE (inMovementId_doc,0) <> 0 
+      AND NOT EXISTS (--Акция
+                      --Траде маркетинг
+                      SELECT MovementLinkObject_Contract.ObjectId AS ContractId
+                      FROM Movement 
+                          --для Промо договор из zc_Movement_PromoPartner  
+                          LEFT JOIN Movement AS Movement_PromoPartner
+                                             ON Movement_PromoPartner.ParentId = Movement.Id
+                                            AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+                                            AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner() 
+             
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                       ON MovementLinkObject_Contract.MovementId = CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Movement.Id ELSE Movement_PromoPartner.Id END
+                                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                      WHERE Movement.Id = inMovementId_doc
+                        AND COALESCE (MovementLinkObject_Contract.ObjectId,0) <> 0
+                      LIMIT 1)
+     THEN
+          RAISE EXCEPTION 'Ошибка. Для документа Распред. затрат Акция / Трейд-маркетинг должен быть установлен Договор база.';
+     END IF;
 
      -- расчет сумма в ГРН
      IF (COALESCE (inCountDebet, 0) <> 0 OR  COALESCE (inCountKredit, 0) <> 0) AND COALESCE (inPrice, 0) <> 0
