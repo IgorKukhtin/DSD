@@ -64,7 +64,7 @@ BEGIN
                                                                                                                                    , inOperDatePartner_order := inOperDate
                                                                                                                                     ) AS lfGet
                                                                                         ))
-          , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, OL_PersonalTrade.ChildObjectId)
+          , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, OL_Personal.ChildObjectId)
           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractConditionKind(), ioId, tmpCC.ContractConditionKindId)
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, tmpCC.ChangePercent)
           , lpInsertUpdate_MovementFloat (zc_MovementFloat_DelayDay(), ioId, (COALESCE (tmpCC.DayCalendar,0) + COALESCE (tmpCC.DayBank,0))::TFloat )
@@ -93,9 +93,9 @@ BEGIN
                     GROUP BY tmpContractCondition_Value_all.ContractId
                    ) AS tmpCC
                      ON tmpCC.ContractId = Object_Contract.Id
-         LEFT JOIN ObjectLink AS OL_PersonalTrade
-                              ON OL_PersonalTrade.ObjectId = Object_Contract.Id
-                             AND OL_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+         LEFT JOIN ObjectLink AS OL_Personal
+                              ON OL_Personal.ObjectId = Object_Contract.Id
+                             AND OL_Personal.DescId = zc_ObjectLink_Contract_Personal()
     WHERE Object_Contract.Id     = inContractId
       AND Object_Contract.DescId = zc_Object_Contract();
 
