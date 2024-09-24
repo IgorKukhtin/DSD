@@ -24,10 +24,20 @@ BEGIN
      SELECT tmp.MovementId
           , COALESCE (tmp.Summ_Pay,0)      AS Summ_Pay
           , COALESCE (tmp.Summ_ReturnIn,0) AS Summ_ReturnIn
+          
+          , COALESCE (tmp.SumPay1,0)     AS SumPay1
+          , COALESCE (tmp.SumPay2,0)     AS SumPay2
+          , COALESCE (tmp.SumReturn_1,0) AS SumReturn_1
+          , COALESCE (tmp.SumReturn_2,0) AS SumReturn_2
+          , tmp.DatePay_1                AS DatePay_1
+          , tmp.DatePay_2                AS DatePay_2
+          , tmp.DateReturn_1             AS DateReturn_1
+          , tmp.DateReturn_2             AS DateReturn_2 
+          
      FROM gpReport_Sale_BankAccount (inStartDate, inEndDate, inPaidKindId, inJuridicalId, inContractId, inSession) AS tmp
      WHERE COALESCE (tmp.Summ_Pay,0) <> 0
         OR COALESCE (tmp.Summ_ReturnIn,0) <> 0;
-     
+
      -- если нет данных выход   
      IF NOT EXISTS (SELECT 1 FROM _tmpReport LIMIT 1)  
      THEN
@@ -38,12 +48,13 @@ BEGIN
      vbDatePay := DATE_TRUNC ('MONTH', inStartDate);
      --данные из док. продажи
 
-   
+
      PERFORM CASE WHEN COALESCE (tmpData.Summ_Pay,0) <> 0 THEN lpInsertUpdate_MovementDate (tmpData.Desc_datePay, tmpData.MovementId, vbDatePay) END
-           , CASE WHEN COALESCE (tmpData.Summ_Pay,0) <> 0 THEN lpInsertUpdate_MovementFloat (tmpData.Desc_sumPay, tmpData.MovementId, tmpData.Summ_Pay) END
+           , CASE WHEN COALESCE (tmpData.Summ_Pay,0) <> 0 THEN lpInsertUpdate_MovementFloat (tmpData.Desc_sumPay, tmpData.MovementId, tmpData.Summ_Pay::TFloat) END
            , CASE WHEN COALESCE (tmpData.Summ_ReturnIn,0) <> 0 THEN lpInsertUpdate_MovementDate (tmpData.Desc_dateReturn, tmpData.MovementId, vbDatePay) END
-           , CASE WHEN COALESCE (tmpData.Summ_ReturnIn,0) <> 0 THEN lpInsertUpdate_MovementDate (tmpData.Desc_sumReturn, tmpData.MovementId, tmpData.Summ_ReturnIn) END
+           , CASE WHEN COALESCE (tmpData.Summ_ReturnIn,0) <> 0 THEN lpInsertUpdate_MovementFloat (tmpData.Desc_sumReturn, tmpData.MovementId, tmpData.Summ_ReturnIn::TFloat) END
      FROM (
+           /* --в отчете есть данные распределения по док. продажи
            WITH
            tmp AS (SELECT Movement.Id                                    AS MovementId
                         , MovementFloat_Pay_1.ValueData      ::TFloat    AS SumPay1
@@ -88,6 +99,8 @@ BEGIN
                                               ON MovementFloat_Return_2.MovementId = Movement.Id
                                              AND MovementFloat_Return_2.DescId = zc_MovementFloat_Return_2() 
                    )
+                   */
+                   
           SELECT CASE WHEN COALESCE (tmp.Summ_Pay,0) <> 0 
                       THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementDate_Pay_1() ELSE zc_MovementDate_Pay_2() END
                       ELSE 0 
@@ -97,27 +110,27 @@ BEGIN
                       ELSE 0 
                  END AS Desc_sumPay
                , CASE WHEN COALESCE (tmp.Summ_ReturnIn,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementDate_Return_1() ELSE zc_MovementDate_Return_2() END
+                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementDate_Return_1() ELSE zc_MovementDate_Return_2() END
                       ELSE 0 
                  END AS Desc_dateReturn
                , CASE WHEN COALESCE (tmp.Summ_ReturnIn,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementFloat_Return_1() ELSE zc_MovementFloat_Return_2() END
+                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementFloat_Return_1() ELSE zc_MovementFloat_Return_2() END
                       ELSE 0 
                  END AS Desc_sumReturn
                , tmp.Summ_Pay
                , tmp.Summ_ReturnIn
                , tmp.MovementId
-          FROM tmp
+          FROM _tmpReport AS tmp
           ) AS tmpData 
          WHERE tmpData.Desc_datePay <> 0 OR tmpData.Desc_dateReturn <> 0                                   
      ;
 
-     
+   /*
    IF vbUserId = 9457 
    THEN
         RAISE EXCEPTION 'Test.OK';
    END IF;
-
+  */
 
 END;
 $BODY$
