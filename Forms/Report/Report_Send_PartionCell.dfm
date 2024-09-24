@@ -4,6 +4,7 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
   ClientWidth = 1540
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -646
   ExplicitWidth = 1556
   ExplicitHeight = 447
   PixelsPerInch = 96
@@ -188,6 +189,15 @@ inherited Report_Send_PartionCellForm: TReport_Send_PartionCellForm
             DataBinding.FieldName = 'isChoiceCell_mi'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object InsertDate_ChoiceCell_mi: TcxGridDBColumn
+            Caption = '***'#1057#1085#1103#1090#1100' '#1089' '#1093#1088#1072#1085#1077#1085#1080#1103
+            DataBinding.FieldName = 'InsertDate_ChoiceCell_mi'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1082#1072#1085#1080#1088#1086#1074#1072#1085#1080#1103' '#1076#1083#1103' '#1084#1077#1089#1090#1072' '#1086#1090#1073#1086#1088#1072
             Options.Editing = False
             Width = 70
           end
