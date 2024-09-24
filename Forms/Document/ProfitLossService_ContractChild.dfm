@@ -201,10 +201,10 @@ inherited ProfitLossService_ContractChildForm: TProfitLossService_ContractChildF
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate_Pay
+      StoredProc = spUpdate_Pay
       StoredProcList = <
         item
-          StoredProc = spInsertUpdate_Pay
+          StoredProc = spUpdate_Pay
         end>
       Caption = 'actInsertUpdate_Pay'
       ImageIndex = 30
@@ -464,8 +464,8 @@ inherited ProfitLossService_ContractChildForm: TProfitLossService_ContractChildF
     Left = 328
     Top = 232
   end
-  object spInsertUpdate_Pay: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale_Pay'
+  object spUpdate_Pay: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Sale_Pay'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -496,7 +496,7 @@ inherited ProfitLossService_ContractChildForm: TProfitLossService_ContractChildF
       item
         Name = 'inJuridicalId'
         Value = '0'
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'JuridicalId_Child'
         ParamType = ptInput
         MultiSelectSeparator = ','

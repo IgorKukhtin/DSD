@@ -217,7 +217,7 @@ BEGIN
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-       WHERE tmpMI.Amount <> 0
+       --WHERE tmpMI.Amount <> 0
        ;
     RETURN NEXT Cursor2;
 

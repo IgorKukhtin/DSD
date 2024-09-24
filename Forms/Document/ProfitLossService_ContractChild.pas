@@ -41,7 +41,7 @@ type
     JuridicalCode_Child: TcxGridDBColumn;
     JuridicalName_Child: TcxGridDBColumn;
     JuridicalCode: TcxGridDBColumn;
-    spInsertUpdate_Pay: TdsdStoredProc;
+    spUpdate_Pay: TdsdStoredProc;
     actInsertUpdate_Pay: TdsdExecStoredProc;
     macInsertUpdate_Pay_list: TMultiAction;
     macInsertUpdate_Pay: TMultiAction;
