@@ -93,9 +93,10 @@ BEGIN
                     GROUP BY tmpContractCondition_Value_all.ContractId
                    ) AS tmpCC
                      ON tmpCC.ContractId = Object_Contract.Id
+         -- Ответственный сотрудник
          LEFT JOIN ObjectLink AS OL_Personal
                               ON OL_Personal.ObjectId = Object_Contract.Id
-                             AND OL_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                             AND OL_Personal.DescId   = zc_ObjectLink_Contract_Personal()
     WHERE Object_Contract.Id     = inContractId
       AND Object_Contract.DescId = zc_Object_Contract();
 

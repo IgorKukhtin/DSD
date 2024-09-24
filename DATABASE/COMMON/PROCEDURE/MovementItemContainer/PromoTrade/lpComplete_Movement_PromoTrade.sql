@@ -10,16 +10,25 @@ RETURNS VOID
 AS
 $BODY$
 BEGIN
+
+     -- проверка
+     IF EXISTS (SELECT 1 FROM gpSelect_Movement_PromoTradeSign (inMovementId:= inMovementId, inSession:= inUserId :: TVarChar) AS gpSelect WHERE gpSelect.ValueId IS NULL)
+     THEN
+          RAISE EXCEPTION 'Ошибка.Не заполнено ФИО для согласования % %.'
+                        , CHR (13)
+                        , (SELECT gpSelect.Name FROM gpSelect_Movement_PromoTradeSign (inMovementId:= inMovementId, inSession:= inUserId :: TVarChar) AS gpSelect WHERE gpSelect.ValueId IS NULL ORDER BY gpSelect.Ord LIMIT 1)
+                         ;
+     END IF;
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_PromoTrade()
                                 , inUserId     := inUserId
                                  );
 
-
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
