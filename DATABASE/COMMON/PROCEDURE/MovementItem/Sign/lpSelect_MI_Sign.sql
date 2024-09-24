@@ -54,6 +54,7 @@ BEGIN
                         FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, vbObjectDescId, 0) AS tmp
                              LEFT JOIN lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect
                                                                                        ON lpSelect.Num = tmp.Ord
+                                                                                      AND vbMovementDescId = zc_Movement_PromoTrade()
                        )
           -- данные из уже сохраненных элементов подписи
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
