@@ -26,6 +26,7 @@ RETURNS TABLE (FromName TVarChar
              , ChoiceCellCode      Integer
              , ChoiceCellName      TVarChar
              , ChoiceCellName_shot TVarChar
+             , InsertDate_ChoiceCell_mi TDateTime
               )
 AS
 $BODY$
@@ -50,30 +51,6 @@ BEGIN
         , tmpResult.GoodsKindId , tmpResult.GoodsKindName
         , tmpResult.PartionGoodsDate
           --
-       /* , tmpResult.PartionCellCode_1
-        , tmpResult.PartionCellCode_2
-        , tmpResult.PartionCellCode_3
-        , tmpResult.PartionCellCode_4
-        , tmpResult.PartionCellCode_5
-        , tmpResult.PartionCellCode_6
-        , tmpResult.PartionCellCode_7
-        , tmpResult.PartionCellCode_8
-        , tmpResult.PartionCellCode_9
-        , tmpResult.PartionCellCode_10
-        , tmpResult.PartionCellCode_11                                      sh(13)
-        , tmpResult.PartionCellCode_12
-        , tmpResult.PartionCellCode_13
-        , tmpResult.PartionCellCode_14
-        , tmpResult.PartionCellCode_15
-        , tmpResult.PartionCellCode_16
-        , tmpResult.PartionCellCode_17
-        , tmpResult.PartionCellCode_18
-        , tmpResult.PartionCellCode_19
-        , tmpResult.PartionCellCode_20
-        , tmpResult.PartionCellCode_21
-        , tmpResult.PartionCellCode_22
-         */
-         --chr(13)
 
         , (CASE WHEN COALESCE (tmpResult.PartionCellName_1,'') <> '' AND tmpResult.PartionCellName_1 NOT ILIKE '%Отбор%' THEN tmpResult.PartionCellName_1 ELSE '' END
          ||CASE WHEN COALESCE (tmpResult.PartionCellName_2,'') <> '' AND tmpResult.PartionCellName_2 NOT ILIKE '%Отбор%' THEN chr(13)||tmpResult.PartionCellName_2 ELSE '' END
@@ -106,6 +83,7 @@ BEGIN
         , tmpResult.ChoiceCellCode
         , tmpResult.ChoiceCellName
         , tmpResult.ChoiceCellName_shot
+        , tmpResult.InsertDate_ChoiceCell_mi
 
    FROM gpReport_Send_PartionCell (inStartDate, inEndDate, inUnitId, inIsMovement, inIsCell, inIsShowAll, inSession) AS tmpresult
    WHERE tmpResult.isChoiceCell_mi = TRUE

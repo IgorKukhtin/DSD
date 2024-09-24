@@ -130,6 +130,7 @@ type
     spChoiceCell_Print: TdsdStoredProc;
     actChoiceCell_Print: TdsdPrintAction;
     bbChoiceCell_Print: TdxBarButton;
+    InsertDate_ChoiceCell_mi: TcxGridDBColumn;
   private
     { Private declarations }
   public

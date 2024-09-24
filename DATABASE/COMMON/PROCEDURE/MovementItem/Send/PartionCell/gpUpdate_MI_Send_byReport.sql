@@ -350,7 +350,7 @@ BEGIN
      -- обнул€ем последнюю измененную €чейку
      outPartionCellId_last := NULL ::Integer;
 
-
+/*
 if zfConvert_StringToNumber (ioPartionCellName_1) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 1)) > 0   then ioPartionCellName_1     := right (ioPartionCellName_1,  LENGTH(ioPartionCellName_1) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_1, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_2) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 1)) > 0   then ioPartionCellName_2     := right (ioPartionCellName_2,  LENGTH(ioPartionCellName_2) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_2, 2)) > 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_3) = 0  and zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 1)) > 0   then ioPartionCellName_3     := right (ioPartionCellName_3,  LENGTH(ioPartionCellName_3) -  CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 4)) > 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 3)) > 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_3, 2)) > 0 THEN 2 ELSE 1 END); end if;
@@ -373,7 +373,7 @@ if zfConvert_StringToNumber (ioPartionCellName_19) = 0 and zfConvert_StringToNum
 if zfConvert_StringToNumber (ioPartionCellName_20) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_20, 1)) > 0  then ioPartionCellName_20    := right (ioPartionCellName_10, LENGTH(ioPartionCellName_10) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_10, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_20, 2))> 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_21) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_21, 1)) > 0  then ioPartionCellName_21    := right (ioPartionCellName_11, LENGTH(ioPartionCellName_11) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_11, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_21, 2))> 0 THEN 2 ELSE 1 END); end if;
 if zfConvert_StringToNumber (ioPartionCellName_22) = 0 and zfConvert_StringToNumber (LEFT (ioPartionCellName_22, 1)) > 0  then ioPartionCellName_22    := right (ioPartionCellName_12, LENGTH(ioPartionCellName_12) - CASE WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 4))> 0 THEN 4 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_12, 3))> 0 THEN 3 WHEN zfConvert_StringToNumber (LEFT (ioPartionCellName_22, 2))> 0 THEN 2 ELSE 1 END); end if;
-
+*/
 
      -- если не нашли ошибка
      IF COALESCE (inDescId_milo_num, 0) <> 0

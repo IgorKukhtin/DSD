@@ -175,8 +175,9 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperD
              , ChoiceCellName      TVarChar
              , ChoiceCellName_shot TVarChar
 
-             , isChoiceCell_mi       Boolean
-             , PartionGoodsDate_next TDateTime
+             , isChoiceCell_mi          Boolean
+             , PartionGoodsDate_next    TDateTime
+             , InsertDate_ChoiceCell_mi TDateTime
               )
 AS
 $BODY$
@@ -1277,7 +1278,8 @@ BEGIN
           -- если партия - отмечена для снятия с хранения
        ,  tmpChoiceCell_mi AS (SELECT lpSelect.GoodsId, lpSelect.GoodsKindId
                                     , lpSelect.PartionGoodsDate_next
-                                    , ROW_NUMBER() OVER (PARTITION BY lpSelect.GoodsId, lpSelect.GoodsKindId ORDER BY lpSelect.ChoiceCellCode) AS Ord
+                                    , lpSelect.InsertDate AS InsertDate_ChoiceCell_mi
+                                    , ROW_NUMBER() OVER (PARTITION BY lpSelect.GoodsId, lpSelect.GoodsKindId ORDER BY lpSelect.OperDate DESC, lpSelect.MovementItemId DESC, lpSelect.ChoiceCellCode) AS Ord
                                FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
                                WHERE lpSelect.Ord = 1
                               )
@@ -1512,6 +1514,7 @@ BEGIN
         
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN FALSE WHEN tmpResult.Ord = 1 AND tmpChoiceCell_mi.GoodsId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isChoiceCell_mi
         , CASE WHEN tmpResult.isPartionCell_max = FALSE THEN NULL  WHEN tmpResult.Ord = 1 THEN tmpChoiceCell_mi.PartionGoodsDate_next ELSE NULL END ::TDateTime AS PartionGoodsDate_next
+        , tmpChoiceCell_mi.InsertDate_ChoiceCell_mi
 
    FROM tmpResult
         -- нашли Место отбора
@@ -2637,6 +2640,7 @@ BEGIN
 
         , isChoiceCell_mi :: Boolean   AS isChoiceCell_mi
         , NULL            :: TDateTime AS PartionGoodsDate_next
+        , NULL            :: TDateTime AS InsertDate_ChoiceCell_mi
 
    FROM tmpResult
   ;
@@ -2668,5 +2672,4 @@ zc_ObjectFloat_OrderType_TermProduction
 
 */
 
--- select * from gpReport_Send_PartionCell (inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('01.01.2018')::TDateTime , inUnitId := 0 , inIsMovement := 'False' , inIsShowAll := 'false' ,  inSession := '9457');
--- select * from gpReport_Send_PartionCell(inStartDate := ('25.06.2024')::TDateTime , inEndDate := ('26.06.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'true' , inIsShowAll := 'true' ,  inSession := '9457') --where GoodsCode = 41;
+-- select * from gpReport_Send_PartionCell(inStartDate := ('25.09.2024')::TDateTime , inEndDate := ('25.09.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'false' , inIsShowAll := 'false' ,  inSession := '9457') --where GoodsCode = 41;
