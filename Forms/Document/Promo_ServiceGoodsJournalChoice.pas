@@ -31,6 +31,8 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     bbSelect: TdxBarButton;
     DescName: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public

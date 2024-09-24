@@ -2795,12 +2795,12 @@ inherited PromoTradeForm: TPromoTradeForm
   end
   inherited StatusGuides: TdsdGuides
     Left = 32
-    Top = 80
+    Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PromoTrade'
-    Left = 88
-    Top = 72
+    Left = 80
+    Top = 40
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PromoTrade'
@@ -3488,8 +3488,8 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 100
-    Top = 16
+    Left = 60
+    Top = 88
   end
   object GuidesPromoItem: TdsdGuides
     KeyField = 'Id'

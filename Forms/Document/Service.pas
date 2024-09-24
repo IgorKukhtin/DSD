@@ -92,6 +92,9 @@ type
     cxLabel27: TcxLabel;
     edTradeMark: TcxButtonEdit;
     GuidesTradeMark: TdsdGuides;
+    cxLabel28: TcxLabel;
+    ceContractChild: TcxButtonEdit;
+    GuidesContractChild: TdsdGuides;
   private
     { Private declarations }
   public
