@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName_inf TVarChar, ToName TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
+             , ToId Integer, ToName_inf TVarChar, ToName TVarChar, RetailName_To TVarChar, OKPO_To TVarChar, OKPO_Retail TVarChar
              , INN_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar, ContractTagName TVarChar , ContractName_detail TVarChar
@@ -171,6 +171,7 @@ BEGIN
            , Object_To.Id                      		    AS ToId
            , Object_To.ValueData               		    AS ToName_inf
            , ObjectHistory_JuridicalDetails_View.FullName ::TVarChar AS ToName        --берем из истории
+           , Object_Retail_To.ValueData                 AS RetailName_To
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
            , ObjectString_Retail_OKPO.ValueData             AS OKPO_Retail
            , CASE WHEN Movement.Id IN (-- Tax
@@ -332,7 +333,8 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                  ON ObjectLink_Juridical_Retail.ObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId
-                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail() 
+            LEFT JOIN Object AS Object_Retail_To ON Object_Retail_To.Id = ObjectLink_Juridical_Retail.ChildObjectId
             LEFT JOIN ObjectString AS ObjectString_Retail_OKPO
                                    ON ObjectString_Retail_OKPO.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                   AND ObjectString_Retail_OKPO.DescId = zc_ObjectString_Retail_OKPO()
