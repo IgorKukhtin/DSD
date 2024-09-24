@@ -47,7 +47,16 @@ RETURNS TABLE (MovementId Integer, OperDate TDatetime, InvNumber Integer, Status
              , TotalSumm_ReturnIn TFloat
 
              , Ord          Integer
-             , Ord_ReturnIn Integer
+             , Ord_ReturnIn Integer   
+             
+             , SumPay1      TFloat
+             , SumPay2      TFloat
+             , SumReturn_1  TFloat
+             , SumReturn_2  TFloat   
+             , DatePay_1    TDateTime
+             , DatePay_2    TDateTime
+             , DateReturn_1 TDateTime
+             , DateReturn_2 TDateTime
               )
 AS
 $BODY$
@@ -1334,6 +1343,26 @@ BEGIN
 
                )
 
+         --для проверки заполнения
+       , tmpMovementDate AS (SELECT MovementDate.*
+                             FROM MovementDate
+                             WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
+                               AND MovementDate.DescId IN (zc_MovementDate_Pay_1()
+                                                         , zc_MovementDate_Pay_2()
+                                                         , zc_MovementDate_Return_1()
+                                                         , zc_MovementDate_Return_2()
+                                                          )
+                             )
+       , tmpMovementFloat AS (SELECT MovementFloat.*
+                              FROM MovementFloat
+                              WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpData.MovementId FROM tmpData)
+                                AND MovementFloat.DescId IN (zc_MovementFloat_Pay_1()
+                                                           , zc_MovementFloat_Pay_2()
+                                                           , zc_MovementFloat_Return_1()
+                                                           , zc_MovementFloat_Return_2() 
+                                                            )
+                              )
+
      SELECT
          tmpData.MovementId
        , tmpData.OperDate
@@ -1386,7 +1415,15 @@ BEGIN
 
        , tmpData.Ord          :: Integer
        , tmpData.Ord_all_asc  :: Integer
-
+       --
+       , MovementFloat_Pay_1.ValueData      ::TFloat    AS SumPay1
+       , MovementFloat_Pay_2.ValueData      ::TFloat    AS SumPay2
+       , MovementFloat_Return_1.ValueData   ::TFloat    AS SumReturn_1
+       , MovementFloat_Return_2.ValueData   ::TFloat    AS SumReturn_2    
+       , MovementDate_Pay_1.ValueData       ::TDateTime AS DatePay_1
+       , MovementDate_Pay_2.ValueData       ::TDateTime AS DatePay_2
+       , MovementDate_Return_1.ValueData    ::TDateTime AS DateReturn_1
+       , MovementDate_Return_2.ValueData    ::TDateTime AS DateReturn_2
      FROM tmpData
          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpData.JuridicalId
          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpData.ContractId
@@ -1398,6 +1435,32 @@ BEGIN
                              AND ObjectLink_Contract_ContractTag.DescId   = zc_ObjectLink_Contract_ContractTag()
          LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
 
+         --
+         LEFT JOIN tmpMovementDate AS MovementDate_Pay_1
+                                   ON MovementDate_Pay_1.MovementId = tmpData.MovementId
+                                  AND MovementDate_Pay_1.DescId = zc_MovementDate_Pay_1()
+         LEFT JOIN tmpMovementDate AS MovementDate_Pay_2
+                                   ON MovementDate_Pay_2.MovementId = tmpData.MovementId
+                                  AND MovementDate_Pay_2.DescId = zc_MovementDate_Pay_2()
+         LEFT JOIN tmpMovementDate AS MovementDate_Return_1
+                                   ON MovementDate_Return_1.MovementId = tmpData.MovementId
+                                  AND MovementDate_Return_1.DescId = zc_MovementDate_Return_1()
+         LEFT JOIN tmpMovementDate AS MovementDate_Return_2
+                                   ON MovementDate_Return_2.MovementId = tmpData.MovementId
+                                  AND MovementDate_Return_2.DescId = zc_MovementDate_Return_2()
+
+         LEFT JOIN tmpMovementFloat AS MovementFloat_Pay_1
+                                    ON MovementFloat_Pay_1.MovementId = tmpData.MovementId
+                                   AND MovementFloat_Pay_1.DescId = zc_MovementFloat_Pay_1()
+         LEFT JOIN tmpMovementFloat AS MovementFloat_Pay_2
+                                    ON MovementFloat_Pay_2.MovementId = tmpData.MovementId
+                                   AND MovementFloat_Pay_2.DescId = zc_MovementFloat_Pay_2()
+         LEFT JOIN tmpMovementFloat AS MovementFloat_Return_1
+                                    ON MovementFloat_Return_1.MovementId = tmpData.MovementId
+                                   AND MovementFloat_Return_1.DescId = zc_MovementFloat_Return_1()
+         LEFT JOIN tmpMovementFloat AS MovementFloat_Return_2
+                                    ON MovementFloat_Return_2.MovementId = tmpData.MovementId
+                                   AND MovementFloat_Return_2.DescId = zc_MovementFloat_Return_2()
      ORDER BY Object_Juridical.ValueData
             , Object_Contract.ValueData
             , Object_PaidKind.ValueData

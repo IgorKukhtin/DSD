@@ -1,30 +1,30 @@
 inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1077' '#1086#1087#1083#1072#1090'>'
   ClientHeight = 483
-  ClientWidth = 845
+  ClientWidth = 1055
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 861
+  ExplicitWidth = 1071
   ExplicitHeight = 522
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 87
-    Width = 845
+    Width = 1055
     Height = 396
     TabOrder = 3
     ExplicitTop = 87
-    ExplicitWidth = 845
+    ExplicitWidth = 1055
     ExplicitHeight = 396
     ClientRectBottom = 396
-    ClientRectRight = 845
+    ClientRectRight = 1055
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 845
+      ExplicitWidth = 1055
       ExplicitHeight = 396
       inherited cxGrid: TcxGrid
-        Width = 845
+        Width = 1055
         Height = 396
-        ExplicitWidth = 845
+        ExplicitWidth = 1055
         ExplicitHeight = 396
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -82,6 +82,26 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_debt_end
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_2
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -143,6 +163,26 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSumm_debt_end
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumPay2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_1
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SumReturn_2
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -412,14 +452,105 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Options.Editing = False
             Width = 55
           end
+          object DatePay_1: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-1'
+            DataBinding.FieldName = 'DatePay_1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-1'
+            Options.Editing = False
+            Width = 60
+          end
+          object SumPay1: TcxGridDBColumn
+            Caption = '1-'#1072#1103' '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'SumPay1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object DatePay_2: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-2'
+            DataBinding.FieldName = 'DatePay_2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-2'
+            Options.Editing = False
+            Width = 60
+          end
+          object SumPay2: TcxGridDBColumn
+            Caption = '2-'#1072#1103' '#1086#1087#1083#1072#1090#1072
+            DataBinding.FieldName = 'SumPay2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099'-2 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object DateReturn_1: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-1'
+            DataBinding.FieldName = 'DateReturn_1'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-1'
+            Options.Editing = False
+            Width = 60
+          end
+          object SumReturn_1: TcxGridDBColumn
+            Caption = '1-'#1099#1081' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SumReturn_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
+          object DateReturn_2: TcxGridDBColumn
+            Caption = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
+            DataBinding.FieldName = 'DateReturn_2'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.DisplayFormat = 'MM YYYY'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
+            Options.Editing = False
+            Width = 60
+          end
+          object SumReturn_2: TcxGridDBColumn
+            Caption = '2-'#1086#1081' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SumReturn_2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-2 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Width = 80
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 845
+    Width = 1055
     Height = 61
-    ExplicitWidth = 845
+    ExplicitWidth = 1055
     ExplicitHeight = 61
     inherited deStart: TcxDateEdit
       Left = 118
