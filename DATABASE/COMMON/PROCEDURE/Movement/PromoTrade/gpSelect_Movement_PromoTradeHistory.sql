@@ -9,29 +9,29 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PromoTradeHistory(
 )
 RETURNS TABLE (Ord              Integer
              , Name             TVarChar    --имя параметра
-             , Value            TFloat      --значение параметра 
-             , Value_2          TFloat      --значение параметра 
+             , Value            TFloat      --значение параметра
+             , Value_2          TFloat      --значение параметра
               )
 
 AS
 $BODY$
-   DECLARE vbUserId Integer;  
+   DECLARE vbUserId Integer;
    DECLARE vbMovementId_PromoTradeHistory Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
 
- /* 
+ /*
   select sum(zc_MI_Master.zc_MIFloat_AmountSale)
-  union select sum(zc_MI_Master.zc_MIFloat_AmountReturnIn) 
-  union select % возврата- расчет 
-  union select zc_MovementFloat_DebtDay 
-  union select zc_MovementFloat_DebtSumm  
-  
-      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)    
+  union select sum(zc_MI_Master.zc_MIFloat_AmountReturnIn)
+  union select % возврата- расчет
+  union select zc_MovementFloat_DebtDay
+  union select zc_MovementFloat_DebtSumm
+
+      , AmountSale         TFloat -- Объем продаж (статистика за 3м.)
       , SummSale           TFloat --
       , AmountReturnIn     TFloat -- Объем возвраты  даж (статистика за 3м.)
-  
+
  */
 
     vbMovementId_PromoTradeHistory := (SELECT Movement.Id
@@ -43,7 +43,7 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH 
+    WITH
     tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Среднемесячные продажи, кг:'                    ::TVarChar AS Name
               UNION SELECT  2 ::Integer  AS Ord, '2.Среднемесячные продажи, грн:'                   ::TVarChar AS Name   --
               UNION SELECT  3 ::Integer  AS Ord, '3.% возврата:'                                    ::TVarChar AS Name
@@ -70,6 +70,7 @@ BEGIN
                     WHERE Movement.Id = vbMovementId_PromoTradeHistory
                     )
 
+    -- 1.Среднемесячные продажи, кг
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           ,  (CAST (tmpMovement.AmountSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
@@ -77,7 +78,9 @@ BEGIN
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 1
- UNION
+
+   UNION
+    -- 2.Среднемесячные продажи, грн
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           , (CAST (tmpMovement.SummSale/3 AS NUMERIC (16,1))) ::TFloat AS Value
@@ -85,36 +88,42 @@ BEGIN
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 2
- UNION
+
+   UNION
+    -- 3.% возврата
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , (CAST (CASE WHEN COALESCE (tmpMovement.AmountSale,0) <> 0 THEN tmpMovement.AmountReturnIn * 100 / tmpMovement.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value                                               
+          , (CAST (CASE WHEN COALESCE (tmpMovement.AmountSale,0) <> 0 THEN tmpMovement.AmountReturnIn * 100 / tmpMovement.AmountSale ELSE 0 END AS NUMERIC (16,1))) ::TFloat AS Value
           , 0 ::TFloat AS Value_2
     FROM tmpText
          LEFT JOIN tmpMovement ON 1=1
     WHERE tmpText.Ord = 3
- UNION
-    SELECT  tmpText.Ord             ::Integer
-          , tmpText.Name            ::TVarChar
-          , MovementFloat_DebtDay.ValueData ::TFloat AS Value
-          , 0 ::TFloat AS Value_2
-    FROM tmpText
-         LEFT JOIN MovementFloat AS MovementFloat_DebtDay 
-                                 ON MovementFloat_DebtDay.MovementId = vbMovementId_PromoTradeHistory
-                                AND MovementFloat_DebtDay.DescId = zc_MovementFloat_DebtDay()
-    WHERE tmpText.Ord = 4
- UNION
+
+   UNION
+    -- 4.Просроченная дебиторская задолженность, грн
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
           , MovementFloat_DebtSumm.ValueData ::TFloat AS Value
           , 0 ::TFloat AS Value_2
     FROM tmpText
-         LEFT JOIN MovementFloat AS MovementFloat_DebtSumm 
+         LEFT JOIN MovementFloat AS MovementFloat_DebtSumm
                                  ON MovementFloat_DebtSumm.MovementId = vbMovementId_PromoTradeHistory
                                 AND MovementFloat_DebtSumm.DescId = zc_MovementFloat_DebtSumm()
+    WHERE tmpText.Ord = 4
+
+   UNION
+    -- 5.Просроченная дебиторская задолженность, дней
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , MovementFloat_DebtDay.ValueData ::TFloat AS Value
+          , 0 ::TFloat AS Value_2
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_DebtDay
+                                 ON MovementFloat_DebtDay.MovementId = vbMovementId_PromoTradeHistory
+                                AND MovementFloat_DebtDay.DescId = zc_MovementFloat_DebtDay()
     WHERE tmpText.Ord = 5
-    
-    ORDER by 1  
+
+    ORDER by 1
     ;
 
 END;

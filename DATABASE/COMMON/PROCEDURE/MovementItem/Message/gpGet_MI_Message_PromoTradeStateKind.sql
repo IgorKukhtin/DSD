@@ -24,7 +24,15 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     -- Signing
+     -- Проверка
+     IF 1=1 AND NOT EXISTS (SELECT 1 FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect WHERE lpSelect.UserId = vbUserId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав для согласования.', lfGet_Object_ValueData_sh (vbUserId);
+     END IF;
+
+
+
+     -- Определяется - какой по очереди в подписантах
      vbIsUser_Signing_num:= (SELECT CASE vbUserId
                                          WHEN MLO_6.ObjectId THEN 7
                                          WHEN MLO_5.ObjectId THEN 6
@@ -36,7 +44,8 @@ BEGIN
                                          ELSE -1
                                     END
                                              
-                             FROM MovementLinkObject AS MLO 
+                             FROM MovementLinkObject AS MLO
+                                  -- Согласование
                                   LEFT JOIN Movement ON Movement.ParentId = inMovementId
                                                     AND Movement.DescId   = zc_Movement_PromoTradeSign()
                                   LEFT JOIN MovementLinkObject AS MLO_1
@@ -61,10 +70,6 @@ BEGIN
                              WHERE MLO.MovementId = inMovementId
                                AND MLO.DescId     = zc_MovementLinkObject_Insert()
                             );
-     -- vbIsUserSigning2:= vbUserId IN (280164, 133035);  -- Старецкая М.В. + Фурсов А.А.
-     -- vbIsUserSigning3:= vbUserId IN (9463); -- Махота Д.П.
-     -- vbIsUserSigning1:= vbUserId IN (133035, 5); -- Фурсов А.А.
-     -- vbIsUserSigning2:= vbUserId IN (280164);    -- Старецкая М.В.
 
      -- последний
      SELECT tmp.MovementItemId, tmp.PromoTradeStateKindId, tmp.UserId_insert
@@ -97,7 +102,8 @@ BEGIN
            SELECT tmpRes_One.MovementItemId, tmpRes_One.PromoTradeStateKindId, tmpRes_One.UserId_insert
            FROM tmpRes_One
           UNION ALL
-           SELECT tmpMI.MovementItemId, tmpMI.PromoTradeStateKindId, 0 AS UserId_insert
+           -- последнее найденное состояние
+           SELECT 0 AS MovementItemId, tmpMI.PromoTradeStateKindId, 0 AS UserId_insert
            FROM tmpMI
                 LEFT JOIN tmpRes_One ON tmpRes_One.MovementItemId > 0
            WHERE tmpRes_One.MovementItemId IS NULL
@@ -118,6 +124,84 @@ BEGIN
                        , lfGet_Object_ValueData_sh (CASE WHEN inIsComplete = TRUE THEN zc_Enum_PromoStateKind_Complete() ELSE zc_Enum_PromoTradeStateKind_Return() END)
                         ;
      END IF;*/
+
+
+
+     -- Проверка
+     IF inIsComplete = TRUE AND vbPromoTradeStateKindId = zc_Enum_PromoTradeStateKind_Complete_7()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ уже согласован.';
+     END IF;
+
+     -- Проверка
+     IF inIsComplete = FALSE AND vbPromoTradeStateKindId NOT IN (zc_Enum_PromoTradeStateKind_Complete_1()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_2()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_3()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_4()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_5()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_6()
+                                                               , zc_Enum_PromoTradeStateKind_Complete_7()
+                                                                )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не согласован.';
+     END IF;
+
+
+     -- Проверка
+     IF inIsComplete = TRUE
+        AND NOT EXISTS (SELECT 1
+                        -- здесь все кто участвует
+                        FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect
+                        -- этот пользователь
+                        WHERE lpSelect.UserId = vbUserId
+                          -- если его № соответствует
+                          AND lpSelect.Num = CASE COALESCE (vbPromoTradeStateKindId, 0)
+                                                  -- получили следующий
+                                                  WHEN zc_Enum_PromoTradeStateKind_Start()      THEN 1
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 2
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 3
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 4
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 5
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 6
+                                                  WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 7
+                                             END
+                       )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав для согласования раньше чем % % % %.'
+                       , CHR (13)
+                       , (SELECT lpSelect.ItemName
+                          -- здесь все кто участвует
+                          FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect
+                          -- какое следующий № 
+                          WHERE lpSelect.Num = CASE COALESCE (vbPromoTradeStateKindId, 0)
+                                                    -- получили следующий
+                                                    WHEN zc_Enum_PromoTradeStateKind_Start()      THEN 1
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 2
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 3
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 4
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 5
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 6
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 7
+                                               END
+                         )
+                       , CHR (13)
+                       , (SELECT lpSelect.UserName
+                          -- здесь все кто участвует
+                          FROM lpSelect_Movement_PromoTradeSign (inMovementId) AS lpSelect
+                          -- какой следующий № 
+                          WHERE lpSelect.Num = CASE COALESCE (vbPromoTradeStateKindId, 0)
+                                                    -- получили следующий
+                                                    WHEN zc_Enum_PromoTradeStateKind_Start()      THEN 1
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_1() THEN 2
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_2() THEN 3
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_3() THEN 4
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_4() THEN 5
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_5() THEN 6
+                                                    WHEN zc_Enum_PromoTradeStateKind_Complete_6() THEN 7
+                                               END
+                         )
+                        ;
+     END IF;
 
 
      -- Результат

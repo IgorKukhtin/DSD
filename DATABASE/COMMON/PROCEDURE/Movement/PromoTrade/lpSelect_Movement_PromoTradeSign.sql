@@ -60,7 +60,7 @@ BEGIN
                                 ON Movement_PromoTradeSign.ParentId = Movement.Id
                                AND Movement_PromoTradeSign.DescId   = zc_Movement_PromoTradeSign()
             LEFT JOIN MovementLinkObject AS MLO 
-                                         ON MLO.MovementId = Movement.Id
+                                         ON MLO.MovementId = Movement_PromoTradeSign.Id
                                         AND MLO.DescId     IN (zc_MovementLinkObject_Member_1()
                                                              , zc_MovementLinkObject_Member_2()
                                                              , zc_MovementLinkObject_Member_3()
