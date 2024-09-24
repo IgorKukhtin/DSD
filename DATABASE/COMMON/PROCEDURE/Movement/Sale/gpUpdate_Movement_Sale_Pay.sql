@@ -102,19 +102,19 @@ BEGIN
                    */
                    
           SELECT CASE WHEN COALESCE (tmp.Summ_Pay,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementDate_Pay_1() ELSE zc_MovementDate_Pay_2() END
+                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime >= vbDatePay THEN zc_MovementDate_Pay_1() ELSE zc_MovementDate_Pay_2() END
                       ELSE 0 
                  END AS Desc_datePay
                , CASE WHEN COALESCE (tmp.Summ_Pay,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementFloat_Pay_1() ELSE zc_MovementFloat_Pay_2() END
+                      THEN CASE WHEN COALESCE (tmp.DatePay_1, vbDatePay) ::TDateTime >= vbDatePay THEN zc_MovementFloat_Pay_1() ELSE zc_MovementFloat_Pay_2() END
                       ELSE 0 
                  END AS Desc_sumPay
                , CASE WHEN COALESCE (tmp.Summ_ReturnIn,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementDate_Return_1() ELSE zc_MovementDate_Return_2() END
+                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime >= vbDatePay THEN zc_MovementDate_Return_1() ELSE zc_MovementDate_Return_2() END
                       ELSE 0 
                  END AS Desc_dateReturn
                , CASE WHEN COALESCE (tmp.Summ_ReturnIn,0) <> 0 
-                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime = vbDatePay THEN zc_MovementFloat_Return_1() ELSE zc_MovementFloat_Return_2() END
+                      THEN CASE WHEN COALESCE (tmp.DateReturn_1, vbDatePay) ::TDateTime >= vbDatePay THEN zc_MovementFloat_Return_1() ELSE zc_MovementFloat_Return_2() END
                       ELSE 0 
                  END AS Desc_sumReturn
                , tmp.Summ_Pay
