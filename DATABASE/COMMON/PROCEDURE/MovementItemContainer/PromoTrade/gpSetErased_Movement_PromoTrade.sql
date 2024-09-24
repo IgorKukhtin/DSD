@@ -14,6 +14,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_PromoTrade());
 
+     -- Если последний = Подписан
+     IF (SELECT MI.ObjectId
+         FROM MovementItem AS MI
+              JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoTradeStateKind()
+         WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message() AND MI.isErased = FALSE
+         ORDER BY MI.Id DESC
+         LIMIT 1
+        ) IN ((zc_Enum_PromoTradeStateKind_Complete_1()
+             , zc_Enum_PromoTradeStateKind_Complete_2()
+             , zc_Enum_PromoTradeStateKind_Complete_3()
+             , zc_Enum_PromoTradeStateKind_Complete_4()
+             , zc_Enum_PromoTradeStateKind_Complete_5()
+             , zc_Enum_PromoTradeStateKind_Complete_6()
+             , zc_Enum_PromoTradeStateKind_Complete_7()
+             ))
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ в процессе согласования.%Изменения возможны для <%>', CHR (13), lfGet_Object_ValueData_sh (zc_Enum_PromoTradeStateKind_Return());
+     END IF;
+
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);

@@ -15,18 +15,18 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ZakazInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
             CASE WHEN 1=1 AND Movement.DescId = zc_Movement_Promo() AND vbUserId IN (280164, /*5,*/ 133035, 9463, 112324) THEN 'TPromoManagerForm'
                  WHEN Movement.DescId = zc_Movement_Promo() AND vbUserId IN (5) AND 1=0 THEN 'TPromoManagerForm'
                  ELSE COALESCE (Object_Form.ValueData, '')
             END ::TVarChar AS FromName
 
-       FROM Movement                          
+       FROM Movement
             JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
             LEFT JOIN Object AS Object_Form ON Object_Form.Id = MovementDesc.FormId
        WHERE Movement.Id = inMovementId;
-  
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

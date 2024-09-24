@@ -18,6 +18,7 @@ $BODY$
    DECLARE vbIsUserSigning2       Boolean;
    DECLARE vbIsUserSigning3       Boolean;
    DECLARE vbIsMsgColor           Boolean;
+   DECLARE vbIsUserPromoTrade     Boolean;
 
    DECLARE vbMovementId_1_Member  Integer;
    DECLARE vbCount_1_Member       Integer;
@@ -37,6 +38,10 @@ $BODY$
    DECLARE vbCount_Contract       Integer;
    DECLARE vbOperDate_Contract    TDateTime;
    DECLARE vbOperDate_Contract_start TDateTime;
+
+   DECLARE vbMovementId_PromoTrade Integer;
+   DECLARE vbCount_PromoTrade      Integer;
+
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
@@ -47,6 +52,16 @@ BEGIN
      vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016, 5473256) AND UserRole_View.UserId = vbUserId);
      -- Договора-ввод справочников
      vbIsMsg_Contract:= vbUserId = zfCalc_UserAdmin() :: Integer OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (78432) AND UserRole_View.UserId = vbUserId);
+     
+     -- zc_Enum_Role_Admin + Отдел Маркетинг + Маркетинг - Руководитель
+     vbIsUserPromoTrade:= vbUserId = zfCalc_UserAdmin() :: Integer OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View
+                                                                              WHERE UserRole_View.RoleId IN (876016   -- Отдел Маркетинг
+                                                                                                           , 445981   -- Экономист (расширенные права)
+                                                                                                           , 11303484 -- Трейд-маркетинг (создание/проведение док-та)
+                                                                                                           , 11317677 -- Трейд-маркетинг (согласование)
+                                                                                                            )
+                                                                                AND UserRole_View.UserId = vbUserId
+                                                                             );
 
      --
      IF vbIsMsg_Contract = TRUE
@@ -155,6 +170,109 @@ BEGIN
 
      -- Отдел Маркетинг
      vbIsMsgColor:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (876016) AND UserRole_View.UserId = vbUserId);
+
+
+     -- Трейд-маркетинг
+     IF 1=1 AND (vbIsUserPromoTrade = TRUE)
+     THEN
+          SELECT -- 1. MovementId
+                 MIN (Movement_PromoTrade.Id) AS MovementId_PromoTrade
+                 -- 2. Count
+               , SUM (1) AS Count_PromoTrade
+
+                 INTO vbMovementId_PromoTrade
+                    , vbCount_PromoTrade
+
+          FROM Movement AS Movement_PromoTrade
+               -- В работе Директор по маркетингу + В работе Исполнительный Директор
+               INNER JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
+                                             ON MovementLinkObject_PromoStateKind.MovementId = Movement_PromoTrade.Id
+                                            AND MovementLinkObject_PromoStateKind.DescId     = zc_MovementLinkObject_PromoTradeStateKind()
+                                            AND MovementLinkObject_PromoStateKind.ObjectId   IN (zc_Enum_PromoTradeStateKind_Start()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_1()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_2()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_3()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_4()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_5()
+                                                                                               , zc_Enum_PromoTradeStateKind_Complete_6()
+                                                                                                )
+               -- 1.Автор документа - будет подписывать
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                            ON MovementLinkObject_Insert.MovementId = Movement_PromoTrade.Id
+                                           AND MovementLinkObject_Insert.DescId     = zc_MovementLinkObject_Insert()
+               -- кто еще будет подписывать
+               INNER JOIN Movement AS Movement_PromoTradeSign
+                                   ON Movement_PromoTradeSign.ParentId = Movement_PromoTrade.Id
+                                  AND Movement_PromoTradeSign.DescId   = zc_Movement_PromoTradeSign()
+               -- 2.Отвественный - коммерческого отдела
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_1
+                                            ON MovementLinkObject_Member_1.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_1.DescId     = zc_MovementLinkObject_Member_1()
+               -- 3.Отвественный - Экономист
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_2
+                                            ON MovementLinkObject_Member_2.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_2.DescId     = zc_MovementLinkObject_Member_2()
+               -- 4.Отвественный - Региональнай менеджер
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_3
+                                            ON MovementLinkObject_Member_3.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_3.DescId     = zc_MovementLinkObject_Member_3()
+               -- 5.Руководитель отдела продаж
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_4
+                                            ON MovementLinkObject_Member_4.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_4.DescId     = zc_MovementLinkObject_Member_4()
+               -- 6.Отвественный - отдел маркетинга
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_5
+                                            ON MovementLinkObject_Member_5.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_5.DescId     = zc_MovementLinkObject_Member_5()
+               -- 7.Коммерческий директор
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_6
+                                            ON MovementLinkObject_Member_6.MovementId = Movement_PromoTradeSign.Id
+                                           AND MovementLinkObject_Member_6.DescId     = zc_MovementLinkObject_Member_6()
+
+               -- нашли чью подпись ждем
+               LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                    ON ObjectLink_User_Member.ChildObjectId = CASE WHEN -- если уже подписал - Автор документа
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_1()
+                                                                                        THEN MovementLinkObject_Member_1.ObjectId
+
+                                                                                   WHEN -- если уже подписал - Отвественный - коммерческого отдела
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_2()
+                                                                                        THEN MovementLinkObject_Member_2.ObjectId
+
+                                                                                   WHEN -- если уже подписал - 
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_3()
+                                                                                        THEN MovementLinkObject_Member_3.ObjectId
+
+                                                                                   WHEN -- если уже подписал - 
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_4()
+                                                                                        THEN MovementLinkObject_Member_4.ObjectId
+
+                                                                                   WHEN -- если уже подписал - 
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_5()
+                                                                                        THEN MovementLinkObject_Member_5.ObjectId
+
+                                                                                   WHEN -- если уже подписал - 
+                                                                                        MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Complete_6()
+                                                                                        THEN MovementLinkObject_Member_6.ObjectId
+                                                                                   END
+                                   AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+
+               INNER JOIN Object AS Object_User ON Object_User.Id = CASE WHEN -- если - В работе Автор документа
+                                                                              MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoTradeStateKind_Start()
+                                                                              -- подписывать - Автор документа
+                                                                              THEN MovementLinkObject_Insert.ObjectId
+                                                                         ELSE ObjectLink_User_Member.ObjectId
+                                                                    END 
+
+          WHERE Movement_PromoTrade.DescId   = zc_Movement_PromoTrade()
+            AND Movement_PromoTrade.StatusId = zc_Enum_Status_Complete()
+            AND Movement_PromoTrade.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 MONTH' AND CURRENT_DATE + INTERVAL '25 MONTH'
+            -- нашли чью подпись ждем
+            AND Object_User.Id = CASE WHEN vbUserId = 5 THEN 6604558 ELSE vbUserId END -- Голота К.О.
+         ;
+
+     END IF;
+     
 
      -- Отдел Маркетинг
      IF 1=1 AND (vbIsMsg_PromoStateKind = TRUE OR vbIsMsg_Contract = TRUE)
@@ -524,6 +642,7 @@ BEGIN
             , CURRENT_DATE :: TDateTime
 
        WHERE vbCount_1_Main > 0
+       AND 1=0
 
       UNION ALL
        -- 2.2.
@@ -569,6 +688,7 @@ BEGIN
             , CURRENT_DATE :: TDateTime
 
        WHERE COALESCE (vbCount_1_Main, 0) = 0
+       AND 1=0
 
       UNION ALL
        -- 3.
@@ -602,6 +722,52 @@ BEGIN
               END AS Color_Text
             , CURRENT_DATE :: TDateTime
        WHERE vbIsMsg_Contract = TRUE
+
+
+      UNION ALL
+       -- 4.
+       SELECT CASE WHEN vbCount_PromoTrade > 0
+                        THEN vbMovementId_PromoTrade
+                   ELSE -1
+              END :: Integer AS MovementId
+
+            , 44 :: Integer AS NPP
+            , 'Трейд-маркетинг : ' :: TVarChar AS MsgAddr
+            , (CASE WHEN vbCount_PromoTrade > 0
+                        THEN 'подготовлены документы для подписания '
+                          || ' : '    || vbCount_PromoTrade :: TVarChar || ' шт.'
+                          || COALESCE ((SELECT ' <' || MS.ValueData || '>' FROM MovementString AS MS WHERE MS.MovementId = vbMovementId_PromoTrade AND MS.DescId = zc_MovementString_Comment()), '')
+                          || '    № ' || (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = vbMovementId_PromoTrade)
+                          || ' от '   || zfConvert_DateToString ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_PromoTrade))
+                    ELSE 'Нет подготовленных документов'
+               END :: TVarChar
+              ) :: TVarChar AS ValueText
+
+              -- 1.1.
+            , CASE WHEN vbCount_PromoTrade > 0 
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Addr
+              -- 1.2.
+            , CASE WHEN vbCount_PromoTrade > 0 
+                        THEN zc_Color_Aqua()
+                   ELSE -1
+              END AS Color_Addr
+
+              -- 2.1.
+            , CASE WHEN vbCount_PromoTrade > 0 
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Text
+              -- 2.2.
+            , CASE WHEN vbCount_PromoTrade > 0
+                        THEN zc_Color_Aqua()
+                   ELSE -1
+              END AS Color_Text
+
+            , CURRENT_DATE :: TDateTime
+
+       WHERE vbIsUserPromoTrade = TRUE
 
        ORDER BY 2
       ;
