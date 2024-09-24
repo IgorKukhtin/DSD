@@ -56,6 +56,9 @@ BEGIN
                    WHEN zc_MovementLinkObject_Member_6() THEN '7.Коммерческий директор:'                        
               END :: TVarChar AS ItemName
        FROM Movement
+            INNER JOIN Movement AS Movement_PromoTradeSign
+                                ON Movement_PromoTradeSign.ParentId = Movement.Id
+                               AND Movement_PromoTradeSign.DescId   = zc_Movement_PromoTradeSign()
             LEFT JOIN MovementLinkObject AS MLO 
                                          ON MLO.MovementId = Movement.Id
                                         AND MLO.DescId     IN (zc_MovementLinkObject_Member_1()
@@ -71,8 +74,7 @@ BEGIN
                                 AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
             LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectLink_User_Member.ChildObjectId
             
-       WHERE Movement.ParentId = inMovementId
-         AND Movement.DescId   = zc_Movement_PromoTradeSign()
+       WHERE Movement.Id = inMovementId
       ;
 
 END;
