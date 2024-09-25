@@ -64,6 +64,8 @@ type
     Ord: TcxGridDBColumn;
     Ord_ReturnIn: TcxGridDBColumn;
     TotalSumm_debt_end: TcxGridDBColumn;
+    actOpenFormProfitLossService_ContractChild: TdsdOpenForm;
+    bbProfitLossService_ContractChild: TdxBarButton;
   private
     { Private declarations }
   public

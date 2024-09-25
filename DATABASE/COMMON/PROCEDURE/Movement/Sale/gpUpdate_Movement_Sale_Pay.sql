@@ -35,8 +35,9 @@ BEGIN
           , tmp.DateReturn_2             AS DateReturn_2 
           
      FROM gpReport_Sale_BankAccount (inStartDate, inEndDate, inPaidKindId, inJuridicalId, inContractId, inSession) AS tmp
-     WHERE COALESCE (tmp.Summ_Pay,0) <> 0
-        OR COALESCE (tmp.Summ_ReturnIn,0) <> 0;
+     WHERE (COALESCE (tmp.Summ_Pay,0) <> 0
+        OR COALESCE (tmp.Summ_ReturnIn,0) <> 0)
+        AND COALESCE (tmp.MovementId,0) > 0;
 
      -- если нет данных выход   
      IF NOT EXISTS (SELECT 1 FROM _tmpReport LIMIT 1)  
@@ -48,6 +49,7 @@ BEGIN
      vbDatePay := DATE_TRUNC ('MONTH', inStartDate);
      --данные из док. продажи
 
+     
 
      PERFORM CASE WHEN COALESCE (tmpData.Summ_Pay,0) <> 0 THEN lpInsertUpdate_MovementDate (tmpData.Desc_datePay, tmpData.MovementId, vbDatePay) END
            , CASE WHEN COALESCE (tmpData.Summ_Pay,0) <> 0 THEN lpInsertUpdate_MovementFloat (tmpData.Desc_sumPay, tmpData.MovementId, tmpData.Summ_Pay::TFloat) END
@@ -143,3 +145,8 @@ $BODY$
 */
 -- тест
 --
+
+/*
+select * from gpUpdate_Movement_Sale_Pay(inStartDate := ('01.06.2024')::TDateTime , inEndDate := ('30.06.2024')::TDateTime , inPaidKindId := 3 , inJuridicalId := 15410 , inContractId := 1183579 ,  inSession := '9457');
+select * from gpReport_Sale_BankAccount (inStartDate := ('01.06.2024')::TDateTime , inEndDate := ('30.06.2024')::TDateTime , inPaidKindId := 3 , inJuridicalId := 15410 , inContractId := 1183579 ,  inSession := '9457');
+*/

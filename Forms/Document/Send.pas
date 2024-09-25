@@ -250,6 +250,9 @@ type
     dxBarSeparator1: TdxBarSeparator;
     actMICellProtocolOpenForm: TdsdOpenForm;
     bbMICellProtocol: TdxBarButton;
+    spUpdate_isRePack: TdsdStoredProc;
+    actUpdate_isRePack: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1,17 +1,20 @@
 -- Function: lpInsertUpdate_Movement_PromoTrade()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoTrade(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа
-    IN inContractId            Integer    , -- договор
+    IN inContractId            Integer    , -- договор  
+    IN inPaidKindId            Integer    , 
     IN inPromoItemId           Integer    , -- Статья затрат
     IN inPromoKindId           Integer    , -- Вид акции
     IN inStartPromo            TDateTime  , -- Дата начала акции
     IN inEndPromo              TDateTime  , -- Дата окончания акции
-    IN inCostPromo             TFloat     , -- Стоимость участия в акции
+    --IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer      -- пользователь
 )
@@ -104,7 +107,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKind(), ioId, inPromoKindId);
     -- статья затрат
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoItem(), ioId, inPromoItemId);
-
+    -- ФО
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
+    
     -- Дата начала акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartPromo(), ioId, inStartPromo);
     -- Дата окончания акции
@@ -116,7 +121,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateEnd(), ioId, vbOperDateEnd);
 
     --Стоимость участия в акции
-    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
+    --PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
 
      -- Примечание
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
@@ -136,6 +141,9 @@ BEGIN
          -- сохранили связь с <Пользователь>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
      END IF;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

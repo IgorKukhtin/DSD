@@ -218,6 +218,9 @@ type
     spGet_SignPrint: TdsdStoredProc;
     PrintSignCDS: TClientDataSet;
     Value_2_ch2: TcxGridDBColumn;
+    cxLabel8: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
   private
     { Private declarations }
   public

@@ -2,7 +2,6 @@ inherited SendForm: TSendForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 658
   ClientWidth = 1186
-  ExplicitTop = -27
   ExplicitWidth = 1202
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -909,6 +908,8 @@ inherited SendForm: TSendForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitLeft = 24
+        ExplicitTop = -32
         object cxGridDBTableView_PartionCell: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionCellDS
@@ -2084,7 +2085,7 @@ inherited SendForm: TSendForm
       Caption = #8470' '#1076#1086#1082'. '#1087#1077#1088#1077#1089#1086#1088#1090#1080#1094#1099
     end
     object cbisRePack: TcxCheckBox
-      Left = 301
+      Left = 300
       Top = 63
       Caption = #1055#1077#1088#1077#1087#1072#1082
       ParentShowHint = False
@@ -4287,6 +4288,18 @@ inherited SendForm: TSendForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1055#1072#1088#1090#1080#1080
       ImageIndex = 67
     end
+    object actUpdate_isRePack: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isRePack
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isRePack
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1055#1077#1088#1077#1087#1072#1082' ('#1044#1072'/'#1053#1077#1090')'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -4448,6 +4461,10 @@ inherited SendForm: TSendForm
         item
           Visible = True
           ItemName = 'bbPersonalGroupChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'
         end
         item
           Visible = True
@@ -4711,6 +4728,11 @@ inherited SendForm: TSendForm
     object bbMICellProtocol: TdxBarButton
       Action = actMICellProtocolOpenForm
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdate_isRePack
+      Category = 0
+      ImageIndex = 77
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -6733,5 +6755,37 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 790
     Top = 424
+  end
+  object spUpdate_isRePack: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_isRePack'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRePack'
+        Value = ''
+        Component = cbisRePack
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisRePack'
+        Value = Null
+        Component = cbisRePack
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 730
+    Top = 296
   end
 end

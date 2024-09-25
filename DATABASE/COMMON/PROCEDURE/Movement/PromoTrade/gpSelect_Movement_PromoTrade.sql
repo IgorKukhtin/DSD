@@ -16,7 +16,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusCode       Integer     --код статуса
              , StatusName       TVarChar    --Статус
              , ContractId       Integer     --Договора
-             , ContractName     TVarChar    --Договора
+             , ContractName     TVarChar    --Договора 
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar
@@ -89,6 +90,8 @@ BEGIN
              , Object_Status.ValueData                     AS StatusName         --Статус
              , MovementLinkObject_Contract.ObjectId        AS ContractId        --
              , Object_Contract.ValueData                   AS ContractName      --
+             , Object_PaidKind.Id                          AS PaidKindId
+             , Object_PaidKind.ValueData                   AS PaidKindName
              , Object_ContractTag.Id                       AS ContractTagId
              , Object_ContractTag.ValueData                AS ContractTagName
              , Object_Juridical.Id                         AS JuridicalId
@@ -182,6 +185,11 @@ BEGIN
                                           ON MovementLinkObject_PromoItem.MovementId = Movement_PromoTrade.Id
                                          AND MovementLinkObject_PromoItem.DescId = zc_MovementLinkObject_PromoItem()
              LEFT JOIN Object AS Object_PromoItem ON Object_PromoItem.Id = MovementLinkObject_PromoItem.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement_PromoTrade.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
              LEFT JOIN MovementDate AS MovementDate_Insert
                                     ON MovementDate_Insert.MovementId = Movement_PromoTrade.Id

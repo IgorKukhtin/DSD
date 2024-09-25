@@ -15,7 +15,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusCode       Integer     --код статуса
              , StatusName       TVarChar    --Статус
              , ContractId       Integer     --Договора
-             , ContractName     TVarChar    --Договора
+             , ContractName     TVarChar    --Договора 
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar
@@ -62,8 +63,8 @@ BEGIN
      IF COALESCE (inMask, False) = True
      THEN
      inMovementId := gpInsert_Movement_PromoTrade_Mask (ioId        := inMovementId
-                                                 , inOperDate  := inOperDate
-                                                 , inSession   := inSession);
+                                                      , inOperDate  := inOperDate
+                                                      , inSession   := inSession);
      END IF;
 
     IF COALESCE (inMovementId, 0) < 0
@@ -91,7 +92,9 @@ BEGIN
           , Object_Status.Code               	              AS StatusCode
           , Object_Status.Name              		          AS StatusName
           , NULL ::Integer                                    AS ContractId
-          , NULL ::TVarChar                                   AS ContractName
+          , NULL ::TVarChar                                   AS ContractName  
+          , NULL ::Integer                                    AS PaidKindId
+          , NULL ::TVarChar                                   AS PaidKindName
           , NULL ::Integer                                    AS ContractTagId
           , NULL ::TVarChar                                   AS ContractTagName
           , NULL ::Integer                                    AS JuridicalId
@@ -151,6 +154,8 @@ BEGIN
       , Object_Status.ValueData                     AS StatusName         --Статус
       , MovementLinkObject_Contract.ObjectId        AS ContractId        --
       , Object_Contract.ValueData                   AS ContractName      --
+      , Object_PaidKind.Id                          AS PaidKindId
+      , Object_PaidKind.ValueData                   AS PaidKindName      
       , Object_ContractTag.Id                       AS ContractTagId
       , Object_ContractTag.ValueData                AS ContractTagName
       , Object_Juridical.Id                         AS JuridicalId
@@ -211,18 +216,18 @@ BEGIN
                          ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
         LEFT JOIN MovementDate AS MovementDate_StartPromo
-                                ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
-                               AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                               ON MovementDate_StartPromo.MovementId = Movement_PromoTrade.Id
+                              AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
         LEFT JOIN MovementDate AS MovementDate_EndPromo
-                                ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
-                               AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                               ON MovementDate_EndPromo.MovementId =  Movement_PromoTrade.Id
+                              AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
         LEFT JOIN MovementDate AS MovementDate_OperDateStart
-                                ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
-                               AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
+                               ON MovementDate_OperDateStart.MovementId = Movement_PromoTrade.Id
+                              AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
         LEFT JOIN MovementDate AS MovementDate_OperDateEnd
-                                ON MovementDate_OperDateEnd.MovementId = Movement_PromoTrade.Id
-                               AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
+                               ON MovementDate_OperDateEnd.MovementId = Movement_PromoTrade.Id
+                              AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
         LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                 ON MovementFloat_CostPromo.MovementId = Movement_PromoTrade.Id
@@ -246,6 +251,11 @@ BEGIN
                                      ON MovementLinkObject_PromoItem.MovementId = Movement_PromoTrade.Id
                                     AND MovementLinkObject_PromoItem.DescId = zc_MovementLinkObject_PromoItem()
         LEFT JOIN Object AS Object_PromoItem ON Object_PromoItem.Id = MovementLinkObject_PromoItem.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                     ON MovementLinkObject_PaidKind.MovementId = Movement_PromoTrade.Id
+                                    AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement_PromoTrade.Id
