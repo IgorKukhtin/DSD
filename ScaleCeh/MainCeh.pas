@@ -585,13 +585,15 @@ begin
                  then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
           //
           if i2<5 then Columns:=1 else Columns:=2;
-          if i2>22 then PanelGoodsKind.Height:=205
+          if i2>25 then PanelGoodsKind.Height:=235
+          else if i2>22 then PanelGoodsKind.Height:=205
           else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
           if SettingMain.isModeSorting = TRUE
           then begin PanelGoodsKind.Height:= 375;
                      PanelGoodsKind.Font.Size:= 14;
                      rgGoodsKind.Font.Size:= 14;
           end;
+          //ShowMessage(IntToStr(PanelGoodsKind.Height));
           //
           ItemIndex:=0;
      end;

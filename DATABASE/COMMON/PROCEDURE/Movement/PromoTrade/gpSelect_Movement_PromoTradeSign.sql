@@ -30,13 +30,13 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH 
-    tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Автор документа:'                              ::TVarChar AS Name
-              UNION SELECT  2 ::Integer  AS Ord, '2.Відповідальний співробітник комерційного відділу:'  ::TVarChar AS Name
-              UNION SELECT  3 ::Integer  AS Ord, '3.Відповідальний співробітник економічного відділу:' ::TVarChar AS Name   --
-              UNION SELECT  4 ::Integer  AS Ord, '4.Регіональний менеджер / Директор філії:'     ::TVarChar AS Name
-              UNION SELECT  5 ::Integer  AS Ord, '5.Керівник відділу продажу:'                   ::TVarChar AS Name
-              UNION SELECT  6 ::Integer  AS Ord, '6.Відповідальний співробітник відділу маркетингу:'     ::TVarChar AS Name
-              UNION SELECT  7 ::Integer  AS Ord, '7.Комерційний директор:'                        ::TVarChar AS Name
+    tmpText AS (    SELECT  1 ::Integer  AS Ord, '1.Автор документа'                              ::TVarChar AS Name
+              UNION SELECT  2 ::Integer  AS Ord, '2.Відповідальний співробітник комерційного відділу'  ::TVarChar AS Name
+              UNION SELECT  3 ::Integer  AS Ord, '3.Відповідальний співробітник економічного відділу' ::TVarChar AS Name   --
+              UNION SELECT  4 ::Integer  AS Ord, '4.Регіональний менеджер'     ::TVarChar AS Name
+              UNION SELECT  5 ::Integer  AS Ord, '5.Керівник відділу продажу'                   ::TVarChar AS Name
+              UNION SELECT  6 ::Integer  AS Ord, '6.Відповідальний співробітник відділу маркетингу'     ::TVarChar AS Name
+              UNION SELECT  7 ::Integer  AS Ord, '7.Комерційний директор'                        ::TVarChar AS Name
                  )
 
   , tmpData AS (SELECT MovementLinkObject_Member1.ObjectId   AS Member1Id

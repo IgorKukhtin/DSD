@@ -2612,6 +2612,8 @@ object MainCehForm: TMainCehForm
         ParentFont = False
         TabOrder = 1
         OnClick = rgGoodsKindClick
+        ExplicitLeft = -2
+        ExplicitTop = 42
       end
     end
     object PanelPartionGoods: TPanel
