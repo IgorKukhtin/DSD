@@ -60,7 +60,9 @@ BEGIN
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
                            -- !!!замена
                          , CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
-                      -- , 1127098 AS SignInternalId
+
+                           -- № п/п для PromoTrade
+                         , MovementItem.Amount                AS Ord
                            --
                          , MILO_Insert.ObjectId               AS UserId
                          , Object_User.ValueData              AS UserName
@@ -91,6 +93,9 @@ BEGIN
                              FROM tmpObject
                                   LEFT JOIN tmpMI ON tmpMI.UserId         = tmpObject.UserId
                                                  AND tmpMI.SignInternalId = tmpObject.SignInternalId
+                                                 AND (tmpMI.Ord           = tmpObject.Ord
+                                                   OR vbMovementDescId    <> zc_Movement_PromoTrade()
+                                                     )
                              WHERE tmpMI.UserId IS NULL
                              ORDER BY tmpObject.Ord
                              LIMIT CASE WHEN vbMovementDescId = zc_Movement_PromoTrade() THEN 1 ELSE 1000 END

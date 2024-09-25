@@ -17,11 +17,15 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PositionId Integer, Posi
              , isErased boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMemberId Integer;
    DECLARE vbAll    Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
    vbUserId:= lpGetUserBySession (inSession);
+
+   -- доступ
+   vbMemberId:= (SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbUserId AND OL.DescId = zc_ObjectLink_User_Member());
 
    -- User by RoleId
    vbAll:= NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View
@@ -44,7 +48,7 @@ BEGIN
                              , ROW_NUMBER() OVER (PARTITION BY Object_Personal.MemberId ORDER BY Object_Personal.PersonalId DESC) AS Ord
                         FROM Object_Personal_View AS Object_Personal
                         WHERE vbAll = FALSE
-                          AND Object_Personal.PositionId IN (SELECT inPositionId
+                          AND (Object_Personal.PositionId IN (SELECT inPositionId
                                                        --  экспедитор <-> водитель
                                                        UNION SELECT 81178 WHERE inPositionId = 8466
                                                        UNION SELECT 8466  WHERE inPositionId = 81178
@@ -52,7 +56,10 @@ BEGIN
                                                        --UNION SELECT 149828 WHERE inPositionId = 149831
                                                        --UNION SELECT 149831 WHERE inPositionId = 149828
                                                             )
+                            OR Object_Personal.MemberId = vbMemberId
+                              )
                           AND Object_Personal.isErased = FALSE
+
                        UNION ALL
                         SELECT lfSelect.PersonalId
                              , lfSelect.MemberId
@@ -62,6 +69,8 @@ BEGIN
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                              LEFT JOIN Object AS Object_Position ON Object_Position.Id = lfSelect.PositionId
                         WHERE vbAll = TRUE
+
+
                        )
                    
      SELECT 
