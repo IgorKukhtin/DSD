@@ -30,8 +30,12 @@ BEGIN
             , Object_GoodsKind.ValueData               AS GoodsKindName
 
        FROM ObjectLink AS ObjectLink_GoodsKindWeighing_Group
+            INNER JOIN Object AS Object_GoodsKindWeighing ON Object_GoodsKindWeighing.Id       = ObjectLink_GoodsKindWeighing_Group.ObjectId
+                                                         AND Object_GoodsKindWeighing.isErased = FALSE
+
             INNER JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = ObjectLink_GoodsKindWeighing_Group.ChildObjectId
                                                               AND Object_GoodsKindWeighingGroup.ObjectCode > 0
+                                                              AND Object_GoodsKindWeighingGroup.isErased   = FALSE
             LEFT JOIN ObjectLink AS ObjectLink_GoodsKindWeighing_GoodsKind
                                  ON ObjectLink_GoodsKindWeighing_GoodsKind.ObjectId = ObjectLink_GoodsKindWeighing_Group.ObjectId
                                 AND ObjectLink_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKind()
