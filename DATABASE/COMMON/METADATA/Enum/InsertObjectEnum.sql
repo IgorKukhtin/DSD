@@ -13261,11 +13261,11 @@ BEGIN
                                                       inSession           := lfGet_User_Session (vbUserId));
     --5
     vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsBoxName';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inGoodsBoxCode';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0), 
                                                                 inParamNumber   := 5, 
-                                                                inName          := 'inGoodsBoxName', 
-                                                                inParamType     := 'ftString', 
+                                                                inName          := 'inGoodsBoxCode', 
+                                                                inParamType     := 'ftInteger', 
                                                                 inUserParamName := 'код Товар(гофроящик)',
                                                                 inImportTypeId  := vbImportTypeId, 
                                                                 inSession       := lfGet_User_Session (vbUserId));

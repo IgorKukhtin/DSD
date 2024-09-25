@@ -1,13 +1,14 @@
 --
 --gpInsertUpdate_Object_GoodsPropertyValue_GoodsBox_Load
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue_GoodsBox_Load (TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsPropertyValue_GoodsBox_Load (TVarChar, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue_GoodsBox_Load(
     IN inGoodsPropertyName  TVarChar,      -- Классификатор свойств товаров
     IN inGoodsCode          Integer,       -- Код отгружаемого товара
     IN inGoodsName          TVarChar,      -- Название отгружаемого товара
     IN inGoodsKindName      TVarChar,      -- Вид отгружаемого товара
-    IN inGoodsBoxName       TVarChar,      -- Название товара гофроящик
+    IN inGoodsBoxCode       Integer,      -- Название товара гофроящик
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -30,7 +31,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Классификатор свойств товаров не задан.';
    END IF;
    
-   IF COALESCE (inGoodsCode,0) = 0
+   IF COALESCE (inGoodsCode,0) = 0 OR COALESCE (inGoodsBoxCode,0) = 0
    THEN
        RETURN;
    END IF;
@@ -40,10 +41,27 @@ BEGIN
    -- находим вид товара
    vbGoodsKindId    := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsKindName) AND Object.DescId = zc_Object_GoodsKind()); 
    -- находим Товар Гофроящик
-   vbGoodsBoxId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsBoxName) AND Object.DescId = zc_Object_Goods());
+   vbGoodsBoxId := (SELECT Object.Id FROM Object WHERE Object.ObjectCode = inGoodsBoxCode AND Object.DescId = zc_Object_Goods());
 
    -- находим vbGoodsPropertyId
-   vbGoodsPropertyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsPropertyName) AND Object.DescId = zc_Object_GoodsProperty());
+   vbGoodsPropertyId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inGoodsPropertyName) AND Object.DescId = zc_Object_GoodsProperty()); 
+   
+    IF COALESCE (vbGoodsPropertyId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Классификатор свойств товаров <%> не найден.', inGoodsPropertyName;
+   END IF;  
+    IF COALESCE (vbGoodsId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Товар (%)<%> не найден.', inGoodsCode, inGoodsName;
+   END IF; 
+    IF COALESCE (vbGoodsKindId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Вид товара <%> не найден.', inGoodsKindName;
+   END IF;  
+    IF COALESCE (vbGoodsBoxId, 0) = 0
+   THEN
+        RAISE EXCEPTION 'Ошибка.Товар(гофроящик) с кодом <%> не найден.', inGoodsBoxCode;
+   END IF;
                
    --находим  
    vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
@@ -76,6 +94,12 @@ BEGIN
    -- сохранили связь  Товар Гофроящик
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsBox(), vbGoodsPropertyValueId, vbGoodsBoxId);
 
+
+   IF vbUserId = 9457 
+   THEN
+        RAISE EXCEPTION 'Test.OK';
+   END IF;
+   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -88,4 +112,4 @@ $BODY$
 */
 
 -- тест
---
+--select * from gpInsertUpdate_Object_GoodsPropertyValue_GoodsBox_Load(inGoodsPropertyName := 'Фоззи' , inGoodsCode := 2 , inGoodsName := 'Ковбаса ТЕЛЯЧА З ЯЗИКОМ вар в/ґ ТМ Спец Цех' , inGoodsKindName := 'Б/В' , inGoodsBoxCode := 2016 ,  inSession := '9457');

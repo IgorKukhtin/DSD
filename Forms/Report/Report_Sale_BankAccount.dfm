@@ -475,6 +475,18 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             Options.Editing = False
             Width = 80
           end
+          object SumReturn_1: TcxGridDBColumn
+            Caption = '1-'#1099#1081' '#1074#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SumReturn_1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Options.Editing = False
+            Width = 80
+          end
           object DatePay_2: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1086#1087#1083#1072#1090#1099'-2'
             DataBinding.FieldName = 'DatePay_2'
@@ -503,29 +515,19 @@ inherited Report_Sale_BankAccountForm: TReport_Sale_BankAccountForm
             DataBinding.FieldName = 'DateReturn_1'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'MM YYYY'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-1'
             Options.Editing = False
             Width = 60
           end
-          object SumReturn_1: TcxGridDBColumn
-            Caption = '1-'#1099#1081' '#1074#1086#1079#1074#1088#1072#1090
-            DataBinding.FieldName = 'SumReturn_1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-1 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
-            Options.Editing = False
-            Width = 80
-          end
           object DateReturn_2: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
             DataBinding.FieldName = 'DateReturn_2'
             PropertiesClassName = 'TcxDateEditProperties'
             Properties.DisplayFormat = 'MM YYYY'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1052#1077#1089#1103#1094' '#1074#1086#1079#1074#1088#1072#1090'-2'
