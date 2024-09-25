@@ -23,7 +23,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  dsdGuides, cxTextEdit, cxLabel, cxCurrencyEdit;
+  dsdGuides, cxTextEdit, cxLabel, cxCurrencyEdit, ExternalLoad, dsdCommon;
 
 type
   TGoodsPropertyValueForm = class(TParentForm)
@@ -101,6 +101,11 @@ type
     macInsert_byGoodsProperty: TMultiAction;
     actInsert_byGoodsProperty: TdsdDataSetRefresh;
     bbInsert_byGoodsProperty: TdxBarButton;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    macStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public

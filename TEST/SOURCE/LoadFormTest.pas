@@ -1651,10 +1651,11 @@ end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
   exit;
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
   exit;
