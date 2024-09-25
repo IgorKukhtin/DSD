@@ -74,6 +74,7 @@ type
     actGet_SignPrint: TdsdExecStoredProc;
     macPrint: TMultiAction;
     SignInternalName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

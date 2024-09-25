@@ -18,7 +18,6 @@ inherited PromoTradeForm: TPromoTradeForm
     ClientRectRight = 1164
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitTop = 0
       ExplicitWidth = 1164
       ExplicitHeight = 512
       inherited cxGrid: TcxGrid
@@ -520,9 +519,6 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.3.'#1057#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1077
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cxGridMov3: TcxGrid
               Left = 0
               Top = 0
@@ -596,9 +592,6 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object tsAdvertising: TcxTabSheet
             Caption = '2.2. '#1048#1089#1090#1086#1088#1080#1103' '#1082#1083#1080#1077#1085#1090#1072
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cxGridMov2: TcxGrid
               Left = 0
               Top = 0
@@ -606,6 +599,8 @@ inherited PromoTradeForm: TPromoTradeForm
               Height = 175
               Align = alClient
               TabOrder = 0
+              ExplicitLeft = 3
+              ExplicitTop = -96
               object cxGridDBTableViewMov2: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = Mov2DS
@@ -697,9 +692,6 @@ inherited PromoTradeForm: TPromoTradeForm
           ClientRectTop = 24
           object cxTabSheet1: TcxTabSheet
             Caption = '2.1.'#1050#1086#1084#1084#1077#1088#1095#1077#1089#1082#1080#1077' '#1091#1089#1083#1086#1074#1080#1103
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object cxGridMov1: TcxGrid
               Left = 0
               Top = 0
@@ -760,7 +752,6 @@ inherited PromoTradeForm: TPromoTradeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 8
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -770,7 +761,6 @@ inherited PromoTradeForm: TPromoTradeForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGridPromoStateKind
-        ExplicitWidth = 8
       end
       object cxGridPromoStateKind: TcxGrid
         Left = 0
@@ -873,9 +863,6 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxTabSheetSign: TcxTabSheet
       Caption = '3.'#1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -971,6 +958,8 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
+    ExplicitLeft = -1
+    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -1037,12 +1026,12 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 110
     end
     object cxLabel5: TcxLabel
-      Left = 360
+      Left = 361
       Top = 74
       Caption = #1044#1072#1090#1072' '#1089
     end
     object deStartPromo: TcxDateEdit
-      Left = 360
+      Left = 361
       Top = 90
       EditValue = 42132d
       Properties.SaveTime = False
@@ -1093,7 +1082,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 87
     end
     object edCostPromo: TcxCurrencyEdit
-      Left = 360
+      Left = 361
       Top = 54
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -1108,12 +1097,12 @@ inherited PromoTradeForm: TPromoTradeForm
       Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
     end
     object cxLabel13: TcxLabel
-      Left = 360
+      Left = 361
       Top = 109
       Caption = #1054#1087#1080#1089#1072#1085#1080#1077
     end
     object edComment: TcxTextEdit
-      Left = 360
+      Left = 361
       Top = 126
       Properties.MaxLength = 255
       TabOrder = 8
@@ -1140,12 +1129,12 @@ inherited PromoTradeForm: TPromoTradeForm
       Width = 169
     end
     object cxLabel16: TcxLabel
-      Left = 360
+      Left = 361
       Top = 2
       Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
     end
     object edPromoItem: TcxButtonEdit
-      Left = 360
+      Left = 361
       Top = 18
       Properties.Buttons = <
         item
@@ -1167,7 +1156,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 156
+      Width = 160
     end
     object cxLabel17: TcxLabel
       Left = 191
@@ -1177,7 +1166,10 @@ inherited PromoTradeForm: TPromoTradeForm
     object cxLabel20: TcxLabel
       Left = 190
       Top = 111
-      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edContractTag: TcxButtonEdit
       Left = 190
@@ -1190,7 +1182,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 27
-      Width = 156
+      Width = 84
     end
     object cxLabel3: TcxLabel
       Left = 190
@@ -1207,7 +1199,7 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 29
-      Width = 156
+      Width = 160
     end
     object cxLabel7: TcxLabel
       Left = 190
@@ -1224,7 +1216,24 @@ inherited PromoTradeForm: TPromoTradeForm
         end>
       Properties.ReadOnly = True
       TabOrder = 31
-      Width = 156
+      Width = 160
+    end
+    object cxLabel8: TcxLabel
+      Left = 277
+      Top = 109
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 280
+      Top = 126
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 33
+      Width = 72
     end
   end
   object cxLabel21: TcxLabel [2]
@@ -3064,6 +3073,21 @@ inherited PromoTradeForm: TPromoTradeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 264
@@ -3101,6 +3125,22 @@ inherited PromoTradeForm: TPromoTradeForm
         Component = GuidesContract
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -3231,6 +3271,9 @@ inherited PromoTradeForm: TPromoTradeForm
       end
       item
         Control = edSignInternal
+      end
+      item
+        Control = edPaidKind
       end>
     Left = 256
     Top = 265
@@ -3628,9 +3671,26 @@ inherited PromoTradeForm: TPromoTradeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 220
-    Top = 72
+    Left = 204
+    Top = 40
   end
   object spSelect_PromoTradeCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PromoTradeCondition'
@@ -4038,7 +4098,7 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 275
+    Left = 211
     Top = 108
   end
   object GuidesContractJuridical: TdsdGuides
@@ -4704,5 +4764,47 @@ inherited PromoTradeForm: TPromoTradeForm
     Params = <>
     Left = 860
     Top = 22
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 304
+    Top = 120
   end
 end

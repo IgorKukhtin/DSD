@@ -1,11 +1,14 @@
 -- Function: gpInsertUpdate_Movement_PromoTrade()
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoTrade(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
     IN inOperDate              TDateTime  , -- Дата документа  
-    IN inContractId            Integer    , -- договор  
+    IN inContractId            Integer    , -- договор    
+ INOUT ioPaidKindId            Integer   , -- Виды форм оплаты
+   OUT outPaidKindName         TVarChar   , -- Виды форм оплаты
     IN inPromoItemId           Integer    , -- Статья затрат
     IN inPromoKindId           Integer    , -- Вид акции
     IN inStartPromo            TDateTime  , -- Дата начала акции
@@ -28,18 +31,28 @@ BEGIN
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PromoTrade());
 
 
-    -- проверка - если есть подписи, корректировать нельзя
-    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= ioId
-                                       , inIsComplete:= FALSE
-                                       , inIsUpdate  := TRUE
-                                       , inUserId    := vbUserId
-                                        );
+     -- проверка - если есть подписи, корректировать нельзя
+     PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= ioId
+                                        , inIsComplete:= FALSE
+                                        , inIsUpdate  := TRUE
+                                        , inUserId    := vbUserId
+                                         );
+     --если ФО не определена берем из договора
+     IF COALESCE (ioPaidKindId,0) = 0
+     THEN
+         ioPaidKindId := (SELECT ObjectLink_Contract_PaidKind.ChildObjectId
+                          FROM ObjectLink AS ObjectLink_Contract_PaidKind
+                          WHERE ObjectLink_Contract_PaidKind.ObjectId = inContractId
+                           AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+                          ); 
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_PromoTrade (ioId             := ioId
                                                , inInvNumber      := inInvNumber
                                                , inOperDate       := inOperDate 
                                                , inContractId     := inContractId
+                                               , inPaidKindId     := ioPaidKindId
                                                , inPromoItemId    := inPromoItemId
                                                , inPromoKindId    := inPromoKindId     --Вид акции
                                                , inStartPromo     := inStartPromo      --Дата начала акции
@@ -55,6 +68,8 @@ BEGIN
 
      outOperDateEnd := inOperDate - INTERVAL '1 Day';
      outOperDateStart := outOperDateEnd - INTERVAL '3 Month' + INTERVAL '1 Day';
+     
+     outPaidKindName := lfGet_Object_ValueData_sh (ioPaidKindId) ::TVarChar;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
