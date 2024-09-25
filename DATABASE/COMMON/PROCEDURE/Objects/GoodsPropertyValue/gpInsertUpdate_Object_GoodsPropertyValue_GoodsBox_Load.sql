@@ -64,7 +64,7 @@ BEGIN
    END IF;
                
    --находим  
-   vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+   vbGoodsPropertyValueId := (SELECT ObjectLink_GoodsPropertyValue_Goods.ObjectId
                               FROM ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                    INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                                          ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = ObjectLink_GoodsPropertyValue_Goods.ObjectId
