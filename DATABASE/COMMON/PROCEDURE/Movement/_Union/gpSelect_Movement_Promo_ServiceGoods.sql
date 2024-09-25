@@ -43,7 +43,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , RetailId Integer, RetailName TVarChar
              , PromoItemName TVarChar
              , Comment TVarChar 
-             , PromoItemName_full TVarChar
+             , PromoItemName_full TVarChar 
+             , CostPromo TFloat
+             , SummMarket TFloat
               )
 AS
 $BODY$
@@ -102,7 +104,22 @@ BEGIN
                                WHERE Movement.ParentId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
                                  AND Movement.StatusId <> zc_Enum_Status_Erased()
                                  AND Movement.DescId = zc_Movement_PromoPartner() 
-                               )
+                               ) 
+         --строки Promo
+         , tmpMI_promo AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
+                                , SUM (COALESCE (MIFloat_SummOutMarket.ValueData,0) - COALESCE (MIFloat_SummInMarket.ValueData,0))  ::TFloat AS SummMarket
+                           FROM MovementItem
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummOutMarket
+                                                            ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
+                                LEFT JOIN MovementItemFloat AS MIFloat_SummInMarket
+                                                            ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
+                                                           AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
+                           WHERE MovementItem.DescId = zc_MI_Master()
+                             AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
+                             AND MovementItem.isErased = FALSE
+                           GROUP BY MovementItem.MovementId
+                             )
 
         -- Результат
         SELECT Movement.Id                                                 --Идентификатор
@@ -148,7 +165,9 @@ BEGIN
                     ELSE COALESCE (tmpAdvertising.AdvertisingName,'') 
                         || CASE WHEN COALESCE (tmpAdvertising.Comment,'') <> '' THEN ' ;'||COALESCE (tmpAdvertising.Comment,'') ELSE '' END
                END ::TVarChar AS PromoItemName_full
-
+             , MovementFloat_CostPromo.ValueData  ::TFloat AS CostPromo
+             , COALESCE (tmpMI_promo.SummMarket,0)::TFloat AS SummMarket
+              
         FROM tmpMovement AS Movement
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -243,11 +262,17 @@ BEGIN
                                       ON MovementString_Comment.MovementId = Movement.Id
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
                                      AND Movement.DescId = zc_Movement_PromoTrade()
-             
+
+             LEFT JOIN MovementFloat AS MovementFloat_CostPromo
+                                     ON MovementFloat_CostPromo.MovementId = Movement.Id
+                                    AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
+
              LEFT JOIN tmpAdvertising ON tmpAdvertising.ParentId = Movement.Id
                                      AND Movement.DescId = zc_Movement_Promo()
              LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.Id
                                       AND Movement.DescId = zc_Movement_Promo()                 
+             LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementId = Movement.Id
+                                  AND Movement.DescId = zc_Movement_Promo()
         ;
 
 END;
