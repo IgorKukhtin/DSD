@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TFloat, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoTrade(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -13,7 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PromoTrade(
     IN inPromoKindId           Integer    , -- Вид акции
     IN inStartPromo            TDateTime  , -- Дата начала акции
     IN inEndPromo              TDateTime  , -- Дата окончания акции
-    IN inCostPromo             TFloat     , -- Стоимость участия в акции
+    --IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inUserId                Integer      -- пользователь
 )
@@ -140,6 +141,9 @@ BEGIN
          -- сохранили связь с <Пользователь>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, inUserId);
      END IF;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

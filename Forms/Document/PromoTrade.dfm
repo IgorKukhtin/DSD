@@ -1086,7 +1086,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Top = 54
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       Properties.UseThousandSeparator = True
       TabOrder = 9
       Width = 102
@@ -3176,14 +3176,6 @@ inherited PromoTradeForm: TPromoTradeForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCostPromo'
-        Value = Null
-        Component = edCostPromo
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = edComment
@@ -3208,6 +3200,13 @@ inherited PromoTradeForm: TPromoTradeForm
       item
         Name = 'outChangePercent'
         Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outCostPromo'
+        Value = Null
+        Component = edCostPromo
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

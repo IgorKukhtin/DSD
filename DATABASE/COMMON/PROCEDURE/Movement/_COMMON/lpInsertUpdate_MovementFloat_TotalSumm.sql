@@ -30,7 +30,8 @@ $BODY$
   DECLARE vbOperSumm_VAT_2018      TFloat;
   DECLARE vbOperSumm_Inventory     TFloat;
   DECLARE vbOperSumm_LossAsset     TFloat;
-  DECLARE vbOperSumm_Tare          TFloat;
+  DECLARE vbOperSumm_Tare          TFloat; 
+  DECLARE vbCostPromo_PromoTrade   TFloat;
 
   DECLARE vbTotalSummToPay            TFloat;
   DECLARE vbTotalSummService          TFloat;
@@ -345,6 +346,8 @@ BEGIN
           , OperSumm_Inventory AS OperSumm_Inventory
             --
           , OperSumm_LossAsset
+          --
+          , CostPromo_PromoTrade
 
             -- сумма начисления зп
           , OperSumm_ToPay
@@ -421,7 +424,8 @@ BEGIN
                , vbOperCount_Packer       -- Количество по Заготовителю
                , vbOperSumm_Packer        -- Сумма по Заготовителю
                , vbOperSumm_Inventory     -- сумма ввода остатка
-               , vbOperSumm_LossAsset
+               , vbOperSumm_LossAsset  
+               , vbCostPromo_PromoTrade
 
                  -- сумма начисления зп
                , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus
@@ -529,6 +533,7 @@ BEGIN
 
                                , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_Inventory() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_Inventory
                                , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_LossAsset() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS OperSumm_LossAsset
+                               , SUM (COALESCE (CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) AS CostPromo_PromoTrade
 
                                , SUM (COALESCE (MIFloat_SummToPay.ValueData, 0))              AS OperSumm_ToPay
                                , SUM (COALESCE (MIFloat_SummService.ValueData, 0))            AS OperSumm_Service
@@ -1071,7 +1076,9 @@ BEGIN
                   -- сумма ввода остатка
                 , OperSumm_Inventory AS OperSumm_Inventory
                   --
-                , OperSumm_LossAsset
+                , OperSumm_LossAsset  
+                --
+                , CostPromo_PromoTrade
 
                   -- сумма начисления зп
                 , OperSumm_ToPay
@@ -1239,7 +1246,9 @@ BEGIN
                         -- сумма ввода остатка
                       , SUM (tmpMI.OperSumm_Inventory) AS OperSumm_Inventory
                         --
-                      , SUM (tmpMI.OperSumm_LossAsset) AS OperSumm_LossAsset
+                      , SUM (tmpMI.OperSumm_LossAsset) AS OperSumm_LossAsset   
+                      --
+                      , SUM (tmpMI.CostPromo_PromoTrade) AS CostPromo_PromoTrade
 
                         -- для документа ChangePercent - без НДС
                       , SUM (tmpMI.Sum_ChangePercent) AS Sum_ChangePercent
@@ -1389,7 +1398,8 @@ BEGIN
 
                               -- сумма ввода остатка
                             , tmpMI.OperSumm_Inventory
-                            , tmpMI.OperSumm_LossAsset
+                            , tmpMI.OperSumm_LossAsset  
+                            , tmpMI.CostPromo_PromoTrade
 
                               -- сумма начисления зп
                             , tmpMI.OperSumm_ToPay
@@ -1508,7 +1518,8 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
-                                   , tmpMI.OperSumm_LossAsset
+                                   , tmpMI.OperSumm_LossAsset  
+                                   , tmpMI.CostPromo_PromoTrade
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -1675,7 +1686,8 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
-                                   , tmpMI.OperSumm_LossAsset
+                                   , tmpMI.OperSumm_LossAsset 
+                                   , tmpMI.CostPromo_PromoTrade
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -1775,7 +1787,8 @@ BEGIN
                                    , tmpMI.OperCount_Second  -- Количество дозаказ
 
                                    , tmpMI.OperSumm_Inventory
-                                   , tmpMI.OperSumm_LossAsset
+                                   , tmpMI.OperSumm_LossAsset 
+                                   , tmpMI.CostPromo_PromoTrade
 
                                    , tmpMI.OperSumm_ToPay
                                    , tmpMI.OperSumm_Service
@@ -2065,7 +2078,13 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child);
 
          -- Сохранили свойство <Итого сумма по Оборотной таре>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummTare(), inMovementId, vbOperSumm_Tare);
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), inMovementId, vbOperSumm_Tare);
+
+         IF vbMovementDescId = zc_Movement_PromoTrade()
+         THEN
+             -- Сохранили свойство <Стоимость участия в акции>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), inMovementId, vbCostPromo_PromoTrade);
+         END IF;
 
      END IF;
      END IF;
