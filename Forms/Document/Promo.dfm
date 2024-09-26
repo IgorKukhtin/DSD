@@ -7625,6 +7625,12 @@
       end
       item
         Control = deEndReturn
+      end
+      item
+        Control = edPaidKind
+      end
+      item
+        Control = cbCost
       end>
     Left = 256
     Top = 265

@@ -52,6 +52,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
 
+    --проверка
+    IF COALESCE (inisCost,FALSE) = TRUE AND COALESCE (inIsPromo,FALSE) = TRUE
+    THEN
+        RAISE EXCEPTION 'Ошибка.Параметры <Акция> и <Затраты> не могут быть включены одновременно.';
+    END IF; 
 
     -- проверка - если есть подписи, корректировать нельзя
     PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= ioId
@@ -78,7 +83,8 @@ BEGIN
                                         , ioMonthPromo     := ioMonthPromo      --месяц акции
                                         , inCheckDate      := inCheckDate       --Дата согласования
                                         , inChecked        := inChecked         --Согласовано
-                                        , inIsPromo        := inIsPromo	        --акция
+                                        , inIsPromo        := inIsPromo	        --акция          
+                                        , inisCost         := inisCost          --Затраты
                                         , inCostPromo      := inCostPromo       --Стоимость участия в акции
                                         , inComment        := inComment         --Примечание
                                         , inCommentMain    := inCommentMain     --Примечание (Общее)

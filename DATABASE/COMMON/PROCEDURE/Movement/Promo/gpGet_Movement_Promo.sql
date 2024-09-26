@@ -45,7 +45,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
              , SignInternalId   Integer
              , SignInternalName TVarChar
-             , isPromo          Boolean     --Акция (да/нет)
+             , isPromo          Boolean     --Акция (да/нет)   
+             , isCost           Boolean     --Затраты
              , Checked          Boolean     --Согласовано (да/нет)
              , isTaxPromo       Boolean     -- схема % скидки
              , isTaxPromo_Condition  Boolean     -- схема % компенсации
@@ -127,6 +128,7 @@ BEGIN
           , Object_SignInternal.ValueData :: TVarChar         AS SignInternalName
              
           , CAST (TRUE  AS Boolean)                           AS isPromo
+          , CAST (TRUE  AS Boolean)                           AS isCost
           , CAST (FALSE AS Boolean)                           AS Checked
           , CAST (FALSE AS Boolean)                           AS isTaxPromo            -- схема % скидки
           , CAST (FALSE AS Boolean)                           AS isTaxPromo_Condition  -- схема % компенсации
@@ -177,6 +179,7 @@ BEGIN
           , COALESCE (Movement_Promo.SignInternalId, Object_SignInternal.Id)          AS SignInternalId
           , COALESCE (Movement_Promo.SignInternalName, Object_SignInternal.ValueData) AS SignInternalName
           , Movement_Promo.isPromo            --Акция
+          , Movement_Promo.isCost                   --Затраты
           , Movement_Promo.Checked            --согласовано
           , Movement_Promo.isTaxPromo
           , Movement_Promo.isTaxPromo_Condition

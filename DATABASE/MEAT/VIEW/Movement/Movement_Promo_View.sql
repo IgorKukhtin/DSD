@@ -50,7 +50,8 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , MovementDate_ServiceDate.ValueData          AS ServiceDate        --ћес€ц расчета с/с
 
       , Object_PaidKind.Id                          AS PaidKindId
-      , Object_PaidKind.ValueData                   AS PaidKindName
+      , Object_PaidKind.ValueData                   AS PaidKindName      
+      , COALESCE (MovementBoolean_Cost.ValueData, FALSE)    :: Boolean AS isCOst   -- затраты (да/нет)      
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -166,6 +167,10 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                                      ON MovementLinkObject_PaidKind.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_Cost
+                                  ON MovementBoolean_Cost.MovementId = Movement_Promo.Id
+                                 AND MovementBoolean_Cost.DescId = zc_MovementBoolean_Cost()
 
     WHERE Movement_Promo.DescId = zc_Movement_Promo()
    ;

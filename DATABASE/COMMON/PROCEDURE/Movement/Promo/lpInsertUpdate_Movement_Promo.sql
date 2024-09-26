@@ -15,7 +15,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
-                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+                                                     , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -33,7 +33,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioMonthPromo            TDateTime  , -- Месяц акции
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
-    IN inIsPromo               Boolean    , -- Акция
+    IN inIsPromo               Boolean    , -- Акция   
+    IN inisCost                Boolean    , -- Затраты
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
@@ -141,7 +142,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
     -- сохранили свойство <Акция>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Promo(), ioId, inIsPromo);
-     
+    -- сохранили свойство <Затраты>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Cost(), ioId, inIsCost);
+         
     -- Стоимость участия в акции
     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CostPromo(), ioId, inCostPromo);
     -- Примечание

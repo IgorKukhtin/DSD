@@ -519,7 +519,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           end
           object InvNumber_doc: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'InvNumber_doc'
+            DataBinding.FieldName = 'InvNumber_full_doc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1082#1094#1080#1103' / '#1042#1074#1086#1076' '#1085#1086#1074#1099#1093' '#1087#1086#1079#1080#1094#1080#1081
