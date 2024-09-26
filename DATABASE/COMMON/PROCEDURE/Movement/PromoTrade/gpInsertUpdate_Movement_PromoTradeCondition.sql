@@ -41,24 +41,32 @@ BEGIN
 
     IF inOrd = 4
     THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
         --RetroBonus
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_RetroBonus(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
 
     IF inOrd = 5
     THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
         --Market
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Market(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
     
     IF inOrd = 6
     THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
         --ReturnIn
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ReturnIn(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
     
     IF inOrd = 7
     THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
         --Logist
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Logist(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;

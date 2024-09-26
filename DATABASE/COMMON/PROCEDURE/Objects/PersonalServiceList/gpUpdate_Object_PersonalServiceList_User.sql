@@ -21,15 +21,15 @@ BEGIN
       -- + если есть Ограничения - доступ к просмотру ведомость Админ ЗП
    OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = 11026035)
    THEN
-       RAISE EXCEPTION 'Ошибка.Нет прав.';
+       RAISE EXCEPTION 'Ошибка.1.Нет прав.';
    END IF;
 
-   IF inisUser = FALSE THEN RAISE EXCEPTION 'Ошибка.Нет прав.'; END IF;
+   -- IF inisUser = TRUE THEN RAISE EXCEPTION 'Ошибка.2.Нет прав.'; END IF;
 
    -- доступ Документы-меню (управленцы) + ЗП просмотр ВСЕ
    IF NOT EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId)
    THEN
-       RAISE EXCEPTION 'Ошибка.Нет прав.';
+       RAISE EXCEPTION 'Ошибка.3.Нет прав.';
    END IF;
 
    -- изменили значение

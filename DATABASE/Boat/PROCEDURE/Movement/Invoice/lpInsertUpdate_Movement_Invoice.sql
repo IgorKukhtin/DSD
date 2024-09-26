@@ -103,7 +103,18 @@ BEGIN
                                                    AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
                                                 ), 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.Значение <% НДС> в документе не соответствует значению <Вид НДС>.', '%' ;
+         RAISE EXCEPTION 'Ошибка.Значение % НДС = <%> в документе Счет % не соответствует значению у клиента Вид НДС = <%> и % НДС  = <%>.'
+                       , '%'
+                       , zfConvert_FloatToString (inVATPercent)
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh (inTaxKindId)
+                       , '%'
+                       , zfConvert_FloatToString (COALESCE ((SELECT ObjectFloat_TaxKind_Value.ValueData
+                                                             FROM ObjectFloat AS ObjectFloat_TaxKind_Value
+                                                             WHERE ObjectFloat_TaxKind_Value.ObjectId = inTaxKindId
+                                                               AND ObjectFloat_TaxKind_Value.DescId   = zc_ObjectFloat_TaxKind_Value()
+                                                            ), 0))
+                        ;
      END IF;
 
 
