@@ -18,7 +18,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumber        Integer     --Номер документа
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
-             , StatusName       TVarChar    --Статус
+             , StatusName       TVarChar    --Статус      
+             , PaidKindId Integer, PaidKindName TVarChar
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoStateKindId Integer     -- Состояние Акции
@@ -183,7 +184,9 @@ BEGIN
              , Movement_Promo.InvNumber :: Integer                               --Номер документа
              , Movement_Promo.OperDate                                           --Дата документа
              , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusCode ELSE Object_Status.ObjectCode END :: Integer  AS StatusCode
-             , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Object_Status.ValueData END :: TVarChar AS StatusName
+             , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Object_Status.ValueData END :: TVarChar AS StatusName   
+             , Object_PaidKind.Id                          AS PaidKindId
+             , Object_PaidKind.ValueData                   AS PaidKindName
              , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
              , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
              , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
@@ -304,6 +307,11 @@ BEGIN
                                          AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
              LEFT JOIN Object AS Object_PriceList
                               ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
              LEFT JOIN MovementDate AS MovementDate_StartPromo
                                      ON MovementDate_StartPromo.MovementId = Movement_Promo.Id

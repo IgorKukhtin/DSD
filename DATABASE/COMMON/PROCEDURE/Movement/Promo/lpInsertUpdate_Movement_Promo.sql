@@ -9,6 +9,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer); */
+
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
@@ -35,7 +39,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
-    IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
+    IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела 
+    IN inPaidKindId            Integer    , 
 --    IN inSignInternalId        Integer    , 
     IN inUserId                Integer      -- пользователь
 )
@@ -94,6 +99,8 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoKind(), ioId, inPromoKindId);
     -- Прайс лист
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, inPriceListId);
+    -- ФО
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
     -- Дата начала акции
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartPromo(), ioId, inStartPromo);

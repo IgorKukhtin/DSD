@@ -5367,10 +5367,6 @@
 				<Form>Movement_DateDialog_PersonalServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ProfitLossService_bySale.pas">
-				<Form>Report_ProfitLossService_bySaleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProfitLossService_bySaleDialog.pas">
 				<Form>Report_ProfitLossService_bySaleDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>

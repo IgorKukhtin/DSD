@@ -1534,7 +1534,6 @@ uses
   RouteNum in '..\..\Forms\Guides\RouteNum.pas' {RouteNumForm: TParentForm},
   RouteNumEdit in '..\..\Forms\Guides\RouteNumEdit.pas' {RouteNumEditForm: TParentForm},
   Movement_DateDialog_PersonalService in '..\..\Forms\Document\Movement_DateDialog_PersonalService.pas' {Movement_DateDialog_PersonalServiceForm: TParentForm},
-  Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
   Report_ProfitLossService_bySaleDialog in '..\..\Forms\Report\Report_ProfitLossService_bySaleDialog.pas' {Report_ProfitLossService_bySaleDialogForm: TParentForm},
   ProfitLossService_ContractChild in '..\..\Forms\Document\ProfitLossService_ContractChild.pas' {ProfitLossService_ContractChildForm: TParentForm},
   PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},

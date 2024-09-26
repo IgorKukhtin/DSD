@@ -9,9 +9,12 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);  */
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
-                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+                                                     , Boolean, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -29,13 +32,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioMonthPromo            TDateTime  , -- Месяц акции
     IN inCheckDate             TDateTime  , -- Дата согласования
     IN inChecked               Boolean    , -- Согласовано
-    IN inIsPromo               Boolean    , -- Акция
+    IN inIsPromo               Boolean    , -- Акция  
+    IN inisCost                Boolean    , -- Затраты
     IN inCostPromo             TFloat     , -- Стоимость участия в акции
     IN inComment               TVarChar   , -- Примечание
     IN inCommentMain           TVarChar   , -- Примечание (Общее)
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
+    IN inPaidKindId            Integer    , --
     --IN inSignInternalId        Integer    , -- модель подписи
     IN inSession               TVarChar     -- сессия пользователя
 )
@@ -79,7 +84,8 @@ BEGIN
                                         , inCommentMain    := inCommentMain     --Примечание (Общее)
                                         , inUnitId         := inUnitId          --Подразделение
                                         , inPersonalTradeId:= inPersonalTradeId --Ответственный представитель коммерческого отдела
-                                        , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела
+                                        , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела   
+                                        , inPaidKindId     := inPaidKindId
                                         --, inSignInternalId := inSignInternalId  -- модель подписи
                                         , inUserId         := vbUserId
                                         ) AS tmp;

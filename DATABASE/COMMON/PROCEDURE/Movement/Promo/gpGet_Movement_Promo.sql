@@ -14,7 +14,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumberFull    TVarChar   --Номер документа + дата
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
-             , StatusName       TVarChar    --Статус
+             , StatusName       TVarChar    --Статус     
+             , PaidKindId Integer, PaidKindName TVarChar
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoStateKindId Integer     -- Состояние Акции
@@ -91,8 +92,10 @@ BEGIN
           , CAST (NEXTVAL ('movement_Promo_seq') AS Integer)  AS InvNumber
           , ''  :: TVarChar                                   AS InvNumberFull
           , inOperDate	                                      AS OperDate
-          , Object_Status.Code               	              AS StatusCode
-          , Object_Status.Name              		      AS StatusName
+          , Object_Status.Code                                AS StatusCode
+          , Object_Status.Name                                AS StatusName 
+          , NULL::Integer                                     AS PaidKindId
+          , NULL::TVarChar                                    AS PaidKindName
           , NULL::Integer                                     AS PromoKindId         --Вид акции
           , NULL::TVarChar                                    AS PromoKindName       --Вид акции
           , 0                                                 AS PromoStateKindId        --Состояние акции
@@ -124,9 +127,9 @@ BEGIN
           , Object_SignInternal.ValueData :: TVarChar         AS SignInternalName
              
           , CAST (TRUE  AS Boolean)                           AS isPromo
-          , CAST (FALSE AS Boolean)         		      AS Checked
-          , CAST (FALSE AS Boolean)         		      AS isTaxPromo            -- схема % скидки
-          , CAST (FALSE AS Boolean)         		      AS isTaxPromo_Condition  -- схема % компенсации
+          , CAST (FALSE AS Boolean)                           AS Checked
+          , CAST (FALSE AS Boolean)                           AS isTaxPromo            -- схема % скидки
+          , CAST (FALSE AS Boolean)                           AS isTaxPromo_Condition  -- схема % компенсации
           , CAST (FALSE AS Boolean)                           AS isPromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
@@ -142,7 +145,9 @@ BEGIN
           , ('№ ' || Movement_Promo.InvNumber || ' от ' || zfConvert_DateToString (Movement_Promo.OperDate)  ) :: TVarChar AS InvNumberFull
           , Movement_Promo.OperDate           --Дата документа
           , Movement_Promo.StatusCode         --код статуса
-          , Movement_Promo.StatusName         --Статус
+          , Movement_Promo.StatusName         --Статус  
+          , Movement_Promo.PaidKindId        --
+          , Movement_Promo.PaidKindName        --
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
           , Movement_Promo.PromoStateKindId   --Состояние акции

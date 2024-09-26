@@ -378,8 +378,8 @@
     Width = 317
   end
   object cxLabel22: TcxLabel [47]
-    Left = 445
-    Top = 257
+    Left = 442
+    Top = 255
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

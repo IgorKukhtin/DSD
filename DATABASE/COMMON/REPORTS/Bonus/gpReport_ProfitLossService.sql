@@ -39,14 +39,14 @@ BEGIN
                             AND Movement.DescId = zc_Movement_ProfitLossService()
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                           )
-
+      --Акция / Трейд-маркетинг
     , tmpMLM_doc AS (SELECT MLM.*
                      FROM MovementLinkMovement AS MLM
                      WHERE MLM.DescId = zc_MovementLinkMovement_Doc()
                        AND MLM.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull)
                      )
 
-    , tmpML0 AS (SELECT MovementLinkObject.*
+    , tmpMLO AS (SELECT MovementLinkObject.*
                      FROM MovementLinkObject
                      WHERE MovementLinkObject.DescId = zc_MovementLinkObject_TradeMark()
                        AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull)
@@ -57,11 +57,12 @@ BEGIN
                      , CASE WHEN MovementItem.Amount > 0
                                  THEN MovementItem.Amount
                             ELSE 0
-                       END::TFloat                                    AS AmountIn
+                       END::TFloat AS AmountIn
                      , CASE WHEN MovementItem.Amount < 0
                                  THEN -1 * MovementItem.Amount
                             ELSE 0
-                       END::TFloat                                    AS AmountOut
+                       END::TFloat AS AmountOut
+                     , MovementItem.Amount                    
                 FROM MovementItem
                 WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull) 
                   AND MovementItem.DescId = zc_MI_Master()
@@ -82,10 +83,9 @@ BEGIN
                                                 ON MLM_Doc.MovementId = Movement.Id
                                                AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc() 
 
-                          LEFT JOIN tmpML0 AS MovementLinkObject_TradeMark
+                          LEFT JOIN tmpMLO AS MovementLinkObject_TradeMark
                                            ON MovementLinkObject_TradeMark.MovementId = Movement.Id
                                           AND MovementLinkObject_TradeMark.DescId = zc_MovementLinkObject_TradeMark()
-
 
                           LEFT JOIN tmpMI AS MovementItem 
                                           ON MovementItem.MovementId = Movement.Id 

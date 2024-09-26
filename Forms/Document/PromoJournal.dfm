@@ -67,6 +67,23 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 111
           end
+          object PaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object isCost: TcxGridDBColumn
+            Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isCost'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            Options.Editing = False
+            Width = 58
+          end
           object isPromoStateKind: TcxGridDBColumn
             Caption = #1057#1088#1086#1095#1085#1086
             DataBinding.FieldName = 'isPromoStateKind'
