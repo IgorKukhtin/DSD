@@ -255,9 +255,9 @@ BEGIN
                                                  , inInvNumber        := tmp.InvNumber ::TVarChar
                                                  , inInvNumberPartner := tmp.InvNumberPartner      ::TVarChar
                                                  , inOperDate         := inOperDate_OrderClient    ::TDateTime           --пересохраняем
-                                                 , inPriceWithVAT     := tmp.PriceWithVAT          ::Boolean
+                                                 , inPriceWithVAT     := FALSE -- tmp.PriceWithVAT          ::Boolean
                                                  , inVATPercent       := COALESCE (-- значение в Заказе
-                                                                                    tmp.VATPercent
+                                                                                    NULL -- tmp.VATPercent
                                                                                     -- значение у Клиента
                                                                                   , (SELECT ObjectFloat_TaxKind_Value.ValueData
                                                                                      FROM ObjectLink AS ObjectLink_TaxKind
@@ -277,7 +277,7 @@ BEGIN
                                                  , inFromId           := CASE WHEN inClientId > 0 THEN inClientId WHEN inIsReserve = TRUE THEN -1 ELSE inClientId END
                                                  , inToId             := tmp.ToId                  ::Integer
                                                  , inPaidKindId       := tmp.PaidKindId            ::Integer
-                                                 , inTaxKindId        := COALESCE (tmp.TaxKindId
+                                                 , inTaxKindId        := COALESCE (NULL -- tmp.TaxKindId
                                                                                   , (SELECT ObjectLink_TaxKind.ChildObjectId AS TaxKindId       -- значение у Клиента
                                                                                      FROM ObjectLink AS ObjectLink_TaxKind
                                                                                      WHERE ObjectLink_TaxKind.ObjectId = inClientId
