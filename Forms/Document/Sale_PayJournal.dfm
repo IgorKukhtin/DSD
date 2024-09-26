@@ -104,6 +104,11 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SumReturn_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -185,6 +190,11 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SumReturn_2
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSumm_diff
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -528,6 +538,17 @@ inherited Sale_PayJournalForm: TSale_PayJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090'-2 '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081
+            Width = 80
+          end
+          object TotalSumm_diff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1088#1072#1089#1095#1077#1090'.'
+            DataBinding.FieldName = 'TotalSumm_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083'. '#1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075') '#1086#1090' '#1086#1087#1083#1072#1090
             Width = 80
           end
           object PaidKindName: TcxGridDBColumn

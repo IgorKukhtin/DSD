@@ -56,7 +56,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DatePay_2    TDateTime
              , DateReturn_1 TDateTime
              , DateReturn_2 TDateTime
-           
+             , TotalSumm_diff TFloat
               )
 AS
 $BODY$
@@ -546,7 +546,12 @@ BEGIN
            , MovementDate_Pay_1.ValueData       ::TDateTime AS DatePay_1
            , MovementDate_Pay_2.ValueData       ::TDateTime AS DatePay_2
            , MovementDate_Return_1.ValueData    ::TDateTime AS DateReturn_1
-           , MovementDate_Return_2.ValueData    ::TDateTime AS DateReturn_2
+           , MovementDate_Return_2.ValueData    ::TDateTime AS DateReturn_2  
+           --
+           , (COALESCE (MovementFloat_TotalSumm.ValueData,0)
+              - (COALESCE (MovementFloat_Pay_1.ValueData,0) - COALESCE (MovementFloat_Return_1.ValueData,0))
+              - (COALESCE (MovementFloat_Pay_2.ValueData,0) - COALESCE (MovementFloat_Return_2.ValueData,0))
+             ) ::TFloat AS TotalSumm_diff
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -761,7 +766,6 @@ BEGIN
                                            AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
             LEFT JOIN tmpMovement_ReturnIn AS Movement_ReturnIn ON Movement_ReturnIn.MovementId = Movement.Id
-
 
             LEFT JOIN tmpRetail_JuridicalTo ON tmpRetail_JuridicalTo.JuridicalId_To = Object_JuridicalTo.Id
     ;
