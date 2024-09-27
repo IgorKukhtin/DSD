@@ -54,6 +54,7 @@ type
     actPrint_byServiceShot: TdsdPrintAction;
     bbPrint_byServiceShot: TdxBarButton;
     DescName_doc: TcxGridDBColumn;
+    InvNumberInvoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

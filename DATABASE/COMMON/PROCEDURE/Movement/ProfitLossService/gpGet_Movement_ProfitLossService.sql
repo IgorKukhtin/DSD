@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isLoad Boolean
              , TradeMarkId Integer, TradeMarkName TVarChar
              , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar
+             , InvNumberInvoice TVarChar
              )
 AS
 $BODY$
@@ -105,6 +106,7 @@ BEGIN
            , 0                                AS MovementId_doc
            , CAST ('' as TVarChar)            AS InvNumber_doc
            , CAST ('' as TVarChar)            AS InvNumber_full_doc
+           , CAST ('' AS TVarChar)            AS InvNumberInvoice
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
 
      ELSE
@@ -177,6 +179,7 @@ BEGIN
            , Movement_Doc.Id                        AS MovementId_doc
            , Movement_Doc.InvNumber                 AS InvNumber_doc
            , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
+           , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
@@ -184,6 +187,10 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                     ON MovementString_InvNumberInvoice.MovementId = Movement.Id
+                                    AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
             LEFT JOIN MovementFloat AS MovementFloat_CurrencyPartnerValue
                                     ON MovementFloat_CurrencyPartnerValue.MovementId = Movement.Id

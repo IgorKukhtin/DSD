@@ -95,6 +95,8 @@ type
     cxLabel28: TcxLabel;
     ceContractChild: TcxButtonEdit;
     GuidesContractChild: TdsdGuides;
+    cxLabel29: TcxLabel;
+    ceInvNumberInvoice: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -50,6 +50,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_full TVarChar, OperDate
              , CurrencyPartnerName TVarChar 
              , TradeMarkId Integer, TradeMarkName TVarChar
              , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar, DescName_doc TVarChar
+             , InvNumberInvoice TVarChar
              , isLoad Boolean
 
              , ProfitLossGroupName     TVarChar
@@ -121,7 +122,12 @@ BEGIN
                                                               , zc_MovementFloat_ParPartnerValue()
                                                               )
                                 )
-
+          , tmpMovementString AS (SELECT *
+                                  FROM MovementString
+                                  WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                                    AND MovementString.DescId IN (zc_MovementString_InvNumberInvoice()
+                                                               )
+                                 )
          -- ProfitLoss из проводок
          , tmpMIС_ProfitLoss AS (SELECT DISTINCT MovementItemContainer.MovementId
                                       , CLO_ProfitLoss.ObjectId AS ProfitLossId
@@ -283,6 +289,7 @@ BEGIN
            , Movement_Doc.Id                               AS MovementId_doc
            , Movement_Doc.InvNumber                        AS InvNumber_doc
            , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
+           , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
            , MovementDesc_Doc.ItemName                     AS DescName_doc
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
@@ -329,6 +336,10 @@ BEGIN
                                           AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc()
             LEFT JOIN Movement AS Movement_Doc ON Movement_Doc.Id = MLM_Doc.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = Movement_Doc.DescId
+
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberInvoice
+                                        ON MovementString_InvNumberInvoice.MovementId = Movement.Id
+                                       AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
             LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                        ON MovementFloat_TotalSumm.MovementId = Movement.Id
@@ -490,4 +501,4 @@ $BODY$
 -- тест
 --SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.09.2021' , inEndDate:= '30.09.2021' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '5')
 
-SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.08.2024' , inEndDate:= '01.08.2024' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '5')
+--SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '01.08.2024' , inEndDate:= '01.08.2024' , inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false, inSession:= '5')

@@ -468,6 +468,14 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 80
           end
+          object InvNumberInvoice: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' ('#1082#1083#1080#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'InvNumberInvoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
         end
       end
     end
@@ -824,10 +832,6 @@ inherited ServiceJournalForm: TServiceJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

@@ -83,6 +83,8 @@ type
     edDoc: TcxButtonEdit;
     cxLabel22: TcxLabel;
     GuidesDoc: TdsdGuides;
+    ceInvNumberInvoice: TcxTextEdit;
+    cxLabel29: TcxLabel;
   private
     { Private declarations }
   public

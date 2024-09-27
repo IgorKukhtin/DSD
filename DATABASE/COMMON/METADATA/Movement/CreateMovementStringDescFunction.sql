@@ -151,6 +151,12 @@ CREATE OR REPLACE FUNCTION zc_MovementString_IP() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_IP', 'IP' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_IP');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberInvoice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberInvoice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberInvoice', 'Счет(клиента)' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberInvoice');
+
+
+
 
   --!!!!!!!!!!!!!!!!!!!!!!!!!!Аптека
 CREATE OR REPLACE FUNCTION zc_MovementString_Bayer() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_Bayer'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVar
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -14,7 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inBonusValue               TFloat    , -- % бонуса
-    IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте)
+    IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте) 
+    IN inInvNumberInvoice         TVarChar  , -- Счет(клиента)
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
     IN inContractMasterId         Integer   , -- Договор(условия)
@@ -112,7 +114,8 @@ BEGIN
      -- 
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCurrency(), vbMovementItemId, inAmountCurrency);
 
-
+     -- счет клиента
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
