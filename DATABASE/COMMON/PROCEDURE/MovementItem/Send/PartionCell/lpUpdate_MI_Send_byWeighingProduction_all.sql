@@ -1,8 +1,9 @@
 -- Function: lpUpdate_MI_Send_byWeighingProduction_all()
 
-DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byWeighingProduction_all (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byWeighingProduction_all (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byWeighingProduction_all(
+    IN inOperDate              Integer  , --
     IN inMovementId_from       Integer  , --
     IN inMovementId_To         Integer  , --
     IN inUserId                Integer
@@ -12,6 +13,8 @@ AS
 $BODY$
    DECLARE vbId_tmp Integer;
 BEGIN
+       -- табл - результат
+       CREATE TEMP TABLE _tmpRes_PartionCell (MovementItemId_to Integer, MovementItemId_from Integer, MovementItemId_ChoiceCell Integer) ON COMMIT DROP;
 
        -- сохранили протокол
        WITH --
@@ -119,7 +122,14 @@ BEGIN
                              AND MovementItem.isErased   = FALSE
                           )
 
-            , tmpMI_to_res AS (SELECT tmpMI_to.MovementItemId
+              -- партии ждут в месте отбора
+            , tmpMI_ChoiceCell_mi AS (SELECT *
+                                      FROM lpSelect_Movement_ChoiceCell_mi (inUserId:= inUserId)
+                                     )
+
+            , tmpMI_to_res AS (-- 1.перемещение в место хранени€
+                               SELECT 0 AS MovementItemId_ChoiceCell
+                                    , tmpMI_to.MovementItemId
                                     , tmpMI_to.GoodsId
                                     , tmpMI_to.GoodsKindId
                                       --
@@ -241,19 +251,80 @@ BEGIN
                                     ) AS tmpMI_from
                                     JOIN tmpMI_to ON tmpMI_to.GoodsId     = tmpMI_from.GoodsId
                                                  AND tmpMI_to.GoodsKindId = tmpMI_from.GoodsKindId
+
+                              UNION ALL
+                               -- 2. —разу сквозн€ком - в место отбора
+                               SELECT tmpMI_ChoiceCell_mi.MovementItemId AS MovementItemId_ChoiceCell
+                                    , tmpMI_to.MovementItemId
+                                    , tmpMI_to.GoodsId
+                                    , tmpMI_to.GoodsKindId
+                                      -- сразу в место отбора
+                                    , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), tmpMI_to.MovementItemId, zc_PartionCell_RK())
+                                      -- сразу закрыли
+                                    , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), tmpMI_to.MovementItemId, TRUE)
+
+                               FROM tmpMI_to
+                                    LEFT JOIN (SELECT tmpMI_from.GoodsId
+                                                    , tmpMI_from.GoodsKindId
+                                                    , tmpMI_from.DescId_MILO
+                                                    , tmpMI_from.PartionCellId
+                                                    , MAX (tmpMI_from.PartionCellId_real) AS PartionCellId_real
+                                               FROM tmpMI_from
+                                               GROUP BY tmpMI_from.GoodsId
+                                                      , tmpMI_from.GoodsKindId
+                                                      , tmpMI_from.DescId_MILO
+                                                      , tmpMI_from.PartionCellId
+                                              ) AS tmpMI_from
+                                                ON tmpMI_from.GoodsId     = tmpMI_to.GoodsId
+                                               AND tmpMI_from.GoodsKindId = tmpMI_to.GoodsKindId
+
+                                    -- нашли дл€ какой партии место отбора обнул€лось
+                                    INNER JOIN tmpMI_ChoiceCell_mi ON tmpMI_ChoiceCell_mi.GoodsId     = tmpMI_to.GoodsId
+                                                                  AND tmpMI_ChoiceCell_mi.GoodsKindId = tmpMI_to.GoodsKindId
+                                                                  -- ∆дет сн€ти€ с хранени€
+                                                                  AND tmpMI_ChoiceCell_mi.isChecked   = TRUE
+                                                                  -- последн€€ парти€
+                                                                  AND tmpMI_ChoiceCell_mi.Ord         = 1
+
+                               -- если партию не отправили в место хранени€
+                               WHERE tmpMI_from.GoodsId IS NULL
+                                    
                           )
-       INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
+       INSERT INTO _tmpRes_PartionCell (MovementItemId_to, MovementItemId_from, MovementItemId_ChoiceCell)
           SELECT tmpMI_to_res.MovementItemId
+               , tmpMI_from.MovementItemId
+               , tmpMI_to_res.MovementItemId_ChoiceCell
+          FROM tmpMI_to_res
+               LEFT  JOIN tmpMI_from ON tmpMI_from.GoodsId     = tmpMI_to_res.GoodsId
+                                    AND tmpMI_from.GoodsKindId = tmpMI_to_res.GoodsKindId
+         ;
+
+       -- перенесли протокол по €чейкам ’ранени€ из ¬звешиваний
+       INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
+          SELECT _tmpRes_PartionCell.MovementItemId
                , MovementItemProtocol.OperDate
                , MovementItemProtocol.UserId
                , MovementItemProtocol.ProtocolData
                , MovementItemProtocol.isInsert
-          FROM tmpMI_to_res
-               JOIN tmpMI_from ON tmpMI_from.GoodsId     = tmpMI_to_res.GoodsId
-                              AND tmpMI_from.GoodsKindId = tmpMI_to_res.GoodsKindId
-               JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = tmpMI_from.MovementItemId
+          FROM _tmpRes_PartionCell
+               JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = _tmpRes_PartionCell.MovementItemId_from
                                         AND MovementItemProtocol.ProtocolData ILIKE '%ячейка%'
+          -- нет перемещени€ в место хранени€
+          WHERE _tmpRes_PartionCell.MovementItemId_ChoiceCell = 0
          ;
+
+       -- отметили место отбора - теперь заполнено
+        PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Checked(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, FALSE)
+              , lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, inOperDate)
+                 -- сохранили св€зь с <>
+              , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Update(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, inUserId)
+                -- сохранили свойство <>
+              , lpInsertUpdate_MovementItemDate (zc_MIDate_Update(), _tmpRes_PartionCell.MovementItemId_ChoiceCell, CURRENT_TIMESTAMP)
+        FROM _tmpRes_PartionCell
+        -- перемещени€ в место хранени€
+        WHERE _tmpRes_PartionCell.MovementItemId_ChoiceCell > 0
+       ;
+
 
 END;
 $BODY$

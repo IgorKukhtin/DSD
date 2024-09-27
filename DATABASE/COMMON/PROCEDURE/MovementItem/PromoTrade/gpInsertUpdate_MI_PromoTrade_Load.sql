@@ -23,6 +23,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId     Integer;
    DECLARE vbGoodsKindId Integer;
+   DECLARE vbRetailId    Integer;
    DECLARE vbPartnerId   Integer;
    DECLARE vbMIId        Integer;
    DECLARE vbGoodsPropertyId Integer;
@@ -91,7 +92,45 @@ BEGIN
      -- находим Контрагента (если есть)
      IF COALESCE (inPartnerName,'') <> ''
      THEN
+         -- поиск
          vbPartnerId := (SELECT Object.Id FROM Object WHERE Object.ValueData = TRIM (inPartnerName) AND Object.DescId = zc_Object_Partner());
+
+         -- если не нашли
+         IF COALESCE (vbPartnerId,0) = 0
+         THEN
+             -- поиск
+             vbRetailId := (SELECT ObjectLink_Juridical_Retail.ChildObjectId
+                            FROM MovementLinkObject AS MovementLinkObject_Contract
+                                 LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                      ON ObjectLink_Contract_Juridical.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                     AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                      ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                     AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
+                            WHERE MovementLinkObject_Contract.MovementId = inMovementId
+                              AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                           );
+
+             -- поиск
+             vbPartnerId := (SELECT ObjectLink_Partner.ChildObjectId
+                             FROM Object AS Object_PartnerExternal
+                                  --INNER JOIN ObjectString AS ObjectString_ObjectCode
+                                  --                        ON ObjectString_ObjectCode.ObjectId  = Object_PartnerExternal.Id 
+                                   --                      AND ObjectString_ObjectCode.DescId    = zc_ObjectString_PartnerExternal_ObjectCode()
+                                    --                     AND ObjectString_ObjectCode.ValueData = inPartnerExternalCode
+                                  INNER JOIN ObjectLink AS ObjectLink_Retail
+                                                        ON ObjectLink_Retail.ObjectId      = Object_PartnerExternal.Id 
+                                                       AND ObjectLink_Retail.DescId        = zc_ObjectLink_PartnerExternal_Retail()
+                                                       AND ObjectLink_Retail.ChildObjectId = vbRetailId
+
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner
+                                                        ON ObjectLink_Partner.ObjectId = Object_PartnerExternal.Id 
+                                                       AND ObjectLink_Partner.DescId   = zc_ObjectLink_PartnerExternal_Partner()
+
+                             WHERE Object_PartnerExternal.DescId   = zc_Object_PartnerExternal()
+                               AND Object_PartnerExternal.ValueData ILIKE TRIM (inPartnerName)
+                            );
+         END IF;
 
          IF COALESCE (vbPartnerId,0) = 0
          THEN

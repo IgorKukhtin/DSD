@@ -1,4 +1,5 @@
 -- Function: gpInsertUpdate_SaleExternal_Fora_Load()
+!!!удален!!!
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_SaleExternal_Fora_Load
  (TDateTime, Integer, TVarChar, TVarChar,
