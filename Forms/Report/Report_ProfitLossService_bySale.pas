@@ -53,6 +53,16 @@ type
     actOpenFormProfitLossService_ContractChild: TdsdOpenForm;
     bbOpenFormProfitLossService_ContractChild: TdxBarButton;
     ContractChildCode: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyName_Child: TcxGridDBColumn;
+    ContractCode: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    ContractCode_Master: TcxGridDBColumn;
+    ContractName_Master: TcxGridDBColumn;
+    JuridicalName_baza: TcxGridDBColumn;
+    ContractConditionKindName: TcxGridDBColumn;
+    BonusKindName: TcxGridDBColumn;
+    PartnerName_baza: TcxGridDBColumn;
   private
     { Private declarations }
   public
