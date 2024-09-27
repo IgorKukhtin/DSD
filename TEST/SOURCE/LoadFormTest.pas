@@ -2509,7 +2509,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_ContractChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_ContractChildForm');
-  exit;
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');

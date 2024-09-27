@@ -1520,7 +1520,6 @@ uses
   AmountFormDialog in '..\..\Forms\Document\AmountFormDialog.pas' {AmountFormDialogForm: TParentForm},
   Promo_ServiceGoodsJournalChoice in '..\..\Forms\Document\Promo_ServiceGoodsJournalChoice.pas' {Promo_ServiceGoodsJournalChoiceForm: TParentForm},
   Report_ProfitLossServiceDialog in '..\..\Forms\Report\Report_ProfitLossServiceDialog.pas' {Report_ProfitLossServiceDialogForm: TParentForm},
-  Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm},
   Report_ProductionUnion_TaxExitUpdate in '..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas' {Report_ProductionUnion_TaxExitUpdateForm: TParentForm},
   Report_Check_Sale_TotalSum in '..\..\Forms\Report\Report_Check_Sale_TotalSum.pas' {Report_Check_Sale_TotalSumForm: TParentForm},
   Report_Check_Sale_TotalSumDialog in '..\..\Forms\Report\Report_Check_Sale_TotalSumDialog.pas' {Report_Check_Sale_TotalSumDialogForm: TParentForm},
@@ -1538,7 +1537,8 @@ uses
   ProfitLossService_ContractChild in '..\..\Forms\Document\ProfitLossService_ContractChild.pas' {ProfitLossService_ContractChildForm: TParentForm},
   PromoManagerDialog in '..\..\Forms\Document\PromoManagerDialog.pas' {PromoManagerDialogForm: TParentForm},
   Sale_Pay in '..\..\Forms\Document\Sale_Pay.pas' {Sale_PayForm: TParentForm},
-  Sale_PayJournal in '..\..\Forms\Document\Sale_PayJournal.pas' {Sale_PayJournalForm: TParentForm};
+  Sale_PayJournal in '..\..\Forms\Document\Sale_PayJournal.pas' {Sale_PayJournalForm: TParentForm},
+  Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
