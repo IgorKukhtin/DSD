@@ -109,12 +109,12 @@ BEGIN
                                                                )
                                  );
          END IF;
-         
+
       END IF;
 
      -- !!!определили параметр!!!
      IF vbMovementDescId = zc_Movement_Inventory()
-     THEN 
+     THEN
          vbIsCloseInventory:= (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
                                FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
                                                                      , inLevel2      := 'Movement'
@@ -806,7 +806,7 @@ BEGIN
                          --, COALESCE (MIFloat_PartionCell.ValueData, 0)   :: Integer AS PartionCellId
                            , 0   :: Integer AS PartionCellId
 
-                           , CASE 
+                           , CASE
                                   WHEN vbUnitId = zc_Unit_RK() -- Розподільчий комплекс
                                        AND 1=1
                                        --AND vbUserId = 5 -- !!!tmp
@@ -901,7 +901,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_PartionCell
                                                        ON MIFloat_PartionCell.MovementItemId = MovementItem.Id
                                                       AND MIFloat_PartionCell.DescId         = zc_MIFloat_PartionCell()
-                                                          
+
                     )
            -- Результат
            SELECT CASE WHEN vbMovementDescId = zc_Movement_Loss()
@@ -981,7 +981,7 @@ BEGIN
                                                         , inCount               := tmp.Count
                                                         , inCuterWeight         := 0
                                                         , inPartionGoodsDate    := tmp.PartionGoodsDate
-                                                        , inPartionGoods        := tmp.PartionGoods  
+                                                        , inPartionGoods        := tmp.PartionGoods
                                                         , inPartNumber          := NULL
                                                         , inModel               := NULL
                                                         , inGoodsKindId         := tmp.GoodsKindId
@@ -1039,8 +1039,8 @@ BEGIN
                                                                                         ELSE NULL
                                                                                    END
                                                         , inUnitId              := NULL
-                                                        , inStorageId           := NULL  
-                                                        , inPartionModelId      := NULL 
+                                                        , inStorageId           := NULL
+                                                        , inPartionModelId      := NULL
                                                         , inUserId              := -1 * vbUserId
                                                          )
 
@@ -1237,7 +1237,7 @@ BEGIN
                            , tmpMI.PartNumber
                            , tmpMI.PartionGoodsDate
                            , tmpMI.PartionGoods
-                           
+
 
                            , tmpMI.Amount
                            , tmpMI.Count
@@ -1260,7 +1260,7 @@ BEGIN
                        , tmp.AssetId_two
                        , tmp.PartionCellId
                        , tmp.PartionGoodsDate
-                       , tmp.PartionGoods 
+                       , tmp.PartionGoods
                        , tmp.PartNumber
                        , tmp.myId -- если нет суммирования - каждое взвешивание в отдельной строчке
                 HAVING SUM (tmp.Amount_mi) <> 0
@@ -1459,7 +1459,7 @@ BEGIN
             AND MovementItem.DescId     = zc_MI_Master()
             AND MovementItem.isErased   = FALSE
            ;
-          
+
      END IF;
 
 
@@ -1654,14 +1654,17 @@ BEGIN
                          LEFT JOIN MovementLinkObject AS MLO_To
                                                       ON MLO_To.MovementId = inMovementId
                                                      AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                     -- !!!приход на РК!!!
                                                      AND MLO_To.ObjectId   = zc_Unit_RK()
                     WHERE MLO_From.MovementId = inMovementId
                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
+                      -- !!!расход с упаковки!!!
                       AND MLO_From.ObjectId   IN (zc_Unit_Pack(), zc_Unit_RK_Label())
                    )
         -- AND vbUserId = 5
      THEN
-         PERFORM lpUpdate_MI_Send_byWeighingProduction_all (inMovementId_from:= inMovementId
+         PERFORM lpUpdate_MI_Send_byWeighingProduction_all (inOperDate       := inOperDate
+                                                          , inMovementId_from:= inMovementId
                                                           , inMovementId_To  := vbMovementId_begin
                                                           , inUserId         := vbUserId
                                                            );
