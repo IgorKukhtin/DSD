@@ -123,13 +123,16 @@ BEGIN
                                 AND MovementFloat_Logist.DescId = zc_MovementFloat_Logist()
     WHERE tmpText.Ord = 7
     
-/* UNION
+ UNION
     SELECT  tmpText.Ord             ::Integer
           , tmpText.Name            ::TVarChar
-          , ''                    ::TVarChar AS Value 
+          , zfConvert_FloatToString (MovementFloat_Report.ValueData) ::TVarChar AS Value
     FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Report
+                                 ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Report.DescId = zc_MovementFloat_Report()
     WHERE tmpText.Ord = 8     
-    */
+    
 ORDER by 1  
     ;
 

@@ -70,7 +70,14 @@ BEGIN
         --Logist
         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Logist(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
     END IF;
-   
+
+    IF inOrd = 8
+    THEN 
+        --замена
+        inValue:= REPLACE (TRIM (inValue), ',', '.');
+        --Logist
+        PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Report(), vbMovementId_PromoTradeCondition, zfConvert_StringToFloat(inValue)::TFloat);
+    END IF;   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
