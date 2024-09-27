@@ -9,9 +9,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDat
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                        , TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                        , TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                       , TVarChar, TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
@@ -33,6 +37,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
    OUT outSumma                   TFloat    , -- сумма расчет
 
     IN inMovementId_List          TVarChar  , -- список Ид док для затрат
+    IN inInvNumberInvoice         TVarChar  , -- Счет(клиента)
     IN inComment                  TVarChar  , -- Комментарий
     IN inBusinessId               Integer   , -- Бизнес
     IN inContractId               Integer   , -- Договор
@@ -261,6 +266,8 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), CASE WHEN inPartnerId <> 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN inPartnerId ELSE inJuridicalId END, ioId, vbAmount, NULL);
 
+     -- счет клиента
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 

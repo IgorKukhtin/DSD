@@ -3,6 +3,7 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1362
+  ExplicitLeft = -198
   ExplicitWidth = 1378
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -799,7 +800,7 @@
           Height = 171
           Align = alClient
           TabOrder = 1
-          Properties.ActivePage = tsPartner
+          Properties.ActivePage = tsPromoPartnerList
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
           ClientRectRight = 817
@@ -3566,6 +3567,7 @@
     Width = 1362
     Height = 113
     TabOrder = 3
+    ExplicitTop = -2
     ExplicitWidth = 1362
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
@@ -3628,7 +3630,7 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 4
-      Width = 178
+      Width = 97
     end
     object cxLabel11: TcxLabel
       Left = 788
@@ -3732,14 +3734,14 @@
       Width = 87
     end
     object edCostPromo: TcxCurrencyEdit
-      Left = 840
+      Left = 810
       Top = 54
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False
       Properties.UseThousandSeparator = True
       TabOrder = 12
-      Width = 73
+      Width = 103
     end
     object cxLabel12: TcxLabel
       Left = 811
@@ -3756,7 +3758,7 @@
       Top = 54
       Properties.MaxLength = 255
       TabOrder = 11
-      Width = 257
+      Width = 225
     end
     object cxLabel14: TcxLabel
       Left = 8
@@ -3848,7 +3850,7 @@
     end
     object cbPromo: TcxCheckBox
       Left = 1019
-      Top = 18
+      Top = 7
       Hint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
       Caption = #1040#1082#1094#1080#1103' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 37
@@ -3871,7 +3873,7 @@
     end
     object cbisTaxPromo: TcxCheckBox
       Left = 1165
-      Top = 45
+      Top = 47
       Caption = '% '#1089#1082#1080#1076#1082#1080
       Properties.ReadOnly = True
       TabOrder = 40
@@ -3879,7 +3881,7 @@
     end
     object cbisTaxPromo_Condition: TcxCheckBox
       Left = 1245
-      Top = 45
+      Top = 47
       Caption = '% '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
       Properties.ReadOnly = True
       TabOrder = 41
@@ -3912,6 +3914,31 @@
       Properties.ReadOnly = True
       TabOrder = 44
       Width = 103
+    end
+    object cxLabel27: TcxLabel
+      Left = 485
+      Top = 4
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 486
+      Top = 18
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 46
+      Width = 72
+    end
+    object cbCost: TcxCheckBox
+      Left = 1019
+      Top = 28
+      Hint = #1045#1089#1083#1080' '#1044#1072' - '#1101#1090#1086' '#1040#1082#1094#1080#1103', '#1053#1077#1090' - '#1058#1077#1085#1076#1077#1088#1099
+      Caption = #1047#1072#1090#1088#1072#1090#1099' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 47
+      Width = 113
     end
   end
   object deMonthPromo: TcxDateEdit [2]
@@ -3955,7 +3982,7 @@
     Caption = #1054#1078#1080#1076#1072#1077#1090#1089#1103' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
   end
   object edPromoStateKind: TcxButtonEdit [8]
-    Left = 1128
+    Left = 1137
     Top = 18
     Properties.Buttons = <
       item
@@ -3965,10 +3992,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 153
+    Width = 145
   end
   object cxLabel23: TcxLabel [9]
-    Left = 1128
+    Left = 1137
     Top = 4
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
   end
@@ -7306,6 +7333,28 @@
         Component = edServiceDate
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PaidKindName'
+        Value = Null
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCost'
+        Value = Null
+        Component = cbCost
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 264
@@ -7442,6 +7491,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisCost'
+        Value = Null
+        Component = cbCost
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inCostPromo'
         Value = Null
         Component = edCostPromo
@@ -7485,6 +7542,14 @@
         Name = 'inPersonalId'
         Value = Null
         Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -7560,6 +7625,12 @@
       end
       item
         Control = deEndReturn
+      end
+      item
+        Control = edPaidKind
+      end
+      item
+        Control = cbCost
       end>
     Left = 256
     Top = 265
@@ -7928,8 +7999,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 460
-    Top = 8
+    Left = 412
+    Top = 24
   end
   object GuidesPersonalTrade: TdsdGuides
     KeyField = 'Id'
@@ -10797,5 +10868,47 @@
     PackSize = 1
     Left = 904
     Top = 360
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = False
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    Left = 512
+    Top = 16
   end
 end

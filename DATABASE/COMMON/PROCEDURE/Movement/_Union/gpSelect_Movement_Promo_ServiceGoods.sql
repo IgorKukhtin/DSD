@@ -38,9 +38,11 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              --
              , ContractId       Integer     --Договора
              , ContractCode     Integer     --Договора
-             , ContractName     TVarChar    --Договора
+             , ContractName     TVarChar    --Договора 
+             , ContractTagName  TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , RetailId Integer, RetailName TVarChar
+             , RetailId Integer, RetailName TVarChar  
+             , PaidKindName TVarChar
              , PromoItemName TVarChar
              , Comment TVarChar 
              , PromoItemName_full TVarChar 
@@ -90,20 +92,61 @@ BEGIN
                                 AND Movement.DescId = zc_Movement_PromoAdvertising()
                               )
          --получаем договора из  PromoPartner
-         , tmpPromoPartner AS (SELECT 
-                                   Movement.ParentId
-                                 , Object_Contract.Id         AS ContractId
-                                 , Object_Contract.ObjectCode AS ContractCode
-                                 , Object_Contract.ValueData  AS InvNumber
-                               FROM Movement 
-                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                                                ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                               AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-                           
-                               WHERE Movement.ParentId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
-                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
-                                 AND Movement.DescId = zc_Movement_PromoPartner() 
+         , tmpPromoPartner AS (
+                               WITH
+                               tmpMov AS (SELECT Movement.*
+                                          FROM Movement
+                                          WHERE Movement.ParentId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
+                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
+                                            AND Movement.DescId = zc_Movement_PromoPartner()
+                                          )
+                             , tmpMI AS (SELECT MovementItem.*
+                                         FROM MovementItem
+                                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMov.Id FROM tmpMov) 
+                                           AND MovementItem.DescId = zc_MI_Master()
+                                           AND MovementItem.isErased = FALSE
+                                         )
+                               SELECT 
+                                   Movement.ParentId    
+                                   
+                                 , Object_Contract.Id              AS ContractId
+                                 , Object_Contract.ObjectCode      AS ContractCode
+                                 , Object_Contract.ValueData       AS InvNumber 
+                                 , Object_ContractTag.ValueData    AS ContractTagName 
+                                 
+                                 , STRING_AGG (DISTINCT Object_Juridical.ValueData, ';')  AS JuridicalName 
+                                 , STRING_AGG (DISTINCT Object_Retail.ValueData, ';')     AS RetailName
+
+                               FROM tmpMov  AS  Movement
+                                   INNER JOIN tmpMI AS MI_PromoPartner
+                                                           ON MI_PromoPartner.MovementId = Movement.Id
+                                   INNER JOIN Object AS Object_Partner
+                                                     ON Object_Partner.Id = MI_PromoPartner.ObjectId
+                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                              ON ObjectLink_Partner_Juridical.ObjectId = MI_PromoPartner.ObjectId
+                                                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                   LEFT OUTER JOIN Object AS Object_Juridical
+                                                          ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                                   LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                              ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.ID
+                                                             AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                   LEFT OUTER JOIN Object AS Object_Retail
+                                                          ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
+                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                                    ON MILinkObject_Contract.MovementItemId = MI_PromoPartner.Id
+                                                                   AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                   LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+
+                                   LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                                        ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                                       AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+                                   LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+                               GROUP BY Movement.ParentId
+                                      , Object_Contract.Id
+                                      , Object_Contract.ObjectCode
+                                      , Object_Contract.ValueData
+                                      , Object_ContractTag.ValueData
                                ) 
          --строки Promo
          , tmpMI_promo AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
@@ -150,13 +193,15 @@ BEGIN
              , MovementLinkObject_Personal.ObjectId        AS PersonalId         --Ответственный представитель маркетингового отдела
              , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела
 
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementLinkObject_Contract.ObjectId ELSE tmpPromoPartner.ContractId END  AS ContractId        --  
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Contract.ObjectCode ELSE tmpPromoPartner.ContractCode END          AS ContractCode
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Contract.ValueData ELSE tmpPromoPartner.InvNumber END              AS ContractName      --
-             , Object_Juridical.Id                         AS JuridicalId
-             , Object_Juridical.ValueData                  AS JuridicalName
-             , Object_Retail.Id                            AS RetailId
-             , Object_Retail.ValueData                     AS RetailNamе
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementLinkObject_Contract.ObjectId ELSE tmpPromoPartner.ContractId END            AS ContractId        --  
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Contract.ObjectCode ELSE tmpPromoPartner.ContractCode END                    AS ContractCode
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Contract.ValueData ELSE tmpPromoPartner.InvNumber END  ::TVarChar            AS ContractName      -- 
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_ContractTag.ValueData ELSE tmpPromoPartner.ContractTagName END  ::TVarChar   AS ContractTagName
+             , Object_Juridical.Id                                                                                                                           AS JuridicalId
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Juridical.ValueData ELSE tmpPromoPartner.JuridicalName END  ::TVarChar       AS JuridicalName
+             , Object_Retail.Id                                                                                                                              AS RetailId
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Retail.ValueData ELSE tmpPromoPartner.RetailName END  ::TVarChar             AS RetailName   
+             , Object_PaidKind.ValueData  ::TVarChar                                                                                                         AS PaidKindName
              
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE tmpAdvertising.AdvertisingName END ::TVarChar AS PromoItemName      --Стаья затрат
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementString_Comment.ValueData ELSE tmpAdvertising.Comment END   ::TVarChar AS Comment            --Примечание затрат
@@ -235,12 +280,23 @@ BEGIN
                                           ON MovementLinkObject_PromoStateKind.MovementId = Movement.Id
                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
              --PromoTrade
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                          AND Movement.DescId = zc_Movement_PromoTrade()
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                                  ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                                 AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+             LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                                   ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id

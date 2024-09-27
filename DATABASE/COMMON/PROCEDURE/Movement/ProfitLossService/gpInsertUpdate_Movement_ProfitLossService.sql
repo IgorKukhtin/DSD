@@ -7,7 +7,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVar
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -16,7 +17,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inAmountIn                 TFloat    , -- Сумма операции
     IN inAmountOut                TFloat    , -- Сумма операции
     IN inBonusValue               TFloat    , -- % бонуса
-    IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте)
+    IN inAmountCurrency           TFloat    , -- сумма начислений (в валюте) 
+    IN inInvNumberInvoice         TVarChar  , -- Счет(клиента)
     IN inComment                  TVarChar  , -- Комментарий
     IN inContractId               Integer   , -- Договор
     IN inContractMasterId         Integer   , -- Договор(условия)
@@ -77,7 +79,8 @@ BEGIN
                                                       , inAmountIn          := inAmountIn
                                                       , inAmountOut         := inAmountOut
                                                       , inBonusValue        := inBonusValue
-                                                      , inAmountCurrency    := inAmountCurrency
+                                                      , inAmountCurrency    := inAmountCurrency  
+                                                      , inInvNumberInvoice  := inInvNumberInvoice
                                                       , inComment           := inComment
                                                       , inContractId        := inContractId
                                                       , inContractMasterId  := inContractMasterId

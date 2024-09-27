@@ -30,7 +30,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AssetId Integer, AssetName TVarChar
              , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
-             , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar
+             , MovementId_doc Integer, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar 
+             , InvNumberInvoice TVarChar
              )
 AS
 $BODY$
@@ -105,7 +106,8 @@ BEGIN
            , CAST ('' as TVarChar)            AS TradeMarkName
            , 0                                AS MovementId_doc
            , CAST ('' as TVarChar)            AS InvNumber_doc
-           , CAST ('' as TVarChar)            AS InvNumber_full_doc             
+           , CAST ('' as TVarChar)            AS InvNumber_full_doc
+           , CAST ('' AS TVarChar)            AS InvNumberInvoice             
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
   
@@ -200,7 +202,8 @@ BEGIN
            , Object_TradeMark.ValueData          AS TradeMarkName
            , Movement_Doc.Id                     AS MovementId_doc
            , Movement_Doc.InvNumber              AS InvNumber_doc
-           , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
+           , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc 
+           , MovementString_InvNumberInvoice.ValueData ::TVarChar AS InvNumberInvoice
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
             
@@ -220,12 +223,16 @@ BEGIN
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                     ON MovementString_InvNumberPartner.MovementId = Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementString AS MovementString_MovementId
-                                     ON MovementString_MovementId.MovementId =  Movement.Id
+                                     ON MovementString_MovementId.MovementId = Movement.Id
                                     AND MovementString_MovementId.DescId = zc_MovementString_MovementId()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                     ON MovementString_InvNumberInvoice.MovementId = Movement.Id
+                                    AND MovementString_InvNumberInvoice.DescId = zc_MovementString_InvNumberInvoice()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id

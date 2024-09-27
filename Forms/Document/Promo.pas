@@ -551,6 +551,10 @@ type
     actChoiceTradeMark: TOpenChoiceForm;
     actChoiceGoodsGroupProperty: TOpenChoiceForm;
     actChoiceGoodsGroupDirection: TOpenChoiceForm;
+    cxLabel27: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
+    cbCost: TcxCheckBox;
   private
     { Private declarations }
   public

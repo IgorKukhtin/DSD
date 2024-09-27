@@ -150,8 +150,8 @@
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [18]
-    Left = 8
-    Top = 424
+    Left = 10
+    Top = 430
     TabOrder = 10
     Width = 591
   end
@@ -249,7 +249,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 31
-    Width = 273
+    Width = 187
   end
   object cxLabel14: TcxLabel [32]
     Left = 293
@@ -461,6 +461,17 @@
     TabOrder = 59
     Width = 142
   end
+  object cxLabel29: TcxLabel [60]
+    Left = 202
+    Top = 317
+    Caption = #1057#1095#1077#1090'('#1082#1083#1080#1077#1085#1090#1072')'
+  end
+  object ceInvNumberInvoice: TcxTextEdit [61]
+    Left = 201
+    Top = 334
+    TabOrder = 61
+    Width = 79
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 14
     Top = 453
@@ -623,6 +634,14 @@
         Value = Null
         Component = GuidesIncomeCost
         ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1082,6 +1101,13 @@
         Value = Null
         Component = GuidesDoc
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1611,7 +1637,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 101
+    Left = 45
     Top = 323
   end
   object GuidesAsset: TdsdGuides

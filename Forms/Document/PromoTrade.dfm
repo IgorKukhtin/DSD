@@ -599,8 +599,6 @@ inherited PromoTradeForm: TPromoTradeForm
               Height = 175
               Align = alClient
               TabOrder = 0
-              ExplicitLeft = 3
-              ExplicitTop = -96
               object cxGridDBTableViewMov2: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = Mov2DS
@@ -958,8 +956,6 @@ inherited PromoTradeForm: TPromoTradeForm
     Width = 1164
     Height = 153
     TabOrder = 3
-    ExplicitLeft = -1
-    ExplicitTop = 6
     ExplicitWidth = 1164
     ExplicitHeight = 153
     inherited edInvNumber: TcxTextEdit
@@ -3575,8 +3571,7 @@ inherited PromoTradeForm: TPromoTradeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 420
-    Top = 8
+    Left = 492
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'

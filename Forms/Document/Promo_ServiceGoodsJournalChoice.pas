@@ -33,6 +33,10 @@ type
     DescName: TcxGridDBColumn;
     ContractCode: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    ContractTagName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

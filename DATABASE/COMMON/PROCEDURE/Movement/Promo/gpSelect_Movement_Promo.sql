@@ -18,7 +18,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumber        Integer     --Номер документа
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
-             , StatusName       TVarChar    --Статус
+             , StatusName       TVarChar    --Статус      
+             , PaidKindId Integer, PaidKindName TVarChar
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
              , PromoStateKindId Integer     -- Состояние Акции
@@ -61,7 +62,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , DayCount         Integer     --
              , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
              , ChangePercentName TVarChar    -- Скидка по договору
-             , isPromo          Boolean     --Акция (да/нет)
+             , isPromo          Boolean     --Акция (да/нет)  
+             , isCOst           Boolean     --затраты
              , Checked          Boolean     --Согласовано (да/нет)
              , isTaxPromo       Boolean     -- схема % скидки
              , isTaxPromo_Condition  Boolean     -- схема % компенсации
@@ -183,7 +185,9 @@ BEGIN
              , Movement_Promo.InvNumber :: Integer                               --Номер документа
              , Movement_Promo.OperDate                                           --Дата документа
              , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusCode ELSE Object_Status.ObjectCode END :: Integer  AS StatusCode
-             , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Object_Status.ValueData END :: TVarChar AS StatusName
+             , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Object_Status.ValueData END :: TVarChar AS StatusName   
+             , Object_PaidKind.Id                          AS PaidKindId
+             , Object_PaidKind.ValueData                   AS PaidKindName
              , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
              , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
              , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
@@ -235,7 +239,8 @@ BEGIN
               END as IsFirst
              , COALESCE (MI_Child.ChangePercentName, 'ДА')    :: TVarChar AS ChangePercentName
 
-             , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
+             , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет) 
+             , COALESCE (MovementBoolean_Cost.ValueData, FALSE)    :: Boolean AS isCOst   -- затраты (да/нет)
              , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
              , CASE WHEN MovementBoolean_TaxPromo.ValueData = TRUE  THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo --
              , CASE WHEN MovementBoolean_TaxPromo.ValueData = FALSE THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo_Condition  --
@@ -305,6 +310,11 @@ BEGIN
              LEFT JOIN Object AS Object_PriceList
                               ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
              LEFT JOIN MovementDate AS MovementDate_StartPromo
                                      ON MovementDate_StartPromo.MovementId = Movement_Promo.Id
                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
@@ -366,6 +376,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                        ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                       AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_Cost
+                                       ON MovementBoolean_Cost.MovementId = Movement_Promo.Id
+                                      AND MovementBoolean_Cost.DescId = zc_MovementBoolean_Cost()
 
              LEFT JOIN MovementBoolean AS MovementBoolean_TaxPromo
                                        ON MovementBoolean_TaxPromo.MovementId = Movement_Promo.Id

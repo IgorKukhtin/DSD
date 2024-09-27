@@ -378,9 +378,20 @@
     Width = 317
   end
   object cxLabel22: TcxLabel [47]
-    Left = 445
-    Top = 257
+    Left = 442
+    Top = 255
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
+  end
+  object ceInvNumberInvoice: TcxTextEdit [48]
+    Left = 683
+    Top = 84
+    TabOrder = 48
+    Width = 79
+  end
+  object cxLabel29: TcxLabel [49]
+    Left = 684
+    Top = 67
+    Caption = #1057#1095#1077#1090'('#1082#1083#1080#1077#1085#1090#1072')'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -473,6 +484,14 @@
         Value = Null
         Component = edAmountCurrency
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -603,8 +622,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 633
-    Top = 68
+    Left = 625
+    Top = 132
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProfitLossService'
@@ -927,10 +946,17 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_doc'
+        Name = 'InvNumber_full_doc'
         Value = Null
         Component = GuidesDoc
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
         DataType = ftString
         MultiSelectSeparator = ','
       end>

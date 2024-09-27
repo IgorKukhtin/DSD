@@ -73,6 +73,7 @@ type
     PersonalName_main: TcxGridDBColumn;
     TradeMarkName: TcxGridDBColumn;
     InvNumber_doc: TcxGridDBColumn;
+    InvNumberInvoice: TcxGridDBColumn;
   private
     { Private declarations }
   public
