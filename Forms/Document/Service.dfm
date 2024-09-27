@@ -1780,20 +1780,6 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDate'
-        Value = 43986d
-        Component = ceOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 43986d
-        Component = ceOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'PromoItemName_full'
         Value = Null
         Component = ceComment

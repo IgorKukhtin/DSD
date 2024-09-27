@@ -302,12 +302,12 @@
   end
   object cxLabel18: TcxLabel [38]
     Left = 608
-    Top = 207
+    Top = 112
     Caption = #1042#1072#1083#1102#1090#1072' '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
   end
   object edCurrency: TcxButtonEdit [39]
     Left = 608
-    Top = 228
+    Top = 131
     Properties.Buttons = <
       item
         Default = True
@@ -383,14 +383,14 @@
     Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075
   end
   object ceInvNumberInvoice: TcxTextEdit [48]
-    Left = 683
-    Top = 84
+    Left = 608
+    Top = 228
     TabOrder = 48
-    Width = 79
+    Width = 154
   end
   object cxLabel29: TcxLabel [49]
-    Left = 684
-    Top = 67
+    Left = 609
+    Top = 209
     Caption = #1057#1095#1077#1090'('#1082#1083#1080#1077#1085#1090#1072')'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -960,8 +960,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 705
-    Top = 92
+    Left = 630
+    Top = 236
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1500,8 +1500,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 656
-    Top = 199
+    Left = 624
+    Top = 111
   end
   object GuidesTradeMark: TdsdGuides
     KeyField = 'Id'
@@ -1558,20 +1558,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inStartDate'
-        Value = Null
-        Component = ceOperDate
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = Null
-        Component = ceOperDate
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
