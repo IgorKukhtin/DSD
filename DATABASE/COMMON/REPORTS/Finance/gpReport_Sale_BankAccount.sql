@@ -357,7 +357,7 @@ BEGIN
                                               AND tmpContainer.PartnerId   = _tmpSale.PartnerId
                                               AND tmpContainer.ContractId  = _tmpSale.ContractId
                                               AND tmpContainer.PaidKindId  = _tmpSale.PaidKindId
-                             WHERE _tmpSale.OperDate < inStartDate - INTERVAL '1 DAY'
+                             WHERE _tmpSale.OperDate < inStartDate
 
                             )
                  -- Результат по накладным
