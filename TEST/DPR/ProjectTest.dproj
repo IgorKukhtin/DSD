@@ -5311,10 +5311,6 @@
 				<Form>Report_ProfitLossServiceDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_ProfitLossService.pas">
-				<Form>Report_ProfitLossServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProductionUnion_TaxExitUpdate.pas">
 				<Form>Report_ProductionUnion_TaxExitUpdateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -5385,6 +5381,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_PayJournal.pas">
 				<Form>Sale_PayJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ProfitLossService.pas">
+				<Form>Report_ProfitLossServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

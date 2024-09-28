@@ -35,13 +35,15 @@ BEGIN
                                           , ioMonthPromo     := tmp.MonthPromo
                                           , inCheckDate      := Null          ::TDateTime
                                           , inChecked        := False         ::Boolean
-                                          , inIsPromo        := tmp.IsPromo
+                                          , inIsPromo        := tmp.IsPromo 
+                                          , inisCost         := tmp.isCost
                                           , inCostPromo      := tmp.CostPromo
                                           , inComment        := '' ::TVarChar
                                           , inCommentMain    := tmp.CommentMain
                                           , inUnitId         := tmp.UnitId
                                           , inPersonalTradeId:= tmp.PersonalTradeId
-                                          , inPersonalId     := tmp.PersonalId
+                                          , inPersonalId     := tmp.PersonalId 
+                                          , inPaidKindId     := tmp.PaidKindId
                                           , inUserId         := vbUserId
                                            )
      FROM gpGet_Movement_Promo (ioId, inOperDate, 'False', inSession) AS tmp;

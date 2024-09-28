@@ -3,7 +3,6 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1362
-  ExplicitLeft = -198
   ExplicitWidth = 1378
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -800,7 +799,7 @@
           Height = 171
           Align = alClient
           TabOrder = 1
-          Properties.ActivePage = tsPromoPartnerList
+          Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
           ClientRectRight = 817
@@ -3567,7 +3566,6 @@
     Width = 1362
     Height = 113
     TabOrder = 3
-    ExplicitTop = -2
     ExplicitWidth = 1362
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
