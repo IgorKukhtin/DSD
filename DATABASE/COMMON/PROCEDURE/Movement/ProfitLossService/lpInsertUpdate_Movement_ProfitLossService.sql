@@ -162,11 +162,12 @@ BEGIN
                                                                    );
      END IF;*/
 
-     IF inUserId <> 5
+     IF inUserId <> 5 OR 1=1
      THEN
      -- 5.3. проводим Документ
-     PERFORM lpComplete_Movement_Service (inMovementId := ioId
-                                        , inUserId     := inUserId);
+     PERFORM gpComplete_Movement_ProfitLossService (inMovementId := ioId
+                                                  , inSession    := inUserId :: TVarChar
+                                                   );
      END IF;
 
 END;

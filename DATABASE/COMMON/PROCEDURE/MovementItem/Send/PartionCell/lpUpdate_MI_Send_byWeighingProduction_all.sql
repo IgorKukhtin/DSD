@@ -1,9 +1,10 @@
 -- Function: lpUpdate_MI_Send_byWeighingProduction_all()
 
 DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byWeighingProduction_all (Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_Send_byWeighingProduction_all (TDateTime, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_Send_byWeighingProduction_all(
-    IN inOperDate              Integer  , --
+    IN inOperDate              TDateTime, --
     IN inMovementId_from       Integer  , --
     IN inMovementId_To         Integer  , --
     IN inUserId                Integer
@@ -260,6 +261,8 @@ BEGIN
                                     , tmpMI_to.GoodsKindId
                                       -- сразу в место отбора
                                     , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionCell_1(), tmpMI_to.MovementItemId, zc_PartionCell_RK())
+                                      --
+                                    , lpInsertUpdate_MovementItemFloat (zc_MIFloat_PartionCell_real_1(), tmpMI_to.MovementItemId, COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = tmpMI_to.MovementItemId AND MIF.DescId = zc_MIFloat_PartionCell_real_1()), 0))
                                       -- сразу закрыли
                                     , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_PartionCell_Close_1(), tmpMI_to.MovementItemId, TRUE)
 
@@ -301,7 +304,7 @@ BEGIN
 
        -- перенесли протокол по ячейкам Хранения из Взвешиваний
        INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
-          SELECT _tmpRes_PartionCell.MovementItemId
+          SELECT _tmpRes_PartionCell.MovementItemId_to
                , MovementItemProtocol.OperDate
                , MovementItemProtocol.UserId
                , MovementItemProtocol.ProtocolData
@@ -337,5 +340,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_MI_Send_byWeighingProduction_all (inMovementId_from := 0, inMovementId_to := 0 , inUserId:= zfCalc_UserAdmin() :: Integer);
--- select * from gpInsert_ScaleCeh_Movement_all(inBranchCode := 1 , inMovementId := 28931444 , inOperDate := ('07.08.2024')::TDateTime ,  inSession := '378f6845-ef70-4e5b-aeb9-45d91bd5e82e');
+-- SELECT * FROM lpUpdate_MI_Send_byWeighingProduction_all (inOperDate:= NULL, inMovementId_from := 0, inMovementId_to := 0 , inUserId:= zfCalc_UserAdmin() :: Integer);

@@ -128,7 +128,7 @@ BEGIN
           , Object_SignInternal.ValueData :: TVarChar         AS SignInternalName
              
           , CAST (TRUE  AS Boolean)                           AS isPromo
-          , CAST (TRUE  AS Boolean)                           AS isCost
+          , CAST (FALSE AS Boolean)                           AS isCost
           , CAST (FALSE AS Boolean)                           AS Checked
           , CAST (FALSE AS Boolean)                           AS isTaxPromo            -- схема % скидки
           , CAST (FALSE AS Boolean)                           AS isTaxPromo_Condition  -- схема % компенсации

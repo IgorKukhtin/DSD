@@ -349,8 +349,9 @@ BEGIN
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
      THEN
-          PERFORM lpComplete_Movement_Service (inMovementId := ioId
-                                             , inUserId     := vbUserId);
+          PERFORM gpComplete_Movement_Service (inMovementId := ioId
+                                             , inSession    := inSession
+                                              );
      END IF;
 
 END;
