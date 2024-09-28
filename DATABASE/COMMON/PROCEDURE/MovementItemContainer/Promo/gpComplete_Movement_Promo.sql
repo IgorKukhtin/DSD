@@ -29,6 +29,28 @@ BEGIN
                                         , inUserId    := vbUserId
                                          );
 
+    -- Проверили - Компенсация,грн 
+    IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemFloat AS MIFloat_SummOutMarket
+                                                    ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_SummOutMarket.DescId         = zc_MIFloat_SummOutMarket()
+                        LEFT JOIN MovementItemFloat AS MIFloat_SummInMarket
+                                                    ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_SummInMarket.DescId         = zc_MIFloat_SummInMarket()
+                   WHERE COALESCE (MIFloat_SummOutMarket.ValueData, 0) = 0
+                     AND COALESCE (MIFloat_SummInMarket.ValueData, 0)  = 0
+                  )
+       -- если Затраты
+       AND EXISTS (SELECT 1 FROM MovementBoolean AS MB WHERE MB.MovementId = inMovementId AND MB.DescId = zc_MovementBoolean_Cost() AND MB.ValueData = TRUE)
+    THEN
+        RAISE EXCEPTION 'Ошибка.Для Акции с признаком <Затраты> необходимо заполнить ячейку <Компенсация,грн>.';
+    END IF;
+
+
     -- Проверили inPriceTender
     IF EXISTS (SELECT 1
                 FROM MovementItem

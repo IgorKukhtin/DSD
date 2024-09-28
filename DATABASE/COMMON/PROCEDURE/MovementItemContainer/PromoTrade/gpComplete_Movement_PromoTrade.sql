@@ -14,12 +14,29 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PromoTrade());
 
+
+    -- Проверили - Сумма, грн 
+    IF EXISTS (SELECT 1
+                   FROM (SELECT 1 AS x) AS xx
+                        LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                              AND MovementItem.DescId     = zc_MI_Master()
+                                              AND MovementItem.isErased   = FALSE
+                        LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                                    ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                                   AND MIFloat_Summ.DescId         = zc_MIFloat_Summ()
+                   WHERE COALESCE (MIFloat_Summ.ValueData, 0) = 0
+                  )
+    THEN
+        RAISE EXCEPTION 'Ошибка.В строчной части необходимо заполнить ячейку <Сумма,грн>.';
+    END IF;
+
+
      -- проводим Документ + сохранили протокол
      PERFORM lpComplete_Movement_PromoTrade (inMovementId := inMovementId
                                            , inUserId     := vbUserId
                                             );
                                              
-     -- проводим Документ + сохранили протокол
+     -- пересчитали данные - История клиента
      PERFORM gpUpdate_Movement_PromoTradeHistory (inMovementId := inMovementId
                                                 , inSession    := inSession
                                                  );
