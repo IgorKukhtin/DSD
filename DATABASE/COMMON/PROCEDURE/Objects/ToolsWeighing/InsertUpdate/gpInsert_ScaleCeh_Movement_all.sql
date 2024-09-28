@@ -1651,11 +1651,11 @@ BEGIN
      IF vbMovementDescId = zc_Movement_Send()
         AND EXISTS (SELECT 1
                     FROM MovementLinkObject AS MLO_From
-                         LEFT JOIN MovementLinkObject AS MLO_To
-                                                      ON MLO_To.MovementId = inMovementId
-                                                     AND MLO_To.DescId     = zc_MovementLinkObject_To()
-                                                     -- !!!приход на РК!!!
-                                                     AND MLO_To.ObjectId   = zc_Unit_RK()
+                         INNER JOIN MovementLinkObject AS MLO_To
+                                                       ON MLO_To.MovementId = inMovementId
+                                                      AND MLO_To.DescId     = zc_MovementLinkObject_To()
+                                                      -- !!!приход на РК!!!
+                                                      AND MLO_To.ObjectId   = zc_Unit_RK()
                     WHERE MLO_From.MovementId = inMovementId
                       AND MLO_From.DescId     = zc_MovementLinkObject_From()
                       -- !!!расход с упаковки!!!
