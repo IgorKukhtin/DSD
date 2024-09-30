@@ -453,7 +453,7 @@ inherited ServiceJournalForm: TServiceJournalForm
           end
           object InvNumber_doc: TcxGridDBColumn
             Caption = #1044#1086#1082'. '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076'. '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'InvNumber_doc'
+            DataBinding.FieldName = 'InvNumber_full_doc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1082#1094#1080#1103' / '#1042#1074#1086#1076' '#1085#1086#1074#1099#1093' '#1087#1086#1079#1080#1094#1080#1081
@@ -720,6 +720,61 @@ inherited ServiceJournalForm: TServiceJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object mactOpenDocumentPromo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFormPromo
+        end
+        item
+          Action = actOpenFormPromo
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
+      ImageIndex = 28
+    end
+    object actOpenFormPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1040#1082#1094#1080#1080
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormNamePromo'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_doc'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actGetFormPromo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementFormPromo
+      StoredProcList = <
+        item
+          StoredProc = getMovementFormPromo
+        end>
+      Caption = 'actGetForm'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -835,6 +890,22 @@ inherited ServiceJournalForm: TServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocumentPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -884,6 +955,10 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
     object bbPrint_byServiceShot: TdxBarButton
       Action = actPrint_byServiceShot
+      Category = 0
+    end
+    object bbOpenDocumentPromo: TdxBarButton
+      Action = mactOpenDocumentPromo
       Category = 0
     end
   end
@@ -956,8 +1031,10 @@ inherited ServiceJournalForm: TServiceJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 'false'
-        ParamType = ptUnknown
+        Name = 'FormNamePromo'
+        Value = 'TPromoForm'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 392
@@ -1044,5 +1121,30 @@ inherited ServiceJournalForm: TServiceJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object getMovementFormPromo: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_doc'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = 'TPromoForm'
+        Component = FormParams
+        ComponentItem = 'FormNamePromo'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 192
   end
 end

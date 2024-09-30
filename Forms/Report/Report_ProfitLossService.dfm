@@ -28,36 +28,6 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountOut
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountMarket
             end
             item
@@ -73,31 +43,22 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountMarket_calc
+              Column = SummMarket_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummOutMarket_calc
+              Column = SummMarket_tm_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = SummAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountOut
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountMarket
             end
             item
@@ -113,16 +74,17 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = AmountMarket_calc
+              Column = SummMarket_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = SummOutMarket_calc
+              Column = SummMarket_tm_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = SummAmount
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -278,25 +240,15 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             Options.Editing = False
             Width = 70
           end
-          object AmountIn: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090
-            DataBinding.FieldName = 'AmountIn'
+          object Amount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
-          end
-          object AmountOut: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090
-            DataBinding.FieldName = 'AmountOut'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object MovementDescName_doc: TcxGridDBColumn
@@ -409,9 +361,9 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderHint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080','#1075#1088#1085
             Width = 80
           end
-          object AmountMarket_calc: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087'. '#1079#1072' '#1074#1077#1089', '#1082#1075' ('#1088#1072#1089#1087#1088#1077#1076'.)'
-            DataBinding.FieldName = 'AmountMarket_calc'
+          object SummMarket_calc: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103', '#1075#1088#1085' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'SummMarket_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -419,16 +371,38 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object SummOutMarket_calc: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103', '#1075#1088#1085' ('#1088#1072#1089#1087#1088#1077#1076'.)'
-            DataBinding.FieldName = 'SummOutMarket_calc'
+          object SummMarket_tm_calc: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1058#1052', '#1075#1088#1085' ('#1088#1072#1089#1087#1088#1077#1076'.)'
+            DataBinding.FieldName = 'SummMarket_tm_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090' '#1082#1088#1077#1076#1080#1090'('#1084#1072#1088#1082#1077#1090' '#1073#1102#1076#1078#1077#1090')'
             Width = 80
+          end
+          object Persent_part: TcxGridDBColumn
+            Caption = '% '#1056#1072#1089#1087#1088'.'
+            DataBinding.FieldName = 'Persent_part'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object SummAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'SummAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object TotalSumm: TcxGridDBColumn
+            Caption = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'TotalSumm'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
@@ -572,8 +546,8 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
         item
           Action = actOpenFormPromo
         end>
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
       ImageIndex = 28
     end
     object mactOpenDocument: TMultiAction
@@ -697,7 +671,6 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
     end
     object bbOpenDocumentPromo: TdxBarButton
       Action = mactOpenDocumentPromo
-      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
       Category = 0
     end
   end

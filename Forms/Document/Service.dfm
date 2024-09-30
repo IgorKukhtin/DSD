@@ -1097,7 +1097,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_doc'
+        Name = 'InvNumber_full_doc'
         Value = Null
         Component = GuidesDoc
         ComponentItem = 'TextValue'

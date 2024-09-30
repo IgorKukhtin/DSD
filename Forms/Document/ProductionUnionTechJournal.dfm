@@ -5925,7 +5925,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end>
     PackSize = 1
     Left = 848
-    Top = 425
+    Top = 409
   end
   object spDelete_Object_Print: TdsdStoredProc
     StoredProcName = 'gpDelete_Object_Print_byUser'
@@ -5933,8 +5933,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     OutputType = otResult
     Params = <>
     PackSize = 1
-    Left = 840
-    Top = 547
+    Left = 864
+    Top = 555
   end
   object spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc
     StoredProcName = 'gpReport_ProductionUnion_TaxExitUpdate'

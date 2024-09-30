@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_PersonalService_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Print (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Print(
     IN inMovementId    Integer  , -- ключ Документа
     IN inIsShowAll     Boolean  ,
+    IN inIsList        Boolean  , --для печати - данных из грида
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -304,6 +306,7 @@ BEGIN
                                       ,*/ tmpMIContainer_all.MemberId
                                       , CASE WHEN inIsShowAll = TRUE THEN tmpMIContainer_all.PositionId ELSE 0 END
                               )
+                                               
       , tmpMI_all AS (SELECT MovementItem.Id                            AS MovementItemId
                            , MovementItem.Amount
                            , MovementItem.ObjectId                      AS PersonalId
@@ -499,10 +502,9 @@ BEGIN
                            LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                                          ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                                         AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
-
-                      WHERE  MovementItem.MovementId = inMovementId
-                         AND MovementItem.DescId = zc_MI_Master()
-                         AND MovementItem.isErased = FALSE
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId = zc_MI_Master()
+                        AND MovementItem.isErased = FALSE
                      )
 
           , tmpMIChild AS (SELECT MovementItem.ParentId    AS ParentId
@@ -515,7 +517,31 @@ BEGIN
                              AND MovementItem.DescId = zc_MI_Child()
                              AND MovementItem.isErased = FALSE
                            GROUP BY MovementItem.ParentId
-                       )
+                       ) 
+                       
+       --- все строки документа или выбранные, если печать из грида 
+      , tmpMI_list AS (SELECT DISTINCT
+                              tmpMI_all.PersonalId
+                            , tmpMI_all.UnitId
+                            , tmpMI_all.PositionId
+                            , tmpMI_all.MemberId
+                            , tmpMI_all.PersonalServiceListId
+                       FROM tmpMI_all
+                       WHERE inIsList = FALSE
+                     UNION
+                       SELECT DISTINCT
+                              tmpMI_all.PersonalId
+                            , tmpMI_all.UnitId
+                            , tmpMI_all.PositionId
+                            , tmpMI_all.MemberId
+                            , tmpMI_all.PersonalServiceListId
+                       FROM tmpMI_all  
+                            INNER JOIN (SELECT OP.ReportKindId AS MovementItemId
+                                        FROM Object_Print AS OP
+                                        WHERE OP.UserId = vbUserId
+                                          AND OP.ObjectId = inMovementId) AS tmpOP ON tmpOP.MovementItemId = tmpMI_all.MovementItemId
+                       WHERE inIsList = TRUE
+                       )  
           , tmpMI AS (SELECT tmpMI_all_find.PersonalId
                            , tmpMI_all_find.UnitId
                            , tmpMI_all_find.PositionId
@@ -946,6 +972,13 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Member_Official
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
+            --если печать из грида
+            INNER JOIN tmpMI_list ON tmpMI_list.PersonalId = tmpAll.PersonalId
+                                 AND tmpMI_list.PositionId = tmpAll.PositionId
+                                 AND tmpMI_list.MemberId = tmpAll.MemberId
+                                 AND tmpMI_list.UnitId = tmpAll.UnitId
+                                 AND tmpMI_list.PersonalId = tmpAll.PersonalId
+                                -- AND inIsList = TRUE) OR (inIsList = FALSE)
        WHERE 0 <> tmpAll.SummToPay
                 + tmpAll.SummNalog    - COALESCE (tmpMIContainer.SummNalog, 0)
                 - tmpAll.SummNalogRet + COALESCE (tmpMIContainer.SummNalogRet, 0)

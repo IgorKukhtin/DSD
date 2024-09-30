@@ -55,6 +55,11 @@ type
     bbPrint_byServiceShot: TdxBarButton;
     DescName_doc: TcxGridDBColumn;
     InvNumberInvoice: TcxGridDBColumn;
+    getMovementFormPromo: TdsdStoredProc;
+    actGetFormPromo: TdsdExecStoredProc;
+    actOpenFormPromo: TdsdOpenForm;
+    mactOpenDocumentPromo: TMultiAction;
+    bbOpenDocumentPromo: TdxBarButton;
   private
     { Private declarations }
   public

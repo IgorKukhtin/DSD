@@ -34,11 +34,12 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , AmountMarket TFloat
              , SummInMarket Tfloat
              , SummOutMarket  Tfloat 
-             , SummAmount         Tfloat --сумма продажи  
+             , SummAmount         Tfloat --сумма продажи
+             , TotalSumm          TFloat
              , Persent_part       Tfloat
              , Persent_part_tm    Tfloat             
-             , AmountMarket_calc  Tfloat
-             , SummOutMarket_calc Tfloat    
+             , SummMarket_calc  Tfloat
+             , SummMarket_tm_calc Tfloat    
              ) 
 
 AS
@@ -249,20 +250,22 @@ BEGIN
                             , tmp.ContractId
                             , tmp.GoodsId
                             , tmp.GoodsKindId 
-                            , ObjectLink_Goods_TradeMark.ChildObjectId AS TradeMarkId
+                            , tmp.TradeMarkId
                             , tmp.SummAmount
                             , tmp.Sale_Summ
                             , tmp.Return_Summ
                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSumm
                             , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummSale
                             , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummReturn
-                            , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, ObjectLink_Goods_TradeMark.ChildObjectId) AS TotalSumm_tm
-                            , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, ObjectLink_Goods_TradeMark.ChildObjectId) AS TotalSummSale_tm
-                            , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, ObjectLink_Goods_TradeMark.ChildObjectId) AS TotalSummReturn_tm
+                            , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSumm_tm
+                            , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSummSale_tm
+                            , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSummReturn_tm
+                           -- , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.GoodsId, tmp.GoodsKindId) AS TotalSumm_goods
                        FROM (SELECT ContainerLO_Juridical.ObjectId        AS JuridicalId
                                   , ContainerLinkObject_Contract.ObjectId AS ContractId
                                   , MIContainer.ObjectId_analyzer         AS GoodsId
                                   , MIContainer.ObjectIntId_analyzer      AS GoodsKindId
+                                  , ObjectLink_Goods_TradeMark.ChildObjectId AS TradeMarkId
 
                                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_SaleCount_10400()     THEN -1 * MIContainer.Amount ELSE 0 END) AS Sale_AmountPartner
                                   , SUM (CASE WHEN tmpAnalyzer.AnalyzerId = zc_Enum_AnalyzerId_ReturnInCount_10800() THEN  1 * MIContainer.Amount ELSE 0 END) AS Return_AmountPartner
@@ -282,21 +285,29 @@ BEGIN
                                     LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                                   ON ContainerLO_Juridical.ContainerId = MIContainer.ContainerId_Analyzer
                                                                  AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                         ON ObjectLink_Goods_TradeMark.ObjectId = MIContainer.ObjectId_analyzer
+                                                        AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()                                                                 
                                     -- Договор(база)
                                     INNER JOIN (SELECT DISTINCT tmpMovement.ContractChildId
                                                      , tmpMovement.JuridicalId
-                                                FROM tmpMovement) AS tmpMovement
+                                                     , tmpMovement.GoodsId
+                                                     , tmpMovement.GoodsKindId
+                                                     , tmpMovement.TradeMarkId
+                                                FROM tmpData AS tmpMovement) AS tmpMovement
                                                                   ON tmpMovement.JuridicalId = ContainerLO_Juridical.ObjectId
                                                                  AND tmpMovement.ContractChildId = ContainerLinkObject_Contract.ObjectId
+                                                                 AND ((tmpMovement.GoodsId = MIContainer.ObjectId_analyzer AND tmpMovement.GoodsKindId = MIContainer.ObjectIntId_analyzer AND COALESCE (tmpMovement.TradeMarkId,0) = 0) 
+                                                                     OR (COALESCE (tmpMovement.TradeMarkId,0) <> 0 AND ObjectLink_Goods_TradeMark.ChildObjectId = tmpMovement.TradeMarkId)
+                                                                     )
                              GROUP BY ContainerLO_Juridical.ObjectId
                                     , MIContainer.ObjectId_analyzer
                                     , MIContainer.ObjectIntId_analyzer
                                     , ContainerLinkObject_Contract.ObjectId
+                                    , ObjectLink_Goods_TradeMark.ChildObjectId
                              ) AS tmp
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                                  ON ObjectLink_Goods_TradeMark.ObjectId = tmp.GoodsId
-                                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                       )
+
     , tmpRes AS (SELECT tmpData.MovementId
                       , tmpData.MovementDescId
                       , tmpData.OperDate
@@ -328,7 +339,8 @@ BEGIN
                       , tmpContainer.TotalSumm_tm
                       , tmpContainer.TotalSummSale_tm
                       , tmpContainer.TotalSummReturn_tm
-                      , CASE WHEN COALESCE(tmpContainer.TotalSumm,0) <> 0 THEN (tmpContainer.SummAmount * 100 / tmpContainer.TotalSumm) ELSE 0 END AS Persent_part
+                     -- , tmpContainer.TotalSumm_goods
+                      , CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN 100 ELSE CASE WHEN COALESCE(tmpContainer.TotalSumm,0) <> 0 THEN (tmpContainer.SummAmount * 100 / tmpContainer.TotalSumm) ELSE 0 END END AS Persent_part
                       , CASE WHEN COALESCE(tmpContainer.TotalSumm_tm,0) <> 0 THEN (tmpContainer.SummAmount * 100 / tmpContainer.TotalSumm_tm) ELSE 0 END AS Persent_part_tm                       
                  FROM tmpData 
                       --
@@ -391,20 +403,23 @@ BEGIN
                   , Object_GoodsGroup.ValueData        AS GoodsGroupName
                   , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
 
-                  , tmpData.AmountIn         :: Tfloat
-                  , tmpData.AmountOut        :: Tfloat
-                  , tmpData.Amount           :: Tfloat
-                  , tmpData.AmountMarket     :: Tfloat
+                  , tmpData.AmountIn         :: Tfloat --дебет сумма док. начисления
+                  , tmpData.AmountOut        :: Tfloat --кредит сумма док. начисления
+                  , tmpData.Amount           :: Tfloat --сумма док. начисления
+                  , tmpData.AmountMarket     :: Tfloat -- Комп. за вес, кг
                   , tmpData.SummInMarket     :: Tfloat --Корр. компенс., грн
                   , tmpData.SummOutMarket    :: Tfloat --Компенсация, грн 
-                  , tmpData.SummAmount       :: Tfloat --сумма продажи  
+                  , tmpData.SummAmount       :: Tfloat --сумма продажи   
+                  , tmpData.TotalSumm        :: Tfloat --Итого сумма продажи по юр лицо + договор
                   , tmpData.Persent_part     :: Tfloat
                   , tmpData.Persent_part_tm  :: Tfloat
                   
 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 THEN tmpData.SummOutMarket ELSE 0 END  :: Tfloat  AS AmountMarket_calc 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (tmpData.SummOutMarket * tmpData.Persent_part_tm) ELSE 0 END  :: Tfloat  AS AmountMarket_tm_calc
-
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 
+                         THEN CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN tmpData.SummOutMarket ELSE (tmpData.Amount * tmpData.Persent_part)/100 END
+                         ELSE 0 
+                    END  :: Tfloat  AS SummMarket_calc 
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket,tmpData.Amount) * tmpData.Persent_part_tm)/100 ELSE 0 END  :: Tfloat  AS SummMarket_tm_calc
              FROM tmpRes AS tmpData 
                 LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
                -- LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId

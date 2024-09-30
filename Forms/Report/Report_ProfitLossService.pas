@@ -48,6 +48,9 @@ type
     mactOpenDocumentPromo: TMultiAction;
     bbOpenDocument: TdxBarButton;
     bbOpenDocumentPromo: TdxBarButton;
+    Persent_part: TcxGridDBColumn;
+    SummAmount: TcxGridDBColumn;
+    TotalSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

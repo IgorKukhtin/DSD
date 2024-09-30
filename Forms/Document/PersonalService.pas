@@ -392,6 +392,15 @@ type
     Amount_avance_ret: TcxGridDBColumn;
     AmountCash_print: TcxGridDBColumn;
     SummNalog_print: TcxGridDBColumn;
+    spDelete_Object_Print: TdsdStoredProc;
+    spInsertPrint_byGrid: TdsdStoredProc;
+    actDelete_Object_Print: TdsdExecStoredProc;
+    actPrint_byGrid: TdsdExecStoredProc;
+    actPrint_byGrid_list: TMultiAction;
+    macPrint_grid_new: TMultiAction;
+    spSelectPrint_grid: TdsdStoredProc;
+    bbPrintGridNew: TdxBarButton;
+    actPrint_Grid_new: TdsdPrintAction;
   private
     { Private declarations }
   public

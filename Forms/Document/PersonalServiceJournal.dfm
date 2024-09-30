@@ -2945,6 +2945,13 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 599
@@ -3111,6 +3118,13 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
       item
         Name = 'inisShowAll'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

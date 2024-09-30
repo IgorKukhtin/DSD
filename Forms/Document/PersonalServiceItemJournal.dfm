@@ -14,18 +14,19 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     Width = 1221
     Height = 616
     TabOrder = 3
+    ExplicitTop = 89
     ExplicitWidth = 1221
-    ExplicitHeight = 648
+    ExplicitHeight = 616
     ClientRectBottom = 616
     ClientRectRight = 1221
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1221
-      ExplicitHeight = 648
+      ExplicitHeight = 616
       inherited cxGrid: TcxGrid
         Width = 1221
         Height = 531
         ExplicitWidth = 1221
-        ExplicitHeight = 563
+        ExplicitHeight = 531
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -1862,7 +1863,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         Align = alBottom
         TabOrder = 1
         Visible = False
-        ExplicitTop = 563
         object ExportXmlGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ExportDS
@@ -1895,7 +1895,6 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
   inherited Panel: TPanel
     Width = 1221
     Height = 63
-    ExplicitTop = 5
     ExplicitWidth = 1221
     ExplicitHeight = 63
     inherited deStart: TcxDateEdit
@@ -3102,6 +3101,13 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 535
@@ -3271,6 +3277,13 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       item
         Name = 'inisShowAll'
         Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsList'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
