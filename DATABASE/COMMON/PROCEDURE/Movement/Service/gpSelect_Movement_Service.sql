@@ -252,7 +252,7 @@ BEGIN
            
            , Object_TradeMark.Id                    AS TradeMarkId
            , Object_TradeMark.ValueData             AS TradeMarkName
-           , Movement_Doc.Id                        AS MovementId_doc
+           , COALESCE (Movement_Doc.Id, -1) ::Integer  AS MovementId_doc
            , Movement_Doc.InvNumber                 AS InvNumber_doc
            , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
            , MovementDesc_Doc.ItemName              AS DescName_doc

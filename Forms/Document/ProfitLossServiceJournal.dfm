@@ -805,6 +805,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1089#1091#1084#1084#1091' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1089'/'#1089
+      Hint = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1089#1091#1084#1084#1091' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1089'/'#1089
       ImageIndex = 26
       FormName = 'TProfitLossService_51201JournalForm'
       FormNameParam.Value = 'TProfitLossService_51201JournalForm'
@@ -915,6 +916,61 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actOpenFormPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1040#1082#1094#1080#1080
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormNamePromo'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_doc'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object mactOpenDocumentPromo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetFormPromo
+        end
+        item
+          Action = actOpenFormPromo
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1080#1072#1088#1082#1077#1090#1080#1085#1075
+      ImageIndex = 28
+    end
+    object actGetFormPromo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementFormPromo
+      StoredProcList = <
+        item
+          StoredProc = getMovementFormPromo
+        end>
+      Caption = 'actGetForm'
     end
   end
   inherited MasterDS: TDataSource
@@ -1053,6 +1109,18 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocumentPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -1086,6 +1154,10 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     end
     object bbactPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbOpenDocumentPromo: TdxBarButton
+      Action = mactOpenDocumentPromo
       Category = 0
     end
   end
@@ -1186,9 +1258,16 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormNamePromo'
+        Value = 'TPromoForm'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 408
-    Top = 208
+    Left = 488
+    Top = 192
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_ProfitLossService'
@@ -1343,5 +1422,30 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       end>
     Left = 194
     Top = 178
+  end
+  object getMovementFormPromo: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId_doc'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = 'TPromoForm'
+        Component = FormParams
+        ComponentItem = 'FormNamePromo'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 584
+    Top = 192
   end
 end
