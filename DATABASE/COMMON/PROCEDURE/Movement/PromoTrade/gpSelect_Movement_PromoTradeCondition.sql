@@ -45,6 +45,7 @@ BEGIN
               UNION SELECT  6 ::Integer  AS Ord  , 'Компенсация возвратов:' ::TVarChar AS Name
               UNION SELECT  7 ::Integer  AS Ord  , 'Логистический бонус:'   ::TVarChar AS Name
               UNION SELECT  8 ::Integer  AS Ord  , 'Отчеты:'                ::TVarChar AS Name
+              UNION SELECT  9 ::Integer  AS Ord  , 'Маркетинг:'             ::TVarChar AS Name
                  )
 
     SELECT  tmpText.Ord             ::Integer
@@ -132,7 +133,17 @@ BEGIN
                                  ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
                                 AND MovementFloat_Report.DescId = zc_MovementFloat_Report()
     WHERE tmpText.Ord = 8     
-    
+
+ UNION
+    SELECT  tmpText.Ord             ::Integer
+          , tmpText.Name            ::TVarChar
+          , zfConvert_FloatToString (MovementFloat_Report.ValueData) ::TVarChar AS Value
+    FROM tmpText
+         LEFT JOIN MovementFloat AS MovementFloat_Report
+                                 ON MovementFloat_Report.MovementId = vbMovementId_PromoTradeCondition
+                                AND MovementFloat_Report.DescId = zc_MovementFloat_Market()
+    WHERE tmpText.Ord = 9
+        
 ORDER by 1  
     ;
 
