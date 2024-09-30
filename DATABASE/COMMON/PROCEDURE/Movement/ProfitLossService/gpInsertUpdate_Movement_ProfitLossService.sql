@@ -62,10 +62,24 @@ BEGIN
                                                        ON MovementLinkObject_Contract.MovementId = CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Movement.Id ELSE Movement_PromoPartner.Id END
                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                       WHERE Movement.Id = inMovementId_doc
-                        AND COALESCE (MovementLinkObject_Contract.ObjectId,0) <> 0
+                        AND MovementLinkObject_Contract.ObjectId <> 0
                       LIMIT 1)
      THEN
-          RAISE EXCEPTION 'Ошибка. Для документа Распред. затрат Акция / Трейд-маркетинг должен быть установлен Договор база.';
+          RAISE EXCEPTION 'Ошибка.В документе <%> № <%> от <%> должен быть установлен <Договор база>.'
+                        , (SELECT MovementDesc.ItemName
+                           FROM Movement 
+                                JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                        , (SELECT Movement.InvNumber
+                           FROM Movement 
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                           FROM Movement 
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                         ;
      END IF;
         
         
