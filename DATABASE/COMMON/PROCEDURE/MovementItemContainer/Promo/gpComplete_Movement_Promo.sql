@@ -181,11 +181,10 @@ BEGIN
            )
       );
 
-         RAISE EXCEPTION 'Ошибка.test';
      -- проверка - не должно быть в этом периоде таких же Акций
      IF EXISTS (SELECT 1 FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId)
      THEN
-         RAISE EXCEPTION 'Ошибка.Невозможно дублирование Акций.%Найдена Акция № <%> от <%>%период проведения с <%> по <%>%для <%>%%.'
+         RAISE EXCEPTION 'Ошибка.Невозможно дублирование Акций.%Найдена Акция № <%> от <%>%период проведения с <%> по <%>%для <%> % %.'
                         , CHR (13)
                         , (SELECT _tmpPromo_find.InvNumber FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)
                         , (SELECT zfConvert_DateToString (_tmpPromo_find.OperDate) FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId ORDER BY _tmpPromo_find.MovementId LIMIT 1)

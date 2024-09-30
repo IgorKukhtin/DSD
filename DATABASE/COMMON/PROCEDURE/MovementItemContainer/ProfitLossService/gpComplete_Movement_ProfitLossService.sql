@@ -59,7 +59,7 @@ BEGIN
              THEN
                  RAISE EXCEPTION 'Ошибка.Не соответствует сумма %в документе Акция <Компенсация,грн> = <%> %и в документе Начислений = <%>.'
                                , CHR (13)
-                               , (SELECT CASE WHEN SUM (COALESCE (MIFloat_SummInMarket.ValueData, 0) - COALESCE (MIFloat_SummOutMarket.ValueData, 0)) < 0
+                               , (SELECT CASE WHEN SUM (COALESCE (MIFloat_SummInMarket.ValueData, 0) - COALESCE (MIFloat_SummOutMarket.ValueData, 0)) <= 0
                                                    THEN 'Кредит: ' || zfConvert_FloatToString (-1 * SUM (COALESCE (MIFloat_SummInMarket.ValueData, 0) - COALESCE (MIFloat_SummOutMarket.ValueData, 0)))
                                               ELSE 'Дебет: ' || zfConvert_FloatToString (1 * SUM (COALESCE (MIFloat_SummInMarket.ValueData, 0) - COALESCE (MIFloat_SummOutMarket.ValueData, 0)))
                                          END
@@ -75,7 +75,7 @@ BEGIN
                                     AND MovementItem.isErased   = FALSE
                                  )
                                , CHR (13)
-                               , (SELECT CASE WHEN SUM (MovementItem.Amount) < 0
+                               , (SELECT CASE WHEN SUM (MovementItem.Amount) <= 0
                                                    THEN 'Кредит: ' || zfConvert_FloatToString (-1 * SUM (MovementItem.Amount))
                                               ELSE 'Дебет: ' || zfConvert_FloatToString (1 * SUM (MovementItem.Amount))
                                          END
