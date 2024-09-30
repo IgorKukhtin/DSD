@@ -52,8 +52,8 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
 
-    --проверка
-    IF COALESCE (inisCost,FALSE) = TRUE AND COALESCE (inIsPromo,FALSE) = TRUE
+    -- проверка
+    IF 1=0 AND COALESCE (inisCost,FALSE) = TRUE AND COALESCE (inIsPromo,FALSE) = TRUE
     THEN
         RAISE EXCEPTION 'Ошибка.Параметры <Акция> и <Затраты> не могут быть включены одновременно.';
     END IF; 

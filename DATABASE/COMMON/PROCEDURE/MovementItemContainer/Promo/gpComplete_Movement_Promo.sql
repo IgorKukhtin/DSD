@@ -181,6 +181,7 @@ BEGIN
            )
       );
 
+         RAISE EXCEPTION 'Ошибка.test';
      -- проверка - не должно быть в этом периоде таких же Акций
      IF EXISTS (SELECT 1 FROM _tmpPromo_find WHERE _tmpPromo_find.MovementId <> inMovementId)
      THEN

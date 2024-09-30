@@ -188,7 +188,7 @@ BEGIN
 
                       WHERE (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
 -- and Movement.Id = 29240028  
- and Movement.Id = 29240044 
+-- and Movement.Id = 29240044 
                      )
       -- Договор (условие) - ограничение по котрагенту - ВСЕ условия
     , tmpContractMaster_all  AS (SELECT DISTINCT tmpMovement.ContractChildId, tmpMovement.ContractMasterId
@@ -382,9 +382,9 @@ BEGIN
                                               ,  (tmp.Sale_Summ)   AS Sale_Summ
                                               ,  (tmp.Return_Summ) AS Return_Summ
                   
-                                              , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId) AS TotalSumm
-                                              , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId) AS TotalSummSale
-                                              , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId) AS TotalSummReturn
+                                              , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSumm
+                                              , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSummSale
+                                              , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSummReturn
                   
                                          FROM tmpContainer_partner AS tmp
                                                -- нашли подключенного контрагента - ВСЕ условия
@@ -419,9 +419,9 @@ BEGIN
                                               ,  (tmp.Sale_Summ)   AS Sale_Summ
                                               ,  (tmp.Return_Summ) AS Return_Summ
                   
-                                              ,  SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId) AS TotalSumm
-                                              ,  SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId) AS TotalSummSale
-                                              ,  SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId) AS TotalSummReturn
+                                              ,  SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSumm
+                                              ,  SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSummSale
+                                              ,  SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSummReturn
                   
                                          FROM tmpContainer_partner AS tmp
                                                -- нашли подключенного контрагента - ОДНО условие

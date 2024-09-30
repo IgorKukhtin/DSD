@@ -548,10 +548,13 @@ BEGIN
            , MovementDate_Return_1.ValueData    ::TDateTime AS DateReturn_1
            , MovementDate_Return_2.ValueData    ::TDateTime AS DateReturn_2  
            --
-           , (COALESCE (MovementFloat_TotalSumm.ValueData,0)
-              - (COALESCE (MovementFloat_Pay_1.ValueData,0) - COALESCE (MovementFloat_Return_1.ValueData,0))
-              - (COALESCE (MovementFloat_Pay_2.ValueData,0) - COALESCE (MovementFloat_Return_2.ValueData,0))
-             ) ::TFloat AS TotalSumm_diff
+           , (CASE WHEN MovementFloat_Pay_1.ValueData <> 0 OR MovementFloat_Return_1.ValueData <> 0
+                     OR MovementFloat_Pay_2.ValueData <> 0 OR MovementFloat_Return_2.ValueData <> 0
+                       THEN COALESCE (MovementFloat_TotalSumm.ValueData,0)
+                          - (COALESCE (MovementFloat_Pay_1.ValueData,0) - COALESCE (MovementFloat_Return_1.ValueData,0))
+                          - (COALESCE (MovementFloat_Pay_2.ValueData,0) - COALESCE (MovementFloat_Return_2.ValueData,0))
+                   ELSE 0
+              END) ::TFloat AS TotalSumm_diff
        FROM tmpMovement AS Movement
 
             LEFT JOIN tmpStatus AS Object_Status ON Object_Status.Id = Movement.StatusId

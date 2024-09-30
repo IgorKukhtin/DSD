@@ -602,6 +602,8 @@ BEGIN
                              -- ***Дата партии
                            , CASE WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE -- AND vbUserId = 5
                                        THEN zc_DateStart()
+                                  --WHEN vbUserId = 5
+                                  --     THEN MIDate_PartionGoods.ValueData
                                   ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                              END :: TDateTime AS PartionGoodsDate
 
@@ -656,6 +658,8 @@ BEGIN
                                          THEN  zc_DateStart()
                                     --WHEN COALESCE (MovementBoolean_isRePack.ValueData, FALSE)  = TRUE
                                     --     THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) -- zc_DateStart()
+                                    --WHEN vbUserId = 5
+                                    --     THEN MIDate_PartionGoods.ValueData
                                     ELSE COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate)
                                END
 
