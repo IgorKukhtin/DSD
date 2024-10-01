@@ -36,7 +36,15 @@ BEGIN
               , tmpInfoMoney.isProfitLoss
               , tmpInfoMoney.isErased
          FROM gpSelect_Object_InfoMoney (inSession) AS tmpInfoMoney
-         WHERE tmpInfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500();
+         WHERE tmpInfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500()
+        UNION
+         SELECT NULL AS Id, NULL AS Code, 'Нет значения' ::TVarChar AS Name, 'Нет значения' ::TVarChar AS NameAll
+              , NULL AS InfoMoneyGroupId, NULL AS InfoMoneyGroupCode, ''::TVarChar AS InfoMoneyGroupName
+              , NULL AS InfoMoneyDestinationId, NULL AS InfoMoneyDestinationCode
+              , ''::TVarChar AS InfoMoneyDestinationName
+              , FALSE AS isProfitLoss
+              , FALSE AS isErased
+         ;
      ELSE
      
      -- Результат

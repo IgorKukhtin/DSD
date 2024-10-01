@@ -3,6 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 707
   ClientWidth = 1419
+  ExplicitLeft = -258
+  ExplicitTop = -114
   ExplicitWidth = 1435
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -1331,42 +1333,26 @@
                 OptionsView.HeaderAutoHeight = True
                 OptionsView.Indicator = True
                 Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-                object InfoMoneyCode_CostPromo_ch5: TcxGridDBColumn
-                  Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080' ('#1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103')'
-                  DataBinding.FieldName = 'InfoMoneyCode_CostPromo'
-                  PropertiesClassName = 'TcxCurrencyEditProperties'
-                  Properties.DecimalPlaces = 0
-                  Properties.DisplayFormat = '0.####;-0.####; ;'
+                object Name_ch5: TcxGridDBColumn
+                  Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+                  DataBinding.FieldName = 'Name'
+                  HeaderAlignmentHorz = taCenter
+                  HeaderAlignmentVert = vaCenter
+                  Options.Editing = False
+                  Width = 162
+                end
+                object InfoMoneyCode_ch5: TcxGridDBColumn
+                  Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
+                  DataBinding.FieldName = 'InfoMoneyCode'
                   Visible = False
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  HeaderHint = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080' '#1076#1083#1103' '#1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
                   Options.Editing = False
                   Width = 67
                 end
-                object InfoMoneyName_CostPromo_ch5: TcxGridDBColumn
-                  Caption = #1057#1090#1072#1090#1100#1103' '#1076#1083#1103' '#1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
-                  DataBinding.FieldName = 'InfoMoneyName_CostPromo'
-                  PropertiesClassName = 'TcxButtonEditProperties'
-                  Properties.Buttons = <
-                    item
-                      Action = actChoiceInfoMoneyCostPromo
-                      Default = True
-                      Kind = bkEllipsis
-                    end>
-                  Properties.ReadOnly = True
-                  HeaderAlignmentHorz = taCenter
-                  HeaderAlignmentVert = vaCenter
-                  Width = 162
-                end
-                object InfoMoneyCode_Market_ch5: TcxGridDBColumn
-                  Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080' ('#1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080')'
-                  DataBinding.FieldName = 'InfoMoneyCode_Market'
-                  Visible = False
-                end
-                object InfoMoneyName_Market_ch5: TcxGridDBColumn
-                  Caption = #1057#1090#1072#1090#1100#1103' '#1076#1083#1103' '#1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#9
-                  DataBinding.FieldName = 'InfoMoneyName_Market'
+                object InfoMoneyName_ch5: TcxGridDBColumn
+                  Caption = #1057#1090#1072#1090#1100#1103
+                  DataBinding.FieldName = 'InfoMoneyName'
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
                     item
@@ -1377,13 +1363,7 @@
                   Properties.ReadOnly = True
                   HeaderAlignmentHorz = taCenter
                   HeaderAlignmentVert = vaCenter
-                  Width = 151
-                end
-                object IsErased_ch5: TcxGridDBColumn
-                  Caption = #1059#1076#1072#1083'.'
-                  DataBinding.FieldName = 'IsErased'
-                  Visible = False
-                  Width = 55
+                  Width = 160
                 end
               end
               object cxGridLevelInfoMoney: TcxGridLevel
@@ -1422,9 +1402,8 @@
         Align = alBottom
         PopupMenu = PromoStateKindPopupMenu
         TabOrder = 4
-        ExplicitLeft = -40
-        ExplicitTop = 320
-        ExplicitWidth = 1418
+        ExplicitLeft = 3
+        ExplicitTop = 366
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -4214,7 +4193,6 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewInfoMoney
-      Action = actChoiceInfoMoneyCostPromo
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090'>'
@@ -4258,7 +4236,7 @@
       Category = 'InfoMoney'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'actChoiceInfoMoneyMarket'
+      Caption = 'actChoiceInfoMoney'
       FormName = 'TInfoMoney_ObjectDescForm'
       FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
       FormNameParam.DataType = ftString
@@ -4268,14 +4246,14 @@
           Name = 'Key'
           Value = Null
           Component = InfoMoneyCDS
-          ComponentItem = 'InfoMoneyId_Market'
+          ComponentItem = 'InfoMoneyId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
           Component = InfoMoneyCDS
-          ComponentItem = 'InfoMoneyName_Market'
+          ComponentItem = 'InfoMoneyName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -4287,40 +4265,7 @@
         end>
       isShowModal = True
     end
-    object actChoiceInfoMoneyCostPromo: TOpenChoiceForm [4]
-      Category = 'InfoMoney'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceInfoMoneyCostPromo'
-      FormName = 'TInfoMoney_ObjectDescForm'
-      FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = InfoMoneyCDS
-          ComponentItem = 'InfoMoneyId_CostPromo'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = InfoMoneyCDS
-          ComponentItem = 'InfoMoneyName_CostPromo'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inDescCode'
-          Value = 'zc_Movement_InfoMoney'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actInsUpPromoPlan_Child_calc: TdsdExecStoredProc [5]
+    object actInsUpPromoPlan_Child_calc: TdsdExecStoredProc [4]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4336,7 +4281,7 @@
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1083#1072#1085' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072
       ImageIndex = 30
     end
-    object macInsUpPromoPlan_Child_calc: TMultiAction [6]
+    object macInsUpPromoPlan_Child_calc: TMultiAction [5]
       Category = 'Plan'
       MoveParams = <>
       ActionList = <
@@ -4351,7 +4296,7 @@
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1083#1072#1085' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1072' '#1040#1082#1094#1080#1103
       ImageIndex = 30
     end
-    object actUpdateDSInfoMoney: TdsdUpdateDataSet [7]
+    object actUpdateDSInfoMoney: TdsdUpdateDataSet [6]
       Category = 'InfoMoney'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4363,7 +4308,7 @@
       Caption = 'actUpdateMainDS'
       DataSource = InfoMoneyDS
     end
-    object actInsUpPromoPlan_Master_calc: TdsdExecStoredProc [8]
+    object actInsUpPromoPlan_Master_calc: TdsdExecStoredProc [7]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4379,7 +4324,7 @@
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078
       ImageIndex = 41
     end
-    object actErasedInvoice: TdsdUpdateErased [9]
+    object actErasedInvoice: TdsdUpdateErased [8]
       Category = 'Invoice'
       MoveParams = <>
       StoredProc = spErasedInvoice
@@ -4397,7 +4342,7 @@
       DataSource = PromoInvoiceDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1076#1086#1082#1091#1084#1077#1085#1090' '#1057#1095#1077#1090'> ?'
     end
-    object actChoiceTradeMark: TOpenChoiceForm [10]
+    object actChoiceTradeMark: TOpenChoiceForm [9]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4424,7 +4369,7 @@
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupProperty: TOpenChoiceForm [11]
+    object actChoiceGoodsGroupProperty: TOpenChoiceForm [10]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4451,7 +4396,7 @@
         end>
       isShowModal = True
     end
-    object actChoiceGoodsGroupDirection: TOpenChoiceForm [12]
+    object actChoiceGoodsGroupDirection: TOpenChoiceForm [11]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4478,7 +4423,7 @@
         end>
       isShowModal = True
     end
-    object actUpdatePlanDS: TdsdUpdateDataSet [13]
+    object actUpdatePlanDS: TdsdUpdateDataSet [12]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4492,7 +4437,7 @@
       Caption = 'actUpdatePlanDS'
       DataSource = PlanDS
     end
-    object macInsUpPromoPlan_Master_calc: TMultiAction [14]
+    object macInsUpPromoPlan_Master_calc: TMultiAction [13]
       Category = 'Plan'
       MoveParams = <>
       ActionList = <
@@ -4507,7 +4452,7 @@
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1055#1083#1072#1085' '#1087#1088#1086#1076#1072#1078' '#1040#1082#1094#1080#1103
       ImageIndex = 41
     end
-    object actUnErasedInvoice: TdsdUpdateErased [15]
+    object actUnErasedInvoice: TdsdUpdateErased [14]
       Category = 'Invoice'
       MoveParams = <>
       StoredProc = spSelectPromoInvoice
@@ -4525,7 +4470,7 @@
       isSetErased = False
       DataSource = PartnerDS
     end
-    object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc [16]
+    object actInsertUpdate_MI_PriceCalc: TdsdExecStoredProc [15]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4544,7 +4489,7 @@
       Hint = #1056#1072#1089#1095#1077#1090' '#1062#1077#1085#1099' '#1089'/'#1089' ('#1087#1083#1072#1085'/'#1092#1072#1082#1090')'
       ImageIndex = 76
     end
-    object actUpdate_MI_ContractCondition: TdsdExecStoredProc [17]
+    object actUpdate_MI_ContractCondition: TdsdExecStoredProc [16]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4557,7 +4502,7 @@
       Hint = #1056#1072#1089#1095#1077#1090' '#1041#1086#1085#1091#1089#1072' '#1089#1077#1090#1080
       ImageIndex = 76
     end
-    object actRefreshInvoice: TdsdDataSetRefresh [18]
+    object actRefreshInvoice: TdsdDataSetRefresh [17]
       Category = 'Invoice'
       MoveParams = <>
       StoredProc = spSelectPromoInvoice
@@ -4571,7 +4516,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [19]
+    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [18]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4591,7 +4536,7 @@
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1079#1072#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' <=> % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
     end
-    object actRefreshCalc: TdsdDataSetRefresh [20]
+    object actRefreshCalc: TdsdDataSetRefresh [19]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectCalc
@@ -4608,7 +4553,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsertRecordPromoStateKind: TInsertRecord [21]
+    object actInsertRecordPromoStateKind: TInsertRecord [20]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4619,7 +4564,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
       ImageIndex = 0
     end
-    object actInfoMoneyProtocolOpenForm: TdsdOpenForm [22]
+    object actInfoMoneyProtocolOpenForm: TdsdOpenForm [21]
       Category = 'InfoMoney'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1090#1072#1090#1100#1080' '#1079#1072#1090#1088#1072#1090'>'
@@ -4649,7 +4594,7 @@
         end>
       isShowModal = False
     end
-    object actRefresh_Get: TdsdDataSetRefresh [23]
+    object actRefresh_Get: TdsdDataSetRefresh [22]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -4666,7 +4611,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actMISetErasedPromoStateKind: TdsdUpdateErased [24]
+    object actMISetErasedPromoStateKind: TdsdUpdateErased [23]
       Category = 'PromoStateKind'
       MoveParams = <>
       StoredProc = spErasedPromoStateKind
@@ -4685,7 +4630,7 @@
       DataSource = PromoStateKindDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'> ?'
     end
-    object actMISetUnErasedPromoStateKind: TdsdUpdateErased [25]
+    object actMISetUnErasedPromoStateKind: TdsdUpdateErased [24]
       Category = 'PromoStateKind'
       MoveParams = <>
       StoredProc = spUnErasedPromoStateKind
@@ -4704,7 +4649,7 @@
       isSetErased = False
       DataSource = PromoStateKindDS
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [26]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [25]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4719,7 +4664,7 @@
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdatePromoStateKindDS: TdsdUpdateDataSet [27]
+    object actUpdatePromoStateKindDS: TdsdUpdateDataSet [26]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4737,7 +4682,7 @@
       Caption = 'actUpdatePromoStateKindDS'
       DataSource = PromoStateKindDS
     end
-    object actUpdateCalcDS2: TdsdUpdateDataSet [28]
+    object actUpdateCalcDS2: TdsdUpdateDataSet [27]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4809,7 +4754,7 @@
           StoredProc = spSelect_MI_PromoPlan_Child
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [30]
+    object mactInsertUpdateMISignNo: TMultiAction [29]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -4823,7 +4768,7 @@
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [31]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [30]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4838,7 +4783,7 @@
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
     end
-    object InsertRecord: TInsertRecord [33]
+    object InsertRecord: TInsertRecord [32]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4849,7 +4794,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [34]
+    object actUpdateCalcDS: TdsdUpdateDataSet [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4870,7 +4815,7 @@
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS
     end
-    object actOpenProtocoPromoStateKind: TdsdOpenForm [35]
+    object actOpenProtocoPromoStateKind: TdsdOpenForm [34]
       Category = 'PromoStateKind'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080'>'
@@ -4913,7 +4858,7 @@
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [37]
+    object actPrint_Calc: TdsdPrintAction [36]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectCalc
@@ -4974,7 +4919,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Calc2: TdsdPrintAction [38]
+    object actPrint_Calc2: TdsdPrintAction [37]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectCalc2
@@ -5047,7 +4992,7 @@
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object actUpdateConditionDS: TdsdUpdateDataSet [40]
+    object actUpdateConditionDS: TdsdUpdateDataSet [39]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5100,7 +5045,7 @@
           StoredProc = spSelect_PromoInfoMoney
         end>
     end
-    object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [44]
+    object actOpenFormPromoContractBonus_Detail: TdsdOpenForm [43]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1041#1086#1085#1091#1089' '#1089#1077#1090#1080
@@ -5130,7 +5075,7 @@
         end>
       isShowModal = False
     end
-    object macInsertUpdate_MI_Param: TMultiAction [45]
+    object macInsertUpdate_MI_Param: TMultiAction [44]
       Category = 'Update_MI_Param'
       MoveParams = <>
       ActionList = <
@@ -5197,7 +5142,7 @@
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [48]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [47]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5208,7 +5153,7 @@
         end>
       Caption = 'actInsertUpdate_MI_Param'
     end
-    object actPromoStateKindChoice: TOpenChoiceForm [52]
+    object actPromoStateKindChoice: TOpenChoiceForm [51]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -5239,7 +5184,7 @@
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1058#1086#1074#1072#1088'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083' '#1058#1086#1074#1072#1088'>'
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [56]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [55]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1057#1077#1090#1100'/'#1070#1088'.'#1083#1080#1094#1086'/'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
@@ -5269,7 +5214,7 @@
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [57]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [56]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
@@ -5299,7 +5244,7 @@
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [58]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [57]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
@@ -6707,18 +6652,6 @@
         item
           Visible = True
           ItemName = 'bsAdvertising'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInsertRecordInfoMoney'
-        end
-        item
-          Visible = True
-          ItemName = 'bbsInfoMoney'
         end
         item
           Visible = True
@@ -8852,8 +8785,8 @@
     ShowFieldImageList = <>
     ViewDocumentList = <>
     PropertiesCellList = <>
-    Left = 254
-    Top = 377
+    Left = 542
+    Top = 369
   end
   object pmPartner: TPopupMenu
     Images = dmMain.ImageList
@@ -11342,14 +11275,6 @@
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 968
@@ -11377,18 +11302,18 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInfoMoneyId_CostPromo'
+        Name = 'inInfoMoneyId'
         Value = Null
         Component = InfoMoneyCDS
-        ComponentItem = 'InfoMoneyId_CostPromo'
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inInfoMoneyId_Market'
+        Name = 'inDescId'
         Value = Null
         Component = InfoMoneyCDS
-        ComponentItem = 'InfoMoneyId_Market'
+        ComponentItem = 'DescId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

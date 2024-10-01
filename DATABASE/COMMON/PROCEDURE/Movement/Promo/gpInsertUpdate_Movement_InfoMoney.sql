@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_InfoMoney (Integer, Integer, Int
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_InfoMoney(
  INOUT ioId                     Integer    , -- Ключ объекта <партнер для документа акции>
     IN inParentId               Integer    , -- Ключ родительского объекта <Документ акции>
-    IN inInfoMoneyId_CostPromo  Integer    , 
-    IN inInfoMoneyId_Market     Integer    , -- 
+    IN inInfoMoneyId            Integer    , 
+    IN inDescId                 Integer    , -- 
     IN inSession                TVarChar    -- сессия пользователя
 )
 AS
@@ -49,9 +49,9 @@ BEGIN
     
     
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney_CostPromo(), ioId, inInfoMoneyId_CostPromo);
+    PERFORM lpInsertUpdate_MovementLinkObject (inDescId, ioId, inInfoMoneyId);
     -- сохранили связь с <>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney_Market(), ioId, inInfoMoneyId_Market);
+    --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney_Market(), ioId, inInfoMoneyId_Market);
         
    
     -- сохранили протокол
