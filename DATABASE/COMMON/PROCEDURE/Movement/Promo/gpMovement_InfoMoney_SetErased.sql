@@ -1,0 +1,57 @@
+-- Function: gpMovement_InfoMoney_SetErased (Integer, Integer, TVarChar)
+
+DROP FUNCTION IF EXISTS gpMovement_InfoMoney_SetErased (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpMovement_InfoMoney_SetErased(
+    IN inMovementId      Integer              , -- ключ объекта <Элемент документа>
+   OUT outIsErased           Boolean              , -- новое значение
+    IN inSession             TVarChar               -- текущий пользователь
+)
+  RETURNS Boolean
+AS
+$BODY$
+   DECLARE vbMovementId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbUserId Integer;
+BEGIN
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_PromoGoods());
+    vbUserId := lpGetUserBySession (inSession);
+
+
+    -- проверка - если есть подписи, корректировать нельзя
+    PERFORM lpCheck_Movement_Promo_Sign (inMovementId:= (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = inMovementId)
+                                       , inIsComplete:= FALSE
+                                       , inIsUpdate  := TRUE
+                                       , inUserId    := vbUserId
+                                        );
+
+    -- устанавливаем новое значение
+    outIsErased := TRUE;
+
+    -- Обязательно меняем
+    UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId
+    RETURNING ParentId INTO vbMovementId;
+
+    -- проверка - связанные документы Изменять нельзя
+    -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
+
+    -- определяем <Статус>
+    vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+        RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+
+    -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
+    -- outIsErased := FALSE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.24         *
+*/

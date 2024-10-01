@@ -408,6 +408,15 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Member_6', 'Коммерческий директор' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member_6');
 
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_InfoMoney_CostPromo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InfoMoney_CostPromo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_InfoMoney_CostPromo', 'Статья для Стоимость участия' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InfoMoney_CostPromo');
+
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_InfoMoney_Market() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InfoMoney_Market'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_InfoMoney_Market', 'Статья для Сумма компенсации' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_InfoMoney_Market');
+
+
 
 
 

@@ -222,6 +222,10 @@ CREATE OR REPLACE FUNCTION zc_Movement_PromoInvoice() RETURNS Integer AS $BODY$B
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PromoInvoice', 'Счета для акции' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PromoInvoice');
 
+CREATE OR REPLACE FUNCTION zc_Movement_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_InfoMoney'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_InfoMoney', 'Статьи затрат для акции' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_InfoMoney');
+
 
 CREATE OR REPLACE FUNCTION zc_Movement_Reprice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Reprice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)

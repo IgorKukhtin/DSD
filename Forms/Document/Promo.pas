@@ -555,6 +555,38 @@ type
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
     cbCost: TcxCheckBox;
+    cxSplitter5: TcxSplitter;
+    cxPageControl4: TcxPageControl;
+    cxTabSheetInfoMoney: TcxTabSheet;
+    cxGridInfoMoney: TcxGrid;
+    cxGridDBTableViewInfoMoney: TcxGridDBTableView;
+    InfoMoneyCode_CostPromo_ch5: TcxGridDBColumn;
+    InfoMoneyName_CostPromo_ch5: TcxGridDBColumn;
+    InfoMoneyName_Market_ch5: TcxGridDBColumn;
+    IsErased_ch5: TcxGridDBColumn;
+    cxGridLevelInfoMoney: TcxGridLevel;
+    InfoMoneyCode_Market_ch5: TcxGridDBColumn;
+    InfoMoneyDS: TDataSource;
+    InfoMoneyCDS: TClientDataSet;
+    dsdDBViewAddOnInfoMoney: TdsdDBViewAddOn;
+    spSelect_PromoInfoMoney: TdsdStoredProc;
+    spInsertUpdate_PromoInfoMoney: TdsdStoredProc;
+    actChoiceInfoMoneyCostPromo: TOpenChoiceForm;
+    actChoiceInfoMoneyMarket: TOpenChoiceForm;
+    actUpdateDSInfoMoney: TdsdUpdateDataSet;
+    spErasedInfoMoney: TdsdStoredProc;
+    spUnErasedInfoMoney: TdsdStoredProc;
+    actInsertRecordInfoMoney: TInsertRecord;
+    actErasedInfoMoney: TdsdUpdateErased;
+    actunErasedInfoMoney: TdsdUpdateErased;
+    bbsInfoMoney: TdxBarSubItem;
+    bbErasedInfoMoney: TdxBarButton;
+    bbInsertRecordInfoMoney: TdxBarButton;
+    bbunErasedInfoMoney: TdxBarButton;
+    actInfoMoneyProtocolOpenForm: TdsdOpenForm;
+    bbInfoMoneyProtocolOpen: TdxBarButton;
+    ddsUpdate: TdxBarSubItem;
+    Separator: TdxBarSeparator;
   private
     { Private declarations }
   public
