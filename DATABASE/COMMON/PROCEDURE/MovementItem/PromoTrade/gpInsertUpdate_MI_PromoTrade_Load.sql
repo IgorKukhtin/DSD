@@ -157,7 +157,7 @@ BEGIN
      END IF;
 
      --пробуем найти строку для обновления
-     vbMIId := (SELECT MovementItem.Id
+     vbMIId := 0 /*(SELECT MovementItem.Id
                 FROM MovementItem
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -172,7 +172,7 @@ BEGIN
                    AND MovementItem.ObjectId = vbGoodsId
                    AND COALESCE (MILinkObject_GoodsKind.ObjectId,0) = COALESCE(vbGoodsKindId,0)
                    AND (COALESCE (MILinkObject_Partner.ObjectId,0) = COALESCE (vbPartnerId,0))
-                );
+                )*/;
 
      -- сохранили <Элемент документа>
      PERFORM lpInsertUpdate_MovementItem_PromoTradeGoods (ioId                   := COALESCE (vbMIId,0) ::Integer

@@ -6,8 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PromoTrade (Integer, TVarChar, T
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoTrade(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
     IN inInvNumber             TVarChar   , -- Номер документа
-    IN inOperDate              TDateTime  , -- Дата документа  
-    IN inContractId            Integer    , -- договор    
+    IN inOperDate              TDateTime  , -- Дата документа
+    IN inContractId            Integer    , -- договор
  INOUT ioPaidKindId            Integer   , -- Виды форм оплаты
    OUT outPaidKindName         TVarChar   , -- Виды форм оплаты
     IN inPromoItemId           Integer    , -- Статья затрат
@@ -15,11 +15,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PromoTrade(
     IN inStartPromo            TDateTime  , -- Дата начала акции
     IN inEndPromo              TDateTime  , -- Дата окончания акции
     --IN inCostPromo             TFloat     , -- Стоимость участия в акции
-    IN inComment               TVarChar   , -- Примечание 
+    IN inComment               TVarChar   , -- Примечание
    OUT outPriceListName        TVarChar ,
    OUT outPersonalTradetName   TVarChar ,
-   OUT outChangePercent        TFloat   , 
-   OUT outCostPromo            TFloat   ,   
+   OUT outChangePercent        TFloat   ,
+   OUT outCostPromo            TFloat   ,
    OUT outOperDateStart        TDateTime ,
    OUT outOperDateEnd          TDateTime ,
     IN inSession               TVarChar     -- сессия пользователя
@@ -42,17 +42,17 @@ BEGIN
      --если ФО не определена берем из договора
      IF COALESCE (ioPaidKindId,0) = 0
      THEN
-         ioPaidKindId := (SELECT ObjectLink_Contract_PaidKind.ChildObjectId
+         ioPaidKindId := 0;/*(SELECT ObjectLink_Contract_PaidKind.ChildObjectId
                           FROM ObjectLink AS ObjectLink_Contract_PaidKind
                           WHERE ObjectLink_Contract_PaidKind.ObjectId = inContractId
                            AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-                          ); 
+                          );*/
      END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_PromoTrade (ioId             := ioId
                                                , inInvNumber      := inInvNumber
-                                               , inOperDate       := inOperDate 
+                                               , inOperDate       := inOperDate
                                                , inContractId     := inContractId
                                                , inPaidKindId     := ioPaidKindId
                                                , inPromoItemId    := inPromoItemId
@@ -62,7 +62,7 @@ BEGIN
                                                --, inCostPromo      := inCostPromo       --Стоимость участия в акции
                                                , inComment        := inComment         --Примечание
                                                , inUserId         := vbUserId
-                                               ) AS tmp;  
+                                               ) AS tmp;
 
      outPriceListName      := (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PriceList() AND MLO.MovementId = ioId)     ::TVarChar;
      outPersonalTradetName := (SELECT lfGet_Object_ValueData_sh (MLO.ObjectId) FROM MovementLinkObject AS MLO WHERE MLO.DescId = zc_MovementLinkObject_PersonalTrade() AND MLO.MovementId = ioId) ::TVarChar;
@@ -71,7 +71,7 @@ BEGIN
 
      outOperDateEnd := inOperDate - INTERVAL '1 Day';
      outOperDateStart := outOperDateEnd - INTERVAL '3 Month' + INTERVAL '1 Day';
-     
+
      outPaidKindName := lfGet_Object_ValueData_sh (ioPaidKindId) ::TVarChar;
 END;
 $BODY$
