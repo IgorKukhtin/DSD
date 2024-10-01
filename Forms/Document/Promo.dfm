@@ -4,7 +4,6 @@
   ClientHeight = 707
   ClientWidth = 1419
   ExplicitLeft = -258
-  ExplicitTop = -114
   ExplicitWidth = 1435
   ExplicitHeight = 746
   PixelsPerInch = 96
@@ -3876,7 +3875,7 @@
     end
     object edCostPromo: TcxCurrencyEdit
       Left = 810
-      Top = 54
+      Top = 61
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       Properties.ReadOnly = False

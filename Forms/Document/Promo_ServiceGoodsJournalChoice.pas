@@ -37,6 +37,8 @@ type
     RetailName: TcxGridDBColumn;
     ContractTagName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
