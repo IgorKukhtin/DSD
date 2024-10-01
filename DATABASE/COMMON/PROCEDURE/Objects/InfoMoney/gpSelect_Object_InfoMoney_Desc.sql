@@ -26,7 +26,27 @@ BEGIN
          vbInfoMoneyGroupId:= (SELECT Value FROM gpExecSql_Value ('SELECT '||inDescCode||'() :: TVarChar', inSession)) :: Integer;
      END IF;
 
-
+     IF inDescCode = 'zc_Movement_InfoMoney' 
+     THEN 
+         RETURN QUERY
+         SELECT tmpInfoMoney.Id, tmpInfoMoney.Code, tmpInfoMoney.Name, tmpInfoMoney.NameAll
+              , tmpInfoMoney.InfoMoneyGroupId, tmpInfoMoney.InfoMoneyGroupCode, tmpInfoMoney.InfoMoneyGroupName
+              , tmpInfoMoney.InfoMoneyDestinationId, tmpInfoMoney.InfoMoneyDestinationCode
+              , tmpInfoMoney.InfoMoneyDestinationName
+              , tmpInfoMoney.isProfitLoss
+              , tmpInfoMoney.isErased
+         FROM gpSelect_Object_InfoMoney (inSession) AS tmpInfoMoney
+         WHERE tmpInfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500()
+        UNION
+         SELECT NULL AS Id, NULL AS Code, 'Нет значения' ::TVarChar AS Name, 'Нет значения' ::TVarChar AS NameAll
+              , NULL AS InfoMoneyGroupId, NULL AS InfoMoneyGroupCode, ''::TVarChar AS InfoMoneyGroupName
+              , NULL AS InfoMoneyDestinationId, NULL AS InfoMoneyDestinationCode
+              , ''::TVarChar AS InfoMoneyDestinationName
+              , FALSE AS isProfitLoss
+              , FALSE AS isErased
+         ;
+     ELSE
+     
      -- Результат
      RETURN QUERY 
        WITH tmpDesc AS (SELECT ObjectDesc.Id
@@ -79,19 +99,23 @@ BEGIN
        SELECT tmpInfoMoney.*
        FROM tmpInfoMoney 
        WHERE tmpInfoMoney.Id = 0*/
-       ;
+       ;  
+     END IF;
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_InfoMoney_Desc (TVarChar, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Object_InfoMoney_Desc (TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.24         *
  04.04.15                                        *
 */
 
 -- тест
 -- SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Enum_InfoMoneyGroup_30000', zfCalc_UserAdmin()) ORDER BY Code
 -- SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Object_Juridical', zfCalc_UserAdmin()) ORDER BY Code
+-- SELECT * FROM gpSelect_Object_InfoMoney_Desc ('zc_Movement_InfoMoney' , zfCalc_UserAdmin()) ORDER BY Code

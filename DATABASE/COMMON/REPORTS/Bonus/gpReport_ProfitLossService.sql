@@ -416,10 +416,10 @@ BEGIN
                   
 
                   , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 
-                         THEN CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN tmpData.SummOutMarket ELSE (tmpData.Amount * tmpData.Persent_part)/100 END
+                         THEN CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN tmpData.SummOutMarket ELSE (ABS(tmpData.Amount) * tmpData.Persent_part)/100 END
                          ELSE 0 
                     END  :: Tfloat  AS SummMarket_calc 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket,tmpData.Amount) * tmpData.Persent_part_tm)/100 ELSE 0 END  :: Tfloat  AS SummMarket_tm_calc
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket,ABS(tmpData.Amount)) * tmpData.Persent_part_tm)/100 ELSE 0 END  :: Tfloat  AS SummMarket_tm_calc
              FROM tmpRes AS tmpData 
                 LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
                -- LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId

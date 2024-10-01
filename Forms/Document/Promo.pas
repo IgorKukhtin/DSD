@@ -555,6 +555,35 @@ type
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
     cbCost: TcxCheckBox;
+    cxSplitter5: TcxSplitter;
+    cxPageControl4: TcxPageControl;
+    cxTabSheetInfoMoney: TcxTabSheet;
+    cxGridInfoMoney: TcxGrid;
+    cxGridDBTableViewInfoMoney: TcxGridDBTableView;
+    InfoMoneyCode_ch5: TcxGridDBColumn;
+    Name_ch5: TcxGridDBColumn;
+    InfoMoneyName_ch5: TcxGridDBColumn;
+    cxGridLevelInfoMoney: TcxGridLevel;
+    InfoMoneyDS: TDataSource;
+    InfoMoneyCDS: TClientDataSet;
+    dsdDBViewAddOnInfoMoney: TdsdDBViewAddOn;
+    spSelect_PromoInfoMoney: TdsdStoredProc;
+    spInsertUpdate_PromoInfoMoney: TdsdStoredProc;
+    actChoiceInfoMoneyMarket: TOpenChoiceForm;
+    actUpdateDSInfoMoney: TdsdUpdateDataSet;
+    spErasedInfoMoney: TdsdStoredProc;
+    spUnErasedInfoMoney: TdsdStoredProc;
+    actInsertRecordInfoMoney: TInsertRecord;
+    actErasedInfoMoney: TdsdUpdateErased;
+    actunErasedInfoMoney: TdsdUpdateErased;
+    bbsInfoMoney: TdxBarSubItem;
+    bbErasedInfoMoney: TdxBarButton;
+    bbInsertRecordInfoMoney: TdxBarButton;
+    bbunErasedInfoMoney: TdxBarButton;
+    actInfoMoneyProtocolOpenForm: TdsdOpenForm;
+    bbInfoMoneyProtocolOpen: TdxBarButton;
+    ddsUpdate: TdxBarSubItem;
+    Separator: TdxBarSeparator;
   private
     { Private declarations }
   public
