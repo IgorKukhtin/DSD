@@ -126,7 +126,7 @@ BEGIN
         SELECT
             8 ::Integer AS LineNo,
             'Торгова марка'::TVarChar as LineName,
-            (SELECT STRING_AGG (CASE WHEN _tmpMI.TradeMarkName <> '' THEN _tmpMI.TradeMarkName || ' ' ELSE '' END , chr(13)) 
+            (SELECT STRING_AGG (DISTINCT CASE WHEN _tmpMI.TradeMarkName <> '' THEN _tmpMI.TradeMarkName || ' ' ELSE '' END , chr(13)) 
              FROM _tmpMI)::TEXT AS LineValue
         UNION ALL
         SELECT
