@@ -4259,8 +4259,8 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceInfoMoneyMarket'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormName = 'TInfoMoney_ObjectDescForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -4278,6 +4278,12 @@
           ComponentItem = 'InfoMoneyName_Market'
           DataType = ftString
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDescCode'
+          Value = 'zc_Movement_InfoMoney'
+          DataType = ftString
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end
@@ -4286,8 +4292,8 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'actChoiceInfoMoneyCostPromo'
-      FormName = 'TInfoMoney_ObjectForm'
-      FormNameParam.Value = 'TInfoMoney_ObjectForm'
+      FormName = 'TInfoMoney_ObjectDescForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectDescForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -4303,6 +4309,12 @@
           Value = Null
           Component = InfoMoneyCDS
           ComponentItem = 'InfoMoneyName_CostPromo'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inDescCode'
+          Value = 'zc_Movement_InfoMoney'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
