@@ -1738,7 +1738,6 @@ inherited PromoTradeForm: TPromoTradeForm
         item
           DataSet = PrintSignCDS
           UserName = 'frxDBDSign'
-          IndexFieldNames = 'LineNo'
         end>
       Params = <
         item
@@ -3823,8 +3822,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object SignCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 1064
-    Top = 144
+    Left = 1040
+    Top = 152
   end
   object SignDS: TDataSource
     DataSet = SignCDS
@@ -4453,8 +4452,8 @@ inherited PromoTradeForm: TPromoTradeForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 948
-    Top = 137
+    Left = 964
+    Top = 105
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

@@ -228,10 +228,13 @@ BEGIN
                        )
 
         SELECT
-            tmpSign.Ord     ::Integer  AS LineNo
-          , tmpSign.Name    ::TVarChar AS LineName
-          , tmpSign.Value   ::TVarChar AS LineValue
-        FROM tmpSign
+            (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 1) ::TVarChar AS UserName
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 2) ::TVarChar AS MemberName1
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 3) ::TVarChar AS MemberName2
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 4) ::TVarChar AS MemberName3
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 5) ::TVarChar AS MemberName4
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 6) ::TVarChar AS MemberName5
+          , (SELECT tmpSign.Value FROM tmpSign WHERE tmpSign.Ord = 7) ::TVarChar AS MemberName6
       ;
     RETURN NEXT Cursor3;
 END;

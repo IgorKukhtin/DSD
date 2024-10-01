@@ -408,7 +408,6 @@ inherited PromoTradeJournalForm: TPromoTradeJournalForm
         item
           DataSet = PrintSignCDS
           UserName = 'frxDBDSign'
-          IndexFieldNames = 'LineNo'
         end>
       Params = <
         item
