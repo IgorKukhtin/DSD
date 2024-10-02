@@ -1598,7 +1598,7 @@ BEGIN
                    )
 
      , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                           , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())        AS GoodsKindId
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
                            , SUM (COALESCE (Container.Amount,0))         AS Amount
                       FROM ContainerLinkObject AS CLO_Unit
@@ -1606,7 +1606,8 @@ BEGIN
                            INNER JOIN tmpGoods ON tmpGoods.GoodsId = Container.ObjectId
                            LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                          ON CLO_GoodsKind.ContainerId = CLO_Unit.ContainerId
-                                                        AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                                        AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                                                        AND CLO_GoodsKind.ObjectId    > 0
                            LEFT JOIN ContainerLinkObject AS CLO_Account
                                                          ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                         AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
@@ -1624,7 +1625,7 @@ BEGIN
                         AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                         AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                       GROUP BY Container.ObjectId
-                           , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                           , COALESCE (CLO_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                            , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart())
                       HAVING SUM (COALESCE (Container.Amount,0)) > 0
                      )
