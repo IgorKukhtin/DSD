@@ -435,7 +435,7 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
           Name = 'PromoItemName_full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'PromoItemName_full'
+          ComponentItem = 'AdvertisingName'
           DataType = ftString
           MultiSelectSeparator = ','
         end

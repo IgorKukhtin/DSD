@@ -611,10 +611,20 @@ AS
              zc_Movement_Sale()
            , CAST ('Tax' AS TVarChar)
            , CAST ('01.08.2023' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('30.09.2024' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_Tax010823' AS TVarChar)
+      UNION
+--налоговая c 01.10.2024
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Tax' AS TVarChar)
+           , CAST ('01.10.2024' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_Tax011024' AS TVarChar)
       UNION
 --коррект
       SELECT
@@ -722,11 +732,20 @@ AS
              zc_movement_TaxCorrective()
            , CAST ('TaxCorrective' AS TVarChar)
            , CAST ('01.08.2023' AS TDateTime)
-           , CAST ('01.01.2214' AS TDateTime)
+           , CAST ('30.09.2024' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_TaxCorrective010823' AS TVarChar)
-
+      UNION
+--коррект  c 01.10.2024
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('01.10.2024' AS TDateTime)
+           , CAST ('01.01.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective011024' AS TVarChar)
 
 /*
 -- Новая форма налоговой

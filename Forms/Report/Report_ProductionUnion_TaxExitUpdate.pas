@@ -73,6 +73,10 @@ type
     PrintItemsCDS: TClientDataSet;
     spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc;
     spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
+    spDelete_Object_Print: TdsdStoredProc;
+    spInsertPrint_byGrid: TdsdStoredProc;
+    dsdStoredProc1: TdsdStoredProc;
+    dsdStoredProc2: TdsdStoredProc;
   private
     { Private declarations }
   public
