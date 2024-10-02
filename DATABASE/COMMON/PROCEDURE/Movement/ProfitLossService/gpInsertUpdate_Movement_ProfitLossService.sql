@@ -48,6 +48,7 @@ BEGIN
  
       --проверка договор должен быть в Promo, иначе выдавать ошибку  
      IF COALESCE (inMovementId_doc,0) <> 0 
+      AND EXISTS (SELECT 1 FROM Movement  WHERE Movement.Id = inMovementId_doc AND Movement.DescId = zc_Movement_PromoTrade())
       AND NOT EXISTS (--Акция
                       --Траде маркетинг
                       SELECT MovementLinkObject_Contract.ObjectId AS ContractId
