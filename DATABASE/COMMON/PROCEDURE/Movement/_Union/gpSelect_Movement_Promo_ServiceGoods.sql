@@ -43,11 +43,13 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar  
              , PaidKindName TVarChar
-             , PromoItemName TVarChar
+             , AdvertisingName TVarChar
              , Comment TVarChar 
-             , PromoItemName_full TVarChar 
+             , AdvertisingName_full TVarChar 
+             , InfoMoneyCode      Integer 
+             , InfoMoneyName      TVarChar
              , CostPromo TFloat
-             , SummMarket TFloat
+             , SummMarket TFloat  
               )
 AS
 $BODY$
@@ -135,22 +137,96 @@ BEGIN
                                       , Object_Contract.ValueData
                                       , Object_ContractTag.ValueData
                                ) 
+
+         , tmpInfoMoney AS (SELECT Movement.ParentId
+                                 , MLO_InfoMoney_CostPromo.ObjectId  AS InfoMoneyId_CostPromo       
+                                 , MLO_InfoMoney_Market.ObjectId     AS InfoMoneyId_Market       
+                               FROM Movement
+                                   LEFT JOIN MovementLinkObject AS MLO_InfoMoney_CostPromo
+                                                                ON MLO_InfoMoney_CostPromo.MovementId = Movement.Id
+                                                               AND MLO_InfoMoney_CostPromo.DescId = zc_MovementLinkObject_InfoMoney_CostPromo()
+                           
+                                   LEFT JOIN MovementLinkObject AS MLO_InfoMoney_Market
+                                                                ON MLO_InfoMoney_Market.MovementId = Movement.Id
+                                                               AND MLO_InfoMoney_Market.DescId = zc_MovementLinkObject_InfoMoney_Market()
                                    
+                               WHERE Movement.DescId = zc_Movement_InfoMoney()
+                                 AND Movement.ParentId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+                            )                                   
+
          --строки Promo
-         , tmpMI_promo AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
+         , tmpMI_promo AS (WITH
+                           tmpMI AS (SELECT MovementItem.*
+                                     FROM MovementItem
+                                     WHERE MovementItem.DescId = zc_MI_Master()
+                                       AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
+                                       AND MovementItem.isErased = FALSE
+                                     )
+                         , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
+                                                    FROM MovementItemFloat
+                                                    WHERE MovementItemFloat.MovementItemId In (SELECT DISTINCT tmpMI.Id FROM tmpMI) 
+                                                      AND MovementItemFloat.DescId IN (zc_MIFloat_SummOutMarket(), zc_MIFloat_SummInMarket())
+                                                    )
+                           SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
                                 , SUM (COALESCE (MIFloat_SummOutMarket.ValueData,0) - COALESCE (MIFloat_SummInMarket.ValueData,0))  ::TFloat AS SummMarket
-                           FROM MovementItem
-                                LEFT JOIN MovementItemFloat AS MIFloat_SummOutMarket
+                           FROM tmpMI AS MovementItem
+                                LEFT JOIN tmpMovementItemFloat AS MIFloat_SummOutMarket
                                                             ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
-                                LEFT JOIN MovementItemFloat AS MIFloat_SummInMarket
+                                LEFT JOIN tmpMovementItemFloat AS MIFloat_SummInMarket
                                                             ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
-                           WHERE MovementItem.DescId = zc_MI_Master()
-                             AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement WHERE tmpMovement.DescId = zc_Movement_Promo())
-                             AND MovementItem.isErased = FALSE
                            GROUP BY MovementItem.MovementId
                              )
+ 
+ 
+       , tmpMovementDate AS (SELECT MovementDate.* 
+                            FROM MovementDate
+                            WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement) 
+                              AND MovementDate.DescId IN (zc_MovementDate_EndPromo()
+                                                        , zc_MovementDate_EndReturn()
+                                                        , zc_MovementDate_EndSale()
+                                                        , zc_MovementDate_Month()
+                                                        , zc_MovementDate_OperDateEnd()
+                                                        , zc_MovementDate_OperDateStart()
+                                                        , zc_MovementDate_StartPromo()
+                                                        , zc_MovementDate_StartSale())
+                            )
+      , tmpInfoMoney_View AS (SELECT *
+                              FROM Object_InfoMoney_View
+                              )
+ 
+          --ну как то так нужно вывести данные несколькими строками
+         , tmpPomo_params AS (SELECT tmpMovement.Id AS ParentId
+                                   , tmpAdvertising.AdvertisingId
+                                   , tmpAdvertising.AdvertisingName 
+                                   , tmpAdvertising.Comment  AS Comment_Advertising
+                                   , MovementFloat_CostPromo.ValueData  ::TFloat AS CostPromo
+                                   , 0 ::TFloat AS SummMarket
+                                   , tmpInfoMoney.InfoMoneyId_CostPromo AS InfoMoneyId
+                              FROM tmpMovement
+                                   LEFT JOIN tmpAdvertising ON tmpAdvertising.ParentId = tmpMovement.Id
+                                   LEFT JOIN MovementFloat AS MovementFloat_CostPromo
+                                                           ON MovementFloat_CostPromo.MovementId = tmpMovement.Id 
+                                                          AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
+                                   LEFT JOIN tmpInfoMoney ON tmpInfoMoney.ParentId = tmpMovement.Id
+                              WHERE tmpMovement.DescId = zc_Movement_Promo() 
+                           UNION ALL
+                              SELECT tmpMovement.Id AS ParentId
+                              , NULL AS AdvertisingId
+                              , NULL AS AdvertisingName 
+                              , NULL AS Comment_Advertising
+                              , 0  ::TFloat AS CostPromo
+                              , tmpMI_promo.SummMarket ::TFloat AS SummMarket
+                              , tmpInfoMoney.InfoMoneyId_Market AS InfoMoneyId
+                              FROM tmpMovement
+                                   LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementId = tmpMovement.Id 
+                                   LEFT JOIN tmpInfoMoney ON tmpInfoMoney.ParentId =  tmpMovement.Id 
+                              WHERE tmpMovement.DescId = zc_Movement_Promo()
+                                AND (COALESCE (tmpMI_promo.SummMarket,0) <> 0 OR COALESCE (tmpInfoMoney.InfoMoneyId_Market,0) <> 0)
+                             )
+
 
         -- Результат
         SELECT Movement.Id                                                 --Идентификатор
@@ -191,16 +267,20 @@ BEGIN
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_Retail.ValueData ELSE tmpPromoPartner.RetailName END  ::TVarChar             AS RetailName   
              , Object_PaidKind.ValueData  ::TVarChar                                                                                                         AS PaidKindName
              
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE tmpAdvertising.AdvertisingName END ::TVarChar AS PromoItemName      --Стаья затрат
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementString_Comment.ValueData ELSE tmpAdvertising.Comment END   ::TVarChar AS Comment            --Примечание затрат
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN COALESCE (Object_PromoItem.ValueData,'')
-                        || CASE WHEN COALESCE (MovementString_Comment.ValueData,'') <> '' THEN ' ;'||COALESCE (MovementString_Comment.ValueData,'') ELSE '' END
-                    ELSE COALESCE (tmpAdvertising.AdvertisingName,'') 
-                        || CASE WHEN COALESCE (tmpAdvertising.Comment,'') <> '' THEN ' ;'||COALESCE (tmpAdvertising.Comment,'') ELSE '' END
-               END ::TVarChar AS PromoItemName_full
-             , MovementFloat_CostPromo.ValueData  ::TFloat AS CostPromo
-             , COALESCE (tmpMI_promo.SummMarket,0)::TFloat AS SummMarket
-              
+             , CASE WHEN Movement.DescId = zc_Movement_Promo() THEN tmpPomo_params.AdvertisingName ELSE NULL END ::TVarChar AS AdvertisingName      --рекламная поддержка
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementString_Comment.ValueData ELSE tmpPomo_params.Comment_Advertising END   ::TVarChar AS Comment            --Примечание затрат
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN NULL
+                    ELSE COALESCE (tmpPomo_params.AdvertisingName,'') 
+                        || CASE WHEN COALESCE (tmpPomo_params.Comment_Advertising,'') <> '' THEN ' ;'||COALESCE (tmpPomo_params.Comment_Advertising,'') ELSE '' END
+               END ::TVarChar AS AdvertisingName_full 
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ObjectCode ELSE View_InfoMoney.InfoMoneyCode END  InfoMoneyCode
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE View_InfoMoney.InfoMoneyName_all END  ::TVarChar InfoMoneyName
+
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementFloat_CostPromo.ValueData 
+                    ELSE tmpPomo_params.CostPromo
+               END                                   ::TFloat AS CostPromo
+             , COALESCE (tmpPomo_params.SummMarket,0)::TFloat AS SummMarket   
+             
         FROM tmpMovement AS Movement
              LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
@@ -217,32 +297,32 @@ BEGIN
              LEFT JOIN Object AS Object_PriceList
                               ON Object_PriceList.Id = MovementLinkObject_PriceList.ObjectId
 
-             LEFT JOIN MovementDate AS MovementDate_StartSale
+             LEFT JOIN tmpMovementDate AS MovementDate_StartSale
                                     ON MovementDate_StartSale.MovementId = Movement.Id
                                    AND MovementDate_StartSale.DescId = zc_MovementDate_StartSale()
-             LEFT JOIN MovementDate AS MovementDate_EndSale
+             LEFT JOIN tmpMovementDate AS MovementDate_EndSale
                                     ON MovementDate_EndSale.MovementId = Movement.Id
                                    AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
 
-             LEFT JOIN MovementDate AS MovementDate_StartPromo
+             LEFT JOIN tmpMovementDate AS MovementDate_StartPromo
                                     ON MovementDate_StartPromo.MovementId = Movement.Id
                                    AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
-             LEFT JOIN MovementDate AS MovementDate_EndPromo
+             LEFT JOIN tmpMovementDate AS MovementDate_EndPromo
                                     ON MovementDate_EndPromo.MovementId =  Movement.Id
                                    AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
 
-             LEFT JOIN MovementDate AS MovementDate_EndReturn
+             LEFT JOIN tmpMovementDate AS MovementDate_EndReturn
                                     ON MovementDate_EndReturn.MovementId = Movement.Id
                                    AND MovementDate_EndReturn.DescId = zc_MovementDate_EndReturn()
 
-             LEFT JOIN MovementDate AS MovementDate_OperDateStart
+             LEFT JOIN tmpMovementDate AS MovementDate_OperDateStart
                                     ON MovementDate_OperDateStart.MovementId = Movement.Id
                                    AND MovementDate_OperDateStart.DescId = zc_MovementDate_OperDateStart()
-             LEFT JOIN MovementDate AS MovementDate_OperDateEnd
+             LEFT JOIN tmpMovementDate AS MovementDate_OperDateEnd
                                     ON MovementDate_OperDateEnd.MovementId = Movement.Id
                                    AND MovementDate_OperDateEnd.DescId = zc_MovementDate_OperDateEnd()
 
-             LEFT JOIN MovementDate AS MovementDate_Month
+             LEFT JOIN tmpMovementDate AS MovementDate_Month
                                     ON MovementDate_Month.MovementId = Movement.Id
                                    AND MovementDate_Month.DescId = zc_MovementDate_Month()
 
@@ -310,13 +390,14 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                      ON MovementFloat_CostPromo.MovementId = Movement.Id
                                     AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
+                                    AND Movement.DescId = zc_Movement_PromoTrade() 
 
-             LEFT JOIN tmpAdvertising ON tmpAdvertising.ParentId = Movement.Id
+             LEFT JOIN tmpPomo_params ON tmpPomo_params.ParentId = Movement.Id
                                      AND Movement.DescId = zc_Movement_Promo()
+             LEFT JOIN tmpInfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpPomo_params.InfoMoneyId
              LEFT JOIN tmpPromoPartner ON tmpPromoPartner.ParentId = Movement.Id
-                                      AND Movement.DescId = zc_Movement_Promo()                 
-             LEFT JOIN tmpMI_promo ON tmpMI_promo.MovementId = Movement.Id
-                                  AND Movement.DescId = zc_Movement_Promo()
+                                      AND Movement.DescId = zc_Movement_Promo()
+            
         ;
 
 END;

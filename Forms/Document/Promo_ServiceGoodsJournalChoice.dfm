@@ -228,13 +228,21 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
             HeaderAlignmentVert = vaCenter
             Width = 95
           end
-          object PromoItemName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'PromoItemName'
+          object AdvertisingName: TcxGridDBColumn
+            Caption = #1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072
+            DataBinding.FieldName = 'AdvertisingName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 111
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
           end
           object CostPromo: TcxGridDBColumn
             Caption = #1057#1090#1086#1080#1084#1086#1089#1090#1100' '#1091#1095#1072#1089#1090#1080#1103
@@ -257,14 +265,6 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 89
-          end
-          object Comment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1079#1072#1090#1088#1072#1090
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 101
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
@@ -312,6 +312,24 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object InfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055' '#1089#1090#1072#1090#1100#1080' '#1079#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1059#1055' '#1089#1090#1072#1090#1100#1080' '#1079#1072#1090#1088#1072#1090
+            Options.Editing = False
+            Width = 60
+          end
+          object InfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1079#1072#1090#1088#1072#1090
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
           end
         end
       end
