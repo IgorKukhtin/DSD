@@ -669,6 +669,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inContractChildId'
+        Value = Null
+        Component = GuidesContractChild
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ininfomoneyid'
         Value = ''
         Component = GuidesInfoMoney
@@ -1108,6 +1116,21 @@
         Name = 'InvNumberInvoice'
         Value = Null
         Component = ceInvNumberInvoice
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractChildId'
+        Value = Null
+        Component = GuidesContractChild
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ContractChildInvNumber'
+        Value = Null
+        Component = GuidesContractChild
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1780,7 +1803,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PromoItemName_full'
+        Name = 'AdvertisingName_full'
         Value = Null
         Component = ceComment
         DataType = ftString
@@ -1799,6 +1822,23 @@
         Name = 'ContractName'
         Value = Null
         Component = GuidesContractChild
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1840,7 +1880,6 @@
   object GuidesContractChild: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContractChild
-    DisableGuidesOpen = True
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

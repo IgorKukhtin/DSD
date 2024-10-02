@@ -32,6 +32,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , ContractCode Integer, ContractInvNumber TVarChar, ContractTagName TVarChar
+             , ContractChildId Integer, ContractChildCode Integer, ContractChildInvNumber TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
@@ -232,7 +233,11 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyName_all
            , View_Contract_InvNumber.ContractCode
            , View_Contract_InvNumber.InvNumber              AS ContractInvNumber
-           , View_Contract_InvNumber.ContractTagName        AS ContractTagName
+           , View_Contract_InvNumber.ContractTagName        AS ContractTagName 
+           , Object_ContractChild.Id                        AS ContractChildId
+           , Object_ContractChild.ObjectCode                AS ContractChildCode
+           , Object_ContractChild.ValueData                 AS ContractChildInvNumber
+           
            , Object_Unit.ValueData                          AS UnitName
            , Object_PaidKind.ValueData                      AS PaidKindName
            , MovementString_MovementId.ValueData            AS CostMovementId
@@ -380,6 +385,11 @@ BEGIN
                                                                                          ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
                                                                                     END
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                             ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+            LEFT JOIN Object AS Object_ContractChild ON Object_ContractChild.Id = MILinkObject_ContractChild.ObjectId
+
             LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
 
        -- НЕ Разрешен просмотр долги Маркетинг - НАЛ
@@ -419,4 +429,3 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_Service (inStartDate:= '01.09.2021'::TDateTime, inEndDate:= '03.09.2021'::TDateTime, inJuridicalBasisId:=0, inSettingsServiceId := 3175171, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
 
 --3175171
-

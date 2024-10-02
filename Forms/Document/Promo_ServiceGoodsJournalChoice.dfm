@@ -432,10 +432,10 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PromoItemName_full'
+          Name = 'AdvertisingName_full'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'AdvertisingName'
+          ComponentItem = 'AdvertisingName_full'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -451,6 +451,21 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
           Value = Null
           Component = MasterCDS
           ComponentItem = 'ContractName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
