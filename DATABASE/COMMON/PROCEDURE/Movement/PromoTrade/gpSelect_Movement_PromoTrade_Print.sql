@@ -114,14 +114,18 @@ BEGIN
         SELECT
             6 ::Integer AS LineNo,
             'Кількість SKU'::TVarChar as LineName,
-            (SELECT COUNT(_tmpMI.GoodsCode) 
+            (SELECT COUNT(DISTINCT _tmpMI.GoodsCode) 
              FROM _tmpMI)::TEXT AS LineValue
         UNION ALL
         SELECT
             7 ::Integer AS LineNo,
             'Кількість торгових точок'::TVarChar as LineName,
-            (SELECT SUM (_tmpMI.PartnerCount)
-             FROM _tmpMI)::TEXT AS LineValue
+            (SELECT SUM (COALESCE (tmp.PartnerCount,0))
+             FROM (SELECT SUM (_tmpMI.PartnerCount) AS PartnerCount FROM _tmpMI WHERE COALESCE (_tmpMI.PartnerId,0) = 0 
+                 UNION 
+                   SELECT COUNT ( DISTINCT _tmpMI.PartnerId) AS PartnerCount FROM _tmpMI WHERE COALESCE (_tmpMI.PartnerId,0) <> 0
+                  ) AS tmp
+             )::TEXT AS LineValue
         UNION ALL
         SELECT
             8 ::Integer AS LineNo,
