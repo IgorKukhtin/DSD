@@ -2719,7 +2719,7 @@ end if;
                                  , ProtocolData
                                   )
         WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
-        SELECT inSession :: Integer
+        SELECT vbUserId :: Integer
                -- во сколько началась
              , CURRENT_TIMESTAMP
              , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1

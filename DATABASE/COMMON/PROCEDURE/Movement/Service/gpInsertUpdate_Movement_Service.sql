@@ -178,6 +178,7 @@ BEGIN
 
      --проверка договор должен быть в Promo, иначе выдавать ошибку  
      IF COALESCE (inMovementId_doc,0) <> 0 
+      AND EXISTS (SELECT 1 FROM Movement  WHERE Movement.Id = inMovementId_doc AND Movement.DescId = zc_Movement_PromoTrade())
       AND NOT EXISTS (--Акция
                       --Траде маркетинг
                       SELECT MovementLinkObject_Contract.ObjectId AS ContractId
@@ -195,7 +196,21 @@ BEGIN
                         AND COALESCE (MovementLinkObject_Contract.ObjectId,0) <> 0
                       LIMIT 1)
      THEN
-          RAISE EXCEPTION 'Ошибка. Для документа Распред. затрат Акция / Трейд-маркетинг должен быть установлен Договор база.';
+          RAISE EXCEPTION 'Ошибка.В документе <%> № <%> от <%> должен быть установлен <Договор база>.'
+                        , (SELECT MovementDesc.ItemName
+                           FROM Movement 
+                                JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                        , (SELECT Movement.InvNumber
+                           FROM Movement 
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                        , (SELECT zfConvert_DateToString (Movement.OperDate)
+                           FROM Movement 
+                           WHERE Movement.Id = inMovementId_doc
+                          )
+                         ;
      END IF;
 
      -- расчет сумма в ГРН
