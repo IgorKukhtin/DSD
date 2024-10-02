@@ -5,7 +5,7 @@ inherited SaleAssetJournalForm: TSaleAssetJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 935
-  ExplicitHeight = 457
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,8 +22,6 @@ inherited SaleAssetJournalForm: TSaleAssetJournalForm
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 362
-        ExplicitLeft = 107
-        ExplicitTop = -3
         ExplicitWidth = 919
         ExplicitHeight = 362
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -417,8 +415,8 @@ inherited SaleAssetJournalForm: TSaleAssetJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Loss'
-      ReportNameParam.Value = 'PrintMovement_Loss'
+      ReportName = 'PrintMovement_SaleAsset'
+      ReportNameParam.Value = 'PrintMovement_SaleAsset'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

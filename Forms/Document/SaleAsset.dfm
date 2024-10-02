@@ -2,7 +2,6 @@ inherited SaleAssetForm: TSaleAssetForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' ('#1054#1057')>'
   ClientHeight = 668
   ClientWidth = 1079
-  ExplicitLeft = -202
   ExplicitWidth = 1095
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -644,10 +643,10 @@ inherited SaleAssetForm: TSaleAssetForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint_Loss
+      StoredProc = spSelectPrint_SaleAsset
       StoredProcList = <
         item
-          StoredProc = spSelectPrint_Loss
+          StoredProc = spSelectPrint_SaleAsset
         end>
       DataSets = <
         item
@@ -666,8 +665,8 @@ inherited SaleAssetForm: TSaleAssetForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Loss'
-      ReportNameParam.Value = 'PrintMovement_Loss'
+      ReportName = 'PrintMovement_SaleAsset'
+      ReportNameParam.Value = 'PrintMovement_SaleAsset'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -1789,7 +1788,7 @@ inherited SaleAssetForm: TSaleAssetForm
     Left = 628
     Top = 278
   end
-  object spSelectPrint_Loss: TdsdStoredProc
+  object spSelectPrint_SaleAsset: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SaleAsset_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -1810,7 +1809,7 @@ inherited SaleAssetForm: TSaleAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
+    Left = 327
     Top = 208
   end
   object GuidesFrom: TdsdGuides
@@ -1927,8 +1926,8 @@ inherited SaleAssetForm: TSaleAssetForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 152
+    Left = 383
+    Top = 392
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'

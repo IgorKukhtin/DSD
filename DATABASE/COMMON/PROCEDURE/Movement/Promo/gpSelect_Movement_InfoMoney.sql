@@ -39,8 +39,9 @@ BEGIN
                                                  AND MLO_InfoMoney_Market.DescId = zc_MovementLinkObject_InfoMoney_Market()
                      LEFT JOIN Object AS Object_InfoMoney_Market ON Object_InfoMoney_Market.Id = MLO_InfoMoney_Market.ObjectId
 
-                             WHERE Movement.DescId = zc_Movement_InfoMoney()
-                               AND Movement.ParentId = inMovementId
+                WHERE Movement.DescId = zc_Movement_InfoMoney()
+                  AND Movement.ParentId = inMovementId
+                
                 )
     --Результат
     SELECT  tmpText.Ord                 ::Integer

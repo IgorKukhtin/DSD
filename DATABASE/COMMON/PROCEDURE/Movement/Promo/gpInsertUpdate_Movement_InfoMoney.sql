@@ -25,17 +25,20 @@ BEGIN
                                        , inIsUpdate  := TRUE
                                        , inUserId    := vbUserId
                                         );
-
+    --проверка вдруг уже создан док.
+    ioId := (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inParentId AND Movement.DescId = zc_Movement_InfoMoney());
+    
     -- определяем признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
-    --проверили сохранен ли документ
+    --проверили сохранен ли документ 
     IF NOT EXISTS(SELECT 1 FROM Movement 
                   WHERE Movement.Id = inParentId
                     AND Movement.StatusId = zc_Enum_Status_UnComplete())
     THEN
         RAISE EXCEPTION 'Ошибка. Документ не сохранен или не находится в состоянии <Не проведен>.';
     END IF;
+        
     
     -- сохранили <Документ>
     SELECT
