@@ -142,7 +142,7 @@ BEGIN
                 INNER JOIN MovementDate AS MovementDate_OperDatePartner
                                         ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                        AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                       AND MovementDate_OperDatePartner.ValueData BETWEEN CASE WHEN vbUserId = 5 THEN inStartDate - INTERVAL '12 MONTH' ELSE inStartDate - INTERVAL '12 MONTH' END AND inEndDate
+                                       AND MovementDate_OperDatePartner.ValueData BETWEEN CASE WHEN vbUserId = 5 THEN inStartDate - INTERVAL '24 MONTH' ELSE inStartDate - INTERVAL '12 MONTH' END AND inEndDate
                 INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -161,8 +161,10 @@ BEGIN
                 INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                       ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
                                      AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                     -- !!!Доходы + Продукция
-                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_30100()
+                                     -- !!!Доходы + Продукция + Мясное сырье
+                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                   , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                    )
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                               ON MovementLinkObject_To.MovementId = Movement.Id
@@ -221,8 +223,10 @@ BEGIN
                 INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                       ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
                                      AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                     -- !!!Доходы + Продукция
-                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_30100()
+                                     -- !!!Доходы + Продукция + Мясное сырье
+                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                   , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                    )
 
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
                                               ON MovementLinkObject_From.MovementId = Movement.Id
@@ -290,8 +294,10 @@ BEGIN
                                    INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                          ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = CLO_InfoMoney.ObjectId
                                                         AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                                        -- !!!Доходы + Продукция
-                                                        AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_30100()
+                                                        -- !!!Доходы + Продукция + Мясное сырье
+                                                        AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                      , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                       )
 
                                    INNER JOIN ContainerLinkObject AS CLO_PaidKind
                                                                   ON CLO_PaidKind.ContainerId = Container.Id
@@ -729,8 +735,10 @@ BEGIN
                                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                                                              -- !!!Доходы + Продукция
-                                                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_30100()
+                                                                              -- !!!Доходы + Продукция + Мясное сырье
+                                                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                                            , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                                             )
                                                          -- !!!Группируем Договора!!!
                                                          LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = MovementItemLinkObject.ObjectId
 
@@ -798,8 +806,10 @@ BEGIN
                                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
                                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                                                              -- !!!Доходы + Продукция
-                                                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId = zc_Enum_InfoMoneyDestination_30100()
+                                                                              -- !!!Доходы + Продукция + Мясное сырье
+                                                                              AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                                            , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                                             )
                                                          -- !!!Группируем Договора!!!
                                                          LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = MovementItemLinkObject.ObjectId
 
@@ -858,7 +868,7 @@ BEGIN
                                                WHERE Movement.DescId IN ( zc_Movement_SendDebt())
                                                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                  AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                 AND inPaidKindId = zc_Enum_PaidKind_FirstForm()
+                                               --AND inPaidKindId = zc_Enum_PaidKind_FirstForm()
                                               )
 
                              , tmpMI AS (SELECT MovementItem.*
@@ -869,21 +879,18 @@ BEGIN
                              , tmpMILO AS (SELECT * FROM MovementItemLinkObject WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
                              , tmpMIFloat AS (SELECT * FROM MovementItemFloat WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI.Id FROM tmpMI))
 
+                               -- Сумма кредит (уменьшение дебиторки, как оплата)
                              , tmpTotalSumm_Child AS (SELECT View_Contract_ContractKey.ContractId_key AS ContractId
-                                                           , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id) AS JuridicalId
+                                                           , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_To.Id) AS JuridicalId
+                                                           , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END AS PartnerId
                                                            , MILinkObject_PaidKind_To.ObjectId        AS PaidKindId
-                                                           , SUM (-1 * MI_Child.Amount)               AS Amount
+                                                           , SUM (1 * MI_Child.Amount)               AS Amount
                                                       FROM tmpMovement AS Movement
-                                                          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                                                                  ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                                                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
                                                           LEFT JOIN tmpMI AS MI_Child
                                                                           ON MI_Child.MovementId = Movement.Id
                                                                          AND MI_Child.DescId     = zc_MI_Child()
 
-                                                          LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = MI_Child.ObjectId
-                                                          LEFT JOIN ObjectDesc AS ObjectToDesc ON ObjectToDesc.Id = Object_Juridical_To.DescId
+                                                          LEFT JOIN Object AS Object_To ON Object_To.Id = MI_Child.ObjectId
 
                                                           LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalTo
                                                                                ON ObjectLink_Partner_JuridicalTo.ObjectId = MI_Child.ObjectId
@@ -900,19 +907,33 @@ BEGIN
                                                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
                                                                             AND (MILinkObject_PaidKind_To.ObjectId = inPaidKindId OR COALESCE (inPaidKindId,0) = 0)
 
+                                                          INNER JOIN tmpMILO AS MILinkObject_InfoMoney_To
+                                                                             ON MILinkObject_InfoMoney_To.MovementItemId = MI_Child.Id
+                                                                            AND MILinkObject_InfoMoney_To.DescId = zc_MILinkObject_InfoMoney()
                                                           -- !!!Ограничили!!!
-                                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id)
+                                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = MILinkObject_InfoMoney_To.ObjectId
+                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                                                               -- !!!Доходы + Продукция + Мясное сырье
+                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                                             , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                                              )
+                                                          -- !!!Ограничили!!!
+                                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_To.Id)
 
                                                       WHERE -- !!!Группируем Договора!!!
                                                             (View_Contract_ContractKey.ContractId_key = vbContractId_key OR COALESCE (vbContractId_key, 0) = 0)
 
                                                       GROUP BY View_Contract_ContractKey.ContractId_key
-                                                             , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_Juridical_To.Id)
+                                                             , COALESCE (ObjectLink_Partner_JuridicalTo.ChildObjectId, Object_To.Id)
+                                                             , CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END
                                                              , MILinkObject_PaidKind_To.ObjectId
                                                       )
 
+                               -- Сумма Дебет (увеличение дебиторки, как продажа)
                              , tmpTotalSumm_Master AS (SELECT View_Contract_ContractKey.ContractId_key AS ContractId
-                                                            , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id) AS JuridicalId
+                                                            , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_From.Id) AS JuridicalId
+                                                            , CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END AS PartnerId
                                                             , MILinkObject_PaidKind_From.ObjectId      AS PaidKindId
                                                             , SUM (-1 * MI_Master.Amount)     ::TFloat AS Amount
                                                        FROM tmpMovement AS Movement
@@ -924,8 +945,7 @@ BEGIN
                                                                            ON MI_Master.MovementId = Movement.Id
                                                                           AND MI_Master.DescId     = zc_MI_Master()
 
-                                                           LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = MI_Master.ObjectId
-                                                           LEFT JOIN ObjectDesc AS ObjectFromDesc ON ObjectFromDesc.Id = Object_Juridical_From.DescId
+                                                           LEFT JOIN Object AS Object_From ON Object_From.Id = MI_Master.ObjectId
 
                                                            LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalFrom
                                                                                 ON ObjectLink_Partner_JuridicalFrom.ObjectId = MI_Master.ObjectId
@@ -942,34 +962,51 @@ BEGIN
                                                                              AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
                                                                              AND (MILinkObject_PaidKind_From.ObjectId = inPaidKindId OR COALESCE (inPaidKindId,0) = 0)
 
+                                                          INNER JOIN tmpMILO AS MILinkObject_InfoMoney_From
+                                                                             ON MILinkObject_InfoMoney_From.MovementItemId = MI_Master.Id
+                                                                            AND MILinkObject_InfoMoney_From.DescId = zc_MILinkObject_InfoMoney()
                                                           -- !!!Ограничили!!!
-                                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id)
+                                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = MILinkObject_InfoMoney_From.ObjectId
+                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                                                               -- !!!Доходы + Продукция + Мясное сырье
+                                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                                             , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                                              )
+
+                                                          -- !!!Ограничили!!!
+                                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_From.Id)
 
                                                        WHERE -- !!!Группируем Договора!!!
                                                              (View_Contract_ContractKey.ContractId_key = vbContractId_key OR COALESCE (vbContractId_key, 0) = 0)
 
                                                        GROUP BY View_Contract_ContractKey.ContractId_key
-                                                              , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_Juridical_From.Id)
+                                                              , COALESCE (ObjectLink_Partner_JuridicalFrom.ChildObjectId, Object_From.Id)
+                                                              , CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END
                                                               , MILinkObject_PaidKind_From.ObjectId
                                                       )
                              -- Взаимозачет
                              SELECT tmp.JuridicalId
+                                  , tmp.PartnerId
                                   , tmp.ContractId
                                   , tmp.PaidKindId
                                   , SUM (tmp.Amount) AS Amount
                              FROM (SELECT tmp.JuridicalId
+                                        , tmp.PartnerId
                                         , tmp.ContractId
                                         , tmp.PaidKindId
                                         , tmp.Amount
                                    FROM tmpTotalSumm_Master AS tmp
                                 UNION
                                    SELECT tmp.JuridicalId
+                                        , tmp.PartnerId
                                         , tmp.ContractId
                                         , tmp.PaidKindId
                                         , tmp.Amount
                                    FROM tmpTotalSumm_Child AS tmp
                                   ) AS tmp
                              GROUP BY tmp.JuridicalId
+                                    , tmp.PartnerId
                                     , tmp.ContractId
                                     , tmp.PaidKindId
                            )
@@ -1001,7 +1038,7 @@ BEGIN
                          FROM tmpMovement_Cash AS tmp
                       UNION
                          SELECT tmp.JuridicalId
-                              , 0 AS PartnerId
+                              , tmp.PartnerId
                               , tmp.ContractId
                               , tmp.PaidKindId
                               , tmp.Amount AS TotalAmount
@@ -1189,6 +1226,28 @@ BEGIN
                             AND tmpRes.PaidKindId  = tmpSumm_pay.PaidKindId
            ;
 
+     -- добавили если не нашли - возвраты
+     INSERT INTO _tmpSale (MovementId, StatusId, InvNumber, OperDate, PaidKindId, ContractId, PartnerId, JuridicalId, SummSale, Ord, Ord_all_asc)
+        SELECT DISTINCT
+               0 AS MovementId
+             , 0 AS StatusId
+             , 0 AS InvNumber
+             , inEndDate + INTERVAL '1 DAY' AS OperDate
+             , _tmpPay.PaidKindId
+             , _tmpPay.ContractId
+             , _tmpPay.PartnerId
+             , _tmpPay.JuridicalId
+             , 0 AS SummSale
+             , 1 AS Ord
+             , 0 AS Ord_all_asc
+        FROM _tmpPay
+             LEFT JOIN _tmpSale ON _tmpSale.Ord         = 1
+                               AND _tmpSale.JuridicalId = _tmpPay.JuridicalId
+                               AND _tmpSale.PartnerId   = _tmpPay.PartnerId
+                               AND _tmpSale.ContractId  = _tmpPay.ContractId
+                               AND _tmpSale.PaidKindId  = _tmpPay.PaidKindId
+        WHERE _tmpSale.MovementId IS NULL
+       ;
 
     -- Результат
     RETURN QUERY
