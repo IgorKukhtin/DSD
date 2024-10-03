@@ -4,7 +4,7 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
   ClientWidth = 1118
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1134
-  ExplicitHeight = 594
+  ExplicitHeight = 595
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -4991,7 +4991,7 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
         end
         item
           Name = 'inEndDate'
-          Value = 'NULL'
+          Value = Null
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -5272,7 +5272,7 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -5511,7 +5511,7 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
         end
         item
           Name = 'ContractSigningDate'
-          Value = 'NULL'
+          Value = Null
           Component = FormParams
           ComponentItem = 'ContractSigningDate'
           DataType = ftDateTime
@@ -6748,45 +6748,48 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
       item
         Name = 'inJuridicalId'
         Value = ''
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPartnerId'
         Value = '0'
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inContractId'
         Value = ''
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inAccountId'
         Value = ''
-        Component = GuidesAccount
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'AccountId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = GuidesPaidKind
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = GuidesInfoMoney
-        ComponentItem = 'Key'
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -6800,8 +6803,7 @@ inherited Report_JuridicalSold_AssetNoBalanceForm: TReport_JuridicalSold_AssetNo
       end
       item
         Name = 'inMovementId_Partion'
-        Value = '0'
-        ComponentItem = 'Key'
+        Value = 0
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
