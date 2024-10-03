@@ -459,14 +459,14 @@ inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceF
           Name = 'InfoMoneyId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
+          ComponentItem = 'InfoMoneyId_choice'
           MultiSelectSeparator = ','
         end
         item
           Name = 'InfoMoneyName'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
+          ComponentItem = 'InfoMoneyName_choice'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

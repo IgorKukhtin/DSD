@@ -49,6 +49,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , InfoMoneyId        Integer
              , InfoMoneyCode      Integer 
              , InfoMoneyName      TVarChar
+             , InfoMoneyId_choice    Integer
+             , InfoMoneyName_choice  TVarChar
              , CostPromo          TFloat
              , SummMarket         TFloat  
               )
@@ -348,6 +350,10 @@ BEGIN
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.Id ELSE View_InfoMoney.InfoMoneyId END            AS InfoMoneyId
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ObjectCode ELSE View_InfoMoney.InfoMoneyCode END  AS InfoMoneyCode
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE View_InfoMoney.InfoMoneyName_all END  ::TVarChar AS InfoMoneyName
+
+             , View_InfoMoney.InfoMoneyId                    AS InfoMoneyId_choice
+             , View_InfoMoney.InfoMoneyName_all   ::TVarChar AS InfoMoneyName_choice
+
 
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementFloat_CostPromo.ValueData 
                     ELSE tmpPomo_params.CostPromo
