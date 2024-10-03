@@ -694,8 +694,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       inherited cxGridChild: TcxGrid
         Top = 297
         Width = 1203
-        ExplicitLeft = -3
-        ExplicitTop = 298
+        ExplicitTop = 297
         ExplicitWidth = 1203
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -5652,6 +5651,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = Null
         DataType = ftBoolean
@@ -5850,6 +5856,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = False
         DataType = ftBoolean
@@ -5914,6 +5927,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = True
         DataType = ftBoolean
@@ -5972,6 +5992,13 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       end
       item
         Name = 'inisList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsListReport'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput

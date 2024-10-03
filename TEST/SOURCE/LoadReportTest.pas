@@ -157,7 +157,6 @@ begin
   exit;
   LoadReportFromFile('Печать_ ЯчеекОтбора', ReportPath + '\Справочники\Печать_ ЯчеекОтбора.fr3');
   exit;
-
   LoadReportFromFile('Печать паспорта ячейки', ReportPath + '\Товарный Учет\Печать паспорта ячейки.fr3');
   exit;
   }

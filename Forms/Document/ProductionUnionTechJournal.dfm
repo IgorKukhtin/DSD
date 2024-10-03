@@ -5728,6 +5728,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = False
         DataType = ftBoolean
@@ -5917,6 +5924,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = False
         DataType = ftBoolean
@@ -5990,6 +6004,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inIsListReport'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisPartion'
         Value = True
         DataType = ftBoolean
@@ -5997,7 +6018,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 872
+    Left = 920
     Top = 457
   end
   object spPrint_TaxExitUpdate_groupCeh: TdsdStoredProc
@@ -6048,6 +6069,13 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       end
       item
         Name = 'inisList'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsListReport'
         Value = False
         DataType = ftBoolean
         ParamType = ptInput

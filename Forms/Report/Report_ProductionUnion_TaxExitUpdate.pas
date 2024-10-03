@@ -75,8 +75,17 @@ type
     spPrint_TaxExitUpdate_groupTRM: TdsdStoredProc;
     spDelete_Object_Print: TdsdStoredProc;
     spInsertPrint_byGrid: TdsdStoredProc;
-    dsdStoredProc1: TdsdStoredProc;
-    dsdStoredProc2: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupCeh_gr: TdsdStoredProc;
+    spPrint_TaxExitUpdate_groupTRM_gr: TdsdStoredProc;
+    actDelete_Object_Print: TdsdExecStoredProc;
+    actPrint_byGrid: TdsdExecStoredProc;
+    actPrint_byGrid_list: TMultiAction;
+    actPrintCEH_Group_gr: TdsdPrintAction;
+    actPrintTRM_Group_gr: TdsdPrintAction;
+    macPrintCEH_Group_gr: TMultiAction;
+    macPrintTRM_Group_gr: TMultiAction;
+    bbmacPrintCEH_Group_gr: TdxBarButton;
+    bbmacPrintTRM_Group_gr: TdxBarButton;
   private
     { Private declarations }
   public

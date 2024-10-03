@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ProductionUnion_TaxExitUpdate (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_TaxExitUpdate (
     IN inStartDate      TDateTime ,
@@ -12,11 +13,13 @@ CREATE OR REPLACE FUNCTION gpReport_ProductionUnion_TaxExitUpdate (
     IN inToId           Integer   ,  
     IN inParam          Integer   ,
     IN inIsList         Boolean   , --для печати - данных из грида
+    IN inIsListReport   Boolean   , --для печати - данных из грида в отчете
     IN inIsPartion      Boolean   , --
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName_Complete TVarChar, MeasureName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindId_Complete Integer, GoodsKindName_Complete TVarChar, MeasureName TVarChar
              , PartionGoodsDate TDateTime
              , RealDelicShp TFloat
              , RealWeightShp_calc TFloat
@@ -289,7 +292,6 @@ BEGIN
                              , tmpMI_WorkProgress_out.GoodsId
                              , tmpMI_WorkProgress_out.PartionGoodsId
                              , MIContainer.ObjectIntId_Analyzer
-
                      )
          -- результат - группируется
        , tmpMI_WorkProgress_in_gr AS
@@ -663,10 +665,30 @@ BEGIN
                            WHERE Object_GoodsNormDiff.DescId = zc_Object_GoodsNormDiff()
                              AND Object_GoodsNormDiff.isErased = FALSE
                           )
+    -- список товаров для ограничения печати из грида для отчета
+    , tmpGoods AS (SELECT DISTINCT tmpResult.GoodsId
+                        , tmpResult.GoodsKindId_Complete 
+                        , ObjectDate_PartionGoods.ValueData  ::TDateTime  AS PartionGoodsDate
+                   FROM tmpResult
+                        LEFT JOIN ObjectDate AS ObjectDate_PartionGoods
+                                             ON ObjectDate_PartionGoods.ObjectId = tmpResult.PartionGoodsId
+                                            AND ObjectDate_PartionGoods.DescId = zc_ObjectDate_PartionGoods_Value()
+                   WHERE inIsListReport = FALSE
+                 UNION 
+                   SELECT DISTINCT OP.ObjectId AS GoodsId
+                          , OP.ReportKindId AS GoodsKindId_Complete
+                          , OP.ValueDate   ::TDateTime  AS PartionGoodsDate
+                     FROM Object_Print AS OP
+                     WHERE OP.UserId = vbUserId
+                       AND inIsListReport = TRUE  
+                   )
+
     -- Результат
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.Id                        AS GoodsId
          , Object_Goods.ObjectCode                AS GoodsCode
-         , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar                AS GoodsName
+         , (Object_Goods.ValueData || CASE WHEN vbUserId = 5 AND 1=0 THEN ' ' || tmpResult.MovementId ELSE '' END) :: TVarChar  AS GoodsName
+         , Object_GoodsKindComplete.Id            AS GoodsKindId_Complete
          , Object_GoodsKindComplete.ValueData     AS GoodsKindName_Complete
          , Object_Measure.ValueData               AS MeasureName
          , ObjectDate_PartionGoods.ValueData  ::TDateTime  AS PartionGoodsDate
@@ -846,6 +868,12 @@ BEGIN
                                ON ObjectDate_PartionGoods.ObjectId = tmpResult.PartionGoodsId
                               AND ObjectDate_PartionGoods.DescId = zc_ObjectDate_PartionGoods_Value()
 
+          --если печать из грида отчета - ограничиваем через товары
+          INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpResult.GoodsId
+                             AND COALESCE (tmpGoods.GoodsKindId_Complete,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
+                             AND tmpGoods.PartionGoodsDate = ObjectDate_PartionGoods.ValueData  ::TDateTime
+
+
           LEFT JOIN tmpGoodsNormDiff ON tmpGoodsNormDiff.GoodsId = tmpResult.GoodsId
                                     AND COALESCE (tmpGoodsNormDiff.GoodsKindId,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
     ;
@@ -864,3 +892,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsPartion:= TRUE, inSession := '9457');
+--SELECT * FROM gpReport_ProductionUnion_TaxExitUpdate(inStartDate := ('01.07.2024')::TDateTime , inEndDate := ('01.07.2024')::TDateTime , inFromId := 8448 , inToId := 8448 , inParam:=0, inIsList:= FALSE, inIsListReport:= TRUE, inIsPartion:= TRUE, inSession := '9457');
