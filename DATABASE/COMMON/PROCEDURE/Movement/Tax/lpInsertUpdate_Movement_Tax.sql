@@ -190,20 +190,21 @@ BEGIN
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
-     END IF;
-
+     
      -- сохранили "текущая дата", вместо "регистрации" - если нет или убрали электронная (т.е. регистрация медка)
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), tmp.MovementId, CURRENT_DATE)
      FROM (SELECT ioId AS MovementId /*WHERE vbIsInsert = TRUE AND CURRENT_DATE >= '01.04.2016'*/) AS tmp
           LEFT JOIN MovementBoolean ON MovementBoolean.MovementId = tmp.MovementId
                                    AND MovementBoolean.DescId = zc_MovementBoolean_Electron()
      WHERE COALESCE (MovementBoolean.ValueData, FALSE) = FALSE
+       AND vbIsInsert = TRUE
     ;
+
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$

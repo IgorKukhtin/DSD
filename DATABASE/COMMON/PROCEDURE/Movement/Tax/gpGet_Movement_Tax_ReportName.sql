@@ -27,6 +27,8 @@ BEGIN
                                */
                               WHEN Movement.OperDate < '01.03.2017' AND MovementDate_DateRegistered.ValueData >= '01.03.2017'
                                    THEN Movement.OperDate
+                              WHEN COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                                   THEN '01.10.2024'
                               WHEN Movement.OperDate > COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate)
                                    THEN Movement.OperDate
                               ELSE COALESCE (MovementDate_DateRegistered.ValueData, Movement.OperDate)

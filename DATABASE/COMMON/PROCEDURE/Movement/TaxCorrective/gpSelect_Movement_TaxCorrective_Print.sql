@@ -104,6 +104,11 @@ BEGIN
           , CASE WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)
                   AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
                   AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
+                      THEN '01.10.2024'
+
+                 WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)
+                  AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                  AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
                       THEN Movement_TaxCorrective.OperDate -- '01.03.2021'
 
                  WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate
@@ -926,7 +931,8 @@ BEGIN
                   WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201209'
                   WHEN vbOperDate_begin  < '01.03.2021' THEN 'J1201210'
                   WHEN vbOperDate_begin  < '16.03.2021' THEN 'J1201211'
-                  ELSE 'J1201212'
+                  WHEN vbOperDate_begin  < '01.10.2024' THEN 'J1201212'
+                  ELSE 'J1201216'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                                        AS N10
            , CASE WHEN tmpPersonalSigning.PersonalName <> ''

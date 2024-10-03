@@ -164,6 +164,8 @@ order by 4*/
                    --   THEN '01.03.2021'
                  WHEN MovementDate_DateRegistered.ValueData > Movement_Tax.OperDate
                       THEN MovementDate_DateRegistered.ValueData
+                 WHEN COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
+                      THEN '01.10.2024'
                  ELSE Movement_Tax.OperDate
             END AS OperDate_begin
 
@@ -315,7 +317,8 @@ order by 4*/
                   WHEN vbOperDate_begin  < '01.12.2018' THEN 'J1201009'
                   WHEN vbOperDate_begin  < '01.03.2021' THEN 'J1201010'
                   WHEN vbOperDate_begin  < '16.03.2021' THEN 'J1201011'
-                  ELSE 'J1201012'
+                  WHEN vbOperDate_begin  < '01.10.2024' THEN 'J1201012'
+                  ELSE 'J1201016'
              END ::TVarChar AS CHARCODE
            -- , 'Неграш О.В.'::TVarChar                    AS N10
            , CASE WHEN Object_PersonalSigning.PersonalName <> ''
