@@ -44,13 +44,17 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar
              , AmountIn_calc  Tfloat
              , AmountOut_calc  Tfloat
              , Amount_calc     Tfloat
+
              , Persent TFloat
+             , Persent_amount TFloat
+
              , Amount_501 TFloat
              , Amount_502 TFloat
              , Amount_503 TFloat
              , Amount_512 TFloat
              , Amount_601 TFloat
              , Amount_504 TFloat
+             , Amount_oth TFloat
              )
 
 AS
@@ -59,7 +63,7 @@ $BODY$
  DECLARE inIsGroup Boolean;
 BEGIN
      vbUserId:= lpGetUserBySession (inSession);
-     
+
      inIsGroup:= TRUE;
 
      -- !!!Только просмотр Аудитор!!!
@@ -178,7 +182,7 @@ BEGIN
                                                            AND MILinkObject_ContractConditionKind.DescId         = zc_MILinkObject_ContractConditionKind()
                                                            AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentSale()
                                                                                                              , zc_Enum_ContractConditionKind_BonusPercentSaleReturn()
-                                                                                                               --  % бонуса за долевую продажу 
+                                                                                                               --  % бонуса за долевую продажу
                                                                                                              , zc_Enum_ContractConditionKind_BonusPercentSalePart()
                                                                                                                -- % бонуса за оплату
                                                                                                              , zc_Enum_ContractConditionKind_BonusPercentAccount()
@@ -191,8 +195,8 @@ BEGIN
 
 
                       WHERE (COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0) = inJuridicalId OR inJuridicalId = 0)
--- and Movement.Id = 29240028  
--- and Movement.Id = 29240044 
+-- and Movement.Id = 29240028
+-- and Movement.Id = 29240044
                      )
       -- Договор (условие) - ограничение по котрагенту - ВСЕ условия
     , tmpContractMaster_all  AS (SELECT DISTINCT tmpMovement.ContractChildId, tmpMovement.ContractMasterId
@@ -290,7 +294,7 @@ BEGIN
                           FROM MovementDate
                                INNER JOIN MovementFloat ON MovementFloat.MovementId = MovementDate.MovementId
                                                        AND MovementFloat.DescId     = CASE MovementDate.DescId WHEN zc_MovementDate_Pay_1() THEN zc_MovementFloat_Pay_1()
-                                                                                                               WHEN zc_MovementDate_Pay_2() THEN zc_MovementFloat_Pay_2() 
+                                                                                                               WHEN zc_MovementDate_Pay_2() THEN zc_MovementFloat_Pay_2()
                                                                                       END
                                INNER JOIN Movement ON Movement.Id       = MovementDate.MovementId
                                                   AND Movement.DescId   = zc_Movement_Sale()
@@ -299,12 +303,12 @@ BEGIN
                                                        ON MovementFloat_TotalSumm.MovementId = MovementDate.MovementId
                                                       AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
 
-                               LEFT JOIN MovementItemLinkObject AS MILinkObject_To
-                                                                ON MILinkObject_To.MovementItemId = Movement.Id
-                                                               AND MILinkObject_To.DescId         = zc_MILinkObject_To()
+                               LEFT JOIN MovementLinkObject AS MLO_To
+                                                            ON MLO_To.MovementId = Movement.Id
+                                                           AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                                    ON ObjectLink_Partner_Juridical.ObjectId = MILinkObject_To.ObjectId
-                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MLO_To.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
 
                           WHERE MovementDate.ValueData = DATE_TRUNC ('MONTH', inStartDate)
                             AND MovementDate.DescId IN (zc_MovementDate_Pay_1(), zc_MovementDate_Pay_2())
@@ -493,21 +497,21 @@ BEGIN
                                             --, STRING_AGG (DISTINCT tmp.PersonalTradeName, ';') AS PersonalTradeName
                                               , tmp.PersonalName
                                               , tmp.PersonalTradeName
-                  
+
                                               , tmp.Sale_AmountPartner
                                               , tmp.Return_AmountPartner
 
                                               , (tmp.SummAmount)  AS SummAmount
                                               , (tmp.Sale_Summ)   AS Sale_Summ
                                               , (tmp.Return_Summ) AS Return_Summ
-                  
+
                                               , SUM (tmp.Sale_AmountPartner)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSale_AmountPartner
                                               , SUM (tmp.Return_AmountPartner) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalReturn_AmountPartner
 
                                               , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSumm
                                               , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSummSale
                                               , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalSummReturn
-                  
+
                                               , tmp.AmountPartner_pay
                                               , tmp.SummSale_pay
                                               , SUM (tmp.AmountPartner_pay)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_all_partner.ContractMasterId) AS TotalAmountPartner_pay
@@ -541,21 +545,21 @@ BEGIN
                                             --, STRING_AGG (DISTINCT tmp.PersonalTradeName, ';') AS PersonalTradeName
                                               , tmp.PersonalName
                                               , tmp.PersonalTradeName
-                  
+
                                               , tmp.Sale_AmountPartner
                                               , tmp.Return_AmountPartner
 
                                               , (tmp.SummAmount)  AS SummAmount
                                               , (tmp.Sale_Summ)   AS Sale_Summ
                                               , (tmp.Return_Summ) AS Return_Summ
-                  
+
                                               , SUM (tmp.Sale_AmountPartner)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSale_AmountPartner
                                               , SUM (tmp.Return_AmountPartner) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalReturn_AmountPartner
 
                                               ,  SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSumm
                                               ,  SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSummSale
                                               ,  SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalSummReturn
-                  
+
                                               , tmp.AmountPartner_pay
                                               , tmp.SummSale_pay
                                               , SUM (tmp.AmountPartner_pay)  OVER (PARTITION BY tmp.ContractId, tmpContractMaster_partner.ContractMasterId) AS TotalAmountPartner_pay
@@ -598,10 +602,14 @@ BEGIN
                          -- % бонуса
                        , tmpMovement.BonusValue
 
-                       , COALESCE (tmpContainer_partner_where_one.JuridicalId, tmpContainer_partner_where_all.JuridicalId, tmpContainer.JuridicalId, tmpContainer_partner.JuridicalId) AS JuridicalId_baza
-                       , COALESCE (tmpContainer_partner_where_one.PartnerId, tmpContainer_partner_where_all.PartnerId, tmpContainer.PartnerId, tmpContainer_partner.PartnerId)         AS PartnerId_baza
-                       , COALESCE (tmpContainer_partner_where_one.GoodsId, tmpContainer_partner_where_all.GoodsId, tmpContainer.GoodsId, tmpContainer_partner.GoodsId)                 AS GoodsId
-                       , COALESCE (tmpContainer_partner_where_one.GoodsKindId, tmpContainer_partner_where_all.GoodsKindId, tmpContainer.GoodsKindId, tmpContainer_partner.GoodsKindId) AS GoodsKindId
+                       , COALESCE (tmpContainer_pay.JuridicalId, tmpContainer_partner_pay.JuridicalId, tmpContainer_partner_find_pay.JuridicalId
+                                 , tmpContainer_partner_where_one.JuridicalId, tmpContainer_partner_where_all.JuridicalId, tmpContainer.JuridicalId, tmpContainer_partner.JuridicalId, tmpContainer_partner_find.JuridicalId) AS JuridicalId_baza
+                       , COALESCE (tmpContainer_pay.PartnerId, tmpContainer_partner_pay.PartnerId, tmpContainer_partner_find_pay.PartnerId
+                                 , tmpContainer_partner_where_one.PartnerId, tmpContainer_partner_where_all.PartnerId, tmpContainer.PartnerId, tmpContainer_partner.PartnerId, tmpContainer_partner_find.PartnerId)         AS PartnerId_baza
+                       , COALESCE (tmpContainer_pay.GoodsId, tmpContainer_partner_pay.GoodsId, tmpContainer_partner_find_pay.GoodsId
+                                 , tmpContainer_partner_where_one.GoodsId, tmpContainer_partner_where_all.GoodsId, tmpContainer.GoodsId, tmpContainer_partner.GoodsId, tmpContainer_partner_find.GoodsId) AS GoodsId
+                       , COALESCE (tmpContainer_pay.GoodsKindId, tmpContainer_partner_pay.GoodsKindId, tmpContainer_partner_find_pay.GoodsKindId
+                                 , tmpContainer_partner_where_one.GoodsKindId, tmpContainer_partner_where_all.GoodsKindId, tmpContainer.GoodsKindId, tmpContainer_partner.GoodsKindId, tmpContainer_partner_find.GoodsKindId) AS GoodsKindId
 
                        , tmpMovement.AmountIn
                        , tmpMovement.AmountOut
@@ -612,44 +620,44 @@ BEGIN
                                                                           (zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                          , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                           )
-                                   THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, 0)
+                                   THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, tmpContainer_partner_pay.TotalSummSale_pay, tmpContainer_partner_find_pay.TotalSummSale_pay, 0)
                               WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                    THEN COALESCE (tmpContainer_partner_where_one.TotalSumm, tmpContainer_partner_where_all.TotalSumm, tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm, tmpContainer_partner_find.TotalSumm, 0)
                               ELSE COALESCE (tmpContainer_partner_where_one.TotalSummSale, tmpContainer_partner_where_all.TotalSummSale, tmpContainer.TotalSummSale, tmpContainer_partner.TotalSummSale, tmpContainer_partner_find.TotalSummSale, 0)
                          END AS TotalSumm
                          -- Итог - продажа
-                       , COALESCE (tmpContainer_pay.TotalSummSale_pay
+                       , COALESCE (tmpContainer_pay.TotalSummSale_pay, tmpContainer_partner_pay.TotalSummSale_pay, tmpContainer_partner_find_pay.TotalSummSale_pay
                                  , tmpContainer_partner_where_one.TotalSummSale, tmpContainer_partner_where_all.TotalSummSale, tmpContainer.TotalSummSale, tmpContainer_partner.TotalSummSale, tmpContainer_partner_find.TotalSummSale, 0) AS TotalSummSale
                          -- Итог - возврат
                        , CASE WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                    THEN COALESCE (tmpContainer_partner_where_one.TotalSummReturn, tmpContainer_partner_where_all.TotalSummReturn, tmpContainer.TotalSummReturn, tmpContainer_partner.TotalSummReturn, tmpContainer_partner_find.TotalSummReturn, 0)
                               ELSE 0
                          END AS TotalSummReturn
-                       
+
                          -- продажа
-                       , COALESCE (tmpContainer_pay.SummSale_pay
+                       , COALESCE (tmpContainer_pay.SummSale_pay, tmpContainer_partner_pay.SummSale_pay, tmpContainer_partner_find_pay.SummSale_pay
                                  , tmpContainer_partner_where_one.Sale_Summ, tmpContainer_partner_where_all.Sale_Summ, tmpContainer.Sale_Summ, tmpContainer_partner.Sale_Summ, tmpContainer_partner_find.Sale_Summ, 0) AS Sale_Summ
                          -- возврат
                        , CASE WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                    THEN COALESCE (tmpContainer_partner_where_one.Return_Summ, tmpContainer_partner_where_all.Return_Summ, tmpContainer.Return_Summ, tmpContainer_partner.Return_Summ, tmpContainer_partner_find.Return_Summ, 0)
-                              ELSE 0 
+                              ELSE 0
                          END AS Return_Summ
                          -- Кол-во
                        , CASE WHEN tmpMovement.ContractConditionKindId IN  -- % бонуса за оплату
                                                                           (zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                          , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                           )
-                                   THEN COALESCE (tmpContainer_pay.AmountPartner_pay, 0)
+                                   THEN COALESCE (tmpContainer_pay.AmountPartner_pay, tmpContainer_partner_pay.AmountPartner_pay, tmpContainer_partner_find_pay.AmountPartner_pay, 0)
 
                               WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                    THEN COALESCE (tmpContainer_partner_where_one.SummAmount, tmpContainer_partner_where_all.SummAmount, tmpContainer.SummAmount, tmpContainer_partner.SummAmount, tmpContainer_partner_find.SummAmount, 0)
                               ELSE COALESCE (tmpContainer_partner_where_one.Sale_Summ, tmpContainer_partner_where_all.Sale_Summ, tmpContainer.Sale_Summ, tmpContainer_partner.Sale_Summ, tmpContainer_partner_find.Sale_Summ, 0)
                          END AS SummAmount
 
-                         -- Коэфф
+                         -- Коэфф - Сумма
                        , CASE WHEN CASE WHEN -- % бонуса за оплату
                                              tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt())
-                                             THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, 0)
+                                             THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, tmpContainer_partner_pay.TotalSummSale_pay, tmpContainer_partner_find_pay.TotalSummSale_pay, 0)
 
                                         WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                              THEN COALESCE (tmpContainer_partner_where_one.TotalSumm, tmpContainer_partner_where_all.TotalSumm, tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm, tmpContainer_partner_find.TotalSumm, 0)
@@ -658,7 +666,7 @@ BEGIN
 
                                    THEN CASE WHEN -- % бонуса за оплату
                                                   tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt())
-                                                  THEN COALESCE (tmpContainer_pay.SummSale_pay, 0)
+                                                  THEN COALESCE (tmpContainer_pay.SummSale_pay, tmpContainer_partner_pay.SummSale_pay, tmpContainer_partner_find_pay.SummSale_pay, 0)
 
                                              WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                                   THEN COALESCE (tmpContainer_partner_where_one.SummAmount, tmpContainer_partner_where_all.SummAmount, tmpContainer.SummAmount, tmpContainer_partner.SummAmount, tmpContainer_partner_find.SummAmount, 0)
@@ -666,7 +674,7 @@ BEGIN
                                         END * 100
                                       / CASE WHEN -- % бонуса за оплату
                                                   tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt())
-                                                  THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, 0)
+                                                  THEN COALESCE (tmpContainer_pay.TotalSummSale_pay, tmpContainer_partner_pay.TotalSummSale_pay, tmpContainer_partner_find_pay.TotalSummSale_pay, 0)
 
                                              WHEN tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSaleReturn())
                                                   THEN COALESCE (tmpContainer_partner_where_one.TotalSumm, tmpContainer_partner_where_all.TotalSumm, tmpContainer.TotalSumm, tmpContainer_partner.TotalSumm, tmpContainer_partner_find.TotalSumm, 0)
@@ -675,12 +683,30 @@ BEGIN
                              ELSE 0
                          END AS PartPersent
 
-                       , COALESCE (tmpContainer_partner_where_one.PersonalName, tmpContainer_partner_where_all.PersonalName, tmpContainer.PersonalName, tmpContainer_partner.PersonalName, '') AS PersonalName
-                       , COALESCE (tmpContainer_partner_where_one.PersonalTradeName, tmpContainer_partner_where_all.PersonalTradeName, tmpContainer.PersonalTradeName, tmpContainer_partner.PersonalTradeName, '') AS PersonalTradeName
+                         -- Коэфф - Кол-во
+                       , CASE WHEN CASE WHEN -- % бонуса за долевую продажу
+                                             tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSalePart())
+                                             THEN COALESCE (tmpContainer_partner_where_one.TotalSale_AmountPartner, tmpContainer_partner_where_all.TotalSale_AmountPartner, tmpContainer.TotalSale_AmountPartner, tmpContainer_partner.TotalSale_AmountPartner, tmpContainer_partner_find.TotalSale_AmountPartner, 0)
+                                   END <> 0
+
+                                   THEN COALESCE (tmpContainer_partner_where_one.Sale_AmountPartner, tmpContainer_partner_where_all.Sale_AmountPartner, tmpContainer.Sale_AmountPartner, tmpContainer_partner.Sale_AmountPartner, tmpContainer_partner_find.Sale_AmountPartner, 0)
+                                      * 100
+                                      / CASE WHEN -- % бонуса за долевую продажу
+                                                  tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentSalePart())
+                                                  THEN COALESCE (tmpContainer_partner_where_one.TotalSale_AmountPartner, tmpContainer_partner_where_all.TotalSale_AmountPartner, tmpContainer.TotalSale_AmountPartner, tmpContainer_partner.TotalSale_AmountPartner, tmpContainer_partner_find.TotalSale_AmountPartner, 0)
+
+                                        END
+                             ELSE 0
+                         END AS PartPersent_amount
+
+                       , COALESCE (tmpContainer_pay.PersonalName, tmpContainer_partner_pay.PersonalName, tmpContainer_partner_find_pay.PersonalName
+                                 , tmpContainer_partner_where_one.PersonalName, tmpContainer_partner_where_all.PersonalName, tmpContainer.PersonalName, tmpContainer_partner.PersonalName, tmpContainer_partner_find.PersonalName, '') AS PersonalName
+                       , COALESCE (tmpContainer_pay.PersonalTradeName, tmpContainer_partner_pay.PersonalTradeName, tmpContainer_partner_find_pay.PersonalTradeName
+                                 , tmpContainer_partner_where_one.PersonalTradeName, tmpContainer_partner_where_all.PersonalTradeName, tmpContainer.PersonalTradeName, tmpContainer_partner.PersonalTradeName, tmpContainer_partner_find.PersonalTradeName, '') AS PersonalTradeName
 
                   -- Затраты
                   FROM tmpMovement
-                       -- 1.1. условия
+                       -- 1.1.1. условия
                        /*LEFT JOIN (SELECT DISTINCT tmpContractMaster_partner.ContractChildId, tmpContractMaster_partner.ContractMasterId, tmpContractMaster_partner.ContractConditionKindId, tmpContractMaster_partner.BonusKindId, tmpContractMaster_partner.BonusValue
                                   FROM tmpContractMaster_partner
                                  ) AS tmp_1_check
@@ -691,7 +717,7 @@ BEGIN
                                   AND tmp_1_check.BonusValue              = tmpMovement.BonusValue
                                   -- только если в условии нет PartnerId
                                   AND tmpMovement.PartnerId = 0*/
-                       -- 1.2. ПРОДАЖИ - если по Контрагенту ограничение в договорах - ОДНО условие - группировка для бонусов по ContractId
+                       -- 1.1.2. ПРОДАЖИ - если по Контрагенту ограничение в договорах - ОДНО условие - группировка для бонусов по ContractId
                        LEFT JOIN tmpContainer_partner_where_one ON tmpContainer_partner_where_one.ContractId       = tmpMovement.ContractChildId
                                                                AND tmpContainer_partner_where_one.ContractMasterId = tmpMovement.ContractMasterId
                                                                -- только если в условии нет PartnerId
@@ -705,7 +731,7 @@ BEGIN
                                                                                                              , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                                               )
 
-                       -- 2.1. условия
+                       -- 1.2.1. условия
                        /*LEFT JOIN (SELECT DISTINCT tmpContractMaster_all_partner.ContractChildId, tmpContractMaster_all_partner.ContractMasterId
                                   FROM tmpContractMaster_all_partner
                                  ) AS tmp_2_check
@@ -713,7 +739,7 @@ BEGIN
                                   AND tmp_2_check.ContractMasterId = tmpMovement.ContractMasterId
                                   -- только если в условии нет PartnerId
                                   AND tmpMovement.PartnerId = 0*/
-                       -- 2.2. ПРОДАЖИ - если по Контрагенту ограничение в условиях - группировка для бонусов по ContractId
+                       -- 1.2.2. ПРОДАЖИ - если по Контрагенту ограничение в условиях - группировка для бонусов по ContractId
                        LEFT JOIN tmpContainer_partner_where_all ON tmpContainer_partner_where_all.ContractId       = tmpMovement.ContractChildId
                                                                AND tmpContainer_partner_where_all.ContractMasterId = tmpMovement.ContractMasterId
                                                                -- только если в условии нет PartnerId
@@ -727,7 +753,7 @@ BEGIN
                                                                                                              , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                                               )
 
-                       -- 3. ПРОДАЖИ - если группировка для бонусов по ContractId
+                       -- 1.3. ПРОДАЖИ - если группировка для бонусов по ContractId
                        LEFT JOIN tmpContainer ON tmpContainer.ContractId = tmpMovement.ContractChildId
                                              -- только если в условии нет PartnerId
                                              AND tmpMovement.PartnerId = 0
@@ -745,7 +771,7 @@ BEGIN
                                                                                            , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                             )
 
-                       -- 4. ПРОДАЖИ - группировка для бонусов по PartnerId - 2 ключа в базе
+                       -- 1.4. ПРОДАЖИ - группировка для бонусов по PartnerId - 2 ключа в базе
                        LEFT JOIN tmpContainer_partner ON tmpContainer_partner.ContractId = tmpMovement.ContractChildId
                                                      -- !!!если в условии есть PartnerId!!!
                                                      AND tmpContainer_partner.PartnerId  = tmpMovement.PartnerId
@@ -755,7 +781,7 @@ BEGIN
                                                                                                    , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                                     )
 
-                       -- 5. ПРОДАЖИ - если группировка для бонусов по ContractId - не найдены 2 ключа в базе
+                       -- 1.5. ПРОДАЖИ - если группировка для бонусов по ContractId - не найдены 2 ключа в базе
                        LEFT JOIN tmpContainer AS tmpContainer_partner_find
                                               ON tmpContainer_partner_find.ContractId = tmpMovement.ContractChildId
                                              -- если НЕ найдены 2 ключа в базе
@@ -765,14 +791,35 @@ BEGIN
                                              AND tmpMovement.ContractConditionKindId NOT IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                                            , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                             )
+                       -- 2. - по оплате
 
-                       -- 11. ПРОДАЖИ - если группировка для бонусов по ContractId
+                       -- 2.3. ПРОДАЖИ - если группировка для бонусов по ContractId
                        LEFT JOIN tmpContainer AS tmpContainer_pay
                                               ON tmpContainer_pay.ContractId = tmpMovement.ContractChildId
                                              -- только если в условии нет PartnerId
-                                             -- AND tmpMovement.PartnerId = 0
+                                             AND tmpMovement.PartnerId = 0
 
                                              -- только % бонуса за оплату
+                                             AND tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                       , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                        )
+                       -- 2.4. ПРОДАЖИ - группировка для бонусов по PartnerId - 2 ключа в базе
+                       LEFT JOIN tmpContainer_partner AS tmpContainer_partner_pay
+                                                      ON tmpContainer_partner_pay.ContractId = tmpMovement.ContractChildId
+                                                     -- !!!если в условии есть PartnerId!!!
+                                                     AND tmpContainer_partner_pay.PartnerId  = tmpMovement.PartnerId
+                                                     AND tmpMovement.PartnerId > 0
+                                                     -- только НЕ % бонуса за оплату
+                                                     AND tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
+                                                                                               , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
+                                                                                                )
+                       -- 2.5. ПРОДАЖИ - если группировка для бонусов по ContractId - не найдены 2 ключа в базе
+                       LEFT JOIN tmpContainer AS tmpContainer_partner_find_pay
+                                              ON tmpContainer_partner_find_pay.ContractId = tmpMovement.ContractChildId
+                                             -- если НЕ найдены 2 ключа в базе
+                                             AND tmpContainer_partner_pay.ContractId IS NULL
+                                             AND tmpMovement.PartnerId > 0
+                                             -- только НЕ % бонуса за оплату
                                              AND tmpMovement.ContractConditionKindId IN (zc_Enum_ContractConditionKind_BonusPercentAccount()
                                                                                        , zc_Enum_ContractConditionKind_BonusPercentAccountSendDebt()
                                                                                         )
@@ -780,7 +827,20 @@ BEGIN
              -- Результат
              SELECT tmpData.MovementId
                   , tmpData.OperDate
+
                   , tmpData.InvNumber
+/*, (
+(select count(*) from tmpMovement_pay) :: TVarChar
+||  '   ' ||
+(select min (tmpMovement_pay.MovementId) from tmpMovement_pay) :: TVarChar
+||  '   ' ||
+(select sum(tmpMovement_pay.Summ_Pay) from tmpMovement_pay where  tmpMovement_pay.MovementId = 27213971 ) :: TVarChar
+
+||  '   '  ||
+(select sum(tmpMovement_pay.TotalSumm) from tmpMovement_pay where tmpMovement_pay.MovementId = 27213971 ) :: TVarChar
+
+):: TVarChar*/
+
                   , Object_Retail.Id            AS RetailId
                   , Object_Retail.ValueData     AS RetailNamе
 
@@ -852,23 +912,69 @@ BEGIN
                   , COALESCE (tmpData.Return_Summ,0) ::TFloat    AS Return_Summ
                   , COALESCE (tmpData.SummAmount,0)  ::TFloat    AS SummAmount
 
-                  , CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN CAST (tmpData.PartPersent * tmpData.AmountIn / 100 AS NUMERIC (16,2))  ELSE tmpData.AmountIn  END ::TFloat AS AmountIn_calc
-                  , CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN CAST (tmpData.PartPersent * tmpData.AmountOut / 100 AS NUMERIC (16,2)) ELSE tmpData.AmountOut END ::TFloat AS AmountOut_calc
-                  , CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2))    ELSE tmpData.Amount    END ::TFloat AS Amount_calc
-                  , tmpData.PartPersent ::TFloat AS Persent
+
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.AmountIn / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.PartPersent <> 0 OR 1=1
+                              THEN CAST (tmpData.PartPersent * tmpData.AmountIn / 100 AS NUMERIC (16,2))  ELSE tmpData.AmountIn  END ::TFloat AS AmountIn_calc
+
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.AmountOut / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.PartPersent <> 0 OR 1=1 THEN CAST (tmpData.PartPersent * tmpData.AmountOut / 100 AS NUMERIC (16,2)) ELSE tmpData.AmountOut END ::TFloat AS AmountOut_calc
+
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.PartPersent <> 0 OR 1=1 THEN CAST (tmpData.PartPersent * tmpData.Amount / 100 AS NUMERIC (16,2))    ELSE tmpData.Amount    END ::TFloat AS Amount_calc
+
+                  , tmpData.PartPersent        ::TFloat AS Persent
+                  , tmpData.PartPersent_amount ::TFloat AS Persent_amount
 
                     -- бонус за продукцию
-                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21501() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_501
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21501() AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21501() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_501
+
                     -- бонус за мясное сырье
-                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21502() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_502
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21502() AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21502() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_502
+
                     -- бонус за рекламу
-                  , CASE WHEN tmpData.InfoMoneyId = 8952                      THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_503
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = 8952 AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = 8952                      THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_503
+
                     -- маркетинговый бюджет
-                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21512() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_512
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21512() AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_21512() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_512
+
                     -- расходы учредитедей
-                  , CASE WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_80601() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_601
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_80601() AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = zc_Enum_InfoMoney_80601() THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_601
+
                     -- Услуги - Акции
-                  , CASE WHEN tmpData.InfoMoneyId = 8953                      THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_504
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.InfoMoneyId = 8953 AND tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId = 8953                      THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_504
+
+                    -- Услуги - Акции
+                  , CASE -- % бонуса за долевую продажу
+                         WHEN tmpData.ContractConditionKindId = zc_Enum_ContractConditionKind_BonusPercentSalePart()
+                              AND tmpData.InfoMoneyId NOT IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), 8952, zc_Enum_InfoMoney_21512(), zc_Enum_InfoMoney_80601(), 8953)
+                              THEN CAST (tmpData.PartPersent_amount * tmpData.Amount / 100 AS NUMERIC (16,2))
+                         WHEN tmpData.InfoMoneyId NOT IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502(), 8952, zc_Enum_InfoMoney_21512(), zc_Enum_InfoMoney_80601(), 8953)
+                              THEN CAST (CASE WHEN tmpData.PartPersent <> 0 OR 1=1 THEN tmpData.PartPersent * tmpData.Amount / 100 ELSE 0 END AS NUMERIC (16,2)) ELSE 0 END ::TFloat AS Amount_oth
 
              FROM tmpData
                 -- кому начислили
