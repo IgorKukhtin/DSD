@@ -103,7 +103,7 @@ BEGIN
 
           , CASE WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)
                   AND COALESCE (MovementString_InvNumberRegistered.ValueData, '') = ''
-                  AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
+                  -- AND COALESCE (MovementString_InvNumberRegistered_tax.ValueData, '') = ''
                       THEN '01.10.2024'
 
                  WHEN (CURRENT_DATE >= '01.03.2021' /*OR vbUserId = 5*/)

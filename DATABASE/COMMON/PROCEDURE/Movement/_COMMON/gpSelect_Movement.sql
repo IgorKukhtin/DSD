@@ -149,7 +149,7 @@ BEGIN
                   LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                                 ON CLO_PaidKind.ContainerId = Container.Id
                                                AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-             WHERE Container.DescId = zc_Container_Summ()
+             WHERE Container.DescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
                AND (CLO_Juridical.ObjectId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
                AND (CLO_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0)
