@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
-             , ContractId Integer, ContractInvNumber TVarChar
+             , ContractId Integer, ContractInvNumber TVarChar 
+             , ContractChildId Integer, ContractChildInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , CostMovementId TVarChar, CostMovementInvNumber TVarChar
@@ -86,6 +87,8 @@ BEGIN
            , CAST ('' AS TVarChar)            AS InfoMoneyName
            , 0                                AS ContractId
            , ''::TVarChar                     AS ContractInvNumber
+           , 0                                AS ContractChildId
+           , ''::TVarChar                     AS ContractChildInvNumber
            , 0                                AS UnitId
            , CAST ('' AS TVarChar)            AS UnitName
            , 0                                AS PaidKindId
@@ -181,6 +184,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyName_all    AS InfoMoneyName
            , View_Contract_InvNumber.ContractId  AS ContractId
            , View_Contract_InvNumber.InvNumber   AS ContractInvNumber
+           , Object_ContractChild.Id             AS ContractChildId
+           , Object_ContractChild.ValueData      AS ContractChildInvNumber
            , Object_Unit.Id                      AS UnitId
            , Object_Unit.ValueData               AS UnitName
            , Object_PaidKind.Id                  AS PaidKindId
@@ -314,9 +319,14 @@ BEGIN
                                                                                          ELSE COALESCE (View_Contract_InvNumber.JuridicalBasisId, zc_Juridical_Basis()) 
                                                                                     END
 
-            LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id 
+            LEFT JOIN tmpCost ON tmpCost.MovementServiceId = Movement.Id
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractChild
+                                             ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
+            LEFT JOIN Object AS Object_ContractChild ON Object_ContractChild.Id = MILinkObject_ContractChild.ObjectId
             
-       WHERE Movement.Id =  inMovementId_Value;
+       WHERE Movement.Id = inMovementId_Value;
 
    END IF;  
 

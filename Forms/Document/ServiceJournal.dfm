@@ -401,6 +401,14 @@ inherited ServiceJournalForm: TServiceJournalForm
             Options.Editing = False
             Width = 55
           end
+          object ContractChildInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractChildInvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object OperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
             DataBinding.FieldName = 'OperDatePartner'

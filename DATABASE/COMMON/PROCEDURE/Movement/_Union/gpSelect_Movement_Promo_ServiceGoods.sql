@@ -42,14 +42,15 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ContractTagName  TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , RetailId Integer, RetailName TVarChar  
-             , PaidKindName TVarChar
-             , AdvertisingName TVarChar
-             , Comment TVarChar 
+             , PaidKindName       TVarChar
+             , AdvertisingName    TVarChar
+             , Comment            TVarChar 
              , AdvertisingName_full TVarChar 
+             , InfoMoneyId        Integer
              , InfoMoneyCode      Integer 
              , InfoMoneyName      TVarChar
-             , CostPromo TFloat
-             , SummMarket TFloat  
+             , CostPromo          TFloat
+             , SummMarket         TFloat  
               )
 AS
 $BODY$
@@ -344,8 +345,9 @@ BEGIN
                     ELSE COALESCE (tmpPomo_params.AdvertisingName,'') 
                         || CASE WHEN COALESCE (tmpPomo_params.Comment_Advertising,'') <> '' THEN ' ;'||COALESCE (tmpPomo_params.Comment_Advertising,'') ELSE '' END
                END ::TVarChar AS AdvertisingName_full 
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ObjectCode ELSE View_InfoMoney.InfoMoneyCode END  InfoMoneyCode
-             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE View_InfoMoney.InfoMoneyName_all END  ::TVarChar InfoMoneyName
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.Id ELSE View_InfoMoney.InfoMoneyId END            AS InfoMoneyId
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ObjectCode ELSE View_InfoMoney.InfoMoneyCode END  AS InfoMoneyCode
+             , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Object_PromoItem.ValueData ELSE View_InfoMoney.InfoMoneyName_all END  ::TVarChar AS InfoMoneyName
 
              , CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN MovementFloat_CostPromo.ValueData 
                     ELSE tmpPomo_params.CostPromo

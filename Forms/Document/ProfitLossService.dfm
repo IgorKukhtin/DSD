@@ -214,7 +214,7 @@
   end
   object cxLabel13: TcxLabel [27]
     Left = 125
-    Top = 257
+    Top = 255
     Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1072')'
   end
   object ceContractMaster: TcxButtonEdit [28]
@@ -1561,7 +1561,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PromoItemName_full'
+        Name = 'AdvertisingName_full'
         Value = Null
         Component = ceComment
         DataType = ftString
@@ -1580,6 +1580,23 @@
         Name = 'ContractName'
         Value = Null
         Component = ContractChildGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = GuidesInfoMoney
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = GuidesInfoMoney
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
