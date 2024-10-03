@@ -64,7 +64,7 @@ BEGIN
                                 , CLO_Contract.ObjectId                   AS ContractId
                            FROM ContainerLinkObject AS CLO_Juridical
                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
-                                                    AND Container.DescId = zc_Container_Summ()
+                                                    AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                 LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                               ON CLO_Partner.ContainerId = CLO_Juridical.ContainerId
                                                              AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
@@ -147,7 +147,7 @@ BEGIN
                                 , CLO_Contract.ObjectId                   AS ContractId
                            FROM ContainerLinkObject AS CLO_Juridical
                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
-                                                    AND Container.DescId = zc_Container_Summ()
+                                                    AND Container.DescId IN (zc_Container_Summ(), zc_Container_SummAsset())
                                 LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                               ON CLO_Partner.ContainerId = CLO_Juridical.ContainerId
                                                              AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()

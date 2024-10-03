@@ -119,6 +119,7 @@ BEGIN
                                 , Container.Amount                        AS Amount
                                 , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
                                 , CASE WHEN Container.DescId = zc_Container_SummAsset() THEN TRUE ELSE FALSE END AS isNotBalance
+                                --, FALSE AS isNotBalance
 
                            FROM ContainerLinkObject AS CLO_Juridical
                                 INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
