@@ -1,7 +1,8 @@
 inherited Promo_ServiceGoodsJournalChoiceForm: TPromo_ServiceGoodsJournalChoiceForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1103' / '#1058#1088#1072#1076#1077'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1103' / '#1058#1088#1077#1081#1076'-'#1084#1072#1088#1082#1077#1090#1080#1085#1075'>'
   ClientHeight = 535
   ClientWidth = 1110
+  AddOnFormData.isSingle = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
