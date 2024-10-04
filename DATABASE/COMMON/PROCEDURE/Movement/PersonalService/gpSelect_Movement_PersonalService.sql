@@ -582,9 +582,6 @@ BEGIN
           --OR vbUserId = 2573318
           OR vbUserId = 5
             )
-        AND (Object_PersonalServiceList.ValueData NOT ILIKE '%Костя%'
-          OR vbUserId NOT IN (5, 9457 , 4467766)
-            )
             ;
 
 END;

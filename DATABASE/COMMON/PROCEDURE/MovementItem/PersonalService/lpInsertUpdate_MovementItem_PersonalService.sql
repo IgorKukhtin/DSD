@@ -55,6 +55,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
    OUT outSummTransportAddLong  TFloat    , -- ***Сумма дальнобойные (доплата, тоже командировочные)
    OUT outSummTransportTaxi     TFloat    , -- ***Сумма на такси (доплата)
    OUT outSummPhone             TFloat    , -- ***Сумма Моб.связь (удержание)
+
     IN inSummService            TFloat    , -- Сумма начислено
     IN inSummCardRecalc         TFloat    , -- Карта БН (ввод) - 1ф.
     IN inSummCardSecondRecalc   TFloat    , -- Карта БН (ввод) - 2ф.
@@ -195,7 +196,7 @@ BEGIN
                                                  AND ObjectLink.ObjectId = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList())
                                               )
                         -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
-                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService(), vbPersonalServiceListId)
                         ELSE
                      lpGetAccessKey (COALESCE ((SELECT ObjectLink_User_Member.ObjectId
                                                 FROM ObjectLink
@@ -206,6 +207,7 @@ BEGIN
                                                  LIMIT 1
                                                ), inUserId)
                                    , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
+                                   , vbPersonalServiceListId
                                     )
                      END;
      -- !!!ВАЖНО!!!
