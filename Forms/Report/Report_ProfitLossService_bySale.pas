@@ -63,6 +63,9 @@ type
     ContractConditionKindName: TcxGridDBColumn;
     BonusKindName: TcxGridDBColumn;
     PartnerName_baza: TcxGridDBColumn;
+    BonusValue: TcxGridDBColumn;
+    Amount_oth: TcxGridDBColumn;
+    Persent_amount: TcxGridDBColumn;
   private
     { Private declarations }
   public
