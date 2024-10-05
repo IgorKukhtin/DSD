@@ -81,6 +81,7 @@ BEGIN
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.isErased   = FALSE
            AND MovementItem.Amount     = 0
+           AND NOT EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_Summ() AND MIF.ValueData <> 0)
            AND MIF_ContainerId.MovementItemId = MovementItem.Id
            AND MIF_ContainerId.DescId         = zc_MIFloat_ContainerId()
            AND MIF_ContainerId.ValueData      > 0
@@ -93,6 +94,7 @@ BEGIN
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.Amount     = 0
            AND MovementItem.isErased   = FALSE
+           AND NOT EXISTS (SELECT 1 FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_Summ() AND MIF.ValueData <> 0)
         ;
      END IF;
 
