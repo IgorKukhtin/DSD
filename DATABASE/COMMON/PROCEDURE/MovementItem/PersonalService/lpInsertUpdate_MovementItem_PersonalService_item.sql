@@ -84,6 +84,7 @@ BEGIN
                                                      , inMovementId             := inMovementId
                                                      , inPersonalId             := inPersonalId
                                                      , inIsMain                 := inIsMain
+
                                                      , inSummService            := inSummService
                                                      , inSummCardRecalc         := inSummCardRecalc
                                                      , inSummCardSecondRecalc   := inSummCardSecondRecalc
@@ -94,6 +95,7 @@ BEGIN
                                                      , inSummMinus              := inSummMinus
                                                      , inSummAdd                := inSummAdd
                                                      , inSummAddOthRecalc       := inSummAddOthRecalc
+
                                                      , inSummHoliday            := inSummHoliday
                                                      , inSummSocialIn           := inSummSocialIn
                                                      , inSummSocialAdd          := inSummSocialAdd
@@ -107,6 +109,7 @@ BEGIN
                                                      , inSummAuditAdd           := inSummAuditAdd
                                                      , inSummHouseAdd           := inSummHouseAdd
                                                      , inSummAvanceRecalc       := inSummAvanceRecalc
+
                                                      , inNumber                 := inNumber
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId

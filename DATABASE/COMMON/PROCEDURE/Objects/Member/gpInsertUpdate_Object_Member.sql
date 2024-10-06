@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
+ -- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
@@ -72,8 +72,13 @@ BEGIN
     
    --проверка
    IF COALESCE (inName,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <ФИО>.' ; END IF;  
-   IF COALESCE (inPhone,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Телефон>.' ; END IF;
-   IF COALESCE (inINN,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <ИНН>.' ; END IF;
+
+   -- Ограничение - проверка параметров для Физ лиц
+   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11355513)
+   THEN
+       IF COALESCE (inPhone,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <Телефон>.' ; END IF;
+       IF COALESCE (inINN,'') = '' THEN RAISE EXCEPTION 'Ошибка. Не заполнен реквизит <ИНН>.' ; END IF;
+   END IF;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;

@@ -96,7 +96,7 @@ BEGIN
                                                  AND ObjectLink.ObjectId = inPersonalServiceListId
                                               )
                         -- THEN zc_Enum_Process_AccessKey_PersonalServiceAdmin()
-                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService())
+                        THEN lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalService(), inPersonalServiceListId)
                         ELSE
                          lpGetAccessKey (COALESCE ((SELECT ObjectLink_User_Member.ObjectId
                                                     FROM ObjectLink
@@ -124,6 +124,7 @@ BEGIN
                                                    )
                                                   )
                                        , zc_Enum_Process_InsertUpdate_Movement_PersonalService()
+                                       , inPersonalServiceListId
                                         )
                         END;
      -- END IF;

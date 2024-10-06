@@ -350,28 +350,34 @@ BEGIN
                                                                   , inMovementId         := _tmpMI_Recalc.MovementId_to
                                                                   , inPersonalId         := _tmpMI_Recalc.PersonalId
                                                                   , inIsMain             := CASE WHEN _tmpMI_Recalc.isMain = 1 THEN TRUE ELSE FALSE END
+
                                                                   , inSummService        := 0 :: TFloat
                                                                   , inSummCardRecalc     := 0 :: TFloat
                                                                   , inSummCardSecondRecalc:= 0 :: TFloat
                                                                   , inSummCardSecondCash := 0 :: TFloat
+                                                                  , inSummAvCardSecondRecalc:= 0 :: TFloat
                                                                   , inSummNalogRecalc    := 0 :: TFloat
                                                                   , inSummNalogRetRecalc := 0 :: TFloat
                                                                   , inSummMinus          := 0 :: TFloat
                                                                   , inSummAdd            := 0 :: TFloat
                                                                   , inSummAddOthRecalc   := 0 :: TFloat
+
                                                                   , inSummHoliday        := 0 :: TFloat
                                                                   , inSummSocialIn       := 0 :: TFloat
                                                                   , inSummSocialAdd      := 0 :: TFloat
                                                                   , inSummChildRecalc    := 0 :: TFloat
                                                                   , inSummMinusExtRecalc := 0 :: TFloat
+
                                                                   , inSummFine           := 0 :: TFloat
                                                                   , inSummFineOthRecalc  := 0 :: TFloat
                                                                   , inSummHosp           := 0 :: TFloat
                                                                   , inSummHospOthRecalc  := 0 :: TFloat
+
                                                                   , inSummCompensationRecalc:= 0 :: TFloat
                                                                   , inSummAuditAdd       := 0 :: TFloat
                                                                   , inSummHouseAdd       := 0 :: TFloat
                                                                   , inSummAvanceRecalc   := 0 :: TFloat
+
                                                                   , inNumber             := ''
                                                                   , inComment            := ''
                                                                   , inInfoMoneyId        := _tmpMI_Recalc.InfoMoneyId
@@ -379,6 +385,8 @@ BEGIN
                                                                   , inPositionId         := _tmpMI_Recalc.PositionId
                                                                   , inMemberId           := NULL
                                                                   , inPersonalServiceListId  := _tmpMI_Recalc.PersonalServiceListId_to
+                                                                  , inFineSubjectId      := NULL
+                                                                  , inUnitFineSubjectId  := NULL
                                                                   , inUserId             := inUserId
                                                                    ) AS MovementItemId_to
                 , _tmpMI_Recalc.MovementId_to
@@ -518,7 +526,7 @@ BEGIN
      UPDATE Movement SET AccessKeyId = tmp.AccessKeyId
      FROM (WITH tmp AS (SELECT DISTINCT _tmpMI_Recalc.MovementId_to, _tmpMI_Recalc.PersonalServiceListId_to FROM _tmpMI_Recalc WHERE _tmpMI_Recalc.MovementItemId_to <> 0 AND _tmpMI_Recalc.PersonalServiceListId_to <> 0)
            SELECT tmp.MovementId_to
-                , lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService()) AS AccessKeyId
+                , lpGetAccessKey (ObjectLink_User_Member.ObjectId, zc_Enum_Process_InsertUpdate_Movement_PersonalService(), tmp.PersonalServiceListId_to) AS AccessKeyId
            FROM tmp
                 LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
                                      ON ObjectLink_PersonalServiceList_Member.ObjectId = tmp.PersonalServiceListId_to

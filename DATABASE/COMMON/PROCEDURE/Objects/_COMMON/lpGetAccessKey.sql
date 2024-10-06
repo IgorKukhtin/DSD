@@ -1,10 +1,12 @@
 -- Function: lpGetAccessKey()
 
-DROP FUNCTION IF EXISTS lpGetAccessKey (Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpGetAccessKey (Integer, Integer);
+DROP FUNCTION IF EXISTS lpGetAccessKey (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetAccessKey(
     IN inUserId      Integer      , -- 
-    IN inProcessId   Integer        -- 
+    IN inProcessId   Integer      , -- 
+    IN inPersonalServiceListId Integer DEFAULT 0
  )
 RETURNS Integer
 AS
@@ -91,7 +93,7 @@ BEGIN
       THEN
            inUserId := (SELECT MAX (UserId) FROM Object_RoleAccessKeyGuide_View WHERE AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin());
       ELSE
-          RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа к документу.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+          RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа к документу.(%)', lfGet_Object_ValueData (zc_Enum_Role_Admin()), lfGet_Object_ValueData (inPersonalServiceListId);
 
       END IF;
       END IF;
@@ -317,13 +319,13 @@ BEGIN
              GROUP BY AccessKeyId
             );
   ELSE
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)(%)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId), lfGet_Object_ValueData (inPersonalServiceListId);
   END IF;  
   
 
   IF COALESCE (vbValueId, 0) = 0
   THEN
-      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.(<%>)(%)', lfGet_Object_ValueData_sh (vbUserId_save), lfGet_Object_ValueData_sh (inUserId), lfGet_Object_ValueData (inPersonalServiceListId);
   ELSE RETURN vbValueId;
   END IF;  
 

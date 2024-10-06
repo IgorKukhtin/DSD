@@ -82,7 +82,7 @@ BEGIN
    vbisNotPack   :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_NotPack()):: Boolean;
 
    IF COALESCE (vbIsNotMobile,False) <> COALESCE (inIsNotMobile,False) OR COALESCE (vbIsOrder,False) <> COALESCE (inIsOrder,False) OR COALESCE (vbNormPack,0) <> COALESCE (inNormPack,0)
-   OR COALESCE (vbisNotPack,False) <> COALESCE (inisNotPack,False)
+   --OR COALESCE (vbisNotPack,False) <> COALESCE (inisNotPack,False)
    THEN
         -- проверка прав пользователя на вызов процедуры
         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_isOrder());
@@ -97,10 +97,18 @@ BEGIN
         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_NormPack(), ioId, inNormPack);
 
         -- сохранили свойство <>
-        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotPack(), ioId, inIsNotPack);
+        --PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotPack(), ioId, inIsNotPack);
 
    END IF;
    
+   IF COALESCE (vbisNotPack,False) <> COALESCE (inisNotPack,False)
+   THEN
+        -- проверка прав пользователя на вызов процедуры
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_GoodsByGoodsKind_isNotPack());
+        -- сохранили свойство <>
+        PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind_NotPack(), ioId, inIsNotPack);
+   END IF;
+
    --если  менялся isTop - другие права
    vbIsTop :=(SELECT ObjectBoolean.ValueData FROM ObjectBoolean WHERE ObjectBoolean.ObjectId = ioId AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind_Top()):: Boolean;
    outIsTop := vbIsTop;

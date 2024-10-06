@@ -1880,11 +1880,14 @@ BEGIN
                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
                                      -- Без отбор
                                      WHERE _tmpPartionCell.ObjectId <> zc_PartionCell_RK()
+                                       AND _tmpPartionCell.ObjectId <> zc_PartionCell_Err()
                                     ) AS _tmpPartionCell
                                       ON _tmpPartionCell.MovementItemId = MovementItem.MovementItemId
                           LEFT JOIN (SELECT DISTINCT _tmpPartionCell.MovementItemId FROM _tmpPartionCell
                                      -- только отбор
-                                     WHERE _tmpPartionCell.ObjectId = zc_PartionCell_RK()
+                                     WHERE _tmpPartionCell.ObjectId IN (zc_PartionCell_RK()
+                                                                      , zc_PartionCell_Err()
+                                                                       )
                                     ) AS _tmpPartionCell_RK
                                       ON _tmpPartionCell_RK.MovementItemId = MovementItem.MovementItemId
 
@@ -2611,7 +2614,7 @@ BEGIN
                 AND tmpResult.PartionGoodsDate > zc_DateStart()
                     THEN zc_Color_Orange() -- zc_Color_Aqua()
 
-               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 <> zc_PartionCell_RK()
+               WHEN tmpResult.isPartionCell_max = TRUE AND tmpResult.Ord = 1 AND tmpResult.PartionCellId_1 NOT IN (zc_PartionCell_RK(), zc_PartionCell_Err())
               --AND tmpResult.PartionGoodsDate > zc_DateStart()
                     -- если надо подсветить
                     THEN zc_Color_Yelow()

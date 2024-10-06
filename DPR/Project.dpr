@@ -131,7 +131,7 @@ begin
   Logger.Enabled := FindCmdLineSwitch('log');
 
   if FindCmdLineSwitch('autosrcipt', true) then begin
-     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'qsxqsxw11', gc_User);
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Авто-Загрузка Medoc', 'Medoc321Medoc', gc_User);
      i := 0;
      while ParamStr(i) <> '/autosrcipt' do
            inc(i);

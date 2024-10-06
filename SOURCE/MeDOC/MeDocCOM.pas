@@ -335,6 +335,9 @@ end;
                        or (FormCode = 23005)or (FormCode = 23011)
                          //01.08.2023
                        or (FormCode = 23811) or (FormCode = 23814)
+                         //01.10.2024
+                       or (FormCode = 24868) or (FormCode = 24871)
+
                      then
                        DocKind := 'Tax'
                      else

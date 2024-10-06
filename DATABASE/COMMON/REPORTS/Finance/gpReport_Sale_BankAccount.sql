@@ -110,81 +110,202 @@ BEGIN
 
      -- 1.1. Продажи
      CREATE TEMP TABLE _tmpSale ON COMMIT DROP
-       AS (SELECT Movement.Id AS MovementId
-                , Movement.StatusId
-                , Movement.InvNumber
-                , Movement.OperDate AS OperDate_unit
-                , MovementDate_OperDatePartner.ValueData AS OperDate
-                , EXTRACT (YEAR FROM MovementDate_OperDatePartner.ValueData)  AS OperDate_y
-                , EXTRACT (MONTH FROM MovementDate_OperDatePartner.ValueData) AS OperDate_m
-                , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
-                  -- замена - Группируем Договора
-                , View_Contract_ContractKey.ContractId_key   AS ContractId
-                  --
-                , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END AS PartnerId
-                , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                , MovementFloat_TotalSumm.ValueData          AS SummSale
-                  -- сортировка от последней накладной к первой
-                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
-                                                , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
-                                                , View_Contract_ContractKey.ContractId_key
-                                                , MovementLinkObject_PaidKind.ObjectId
-                                     ORDER BY MovementDate_OperDatePartner.ValueData DESC, Movement.Id DESC
-                                    ) AS Ord
-                  -- сортировка от первой к последней накладной
-                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
-                                                , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
-                                                , View_Contract_ContractKey.ContractId_key
-                                                , MovementLinkObject_PaidKind.ObjectId
-                                     ORDER BY Movement.Id ASC
-                                    ) AS Ord_all_asc
-           FROM Movement
-                INNER JOIN MovementDate AS MovementDate_OperDatePartner
-                                        ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                                       AND MovementDate_OperDatePartner.ValueData BETWEEN CASE WHEN vbUserId = 5 THEN inStartDate - INTERVAL '24 MONTH' ELSE inStartDate - INTERVAL '12 MONTH' END AND inEndDate
-                INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                              ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-                                             AND MovementLinkObject_PaidKind.ObjectId IN (SELECT _tmpPaidKind.Id FROM _tmpPaidKind)
+       AS (WITH tmpSale_period_1 AS (SELECT Movement.Id AS MovementId
+                                          , Movement.StatusId
+                                          , Movement.InvNumber
+                                          , Movement.OperDate AS OperDate_unit
+                                          , MovementDate_OperDatePartner.ValueData AS OperDate
+                                          , EXTRACT (YEAR FROM MovementDate_OperDatePartner.ValueData)  AS OperDate_y
+                                          , EXTRACT (MONTH FROM MovementDate_OperDatePartner.ValueData) AS OperDate_m
+                                          , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
+                                            -- замена - Группируем Договора
+                                          , View_Contract_ContractKey.ContractId_key   AS ContractId
+                                            -- только для НАЛ
+                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END AS PartnerId
+                                            --
+                                          , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                          , MovementFloat_TotalSumm.ValueData          AS SummSale
+                                            -- сортировка от последней накладной к первой
+                                          , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
+                                                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
+                                                                          , View_Contract_ContractKey.ContractId_key
+                                                                          , MovementLinkObject_PaidKind.ObjectId
+                                                               ORDER BY MovementDate_OperDatePartner.ValueData DESC, Movement.Id DESC
+                                                              ) AS Ord
+                                            -- сортировка от первой к последней накладной
+                                          , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
+                                                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
+                                                                          , View_Contract_ContractKey.ContractId_key
+                                                                          , MovementLinkObject_PaidKind.ObjectId
+                                                               ORDER BY Movement.Id ASC
+                                                              ) AS Ord_all_asc
+                                     FROM Movement
+                                          INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                                 AND MovementDate_OperDatePartner.ValueData BETWEEN DATE_TRUNC ('YEAR', inStartDate - INTERVAL '12 MONTH') AND inEndDate
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                                       AND MovementLinkObject_PaidKind.ObjectId IN (SELECT _tmpPaidKind.Id FROM _tmpPaidKind)
+                          
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                          -- !!!Группируем Договора!!!
+                                          LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = MovementLinkObject_Contract.ObjectId
+                          
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                                ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                               AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                          -- !!!Ограничили!!!
+                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
+                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                                               -- !!!Доходы + Продукция + Мясное сырье
+                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                             , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                              )
+                          
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                          -- !!!Ограничили!!!
+                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                          
+                                          INNER JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                                  AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+                                                                  AND MovementFloat_TotalSumm.ValueData  > 0
+                          
+                                     WHERE Movement.DescId   = zc_Movement_Sale()
+                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                          -- !!!Группируем Договора!!!
+                                       AND (View_Contract_ContractKey.ContractId_key = vbContractId_key OR COALESCE (vbContractId_key, 0) = 0)
+                                    )
+              , tmpSale_period_2 AS (SELECT Movement.Id AS MovementId
+                                          , Movement.StatusId
+                                          , Movement.InvNumber
+                                          , Movement.OperDate AS OperDate_unit
+                                          , MovementDate_OperDatePartner.ValueData AS OperDate
+                                          , EXTRACT (YEAR FROM MovementDate_OperDatePartner.ValueData)  AS OperDate_y
+                                          , EXTRACT (MONTH FROM MovementDate_OperDatePartner.ValueData) AS OperDate_m
+                                          , MovementLinkObject_PaidKind.ObjectId       AS PaidKindId
+                                            -- замена - Группируем Договора
+                                          , View_Contract_ContractKey.ContractId_key   AS ContractId
+                                            -- только для НАЛ
+                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END AS PartnerId
+                                            --
+                                          , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                          , MovementFloat_TotalSumm.ValueData          AS SummSale
+                                            -- сортировка от последней накладной к первой
+                                          , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
+                                                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
+                                                                          , View_Contract_ContractKey.ContractId_key
+                                                                          , MovementLinkObject_PaidKind.ObjectId
+                                                               ORDER BY MovementDate_OperDatePartner.ValueData DESC, Movement.Id DESC
+                                                              ) AS Ord
+                                            -- сортировка от первой к последней накладной
+                                          , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Partner_Juridical.ChildObjectId
+                                                                          , CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN MovementLinkObject_To.ObjectId ELSE 0 END
+                                                                          , View_Contract_ContractKey.ContractId_key
+                                                                          , MovementLinkObject_PaidKind.ObjectId
+                                                               ORDER BY Movement.Id ASC
+                                                              ) AS Ord_all_asc
+                                     FROM Movement
+                                          INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                                                 AND MovementDate_OperDatePartner.ValueData BETWEEN DATE_TRUNC ('YEAR', inStartDate - INTERVAL '36 MONTH') AND (DATE_TRUNC ('YEAR', inStartDate - INTERVAL '12 MONTH') - INTERVAL '1 DAY')
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                                                       AND MovementLinkObject_PaidKind.ObjectId IN (SELECT _tmpPaidKind.Id FROM _tmpPaidKind)
+                          
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                        ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
+                                          -- !!!Группируем Договора!!!
+                                          LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = MovementLinkObject_Contract.ObjectId
+                          
+                                          INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
+                                                                ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
+                                                               AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                          -- !!!Ограничили!!!
+                                          INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                                                                ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
+                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+                                                               -- !!!Доходы + Продукция + Мясное сырье
+                                                               AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
+                                                                                                                             , zc_Enum_InfoMoneyDestination_30200()
+                                                                                                                              )
+                          
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                        ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                              AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                                          -- !!!Ограничили!!!
+                                          INNER JOIN _tmpJur ON _tmpJur.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                          
+                                          INNER JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                                   ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                                  AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
+                                                                  AND MovementFloat_TotalSumm.ValueData  > 0
+                          
+                                     WHERE Movement.DescId   = zc_Movement_Sale()
+                                       AND Movement.StatusId = zc_Enum_Status_Complete()
+                                          -- !!!Группируем Договора!!!
+                                       AND (View_Contract_ContractKey.ContractId_key = vbContractId_key OR COALESCE (vbContractId_key, 0) = 0)
+                                       AND NOT EXISTS (SELECT 1 FROM tmpSale_period_1)
+                                    )
+             -- Результат
+             SELECT tmpSale_period.MovementId
+                  , tmpSale_period.StatusId
+                  , tmpSale_period.InvNumber
+                  , tmpSale_period.OperDate_unit
+                  , tmpSale_period.OperDate
+                  , tmpSale_period.OperDate_y
+                  , tmpSale_period.OperDate_m
+                  , tmpSale_period.PaidKindId
+                    -- замена - Группируем Договора
+                  , tmpSale_period.ContractId
+                    --
+                  , tmpSale_period.PartnerId
+                  , tmpSale_period.JuridicalId
+                  , tmpSale_period.SummSale
+                    -- сортировка от последней накладной к первой
+                  , tmpSale_period.Ord
+                    -- сортировка от первой к последней накладной
+                  , tmpSale_period.Ord_all_asc
+             FROM tmpSale_period_1 AS tmpSale_period
 
-                INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                              ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                             AND MovementLinkObject_Contract.DescId     = zc_MovementLinkObject_Contract()
-                -- !!!Группируем Договора!!!
-                LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = MovementLinkObject_Contract.ObjectId
-
-                INNER JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                                      ON ObjectLink_Contract_InfoMoney.ObjectId = MovementLinkObject_Contract.ObjectId
-                                     AND ObjectLink_Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
-                -- !!!Ограничили!!!
-                INNER JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
-                                      ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId      = ObjectLink_Contract_InfoMoney.ChildObjectId
-                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId        = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-                                     -- !!!Доходы + Продукция + Мясное сырье
-                                     AND ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId IN (zc_Enum_InfoMoneyDestination_30100()
-                                                                                                   , zc_Enum_InfoMoneyDestination_30200()
-                                                                                                    )
-
-                INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                    AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
-                -- !!!Ограничили!!!
-                INNER JOIN _tmpJur ON _tmpJur.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-
-                INNER JOIN MovementFloat AS MovementFloat_TotalSumm
-                                         ON MovementFloat_TotalSumm.MovementId = Movement.Id
-                                        AND MovementFloat_TotalSumm.DescId     = zc_MovementFloat_TotalSumm()
-                                        AND MovementFloat_TotalSumm.ValueData  > 0
-
-           WHERE Movement.DescId   = zc_Movement_Sale()
-             AND Movement.StatusId = zc_Enum_Status_Complete()
-                -- !!!Группируем Договора!!!
-             AND (View_Contract_ContractKey.ContractId_key = vbContractId_key OR COALESCE (vbContractId_key, 0) = 0)
-          );
+            UNION ALL
+             SELECT tmpSale_period.MovementId
+                  , tmpSale_period.StatusId
+                  , tmpSale_period.InvNumber
+                  , tmpSale_period.OperDate_unit
+                  , tmpSale_period.OperDate
+                  , tmpSale_period.OperDate_y
+                  , tmpSale_period.OperDate_m
+                  , tmpSale_period.PaidKindId
+                    -- замена - Группируем Договора
+                  , tmpSale_period.ContractId
+                    --
+                  , tmpSale_period.PartnerId
+                  , tmpSale_period.JuridicalId
+                  , tmpSale_period.SummSale
+                    -- сортировка от последней накладной к первой
+                  , tmpSale_period.Ord
+                    -- сортировка от первой к последней накладной
+                  , tmpSale_period.Ord_all_asc
+             FROM tmpSale_period_2 AS tmpSale_period
+            )
+          ;
 
 
      -- 1.2. ReturnIn
@@ -205,6 +326,7 @@ BEGIN
                                        AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                        -- за период
                                        AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+
                 INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                              AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -261,8 +383,7 @@ BEGIN
      INSERT INTO _tmpDebt (JuridicalId, PartnerId, ContractId, PaidKindId, MovementId_sale, OperDate_sale, Summ_debt, Summ_debt_end, Summ_sale)
         WITH -- Дебиторы
              tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE AccountGroupId = zc_Enum_AccountGroup_30000())
-             -- ----ВСЕ долги на конец inEndDate
-             -- ВСЕ долги на начало inStartDate
+             -- ВСЕ долги на начало inStartDate + на конец inEndDate
            , tmpContainer AS (SELECT CLO_Juridical.ContainerId                   AS ContainerId
                                    , CLO_Juridical.ObjectId                      AS JuridicalId
                                    , CASE WHEN CLO_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm() THEN COALESCE (CLO_Partner.ObjectId, 0) ELSE 0 END AS PartnerId
@@ -487,7 +608,8 @@ BEGIN
 
      -- добавили если не нашли - Долги
      INSERT INTO _tmpSale (MovementId, StatusId, InvNumber, OperDate, PaidKindId, ContractId, PartnerId, JuridicalId, SummSale, Ord, Ord_all_asc)
-        SELECT _tmpDebt.MovementId_sale AS MovementId
+        SELECT DISTINCT
+               0 AS MovementId
              , 0 AS StatusId
              , 0 AS InvNumber
              , _tmpDebt.OperDate_sale AS OperDate
@@ -496,15 +618,16 @@ BEGIN
              , _tmpDebt.PartnerId
              , _tmpDebt.JuridicalId
              , 0 AS SummSale
-             , 0 AS Ord
+             , 1 AS Ord
              , 0 AS Ord_all_asc
         FROM _tmpDebt
-             LEFT JOIN _tmpSale ON _tmpSale.MovementId  = _tmpDebt.MovementId_sale
+             LEFT JOIN _tmpSale ON _tmpSale.Ord         = 1
+                             --AND _tmpSale.MovementId  = _tmpDebt.MovementId_sale
                                AND _tmpSale.JuridicalId = _tmpDebt.JuridicalId
                                AND _tmpSale.PartnerId   = _tmpDebt.PartnerId
                                AND _tmpSale.ContractId  = _tmpDebt.ContractId
                                AND _tmpSale.PaidKindId  = _tmpDebt.PaidKindId
-        WHERE _tmpSale.MovementId IS NULL
+        WHERE _tmpSale.Ord IS NULL -- _tmpSale.MovementId IS NULL
           -- без этих долгов
           AND _tmpDebt.Summ_debt_end = 0
        ;
@@ -695,23 +818,24 @@ BEGIN
              , _tmpReturnIn_res.PartnerId
              , _tmpReturnIn_res.JuridicalId
              , 0 AS SummSale
-             , 0 AS Ord
+             , 1 AS Ord
              , 0 AS Ord_all_asc
         FROM _tmpReturnIn_res
-             LEFT JOIN _tmpSale ON _tmpSale.MovementId  = _tmpReturnIn_res.MovementId_sale
+             LEFT JOIN _tmpSale ON _tmpSale.Ord         = 1
+                             --AND _tmpSale.MovementId  = _tmpReturnIn_res.MovementId_sale
                                AND _tmpSale.JuridicalId = _tmpReturnIn_res.JuridicalId
                                AND _tmpSale.PartnerId   = _tmpReturnIn_res.PartnerId
                                AND _tmpSale.ContractId  = _tmpReturnIn_res.ContractId
                                AND _tmpSale.PaidKindId  = _tmpReturnIn_res.PaidKindId
-        WHERE _tmpSale.MovementId IS NULL
+        WHERE _tmpSale.Ord IS NULL -- _tmpSale.MovementId IS NULL
        ;
 
 
      -- оплаты привязаны к долгам
      CREATE TEMP TABLE _tmpPay (JuridicalId Integer, PartnerId Integer, ContractId Integer, PaidKindId Integer, MovementId_sale Integer, TotalAmount TFloat, TotalAmount_next TFloat, Amount_Bank TFloat, Amount_SendDebt TFloat) ON COMMIT DROP;
 
-    -- BankAccount
-    WITH tmpMovement_BankAccount
+     -- BankAccount
+     WITH tmpMovement_BankAccount
                       AS (WITH tmpMovement AS (SELECT Movement.*
                                                FROM Movement
                                                WHERE Movement.DescId IN (zc_Movement_BankAccount()) -- , zc_Movement_SendDebt()
@@ -1226,7 +1350,7 @@ BEGIN
                             AND tmpRes.PaidKindId  = tmpSumm_pay.PaidKindId
            ;
 
-     -- добавили если не нашли - возвраты
+     -- добавили если не нашли - оплаты
      INSERT INTO _tmpSale (MovementId, StatusId, InvNumber, OperDate, PaidKindId, ContractId, PartnerId, JuridicalId, SummSale, Ord, Ord_all_asc)
         SELECT DISTINCT
                0 AS MovementId
@@ -1246,7 +1370,7 @@ BEGIN
                                AND _tmpSale.PartnerId   = _tmpPay.PartnerId
                                AND _tmpSale.ContractId  = _tmpPay.ContractId
                                AND _tmpSale.PaidKindId  = _tmpPay.PaidKindId
-        WHERE _tmpSale.MovementId IS NULL
+        WHERE _tmpSale.Ord IS NULL -- _tmpSale.MovementId IS NULL
        ;
 
     -- Результат
@@ -1287,7 +1411,10 @@ BEGIN
                                                              AND _tmpDebt.PartnerId        = _tmpSale.PartnerId
                                                              AND _tmpDebt.ContractId       = _tmpSale.ContractId
                                                              AND _tmpDebt.PaidKindId       = _tmpSale.PaidKindId
-                                    --                         AND _tmpDebt.MovementId_sale  > 0
+                                                             -- без этих долгов
+                                                             AND _tmpDebt.Summ_debt_end    = 0
+                                                             --
+                                                             -- AND _tmpDebt.MovementId_sale  > 0
                                    -- возвраты по накладным
                                    LEFT JOIN _tmpReturnIn_res ON _tmpReturnIn_res.MovementId_sale = _tmpSale.MovementId
                                                              AND _tmpReturnIn_res.JuridicalId     = _tmpSale.JuridicalId
@@ -1342,7 +1469,7 @@ BEGIN
                      , COALESCE (tmpReturnIn.Summ_ReturnIn, 0)   AS TotalSumm_ReturnIn
 
                 FROM tmpMovement_Sale
-                     -- вся Сумма оплаты
+                     -- Итого Сумма оплаты
                      LEFT JOIN (SELECT _tmpPay.JuridicalId
                                      , _tmpPay.PartnerId
                                      , _tmpPay.ContractId
