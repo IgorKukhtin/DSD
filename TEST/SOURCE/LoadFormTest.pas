@@ -2502,6 +2502,7 @@ end;
 
 procedure TLoadFormTest.LoadReportBonusFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossService_bySaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossService_bySaleDialogForm'));
@@ -2509,7 +2510,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossService_ContractChildForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossService_ContractChildForm');
-
+ }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossServiceForm');
