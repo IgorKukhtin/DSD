@@ -1,4 +1,4 @@
--- Function: gpReport_Sale_BankAccount
+ -- Function: gpReport_Sale_BankAccount
 
 DROP FUNCTION IF EXISTS gpReport_Sale_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 

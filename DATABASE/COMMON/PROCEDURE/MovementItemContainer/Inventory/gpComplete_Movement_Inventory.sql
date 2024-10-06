@@ -277,7 +277,7 @@ BEGIN
                                             AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
                  LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
                                                ON CLO_GoodsKind.ContainerId = MIFloat_ContainerId.ValueData :: Integer
-                                              AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                              AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
             WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
            ;
      -- !!!Ограничения по товарам!!!
@@ -1843,13 +1843,9 @@ end if;
 if vbUserId IN (5, zc_Enum_Process_Auto_PrimeCost()) and 1=0
 then
     RAISE EXCEPTION '<%> %  %  %', vbIsLastOnMonth
- , (select count(*) FROM  _tmpItem
-                                       JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
-                                                        AND _tmpItemSumm.OperSumm <> 0
-                                                        AND _tmpItemSumm.ContainerId = 0
-                                 )
- , (select MIN (_tmpItem.OperCount) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItemSumm.ContainerId =  157990 )
- , (select MIN (_tmpItem.GoodsId) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItemSumm.ContainerId =  157990 )
+ , (select count(*) FROM  _tmpItem where _tmpItem.MovementItemId = 303919262 and _tmpItem.ContainerId > 0)
+ , (select sum (_tmpItem.OperCount) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItemSumm.MovementItemId = 303919262 )
+ , (select sum (_tmpItemSumm.OperSumm) from _tmpItemSumm  JOIN _tmpItem ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId and _tmpItemSumm.MovementItemId = 303919262 )
 -- , (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 2261046)
 -- , (select _tmpRemainsSumm.InfoMoneyId_Detail from _tmpRemainsSumm where _tmpRemainsSumm.ContainerId = 695905)
 -- , zc_Enum_InfoMoney_80401() -- (select _tmpItemSumm.OperSumm from _tmpItemSumm where _tmpItemSumm.ContainerId = 0 and _tmpItemSumm.MovementItemId = 121243281)
