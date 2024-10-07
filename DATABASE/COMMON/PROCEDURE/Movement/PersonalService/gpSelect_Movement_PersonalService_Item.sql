@@ -570,7 +570,79 @@ BEGIN
                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                 )
 
-        , tmpMIContainer_pay AS (SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+        , tmpMIContainer_pay AS (
+                                 WITH 
+                                 tmpContainer AS (SELECT tmpContainer_pay.MemberId
+                                                       , tmpContainer_pay.PositionId
+                                                       , tmpContainer_pay.PositionLevelId
+                                                       , tmpContainer_pay.UnitId
+                                                       , tmpContainer_pay.PersonalServiceListId
+                                                       , tmpContainer_pay.ServiceDate
+                                                       , tmpContainer_pay.ContainerId
+                                                       , MIContainer.Amount
+                                                       , MIContainer.AnalyzerId
+                                                       , MIContainer.MovementDescId
+                                                       , MIContainer.MovementId
+                                                  FROM tmpContainer_pay
+                                                       INNER JOIN MovementItemContainer AS MIContainer
+                                                                                        ON MIContainer.ContainerId    = tmpContainer_pay.ContainerId
+                                                                                       AND MIContainer.DescId         = zc_MIContainer_Summ()
+                                                                                       AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                  )
+                              , tmpMI AS (SELECT *
+                                          FROM MovementItem
+                                          WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpContainer.MovementId FROM tmpContainer)
+                                            AND MovementItem.DescId     = zc_MI_Master()
+                                            AND MovementItem.isErased   = FALSE
+                                          )
+                              , tmpMILO AS (SELECT *
+                                            FROM MovementItemLinkObject
+                                            WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                              AND MovementItemLinkObject.DescId = zc_MILinkObject_MoneyPlace()
+                                            )
+
+                                SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
+                                     , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
+                                     , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
+                                       -- аванс по ведомости
+                                     , SUM (CASE WHEN ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm()
+                                                  AND MIContainer.MovementDescId = zc_Movement_Cash()
+                                                  AND Object.ValueData ILIKE '%АВАНС%'
+                                                      THEN MIContainer.Amount
+                                                 ELSE 0
+                                            END) AS Amount_avance_ps
+
+                                     , MIContainer.MemberId
+                                     , MIContainer.PositionId
+                                     , MIContainer.PositionLevelId
+                                     , MIContainer.UnitId
+                                     , MIContainer.PersonalServiceListId
+                                     , MIContainer.ServiceDate 
+                                     --
+                                     , MIN (MIContainer.ContainerId) AS ContainerId_min
+                                     , MAX (MIContainer.ContainerId) AS ContainerId_max
+                                 FROM tmpContainer AS MIContainer
+                                      LEFT JOIN tmpMI AS MovementItem 
+                                                      ON MovementItem.MovementId = MIContainer.MovementId
+
+                                      LEFT JOIN tmpMILO AS MILinkObject_MoneyPlace
+                                                        ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                      LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId = MILinkObject_MoneyPlace.ObjectId
+                                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId   = zc_ObjectLink_PersonalServiceList_PaidKind()
+
+                                 GROUP BY MIContainer.MemberId
+                                        , MIContainer.PositionId
+                                        , MIContainer.PositionLevelId
+                                        , MIContainer.UnitId 
+                                        , MIContainer.PersonalServiceListId
+                                        , MIContainer.ServiceDate
+
+
+
+                               /*SELECT SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance()) AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END) AS Amount_avance
                                       , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalAvance())  THEN MIContainer.Amount ELSE 0 END) AS Amount_avance_all
                                       , SUM (CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_Cash_PersonalService()) THEN MIContainer.Amount ELSE 0 END) AS Amount_service
                                         -- аванс по ведомости
@@ -612,6 +684,7 @@ BEGIN
                                         , tmpContainer_pay.UnitId 
                                         , tmpContainer_pay.PersonalServiceListId
                                         , tmpContainer_pay.ServiceDate
+                                 */
                                 )
 
       --все ведомости у которых заполнено - zc_ObjectLink_PersonalServiceList_Avance_F2
