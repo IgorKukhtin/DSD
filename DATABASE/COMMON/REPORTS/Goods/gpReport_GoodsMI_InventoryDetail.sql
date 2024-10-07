@@ -47,10 +47,16 @@ $BODY$
  DECLARE vbIsGroup Boolean;
  DECLARE vbPriceWithVAT Boolean;
  DECLARE vbVATPercent TFloat;
+ DECLARE vbIsNotSumm Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_GoodsMI_Inventory());
      vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     -- Отчет Инвентаризация - только кол-во
+     vbIsNotSumm:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = 11365936);
+
 
      -- !!!Только просмотр Аудитор!!!
      PERFORM lpCheckPeriodClose_auditor (inStartDate, inEndDate, NULL, NULL, NULL, vbUserId);
@@ -395,23 +401,24 @@ BEGIN
                 , SUM (tmpContainer.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END) AS AmountOut_Weight
                 , SUM (CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpContainer.AmountOut ELSE 0 END) AS AmountOut_sh
 
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) END AS Summ
                 
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_zavod
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_zavod
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_branch        -- zc_Enum_AccountGroup_60000 Прибыль будущих периодов
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_branch
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_60000
-                , SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_60000
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_zavod
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_zavod
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_branch        -- zc_Enum_AccountGroup_60000 Прибыль будущих периодов
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_branch
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_60000
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId <> zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_60000
 
-                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_RePrice
-                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_RePrice
-                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) AS SummIn_RePrice_60000
-                , SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) AS SummOut_RePrice_60000
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_RePrice
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) <> zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_RePrice
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummIn  ELSE 0 END) END AS SummIn_RePrice_60000
+                , CASE WHEN vbIsNotSumm = TRUE THEN 0 ELSE SUM (CASE WHEN tmpContainer.AnalyzerId = zc_Enum_AccountGroup_60000() AND COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.SummOut ELSE 0 END) END AS SummOut_RePrice_60000
                 
                 , SUM (tmpContainer.Amount_mi)   AS Amount_mi
                 , SUM (tmpContainer.Amount_mi * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END)   AS AmountWeight_mi
                 , SUM (tmpContainer.Amount_mi * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN 1 ELSE 0 END)   AS AmountSh_mi
+
            FROM tmpContainer
                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
