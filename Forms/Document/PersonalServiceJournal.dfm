@@ -2303,14 +2303,14 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalServiceId'
+          Name = 'PersonalServiceListId'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'PersonalServiceListId'
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalServiceInvNumber'
+          Name = 'PersonalServiceListName'
           Value = Null
           Component = MasterCDS
           ComponentItem = 'PersonalServiceListName'
