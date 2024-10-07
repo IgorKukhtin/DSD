@@ -3601,7 +3601,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Full'
+        Name = 'PersonalServiceListName'
         Value = ''
         Component = GuidesPersonalService
         ComponentItem = 'TextValue'

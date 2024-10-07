@@ -175,7 +175,7 @@ object Movement_DateDialog_PersonalServiceForm: TMovement_DateDialog_PersonalSer
         MultiSelectSeparator = ','
       end
       item
-        Name = 'InvNumber_Full'
+        Name = 'PersonalServiceListName'
         Value = ''
         Component = GuidesPersonalService
         ComponentItem = 'TextValue'

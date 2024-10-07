@@ -2313,7 +2313,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
           Name = 'PersonalServiceInvNumber'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'InvNumber_full'
+          ComponentItem = 'PersonalServiceListName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
