@@ -87,6 +87,7 @@ BEGIN
 
    FROM gpReport_Send_PartionCell (inStartDate, inEndDate, inUnitId, inIsMovement, inIsCell, inIsShowAll, inSession) AS tmpresult
    WHERE tmpResult.isChoiceCell_mi = TRUE
+   ORDER BY tmpResult.ChoiceCellCode
   ;
 
 

@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_PersonalService()
+-- Function: gpSelect_Movement_PersonalService()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
@@ -581,6 +581,9 @@ BEGIN
           OR vbIsLevelMax01 = TRUE
           --OR vbUserId = 2573318
           OR vbUserId = 5
+            )
+        AND (Object_PersonalServiceList.ValueData NOT ILIKE '%Костя%'
+          OR vbUserId NOT IN (5, 9457 , 4467766)
             )
             ;
 

@@ -1,4 +1,4 @@
- -- Function: gpSelect_Movement_PersonalService_Item()
+-- Function: gpSelect_Movement_PersonalService_Item()
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
@@ -84,11 +84,14 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsUserAll Boolean;
    DECLARE vbIsLevelMax01 Boolean;
+   DECLARE vbPersonalServiceId_find Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     vbPersonalServiceId_find:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inPersonalServiceId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()), 0);
 
      -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
@@ -264,10 +267,11 @@ BEGIN
                                LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                                       ON MovementDate_ServiceDate.MovementId = Movement.Id
                                                      AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                          WHERE inIsServiceDate = FALSE AND COALESCE (inPersonalServiceId,0) = 0
+                          WHERE inIsServiceDate = FALSE -- AND COALESCE (inPersonalServiceId,0) = 0
                             -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
                             -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
+                            AND (MovementLinkObject_PersonalServiceList.ObjectId = vbPersonalServiceId_find OR vbPersonalServiceId_find = 0)
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0) 
 
                          UNION ALL
@@ -285,15 +289,16 @@ BEGIN
                                                             ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
-                          WHERE inIsServiceDate = TRUE AND COALESCE (inPersonalServiceId,0) = 0 
+                          WHERE inIsServiceDate = TRUE --AND COALESCE (inPersonalServiceId,0) = 0 
                             AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                             -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
                             -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            AND (MovementLinkObject_PersonalServiceList.ObjectId = vbPersonalServiceId_find OR vbPersonalServiceId_find = 0)
                                  
-                         UNION ALL
+                       /*UNION ALL
                           SELECT Movement.Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
                                , MovementDate_ServiceDate.ValueData              AS ServiceDate
@@ -314,15 +319,14 @@ BEGIN
                                                      AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
                           WHERE inIsServiceDate = FALSE
                             AND tmpMemberPersonalServiceList.PersonalServiceListId > 0  
-                            AND COALESCE (inPersonalServiceId,0) > 0
+                            AND COALESCE (inPersonalServiceId,0) > 0*/
                          )
                          
         , tmpSign AS (SELECT tmpMovement.Id
-                           , tmpSign.strSign
-                           , tmpSign.strSignNo
+                           , '' :: TVarChar AS strSign
+                           , '' :: TVarChar AS strSignNo
                       FROM tmpMovement
-                           LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
-                      )
+                     )
         , tmpMember AS (SELECT tmp.PersonalServiceListId 
                              , ObjectLink_PersonalServiceList_Member.ChildObjectId AS MemberId
                         FROM (SELECT DISTINCT tmpMovement.PersonalServiceListId FROM tmpMovement) AS tmp
@@ -332,11 +336,11 @@ BEGIN
                        )
 
         , tmpMI_All AS (SELECT MovementItem.*
-                        FROM tmpMovement
-                           INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                  AND MovementItem.isErased = FALSE
-                        )
+                        FROM MovementItem
+                        WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
+                           AND MovementItem.DescId = zc_MI_Master()
+                           AND MovementItem.isErased = FALSE
+                       )
 
         , tmpMI AS (SELECT MovementItem.MovementId
                          , MovementItem.Id                          AS MovementItemId
@@ -373,32 +377,85 @@ BEGIN
 
         , tmpMovementItemString AS (SELECT MovementItemString.*
                                     FROM MovementItemString
-                                    WHERE MovementItemString.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                                    WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
                                       AND MovementItemString.DescId IN (zc_MIString_Comment()
                                                                       , zc_MIString_Number())
                                    )
 
         , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
                                      FROM MovementItemBoolean
-                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
                                        AND MovementItemBoolean.DescId IN (zc_MIBoolean_Main()
                                                                         , zc_MIBoolean_isAuto())
                                     )
 
         , tmpMovementItemDate AS (SELECT MovementItemDate.*
                                   FROM MovementItemDate
-                                  WHERE MovementItemDate.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                                  WHERE MovementItemDate.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
                                     AND MovementItemDate.DescId IN (zc_MIDate_BankOut())
                                  )
 
         , tmpMovementItemFloat AS (SELECT MovementItemFloat.*
                                    FROM MovementItemFloat
-                                   WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                                   WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
+                                     AND MovementItemFloat.DescId IN (zc_MIFloat_SummToPay()
+                                                                    , zc_MIFloat_SummService()
+                                                                    , zc_MIFloat_SummCard()
+                                                                    , zc_MIFloat_SummCardRecalc()
+                                                                    , zc_MIFloat_SummCardSecond()
+                                                                    , zc_MIFloat_SummCardSecondRecalc()
+                                                                    , zc_MIFloat_SummAvCardSecond()
+                                                                    , zc_MIFloat_SummAvCardSecondRecalc()
+                                                                    , zc_MIFloat_SummCardSecondDiff()
+                                                                    , zc_MIFloat_SummCardSecondCash()
+                                                                    , zc_MIFloat_SummNalog()
+                                                                    , zc_MIFloat_SummNalogRecalc()
+                                                                    , zc_MIFloat_SummNalogRet()
+                                                                    , zc_MIFloat_SummNalogRetRecalc()
+                                                                    , zc_MIFloat_SummMinus()
+                                                                    , zc_MIFloat_SummFine()
+                                                                    , zc_MIFloat_SummFineOth()
+                                                                    , zc_MIFloat_SummFineOthRecalc()
+                                                                    , zc_MIFloat_SummAdd()
+                                                                    , zc_MIFloat_SummAuditAdd()
+                                                                    , zc_MIFloat_SummHoliday()
+                                                                    , zc_MIFloat_SummHosp()
+                                                                    , zc_MIFloat_SummHospOth()
+                                                                    , zc_MIFloat_SummHospOthRecalc()
+                                                                    , zc_MIFloat_SummSocialIn()
+                                                                    , zc_MIFloat_SummSocialAdd()
+                                                                    , zc_MIFloat_SummChild()
+                                                                    , zc_MIFloat_SummChildRecalc()
+                                                                    , zc_MIFloat_SummMinusExt()
+                                                                    , zc_MIFloat_SummMinusExtRecalc()
+                                                                    , zc_MIFloat_SummTransport()
+                                                                    , zc_MIFloat_SummTransportAdd()
+                                                                    , zc_MIFloat_SummTransportAddLong()
+                                                                    , zc_MIFloat_SummTransportTaxi()
+                                                                    , zc_MIFloat_SummPhone()
+                                                                    , zc_MIFloat_SummAddOth()
+                                                                    , zc_MIFloat_SummAddOthRecalc()
+                                                                    , zc_MIFloat_SummHouseAdd()
+                                                                    , zc_MIFloat_SummCompensation()
+                                                                    , zc_MIFloat_SummCompensationRecalc()
+                                                                    , zc_MIFloat_DayCompensation()
+                                                                    , zc_MIFloat_PriceCompensation()
+                                                                    , zc_MIFloat_DayVacation()
+                                                                    , zc_MIFloat_DayHoliday()
+                                                                    , zc_MIFloat_DayWork()
+                                                                    , zc_MIFloat_DayAudit()
+                                                                    , zc_MIFloat_SummMedicdayAdd()
+                                                                    , zc_MIFloat_DayMedicday()
+                                                                    , zc_MIFloat_SummSkip()
+                                                                    , zc_MIFloat_DaySkip()
+                                                                    , zc_MIFloat_SummAvance()
+                                                                    , zc_MIFloat_SummAvanceRecalc()
+                                                                     )
                                    ) 
 
         , tmpMovementItemLinkObject AS (SELECT MovementItemLinkObject.*
                                         FROM MovementItemLinkObject
-                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT tmpMI_All.Id FROM tmpMI_All)
+                                        WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_All.Id FROM tmpMI_All)
                                           AND MovementItemLinkObject.DescId IN (zc_MILinkObject_FineSubject()
                                                                               , zc_MILinkObject_UnitFineSubject())
                                        )
@@ -407,6 +464,8 @@ BEGIN
                      WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                         AND MovementItem.DescId = zc_MI_Child()
                         AND MovementItem.isErased = FALSE
+                        --
+                        AND 1=0
                      )
       , tmpMI_Float_Child AS (SELECT MovementItemFloat.*
                               FROM MovementItemFloat
@@ -445,6 +504,8 @@ BEGIN
                            WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                               AND MovementItem.DescId = zc_MI_Child()
                               AND MovementItem.isErased = FALSE
+                              --
+                              AND 1=0
                           )
       , tmpMIChild AS (SELECT tmpMIChild_all.ParentId
                             , MAX (tmpMIChild_all.DayCount) AS DayCount
@@ -1006,19 +1067,19 @@ BEGIN
                                         ON MIFloat_DayAudit.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayAudit.DescId = zc_MIFloat_DayAudit()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummMedicdayAdd
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummMedicdayAdd
                                         ON MIFloat_SummMedicdayAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummMedicdayAdd.DescId = zc_MIFloat_SummMedicdayAdd()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_DayMedicday
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_DayMedicday
                                         ON MIFloat_DayMedicday.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayMedicday.DescId = zc_MIFloat_DayMedicday()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_SummSkip
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummSkip
                                         ON MIFloat_SummSkip.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummSkip.DescId = zc_MIFloat_SummSkip()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_DaySkip
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_DaySkip
                                         ON MIFloat_DaySkip.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DaySkip.DescId = zc_MIFloat_DaySkip()
 
@@ -1171,4 +1232,4 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService (inStartDate:= '30.01.2015', inEndDate:= '01.02.2015', inJuridicalBasisId:= 0, inIsServiceDate:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inJuridicalBasisId := 9399 , inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
+-- SELECT * FROM gpSelect_Movement_PersonalService_Item(inStartDate := ('01.12.2024')::TDateTime , inEndDate := ('01.12.2024')::TDateTime , inJuridicalBasisId := 9399 , inPersonalServiceId:= 0, inIsServiceDate := 'False' , inIsErased := 'False' ,  inSession := '9457');
