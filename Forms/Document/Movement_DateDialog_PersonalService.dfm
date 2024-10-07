@@ -136,7 +136,7 @@ object Movement_DateDialog_PersonalServiceForm: TMovement_DateDialog_PersonalSer
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceId'
+        Name = 'PersonalServiceListId'
         Value = Null
         Component = GuidesPersonalService
         ComponentItem = 'Key'
@@ -144,7 +144,7 @@ object Movement_DateDialog_PersonalServiceForm: TMovement_DateDialog_PersonalSer
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceInvNumber'
+        Name = 'PersonalServiceListName'
         Value = Null
         Component = GuidesPersonalService
         ComponentItem = 'TextValue'
@@ -159,11 +159,11 @@ object Movement_DateDialog_PersonalServiceForm: TMovement_DateDialog_PersonalSer
     KeyField = 'Id'
     LookupControl = edInvNumberPersonalService
     Key = '0'
-    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
+    FormNameParam.Value = 'TPersonalServiceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalServiceJournalChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPersonalServiceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -175,7 +175,7 @@ object Movement_DateDialog_PersonalServiceForm: TMovement_DateDialog_PersonalSer
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceListName'
+        Name = 'TextValue'
         Value = ''
         Component = GuidesPersonalService
         ComponentItem = 'TextValue'

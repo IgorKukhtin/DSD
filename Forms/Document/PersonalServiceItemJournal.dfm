@@ -1915,7 +1915,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
       Top = 35
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103':'
     end
-    object edInvNumberPersonalService: TcxButtonEdit
+    object edInvNumberPersonalServiceList: TcxButtonEdit
       Left = 138
       Top = 34
       Properties.Buttons = <
@@ -2312,17 +2312,17 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalServiceId'
+          Name = 'PersonalServiceListId'
           Value = Null
-          Component = GuidesPersonalService
+          Component = GuidesPersonalServiceList
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'PersonalServiceInvNumber'
+          Name = 'PersonalServiceListName'
           Value = Null
-          Component = GuidesPersonalService
+          Component = GuidesPersonalServiceList
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -2661,9 +2661,9 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPersonalServiceId'
+        Name = 'inPersonalServiceListId'
         Value = Null
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -2925,7 +2925,7 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         Component = JuridicalBasisGuides
       end
       item
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
       end>
     Left = 392
     Top = 304
@@ -3039,17 +3039,17 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceId'
+        Name = 'PersonalServiceListId'
         Value = Null
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceInvNumber'
+        Name = 'PersonalServiceListName'
         Value = Null
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -3581,29 +3581,29 @@ inherited PersonalServiceItemJournalForm: TPersonalServiceItemJournalForm
     Left = 80
     Top = 376
   end
-  object GuidesPersonalService: TdsdGuides
+  object GuidesPersonalServiceList: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edInvNumberPersonalService
+    LookupControl = edInvNumberPersonalServiceList
     Key = '0'
-    FormNameParam.Value = 'TPersonalServiceJournalChoiceForm'
+    FormNameParam.Value = 'TPersonalServiceList_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TPersonalServiceJournalChoiceForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TPersonalServiceList_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PersonalServiceListName'
+        Name = 'TextValue'
         Value = ''
-        Component = GuidesPersonalService
+        Component = GuidesPersonalServiceList
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

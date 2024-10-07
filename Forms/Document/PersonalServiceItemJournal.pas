@@ -112,8 +112,8 @@ type
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
     cxLabel30: TcxLabel;
-    edInvNumberPersonalService: TcxButtonEdit;
-    GuidesPersonalService: TdsdGuides;
+    edInvNumberPersonalServiceList: TcxButtonEdit;
+    GuidesPersonalServiceList: TdsdGuides;
   private
     { Private declarations }
   public

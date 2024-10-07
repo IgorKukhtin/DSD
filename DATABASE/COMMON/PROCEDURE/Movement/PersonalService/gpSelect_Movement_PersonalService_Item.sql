@@ -4,13 +4,13 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService_Item (TDateTime, TDateTime, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService_Item(
-    IN inStartDate         TDateTime , --
-    IN inEndDate           TDateTime , --
-    IN inJuridicalBasisId  Integer , -- гл. юр.лицо  
-    IN inPersonalServiceId Integer ,
-    IN inIsServiceDate     Boolean ,
-    IN inIsErased          Boolean ,
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inStartDate                TDateTime , --
+    IN inEndDate                  TDateTime , --
+    IN inJuridicalBasisId         Integer , -- гл. юр.лицо  
+    IN inPersonalServiceListId    Integer ,
+    IN inIsServiceDate            Boolean ,
+    IN inIsErased                 Boolean ,
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
@@ -84,14 +84,14 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbIsUserAll Boolean;
    DECLARE vbIsLevelMax01 Boolean;
-   DECLARE vbPersonalServiceId_find Integer;
+   --DECLARE vbPersonalServiceId_find Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
      vbUserId:= lpGetUserBySession (inSession);
 
 
-     vbPersonalServiceId_find:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inPersonalServiceId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()), 0);
+     --vbPersonalServiceId_find:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inPersonalServiceId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList()), 0);
 
      -- !!!Проверка прав роль - Ограничение - нет вообще доступа к просмотру данных ЗП!!!
      PERFORM lpCheck_UserRole_8813637 (vbUserId);
@@ -271,7 +271,7 @@ BEGIN
                             -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
                             -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
-                            AND (MovementLinkObject_PersonalServiceList.ObjectId = vbPersonalServiceId_find OR vbPersonalServiceId_find = 0)
+                            AND (MovementLinkObject_PersonalServiceList.ObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0) 
 
                          UNION ALL
@@ -296,7 +296,7 @@ BEGIN
                             -- AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             AND tmpMemberPersonalServiceList.PersonalServiceListId > 0
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
-                            AND (MovementLinkObject_PersonalServiceList.ObjectId = vbPersonalServiceId_find OR vbPersonalServiceId_find = 0)
+                            AND (MovementLinkObject_PersonalServiceList.ObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                                  
                        /*UNION ALL
                           SELECT Movement.Id
