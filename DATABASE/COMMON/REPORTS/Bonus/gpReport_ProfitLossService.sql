@@ -30,16 +30,25 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar
+             , GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
              , AmountIn TFloat, AmountOut TFloat, Amount TFloat
-             , AmountMarket TFloat
-             , SummInMarket Tfloat
-             , SummOutMarket  Tfloat 
-             , SummAmount         Tfloat --сумма продажи
-             , TotalSumm          TFloat
-             , Persent_part       Tfloat
-             , Persent_part_tm    Tfloat             
-             , SummMarket_calc  Tfloat
-             , SummMarket_tm_calc Tfloat    
+             , AmountMarket        TFloat
+             , SummInMarket        TFloat
+             , SummOutMarket       TFloat 
+             , SummAmount          TFloat --сумма продажи
+             , TotalSumm           TFloat --итого продажа по юр.лицо + договор
+             , TotalSumm_tm        TFloat --
+             , TotalSumm_gp        TFloat --
+             , TotalSumm_gpp       TFloat --
+             , Persent_part        TFloat
+             , Persent_part_tm     TFloat 
+             , Persent_part_gp     TFloat
+             , Persent_part_gpp    TFloat            
+             , SummMarket_calc     TFloat
+             , SummMarket_tm_calc  TFloat
+             , SummMarket_gp_calc  TFloat
+             , SummMarket_gpp_calc TFloat  
              ) 
 
 AS
@@ -61,14 +70,14 @@ BEGIN
                             AND Movement.DescId = zc_Movement_ProfitLossService()
                             AND Movement.StatusId = zc_Enum_Status_Complete()
                           )
-      --Акция / Трейд-маркетинг
+      --связь с док. Акция / Трейд-маркетинг
     , tmpMLM_doc AS (SELECT MLM.*
                      FROM MovementLinkMovement AS MLM
                      WHERE MLM.DescId = zc_MovementLinkMovement_Doc()
                        AND MLM.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull)
                        AND COALESCE (MLM.MovementChildId,0) > 0
                      )
-
+      --торгоая марка в док. начисления
     , tmpMLO AS (SELECT MovementLinkObject.*
                      FROM MovementLinkObject
                      WHERE MovementLinkObject.DescId = zc_MovementLinkObject_TradeMark()
@@ -94,6 +103,7 @@ BEGIN
                   AND MovementItem.isErased = FALSE
                   AND COALESCE (MovementItem.Amount,0) <> 0
                 )
+    --
     , tmpMILO AS (
                   SELECT MovementItemLinkObject.* 
                   FROM MovementItemLinkObject
@@ -106,6 +116,7 @@ BEGIN
                                                         , zc_MILinkObject_ContractConditionKind()
                                                         )
                   )
+    --ProfitLossService - в віборку берем документы с выбранным     zc_MovementLinkMovement_Doc или Торговой маркой
     , tmpMovement AS (SELECT Movement.Id              AS MovementId
                            , Movement.DescId          AS MovementDescId
                            , Movement.OperDate
@@ -167,11 +178,10 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
                                                            ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
-                      WHERE MLM_Doc.MovementChildId IS NOT NULL OR MovementLinkObject_TradeMark.ObjectId
-
-
-                      )
-
+                      WHERE COALESCE (MLM_Doc.MovementChildId,0) <> 0
+                         OR COALESCE (MovementLinkObject_TradeMark.ObjectId,0) <> 0
+                     )
+     -- строки Акция / Трейд-маркетинг
     , tmpMI_doc AS (SELECT MovementItem.*
                     FROM MovementItem
                     WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_doc.MovementChildId FROM tmpMLM_doc) 
@@ -193,7 +203,11 @@ BEGIN
     , tmpMILO_doc AS (SELECT MovementItemLinkObject.*
                       FROM MovementItemLinkObject
                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_doc.Id FROM tmpMI_doc)
-                        AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind()
+                                                            , zc_MILinkObject_TradeMark()
+                                                            , zc_MILinkObject_GoodsGroupProperty()
+                                                            )
+                                                             
                      )
 
     , tmpData AS (SELECT tmpMovement.MovementId
@@ -201,7 +215,9 @@ BEGIN
                        , tmpMovement.OperDate
                        , tmpMovement.InvNumber
                        , tmpMovement.MovementId_doc
-                       , tmpMovement.TradeMarkId
+                       , COALESCE (MILinkObject_TradeMark.ObjectId, tmpMovement.TradeMarkId) AS TradeMarkId 
+                       , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+                       , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
                        , tmpMovement.JuridicalId
                        , tmpMovement.ContractId
                        , tmpMovement.ContractChildId
@@ -239,58 +255,46 @@ BEGIN
                    LEFT JOIN tmpMIFloat_doc AS MIFloat_Summ
                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                            AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
-                                           
-             --  из док АКции - по ним нужно будет делать распределение 
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_TradeMark
-                                              ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                                  ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
-                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = COALESCE (MILinkObject_TradeMark.ObjectId, ObjectLink_Goods_TradeMark.ChildObjectId)
-             --
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
-                                              ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
 
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
-                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = MovementItem.ObjectId
-                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
-             LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+                   --   из док АКции - по ним нужно будет делать распределение
+                   LEFT JOIN tmpMILO_doc AS MILinkObject_TradeMark
+                                                    ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
+                                                   AND COALESCE (MovementItem.ObjectId,0) = 0
+                   --
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
+                                                    ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
+                                                   AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
+                                                   AND COALESCE (MovementItem.ObjectId,0) = 0
+                   LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = MILinkObject_GoodsGroupProperty.ObjectId
+                                                                AND Object_GoodsGroupProperty.DescId = zc_Object_GoodsGroupProperty()
 
-             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
-                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
-                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
-             LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
-             --                                
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupDirection
-                                              ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_GoodsGroupDirection.DescId = zc_MILinkObject_GoodsGroupDirection() 
-                                             AND COALESCE (MovementItem.ObjectId,0) = 0
-             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupDirection
-                                  ON ObjectLink_Goods_GoodsGroupDirection.ObjectId = MovementItem.ObjectId
-                                 AND ObjectLink_Goods_GoodsGroupDirection.DescId = zc_ObjectLink_Goods_GoodsGroupDirection()
-             LEFT JOIN Object AS Object_GoodsGroupDirection ON Object_GoodsGroupDirection.Id = COALESCE (MILinkObject_GoodsGroupDirection.ObjectId, ObjectLink_Goods_GoodsGroupDirection.ChildObjectId)
-                                           
-                                           
+                   LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                        ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                       AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+                   LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
                   )
+
  
       -- продажи / возвраты
     , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
                            , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                       FROM Constant_ProfitLoss_AnalyzerId_View
                       WHERE Constant_ProfitLoss_AnalyzerId_View.isCost = FALSE
-                     )
+                     ) 
+      -- данные о продаже  и возврате
     , tmpContainer AS (SELECT tmp.JuridicalId
                             , tmp.ContractId
                             , tmp.GoodsId
                             , tmp.GoodsKindId 
-                            , tmp.TradeMarkId
+                            , tmp.TradeMarkId 
+                            , ObjectLink_GoodsGroupProperty_Parent.ChildObjectId AS GoodsGroupPropertyId_Parent  
+                            , ObjectLink_Goods_GoodsGroupProperty.ChildObjectId  AS GoodsGroupPropertyId
                             , tmp.SummAmount
                             , tmp.Sale_Summ
                             , tmp.Return_Summ
+                            --
+                            /*
                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSumm
                             , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummSale
                             , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSummReturn
@@ -298,6 +302,7 @@ BEGIN
                             , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSummSale_tm
                             , SUM (tmp.Return_Summ) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSummReturn_tm
                            -- , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.GoodsId, tmp.GoodsKindId) AS TotalSumm_goods
+                           */
                        FROM (SELECT ContainerLO_Juridical.ObjectId        AS JuridicalId
                                   , ContainerLinkObject_Contract.ObjectId AS ContractId
                                   , MIContainer.ObjectId_analyzer         AS GoodsId
@@ -310,7 +315,7 @@ BEGIN
                                   , SUM (CASE WHEN tmpAnalyzer.isSale = TRUE  AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN  1 * MIContainer.Amount ELSE 0 END) AS Sale_Summ
                                   , SUM (CASE WHEN tmpAnalyzer.isSale = FALSE AND tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Return_Summ
 
-                                  , SUM (CASE WHEN tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN MIContainer.Amount ELSE 0 END) AS SummAmount
+                                  , SUM (CASE WHEN tmpAnalyzer.isSumm = TRUE AND tmpAnalyzer.isCost = FALSE THEN MIContainer.Amount ELSE 0 END) AS SummAmount        --итого прожажа минус возвраты
                              FROM tmpAnalyzer
                                     INNER JOIN MovementItemContainer AS MIContainer
                                                                      ON MIContainer.AnalyzerId = tmpAnalyzer.AnalyzerId
@@ -325,7 +330,7 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                                          ON ObjectLink_Goods_TradeMark.ObjectId = MIContainer.ObjectId_analyzer
                                                         AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()                                                                 
-                                    -- Договор(база)
+                                   -- Договор(база)
                                     INNER JOIN (SELECT DISTINCT tmpMovement.ContractChildId
                                                      , tmpMovement.JuridicalId
                                                      , tmpMovement.GoodsId
@@ -335,17 +340,48 @@ BEGIN
                                                                   ON tmpMovement.JuridicalId = ContainerLO_Juridical.ObjectId
                                                                  AND tmpMovement.ContractChildId = ContainerLinkObject_Contract.ObjectId
                                                                  AND ((tmpMovement.GoodsId = MIContainer.ObjectId_analyzer AND tmpMovement.GoodsKindId = MIContainer.ObjectIntId_analyzer AND COALESCE (tmpMovement.TradeMarkId,0) = 0) 
-                                                                     OR (COALESCE (tmpMovement.TradeMarkId,0) <> 0 AND ObjectLink_Goods_TradeMark.ChildObjectId = tmpMovement.TradeMarkId)
+                                            
                                                                      )
                              GROUP BY ContainerLO_Juridical.ObjectId
                                     , MIContainer.ObjectId_analyzer
                                     , MIContainer.ObjectIntId_analyzer
                                     , ContainerLinkObject_Contract.ObjectId
                                     , ObjectLink_Goods_TradeMark.ChildObjectId
-                             ) AS tmp
-                      )
+                             ) AS tmp                                            
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                                  ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = tmp.GoodsId
+                                                 AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+                             --LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
 
-    , tmpRes AS (SELECT tmpData.MovementId
+                             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                                  ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+                                                 AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+                             --LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
+                      )
+    , tmpSaleReturn AS (SELECT tmp.JuridicalId
+                             , tmp.ContractId
+                             , tmp.GoodsId
+                             , tmp.GoodsKindId 
+                             , tmp.TradeMarkId 
+                             , tmp.GoodsGroupPropertyId_Parent  
+                             , tmp.GoodsGroupPropertyId
+                             , tmp.SummAmount
+                             , tmp.Sale_Summ
+                             , tmp.Return_Summ 
+                             --итого по юр.лицо + договор
+                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSumm
+                             --итого по юр.лицо + договор + торговая марка
+                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.TradeMarkId) AS TotalSumm_tm
+                             --итого по юр.лицо + договор + GoodsGroupPropertyId
+                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.GoodsGroupPropertyId) AS TotalSumm_gp
+                             --итого по юр.лицо + договор + GoodsGroupPropertyId_Parent
+                             , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.GoodsGroupPropertyId_Parent) AS TotalSumm_gpp
+                        FROM tmpContainer AS tmp
+                        )
+
+    , tmpRes AS (--определение доли для товара, если выбран в акции
+                 SELECT tmpData.MovementId
                       , tmpData.MovementDescId
                       , tmpData.OperDate
                       , tmpData.InvNumber
@@ -356,9 +392,11 @@ BEGIN
                       , tmpData.PaidKindId
                       , tmpData.InfoMoneyId
                       , tmpData.ContractConditionKindId
-                      , tmpData.TradeMarkId
                       , tmpData.MovementId_doc
-                      , tmpContainer.JuridicalId    AS JuridicalId_baza
+                      , tmpSaleReturn.JuridicalId    AS JuridicalId_baza
+                      , tmpData.TradeMarkId
+                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId
                       , tmpData.GoodsId
                       , tmpData.GoodsKindId
                       , tmpData.Amount
@@ -367,25 +405,156 @@ BEGIN
                       , tmpData.AmountMarket
                       , tmpData.SummOutMarket
                       , tmpData.SummInMarket
-                      , tmpContainer.SummAmount
-                      , tmpContainer.Sale_Summ
-                      , tmpContainer.Return_Summ
-                      , tmpContainer.TotalSumm
-                      , tmpContainer.TotalSummSale
-                      , tmpContainer.TotalSummReturn
-                      , tmpContainer.TotalSumm_tm
-                      , tmpContainer.TotalSummSale_tm
-                      , tmpContainer.TotalSummReturn_tm
-                     -- , tmpContainer.TotalSumm_goods
-                      , CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN 100 ELSE CASE WHEN COALESCE(tmpContainer.TotalSumm,0) <> 0 THEN (tmpContainer.SummAmount * 100 / tmpContainer.TotalSumm) ELSE 0 END END AS Persent_part
-                      , CASE WHEN COALESCE(tmpContainer.TotalSumm_tm,0) <> 0 THEN (tmpContainer.SummAmount * 100 / tmpContainer.TotalSumm_tm) ELSE 0 END AS Persent_part_tm                       
+                      , tmpSaleReturn.SummAmount
+                      , tmpSaleReturn.Sale_Summ
+                      , tmpSaleReturn.Return_Summ
+                      , tmpSaleReturn.TotalSumm
+                      , 0 AS TotalSumm_tm
+                      , 0 AS TotalSumm_gp
+                      , 0 AS TotalSumm_gpp
+                      , CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN 100 ELSE CASE WHEN COALESCE(tmpSaleReturn.TotalSumm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm) ELSE 0 END END AS Persent_part
+                      , 0 AS Persent_part_tm
+                      , 0 AS Persent_part_gp
+                      , 0 AS Persent_part_gpp                       
                  FROM tmpData 
                       --
-                      LEFT JOIN tmpContainer ON tmpContainer.JuridicalId = tmpData.JuridicalId
-                                            AND tmpContainer.ContractId = tmpData.ContractChildId
-                                            AND ((tmpContainer.GoodsId = tmpData.GoodsId AND COALESCE (tmpContainer.GoodsKindId,0) = COALESCE (tmpData.GoodsKindId,0))
-                                              OR (tmpContainer.TradeMarkId = tmpData.TradeMarkId AND COALESCE (tmpData.TradeMarkId,0) <> 0)
-                                                )
+                      LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
+                                             AND tmpSaleReturn.ContractId = tmpData.ContractChildId
+                                             AND tmpSaleReturn.GoodsId = tmpData.GoodsId
+                                             AND COALESCE (tmpSaleReturn.GoodsKindId,0) = COALESCE (tmpData.GoodsKindId,0)
+                 WHERE COALESCE (tmpData.GoodsId,0) <> 0
+              UNION
+                 --определение доли для торговой марки,
+                 SELECT tmpData.MovementId
+                      , tmpData.MovementDescId
+                      , tmpData.OperDate
+                      , tmpData.InvNumber
+                      , tmpData.JuridicalId
+                      , tmpData.ContractId
+                      , tmpData.ContractChildId
+                      , tmpData.ContractMasterId
+                      , tmpData.PaidKindId
+                      , tmpData.InfoMoneyId
+                      , tmpData.ContractConditionKindId
+                      , tmpData.MovementId_doc
+                      , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
+                      , tmpData.TradeMarkId
+                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId
+                      , tmpSaleReturn.GoodsId
+                      , tmpSaleReturn.GoodsKindId
+                      , tmpData.Amount
+                      , tmpData.AmountIn
+                      , tmpData.AmountOut
+                      , tmpData.AmountMarket
+                      , tmpData.SummOutMarket
+                      , tmpData.SummInMarket
+                      , tmpSaleReturn.SummAmount
+                      , tmpSaleReturn.Sale_Summ
+                      , tmpSaleReturn.Return_Summ
+                      , 0 AS TotalSumm
+                      , tmpSaleReturn.TotalSumm_tm
+                      , 0 AS TotalSumm_gp
+                      , 0 AS TotalSumm_gpp
+                      , 0 AS Persent_part
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_tm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_tm) ELSE 0 END AS Persent_part_tm                       
+                      , 0 AS Persent_part_gp
+                      , 0 AS Persent_part_gpp                       
+                 FROM tmpData 
+                      --
+                      LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
+                                             AND tmpSaleReturn.ContractId = tmpData.ContractChildId
+                                             AND tmpSaleReturn.TradeMarkId = tmpData.TradeMarkId
+                 WHERE COALESCE (tmpData.TradeMarkId,0) <> 0
+                   AND COALESCE (tmpData.GoodsId,0) = 0   
+              UNION
+                --определение доли для аналит. классификатора,
+                 SELECT tmpData.MovementId
+                      , tmpData.MovementDescId
+                      , tmpData.OperDate
+                      , tmpData.InvNumber
+                      , tmpData.JuridicalId
+                      , tmpData.ContractId
+                      , tmpData.ContractChildId
+                      , tmpData.ContractMasterId
+                      , tmpData.PaidKindId
+                      , tmpData.InfoMoneyId
+                      , tmpData.ContractConditionKindId
+                      , tmpData.MovementId_doc
+                      , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
+                      , tmpData.TradeMarkId
+                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId
+                      , tmpSaleReturn.GoodsId
+                      , tmpSaleReturn.GoodsKindId
+                      , tmpData.Amount
+                      , tmpData.AmountIn
+                      , tmpData.AmountOut
+                      , tmpData.AmountMarket
+                      , tmpData.SummOutMarket
+                      , tmpData.SummInMarket
+                      , tmpSaleReturn.SummAmount
+                      , tmpSaleReturn.Sale_Summ
+                      , tmpSaleReturn.Return_Summ
+                      , 0 AS TotalSumm
+                      , 0 AS TotalSumm_tm
+                      , tmpSaleReturn.TotalSumm_gp
+                      , 0 AS TotalSumm_gpp
+                      , 0 AS Persent_part
+                      , 0 AS Persent_part_tm
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gp) ELSE 0 END AS Persent_part_gp                       
+                      , 0 AS Persent_part_gpp                       
+                 FROM tmpData 
+                      --
+                      LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
+                                             AND tmpSaleReturn.ContractId = tmpData.ContractChildId
+                                             AND tmpSaleReturn.GoodsGroupPropertyId = tmpData.GoodsGroupPropertyId
+                 WHERE COALESCE (tmpData.GoodsGroupPropertyId,0) <> 0
+                   AND COALESCE (tmpData.GoodsId,0) = 0 
+              UNION
+                 --определение доли для группы аналит. классификатора,
+                 SELECT tmpData.MovementId
+                      , tmpData.MovementDescId
+                      , tmpData.OperDate
+                      , tmpData.InvNumber
+                      , tmpData.JuridicalId
+                      , tmpData.ContractId
+                      , tmpData.ContractChildId
+                      , tmpData.ContractMasterId
+                      , tmpData.PaidKindId
+                      , tmpData.InfoMoneyId
+                      , tmpData.ContractConditionKindId
+                      , tmpData.MovementId_doc
+                      , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
+                      , tmpData.TradeMarkId
+                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId
+                      , tmpSaleReturn.GoodsId
+                      , tmpSaleReturn.GoodsKindId
+                      , tmpData.Amount
+                      , tmpData.AmountIn
+                      , tmpData.AmountOut
+                      , tmpData.AmountMarket
+                      , tmpData.SummOutMarket
+                      , tmpData.SummInMarket
+                      , tmpSaleReturn.SummAmount
+                      , tmpSaleReturn.Sale_Summ
+                      , tmpSaleReturn.Return_Summ
+                      , 0 AS TotalSumm
+                      , 0 AS TotalSumm_tm
+                      , 0 AS TotalSumm_gp
+                      , tmpSaleReturn.TotalSumm_gpp
+                      , 0 AS Persent_part
+                      , 0 AS Persent_part_tm
+                      , 0 AS Persent_part_gp                       
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gpp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gpp) ELSE 0 END AS Persent_part_gpp                       
+                 FROM tmpData 
+                      --
+                      LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
+                                             AND tmpSaleReturn.ContractId = tmpData.ContractChildId
+                                             AND tmpSaleReturn.GoodsGroupPropertyId = tmpData.GoodsGroupPropertyId
+                 WHERE COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) <> 0
+                   AND COALESCE (tmpData.GoodsId,0) = 0
                  )
 
 
@@ -438,25 +607,36 @@ BEGIN
                   , Object_TradeMark.Id                AS TradeMarkId
                   , Object_TradeMark.ValueData         AS TradeMarkName
                   , Object_GoodsGroup.ValueData        AS GoodsGroupName
-                  , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+                  , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull  
+                  , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
+                  , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
+                  , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+                  , Object_GoodsGroupPropertyParent.ValueData AS GoodsGroupPropertyName_Parent
 
-                  , tmpData.AmountIn         :: Tfloat --дебет сумма док. начисления
-                  , tmpData.AmountOut        :: Tfloat --кредит сумма док. начисления
-                  , tmpData.Amount           :: Tfloat --сумма док. начисления
-                  , tmpData.AmountMarket     :: Tfloat -- Комп. за вес, кг
-                  , tmpData.SummInMarket     :: Tfloat --Корр. компенс., грн
-                  , tmpData.SummOutMarket    :: Tfloat --Компенсация, грн 
-                  , tmpData.SummAmount       :: Tfloat --сумма продажи   
-                  , tmpData.TotalSumm        :: Tfloat --Итого сумма продажи по юр лицо + договор
-                  , tmpData.Persent_part     :: Tfloat
-                  , tmpData.Persent_part_tm  :: Tfloat
-                  
+                  , tmpData.AmountIn         :: TFloat --дебет сумма док. начисления
+                  , tmpData.AmountOut        :: TFloat --кредит сумма док. начисления
+                  , tmpData.Amount           :: TFloat --сумма док. начисления
+                  , tmpData.AmountMarket     :: TFloat -- Комп. за вес, кг
+                  , tmpData.SummInMarket     :: TFloat --Корр. компенс., грн
+                  , tmpData.SummOutMarket    :: TFloat --Компенсация, грн 
+                  , tmpData.SummAmount       :: TFloat --сумма продажи   
+                  , tmpData.TotalSumm        :: TFloat --Итого сумма продажи по юр лицо + договор
+                  , tmpData.TotalSumm_tm     :: TFloat --
+                  , tmpData.TotalSumm_gp     :: TFloat --
+                  , tmpData.TotalSumm_gpp    :: TFloat --
+                  , tmpData.Persent_part     :: TFloat
+                  , tmpData.Persent_part_tm  :: TFloat
+                  , tmpData.Persent_part_gp  :: TFloat
+                  , tmpData.Persent_part_gpp :: TFloat
 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) = 0 
                          THEN CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN tmpData.SummOutMarket ELSE (ABS(tmpData.Amount) * tmpData.Persent_part)/100 END
                          ELSE 0 
-                    END  :: Tfloat  AS SummMarket_calc 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket,ABS(tmpData.Amount)) * tmpData.Persent_part_tm)/100 ELSE 0 END  :: Tfloat  AS SummMarket_tm_calc
+                    END  :: TFloat  AS SummMarket_calc 
+
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_tm)/100 ELSE 0 END                   :: TFloat  AS SummMarket_tm_calc
+                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gp)/100 ELSE 0 END          :: TFloat  AS SummMarket_gp_calc
+                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gpp)/100 ELSE 0 END  :: TFloat  AS SummMarket_gpp_calc
              FROM tmpRes AS tmpData 
                 LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
                -- LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
@@ -505,6 +685,18 @@ BEGIN
                                      ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                 LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+
+                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
+                                     ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = Object_Goods.Id
+                                    AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
+                LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = ObjectLink_Goods_GoodsGroupProperty.ChildObjectId
+
+                LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                     ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
+                                    AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
+                LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = ObjectLink_GoodsGroupProperty_Parent.ChildObjectId
+
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                      ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
