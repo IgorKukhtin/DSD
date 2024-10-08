@@ -77,6 +77,13 @@ BEGIN
               LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                ON MILinkObject_GoodsKind.MovementItemId = MIF_ContainerId.MovementItemId
                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
+              LEFT JOIN (SELECT DISTINCT MovementItem.Id 
+                         FROM MovementItem
+                              JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                         WHERE MovementItem.MovementId = inMovementId
+                            AND MovementItem.isErased   = FALSE
+                            AND MovementItem.Amount     = 0
+                        ) AS MI ON MI.Id = MIF_ContainerId.MovementItemId
 
          WHERE MovementItem.MovementId = inMovementId
            AND MovementItem.isErased   = FALSE
@@ -85,7 +92,9 @@ BEGIN
            AND MIF_ContainerId.MovementItemId = MovementItem.Id
            AND MIF_ContainerId.DescId         = zc_MIFloat_ContainerId()
            AND MIF_ContainerId.ValueData      > 0
-           AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind.ObjectId, 0)
+           AND (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> COALESCE (CLO_GoodsKind.ObjectId, 0)
+             OR MI.Id IS NULL
+               )
         ;
 
      ELSE
@@ -246,6 +255,7 @@ BEGIN
      IF vbIsList = TRUE
      THEN
          vbIsGoodsGroup:= TRUE;
+
          --
          INSERT INTO _tmpGoods_Complete_Inventory (GoodsId, GoodsKindId, GoodsKindId_real)
             SELECT DISTINCT MovementItem.ObjectId AS GoodsId
