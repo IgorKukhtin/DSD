@@ -37,7 +37,7 @@ BEGIN
                               FROM Object_InfoMoney_View
                               WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                 AND (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
-                                  OR vbUserId = 405161
+                                  OR vbUserId = 405161 -- Шулика О.Ю.
                                     )
                              )
 
@@ -79,7 +79,8 @@ BEGIN
            UNION
             SELECT Object_Goods.Id           AS GoodsId
                   , Object_Goods.ObjectCode   AS GoodsCode
-                  , Object_Goods.ValueData    AS GoodsName
+                  , CASE WHEN vbUserId IN (5) AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())
+                              THEN '10100' || Object_Goods.ValueData ELSE Object_Goods.ValueData END :: TVarChar    AS GoodsName
                   , zc_Enum_GoodsKind_Main()  AS GoodsKindId
 
              FROM Object_InfoMoney_View
@@ -90,10 +91,10 @@ BEGIN
                   INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                                    AND Object_Goods.isErased = FALSE
 
-             WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100())
+             WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100())
                -- AND (tmpParams.InfoMoneyId IS NULL OR tmpParams.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId)
                AND (tmpParams.InfoMoneyId IS NULL
-                 OR vbUserId = 405161
+                 OR vbUserId = 405161 -- "Шулика О.Ю."
                    )
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
