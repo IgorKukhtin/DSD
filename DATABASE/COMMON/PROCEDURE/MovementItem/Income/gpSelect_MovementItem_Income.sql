@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_old TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat, AmountPartner TFloat, AmountPacker TFloat, Amount_unit TFloat, Amount_diff TFloat
-             , Price TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
+             , Price TFloat, PricePartner TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
              , PartionGoods TVarChar, PartNumber TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , StorageId Integer, StorageName TVarChar
@@ -107,6 +107,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , MovementItem.Amount
                            , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
+                           , COALESCE (MIFloat_PricePartner.ValueData,0)     AS PricePartner
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , MIFloat_Invoice.ValueData :: Integer            AS MIId_Invoice
 
@@ -119,7 +120,10 @@ BEGIN
                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()    
+                            LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                                        ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -173,7 +177,8 @@ BEGIN
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent.GoodsId)                   AS GoodsId
                         , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , tmpMI.Amount                                                     AS Amount
-                        , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
+                        , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price  
+                        , COALESCE (tmpMI.PricePartner, 0)                                 AS PricePartner
                         , COALESCE (tmpMI.CountForPrice, tmpMI_parent.CountForPrice)       AS CountForPrice
                         , COALESCE (tmpMI.MIId_Invoice, tmpMI_parent.MovementItemId)       AS MIId_Invoice
                         --, COALESCE (tmpMI.MovementId_Invoice, tmpMI_parent.MovementId) AS MovementId_Invoice
@@ -192,7 +197,8 @@ BEGIN
                         , COALESCE (tmpMI.GoodsId, tmpMI_parent.GoodsId)                   AS GoodsId
                         , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , tmpMI.Amount                                                     AS Amount
-                        , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
+                        , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price  
+                        , COALESCE (tmpMI.PricePartner, 0)                                 AS PricePartner
                         , COALESCE (tmpMI.CountForPrice, tmpMI_parent.CountForPrice)       AS CountForPrice
                         , COALESCE (tmpMI.MIId_Invoice, tmpMI_parent.MovementItemId)       AS MIId_Invoice
                         --, COALESCE (tmpMI.MovementId_OrderIncome, tmpMI_parent.MovementId) AS MovementId_OrderIncome
@@ -239,6 +245,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_diff
 
            , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price
+           , 0      :: TFloat   AS PricePartner
            , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
@@ -341,7 +348,8 @@ BEGIN
            , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
-           , tmpMI.Price          ::TFloat
+           , tmpMI.Price          ::TFloat   
+           , tmpMI.PricePartner   ::TFloat
            , tmpMI.CountForPrice  ::TFloat
 
            , MIFloat_LiveWeight.ValueData AS LiveWeight
@@ -491,6 +499,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                            , MovementItem.Amount
                            , COALESCE (MIFloat_Price.ValueData, 0)           AS Price
+                           , COALESCE (MIFloat_AmountPartner.ValueData,0)    AS PricePartner
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                            , MIFloat_Invoice.ValueData :: Integer            AS MIId_Invoice
                            , MIString_PartNumber.ValueData :: TVarChar       AS PartNumber
@@ -504,6 +513,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                                        ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -561,6 +573,7 @@ BEGIN
                         , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , tmpMI.Amount                                                     AS Amount
                         , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
+                        , COALESCE (tmpMI.PricePartner,0)                                  AS PricePartner
                         , COALESCE (tmpMI.CountForPrice, tmpMI_parent.CountForPrice)       AS CountForPrice
                         , COALESCE (tmpMI.MIId_Invoice, tmpMI_parent.MovementItemId)       AS MIId_Invoice
                         --, COALESCE (tmpMI.MovementId_Invoice, tmpMI_parent.MovementId) AS MovementId_Invoice
@@ -580,6 +593,7 @@ BEGIN
                         , COALESCE (tmpMI.AssetId, tmpMI_parent.AssetId)                   AS AssetId
                         , tmpMI.Amount                                                     AS Amount
                         , COALESCE (tmpMI.Price, tmpMI_parent.Price)                       AS Price
+                        , COALESCE (tmpMI.PricePartner,0)                                  AS PricePartner
                         , COALESCE (tmpMI.CountForPrice, tmpMI_parent.CountForPrice)       AS CountForPrice
                         , COALESCE (tmpMI.MIId_Invoice, tmpMI_parent.MovementItemId)       AS MIId_Invoice
                         --, COALESCE (tmpMI.MovementId_OrderIncome, tmpMI_parent.MovementId) AS MovementId_OrderIncome
@@ -614,7 +628,8 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount_unit
            , CAST (NULL AS TFloat) AS Amount_diff
 
-           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price
+           , COALESCE (tmpPrice_Kind.ValuePrice, tmpPrice.ValuePrice)  AS Price   
+           , 0 ::TFloat AS PricePartner
            , 1      :: TFloat   AS CountForPrice
 
            , CAST (NULL AS TFloat) AS LiveWeight
@@ -716,7 +731,8 @@ BEGIN
            , CAST (MovementItem.Amount + COALESCE (MIFloat_AmountPacker.ValueData, 0) AS TFloat) AS Amount_unit
            , CAST (MovementItem.Amount - COALESCE (MIFloat_AmountPartner.ValueData, 0) AS TFloat) AS Amount_diff
 
-           , tmpMI.Price          ::TFloat
+           , tmpMI.Price          ::TFloat 
+           , tmpMI.PricePartner   ::TFloat
            , tmpMI.CountForPrice  ::TFloat
 
            , MIFloat_LiveWeight.ValueData AS LiveWeight
@@ -839,6 +855,7 @@ BEGIN
                                  , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
                                  , COALESCE (MIFloat_AmountPacker.ValueData, 0)  AS AmountPacker
                                  , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                                 , COALESCE (MIFloat_PricePartner.ValueData,0)   AS PricePartner
                                  , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                                  , COALESCE (MIFloat_LiveWeight.ValueData, 0)    AS LiveWeight
                                  , COALESCE (MIFloat_HeadCount.ValueData, 0)     AS HeadCount
@@ -861,7 +878,11 @@ BEGIN
 
                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                 LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                                             ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner() 
+                                   
                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -933,7 +954,8 @@ BEGIN
            , CAST (tmpMI_Goods.Amount + tmpMI_Goods.AmountPacker AS TFloat) AS Amount_unit
            , CAST (tmpMI_Goods.Amount - tmpMI_Goods.AmountPartner AS TFloat) AS Amount_diff
 
-           , tmpMI_Goods.Price         :: TFloat
+           , tmpMI_Goods.Price         :: TFloat  
+           , tmpMI_Goods.PricePartner  :: TFloat
            , tmpMI_Goods.CountForPrice :: TFloat AS CountForPrice
 
            , tmpMI_Goods.LiveWeight  :: TFloat
@@ -1020,6 +1042,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.10.24         *
  27.06.23         *
  08.02.22         *
  05.12.19         *

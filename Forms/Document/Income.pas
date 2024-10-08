@@ -241,6 +241,17 @@ type
     mactUpdate_Currency: TMultiAction;
     spUpdate_CurrencyUser: TdsdStoredProc;
     bbUpdate_Currency: TdxBarButton;
+    cbPriceDiff: TcxCheckBox;
+    spUpdate_PriceDiff: TdsdStoredProc;
+    spUpdate_MI_PricePartner: TdsdStoredProc;
+    actUpdate_PriceDiff: TdsdUpdateDataSet;
+    actUpdate_MI_PricePartner: TdsdUpdateDataSet;
+    macUpdate_MI_PricePartner: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    actUpdate_PriceDialog: TExecuteDialog;
+    bbUpdate_PriceDiff: TdxBarButton;
+    bbUpdate_MI_PricePartner: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
   ClientHeight = 480
-  ClientWidth = 1105
+  ClientWidth = 1062
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,13 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1105
+    Width = 1062
     Height = 129
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = -5
+    ExplicitWidth = 1177
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -88,11 +90,11 @@ object IncomeForm: TIncomeForm
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 271
-      Top = 64
+      Top = 62
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = False
       TabOrder = 9
-      Width = 130
+      Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 404
@@ -345,29 +347,40 @@ object IncomeForm: TIncomeForm
       TabOrder = 39
       Width = 120
     end
+    object cbPriceDiff: TcxCheckBox
+      Left = 171
+      Top = 84
+      Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 97
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 155
-    Width = 1105
+    Width = 1062
     Height = 325
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1105
     ClientRectBottom = 325
-    ClientRectRight = 1105
+    ClientRectRight = 1062
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1105
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1105
+        Width = 1062
         Height = 301
         Align = alClient
         TabOrder = 0
+        ExplicitTop = -3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -644,6 +657,18 @@ object IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object PricePartner: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1055#1086#1089#1090'.'
+            DataBinding.FieldName = 'PricePartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 80
+          end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
@@ -820,13 +845,15 @@ object IncomeForm: TIncomeForm
     object cxTabSheetCost: TcxTabSheet
       Caption = #1047#1072#1090#1088#1072#1090#1099
       ImageIndex = 1
+      ExplicitWidth = 1105
       object GridCost: TcxGrid
         Left = 0
         Top = 0
-        Width = 1105
+        Width = 1062
         Height = 301
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1105
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CostDS
@@ -1080,8 +1107,8 @@ object IncomeForm: TIncomeForm
     Width = 168
   end
   object edJuridicalFrom: TcxButtonEdit
-    Left = 272
-    Top = 41
+    Left = 367
+    Top = 8
     Properties.Buttons = <
       item
         Default = True
@@ -1285,6 +1312,14 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_PriceDiff'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_MI_PricePartner'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1321,23 +1356,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintSticker'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerTermo'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -1478,6 +1497,33 @@ object IncomeForm: TIncomeForm
       Action = mactUpdate_Currency
       Category = 0
     end
+    object bbUpdate_PriceDiff: TdxBarButton
+      Action = actUpdate_PriceDiff
+      Category = 0
+    end
+    object bbUpdate_MI_PricePartner: TdxBarButton
+      Action = macUpdate_MI_PricePartner
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end>
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -1498,6 +1544,53 @@ object IncomeForm: TIncomeForm
     Images = dmMain.ImageList
     Left = 51
     Top = 231
+    object actUpdate_PriceDialog: TExecuteDialog
+      Category = 'Price'
+      MoveParams = <>
+      Caption = 'actUpdate_PriceDialog'
+      FormName = 'TPriceDialogForm'
+      FormNameParam.Value = 'TPriceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Label'
+          Value = #1062#1077#1085#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inPrice'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = 0.000000000000000000
+          DataType = ftFloat
+          ParamType = ptInputOutput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_MI_PricePartner: TdsdUpdateDataSet
+      Category = 'Price'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_PricePartner
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_PricePartner
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1511,6 +1604,19 @@ object IncomeForm: TIncomeForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object actUpdate_PriceDiff: TdsdUpdateDataSet
+      Category = 'Price'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceDiff
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceDiff
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')>'
+      ImageIndex = 80
     end
     object actShowErasedCost: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -1599,6 +1705,19 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actRefreshMI: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
     end
     object actUpdateClientDataCost: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -2522,6 +2641,23 @@ object IncomeForm: TIncomeForm
       Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       ImageIndex = 56
     end
+    object macUpdate_MI_PricePartner: TMultiAction
+      Category = 'Price'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PriceDialog
+        end
+        item
+          Action = actUpdate_MI_PricePartner
+        end
+        item
+          Action = actRefreshMI
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
+      ImageIndex = 77
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -3308,6 +3444,13 @@ object IncomeForm: TIncomeForm
         Component = cbCurrencyUser
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPriceDiff'
+        Value = Null
+        Component = cbPriceDiff
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 200
@@ -3428,8 +3571,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 712
-    Top = 104
+    Left = 672
+    Top = 64
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -3514,8 +3657,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 124
-    Top = 56
+    Left = 20
+    Top = 32
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -3626,8 +3769,8 @@ object IncomeForm: TIncomeForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 320
-    Top = 8
+    Left = 440
+    Top = 24
   end
   object spGetTotalSumm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TotalSumm'
@@ -4261,8 +4404,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 273
-    Top = 408
+    Left = 289
+    Top = 400
   end
   object HeaderSaver3: THeaderSaver
     IdParam.Value = Null
@@ -4321,8 +4464,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 780
-    Top = 96
+    Left = 764
+    Top = 56
   end
   object GuidesJuridicalFrom: TdsdGuides
     KeyField = 'Id'
@@ -4334,8 +4477,7 @@ object IncomeForm: TIncomeForm
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 441
-    Top = 48
+    Left = 465
   end
   object spSelectPrintSticker: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
@@ -4379,8 +4521,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 304
+    Left = 856
+    Top = 336
   end
   object spCheckDescService: TdsdStoredProc
     StoredProcName = 'gpCheckDesc_Movement_IncomeCost'
@@ -4403,8 +4545,8 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 920
-    Top = 256
+    Left = 872
+    Top = 272
   end
   object GuidesPriceList: TdsdGuides
     KeyField = 'Id'
@@ -4548,7 +4690,73 @@ object IncomeForm: TIncomeForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1024
-    Top = 291
+    Left = 848
+    Top = 323
+  end
+  object spUpdate_PriceDiff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_PriceDiff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceDiff'
+        Value = False
+        Component = cbPriceDiff
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceDiff'
+        Value = Null
+        Component = cbPriceDiff
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 977
+    Top = 216
+  end
+  object spUpdate_MI_PricePartner: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Income_PricePartner'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = 'False'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPricePartner'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inPrice'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 993
+    Top = 264
   end
 end

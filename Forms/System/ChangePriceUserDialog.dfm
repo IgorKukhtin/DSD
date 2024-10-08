@@ -29,7 +29,6 @@ object ChangePriceUserDialogForm: TChangePriceUserDialogForm
     Default = True
     ModalResult = 1
     TabOrder = 0
-    ExplicitTop = 212
   end
   object cxButton2: TcxButton
     Left = 209
@@ -40,7 +39,6 @@ object ChangePriceUserDialogForm: TChangePriceUserDialogForm
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
-    ExplicitTop = 212
   end
   object edChangePriceUser: TcxCheckBox
     Left = 35
@@ -101,6 +99,6 @@ object ChangePriceUserDialogForm: TChangePriceUserDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 142
-    Top = 65531
+    Top = 19
   end
 end

@@ -1076,9 +1076,9 @@ end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TChange—urrencyUserDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChange—urrencyUserDialogForm');
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202Form'));
   TdsdFormStorageFactory.GetStorage.Load('TIncome20202Form');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncome20202JournalForm'));
@@ -1395,6 +1395,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+
+TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceDialogForm');
+  exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAmountDialogForm');

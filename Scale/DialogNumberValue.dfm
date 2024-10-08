@@ -1,31 +1,33 @@
 inherited DialogNumberValueForm: TDialogNumberValueForm
   Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
-  ClientHeight = 90
-  ClientWidth = 237
+  ClientHeight = 87
+  ClientWidth = 216
   OldCreateOrder = True
   Position = poScreenCenter
-  ExplicitWidth = 253
-  ExplicitHeight = 125
+  ExplicitWidth = 232
+  ExplicitHeight = 126
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 49
-    Width = 237
+    Top = 46
+    Width = 216
     ExplicitTop = 49
     ExplicitWidth = 237
   end
   object PanelNumberValue: TPanel
     Left = 0
     Top = 0
-    Width = 237
-    Height = 49
+    Width = 216
+    Height = 46
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 237
+    ExplicitHeight = 49
     object LabelNumberValue: TLabel
       Left = 0
       Top = 0
-      Width = 237
+      Width = 216
       Height = 14
       Align = alTop
       Alignment = taCenter

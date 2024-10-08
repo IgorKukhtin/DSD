@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat 
-             , isCurrencyUser Boolean
+             , isCurrencyUser Boolean   
+             , isPriceDiff Boolean
              , FromId Integer, FromName TVarChar
              , JuridicalId_From Integer, JuridicalName_From TVarChar
              , ToId Integer, ToName TVarChar, ToParentId Integer
@@ -57,6 +58,7 @@ BEGIN
              , CAST (1 as TFloat)               AS CurrencyValue
              , CAST (1 AS TFloat)               AS ParValue 
              , CAST (False as Boolean)          AS isCurrencyUser
+             , CAST (False as Boolean)          AS isPriceDiff
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -134,6 +136,7 @@ BEGIN
              , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
              , COALESCE (MovementFloat_ParValue.ValueData, 1) :: TFloat  AS ParValue
              , COALESCE (MovementBoolean_CurrencyUser.ValueData, FALSE) ::Boolean AS isCurrencyUser
+             , COALESCE (MovementBoolean_PriceDiff.ValueData, FALSE)    ::Boolean AS isPriceDiff
 
              , Object_From.Id                        AS FromId
              , Object_From.ValueData                 AS FromName
@@ -204,6 +207,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_CurrencyUser
                                       ON MovementBoolean_CurrencyUser.MovementId = Movement.Id
                                      AND MovementBoolean_CurrencyUser.DescId = zc_MovementBoolean_CurrencyUser()
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceDiff
+                                      ON MovementBoolean_PriceDiff.MovementId = Movement.Id
+                                     AND MovementBoolean_PriceDiff.DescId = zc_MovementBoolean_PriceDiff()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id

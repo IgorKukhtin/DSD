@@ -5,7 +5,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1126
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -333,6 +333,15 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object isPriceDiff: TcxGridDBColumn
+            Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'isPriceDiff'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+            Options.Editing = False
+            Width = 70
+          end
           object TotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
@@ -526,6 +535,9 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actMovementItemContainer: TdsdOpenForm
+      Enabled = False
+    end
     inherited actInsert: TdsdInsertUpdateAction
       Enabled = False
       FormName = 'TTaxForm'
@@ -561,16 +573,13 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
           MultiSelectSeparator = ','
         end>
     end
-    inherited actUnComplete: TdsdChangeMovementStatus
-      Enabled = False
-    end
     inherited actComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actSetErased: TdsdChangeMovementStatus
+    inherited actUnComplete: TdsdChangeMovementStatus
       Enabled = False
     end
-    inherited actMovementItemContainer: TdsdOpenForm
+    inherited actSetErased: TdsdChangeMovementStatus
       Enabled = False
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -595,7 +604,7 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
         end
         item
           Name = 'OperDate'
-          Value = 'NULL'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'OperDate'
           DataType = ftDateTime
@@ -857,14 +866,14 @@ inherited IncomeJournalChoiceForm: TIncomeJournalChoiceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 'NULL'
+        Value = Null
         Component = deStart
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
-        Value = 'NULL'
+        Value = Null
         Component = deEnd
         DataType = ftDateTime
         MultiSelectSeparator = ','
