@@ -399,6 +399,8 @@ BEGIN
 
                                          )
                              , tmpMIBoolean AS (SELECT * FROM MovementItemBoolean AS MIB WHERE MIB.MovementItemId  IN (SELECT DISTINCT tmpMI.Id FROM tmpMI AS tmpMI))
+                             , tmpMIFloat AS (SELECT * FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI AS tmpMI) AND MIF.DescId = zc_MIFloat_AmountReceipt())
+                             
                           -- Результат
                           SELECT tmp.MovementId, tmp.ContainerId
                                --, SUM (COALESCE (tmp.Amount_part,0)) AS Amount_part
@@ -409,11 +411,19 @@ BEGIN
                           FROM (SELECT tmpMI.MovementId, tmpMI.ContainerId, tmpMI.Amount_out, tmpMI.Amount
                                      , CASE WHEN COALESCE (tmpMI.TotalAmount,0) <> 0 THEN tmpMI.Amount / tmpMI.TotalAmount ELSE 0 END AS Part
                                      , tmpMI.Amount_out * CASE WHEN COALESCE (tmpMI.TotalAmount,0) <> 0 THEN tmpMI.Amount / tmpMI.TotalAmount ELSE 0 END AS Amount_part
-                                     , COALESCE (MIBoolean_WeightMain.ValueData,FALSE) AS isWeightMain
+                                     , CASE WHEN MIBoolean_WeightMain.ValueData  = TRUE
+                                             AND MIFloat_AmountReceipt.ValueData > 0
+                                                 THEN TRUE
+                                            ELSE FALSE
+                                       END AS isWeightMain
                                 FROM tmpMI
                                      LEFT JOIN tmpMIBoolean AS MIBoolean_WeightMain
-                                                            ON MIBoolean_WeightMain.MovementItemId =  tmpMI.Id
-                                                           AND MIBoolean_WeightMain.DescId = zc_MIBoolean_WeightMain()
+                                                            ON MIBoolean_WeightMain.MovementItemId = tmpMI.Id
+                                                           AND MIBoolean_WeightMain.DescId         = zc_MIBoolean_WeightMain()
+                                     LEFT JOIN tmpMIFloat AS MIFloat_AmountReceipt
+                                                          ON MIFloat_AmountReceipt.MovementItemId = tmpMI.Id
+                                                         AND MIFloat_AmountReceipt.DescId         = zc_MIFloat_AmountReceipt()
+                                                           
                                 ) AS tmp
                           GROUP BY tmp.MovementId, tmp.ContainerId
                           --HAVING SUM (COALESCE (tmp.Amount_part,0)) <> 0
