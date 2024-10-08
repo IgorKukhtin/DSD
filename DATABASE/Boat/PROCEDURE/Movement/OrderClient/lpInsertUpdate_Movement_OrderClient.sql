@@ -215,7 +215,7 @@ BEGIN
          IF EXISTS (SELECT 1 FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect WHERE gpSelect.MovementId_OrderClient = ioId AND gpSelect.Basis_summ > 0)
          THEN
              -- сохраняем лодку в строчную часть
-             vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ, gpSelect.Basis_summ_orig, gpSelect.Basis_summ1_orig
+             vbMI_Id:= (WITH gpSelect AS (SELECT gpSelect.Basis_summ_pl, gpSelect.Basis_summ_orig_pl, gpSelect.Basis_summ1_orig_pl
                                           FROM gpSelect_Object_Product (ioId, FALSE, FALSE, inUserId :: TVarChar) AS gpSelect
                                           WHERE gpSelect.MovementId_OrderClient = ioId
                                          )
@@ -226,11 +226,11 @@ BEGIN
                                                                     , inGoodsId       := inProductId
                                                                     , inAmount        := COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = vbMI_Id), 1)
                                                                       -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options)
-                                                                    , ioOperPrice     := (SELECT gpSelect.Basis_summ       FROM gpSelect)
+                                                                    , ioOperPrice     := (SELECT gpSelect.Basis_summ_pl       FROM gpSelect)
                                                                       -- ИТОГО Сумма продажи без НДС - без Скидки (Basis+options)
-                                                                    , inOperPriceList := (SELECT gpSelect.Basis_summ_orig  FROM gpSelect)
+                                                                    , inOperPriceList := (SELECT gpSelect.Basis_summ_orig_pl  FROM gpSelect)
                                                                       -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
-                                                                    , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig FROM gpSelect)
+                                                                    , inBasisPrice    := (SELECT gpSelect.Basis_summ1_orig_pl FROM gpSelect)
                                                                       --
                                                                     , inCountForPrice := 1  ::TFloat
                                                                     , inComment       := COALESCE ((SELECT MIS.ValueData FROM MovementItemString AS MIS WHERE MIS.MovementItemId = vbMI_Id AND MIS.DescId = zc_MIString_Comment()), '')

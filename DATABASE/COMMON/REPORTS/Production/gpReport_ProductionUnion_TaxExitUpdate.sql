@@ -123,7 +123,7 @@ BEGIN
                            , CASE WHEN inIsPartion = FALSE THEN COALESCE (CLO_PartionGoods.ObjectId, 0) ELSE 0 END AS PartionGoodsId
                            , CASE WHEN MIContainer.IsActive = TRUE THEN MIContainer.Amount ELSE 0 END AS Amount
                       FROM MovementItemContainer AS MIContainer
-                           INNER JOIN (SELECT OP.ObjectId AS MovementId FROM Object_Print AS OP WHERE OP.UserId = vbUserId) AS tmpOP ON tmpOP.MovementId = MIContainer.MovementId
+                           INNER JOIN (SELECT DISTINCT OP.ObjectId AS MovementId FROM Object_Print AS OP WHERE OP.UserId = vbUserId) AS tmpOP ON tmpOP.MovementId = MIContainer.MovementId
                            LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                          ON CLO_PartionGoods.ContainerId = MIContainer.ContainerId
                                                         AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
@@ -434,7 +434,9 @@ BEGIN
                                                                                     , inEndDate        := CASE WHEN inIsPartion = TRUE THEN inEndDate   ELSE NULL END
                                                                                     , inFromId         := CASE WHEN inIsPartion = TRUE THEN inFromId    ELSE NULL END
                                                                                     , inToId           := CASE WHEN inIsPartion = TRUE THEN inToId      ELSE NULL END
+                                                                                    , inParam          := inParam
                                                                                     , inIsList         := inIsList
+                                                                                    , inIsListReport   := inIsListReport
                                                                                       -- !!! всегда по партиям
                                                                                     , inIsPartion      := FALSE
                                                                                     , inSession        := inSession
@@ -442,6 +444,8 @@ BEGIN
                                          WHERE gpReport.isPrint = FALSE
                                            -- !!! если Группировка
                                            AND inIsPartion      = TRUE
+                                           -- ???
+                                           -- AND inParam > 0
                                         )
          -- результат - группируется
        , tmpResult AS
