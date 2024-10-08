@@ -3,8 +3,8 @@ object PriceDialogForm: TPriceDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1042#1074#1086#1076' '#1079#1085#1072#1095#1077#1085#1080#1103
-  ClientHeight = 145
-  ClientWidth = 324
+  ClientHeight = 151
+  ClientWidth = 336
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object PriceDialogForm: TPriceDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.RefreshAction = actRefreshStart
+  AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
@@ -65,8 +65,8 @@ object PriceDialogForm: TPriceDialogForm
     Width = 242
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 166
-    Top = 70
+    Left = 134
+    Top = 6
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -78,19 +78,11 @@ object PriceDialogForm: TPriceDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 231
-    Top = 100
+    Left = 191
+    Top = 76
   end
   object FormParams: TdsdFormParams
     Params = <
-      item
-        Name = 'Price'
-        Value = 100.000000000000000000
-        Component = cePrice
-        DataType = ftFloat
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'Label'
         Value = #1062#1077#1085#1072
@@ -106,8 +98,8 @@ object PriceDialogForm: TPriceDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 150
-    Top = 94
+    Left = 102
+    Top = 86
   end
   object ActionList: TActionList
     Left = 267
@@ -115,21 +107,16 @@ object PriceDialogForm: TPriceDialogForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actGet_UserUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actGet_UserUnit'
     end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -144,5 +131,38 @@ object PriceDialogForm: TPriceDialogForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_MI_ParamFloat'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescCode'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DescCode'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value'
+        Value = Null
+        Component = cePrice
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 72
   end
 end

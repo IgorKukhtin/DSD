@@ -138,6 +138,10 @@ type
     ItemName_to: TcxGridDBColumn;
     isCurrencyUser: TcxGridDBColumn;
     isPriceDiff: TcxGridDBColumn;
+    spUpdate_PriceDiff: TdsdStoredProc;
+    actUpdate_PriceDiff: TdsdUpdateDataSet;
+    bbUpdate_PriceDiff: TdxBarButton;
+    bbsPrint: TdxBarSubItem;
   private
   public
   end;

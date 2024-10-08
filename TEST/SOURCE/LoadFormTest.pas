@@ -1396,8 +1396,11 @@ end;
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
 
-TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMIFloatEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMIFloatEditForm');
+
   exit;
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));

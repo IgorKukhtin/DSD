@@ -1134,6 +1134,13 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceNull'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 246
     Top = 343
@@ -1502,7 +1509,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbUpdate_MI_PricePartner: TdxBarButton
-      Action = macUpdate_MI_PricePartner
+      Action = actUpdate_PricePartnerEdit
       Category = 0
     end
     object bbsPrint: TdxBarSubItem
@@ -1544,53 +1551,6 @@ object IncomeForm: TIncomeForm
     Images = dmMain.ImageList
     Left = 51
     Top = 231
-    object actUpdate_PriceDialog: TExecuteDialog
-      Category = 'Price'
-      MoveParams = <>
-      Caption = 'actUpdate_PriceDialog'
-      FormName = 'TPriceDialogForm'
-      FormNameParam.Value = 'TPriceDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Label'
-          Value = #1062#1077#1085#1072' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inPrice'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'inPrice'
-          DataType = ftFloat
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Price'
-          Value = 0.000000000000000000
-          DataType = ftFloat
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdate_MI_PricePartner: TdsdUpdateDataSet
-      Category = 'Price'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_MI_PricePartner
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_MI_PricePartner
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2641,22 +2601,48 @@ object IncomeForm: TIncomeForm
       Hint = #1042#1099#1087#1086#1083#1085#1080#1090#1100' '#1056#1091#1095#1085#1086#1081' '#1074#1074#1086#1076' '#1082#1091#1088#1089#1072
       ImageIndex = 56
     end
-    object macUpdate_MI_PricePartner: TMultiAction
+    object actUpdate_PricePartnerEdit: TdsdInsertUpdateAction
       Category = 'Price'
       MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_PriceDialog
-        end
-        item
-          Action = actUpdate_MI_PricePartner
-        end
-        item
-          Action = actRefreshMI
-        end>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
       ImageIndex = 77
+      FormName = 'TMIFloatEditForm'
+      FormNameParam.Value = 'TMIFloatEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescCode'
+          Value = 'zc_MIFloat_PricePartner'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DescProcess'
+          Value = 'zc_Enum_Process_Update_MI_Income_PricePartner'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1062#1077#1085#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
     end
   end
   object MasterDS: TDataSource
@@ -4724,39 +4710,5 @@ object IncomeForm: TIncomeForm
     PackSize = 1
     Left = 977
     Top = 216
-  end
-  object spUpdate_MI_PricePartner: TdsdStoredProc
-    StoredProcName = 'gpUpdate_MI_Income_PricePartner'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inId'
-        Value = 'False'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPricePartner'
-        Value = 'False'
-        Component = FormParams
-        ComponentItem = 'inPrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 993
-    Top = 264
   end
 end

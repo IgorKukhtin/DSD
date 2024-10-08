@@ -31,10 +31,10 @@ type
     FormParams: TdsdFormParams;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     cePrice: TcxCurrencyEdit;
     cxMemo1: TcxMemo;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public

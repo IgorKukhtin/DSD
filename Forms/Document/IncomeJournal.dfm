@@ -752,7 +752,11 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PriceDiff'
         end
         item
           Visible = True
@@ -760,15 +764,7 @@ object IncomeJournalForm: TIncomeJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintStickerTermo'
+          ItemName = 'bbsPrint'
         end
         item
           Visible = True
@@ -858,6 +854,29 @@ object IncomeJournalForm: TIncomeJournalForm
     object bbPrintStickerTermo: TdxBarButton
       Action = actPrintStickerTermo
       Category = 0
+    end
+    object bbUpdate_PriceDiff: TdxBarButton
+      Action = actUpdate_PriceDiff
+      Category = 0
+    end
+    object bbsPrint: TdxBarSubItem
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Visible = ivAlways
+      ImageIndex = 3
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintStickerTermo'
+        end>
     end
   end
   object ActionList: TActionList
@@ -1422,6 +1441,19 @@ object IncomeJournalForm: TIncomeJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actUpdate_PriceDiff: TdsdUpdateDataSet
+      Category = 'Price'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PriceDiff
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PriceDiff
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')>'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' <'#1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077' ('#1076#1072'/'#1085#1077#1090')>'
+      ImageIndex = 80
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income'
@@ -1793,5 +1825,39 @@ object IncomeJournalForm: TIncomeJournalForm
     PackSize = 1
     Left = 839
     Top = 160
+  end
+  object spUpdate_PriceDiff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_PriceDiff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPriceDiff'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'isPriceDiff'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisPriceDiff'
+        Value = False
+        Component = ClientDataSet
+        ComponentItem = 'isPriceDiff'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1001
+    Top = 184
   end
 end
