@@ -137,6 +137,7 @@ type
     ItemName_from: TcxGridDBColumn;
     ItemName_to: TcxGridDBColumn;
     isCurrencyUser: TcxGridDBColumn;
+    isPriceDiff: TcxGridDBColumn;
   private
   public
   end;

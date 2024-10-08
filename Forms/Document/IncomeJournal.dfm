@@ -404,6 +404,15 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object isPriceDiff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
+        DataBinding.FieldName = 'isPriceDiff'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+        Options.Editing = False
+        Width = 70
+      end
       object TotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'

@@ -1539,7 +1539,8 @@ uses
   Sale_Pay in '..\..\Forms\Document\Sale_Pay.pas' {Sale_PayForm: TParentForm},
   Sale_PayJournal in '..\..\Forms\Document\Sale_PayJournal.pas' {Sale_PayJournalForm: TParentForm},
   Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm},
-  Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm};
+  Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
+  PriceDialog in '..\..\Forms\System\PriceDialog.pas' {PriceDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
