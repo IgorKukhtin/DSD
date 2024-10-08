@@ -20,36 +20,47 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Movem
              , ContractCode_Master Integer, ContractName_Master TVarChar
                -- Типы условий договоров
              , ContractConditionKindName TVarChar
-             
+
              , PaidKindName TVarChar, PaidKindName_Child TVarChar
              , InfoMoneyName TVarChar, InfoMoneyName_Child TVarChar
-             
+
              , MovementId_doc Integer, OperDate_Doc TDateTime, InvNumber_doc TVarChar, InvNumber_full_doc TVarChar, MovementDescName_doc TVarChar
              --, TradeMarkName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar 
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , MeasureName TVarChar
              , TradeMarkId Integer, TradeMarkName TVarChar
              , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsGroupPropertyId Integer, GoodsGroupPropertyName TVarChar
-             , GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar 
+             , GoodsGroupPropertyId_Parent Integer, GoodsGroupPropertyName_Parent TVarChar
              , AmountIn TFloat, AmountOut TFloat, Amount TFloat
+
+               -- Компенсация за вес, кг - ***Акция
              , AmountMarket        TFloat
-             , SummInMarket        TFloat
-             , SummOutMarket       TFloat 
-             , SummAmount          TFloat --сумма продажи
-             , TotalSumm           TFloat --итого продажа по юр.лицо + договор
+               -- Компенсация,грн - ***Акция
+             , SummMarket          TFloat
+               -- Стоимость участия,грн - ***Акция
+             , CostPromo_m         TFloat
+               -- Стоимость участия - ***Трейд-маркетинг
+             , CostPromo_mi        TFloat
+
+             , SummAmount          TFloat -- сумма продажи
+             , TotalSumm           TFloat -- итого продажа по юр.лицо + договор
              , TotalSumm_tm        TFloat --
              , TotalSumm_gp        TFloat --
              , TotalSumm_gpp       TFloat --
+
              , Persent_part        TFloat
-             , Persent_part_tm     TFloat 
+             , Persent_part_tm     TFloat
              , Persent_part_gp     TFloat
-             , Persent_part_gpp    TFloat            
-             , SummMarket_calc     TFloat
-             , SummMarket_tm_calc  TFloat
-             , SummMarket_gp_calc  TFloat
-             , SummMarket_gpp_calc TFloat  
-             ) 
+             , Persent_part_gpp    TFloat
+
+               -- Расчет - Компенсация, грн
+             , SummMarket_calc     TFloat --
+               -- Расчет - Стоимость участия,грн (Акция)
+             , CostPromo_m_calc    TFloat --
+               -- Расчет - Стоимость участия, грн (Трейд-маркетинг)
+             , CostPromo_mi_calc   TFloat --
+             )
 
 AS
 $BODY$
@@ -62,233 +73,321 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-      WITH 
-      --ProfitLossService
-      tmpMovementFull AS (SELECT Movement.*
+      WITH
+      -- Затраты - ProfitLossService + Service
+      tmpMovement_all AS (SELECT Movement.*
                           FROM Movement
                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                            AND Movement.DescId = zc_Movement_ProfitLossService()
+                            AND Movement.DescId   IN (zc_Movement_ProfitLossService(), zc_Movement_Service())
                             AND Movement.StatusId = zc_Enum_Status_Complete()
-                          )
-      --связь с док. Акция / Трейд-маркетинг
+                         )
+      -- база - Акция / Трейд-маркетинг
     , tmpMLM_doc AS (SELECT MLM.*
                      FROM MovementLinkMovement AS MLM
-                     WHERE MLM.DescId = zc_MovementLinkMovement_Doc()
-                       AND MLM.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull)
-                       AND COALESCE (MLM.MovementChildId,0) > 0
-                     )
-      --торгоая марка в док. начисления
-    , tmpMLO AS (SELECT MovementLinkObject.*
-                     FROM MovementLinkObject
-                     WHERE MovementLinkObject.DescId = zc_MovementLinkObject_TradeMark()
-                       AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull)
-                     )
-
-    --сумма начислений bp ProfitLossService
+                     WHERE MLM.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                       AND MLM.DescId = zc_MovementLinkMovement_Doc()
+                       AND MLM.MovementChildId > 0
+                    )
+      -- база ТМ - по всем продажам
+    , tmpMLO_TM AS (SELECT MovementLinkObject.*
+                    FROM MovementLinkObject
+                    WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                      AND MovementLinkObject.DescId = zc_MovementLinkObject_TradeMark()
+                      AND MovementLinkObject.ObjectId > 0
+                   )
+     -- Затраты - Только то что будем распределять - ProfitLossService + Service
+   , tmpMovement_find AS (SELECT Movement.*
+                               , tmpMLM_doc.MovementChildId AS MovementId_doc
+                               , tmpMLO_TM.ObjectId         AS TradeMarkId
+                          FROM tmpMovement_all AS Movement
+                               LEFT JOIN tmpMLM_doc ON tmpMLM_doc.MovementId = Movement.Id
+                               LEFT JOIN tmpMLO_TM  ON tmpMLO_TM.MovementId  = Movement.Id
+                          WHERE tmpMLM_doc.MovementId > 0
+                             OR tmpMLO_TM.MovementId  > 0
+                         )
+      -- сумма начислений - Затраты - только если ТМ + договор база?
     , tmpMI AS (SELECT MovementItem.MovementId
                      , MovementItem.Id
                      , MovementItem.ObjectId
-                     , CASE WHEN MovementItem.Amount > 0
+                     , CASE WHEN 1=0 -- MovementItem.Amount > 0
                                  THEN MovementItem.Amount
                             ELSE 0
                        END::TFloat AS AmountIn
-                     , CASE WHEN MovementItem.Amount < 0
-                                 THEN -1 * MovementItem.Amount
+                     , CASE WHEN 1=1 -- MovementItem.Amount < 0
+                                 THEN -1 * MovementItem.Amount - MovementItem.Amount
                             ELSE 0
                        END::TFloat AS AmountOut
-                     , MovementItem.Amount                    
+                     , -1 * MovementItem.Amount AS Amount
                 FROM MovementItem
-                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovementFull.Id FROM tmpMovementFull) 
+                WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement_find.Id FROM tmpMovement_find)
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.isErased = FALSE
-                  AND COALESCE (MovementItem.Amount,0) <> 0
-                )
-    --
-    , tmpMILO AS (
-                  SELECT MovementItemLinkObject.* 
+                  AND MovementItem.Amount <> 0
+               )
+      -- св-ва  - Затраты
+    , tmpMILO AS (SELECT MovementItemLinkObject.*
                   FROM MovementItemLinkObject
                   WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
-                    AND MovementItemLinkObject.DescId IN (zc_MILinkObject_ContractChild() 
+                    AND MovementItemLinkObject.DescId IN (zc_MILinkObject_Contract()
+                                                        , zc_MILinkObject_ContractMaster()
+                                                        , zc_MILinkObject_ContractChild()
                                                         , zc_MILinkObject_InfoMoney()
                                                         , zc_MILinkObject_PaidKind()
-                                                        , zc_MILinkObject_ContractMaster()
-                                                        , zc_MILinkObject_Contract()
                                                         , zc_MILinkObject_ContractConditionKind()
-                                                        )
+                                                         )
                   )
-    --ProfitLossService - в віборку берем документы с выбранным     zc_MovementLinkMovement_Doc или Торговой маркой
+      -- Затраты Только то что будем распределять - ProfitLossService + Service
     , tmpMovement AS (SELECT Movement.Id              AS MovementId
+                             -- ProfitLossService or Service
                            , Movement.DescId          AS MovementDescId
+                             --
                            , Movement.OperDate
                            , Movement.InvNumber
-                           , MLM_Doc.MovementChildId  AS MovementId_doc
-                           , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0) AS JuridicalId
-                           , MovementLinkObject_TradeMark.ObjectId        AS TradeMarkId
+                           , Movement.MovementId_doc
+                           , Movement.TradeMarkId
+
+                           , COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementItem.ObjectId, 0)                AS JuridicalId
+                           , CASE WHEN ObjectLink_Partner_Juridical.ChildObjectId > 0 THEN MovementItem.ObjectId ELSE 0 END AS PartnerId
+
                              -- Договор (начисление)
                            , MILinkObject_Contract.ObjectId        AS ContractId
                              -- Договор (база)
                            , MILinkObject_ContractChild.ObjectId   AS ContractChildId
                              -- Договор (условие)
+                             --
                            , MILinkObject_ContractMaster.ObjectId  AS ContractMasterId
                              -- Типы условий договоров
-                           , MILinkObject_ContractConditionKind.ObjectId  AS ContractConditionKindId     
+                           , MILinkObject_ContractConditionKind.ObjectId  AS ContractConditionKindId
 
                            , MILinkObject_InfoMoney.ObjectId              AS InfoMoneyId
                            , MILinkObject_PaidKind.ObjectId               AS PaidKindId
                            , MovementItem.AmountIn
                            , MovementItem.AmountOut
                            , MovementItem.Amount
-                      FROM tmpMovementFull AS Movement
-                          LEFT JOIN tmpMLM_doc AS MLM_Doc
-                                               ON MLM_Doc.MovementId = Movement.Id
-                                              AND MLM_Doc.DescId = zc_MovementLinkMovement_Doc() 
 
-                          LEFT JOIN tmpMLO AS MovementLinkObject_TradeMark
-                                           ON MovementLinkObject_TradeMark.MovementId = Movement.Id
-                                          AND MovementLinkObject_TradeMark.DescId = zc_MovementLinkObject_TradeMark()
+                      FROM tmpMovement_find AS Movement
+                           LEFT JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement.Id
 
-                          LEFT JOIN tmpMI AS MovementItem 
-                                          ON MovementItem.MovementId = Movement.Id
-                          --юр лицо , если выбран контрагент то его юр лицо
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                               ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
-                                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                          -- Договор(база)
-                          LEFT JOIN tmpMILO AS MILinkObject_ContractChild
-                                            ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
- 
-                          LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
-                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney() 
-                          -- Договор(условия)
-                          LEFT JOIN tmpMILO AS MILinkObject_ContractMaster
-                                            ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
-                          -- Договор (начисление)
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                                           ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
-                          -- форма оплаты
-                          LEFT JOIN tmpMILO AS MILinkObject_PaidKind
-                                            ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                           AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind() 
+                           -- юр лицо, если выбран контрагент то его юр лицо
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                ON ObjectLink_Partner_Juridical.ObjectId = MovementItem.ObjectId
+                                               AND ObjectLink_Partner_Juridical.DescId   = zc_ObjectLink_Partner_Juridical()
+                           -- Договор(база)
+                           LEFT JOIN tmpMILO AS MILinkObject_ContractChild
+                                             ON MILinkObject_ContractChild.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractChild.DescId = zc_MILinkObject_ContractChild()
 
-                          -- Типы условий договоров
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
-                                                           ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
-                      WHERE COALESCE (MLM_Doc.MovementChildId,0) <> 0
-                         OR COALESCE (MovementLinkObject_TradeMark.ObjectId,0) <> 0
+                           LEFT JOIN tmpMILO AS MILinkObject_InfoMoney
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                           -- Договор(условия)
+                           LEFT JOIN tmpMILO AS MILinkObject_ContractMaster
+                                             ON MILinkObject_ContractMaster.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_ContractMaster.DescId = zc_MILinkObject_ContractMaster()
+                           -- Договор (начисление)
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                            ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Contract.DescId         = zc_MILinkObject_Contract()
+                           -- форма оплаты
+                           LEFT JOIN tmpMILO AS MILinkObject_PaidKind
+                                             ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+
+                           -- Типы условий договоров
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                                            ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
                      )
-     -- строки Акция / Трейд-маркетинг
+      -- элементы Акция / Трейд-маркетинг
     , tmpMI_doc AS (SELECT MovementItem.*
+                           -- № п/п
+                         , ROW_NUMBER() OVER (PARTITION BY MovementItem.MovementId ORDER BY MovementItem.Id ASC) AS Ord
                     FROM MovementItem
-                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_doc.MovementChildId FROM tmpMLM_doc) 
-                      AND MovementItem.DescId = zc_MI_Master()
-                      AND MovementItem.isErased = FALSE
+                    WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMLM_doc.MovementChildId FROM tmpMLM_doc)
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSE
                     )
-
+      -- Акция - Стоимость участия
+    , tmpMovementFloat_CostPromo AS (SELECT MovementFloat.*
+                                     FROM MovementFloat
+                                     WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMLM_doc.MovementChildId FROM tmpMLM_doc)
+                                       AND MovementFloat.DescId     = zc_MovementFloat_CostPromo()  -- Стоимость участия - ***Акция
+                                       AND MovementFloat.ValueData  <> 0
+                                    )
+      -- Суммы - элементы Акция / Трейд-маркетинг
     , tmpMIFloat_doc AS (SELECT MovementItemFloat.*
                          FROM MovementItemFloat
                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMI_doc.Id FROM tmpMI_doc)
-                           AND MovementItemFloat.DescId IN (zc_MIFloat_AmountMarket()
-                                                          , zc_MIFloat_SummOutMarket()
-                                                          , zc_MIFloat_SummInMarket() 
-                                                          , zc_MIFloat_Summ()
+                           AND MovementItemFloat.DescId IN (zc_MIFloat_AmountMarket()  -- Компенсация за вес, кг - ***Акция
+                                                          , zc_MIFloat_SummOutMarket() -- Компенсация,грн - ***Акция
+                                                          , zc_MIFloat_SummInMarket()  -- Корректировка компенсации,грн - ***Акция
+                                                          , zc_MIFloat_Summ()          -- Стоимость участия - ***Трейд-маркетинг
                                                            )
-                           AND COALESCE (MovementItemFloat.ValueData,0) <> 0
+                           AND MovementItemFloat.ValueData <> 0
                         )
-
+      -- Св-ва - элементы Акция / Трейд-маркетинг
     , tmpMILO_doc AS (SELECT MovementItemLinkObject.*
                       FROM MovementItemLinkObject
                       WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI_doc.Id FROM tmpMI_doc)
-                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind()
-                                                            , zc_MILinkObject_TradeMark()
-                                                            , zc_MILinkObject_GoodsGroupProperty()
+                        AND MovementItemLinkObject.DescId IN (zc_MILinkObject_GoodsKind()           -- Вид товара
+                                                            , zc_MILinkObject_TradeMark()           -- Торговая марка
+                                                            , zc_MILinkObject_GoodsGroupProperty()  -- Аналитический классификатор
+                                                            , zc_MILinkObject_GoodsGroupDirection() -- Аналитическая группа Направление
                                                             )
-                                                             
-                     )
 
+                     )
+      -- Акция / Трейд-маркетинг
     , tmpData AS (SELECT tmpMovement.MovementId
                        , tmpMovement.MovementDescId
                        , tmpMovement.OperDate
                        , tmpMovement.InvNumber
                        , tmpMovement.MovementId_doc
-                       , COALESCE (MILinkObject_TradeMark.ObjectId, tmpMovement.TradeMarkId) AS TradeMarkId 
-                       , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
-                       , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
+
+                         -- ТМ в строчке Акция / Трейд-маркетинг
+                       , COALESCE (MILinkObject_TradeMark.ObjectId, 0) AS TradeMarkId_mi
+
+                         -- ТМ в документе затрат
+                       , COALESCE (tmpMovement.TradeMarkId)            AS TradeMarkId
+
+                         -- Аналитический классификатор - уровень-1 - в строчке Акция / Трейд-маркетинг
+                       , Object_GoodsGroupPropertyParent.Id            AS GoodsGroupPropertyId_Parent
+                         -- Аналитический классификатор - уровень-2 - в строчке Акция / Трейд-маркетинг
+                       , Object_GoodsGroupProperty.Id                  AS GoodsGroupPropertyId
+                         -- Аналитическая группа Направление - в строчке Акция / Трейд-маркетинг
+                       , MILinkObject_GoodsGroupDirection.ObjectId     AS GoodsGroupDirectionId
+
+                         -- Юр лицо / контрагент - в документе затрат
                        , tmpMovement.JuridicalId
+                       , tmpMovement.PartnerId
+                         -- Договор (начисление затрат)
                        , tmpMovement.ContractId
+                         -- Договор (база - в начисление затрат)
                        , tmpMovement.ContractChildId
+                         -- Договор (условие - в начисление затрат)
                        , tmpMovement.ContractMasterId
+                         -- Информативно (в начисление затрат)
                        , tmpMovement.PaidKindId
+                         -- Информативно (в начисление затрат)
                        , tmpMovement.InfoMoneyId
+                         -- Информативно (в начисление затрат)
                        , tmpMovement.ContractConditionKindId
-                       , MovementItem.ObjectId AS GoodsId  
-                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
 
+                         -- ФО в документе Акция / Трейд-маркетинг
+                       , MLO_PaidKind.ObjectId AS PaidKindId_baza
+                         -- Торговая сеть - 1:N или не указан
+                       , 0 AS RetaillId_baza
+                         -- Юр.л. - 1:N или не указан
+                       , 0 AS JuridicalId_baza
+                         -- Контрагент - 1:N или не указан
+                       , 0 AS PartnerId_baza
+                         -- Договор - 1:N или 1:1 или не указан
+                       , COALESCE (MLO_Contract.ObjectId, 0) AS ContractId_baza
+
+                         -- база
+                       , MovementItem.ObjectId AS GoodsId
+                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+
+                         -- Затраты
                        , tmpMovement.AmountIn
-                       , tmpMovement.AmountOut   
+                       , tmpMovement.AmountOut
                        , tmpMovement.Amount
-                       , MIFloat_AmountMarket.ValueData  ::TFloat AS AmountMarket
-                       , COALESCE (MIFloat_SummOutMarket.ValueData, MIFloat_Summ.ValueData) ::TFloat AS SummOutMarket
-                       , MIFloat_SummInMarket.ValueData  ::TFloat AS SummInMarket 
-                       --, MIFloat_Summ.ValueData          ::TFloat AS Summ --
-             
+
+                         -- Компенсация за вес, кг - ***Акция
+                       , COALESCE (MIFloat_AmountMarket.ValueData, 0) ::TFloat AS AmountMarket
+
+                         -- Компенсация,грн - ***Акция
+                       , (COALESCE (MIFloat_SummOutMarket.ValueData, 0) - COALESCE (MIFloat_SummInMarket.ValueData, 0)) ::TFloat AS SummMarket
+
+                         -- Стоимость участия,грн - ***Акция
+                       , CASE WHEN COALESCE (MovementItem.Ord, 0) <= 1
+                                   THEN COALESCE (tmpMovementFloat_CostPromo.ValueData, 0)
+                              ELSE 0
+                         END ::TFloat AS CostPromo_m
+
+                         -- Стоимость участия - ***Трейд-маркетинг
+                       , COALESCE (MIFloat_Summ.ValueData, 0) ::TFloat AS CostPromo_mi
+
                   FROM tmpMovement
-                   LEFT JOIN tmpMI_doc AS MovementItem ON MovementItem.MovementId = tmpMovement.MovementId_doc
+                       -- Акция - Стоимость участия
+                       LEFT JOIN tmpMovementFloat_CostPromo ON tmpMovementFloat_CostPromo.MovementId = tmpMovement.MovementId_doc
 
-                   LEFT JOIN tmpMILO_doc AS MILinkObject_GoodsKind
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                       -- Форма оплаты для базы - Акция / Трейд-маркетинг
+                       LEFT JOIN MovementLinkObject AS MLO_PaidKind
+                                                    ON MLO_PaidKind.MovementId = tmpMovement.MovementId_doc
+                                                   AND MLO_PaidKind.DescId     = zc_MovementLinkObject_PaidKind()
 
-                   LEFT JOIN tmpMIFloat_doc AS MIFloat_AmountMarket
-                                            ON MIFloat_AmountMarket.MovementItemId = MovementItem.Id
-                                           AND MIFloat_AmountMarket.DescId = zc_MIFloat_AmountMarket()
-                   LEFT JOIN tmpMIFloat_doc AS MIFloat_SummOutMarket
-                                            ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
-                                           AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
-                   LEFT JOIN tmpMIFloat_doc AS MIFloat_SummInMarket
-                                            ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
-                                           AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
-                   LEFT JOIN tmpMIFloat_doc AS MIFloat_Summ
-                                            ON MIFloat_Summ.MovementItemId = MovementItem.Id
-                                           AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+                       -- Договор для базы - Трейд-маркетинг
+                       LEFT JOIN MovementLinkObject AS MLO_Contract
+                                                    ON MLO_Contract.MovementId = tmpMovement.MovementId_doc
+                                                   AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
 
-                   --   из док АКции - по ним нужно будет делать распределение
-                   LEFT JOIN tmpMILO_doc AS MILinkObject_TradeMark
-                                                    ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()  
-                                                   AND COALESCE (MovementItem.ObjectId,0) = 0
-                   --
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsGroupProperty
-                                                    ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()  
-                                                   AND COALESCE (MovementItem.ObjectId,0) = 0
-                   LEFT JOIN Object AS Object_GoodsGroupProperty ON Object_GoodsGroupProperty.Id = MILinkObject_GoodsGroupProperty.ObjectId
-                                                                AND Object_GoodsGroupProperty.DescId = zc_Object_GoodsGroupProperty()
+                       -- строчка Акция / Трейд-маркетинг
+                       LEFT JOIN tmpMI_doc AS MovementItem ON MovementItem.MovementId = tmpMovement.MovementId_doc
+                       -- база
+                       LEFT JOIN tmpMILO_doc AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                       -- Компенсация за вес, кг - ***Акция
+                       LEFT JOIN tmpMIFloat_doc AS MIFloat_AmountMarket
+                                                ON MIFloat_AmountMarket.MovementItemId = MovementItem.Id
+                                               AND MIFloat_AmountMarket.DescId = zc_MIFloat_AmountMarket()
+                       -- Компенсация,грн - ***Акция
+                       LEFT JOIN tmpMIFloat_doc AS MIFloat_SummOutMarket
+                                                ON MIFloat_SummOutMarket.MovementItemId = MovementItem.Id
+                                               AND MIFloat_SummOutMarket.DescId = zc_MIFloat_SummOutMarket()
+                       -- Корректировка компенсации,грн - ***Акция
+                       LEFT JOIN tmpMIFloat_doc AS MIFloat_SummInMarket
+                                                ON MIFloat_SummInMarket.MovementItemId = MovementItem.Id
+                                               AND MIFloat_SummInMarket.DescId = zc_MIFloat_SummInMarket()
+                       -- Стоимость участия - ***Трейд-маркетинг
+                       LEFT JOIN tmpMIFloat_doc AS MIFloat_Summ
+                                                ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                               AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
-                   LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
-                                        ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = Object_GoodsGroupProperty.Id
-                                       AND ObjectLink_GoodsGroupProperty_Parent.DescId = zc_ObjectLink_GoodsGroupProperty_Parent()
-                   LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
+                       -- из док Акция - по ТМ нужно будет делать распределение
+                       LEFT JOIN tmpMILO_doc AS MILinkObject_TradeMark
+                                             ON MILinkObject_TradeMark.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_TradeMark.DescId = zc_MILinkObject_TradeMark()
+                                            -- !!!если не указан товар!!!
+                                            AND COALESCE (MovementItem.ObjectId, 0) = 0
+
+                       -- Аналитический классификатор
+                       LEFT JOIN tmpMILO_doc AS MILinkObject_GoodsGroupProperty
+                                             ON MILinkObject_GoodsGroupProperty.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsGroupProperty.DescId = zc_MILinkObject_GoodsGroupProperty()
+                                            -- !!!если не указан товар!!!
+                                            AND COALESCE (MovementItem.ObjectId, 0) = 0
+                       -- Аналитический классификатор, если это уровень - 2, найдем уровень - 1
+                       LEFT JOIN ObjectLink AS ObjectLink_GoodsGroupProperty_Parent
+                                            ON ObjectLink_GoodsGroupProperty_Parent.ObjectId = MILinkObject_GoodsGroupProperty.ObjectId
+                                           AND ObjectLink_GoodsGroupProperty_Parent.DescId   = zc_ObjectLink_GoodsGroupProperty_Parent()
+                       -- уровень - 1
+                       LEFT JOIN Object AS Object_GoodsGroupPropertyParent ON Object_GoodsGroupPropertyParent.Id = COALESCE (ObjectLink_GoodsGroupProperty_Parent.ChildObjectId, MILinkObject_GoodsGroupProperty.ObjectId)
+                       -- уровень - 2
+                       LEFT JOIN Object AS Object_GoodsGroupProperty       ON Object_GoodsGroupProperty.Id = MILinkObject_GoodsGroupProperty.ObjectId
+                                                                          AND ObjectLink_GoodsGroupProperty_Parent.ChildObjectId > 0
+                       -- Аналитическая группа Направление
+                       LEFT JOIN tmpMILO_doc AS MILinkObject_GoodsGroupDirection
+                                             ON MILinkObject_GoodsGroupDirection.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsGroupDirection.DescId         = zc_MILinkObject_GoodsGroupDirection()
+                                            -- !!!если не указан товар!!!
+                                            AND COALESCE (MovementItem.ObjectId, 0) = 0
                   )
 
- 
+
       -- продажи / возвраты
     , tmpAnalyzer AS (SELECT Constant_ProfitLoss_AnalyzerId_View.*
                            , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                       FROM Constant_ProfitLoss_AnalyzerId_View
                       WHERE Constant_ProfitLoss_AnalyzerId_View.isCost = FALSE
-                     ) 
+                     )
       -- данные о продаже  и возврате
     , tmpContainer AS (SELECT tmp.JuridicalId
                             , tmp.ContractId
                             , tmp.GoodsId
-                            , tmp.GoodsKindId 
-                            , tmp.TradeMarkId 
-                            , ObjectLink_GoodsGroupProperty_Parent.ChildObjectId AS GoodsGroupPropertyId_Parent  
+                            , tmp.GoodsKindId
+                            , tmp.TradeMarkId
+                            , ObjectLink_GoodsGroupProperty_Parent.ChildObjectId AS GoodsGroupPropertyId_Parent
                             , ObjectLink_Goods_GoodsGroupProperty.ChildObjectId  AS GoodsGroupPropertyId
                             , tmp.SummAmount
                             , tmp.Sale_Summ
@@ -329,25 +428,27 @@ BEGIN
                                                                  AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                     LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                                          ON ObjectLink_Goods_TradeMark.ObjectId = MIContainer.ObjectId_analyzer
-                                                        AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()                                                                 
+                                                        AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
                                    -- Договор(база)
-                                    INNER JOIN (SELECT DISTINCT tmpMovement.ContractChildId
+                                    INNER JOIN (SELECT DISTINCT
+                                                       tmpMovement.ContractChildId
                                                      , tmpMovement.JuridicalId
                                                      , tmpMovement.GoodsId
                                                      , tmpMovement.GoodsKindId
                                                      , tmpMovement.TradeMarkId
-                                                FROM tmpData AS tmpMovement) AS tmpMovement
-                                                                  ON tmpMovement.JuridicalId = ContainerLO_Juridical.ObjectId
-                                                                 AND tmpMovement.ContractChildId = ContainerLinkObject_Contract.ObjectId
-                                                                 AND ((tmpMovement.GoodsId = MIContainer.ObjectId_analyzer AND tmpMovement.GoodsKindId = MIContainer.ObjectIntId_analyzer AND COALESCE (tmpMovement.TradeMarkId,0) = 0) 
-                                            
-                                                                     )
+                                                FROM tmpData AS tmpMovement
+                                                WHERE 1=0
+                                               ) AS tmpMovement
+                                                 ON tmpMovement.JuridicalId = ContainerLO_Juridical.ObjectId
+                                                AND tmpMovement.ContractChildId = ContainerLinkObject_Contract.ObjectId
+                                                AND ((tmpMovement.GoodsId = MIContainer.ObjectId_analyzer AND tmpMovement.GoodsKindId = MIContainer.ObjectIntId_analyzer AND COALESCE (tmpMovement.TradeMarkId,0) = 0)
+                                                                )
                              GROUP BY ContainerLO_Juridical.ObjectId
                                     , MIContainer.ObjectId_analyzer
                                     , MIContainer.ObjectIntId_analyzer
                                     , ContainerLinkObject_Contract.ObjectId
                                     , ObjectLink_Goods_TradeMark.ChildObjectId
-                             ) AS tmp                                            
+                             ) AS tmp
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroupProperty
                                                   ON ObjectLink_Goods_GoodsGroupProperty.ObjectId = tmp.GoodsId
                                                  AND ObjectLink_Goods_GoodsGroupProperty.DescId = zc_ObjectLink_Goods_GoodsGroupProperty()
@@ -362,13 +463,13 @@ BEGIN
     , tmpSaleReturn AS (SELECT tmp.JuridicalId
                              , tmp.ContractId
                              , tmp.GoodsId
-                             , tmp.GoodsKindId 
-                             , tmp.TradeMarkId 
-                             , tmp.GoodsGroupPropertyId_Parent  
+                             , tmp.GoodsKindId
+                             , tmp.TradeMarkId
+                             , tmp.GoodsGroupPropertyId_Parent
                              , tmp.GoodsGroupPropertyId
                              , tmp.SummAmount
                              , tmp.Sale_Summ
-                             , tmp.Return_Summ 
+                             , tmp.Return_Summ
                              --итого по юр.лицо + договор
                              , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId) AS TotalSumm
                              --итого по юр.лицо + договор + торговая марка
@@ -395,16 +496,24 @@ BEGIN
                       , tmpData.MovementId_doc
                       , tmpSaleReturn.JuridicalId    AS JuridicalId_baza
                       , tmpData.TradeMarkId
-                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId_Parent
                       , tmpData.GoodsGroupPropertyId
                       , tmpData.GoodsId
                       , tmpData.GoodsKindId
+
                       , tmpData.Amount
                       , tmpData.AmountIn
                       , tmpData.AmountOut
+
+                        -- Компенсация за вес, кг - ***Акция
                       , tmpData.AmountMarket
-                      , tmpData.SummOutMarket
-                      , tmpData.SummInMarket
+                        -- Компенсация,грн - ***Акция
+                      , tmpData.SummMarket
+                        -- Стоимость участия,грн - ***Акция
+                      , tmpData.CostPromo_m
+                        -- Стоимость участия - ***Трейд-маркетинг
+                      , tmpData.CostPromo_mi
+
                       , tmpSaleReturn.SummAmount
                       , tmpSaleReturn.Sale_Summ
                       , tmpSaleReturn.Return_Summ
@@ -412,11 +521,11 @@ BEGIN
                       , 0 AS TotalSumm_tm
                       , 0 AS TotalSumm_gp
                       , 0 AS TotalSumm_gpp
-                      , CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN 100 ELSE CASE WHEN COALESCE(tmpSaleReturn.TotalSumm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm) ELSE 0 END END AS Persent_part
+                      , CASE WHEN COALESCE (tmpData.SummMarket,0) <> 0 THEN 100 ELSE CASE WHEN COALESCE(tmpSaleReturn.TotalSumm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm) ELSE 0 END END AS Persent_part
                       , 0 AS Persent_part_tm
                       , 0 AS Persent_part_gp
-                      , 0 AS Persent_part_gpp                       
-                 FROM tmpData 
+                      , 0 AS Persent_part_gpp
+                 FROM tmpData
                       --
                       LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
                                              AND tmpSaleReturn.ContractId = tmpData.ContractChildId
@@ -439,16 +548,23 @@ BEGIN
                       , tmpData.MovementId_doc
                       , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
                       , tmpData.TradeMarkId
-                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId_Parent
                       , tmpData.GoodsGroupPropertyId
                       , tmpSaleReturn.GoodsId
                       , tmpSaleReturn.GoodsKindId
                       , tmpData.Amount
                       , tmpData.AmountIn
                       , tmpData.AmountOut
+
+                        -- Компенсация за вес, кг - ***Акция
                       , tmpData.AmountMarket
-                      , tmpData.SummOutMarket
-                      , tmpData.SummInMarket
+                        -- Компенсация,грн - ***Акция
+                      , tmpData.SummMarket
+                        -- Стоимость участия,грн - ***Акция
+                      , tmpData.CostPromo_m
+                        -- Стоимость участия - ***Трейд-маркетинг
+                      , tmpData.CostPromo_mi
+
                       , tmpSaleReturn.SummAmount
                       , tmpSaleReturn.Sale_Summ
                       , tmpSaleReturn.Return_Summ
@@ -457,16 +573,16 @@ BEGIN
                       , 0 AS TotalSumm_gp
                       , 0 AS TotalSumm_gpp
                       , 0 AS Persent_part
-                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_tm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_tm) ELSE 0 END AS Persent_part_tm                       
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_tm,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_tm) ELSE 0 END AS Persent_part_tm
                       , 0 AS Persent_part_gp
-                      , 0 AS Persent_part_gpp                       
-                 FROM tmpData 
+                      , 0 AS Persent_part_gpp
+                 FROM tmpData
                       --
                       LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
                                              AND tmpSaleReturn.ContractId = tmpData.ContractChildId
                                              AND tmpSaleReturn.TradeMarkId = tmpData.TradeMarkId
                  WHERE COALESCE (tmpData.TradeMarkId,0) <> 0
-                   AND COALESCE (tmpData.GoodsId,0) = 0   
+                   AND COALESCE (tmpData.GoodsId,0) = 0
               UNION
                 --определение доли для аналит. классификатора,
                  SELECT tmpData.MovementId
@@ -483,16 +599,23 @@ BEGIN
                       , tmpData.MovementId_doc
                       , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
                       , tmpData.TradeMarkId
-                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId_Parent
                       , tmpData.GoodsGroupPropertyId
                       , tmpSaleReturn.GoodsId
                       , tmpSaleReturn.GoodsKindId
                       , tmpData.Amount
                       , tmpData.AmountIn
                       , tmpData.AmountOut
+
+                        -- Компенсация за вес, кг - ***Акция
                       , tmpData.AmountMarket
-                      , tmpData.SummOutMarket
-                      , tmpData.SummInMarket
+                        -- Компенсация,грн - ***Акция
+                      , tmpData.SummMarket
+                        -- Стоимость участия,грн - ***Акция
+                      , tmpData.CostPromo_m
+                        -- Стоимость участия - ***Трейд-маркетинг
+                      , tmpData.CostPromo_mi
+
                       , tmpSaleReturn.SummAmount
                       , tmpSaleReturn.Sale_Summ
                       , tmpSaleReturn.Return_Summ
@@ -502,15 +625,15 @@ BEGIN
                       , 0 AS TotalSumm_gpp
                       , 0 AS Persent_part
                       , 0 AS Persent_part_tm
-                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gp) ELSE 0 END AS Persent_part_gp                       
-                      , 0 AS Persent_part_gpp                       
-                 FROM tmpData 
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gp) ELSE 0 END AS Persent_part_gp
+                      , 0 AS Persent_part_gpp
+                 FROM tmpData
                       --
                       LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
                                              AND tmpSaleReturn.ContractId = tmpData.ContractChildId
                                              AND tmpSaleReturn.GoodsGroupPropertyId = tmpData.GoodsGroupPropertyId
                  WHERE COALESCE (tmpData.GoodsGroupPropertyId,0) <> 0
-                   AND COALESCE (tmpData.GoodsId,0) = 0 
+                   AND COALESCE (tmpData.GoodsId,0) = 0
               UNION
                  --определение доли для группы аналит. классификатора,
                  SELECT tmpData.MovementId
@@ -527,28 +650,37 @@ BEGIN
                       , tmpData.MovementId_doc
                       , tmpSaleReturn.JuridicalId  AS JuridicalId_baza
                       , tmpData.TradeMarkId
-                      , tmpData.GoodsGroupPropertyId_Parent  
+                      , tmpData.GoodsGroupPropertyId_Parent
                       , tmpData.GoodsGroupPropertyId
                       , tmpSaleReturn.GoodsId
                       , tmpSaleReturn.GoodsKindId
+
                       , tmpData.Amount
                       , tmpData.AmountIn
                       , tmpData.AmountOut
+
+                        -- Компенсация за вес, кг - ***Акция
                       , tmpData.AmountMarket
-                      , tmpData.SummOutMarket
-                      , tmpData.SummInMarket
+                        -- Компенсация,грн - ***Акция
+                      , tmpData.SummMarket
+                        -- Стоимость участия,грн - ***Акция
+                      , tmpData.CostPromo_m
+                        -- Стоимость участия - ***Трейд-маркетинг
+                      , tmpData.CostPromo_mi
+
                       , tmpSaleReturn.SummAmount
                       , tmpSaleReturn.Sale_Summ
                       , tmpSaleReturn.Return_Summ
+
                       , 0 AS TotalSumm
                       , 0 AS TotalSumm_tm
                       , 0 AS TotalSumm_gp
                       , tmpSaleReturn.TotalSumm_gpp
                       , 0 AS Persent_part
                       , 0 AS Persent_part_tm
-                      , 0 AS Persent_part_gp                       
-                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gpp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gpp) ELSE 0 END AS Persent_part_gpp                       
-                 FROM tmpData 
+                      , 0 AS Persent_part_gp
+                      , CASE WHEN COALESCE(tmpSaleReturn.TotalSumm_gpp,0) <> 0 THEN (tmpSaleReturn.SummAmount * 100 / tmpSaleReturn.TotalSumm_gpp) ELSE 0 END AS Persent_part_gpp
+                 FROM tmpData
                       --
                       LEFT JOIN tmpSaleReturn ON tmpSaleReturn.JuridicalId = tmpData.JuridicalId
                                              AND tmpSaleReturn.ContractId = tmpData.ContractChildId
@@ -561,7 +693,7 @@ BEGIN
              SELECT tmpData.MovementId
                   , tmpData.OperDate
                   , tmpData.InvNumber
-                  , MovementDesc.ItemName       AS MovementDescName 
+                  , MovementDesc.ItemName       AS MovementDescName
                     -- юр.л. - условие
                   , Object_Juridical.Id         AS JuridicalId
                   , Object_Juridical.ObjectCode AS JuridicalCode
@@ -584,30 +716,30 @@ BEGIN
 
                     -- Типы условий договоров
                   , Object_ContractConditionKind.ValueData  AS ContractConditionKindName
-                  
+
                   , Object_PaidKind.ValueData       ::TVarChar AS PaidKindName
                   , Object_PaidKind_Child.ValueData ::TVarChar AS PaidKindName_Child
 
                   , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
                   , Object_InfoMoneyChild_View.InfoMoneyName_all AS InfoMoneyName_Child
-                                   
+
                   , CASE WHEN COALESCE (Movement_Doc.Id,0) <> 0 THEN Movement_Doc.Id ELSE -1 END ::Integer AS MovementId_doc
                   , Movement_Doc.OperDate       AS OperDate_Doc
                   , Movement_Doc.InvNumber      AS InvNumber_doc
                   , zfCalc_PartionMovementName (Movement_Doc.DescId, MovementDesc_Doc.ItemName, Movement_Doc.InvNumber, Movement_Doc.OperDate) :: TVarChar AS InvNumber_full_doc
-                  , MovementDesc_Doc.ItemName   AS MovementDescName_doc   
+                  , MovementDesc_Doc.ItemName   AS MovementDescName_doc
                   --, Object_TradeMark.ValueData  AS TradeMarkName
 
                   , Object_Goods.Id             AS GoodsId
                   , Object_Goods.ObjectCode     AS GoodsCode
                   , Object_Goods.ValueData      AS GoodsName
                   , Object_GoodsKind.ValueData  AS GoodsKindName
-                  
+
                   , Object_Measure.ValueData           AS MeasureName
                   , Object_TradeMark.Id                AS TradeMarkId
                   , Object_TradeMark.ValueData         AS TradeMarkName
                   , Object_GoodsGroup.ValueData        AS GoodsGroupName
-                  , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull  
+                  , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
                   , Object_GoodsGroupProperty.Id              AS GoodsGroupPropertyId
                   , Object_GoodsGroupProperty.ValueData       AS GoodsGroupPropertyName
                   , Object_GoodsGroupPropertyParent.Id        AS GoodsGroupPropertyId_Parent
@@ -616,34 +748,50 @@ BEGIN
                   , tmpData.AmountIn         :: TFloat --дебет сумма док. начисления
                   , tmpData.AmountOut        :: TFloat --кредит сумма док. начисления
                   , tmpData.Amount           :: TFloat --сумма док. начисления
-                  , tmpData.AmountMarket     :: TFloat -- Комп. за вес, кг
-                  , tmpData.SummInMarket     :: TFloat --Корр. компенс., грн
-                  , tmpData.SummOutMarket    :: TFloat --Компенсация, грн 
-                  , tmpData.SummAmount       :: TFloat --сумма продажи   
+
+                    -- Компенсация за вес, кг - ***Акция
+                  , tmpData.AmountMarket
+                    -- Компенсация,грн - ***Акция
+                  , tmpData.SummMarket
+                    -- Стоимость участия,грн - ***Акция
+                  , tmpData.CostPromo_m
+                    -- Стоимость участия - ***Трейд-маркетинг
+                  , tmpData.CostPromo_mi
+
+                  , tmpData.SummAmount       :: TFloat --сумма продажи
                   , tmpData.TotalSumm        :: TFloat --Итого сумма продажи по юр лицо + договор
                   , tmpData.TotalSumm_tm     :: TFloat --
                   , tmpData.TotalSumm_gp     :: TFloat --
                   , tmpData.TotalSumm_gpp    :: TFloat --
+
                   , tmpData.Persent_part     :: TFloat
                   , tmpData.Persent_part_tm  :: TFloat
                   , tmpData.Persent_part_gp  :: TFloat
                   , tmpData.Persent_part_gpp :: TFloat
 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) = 0 
-                         THEN CASE WHEN COALESCE (tmpData.SummOutMarket,0) <> 0 THEN tmpData.SummOutMarket ELSE (ABS(tmpData.Amount) * tmpData.Persent_part)/100 END
-                         ELSE 0 
-                    END  :: TFloat  AS SummMarket_calc 
+/*                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId,0) = 0 AND COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) = 0
+                         THEN CASE WHEN COALESCE (tmpData.SummMarket,0) <> 0 THEN tmpData.SummMarket ELSE (ABS(tmpData.Amount) * tmpData.Persent_part)/100 END
+                         ELSE 0
+                    END  :: TFloat  AS SummMarket_calc
 
-                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_tm)/100 ELSE 0 END                   :: TFloat  AS SummMarket_tm_calc
-                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gp)/100 ELSE 0 END          :: TFloat  AS SummMarket_gp_calc
-                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) <> 0 THEN (COALESCE (tmpData.SummOutMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gpp)/100 ELSE 0 END  :: TFloat  AS SummMarket_gpp_calc
-             FROM tmpRes AS tmpData 
+                  , CASE WHEN COALESCE (tmpData.TradeMarkId,0) <> 0 THEN (COALESCE (tmpData.SummMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_tm)/100 ELSE 0 END                   :: TFloat  AS SummMarket_tm_calc
+                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId,0) <> 0 THEN (COALESCE (tmpData.SummMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gp)/100 ELSE 0 END          :: TFloat  AS SummMarket_gp_calc
+                  , CASE WHEN COALESCE (tmpData.GoodsGroupPropertyId_Parent,0) <> 0 THEN (COALESCE (tmpData.SummMarket, ABS(tmpData.Amount)) * tmpData.Persent_part_gpp)/100 ELSE 0 END  :: TFloat  AS SummMarket_gpp_calc*/
+
+                    -- Расчет - Компенсация, грн
+                  , tmpData.SummMarket     :: TFloat AS SummMarket_calc
+                    -- Расчет - Стоимость участия,грн (Акция)
+                  , tmpData.CostPromo_m     :: TFloat AS CostPromo_m_calc
+                    -- Расчет - Стоимость участия, грн (Трейд-маркетинг)
+                  , tmpData.CostPromo_mi    :: TFloat AS CostPromo_mi_calc
+                  
+             FROM tmpRes AS tmpData
                 LEFT JOIN MovementDesc ON MovementDesc.Id = tmpData.MovementDescId
                -- LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = tmpData.TradeMarkId
-                
+
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
-                
+
                 LEFT JOIN Movement AS Movement_Doc ON Movement_Doc.Id = tmpData.MovementId_doc
                 LEFT JOIN MovementDesc AS MovementDesc_Doc ON MovementDesc_Doc.Id = Movement_Doc.DescId
 
@@ -671,16 +819,16 @@ BEGIN
                 -- Договор (условие)
                 LEFT JOIN Object AS Object_Contract_Master ON Object_Contract_Master.Id = tmpData.ContractMasterId
                 -- Типы условий договоров
-                LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpData.ContractConditionKindId                
+                LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpData.ContractConditionKindId
 
                 -- юр.л. - база
-                LEFT JOIN Object AS Object_Juridical_baza ON Object_Juridical_baza.Id = tmpData.JuridicalId_baza  
- 
+                LEFT JOIN Object AS Object_Juridical_baza ON Object_Juridical_baza.Id = tmpData.JuridicalId_baza
+
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                      ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical_baza.Id
                                     AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
-               
+
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                      ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                                     AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -712,10 +860,8 @@ BEGIN
                                        ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                       AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-
-                
        ;
-         
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
