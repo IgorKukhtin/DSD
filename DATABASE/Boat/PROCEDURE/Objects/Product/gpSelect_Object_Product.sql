@@ -59,33 +59,37 @@ RETURNS TABLE (KeyId TVarChar, Id Integer, Code Integer, Name TVarChar, ProdColo
              , isSale Boolean
 
                -- ИТОГО Сумма вх. без НДС (Basis)
-             , EKPrice_summ1          TFloat
+             , EKPrice_summ1            TFloat
                -- ИТОГО Сумма вх. без НДС (options)
-             , EKPrice_summ2          TFloat
+             , EKPrice_summ2            TFloat
                -- ИТОГО Сумма вх. без НДС (Basis+options)
-             , EKPrice_summ     TFloat
+             , EKPrice_summ             TFloat
 
 
                -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis)
-             , Basis_summ1            TFloat
+             , Basis_summ1              TFloat
                -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
-             , Basis_summ1_orig       TFloat
+             , Basis_summ1_orig         TFloat
+             , Basis_summ1_orig_pl      TFloat
 
                -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (options)
-             , Basis_summ2            TFloat
+             , Basis_summ2              TFloat
                -- ИТОГО Сумма продажи без НДС - без Скидки (options)
-             , Basis_summ2_orig       TFloat
+             , Basis_summ2_orig         TFloat
+             , Basis_summ2_orig_pl      TFloat
 
                -- 1.*Total LP (Basis + Opt) - ИТОГО БЕЗ учета скидки и Транспорта, Сумма продажи без НДС
-             , Basis_summ_orig       TFloat
+             , Basis_summ_orig          TFloat
+             , Basis_summ_orig_pl       TFloat
 
                -- 2.***Total LP - ИТОГО с учетом всех % скидок, без Транспорта, Сумма продажи без НДС
-             , Basis_summ       TFloat
+             , Basis_summ               TFloat
+             , Basis_summ_pl            TFloat
 
                -- 4. Total LP - ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , Basis_summ_transport       TFloat
+             , Basis_summ_transport     TFloat
                -- 5. Total LP + Vat - ИТОГО Сумма продажи с НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
-             , BasisWVAT_summ_transport       TFloat
+             , BasisWVAT_summ_transport TFloat
 
 
                -- Цена продажи с сайта - без НДС, Basis+options
@@ -315,7 +319,9 @@ BEGIN
                          , COALESCE (tmpOrderClient.VATPercent, 0)      AS VATPercent
 
                            -- Цена продажи из истории??? - без НДС (ReceiptProdModel - Basis)
-                         , COALESCE (tmpPriceBasis.ValuePrice, 0) ::TFloat  AS BasisPrice
+                         , COALESCE (tmpPriceBasis.ValuePrice, 0) ::TFloat  AS BasisPrice_pl
+                           -- Цена продажи - документ
+                         , (CASE WHEN MIFloat_BasisPrice.ValueData > 0 THEN MIFloat_BasisPrice.ValueData ELSE COALESCE (tmpPriceBasis.ValuePrice, 0) END) ::TFloat  AS BasisPrice
 
                            -- Цена продажи с сайта - без НДС, Basis+options
                          , COALESCE (tmpOrderClient.OperPrice_load, 0)         AS OperPrice_load
@@ -365,6 +371,10 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice_load
                                                      ON MIFloat_BasisPrice_load.MovementItemId = MovementItem.Id
                                                     AND MIFloat_BasisPrice_load.DescId         = zc_MIFloat_BasisPrice_load()
+                         -- Базовая цена продажи модели - в документе
+                         LEFT JOIN MovementItemFloat AS MIFloat_BasisPrice
+                                                     ON MIFloat_BasisPrice.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_BasisPrice.DescId         = zc_MIFloat_BasisPrice()
 
                          -- цены для <Шаблон сборка Модели>
                          LEFT JOIN tmpPriceBasis ON tmpPriceBasis.GoodsId = ObjectLink_ReceiptProdModel.ChildObjectId
@@ -388,6 +398,8 @@ BEGIN
                                            -- % НДС Заказ клиента
                                          , tmpProduct.VATPercent
                                            -- Цена продажи из истории??? - без НДС (ReceiptProdModel - Basis) - Лодка
+                                         , tmpProduct.BasisPrice_pl
+                                           -- Цена продажи - документ
                                          , tmpProduct.BasisPrice
                                            --
                                          , lpSelect.ReceiptProdModelId, lpSelect.ReceiptProdModelChildId
@@ -467,7 +479,9 @@ BEGIN
                                   , 0 AS DiscountTax_opt
                                   , lpSelect.VATPercent
                                     -- Цена продажи из истории??? - без НДС (ReceiptProdModel - Basis) - Лодка
-                                  , lpSelect.BasisPrice      AS BasisPrice_summ
+                                  , lpSelect.BasisPrice_pl AS BasisPrice_summ_pl
+                                    -- Цена продажи - документ
+                                  , lpSelect.BasisPrice    AS BasisPrice_summ
 
                              FROM tmpReceiptProdModelChild_all AS lpSelect
                                   LEFT JOIN tmpProdOptItems ON tmpProdOptItems.MovementId_OrderClient = lpSelect.MovementId_OrderClient
@@ -484,6 +498,7 @@ BEGIN
                                     , lpSelect.DiscountTax
                                     , lpSelect.DiscountNextTax
                                     , lpSelect.VATPercent
+                                    , lpSelect.BasisPrice_pl
                                     , lpSelect.BasisPrice
 
                             UNION ALL
@@ -502,6 +517,7 @@ BEGIN
                                   , 0 AS DiscountTax_opt
                                   , lpSelect.VATPercent
 
+                                  , 0 AS BasisPrice_summ_pl
                                   , 0 AS BasisPrice_summ
 
                              FROM tmpReceiptProdModelChild_all AS lpSelect
@@ -566,6 +582,7 @@ BEGIN
                                   , lpSelect.VATPercent
 
                                     -- Цена продажи НЕ из истории??? - без НДС - опции
+                                  , SUM (lpSelect.Sale_summ)     AS BasisPrice_summ_pl
                                   , SUM (lpSelect.Sale_summ)     AS BasisPrice_summ
 
                              FROM tmpProdOptItems AS lpSelect
@@ -585,11 +602,15 @@ BEGIN
                                   , tmpCalc_all.isBasis
                                   , tmpCalc_all.EKPrice_summ
                                    -- Цена продажи из истории??? - без НДС
+                                  , tmpCalc_all.BasisPrice_summ_pl
+                                    -- Цена продажи - документ
                                   , tmpCalc_all.BasisPrice_summ
                                     -- с учетом % скидки №1 - без НДС
-                                  , (zfCalc_SummDiscountTax     (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax)) AS BasisPrice_summ_disc_1
+                                  , (zfCalc_SummDiscountTax     (tmpCalc_all.BasisPrice_summ,    tmpCalc_all.DiscountTax)) AS BasisPrice_summ_disc_1
+                                  , (zfCalc_SummDiscountTax     (tmpCalc_all.BasisPrice_summ_pl, tmpCalc_all.DiscountTax)) AS BasisPrice_summ_disc_1_pl
                                     -- с учетом % скидки №2 - без НДС
-                                  , (zfCalc_SummDiscountTax     (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax)) AS BasisPrice_summ_disc_2
+                                  , (zfCalc_SummDiscountTax     (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ,    tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax)) AS BasisPrice_summ_disc_2
+                                  , (zfCalc_SummDiscountTax     (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ_pl, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax)) AS BasisPrice_summ_disc_2_pl
                                     -- Сумма продажи с НДС - с учетом ВСЕХ скидок
                                   , (zfCalc_SummWVATDiscountTax (zfCalc_SummDiscountTax (tmpCalc_all.BasisPrice_summ, tmpCalc_all.DiscountTax), tmpCalc_all.DiscountNextTax, tmpCalc_all.VATPercent)) AS BasisPriceWVAT_summ_disc
                              FROM tmpCalc_all
@@ -601,11 +622,14 @@ BEGIN
                                   , tmpCalc_all.ProductId
                                   , tmpCalc_all.isBasis
                                   , tmpCalc_all.EKPrice_summ
+                                  , tmpCalc_all.BasisPrice_summ_pl
                                   , tmpCalc_all.BasisPrice_summ
                                     -- с учетом % скидки №1 - без НДС
-                                  , tmpCalc_all.BasisPrice_summ_disc_1
+                                  , tmpCalc_all.BasisPrice_summ_disc_1 AS BasisPrice_summ_disc_1
+                                  , tmpCalc_all.BasisPrice_summ_disc_1 AS BasisPrice_summ_disc_1_pl
                                     -- с учетом % скидки №1+2 - без НДС
-                                  , tmpCalc_all.BasisPrice_summ_disc_2
+                                  , tmpCalc_all.BasisPrice_summ_disc_2 AS BasisPrice_summ_disc_2
+                                  , tmpCalc_all.BasisPrice_summ_disc_2 AS BasisPrice_summ_disc_2_pl
                                     -- Сумма продажи с НДС - с учетом ВСЕХ скидок
                                   , tmpCalc_all.BasisPriceWVAT_summ_disc
                              FROM tmpCalc_all
@@ -906,19 +930,23 @@ BEGIN
          , (COALESCE (tmpCalc_1.EKPrice_summ, 0) + COALESCE (tmpCalc_2.EKPrice_summ, 0)) :: TFloat AS EKPrice_summ
 
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis)
-         , tmpCalc_1.BasisPrice_summ_disc_2     :: TFloat AS Basis_summ1
+         , tmpCalc_1.BasisPrice_summ_disc_2 :: TFloat AS Basis_summ1
            -- ИТОГО Сумма продажи без НДС - без Скидки (Basis)
-         , tmpCalc_1.BasisPrice_summ       :: TFloat AS Basis_summ1_orig
+         , tmpCalc_1.BasisPrice_summ        :: TFloat AS Basis_summ1_orig
+         , tmpCalc_1.BasisPrice_summ_pl     :: TFloat AS Basis_summ1_orig_pl
 
            -- ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (options)
-         , tmpCalc_2.BasisPrice_summ_disc_2     :: TFloat AS Basis_summ2
+         , tmpCalc_2.BasisPrice_summ_disc_2 :: TFloat AS Basis_summ2
            -- ИТОГО Сумма продажи без НДС - без Скидки (options)
-         , tmpCalc_2.BasisPrice_summ       :: TFloat AS Basis_summ2_orig
+         , tmpCalc_2.BasisPrice_summ        :: TFloat AS Basis_summ2_orig
+         , tmpCalc_2.BasisPrice_summ_pl     :: TFloat AS Basis_summ2_orig_pl
 
            -- 1.*Total LP (Basis + Opt) - ИТОГО БЕЗ учета скидки и Транспорта, Сумма продажи без НДС
-         , (COALESCE (tmpCalc_1.BasisPrice_summ, 0)          + COALESCE (tmpCalc_2.BasisPrice_summ, 0))        :: TFloat AS Basis_summ_orig
+         , (COALESCE (tmpCalc_1.BasisPrice_summ, 0)        + COALESCE (tmpCalc_2.BasisPrice_summ, 0))     :: TFloat AS Basis_summ_orig
+         , (COALESCE (tmpCalc_1.BasisPrice_summ_pl, 0)     + COALESCE (tmpCalc_2.BasisPrice_summ_pl, 0))  :: TFloat AS Basis_summ_orig_pl
            -- 2.***Total LP - ИТОГО с учетом всех % скидок, без Транспорта, Сумма продажи без НДС
-         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)   + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)) :: TFloat AS Basis_summ
+         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0)    + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0))    :: TFloat AS Basis_summ
+         , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2_pl, 0) + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2_pl, 0)) :: TFloat AS Basis_summ_pl
 
            -- 4. Total LP - ИТОГО Сумма продажи без НДС - со ВСЕМИ Скидками (Basis+options) + TRANSPORT
          , (COALESCE (tmpCalc_1.BasisPrice_summ_disc_2, 0) + COALESCE (tmpCalc_2.BasisPrice_summ_disc_2, 0)
