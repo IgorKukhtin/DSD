@@ -871,7 +871,7 @@ BEGIN
           --если печать из грида отчета - ограничиваем через товары
           INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpResult.GoodsId
                              AND COALESCE (tmpGoods.GoodsKindId_Complete,0) = COALESCE (tmpResult.GoodsKindId_Complete,0)
-                             AND tmpGoods.PartionGoodsDate = ObjectDate_PartionGoods.ValueData  ::TDateTime
+                             AND (tmpGoods.PartionGoodsDate = ObjectDate_PartionGoods.ValueData ::TDateTime OR inIsPartion = TRUE)
 
 
           LEFT JOIN tmpGoodsNormDiff ON tmpGoodsNormDiff.GoodsId = tmpResult.GoodsId
