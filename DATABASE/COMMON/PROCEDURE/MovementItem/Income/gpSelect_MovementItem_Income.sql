@@ -510,6 +510,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                    ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
