@@ -51,6 +51,7 @@ type
     Persent_part: TcxGridDBColumn;
     SummAmount: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
+    GoodsGroupDirectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public
