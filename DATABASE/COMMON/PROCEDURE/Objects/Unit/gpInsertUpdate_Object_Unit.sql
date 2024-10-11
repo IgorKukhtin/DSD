@@ -7,7 +7,8 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Boolean, Boolean, Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
@@ -15,8 +16,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inCode                    Integer   , -- Код объекта <Подразделение>
     IN inName                    TVarChar  , -- Название объекта <Подразделение>
     IN inisPartionDate           Boolean   , -- Партии даты в учете
-    IN inisPartionGoodsKind      Boolean   , -- Партии по виду упаковки 
-    IN inisCountCount            Boolean   , -- Учет батонов 
+    IN inisPartionGoodsKind      Boolean   , -- Партии по виду упаковки
+    IN inisCountCount            Boolean   , -- Учет батонов
     IN inisPartionGP             Boolean   , -- Партии для ГП и Тушенки
     IN inisAvance                Boolean   , -- Начисление аванс автомат.
     IN inParentId                Integer   , -- ссылка на подразделение
@@ -28,11 +29,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inProfitLossDirectionId   Integer   , -- ссылка на Аналитики статей отчета ПиУ
     IN inRouteId                 Integer   , -- Маршрут
     IN inRouteSortingId          Integer   , -- Сортировка маршрутов
-    IN inAreaId                  Integer   , -- регион 
+    IN inAreaId                  Integer   , -- регион
     IN inCityId                  Integer   , -- город
     IN inPersonalHeadId          Integer   , -- Руководитель подразделения
+    IN inFounderId               Integer   , --
     IN inSheetWorkTimeId         Integer   , -- Режим работы (Шаблон табеля р.вр.)
-    IN inAddress                 TVarChar  , -- Адрес 
+    IN inAddress                 TVarChar  , -- Адрес
     IN inAddressEDIN             TVarChar  , -- Адрес для EDIN
     IN inComment                 TVarChar  , -- Примечание
     IN inGLN                     TVarChar  ,
@@ -59,7 +61,7 @@ BEGIN
 /*
    -- проверка
    IF inPersonalSheetWorkTimeId > 0
-   THEN -- 
+   THEN --
         RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Сотрудник (доступ к табелю р.времени)>.';
    END IF;
 */
@@ -96,7 +98,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionGP(), ioId, inisPartionGP);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_Avance(), ioId, inisAvance);
-         
+
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Филиалы>
@@ -119,13 +121,16 @@ BEGIN
    -- сохранили связь с <Сортировки маршрутов>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Unit_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Регион>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId); 
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Area(), ioId, inAreaId);
    -- сохранили связь с <город>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_City(), ioId, inCityId);
    -- сохранили связь с <Сотрудник (доступ к табелю р.времени)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_PersonalHead(), ioId, inPersonalHeadId);
    -- сохранили связь с <Режим работы (Шаблон табеля р.вр.)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_SheetWorkTime(), ioId, inSheetWorkTimeId);
+
+   -- сохранили связь с <Учредители>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Unit_Founder(), ioId, inFounderId);
 
    -- Сохранили <Примечание>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Comment(), ioId, inComment);
@@ -135,7 +140,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_KATOTTG(), ioId, inKATOTTG);
    -- Сохранили <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_AddressEDIN(), ioId, inAddressEDIN);
-      
+
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
