@@ -162,6 +162,14 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 50
       end
+      object FounderName: TcxGridDBColumn
+        Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1080
+        DataBinding.FieldName = 'FounderName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
+      end
       object CityName: TcxGridDBColumn
         Caption = #1043#1086#1088#1086#1076
         DataBinding.FieldName = 'CityName'
@@ -921,6 +929,7 @@ object UnitForm: TUnitForm
     ColumnEnterList = <>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 176
     Top = 200

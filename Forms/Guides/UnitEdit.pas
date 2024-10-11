@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxButtonEdit;
+  dxSkinXmas2008Blue, cxButtonEdit, dsdCommon;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -99,6 +99,9 @@ type
     GuidesCity: TdsdGuides;
     cxLabel23: TcxLabel;
     edAddressEDIN: TcxTextEdit;
+    ceFounder: TcxButtonEdit;
+    cxLabel22: TcxLabel;
+    FounderGuides: TdsdGuides;
   private
     { Private declarations }
   public

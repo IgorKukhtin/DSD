@@ -342,6 +342,12 @@
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 88
     Top = 284
@@ -350,11 +356,19 @@
     StoredProcName = 'gpInsertUpdate_Movement_BankAccount'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ParentId'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -741,6 +755,13 @@
         Value = Null
         Component = ceInvNumberInvoice
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ParentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ParentId'
         MultiSelectSeparator = ','
       end>
     Left = 288

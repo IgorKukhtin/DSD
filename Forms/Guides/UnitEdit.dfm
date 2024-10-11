@@ -290,7 +290,7 @@
   end
   object cxLabel16: TcxLabel
     Left = 40
-    Top = 390
+    Top = 389
     Caption = #1040#1076#1088#1077#1089
   end
   object edAddress: TcxTextEdit
@@ -357,24 +357,24 @@
   end
   object edGLN: TcxTextEdit
     Left = 280
-    Top = 409
+    Top = 407
     TabOrder = 44
     Width = 100
   end
   object cxLabel19: TcxLabel
     Left = 280
-    Top = 390
+    Top = 389
     Caption = 'GLN'
   end
   object edKATOTTG: TcxTextEdit
     Left = 389
-    Top = 409
+    Top = 407
     TabOrder = 46
     Width = 100
   end
   object cxLabel20: TcxLabel
     Left = 389
-    Top = 390
+    Top = 389
     Caption = #1050#1040#1058#1054#1058#1058#1043
   end
   object cxLabel21: TcxLabel
@@ -392,11 +392,11 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 49
-    Width = 449
+    Width = 209
   end
   object cxLabel23: TcxLabel
     Left = 40
-    Top = 479
+    Top = 478
     Caption = #1040#1076#1088#1077#1089' '#1076#1083#1103' EDIN'
   end
   object edAddressEDIN: TcxTextEdit
@@ -404,6 +404,23 @@
     Top = 497
     TabOrder = 51
     Width = 209
+  end
+  object ceFounder: TcxButtonEdit
+    Left = 280
+    Top = 455
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 52
+    Width = 209
+  end
+  object cxLabel22: TcxLabel
+    Left = 280
+    Top = 436
+    Caption = #1059#1095#1088#1077#1076#1080#1090#1077#1083#1100
   end
   object ActionList: TActionList
     Left = 16
@@ -602,6 +619,14 @@
         Name = 'inPersonalHeadId'
         Value = Null
         Component = GuidesPersonalHead
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFounderId'
+        Value = Null
+        Component = FounderGuides
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -972,6 +997,21 @@
         Name = 'AddressEDIN'
         Value = Null
         Component = edAddressEDIN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FounderId'
+        Value = Null
+        Component = FounderGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FounderName'
+        Value = Null
+        Component = FounderGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1458,5 +1498,32 @@
       end>
     Left = 179
     Top = 432
+  end
+  object FounderGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceFounder
+    FormNameParam.Value = 'TFounderForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TFounderForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FounderGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FounderGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 402
+    Top = 438
   end
 end

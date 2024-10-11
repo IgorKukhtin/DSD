@@ -120,7 +120,12 @@ END IF;
                                                      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                                     )*/
-
+   /*, tmpGoods AS (select GoodsId, GoodsKindId
+                  from gpSelect_Object_GoodsByGoodsKind( inSession := '5') AS gpSelect
+                  where (GoodsKindName ilike 'нар. 200' or GoodsKindName ilike 'нар. 180' or GoodsKindName ilike 'нар. 150')
+                    and isOrder = true
+                 )*/
+     -- 
      SELECT tmp.MovementId
           , tmp.OperDate
           , (tmp.InvNumber || ' - ' || CASE WHEN tmp.BranchCode IN (1)     THEN tmp.BranchCode 
@@ -158,6 +163,15 @@ END IF;
           LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
           LEFT JOIN tmpUnit AS tmpUnit_To ON tmpUnit_To.UnitId = MLO_To.ObjectId
 
+          /*JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                           AND MovementItem.DescId     = zc_MI_Master()
+                           AND MovementItem.isErased   = FALSE
+          JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+          JOIN tmpGoods ON tmpGoods.GoodsId     = MovementItem.ObjectId
+                       AND tmpGoods.GoodsKindId = MILinkObject_GoodsKind.ObjectId*/
+
   /*     join  MovementLinkMovement
                     on MovementLinkMovement.MovementChildId = Movement.Id
                       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Production()
@@ -168,15 +182,15 @@ END IF;
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
 --      AND Movement.DescId IN (zc_Movement_Loss())
 --      AND Movement.DescId IN (zc_Movement_Send())
---        AND Movement.DescId IN (zc_Movement_SendOnPrice())
-      --  AND Movement.DescId IN (zc_Movement_Sale())
+        AND Movement.DescId IN (zc_Movement_SendOnPrice())
+--      AND Movement.DescId IN (zc_Movement_Sale())
 --      AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory(), zc_Movement_SendOnPrice(), zc_Movement_Loss(), zc_Movement_Sale(), zc_Movement_ReturnIn())
        -- AND Movement.DescId IN (zc_Movement_Inventory())
        -- AND Movement.DescId IN (zc_Movement_ReturnIn())
-       AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+      -- AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
 --      AND Movement.DescId IN (zc_Movement_SendOnPrice())
        AND Movement.StatusId = zc_Enum_Status_Complete()
-       AND (MLO_From.ObjectId = zc_Unit_RK() or MLO_To.ObjectId = zc_Unit_RK() )
+       AND (MLO_From.ObjectId = zc_Unit_RK())
 --       AND (MLO_From.ObjectId = zc_Unit_RK() OR MLO_To.ObjectId = zc_Unit_RK())
     --   AND MLO_To.ObjectId IN (zc_Unit_RK(), 8462 , 8461, 256716, 1387416)
 

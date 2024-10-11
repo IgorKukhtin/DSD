@@ -24,7 +24,8 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   Vcl.ExtCtrls, cxPC, dxDockControl, dxDockPanel, cxContainer, dsdGuides,
   cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ComCtrls, dxCore,
-  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit, ExternalLoad;
+  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit, ExternalLoad,
+  dsdCommon;
 
 type
   TPriceListItemForm = class(TParentForm)
@@ -113,6 +114,8 @@ type
     bbInsertRecord_TradeMark: TdxBarButton;
     bbChoiceFormTradeMark: TdxBarButton;
     DescName: TcxGridDBColumn;
+    PriceListCode: TcxGridDBColumn;
+    PriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdAddOn, dsdDB, Datasnap.DBClient, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter, cxButtonEdit, cxCalendar;
+  cxGrid, cxSplitter, cxButtonEdit, cxCalendar, dsdCommon;
 
 type
   TUnitForm = class(TParentForm)
@@ -95,6 +95,7 @@ type
     isCountCount: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     CityName: TcxGridDBColumn;
+    FounderName: TcxGridDBColumn;
   private
     { Private declarations }
   public

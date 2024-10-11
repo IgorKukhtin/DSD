@@ -42,6 +42,22 @@ object PriceListItemForm: TPriceListItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object PriceListCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'PriceListCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
+      end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'PriceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object GoodsGroupNameFull: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
         DataBinding.FieldName = 'GoodsGroupNameFull'
@@ -1114,6 +1130,7 @@ object PriceListItemForm: TPriceListItemForm
       end>
     SummaryItemList = <>
     ShowFieldImageList = <>
+    ViewDocumentList = <>
     PropertiesCellList = <>
     Left = 192
     Top = 256
