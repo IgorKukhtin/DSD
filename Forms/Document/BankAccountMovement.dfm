@@ -31,6 +31,7 @@
   object ceOperDate: TcxDateEdit [4]
     Left = 147
     Top = 25
+    EditValue = 45576d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -259,7 +260,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 33
-    Width = 259
+    Width = 169
   end
   object cxLabel16: TcxLabel [34]
     Left = 280
@@ -305,6 +306,17 @@
     TabOrder = 39
     Width = 259
   end
+  object cxLabel29: TcxLabel [40]
+    Left = 189
+    Top = 220
+    Caption = #1057#1095#1077#1090'('#1082#1083#1080#1077#1085#1090#1072')'
+  end
+  object ceInvNumberInvoice: TcxTextEdit [41]
+    Left = 188
+    Top = 237
+    TabOrder = 41
+    Width = 79
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
     Top = 316
@@ -346,7 +358,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
@@ -354,7 +366,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
@@ -370,7 +382,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inamountin'
+        Name = 'inAmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
@@ -378,7 +390,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inamountout'
+        Name = 'inAmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
@@ -402,7 +414,15 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'incomment'
+        Name = 'inInvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
@@ -426,7 +446,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'incontactid'
+        Name = 'inContractId'
         Value = ''
         Component = GuidesContract
         ComponentItem = 'Key'
@@ -434,7 +454,7 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ininfomoneyid'
+        Name = 'inInfoMoneyId'
         Value = ''
         Component = GuidesInfoMoney
         ComponentItem = 'Key'
@@ -713,6 +733,13 @@
         Value = Null
         Component = GuidesPartner
         ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberInvoice'
+        Value = Null
+        Component = ceInvNumberInvoice
         DataType = ftString
         MultiSelectSeparator = ','
       end>

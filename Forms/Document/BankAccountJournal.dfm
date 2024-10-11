@@ -489,10 +489,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1028
     ExplicitWidth = 1028
     inherited deStart: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45292d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 43101d
+      EditValue = 45292d
     end
   end
   object cxLabel27: TcxLabel [2]

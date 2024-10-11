@@ -70,6 +70,8 @@ type
     cxLabel18: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    cxLabel29: TcxLabel;
+    ceInvNumberInvoice: TcxTextEdit;
   private
     { Private declarations }
   public
