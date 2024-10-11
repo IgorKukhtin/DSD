@@ -109,12 +109,15 @@ BEGIN
      THEN
         -- Расчет Remains и запись его в zc_MI_Child
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContainerId(), tmp.MovementItemId, tmp.ContainerId)
+                -- Курсовая разница в ГРН
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), tmp.MovementItemId, tmp.OperSumm_40801)
         FROM
        (SELECT lpInsertUpdate_MovementItem (COALESCE (MovementItem.Id, 0), zc_MI_Child(), COALESCE (tmpSumm.ObjectId, MovementItem.ObjectId), inMovementId
                                           , COALESCE (tmpSumm.OperSumm, 0)
                                           , NULL
                                            ) AS MovementItemId
              , COALESCE (tmpSumm.ContainerId, MovementItem.ContainerId) AS ContainerId
+             , COALESCE (tmpSumm.OperSumm_40801, 0) AS OperSumm_40801
         FROM -- существующие элементы
              (SELECT MovementItem.Id, MovementItem.ObjectId, MIFloat_ContainerId.ValueData AS ContainerId
               FROM MovementItem
@@ -127,7 +130,11 @@ BEGIN
              -- сумма курсовой разницы в грн
              FULL JOIN (SELECT tmpSumm.ContainerId
                              , tmpSumm.ObjectId
-                             , SUM (tmpSumm.OperSumm) AS OperSumm
+                               -- НЕ Курсовая разница
+                             , SUM (CASE WHEN tmpSumm.AccountId <> zc_Enum_Account_40801() THEN tmpSumm.OperSumm ELSE 0 END) AS OperSumm
+                               -- Курсовая разница
+                             , SUM (CASE WHEN tmpSumm.AccountId = zc_Enum_Account_40801() AND vbOperDate >= '01.09.2024' THEN tmpSumm.OperSumm ELSE 0 END) AS OperSumm_40801
+
                          FROM -- это остаток суммы на дату в Валюте (их надо перевести в валюту баланса и прибавить)
                               (SELECT tmpContainer.ContainerId
                                     , tmpContainer.AccountId
@@ -222,7 +229,7 @@ BEGIN
                                           INNER JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
                                                               AND Container.DescId  = zc_Container_Summ()
                                                               -- !!!без виртуальной курсовой разницы!!!
-                                                              AND Container.ObjectId <> zc_Enum_Account_40801() -- Курсовая разница
+                                                              -- AND Container.ObjectId <> zc_Enum_Account_40801() -- Курсовая разница
                                           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
                                                                         ON ContainerLinkObject_PaidKind.ContainerId  = ContainerLinkObject_Currency.ContainerId
                                                                        AND ContainerLinkObject_PaidKind.DescId       = zc_ContainerLinkObject_PaidKind()
@@ -356,8 +363,85 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                          ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
                                         AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+             --LEFT JOIN Container ON Container.Id      = ContainerLinkObject_Currency.ContainerId
+             --                   AND Container.DescId  = zc_Container_Summ()
+             --                   -- !!!без виртуальной курсовой разницы!!!
+             --                   AND Container.ObjectId <> zc_Enum_Account_40801() -- Курсовая разница
+
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-             LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData
+             LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData :: Integer
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
+                                           ON ContainerLinkObject_JuridicalBasis.ContainerId = Container.Id
+                                          AND ContainerLinkObject_JuridicalBasis.DescId  = zc_ContainerLinkObject_JuridicalBasis()
+        WHERE Movement.Id = inMovementId
+          AND Movement.DescId = zc_Movement_Currency()
+          AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+
+       UNION ALL
+        -- Счет Курсовая разница
+        SELECT Movement.DescId
+             , Movement.OperDate
+             , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
+             , COALESCE (Object.DescId, 0)         AS ObjectDescId
+               -- обнуляется Счет
+             , 1 * MIFloat_Summ.ValueData AS OperSumm
+               --
+             , MovementItem.Id     AS MovementItemId
+
+             , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId           -- есть значение
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId                         -- не используется
+             , COALESCE (Container.ObjectId, 0) AS AccountId                        -- есть значение
+             , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
+
+               -- Управленческие группы назначения: не используется
+             , 0 AS InfoMoneyGroupId
+               -- Управленческие назначения: не используется
+             , 0 AS InfoMoneyDestinationId
+               -- Управленческие статьи назначения: не используется
+             , 0 AS InfoMoneyId
+
+               -- Бизнес Баланс: не используется
+             , 0 AS BusinessId_Balance
+               -- Бизнес ОПиУ: не используется
+             , 0 AS BusinessId_ProfitLoss
+
+               -- Главное Юр.лицо: всегда из ...
+             , ContainerLinkObject_JuridicalBasis.ObjectId AS JuridicalId_Basis
+
+             , 0 AS UnitId     -- не используется
+             , 0 AS PositionId -- не используется
+
+               -- Филиал Баланс: не используется
+             , 0 AS BranchId_Balance
+               -- Филиал ОПиУ: не используется
+             , 0 AS BranchId_ProfitLoss
+
+               -- Месяц начислений: не используется
+             , 0 AS ServiceDateId
+
+             , 0 AS ContractId -- не используется
+             , 0 AS PaidKindId -- не используется
+
+             , vbCurrencyId AS CurrencyId
+
+             , TRUE AS IsActive
+             , TRUE AS IsMaster
+
+        FROM Movement
+             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                    AND MovementItem.DescId     = zc_MI_Child()
+             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                         ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+             INNER JOIN MovementItemFloat AS MIFloat_Summ
+                                          ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                         AND MIFloat_Summ.DescId         = zc_MIFloat_Summ()
+                                         AND MIFloat_Summ.ValueData      <> 0
+
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+             INNER JOIN Container ON Container.Id       = MIFloat_ContainerId.ValueData :: Integer
+                                 AND Container.ObjectId = zc_Enum_Account_40801() -- Счет Курсовая разница
              LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
                                            ON ContainerLinkObject_JuridicalBasis.ContainerId = Container.Id
                                           AND ContainerLinkObject_JuridicalBasis.DescId  = zc_ContainerLinkObject_JuridicalBasis()
@@ -382,13 +466,21 @@ BEGIN
              , _tmpItem.OperDate
              , CASE -- Касса Киев + 
                     WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
-                    --
+                    -- новая схема
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.09.2024' THEN 0
+                    -- новая схема - Счет Курсовая разница
+                    WHEN _tmpItem.AccountId = zc_Enum_Account_40801() THEN 0
+                    -- 
                     WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.Id
                     ELSE 0
                END AS ObjectId
 
              , CASE -- Касса Киев + 
                     WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    -- новая схема
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.09.2024' THEN 0
+                    -- новая схема - Счет Курсовая разница
+                    WHEN _tmpItem.AccountId = zc_Enum_Account_40801() THEN 0
                     --
                     WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN Object.DescId
                     ELSE 0
@@ -402,13 +494,23 @@ BEGIN
              , CASE WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN 0 ELSE _tmpItem.ObjectId END AS ObjectIntId_Analyzer
              , 0 AS AccountGroupId
                -- сформируем позже
-             , CASE WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+             , CASE -- Касса Киев
+                    WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    -- новая схема
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.09.2024' THEN 0
+                    -- новая схема - Счет Курсовая разница
+                    WHEN _tmpItem.AccountId = zc_Enum_Account_40801() THEN 0
                     --
                     WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_AccountDirection_40800()  -- Курсовая разница
                     ELSE 0
                END AS AccountDirectionId
 
-             , CASE WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+             , CASE -- Касса Киев
+                    WHEN Object.Id =  14686 AND OperDate = '31.07.2024' THEN 0
+                    -- новая схема
+                    WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.09.2024' THEN 0
+                    -- новая схема - Счет Курсовая разница
+                    WHEN _tmpItem.AccountId = zc_Enum_Account_40801() THEN 0
                     --
                     WHEN Object.DescId = zc_Object_Cash() AND OperDate >= '01.08.2019' THEN zc_Enum_Account_40801()           -- Курсовая разница
                     ELSE 0
@@ -487,6 +589,37 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  13.11.14                                        *
+*/
+
+/*
+-- Просмотр данные zc_MI_Child
+SELECT MovementItem.Id, MovementItem.ObjectId, MovementItem.Amount,  MIFloat_ContainerId.ValueData AS ContainerId
+    , Object.*, Object2.ValueData, Object3.ValueData, Object3.ObjectCode
+              FROM MovementItem
+                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                               ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
+                                              AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                   join Container on Container.Id = MIFloat_ContainerId.ValueData :: Integer
+
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_Cash
+                                                                        ON ContainerLinkObject_Cash.ContainerId  = Container.Id 
+                                                                       AND ContainerLinkObject_Cash.DescId       = zc_ContainerLinkObject_Cash()
+                                                                       AND ContainerLinkObject_Cash.ObjectId     > 0
+
+                   join Object on  Object.Id = ContainerLinkObject_Cash.ObjectId
+
+                                         left  JOIN ContainerLinkObject AS CLO_Currency
+                                                                        -- по этой валюте
+                                                                        ON CLO_Currency.ContainerId = Container.Id 
+                                                                       AND CLO_Currency.DescId   = zc_ContainerLinkObject_Currency()
+                   left join Object as Object2 on  Object2.Id = CLO_Currency.ObjectId
+
+                   left join Object as Object3 on  Object3.Id = Container.ObjectId
+
+              WHERE MovementItem.MovementId = 29391820
+                AND MovementItem.DescId     = zc_MI_Child()
+
+order by Object3.ObjectCode
 */
 
 -- тест

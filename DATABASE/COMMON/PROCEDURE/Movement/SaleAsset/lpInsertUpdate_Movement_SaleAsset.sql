@@ -106,6 +106,14 @@ BEGIN
                                                         , inCurrencyFromId := zc_Enum_Currency_Basis()
                                                         , inCurrencyToId   := inCurrencyDocumentId
                                                         , inPaidKindId     := inPaidKindId)            AS tmp;
+              ELSE
+                  SELECT tmp.Amount, tmp.ParValue
+                  INTO ioCurrencyValue, ioParValue
+                  FROM lfSelect_Movement_Currency_byDate (inOperDate       := inOperDatePartner
+                                                        , inCurrencyFromId := zc_Enum_Currency_Basis()
+                                                        , inCurrencyToId   := inCurrencyDocumentId
+                                                        , inPaidKindId     := inPaidKindId)            AS tmp;
+
               END IF;
          END IF;
      ELSE ioCurrencyValue := 1.00; ioParValue := 1.00;

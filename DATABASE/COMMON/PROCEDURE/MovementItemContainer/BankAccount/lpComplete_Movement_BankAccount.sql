@@ -118,6 +118,7 @@ BEGIN
      -- проверка - Инвестиции
      IF EXISTS (SELECT 1 FROM _tmpItem JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = _tmpItem.InfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
         AND COALESCE ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.DescId = zc_MovementLinkMovement_Invoice() AND MLM.MovementId = inMovementId), 0) = 0
+        AND inUserId <> 5
      THEN
         RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData ((SELECT DISTINCT _tmpItem.InfoMoneyId FROM _tmpItem JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = _tmpItem.InfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()));
      END IF;
@@ -233,6 +234,10 @@ BEGIN
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
+                    
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN ObjectLink_Unit_Founder.ChildObjectId
 
                     -- сразу в ОПиУ - Инвестиции
                     WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
@@ -244,6 +249,10 @@ BEGIN
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN zc_Object_Founder()
 
                     -- сразу в ОПиУ - Инвестиции
                     WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
@@ -267,10 +276,17 @@ BEGIN
                       OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы, т.е. сумма грн сразу в ОПиУ
                          THEN COALESCE (MI_Child.Amount, -1 * _tmpItem.OperSumm)
 
-                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/ CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0 THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData ELSE 0 END AS NUMERIC (16, 2))
+                    ELSE -1 * /*CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END*/
+                         CAST (CASE WHEN MovementFloat_ParPartnerValue.ValueData <> 0
+                                         THEN _tmpItem.OperSumm_Currency * MovementFloat_CurrencyPartnerValue.ValueData / MovementFloat_ParPartnerValue.ValueData
+                                    ELSE 0
+                               END AS NUMERIC (16, 2))
                END AS OperSumm
 
-             , CASE -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "другой" проводке
+             , CASE -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
+                         THEN 0
+                    -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "другой" проводке
                     WHEN _tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
                          THEN 0
                     WHEN Object.DescId IN (zc_Object_Juridical(), zc_Object_Partner())
@@ -283,6 +299,10 @@ BEGIN
              , CASE -- сразу в ОПиУ - и это НЕ курсовая разница
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+                         THEN 0
+
+                    -- если это Расчеты с участниками
+                    WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
                          THEN 0
 
                     -- Инвестиции - забаланс
@@ -342,11 +362,11 @@ BEGIN
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
 
                -- Управленческие группы назначения
-             , _tmpItem.InfoMoneyGroupId
+             , COALESCE (View_InfoMoney_Founder.InfoMoneyGroupId, _tmpItem.InfoMoneyGroupId) AS InfoMoneyGroupId
                -- Управленческие назначения
-             , _tmpItem.InfoMoneyDestinationId
+             , COALESCE (View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
-             , _tmpItem.InfoMoneyId
+             , COALESCE (View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyId) AS InfoMoneyId
 
                -- Бизнес Баланс: всегда из р/сч. (а значение кстати=0)
              , _tmpItem.BusinessId_Balance
@@ -453,6 +473,15 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId =  _tmpItem.MovementItemId
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Founder
+                                  ON ObjectLink_Unit_Founder.ObjectId = MILinkObject_Unit.ObjectId
+                                 AND ObjectLink_Unit_Founder.DescId   = zc_ObjectLink_Unit_Founder()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney_find
+                                  ON ObjectLink_Founder_InfoMoney_find.ObjectId = ObjectLink_Unit_Founder.ChildObjectId
+                                 AND ObjectLink_Founder_InfoMoney_find.DescId   = zc_ObjectLink_Founder_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Founder ON View_InfoMoney_Founder.InfoMoneyId = ObjectLink_Founder_InfoMoney_find.ChildObjectId
 
              LEFT JOIN ObjectLink AS ObjectLink_Founder_InfoMoney
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId

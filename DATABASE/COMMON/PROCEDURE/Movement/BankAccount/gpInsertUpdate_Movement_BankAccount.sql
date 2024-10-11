@@ -2,10 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                   Integer   , -- Ключ объекта <Документ>
+    IN inParentId             Integer   , -- 
     IN inInvNumber            TVarChar  , -- Номер документа
     IN inOperDate             TDateTime , -- Дата документа
     IN inServiceDate          TDateTime , -- Дата начисления
@@ -13,21 +16,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inAmountOut            TFloat    , -- Сумма расхода
     IN inAmountSumm           TFloat    , -- Cумма грн, обмен
 
-    IN inBankAccountId        Integer   , -- Расчетный счет 	
-    IN inComment              TVarChar  , -- Комментарий 
+    IN inBankAccountId        Integer   , -- Расчетный счет
+    IN inInvNumberInvoice     TVarChar  , -- Счет(клиента)
+    IN inComment              TVarChar  , -- Комментарий
     IN inMoneyPlaceId         Integer   , -- Юр лицо, счет, касса, Ведомости начисления
     IN inPartnerId            Integer   , -- Контрагент
     IN inContractId           Integer   , -- Договора
-    IN inInfoMoneyId          Integer   , -- Статьи назначения 
+    IN inInfoMoneyId          Integer   , -- Статьи назначения
     IN inUnitId               Integer   , -- Подразделение
     IN inMovementId_Invoice   Integer   , -- документ счет
-    IN inCurrencyId           Integer   , -- Валюта 
+    IN inCurrencyId           Integer   , -- Валюта
    OUT outCurrencyValue       TFloat    , -- Курс для перевода в валюту баланса
    OUT outParValue            TFloat    , -- Номинал для перевода в валюту баланса
     IN inCurrencyPartnerValue TFloat    , -- Курс для расчета суммы операции
     IN inParPartnerValue      TFloat    , -- Номинал для расчета суммы операции
     IN inSession              TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -107,11 +111,14 @@ BEGIN
                                                , inParValue             := outParValue
                                                , inCurrencyPartnerValue := inCurrencyPartnerValue
                                                , inParPartnerValue      := inParPartnerValue
-                                               , inParentId             := (SELECT ParentId FROM Movement WHERE Id = ioId)
+                                               , inParentId             := inParentId -- (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = ioId)
                                                , inBankAccountPartnerId := (SELECT MovementItemLinkObject.ObjectId FROM MovementItem INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id  AND MovementItemLinkObject.DescId = zc_MILinkObject_BankAccount() WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master())
                                                , inUserId               := vbUserId
                                                 );
-                                                
+
+
+     -- Счет(клиента)
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
@@ -136,7 +143,7 @@ $BODY$
  12.11.14                                        * add lpComplete_Movement_Finance_CreateTemp
  12.09.14                                        * add PositionId and ServiceDateId and BusinessId_... and BranchId_...
  17.08.14                                        * add MovementDescId
- 11.05.14                                        * add ioId:= 
+ 11.05.14                                        * add ioId:=
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  04.04.14                                        * add lpComplete_Movement_BankAccount
  13.03.14                                        * add vbUserId

@@ -1406,7 +1406,7 @@ BEGIN
                              CROSS JOIN tmpSumm
                        ;
     
-IF inUserId = 5 AND 1=1
+IF inUserId = 5 AND 1=0
 THEN
     RAISE EXCEPTION 'Ошибка. vbSumm_diff = <%> <%>', vbSumm_diff, vbSumm_diff_balance;
 END IF;

@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount_MoneyPlace()
+-- Function: gpUpdate_Movement_BankAccount_MoneyPlace()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_BankAccount_MoneyPlace(Integer, Integer, Integer, TVarChar);
 

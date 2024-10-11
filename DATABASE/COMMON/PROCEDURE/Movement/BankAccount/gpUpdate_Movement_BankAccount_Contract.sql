@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpUpdate_Movement_BankAccount_Contract()
 
 DROP FUNCTION IF EXISTS gpUpdate_Movement_BankAccount_Contract(Integer, Integer, TVarChar);
 

@@ -38,7 +38,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
 
     IN inCountDebet               TFloat    , -- кол-во Дебет
     IN inCountKredit              TFloat    , -- кол-во Кредит
-    IN inPrice                    TFloat    , -- цена 
+    IN inPrice                    TFloat    , -- цена
    OUT outSumma                   TFloat    , -- сумма расчет
 
     IN inMovementId_List          TVarChar  , -- список Ид док для затрат
@@ -76,7 +76,7 @@ BEGIN
 
      -- определяем ключ доступа
      IF inPaidKindId = zc_Enum_PaidKind_FirstForm_pav()
-     THEN  
+     THEN
          vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
          vbAccessKeyId:= zc_Enum_Process_AccessKey_ServicePav();
      ELSE
@@ -114,12 +114,12 @@ BEGIN
          ioAmountCurrencyKredit:= 0;
      END IF;
 
-   
+
      -- проверка Юр. лицо
      IF inContractId > 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical() AND OL.ChildObjectId = inJuridicalId)
      THEN
          RAISE EXCEPTION 'Ошибка.Выбрано Юр. лицо = <%> не соответствует значению в договоре = <%>'
-                       , lfGet_Object_ValueData (inJuridicalId) 
+                       , lfGet_Object_ValueData (inJuridicalId)
                        , lfGet_Object_ValueData ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inContractId AND OL.DescId = zc_ObjectLink_Contract_Juridical()))
                         ;
      END IF;
@@ -131,13 +131,13 @@ BEGIN
      THEN
         RAISE EXCEPTION 'Должны быть введены только количество и цена или сумма.';
      END IF;
-     
+
      -- при вводе кол и суммы валюта должна быть ГРН
      IF ((COALESCE (inCountDebet, 0) <> 0 OR  COALESCE (inCountKredit, 0) <> 0) AND COALESCE (inPrice, 0) <> 0) AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
      THEN
          RAISE EXCEPTION 'Ввод в валюте не предусмотрен для количества и цены.';
      END IF;
-     
+
      -- проверка
      IF COALESCE (ioAmountCurrencyDebet, 0) = 0 AND COALESCE (ioAmountCurrencyKredit, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
      THEN
@@ -149,7 +149,7 @@ BEGIN
      THEN
         RAISE EXCEPTION 'Введите сумму или количество и цену';
      END IF;
-     
+
      -- проверка
      IF COALESCE (ioAmountIn, 0) <> 0 AND COALESCE (ioAmountOut, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
@@ -158,18 +158,18 @@ BEGIN
      IF COALESCE (ioAmountCurrencyDebet, 0) <> 0 AND COALESCE (ioAmountCurrencyKredit, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма в валюте: <Дебет> или <Кредит>.';
      END IF;
-     
-     -- проверка 
+
+     -- проверка
      IF COALESCE (inCountDebet, 0) <> 0 AND COALESCE (inCountKredit, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одно количество: <Дебет> или <Кредит>.';
      END IF;
-    
+
      -- проверка
      IF (COALESCE (inCountDebet, 0) + COALESCE (inCountKredit, 0) <> 0 AND COALESCE (inPrice, 0) = 0)
      THEN
         RAISE EXCEPTION 'Должны быть введены цена и количество: <Дебет> или <Кредит>.';
      END IF;
- 
+
      -- проверка
      IF (COALESCE (inJuridicalId, 0) = 0)
      THEN
@@ -182,19 +182,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Для формы оплаты <%> должен быть установлен <Контрагент>.', lfGet_Object_ValueData (inPaidKindId);
      END IF;
 
-     --проверка договор должен быть в Promo, иначе выдавать ошибку  
-     IF COALESCE (inMovementId_doc,0) <> 0 
+     --проверка договор должен быть в Promo, иначе выдавать ошибку
+     IF COALESCE (inMovementId_doc,0) <> 0
       AND EXISTS (SELECT 1 FROM Movement  WHERE Movement.Id = inMovementId_doc AND Movement.DescId = zc_Movement_PromoTrade())
       AND NOT EXISTS (--Акция
                       --Траде маркетинг
                       SELECT MovementLinkObject_Contract.ObjectId AS ContractId
-                      FROM Movement 
-                          --для Промо договор из zc_Movement_PromoPartner  
+                      FROM Movement
+                          --для Промо договор из zc_Movement_PromoPartner
                           LEFT JOIN Movement AS Movement_PromoPartner
                                              ON Movement_PromoPartner.ParentId = Movement.Id
                                             AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                                            AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner() 
-             
+                                            AND Movement_PromoPartner.DescId = zc_Movement_PromoPartner()
+
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                        ON MovementLinkObject_Contract.MovementId = CASE WHEN Movement.DescId = zc_Movement_PromoTrade() THEN Movement.Id ELSE Movement_PromoPartner.Id END
                                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -204,16 +204,16 @@ BEGIN
      THEN
           RAISE EXCEPTION 'Ошибка.В документе <%> № <%> от <%> должен быть установлен <Договор база>.'
                         , (SELECT MovementDesc.ItemName
-                           FROM Movement 
+                           FROM Movement
                                 JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                            WHERE Movement.Id = inMovementId_doc
                           )
                         , (SELECT Movement.InvNumber
-                           FROM Movement 
+                           FROM Movement
                            WHERE Movement.Id = inMovementId_doc
                           )
                         , (SELECT zfConvert_DateToString (Movement.OperDate)
-                           FROM Movement 
+                           FROM Movement
                            WHERE Movement.Id = inMovementId_doc
                           )
                          ;
@@ -234,7 +234,7 @@ BEGIN
             outSumma := inCountKredit * inPrice;
             vbAmount := -1 * inCountKredit * inPrice;
          END IF;
-     ELSE 
+     ELSE
          -- расчет сумма в ГРН
          IF ioAmountIn <> 0
          THEN
@@ -273,9 +273,9 @@ BEGIN
      -- сохранили свойство <Сумма операции (в валюте)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), ioId, vbAmountCurrency);
 
-     -- 
+     --
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_TradeMark(), ioId, inTradeMarkId);
-     -- 
+     --
      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Doc(), ioId, inMovementId_doc);
 
      -- определяем <Элемент документа>
@@ -287,7 +287,7 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), CASE WHEN inPartnerId <> 0 AND inPaidKindId = zc_Enum_PaidKind_SecondForm() THEN inPartnerId ELSE inJuridicalId END, ioId, vbAmount, NULL);
 
-     -- счет клиента
+     -- Счет(клиента)
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberInvoice(), ioId, inInvNumberInvoice);
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);

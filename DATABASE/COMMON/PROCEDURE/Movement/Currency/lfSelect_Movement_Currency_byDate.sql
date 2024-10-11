@@ -89,4 +89,5 @@ ALTER FUNCTION lfSelect_Movement_Currency_byDate (TDateTime, Integer, Integer, I
 
 -- тест
 -- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 840),  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
--- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= CURRENT_DATE, inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 643),  inPaidKindId:= zc_Enum_PaidKind_FirstForm());
+-- SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate:= '29.02.2024', inCurrencyFromId:= (SELECT Id FROM Object WHERE DescId = zc_Object_Currency() AND ObjectCode = 980), inCurrencyToId:= 76965 );
+
