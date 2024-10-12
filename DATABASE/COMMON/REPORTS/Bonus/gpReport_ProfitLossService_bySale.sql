@@ -443,14 +443,15 @@ BEGIN
                                     , Object_Personal.ValueData       AS PersonalName
                                     , Object_PersonalTrade.ValueData  AS PersonalTradeName
 
-                                    , tmp.Sale_AmountPartner
-                                    , tmp.Return_AmountPartner
+                                    , tmp.Sale_AmountPartner   * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS Sale_AmountPartner
+                                    , tmp.Return_AmountPartner * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END AS Return_AmountPartner
+
                                     , tmp.SummAmount
                                     , tmp.Sale_Summ
                                     , tmp.Return_Summ
 
-                                    , SUM (tmp.Sale_AmountPartner)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSale_AmountPartner
-                                    , SUM (tmp.Return_AmountPartner)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalReturn_AmountPartner
+                                    , SUM (tmp.Sale_AmountPartner   * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSale_AmountPartner
+                                    , SUM (tmp.Return_AmountPartner * CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalReturn_AmountPartner
 
                                     , SUM (tmp.SummAmount)  OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSumm
                                     , SUM (tmp.Sale_Summ)   OVER (PARTITION BY tmp.ContractId, tmp.JuridicalId, tmp.PartnerId) AS TotalSummSale
@@ -549,6 +550,14 @@ BEGIN
                                     , MIContainer.ObjectIntId_analyzer
                                     , ContainerLinkObject_Contract.ObjectId
                              ) AS tmp
+
+                            LEFT JOIN ObjectLink AS OL_Goods_Measure
+                                                 ON OL_Goods_Measure.ObjectId = tmp.GoodsId
+                                                AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                  ON ObjectFloat_Weight.ObjectId = tmp.GoodsId
+                                                 AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
+
                             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
                                                  ON ObjectLink_Partner_Personal.ObjectId = tmp.PartnerId
                                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
