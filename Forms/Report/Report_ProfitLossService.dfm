@@ -159,7 +159,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 49
+            Width = 85
           end
           object ContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
@@ -167,7 +167,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 85
           end
           object ContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077')'
@@ -175,7 +175,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 85
           end
           object ContractCode_Master: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1091#1089#1083#1086#1074#1080#1077')'
@@ -201,7 +201,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object ContractConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -510,7 +510,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             Width = 70
           end
           object SummAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' '#1090#1086#1074#1072#1088#1072
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'SummAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -520,7 +520,7 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             Width = 70
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = '*'#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
             DataBinding.FieldName = 'TotalSumm'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -529,30 +529,32 @@ inherited Report_ProfitLossServiceForm: TReport_ProfitLossServiceForm
             Width = 82
           end
           object TotalSumm_tm: TcxGridDBColumn
-            Caption = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1090#1086#1088#1075'.'#1084#1072#1088#1082#1072')'
+            Caption = '*'#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' ('#1058#1052')'
             DataBinding.FieldName = 'TotalSumm_tm'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072')'
             Options.Editing = False
             Width = 70
           end
           object TotalSumm_gpp: TcxGridDBColumn
-            Caption = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1083'.'#1091#1088#1086#1074#1077#1085#1100'-1)'
+            Caption = '*'#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' ('#1091#1088#1086#1074#1077#1085#1100'-1)'
             DataBinding.FieldName = 'TotalSumm_gpp'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' - '#1091#1088#1086#1074#1077#1085#1100'-1)'
+            HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' - '#1091#1088#1086#1074#1077#1085#1100'-1)'
             Options.Editing = False
             Width = 70
           end
           object TotalSumm_gp: TcxGridDBColumn
-            Caption = '* '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1083'.'#1091#1088#1086#1074#1077#1085#1100'-2)'
+            Caption = '*'#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078' ('#1091#1088#1086#1074#1077#1085#1100'-2)'
             DataBinding.FieldName = 'TotalSumm_gp'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' - '#1091#1088#1086#1074#1077#1085#1100'-2)'
             Options.Editing = False
             Width = 70
           end

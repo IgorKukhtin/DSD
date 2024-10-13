@@ -21,7 +21,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, dsdCommon;
 
 type
   TGuideGoodsForm = class(TForm)
@@ -422,7 +422,25 @@ begin
            cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_Weighing').Index].Caption:= 'Расход';
            cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_WeighingWeight').Index].Caption:= 'Расход (кол-во)';
        end;
-  end;
+  end
+  else
+      if (SettingMain.BranchCode >= 201) and (SettingMain.BranchCode <= 202) then
+      begin
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible:= false;
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
+           //
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from').Index].Visible:= false;
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_from').Index].VisibleForCustomization:= false;
+           //
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to').Index].Visible:= false;
+           cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Income_to').Index].VisibleForCustomization:= false;
+           //
+           if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Sale)
+           then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price').Index].Visible:= true;
+           //
+           if (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
+           then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Price_Return').Index].Visible:= false;
+      end;
   //
   EditTare1.Text:='';PanelWeightTare1.Caption:='';
   EditTare2.Text:='';PanelWeightTare2.Caption:='';

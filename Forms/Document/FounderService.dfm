@@ -4,7 +4,7 @@
   ClientHeight = 204
   ClientWidth = 311
   ExplicitWidth = 317
-  ExplicitHeight = 229
+  ExplicitHeight = 233
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
