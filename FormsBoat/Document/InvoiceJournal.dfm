@@ -3370,8 +3370,8 @@
   end
   object DocumentInvoice: TDocument
     GetBlobProcedure = spGetDocument
-    Left = 488
-    Top = 248
+    Left = 496
+    Top = 232
   end
   object spInsertDocument: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_InvoicePdf_bySave'
@@ -3382,7 +3382,7 @@
         Name = 'ioid'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'InvoicePdfId'
+        ComponentItem = 'inProductDocumentId'
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
