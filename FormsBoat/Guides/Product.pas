@@ -265,17 +265,21 @@ type
     bbPrintOrderConfirmation_TD: TdxBarButton;
     bbSeparator: TdxBarSeparator;
     Amount_Debt: TcxGridDBColumn;
-    spGetFileName_Confirm: TdsdStoredProc;
-    actGetFileName_Confirmation: TdsdExecStoredProc;
+    spGetFileName_ConfirmTD: TdsdStoredProc;
+    actGetFileName_ConfirmationTD: TdsdExecStoredProc;
     actInsertDocument: TdsdExecStoredProc;
     spInsertDocument: TdsdStoredProc;
-    mactSave_Confirmation: TMultiAction;
+    mactSave_Confirmation_TD: TMultiAction;
     spGetDocument: TdsdStoredProc;
     actDocumentOpen: TDocumentOpenAction;
     DocumentProduct: TDocument;
-    bbSave_Confirmation: TdxBarButton;
+    bbSave_ConfirmationTD: TdxBarButton;
     actPrintOrderConfirmation_TD_save: TdsdPrintAction;
-    actPrintOrderConfirmation_TDsave1: TdsdPrintAction;
+    actPrintOrderConfirmation_save: TdsdPrintAction;
+    mactSave_Confirmation: TMultiAction;
+    spGetFileName_Confirm_disc: TdsdStoredProc;
+    actGetFileName_Confirmation_disc: TdsdExecStoredProc;
+    bbSave_Confirmation: TdxBarButton;
   private
     { Private declarations }
   public
