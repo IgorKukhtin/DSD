@@ -230,11 +230,15 @@ BEGIN
         -- 1. в балансе
         SELECT _tmpItem.MovementDescId
              , _tmpItem.OperDate
-             , CASE -- сразу в ОПиУ
+
+             , CASE -- Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN Object.Id
+                    -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
-                    
+
                     -- если это Расчеты с участниками
                     WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
                          THEN ObjectLink_Unit_Founder.ChildObjectId
@@ -245,7 +249,11 @@ BEGIN
 
                     ELSE COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, COALESCE (MILinkObject_MoneyPlace.ObjectId, 0))))
                END AS ObjectId
-             , CASE -- сразу в ОПиУ
+
+             , CASE -- Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN COALESCE (Object.DescId, 0)
+                    -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
@@ -283,7 +291,11 @@ BEGIN
                                END AS NUMERIC (16, 2))
                END AS OperSumm
 
-             , CASE -- если это Расчеты с участниками
+             , CASE -- Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN 0
+
+                    -- если это Расчеты с участниками
                     WHEN ObjectLink_Unit_Founder.ChildObjectId >  0
                          THEN 0
                     -- когда в ОПиУ - Инвестиции, сумму в валюте попробуем провести в "другой" проводке
@@ -296,7 +308,11 @@ BEGIN
                     ELSE 0
                END AS OperSumm_Currency
 
-             , CASE -- сразу в ОПиУ - и это НЕ курсовая разница
+             , CASE -- Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN 0
+
+                    -- сразу в ОПиУ - и это НЕ курсовая разница
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN 0
@@ -362,11 +378,11 @@ BEGIN
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId, 0) AS ProfitLossDirectionId
 
                -- Управленческие группы назначения
-             , COALESCE (View_InfoMoney_Founder.InfoMoneyGroupId, _tmpItem.InfoMoneyGroupId) AS InfoMoneyGroupId
+             , COALESCE (View_InfoMoney_20205.InfoMoneyGroupId, View_InfoMoney_Founder.InfoMoneyGroupId, _tmpItem.InfoMoneyGroupId) AS InfoMoneyGroupId
                -- Управленческие назначения
-             , COALESCE (View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId) AS InfoMoneyDestinationId
+             , COALESCE (View_InfoMoney_20205.InfoMoneyDestinationId, View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyDestinationId) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
-             , COALESCE (View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyId) AS InfoMoneyId
+             , COALESCE (View_InfoMoney_20205.InfoMoneyId, View_InfoMoney_Founder.InfoMoneyDestinationId, _tmpItem.InfoMoneyId) AS InfoMoneyId
 
                -- Бизнес Баланс: всегда из р/сч. (а значение кстати=0)
              , _tmpItem.BusinessId_Balance
@@ -374,7 +390,8 @@ BEGIN
              , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
 
                -- Главное Юр.лицо всегда из р/сч.
-             , _tmpItem.JuridicalId_Basis
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, _tmpItem.JuridicalId_Basis) AS JuridicalId_Basis
+
 
              , COALESCE (MILinkObject_Unit.ObjectId, COALESCE (tmpPersonal.UnitId, 0))         AS UnitId
              , COALESCE (MILinkObject_Position.ObjectId, COALESCE (tmpPersonal.PositionId, 0)) AS PositionId -- используется
@@ -387,7 +404,13 @@ BEGIN
                -- Филиал Баланс: всегда из р/сч. (а значение кстати=0) !!!но для ЗП - как в начислениях!!!
              , CASE WHEN MI_Child.Id > 0 OR tmpPersonal.MemberId > 0
                          THEN COALESCE (ObjectLink_Unit_Branch.ChildObjectId, zc_Branch_Basis())
+
+                    -- "Главный филиал" - Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN zc_Branch_Basis()
+
                     ELSE _tmpItem.BranchId_Balance
+
                END AS BranchId_Balance
                -- Филиал ОПиУ: всегда по подразделению !!!но для ЗП - не используется!!!
              , CASE WHEN MI_Child.Id > 0
@@ -404,15 +427,22 @@ BEGIN
                     ELSE 0
                END AS ServiceDateId
 
-             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (ObjectLink_Unit_Contract.ChildObjectId, MILinkObject_Contract.ObjectId, 0) AS ContractId
 
                --  НЕ Всегда БН
-             , CASE WHEN ObjectLink_BankAccount_Account.ChildObjectId = 10895486 -- 
+             , CASE WHEN ObjectLink_BankAccount_Account.ChildObjectId = 10895486 --
                          THEN zc_Enum_PaidKind_FirstForm_pav()
+                    -- Перевыставление
+                    WHEN ObjectLink_Contract_PaidKind.ChildObjectId > 0
+                         THEN ObjectLink_Contract_PaidKind.ChildObjectId
                     ELSE zc_Enum_PaidKind_FirstForm()
                END AS PaidKindId
 
-             , CASE -- сразу в ОПиУ
+             , CASE -- Перевыставление
+                    WHEN ObjectLink_Unit_Contract.ChildObjectId > 0
+                         THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
+
+                    -- сразу в ОПиУ
                     WHEN _tmpItem.CurrencyId             <> zc_Enum_Currency_Basis()
                      AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                          THEN zc_Enum_Currency_Basis() -- !!!меняется валюта!!!
@@ -487,15 +517,35 @@ BEGIN
                                   ON ObjectLink_Founder_InfoMoney.ChildObjectId = _tmpItem.InfoMoneyId
                                  AND ObjectLink_Founder_InfoMoney.DescId = zc_ObjectLink_Founder_InfoMoney()
 
-             LEFT JOIN Object ON Object.Id = COALESCE (MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
                                                            AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+             -- Перевыставление затрат на Юр Лицо
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Contract ON ObjectLink_Unit_Contract.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Contract.DescId   = zc_ObjectLink_Unit_Contract()
+                                                             -- только для затрат - Инвестиции
+                                                             AND _tmpItem.OperDate >= zc_DateStart_Asset()
+                                                             AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical ON ObjectLink_Contract_Juridical.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                  AND ObjectLink_Contract_Juridical.DescId   = zc_ObjectLink_Contract_Juridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind ON ObjectLink_Contract_PaidKind.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                 AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = ObjectLink_Unit_Contract.ChildObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+             -- Перевыставление Инвестиции - на Прочие ТМЦ
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_20205 ON View_InfoMoney_20205.InfoMoneyId = zc_Enum_InfoMoney_20205()
+                                                                    AND ObjectLink_Unit_Contract.ChildObjectId > 0
+
+             LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Contract_Juridical.ChildObjectId, MI_Child.ObjectId, COALESCE (tmpPersonal.PersonalId, COALESCE (ObjectLink_Founder_InfoMoney.ObjectId, MILinkObject_MoneyPlace.ObjectId)))
+
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = COALESCE (MILinkObject_Unit.ObjectId, tmpPersonal.UnitId)
                                                                                                           AND (Object.Id IS NULL -- !!!нужен только для затрат!!!
                                                                                                             OR (_tmpItem.OperDate >= zc_DateStart_Asset() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000())
                                                                                                               )
+
        UNION ALL
 
         -- 2. забаланс

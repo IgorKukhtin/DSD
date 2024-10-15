@@ -217,12 +217,14 @@ BEGIN
 
              , CASE -- сразу в ќѕи” - »нвестиции
                     WHEN tmpMI_Master.OperDate >= zc_DateStart_Asset() AND tmpMI_Master.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         -- AND 1=0
                          THEN 0
                     ELSE tmpMI_Master.ObjectId
                END AS ObjectId
 
              , CASE -- сразу в ќѕи” - »нвестиции
                     WHEN tmpMI_Master.OperDate >= zc_DateStart_Asset() AND tmpMI_Master.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         -- AND 1=0
                          THEN 0
                     ELSE tmpMI_Master.ObjectDescId
                END AS ObjectDescId
@@ -232,6 +234,7 @@ BEGIN
                -- —умма в ¬алюте
              , CASE -- сразу в ќѕи” - »нвестиции
                     WHEN tmpMI_Master.OperDate >= zc_DateStart_Asset() AND tmpMI_Master.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()
+                         -- AND 1=0
                          THEN 0
                     ELSE tmpMI_Master.OperSumm_Currency
                END AS OperSumm_Currency
@@ -369,7 +372,7 @@ BEGIN
                -- —умма
              , 0 AS OperSumm
                -- —умма в ¬алюте
-             , 0 AS OperSumm_Currency
+             , tmpMI_Master.OperSumm_Currency
 
              , tmpMI_Master.OperSumm AS OperSumm_Asset
              , 0 AS OperSumm_Diff_Asset
@@ -431,7 +434,7 @@ BEGIN
                -- —умма
              , 0 AS OperSumm
                -- —умма в ¬алюте
-             , 0 AS OperSumm_Currency
+             , tmpMI_Child.OperSumm_Currency
 
              , tmpMI_Child.OperSumm AS OperSumm_Asset
              , 0 AS OperSumm_Diff_Asset
@@ -533,4 +536,3 @@ $BODY$
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_SendDebt (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())

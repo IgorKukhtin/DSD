@@ -1286,6 +1286,7 @@ BEGIN
                                     , ROW_NUMBER() OVER (PARTITION BY lpSelect.GoodsId, lpSelect.GoodsKindId ORDER BY lpSelect.OperDate DESC, lpSelect.MovementItemId DESC, lpSelect.ChoiceCellCode) AS Ord
                                FROM lpSelect_Movement_ChoiceCell_mi (vbUserId) AS lpSelect
                                WHERE lpSelect.Ord = 1
+                                 AND lpSelect.InsertDate >= (CASE WHEN EXTRACT (HOUR FROM CURRENT_TIMESTAMP) < 8 THEN CURRENT_DATE - INTERVAL '1 DAY' ELSE CURRENT_DATE END + INTERVAL '8 HOUR')
                               )
    --
    SELECT tmpResult.MovementId
@@ -2680,4 +2681,4 @@ zc_ObjectFloat_OrderType_TermProduction
 
 */
 
--- select * from gpReport_Send_PartionCell(inStartDate := ('25.09.2024')::TDateTime , inEndDate := ('25.09.2024')::TDateTime , inUnitId := 8459 , inIsMovement := 'False' , inIsCell := 'false' , inIsShowAll := 'false' ,  inSession := '9457') --where GoodsCode = 41;
+-- select * from gpReport_Send_PartionCell (inStartDate:= CURRENT_DATE, inEndDate:= CURRENT_DATE, inUnitId:= 8459, inIsMovement:= FALSE, inIsCell:= FALSE, inIsShowAll:= FALSE, inSession := '9457') --where GoodsCode = 41;

@@ -36,7 +36,7 @@ RETURNS TABLE (MovementSumm TFloat,
                ContractCode Integer,
                ContractName TVarChar,
                ContractTagName TVarChar,
-               ContractStateKindCode Integer, ContractComment TVarChar, 
+               ContractStateKindCode Integer, ContractComment TVarChar,
                PartnerId Integer, PartnerCode Integer, PartnerName TVarChar,
                PaidKindId Integer, PaidKindName TVarChar,
                BranchId Integer, BranchName TVarChar,
@@ -57,7 +57,7 @@ RETURNS TABLE (MovementSumm TFloat,
                InvNumber_Transport TVarChar,
                OperDate_Transport TDateTime,
                CarName TVarChar,
-               PersonalDriverName TVarChar, 
+               PersonalDriverName TVarChar,
                ContainerId Integer
               )
 AS
@@ -109,7 +109,7 @@ BEGIN
                                 , CLO_InfoMoney.ObjectId                  AS InfoMoneyId
                                 , CLO_Branch.ObjectId                     AS BranchId
                                   -- "оригинал"
-                                , CLO_Contract.ObjectId                   AS ContractId 
+                                , CLO_Contract.ObjectId                   AS ContractId
                                 , CLO_Partner.ObjectId                    AS PartnerId
                                   -- подставили "главный", если есть
                                 , COALESCE (tmpContract.ContractId_Key, CLO_Contract.ObjectId) AS ContractId_Key
@@ -258,7 +258,7 @@ BEGIN
                                 -- объединили по "главному"
                                 tmpContainer.ContractId_Key AS ContractId,
                                 -- оставили "оригинал"
-                                -- tmpContainer.ContractId AS ContractId, 
+                                -- tmpContainer.ContractId AS ContractId,
                                 tmpContainer.PartnerId,
                                 tmpContainer.PaidKindId,
                                 tmpContainer.PartionMovementId,
@@ -291,9 +291,9 @@ BEGIN
                                tmpContainer.PaidKindId,
                                tmpContainer.PartionMovementId,
                                tmpContainer.CurrencyId,
-                               tmpContainer.MovementId,
-                               tmpContainer.OperDate,
-                               tmpContainer.MovementItemId,
+                               MAX (tmpContainer.MovementId)     AS MovementId,
+                               MAX (tmpContainer.OperDate)       AS OperDate,
+                               MAX (tmpContainer.MovementItemId) AS MovementItemId,
 
                                SUM (tmpContainer.MovementSumm)          AS MovementSumm,
                                SUM (tmpContainer.MovementSumm_Currency) AS MovementSumm_Currency,
@@ -304,19 +304,24 @@ BEGIN
                                0 AS OperationSort
                              , tmpContainer.isNotBalance
                         FROM tmpContainer_All AS tmpContainer
-                        GROUP BY tmpContainer.AccountId,
+                             --  —чет(клиента)
+                             LEFT JOIN MovementString AS MovementString_InvNumberInvoice
+                                                      ON MovementString_InvNumberInvoice.MovementId = tmpContainer.MovementId
+                                                     AND MovementString_InvNumberInvoice.DescId     = zc_MovementString_InvNumberInvoice()
+                        GROUP BY CASE WHEN MovementString_InvNumberInvoice.ValueData <> '' THEN MovementString_InvNumberInvoice.ValueData ELSE tmpContainer.MovementId :: TVarChar || tmpContainer.MovementItemId :: TVarChar END,
+                                 tmpContainer.AccountId,
                                  tmpContainer.InfoMoneyId,
                                  tmpContainer.BranchId,
                                  tmpContainer.ContractId,
                                  tmpContainer.PaidKindId,
                                  tmpContainer.PartionMovementId,
                                  tmpContainer.CurrencyId,
-                                 tmpContainer.MovementId,
-                                 tmpContainer.OperDate,
-                                 tmpContainer.MovementItemId
-                               -- , tmpContainer.ContainerId
-                                , tmpContainer.isNotBalance
-                                , tmpContainer.PartnerId
+                                 -- !!! tmpContainer.MovementId,
+                                 -- !!! tmpContainer.OperDate,
+                                 -- !!! tmpContainer.MovementItemId,
+                                 -- tmpContainer.ContainerId,
+                                 tmpContainer.isNotBalance,
+                                 tmpContainer.PartnerId
                        UNION ALL
                         SELECT -- tmpRemains.ContainerId,
                                0 AS ContainerId,
@@ -345,7 +350,7 @@ BEGIN
                                , tmpRemains.ContractId, tmpRemains.PaidKindId, tmpRemains.PartionMovementId
                                , tmpRemains.CurrencyId
                                -- , tmpRemains.ContainerId
-                               , tmpRemains.isNotBalance 
+                               , tmpRemains.isNotBalance
                                , tmpRemains.PartnerId
                         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
                        )
@@ -388,7 +393,7 @@ BEGIN
                ELSE 0
           END :: TFloat AS Kredit_Currency,
 
-          Operation.OperDate,
+          Operation.OperDate :: TDateTime,
           CASE WHEN Movement.DescId = zc_Movement_BankAccount() AND 1=0 THEN '' ELSE Movement.InvNumber END :: TVarChar AS InvNumber,
           CASE WHEN Movement.DescId = zc_Movement_BankAccount() AND 1=0 THEN '' ELSE MovementString_InvNumberPartner.ValueData END :: TVarChar AS InvNumberPartner,
           MIString_Comment.ValueData          AS MovementComment,
@@ -400,7 +405,7 @@ BEGIN
           View_Contract_InvNumber.ContractTagName,
           View_Contract_InvNumber.ContractStateKindCode,
           ObjectString_Comment.ValueData AS ContractComment,
-          
+
           Object_Partner.Id         AS PartnerId,
           Object_Partner.ObjectCode AS PartnerCode,
           Object_Partner.ValueData  AS PartnerName,
@@ -409,7 +414,7 @@ BEGIN
           Object_PaidKind.ValueData AS PaidKindName,
           Object_Branch.Id AS BranchId,
           Object_Branch.ValueData AS BranchName,
-          
+
           Object_InfoMoney_View.InfoMoneyGroupCode,
           Object_InfoMoney_View.InfoMoneyGroupName,
           Object_InfoMoney_View.InfoMoneyDestinationCode,

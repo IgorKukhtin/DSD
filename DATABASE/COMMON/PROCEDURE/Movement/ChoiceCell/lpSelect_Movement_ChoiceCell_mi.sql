@@ -53,7 +53,7 @@ BEGIN
                                   , MIDate_Insert.ValueData    AS InsertDate
                                   , MIDate_Update.ValueData    AS UpdateDate
 
-                                  , ROW_NUMBER() OVER (PARTITION BY MILO_Goods.ObjectId, MILO_GoodsKind.ObjectId ORDER BY Movement.OperDate DESC, MovementItem.Id) AS Ord
+                                  , ROW_NUMBER() OVER (PARTITION BY MILO_Goods.ObjectId, MILO_GoodsKind.ObjectId ORDER BY Movement.OperDate DESC, MovementItem.Id DESC) AS Ord
 
                              FROM Movement
                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
