@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_ContractPartnerChoice()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Object_ContractPartnerChoice (Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractPartnerChoice (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractPartnerChoice(
+    IN inJuridicalId    Integer,
     IN inShowAll        Boolean,       --
     IN inSession        TVarChar       -- сессия пользователя
 )
@@ -89,6 +91,12 @@ BEGIN
         , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
         , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
         , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
+
+      /*  , tmpPartner AS (SELECT Object_Partner.*
+                         FROM Object AS Object_Partner
+                         WHERE Object_Partner.DescId = zc_Object_Partner()
+                         )
+*/
    -- Результат
    SELECT DISTINCT
          Object_Contract_View.ContractId      :: Integer   AS Id
@@ -259,7 +267,8 @@ BEGIN
                                             AND Container_Partner_View.ContractId = Object_Contract_View.ContractId
                                             AND (Container_Partner_View.BranchId = vbBranchId_Constraint OR vbBranchId_Constraint = 0)
 
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)       
+        
         LEFT JOIN tmpObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
         LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
@@ -381,6 +390,7 @@ BEGIN
      --OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
        OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
+     AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
   ;
 
    ELSE
@@ -599,7 +609,8 @@ BEGIN
                                             AND Container_Partner_View.ContractId = Object_Contract_View.ContractId
                                             AND (Container_Partner_View.BranchId = vbBranchId_Constraint OR vbBranchId_Constraint = 0)
 
-        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId)
+        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (Container_Partner_View.JuridicalId, ObjectLink_Partner_Juridical.ChildObjectId) 
+
         LEFT JOIN tmpObjectHistory_JuridicalDetails_View AS ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
         LEFT JOIN tmpObject_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = COALESCE (Container_Partner_View.InfoMoneyId, Object_Contract_View.InfoMoneyId)
@@ -731,6 +742,7 @@ BEGIN
      --OR (vbIsIrna = FALSE AND COALESCE (ObjectBoolean_Guide_Irna.ValueData, FALSE) = FALSE)
        OR (vbIsIrna = TRUE  AND ObjectBoolean_Guide_Irna.ValueData = TRUE)
          )
+     AND (Object_Juridical.Id = inJuridicalId OR inJuridicalId = 0)
   ;
 
    END IF;
@@ -743,6 +755,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.10.24         * inJuridicalId
  26.09.23         * isNotTareReturning
  22.11.18         * add Currency
  10.05.17         *  add Address, GPSE, GPSN
@@ -757,4 +770,4 @@ $BODY$
 
 -- тест
 -- select * from gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= '4467766');
--- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inShowAll:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inJuridicalId:=149317, inShowAll:= FALSE, inSession:= '4467766') --149317

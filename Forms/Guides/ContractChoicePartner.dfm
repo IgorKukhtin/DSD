@@ -2,6 +2,9 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' + '#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 460
   ClientWidth = 1000
+  AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
   ExplicitHeight = 499
   PixelsPerInch = 96
@@ -550,6 +553,23 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Width = 30
           end
         end
+      end
+      object edJuridical: TcxButtonEdit
+        Left = 387
+        Top = 69
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        TabOrder = 1
+        Width = 245
+      end
+      object cxLabel6: TcxLabel
+        Left = 276
+        Top = 70
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
       end
     end
   end
@@ -1181,6 +1201,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     StoredProcName = 'gpSelect_Object_ContractPartnerChoice'
     Params = <
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inShowAll'
         Value = False
         Component = actShowAll
@@ -1216,6 +1244,22 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbText'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1277,6 +1321,20 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     object bbProtocolOpenFormPartner: TdxBarButton
       Action = ProtocolOpenFormPartner
       Category = 0
+    end
+    object bbText: TdxBarControlContainerItem
+      Caption = 'Text'
+      Category = 0
+      Hint = 'Text'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbJuridical: TdxBarControlContainerItem
+      Caption = 'Juridical'
+      Category = 0
+      Hint = 'Juridical'
+      Visible = ivAlways
+      Control = edJuridical
     end
   end
   inherited PopupMenu: TPopupMenu
@@ -1404,5 +1462,54 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     PackSize = 1
     Left = 168
     Top = 192
+  end
+  object GuidesJuridical: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 424
+    Top = 88
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesJuridical
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 416
+    Top = 152
   end
 end

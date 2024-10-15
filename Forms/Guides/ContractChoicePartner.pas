@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit;
+  dxSkinXmas2008Blue, cxImageComboBox, cxButtonEdit, cxCurrencyEdit,
+  cxContainer, dsdGuides, cxLabel, cxTextEdit, cxMaskEdit, dsdCommon;
 
 type
   TContractChoicePartnerForm = class(TAncestorEnumForm)
@@ -72,6 +73,12 @@ type
     ProtocolOpenFormPartner: TdsdOpenForm;
     bbProtocolOpenFormContract: TdxBarButton;
     bbProtocolOpenFormPartner: TdxBarButton;
+    edJuridical: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesJuridical: TdsdGuides;
+    FormParams: TdsdFormParams;
+    bbText: TdxBarControlContainerItem;
+    bbJuridical: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

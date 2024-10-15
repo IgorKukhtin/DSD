@@ -459,14 +459,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
    exit;
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
-  //exit;
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
   exit;
@@ -1687,11 +1687,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalChoiceForm');
   Exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
   Exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
 

@@ -294,9 +294,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -577,9 +574,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object tsContract: TcxTabSheet
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -3269,6 +3263,23 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 1040
