@@ -3667,7 +3667,7 @@ object OrderClientForm: TOrderClientForm
       item
         Name = 'Id'
         Value = Null
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -3676,6 +3676,17 @@ object OrderClientForm: TOrderClientForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PDF_FileName'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ProductDocumentId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 766
@@ -4028,6 +4039,10 @@ object OrderClientForm: TOrderClientForm
         end
         item
           Visible = True
+          ItemName = 'bbSave_Confirmation_TD'
+        end
+        item
+          Visible = True
           ItemName = 'Separator_1'
         end
         item
@@ -4037,6 +4052,10 @@ object OrderClientForm: TOrderClientForm
         item
           Visible = True
           ItemName = 'bbPrintTender'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSave_Confirmation'
         end
         item
           Visible = True
@@ -4229,6 +4248,14 @@ object OrderClientForm: TOrderClientForm
       Action = actPrintStructureGoodsSum
       Category = 0
     end
+    object bbSave_Confirmation_TD: TdxBarButton
+      Action = mactSave_Confirmation_TD
+      Category = 0
+    end
+    object bbSave_Confirmation: TdxBarButton
+      Action = mactSave_Confirmation
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -4320,6 +4347,105 @@ object OrderClientForm: TOrderClientForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1057#1091#1084#1084#1091' '#1088#1091#1095#1085'. '#1089#1082'.'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1057#1091#1084#1084#1091' '#1088#1091#1095#1085'. '#1089#1082#1080#1076#1082#1080
       ImageIndex = 38
+    end
+    object actPrintOrderConfirmation_TD_save: TdsdPrintAction
+      Category = 'PrintSave'
+      MoveParams = <
+        item
+          FromParam.Name = 'Id'
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'Id'
+          ToParam.Value = Null
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOrderConfirmation
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOrderConfirmation
+        end>
+      Caption = 'Confirmation'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44927d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44927d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_EmbeddedFonts'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_Background'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = 'GetTempPath'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PDF_FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GetFileNameExport'
+          Value = ''
+          Component = DocumentProduct
+          ComponentItem = 'FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -4515,6 +4641,108 @@ object OrderClientForm: TOrderClientForm
         end>
       isShowModal = True
       OpenBeforeShow = True
+    end
+    object actPrintOrderConfirmation_save: TdsdPrintAction
+      Category = 'PrintSave'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintOrderConfirmation
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintOrderConfirmation
+        end>
+      Caption = 'Confirmation (Discount)'
+      ImageIndex = 18
+      ShortCut = 16436
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'NPP'
+        end
+        item
+          DataSet = PrintItemsColorCDS
+          UserName = 'frxDBDChild'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 44927d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 44927d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport_find'
+          Value = Null
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_ShowDialog'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_EmbeddedFonts'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'frxPDFExport1_Background'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ExportDirectory'
+          Value = 'GetTempPath'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FileNameExport'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PDF_FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GetFileNameExport'
+          Value = ''
+          Component = DocumentProduct
+          ComponentItem = 'FileName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintProduct_OrderConfirmation_Discount'
+      ReportNameParam.Value = 'PrintProduct_OrderConfirmation_Discount'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateMovement_NPP: TdsdExecStoredProc
       Category = 'NPP'
@@ -4995,7 +5223,6 @@ object OrderClientForm: TOrderClientForm
         item
           FromParam.Name = 'id'
           FromParam.Value = Null
-          FromParam.ComponentItem = 'id'
           FromParam.MultiSelectSeparator = ','
           ToParam.Value = Null
           ToParam.ComponentItem = 'Id'
@@ -5755,6 +5982,111 @@ object OrderClientForm: TOrderClientForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' + '#1055#1088#1086#1074#1077#1089#1090#1080
       ImageIndex = 86
     end
+    object actGetFileName_Confirmation_disc: TdsdExecStoredProc
+      Category = 'PrintSave'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_Confirm_disc
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_Confirm_disc
+        end>
+      Caption = 'actGetFileName_Confirmation(Discount)'
+    end
+    object actGetFileName_ConfirmationTD: TdsdExecStoredProc
+      Category = 'PrintSave'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetFileName_ConfirmTD
+      StoredProcList = <
+        item
+          StoredProc = spGetFileName_ConfirmTD
+        end>
+      Caption = 'actGetFileName_ConfirmationTD'
+    end
+    object actInsertDocument: TdsdExecStoredProc
+      Category = 'PrintSave'
+      MoveParams = <
+        item
+          FromParam.Value = '0'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'InvoicePdfId'
+          ToParam.MultiSelectSeparator = ','
+        end>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertDocument
+      StoredProcList = <
+        item
+          StoredProc = spInsertDocument
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090
+    end
+    object actDocumentOpen: TDocumentOpenAction
+      Category = 'PrintSave'
+      MoveParams = <>
+      Document = DocumentProduct
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1057#1082#1072#1085
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
+    end
+    object mactSave_Confirmation_TD: TMultiAction
+      Category = 'PrintSave'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actGetFileName_ConfirmationTD
+        end
+        item
+          Action = actPrintOrderConfirmation_TD_save
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actDocumentOpen
+        end>
+      Caption = 'Confirmation + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' Confirmation + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ImageIndex = 18
+    end
+    object mactSave_Confirmation: TMultiAction
+      Category = 'PrintSave'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actGetFileName_Confirmation_disc
+        end
+        item
+          Action = actPrintOrderConfirmation_save
+        end
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = actDocumentOpen
+        end>
+      Caption = 'Confirmation (Discount) + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100' Confirmation (Discount) + '#1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ImageIndex = 18
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -6496,6 +6828,13 @@ object OrderClientForm: TOrderClientForm
         Component = GuidesTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -8392,5 +8731,132 @@ object OrderClientForm: TOrderClientForm
     PackSize = 1
     Left = 848
     Top = 184
+  end
+  object spGetFileName_ConfirmTD: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Product_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PDF_FileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PDF_FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 496
+  end
+  object spGetFileName_Confirm_disc: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Product_FileName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inParam'
+        Value = '2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PDF_FileName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PDF_FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 984
+    Top = 520
+  end
+  object spGetDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_ProductDocument'
+    DataSets = <>
+    OutputType = otBlob
+    Params = <
+      item
+        Name = 'inProductDocumentId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ProductDocumentId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 952
+    Top = 472
+  end
+  object DocumentProduct: TDocument
+    GetBlobProcedure = spGetDocument
+    Left = 896
+    Top = 504
+  end
+  object spInsertDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ProductDocument_bySave'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ProductDocumentId'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PDF_FileName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductId'
+        Value = Null
+        Component = GuidesProduct
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProductDocumentData'
+        Value = '789C535018D10000F1E01FE1'
+        Component = DocumentProduct
+        ComponentItem = 'Data'
+        DataType = ftBlob
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 840
+    Top = 512
   end
 end

@@ -24,7 +24,7 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
   cxCurrencyEdit, cxSplitter, cxButtonEdit, ExternalLoad, Vcl.Menus,
   Vcl.ExtCtrls, cxImageComboBox, Vcl.StdCtrls, cxButtons, cxContainer,
-  cxTextEdit, cxLabel;
+  cxTextEdit, cxLabel, Document, dsdCommon;
 
 type
   TProductForm = class(TParentForm)
@@ -265,6 +265,21 @@ type
     bbPrintOrderConfirmation_TD: TdxBarButton;
     bbSeparator: TdxBarSeparator;
     Amount_Debt: TcxGridDBColumn;
+    spGetFileName_ConfirmTD: TdsdStoredProc;
+    actGetFileName_ConfirmationTD: TdsdExecStoredProc;
+    actInsertDocument: TdsdExecStoredProc;
+    spInsertDocument: TdsdStoredProc;
+    mactSave_Confirmation_TD: TMultiAction;
+    spGetDocument: TdsdStoredProc;
+    actDocumentOpen: TDocumentOpenAction;
+    DocumentProduct: TDocument;
+    bbSave_ConfirmationTD: TdxBarButton;
+    actPrintOrderConfirmation_TD_save: TdsdPrintAction;
+    actPrintOrderConfirmation_save: TdsdPrintAction;
+    mactSave_Confirmation: TMultiAction;
+    spGetFileName_Confirm_disc: TdsdStoredProc;
+    actGetFileName_Confirmation_disc: TdsdExecStoredProc;
+    bbSave_Confirmation: TdxBarButton;
   private
     { Private declarations }
   public

@@ -24,7 +24,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit,
-  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons;
+  cxImageComboBox, cxSplitter, cxBlobEdit, Vcl.StdCtrls, cxButtons, Document,
+  dsdCommon;
 
 type
   TOrderClientForm = class(TParentForm)
@@ -501,6 +502,21 @@ type
     spPrintStructureGoodsSum: TdsdStoredProc;
     actPrintStructureGoodsSum: TdsdPrintAction;
     bbPrintStructureGoodsSum: TdxBarButton;
+    spGetFileName_ConfirmTD: TdsdStoredProc;
+    spGetFileName_Confirm_disc: TdsdStoredProc;
+    spGetDocument: TdsdStoredProc;
+    DocumentProduct: TDocument;
+    spInsertDocument: TdsdStoredProc;
+    actGetFileName_Confirmation_disc: TdsdExecStoredProc;
+    actGetFileName_ConfirmationTD: TdsdExecStoredProc;
+    actInsertDocument: TdsdExecStoredProc;
+    actDocumentOpen: TDocumentOpenAction;
+    actPrintOrderConfirmation_TD_save: TdsdPrintAction;
+    actPrintOrderConfirmation_save: TdsdPrintAction;
+    mactSave_Confirmation_TD: TMultiAction;
+    mactSave_Confirmation: TMultiAction;
+    bbSave_Confirmation_TD: TdxBarButton;
+    bbSave_Confirmation: TdxBarButton;
   private
   public
   end;
