@@ -56,7 +56,7 @@ $BODY$
 */
 
 -- тест
--- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_GoodsMI_SaleReturnIn_PaidKind';
+-- UPDATE Object SET ValueData = '' WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpReport_GoodsBalance';
 -- SELECT * FROM Object WHERE DescId = zc_Object_ReportExternal() AND ValueData ilike 'gpSelectMobile_Object_GoodsListSale' ORDER BY Id DESC;
 -- SELECT *, gpInsertUpdate_Object_ReportExternal (ioId:= Id, inName:= '', inSession:= zfCalc_UserAdmin()) FROM Object WHERE DescId = zc_Object_ReportExternal() AND Id = 0 ORDER BY Id;
 --
@@ -171,6 +171,15 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_HolidayCompensation_day',inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_CashPersonal_toPay',inSession:= zfCalc_UserAdmin()); -- +
 
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_MotionGoodsWeek',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Report_Promo',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Check_Sale_TotalSum',inSession:= zfCalc_UserAdmin()); -- +
+
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_MI_Reestr',inSession:= zfCalc_UserAdmin()); -- +
+
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Transport',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Object_ContractPartnerChoice',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelect_Object_ContractPartnerOrderChoice',inSession:= zfCalc_UserAdmin()); -- +
 
 -- --!!! SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsBalance',                 inSession:= zfCalc_UserAdmin()); -- + !!!
 

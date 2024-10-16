@@ -79,6 +79,7 @@ BEGIN
                                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_ContractPartner_Partner.ChildObjectId
                                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                   AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                               INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
@@ -87,9 +88,9 @@ BEGIN
 
                                          WHERE ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
                                         )
-        , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View)
-        , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
-        , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
+        , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+        , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View WHERE Container_Partner_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+        , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
         , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
 
       /*  , tmpPartner AS (SELECT Object_Partner.*
@@ -404,6 +405,7 @@ BEGIN
                                               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_ContractPartner_Partner.ChildObjectId
                                                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                   AND (ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId OR inJuridicalId = 0)
                                               INNER JOIN Object AS Object_ContractPartner ON Object_ContractPartner.Id = ObjectLink_ContractPartner_Partner.ObjectId
                                                                                          AND Object_ContractPartner.isErased = FALSE
                                               INNER JOIN ObjectLink AS ObjectLink_ContractPartner_Contract
@@ -414,9 +416,9 @@ BEGIN
                                         )
        , tmpOB_isBranchAll AS (SELECT * FROM ObjectBoolean AS OB WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Juridical_isBranchAll())
 
-       , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View)
-       , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View)
-       , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View)
+       , tmpObject_Contract_View AS (SELECT * FROM Object_Contract_View WHERE Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+       , tmpContainer_Partner_View AS (SELECT * FROM Container_Partner_View WHERE Container_Partner_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
+       , tmpObjectHistory_JuridicalDetails_View AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
        , tmpObject_InfoMoney_View AS (SELECT * FROM Object_InfoMoney_View)
        , tmpContractCondition_Value_all AS (SELECT * FROM Object_ContractCondition_ValueView WHERE CURRENT_DATE BETWEEN Object_ContractCondition_ValueView.StartDate AND Object_ContractCondition_ValueView.EndDate)
        , tmpObject_ContractCondition_ValueView AS (SELECT tmpContractCondition_Value_all.ContractId
