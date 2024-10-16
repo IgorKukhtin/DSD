@@ -3,7 +3,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   ClientHeight = 460
   ClientWidth = 1000
   AddOnFormData.isAlwaysRefresh = True
-  AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1016
   ExplicitHeight = 499

@@ -2,6 +2,7 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1267
+  ExplicitLeft = -390
   ExplicitWidth = 1283
   ExplicitHeight = 707
   PixelsPerInch = 96
@@ -192,9 +193,6 @@ inherited TaxForm: TTaxForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridDetail: TcxGrid
         Left = 0
         Top = 0
@@ -312,9 +310,6 @@ inherited TaxForm: TTaxForm
     object cxTabSheetPrior: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridGoodsName: TcxGrid
         Left = 0
         Top = 0
@@ -3156,9 +3151,24 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = Null
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 752
-    Top = 65520
+    Left = 1136
+    Top = 48
   end
   object spUpdateIsMedoc: TdsdStoredProc
     StoredProcName = 'gpUpdate_IsMedoc'
