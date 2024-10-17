@@ -135,20 +135,29 @@ BEGIN
                                                   LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
                                             )
        -- строчна€ часть документов ¬звешивани€ или одного - inMovementId_by
-     , tmpMI AS (SELECT MovementItem.MovementId                           AS MovementId
-                                , MovementItem.Id                                   AS MI_Id
-                                , MovementItem.ObjectId                             AS GoodsId
-                                , MovementItem.Amount                               AS Amount
-                                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
-                            FROM tmpMovement
-                                INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
-                                                       AND MovementItem.DescId     = zc_MI_Master()
-                                                       AND MovementItem.isErased   = FALSE
-                                                       -- AND MovementItem.Amount    <> 0
-                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                          )
+     , tmpMI AS (WITH
+                 tmp AS (SELECT MovementItem.*
+                         FROM tmpMovement
+                             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
+                                                    AND MovementItem.DescId     = zc_MI_Master()
+                                                    AND MovementItem.isErased   = FALSE
+                         )
+                  , tmpMILO AS (SELECT *
+                                FROM MovementItemLinkObject
+                                WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmp.Id FROM tmp)
+                                   AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                                )
+                   SELECT MovementItem.MovementId                           AS MovementId
+                       , MovementItem.Id                                   AS MI_Id
+                       , MovementItem.ObjectId                             AS GoodsId
+                       , MovementItem.Amount                               AS Amount
+                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
+                   FROM tmp AS MovementItem
+                       LEFT JOIN tmpMILO AS MILinkObject_GoodsKind
+                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 )
+
    , tmpMI_Boolean AS (SELECT MovementItemBoolean.*
                        FROM MovementItemBoolean
                        WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.MI_Id FROM tmpMI)
