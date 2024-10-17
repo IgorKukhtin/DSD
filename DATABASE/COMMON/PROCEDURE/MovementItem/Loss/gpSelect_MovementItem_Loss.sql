@@ -584,7 +584,28 @@ BEGIN
            , COALESCE (MIFloat_Price.ValueData,0):: TFloat AS Price      
            , MIDate_PartionGoods.ValueData      AS PartionGoodsDate
            , Object_PartionGoods.Id :: Integer AS PartionGoodsId
-           , COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) ::TVarChar AS PartionGoods
+
+           , CASE WHEN COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) <> ''
+                   AND COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData) <> '0'
+                       THEN COALESCE (Object_PartionGoods.ValueData, MIString_PartionGoods.ValueData)
+
+                  WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0 AND Object_PartionGoods.ObjectCode > 0
+                       THEN zfCalc_PartionGoodsName_Asset (inMovementId      := Object_PartionGoods.ObjectCode          -- 
+                                                         , inInvNumber       := Object_PartionGoods.ValueData           -- Инвентарный номер
+                                                         , inOperDate        := ObjectDate_PartionGoods_Value.ValueData -- Дата ввода в эксплуатацию
+                                                         , inUnitName        := Object_Unit_partion.ValueData           -- Подразделение использования
+                                                         , inStorageName     := Object_Storage_partion.ValueData        -- Место хранения
+                                                         , inGoodsName       := ''                                      -- Основные средства или Товар
+                                                          )
+                  WHEN ObjectLink_Goods.ChildObjectId <> 0 AND ObjectLink_Unit.ChildObjectId <> 0
+                       THEN zfCalc_PartionGoodsName_InvNumber (inInvNumber       := Object_PartionGoods.ValueData             -- Инвентарный номер
+                                                             , inOperDate        := ObjectDate_PartionGoods_Value.ValueData   -- Дата перемещения
+                                                             , inPrice           := ObjectFloat_PartionGoods_Price.ValueData  -- Цена
+                                                             , inUnitName_Partion:= Object_Unit_partion.ValueData             -- Подразделение(для цены)
+                                                             , inStorageName     := Object_Storage_partion.ValueData          -- Место хранения
+                                                             , inGoodsName       := ''                                        -- Товар
+                                                              )
+             END ::TVarChar AS PartionGoods
            
            , MIString_PartNumber.ValueData  ::TVarChar AS PartNumber
            , Object_Storage.Id                  AS StorageId
@@ -655,6 +676,25 @@ BEGIN
                                              ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
             LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = MILinkObject_PartionGoods.ObjectId
+
+            -- Остальные св-ва партии
+            LEFT JOIN ObjectLink AS ObjectLink_Goods
+                                 ON ObjectLink_Goods.ObjectId = Object_PartionGoods.Id
+                                AND ObjectLink_Goods.DescId   = zc_ObjectLink_PartionGoods_Goods()
+            LEFT JOIN ObjectLink AS ObjectLink_Unit
+                                 ON ObjectLink_Unit.ObjectId = Object_PartionGoods.Id
+                                AND ObjectLink_Unit.DescId   = zc_ObjectLink_PartionGoods_Unit()
+            LEFT JOIN Object AS Object_Unit_partion ON Object_Unit_partion.Id = ObjectLink_Unit.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Storage
+                                 ON ObjectLink_Storage.ObjectId = Object_PartionGoods.Id
+                                AND ObjectLink_Storage.DescId   = zc_ObjectLink_PartionGoods_Storage()
+            LEFT JOIN Object AS Object_Storage_partion ON Object_Storage_partion.Id = ObjectLink_Storage.ChildObjectId
+            LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                 ON ObjectDate_PartionGoods_Value.ObjectId = Object_PartionGoods.Id
+                                AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
+            LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Price
+                                  ON ObjectFloat_PartionGoods_Price.ObjectId = Object_PartionGoods.Id
+                                 AND ObjectFloat_PartionGoods_Price.DescId   = zc_ObjectFloat_PartionGoods_Price()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Storage
                                              ON MILinkObject_Storage.MovementItemId = MovementItem.Id
