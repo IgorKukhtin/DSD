@@ -1541,7 +1541,9 @@ uses
   Report_ProfitLossService in '..\..\Forms\Report\Report_ProfitLossService.pas' {Report_ProfitLossServiceForm: TParentForm},
   Report_ProfitLossService_bySale in '..\..\Forms\Report\Report_ProfitLossService_bySale.pas' {Report_ProfitLossService_bySaleForm: TParentForm},
   PriceDialog in '..\..\Forms\System\PriceDialog.pas' {PriceDialogForm: TParentForm},
-  MIFloatEdit in '..\..\Forms\System\MIFloatEdit.pas' {MIFloatEditForm: TParentForm};
+  MIFloatEdit in '..\..\Forms\System\MIFloatEdit.pas' {MIFloatEditForm: TParentForm},
+  Report_HistoryCost_CompareDialog in '..\..\Forms\Report\Report_HistoryCost_CompareDialog.pas' {Report_HistoryCost_CompareDialogForm: TParentForm},
+  Report_HistoryCost_Compare in '..\..\Forms\Report\Report_HistoryCost_Compare.pas' {Report_HistoryCost_CompareForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -2563,13 +2563,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_Sale_TotalSumDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_Sale_TotalSumDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnion_TaxExitUpdateForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnion_TaxExitUpdateForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PartionCell_historyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PartionCell_historyForm');
 
@@ -2602,13 +2602,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_PartionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_PartionDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_BankAccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_BankAccountDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Send_PersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_PersonalGroupDialogForm'));
@@ -2897,7 +2897,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossDialogForm');
   exit;
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_CompareDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_CompareDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCost_CompareForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCost_CompareForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
   //
