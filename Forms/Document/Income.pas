@@ -249,6 +249,9 @@ type
     bbUpdate_MI_PricePartner: TdxBarButton;
     bbsPrint: TdxBarSubItem;
     actUpdate_PricePartnerEdit: TdsdInsertUpdateAction;
+    actPrintDiff: TdsdPrintAction;
+    bbPrintDiff: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
   private
   public
   end;
