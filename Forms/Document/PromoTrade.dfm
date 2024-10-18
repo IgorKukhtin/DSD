@@ -1386,18 +1386,7 @@ inherited PromoTradeForm: TPromoTradeForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1088#1075#1086#1074#1103' '#1084#1072#1088#1082#1072'>'
       ImageIndex = 0
     end
-    object InsertRecordGGP: TInsertRecord [4]
-      Category = 'Goods'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      View = cxGridDBTableView
-      Action = actChoiceGoodsGroupProperty
-      Params = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-1>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-1>'
-      ImageIndex = 0
-    end
-    object InsertRecordGGPP: TInsertRecord [5]
+    object InsertRecordGGPP: TInsertRecord [4]
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1406,6 +1395,17 @@ inherited PromoTradeForm: TPromoTradeForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-1>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-1>'
+      ImageIndex = 0
+    end
+    object InsertRecordGGP: TInsertRecord [5]
+      Category = 'Goods'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      View = cxGridDBTableView
+      Action = actChoiceGoodsGroupProperty
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
       ImageIndex = 0
     end
     object InsertRecordGD: TInsertRecord [6]
@@ -2732,11 +2732,11 @@ inherited PromoTradeForm: TPromoTradeForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGGP'
+          ItemName = 'bbInsertRecordGGPP'
         end
         item
           Visible = True
-          ItemName = 'bbInsertRecordGGPP'
+          ItemName = 'bbInsertRecordGGP'
         end
         item
           Visible = True
@@ -2790,7 +2790,6 @@ inherited PromoTradeForm: TPromoTradeForm
     end
     object bbInsertRecordGGPP: TdxBarButton
       Action = InsertRecordGGPP
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1085#1072#1083#1080#1090#1080#1082#1072'-2>'
       Category = 0
     end
     object bbInsertRecordGD: TdxBarButton

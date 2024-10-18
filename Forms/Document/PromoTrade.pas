@@ -222,8 +222,8 @@ type
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
     InsertRecordTM: TInsertRecord;
-    InsertRecordGGP: TInsertRecord;
     InsertRecordGGPP: TInsertRecord;
+    InsertRecordGGP: TInsertRecord;
     InsertRecordGD: TInsertRecord;
     bbInsertRecordTM: TdxBarButton;
     bbInsertRecordGGP: TdxBarButton;
