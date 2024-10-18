@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingPartner(
 )
 RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartner_mi TFloat
+             , Amount TFloat, Amount_mi TFloat, AmountPartner TFloat, AmountPartnerSecond TFloat, AmountPartner_mi TFloat 
              , RealWeight TFloat, CountTare TFloat, WeightTare TFloat
              , CountTare1   TFloat
              , CountTare2   TFloat
@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, GoodsCode Integer, GoodsName TVarChar
              , BoxNumber TFloat, LevelNumber TFloat
              , ChangePercentAmount TFloat, AmountChangePercent TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat
+             , PricePartner TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
              , BoxName TVarChar
@@ -106,7 +107,8 @@ end if;*/
                   , MovementItem.Amount
                   , 0 AS Amount_mi
 
-                  , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner
+                  , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner   
+                  , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0) AS AmountPartnerSecond
                   , 0                                             AS AmountPartner_mi
 
                   , COALESCE (MIFloat_RealWeight.ValueData, 0)          AS RealWeight
@@ -142,7 +144,8 @@ end if;*/
                   , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
                   , COALESCE (MIFloat_Price.ValueData, 0)                 AS Price
                   , COALESCE (MIFloat_CountForPrice.ValueData, 0)         AS CountForPrice
-           
+                  , COALESCE (MIFloat_PricePartner.ValueData, 0)          AS PricePartner
+                  
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
                   
@@ -208,6 +211,9 @@ end if;*/
                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                              ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
                   LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                               ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                              AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
@@ -280,6 +286,10 @@ end if;*/
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                              AND MIFloat_Price.ValueData <> 0 -- !!!‚ÂÏÂÌÌÓ!!!
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                              ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
+
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -310,6 +320,7 @@ end if;*/
                   , MovementItem.Amount AS Amount_mi
 
                   , 0                                             AS AmountPartner
+                  , 0                                             AS AmountPartnerSecond
                   , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS AmountPartner_mi
 
                   , 0 AS RealWeight
@@ -342,10 +353,11 @@ end if;*/
                   , COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) AS ChangePercentAmount
                   , COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS AmountChangePercent
 
-                  , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
-                  , COALESCE (MIFloat_Price.ValueData, 0) 		  AS Price
-                  , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	  AS CountForPrice
-           
+                  , COALESCE (MIFloat_ChangePercent.ValueData, 0)       AS ChangePercent
+                  , COALESCE (MIFloat_Price.ValueData, 0) 		        AS Price
+                  , COALESCE (MIFloat_CountForPrice.ValueData, 0) 	    AS CountForPrice
+                  , COALESCE (MIFloat_PricePartner.ValueData, 0)        AS PricePartner
+                  
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart()) AS PartionGoodsDate
                   , COALESCE (MIString_PartionGoods.ValueData, '')           AS PartionGoods
 
@@ -420,6 +432,10 @@ end if;*/
                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                              AND MIFloat_Price.ValueData <> 0 -- !!!‚ÂÏÂÌÌÓ!!!
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
+                                              ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_PricePartner.DescId = zc_MIFloat_PricePartner()
+
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -458,6 +474,8 @@ end if;*/
            , tmpMI.Amount_mi :: TFloat        AS Amount_mi
 
            , CASE WHEN tmpMI.AmountPartner = 0 THEN NULL ELSE tmpMI.AmountPartner END :: TFloat       AS AmountPartner
+           , tmpMI.AmountPartnerSecond                                                :: TFloat       AS AmountPartnerSecond 
+           
            , CASE WHEN tmpMI.AmountPartner_mi = 0 THEN NULL ELSE tmpMI.AmountPartner_mi END :: TFloat AS AmountPartner_mi
 
            , tmpMI.RealWeight  :: TFloat      AS RealWeight
@@ -494,6 +512,7 @@ end if;*/
            , tmpMI.ChangePercent :: TFloat AS ChangePercent
            , CASE WHEN tmpMI.Price = 0 THEN NULL ELSE tmpMI.Price END :: TFloat                 AS Price
            , CASE WHEN tmpMI.CountForPrice = 0 THEN NULL ELSE tmpMI.CountForPrice END :: TFloat AS CountForPrice
+           , CASE WHEN tmpMI.PricePartner = 0 THEN NULL ELSE tmpMI.PricePartner END   :: TFloat AS PricePartner
            
            , CASE WHEN tmpMI.PartionGoodsDate = zc_DateStart() THEN NULL ELSE tmpMI.PartionGoodsDate END :: TDateTime AS PartionGoodsDate
            , tmpMI.PartionGoods :: TVarChar AS PartionGoods
@@ -532,6 +551,7 @@ end if;*/
                   , SUM (tmpMI.Amount)           AS Amount
                   , SUM (tmpMI.Amount_mi)        AS Amount_mi
                   , SUM (tmpMI.AmountPartner)    AS AmountPartner
+                  , SUM (tmpMI.AmountPartnerSecond) AS AmountPartnerSecond
                   , SUM (tmpMI.AmountPartner_mi) AS AmountPartner_mi
 
                   , SUM (tmpMI.RealWeight)     AS RealWeight
@@ -567,7 +587,8 @@ end if;*/
                   , tmpMI.ChangePercent
                   , tmpMI.Price
                   , tmpMI.CountForPrice
-    
+                  , tmpMI.PricePartner
+
                   , tmpMI.PartionGoodsDate
                   , tmpMI.PartionGoods
                   , tmpMI.GoodsKindId
@@ -597,7 +618,8 @@ end if;*/
                    , tmpMI.ChangePercentAmount
                    , tmpMI.ChangePercent
                    , tmpMI.Price
-                   , tmpMI.CountForPrice
+                   , tmpMI.CountForPrice 
+                   , tmpMI.PricePartner
                    , tmpMI.PartionGoodsDate
                    , tmpMI.PartionGoods
                    , tmpMI.GoodsKindId
@@ -660,6 +682,7 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 18.10.24         * 
  18.10.22         * Asset
  04.11.19         *
  01.12.15         * promo
